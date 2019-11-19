@@ -20,11 +20,11 @@ To support SRES’s overall strategic real estate initiatives a modern Informati
 
 ## Problem Statement:
 
-The inability for SRES to rely on it’s current system, data and processes to analyze real estate data in an accurate and efficient way impacts SRES ability to be the source of truth for strategic real estate information, analysis and advice. (Draft Problem Statement) 
+The Province is not able to make the most informed, timely, and strategic decisions on the optimal use of its real property assets on behalf of the people and priorities of British Columbia.
 
 ## Goal:
 
-The goal of the PIMS project team is to create a Geospatial Client Relationship Management System (GICRM) to support the Strategic Real Estate Services branch of Real Property Division to manage and oversee the disposal of assets surplus to government, optimize the benefits to the government and citizens of BC related to the management of public real estate assets, and be a trusted source for accurate information for Government owned titled property.  
+The goal of the PIMS project team is to create a Geospatial Client Relationship Management System to support the Strategic Real Estate Services branch of Real Property Division to manage and oversee the disposal of assets surplus to government, optimize the benefits to the government and citizens of BC related to the management of public real estate assets, and be a trusted source for accurate information for Government owned titled property.  
 
 The system will support the management of titled properties through the government property ownership life cycle from acquisition to disposal (transfer to another ministry or sale outside of the government). This would include the ability to manage internal workflows. PIMS will be capable of collection, analysis, and reporting of spatial data and related asset information from multiple data sources.
 
