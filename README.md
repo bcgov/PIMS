@@ -24,7 +24,7 @@ The inability for SRES to rely on it’s current system, data and processes to a
 
 ## Goal:
 
-To create a web-based Property Asset Management System with Geographic Information (GIS) integrated with robust mapping features.  PIMS is capable of collection, analysis, and reporting of spatial data and related asset information from multiple data sources.
+To create a web-based Property Asset Management System with Geographic Information (GIS) integrated with robust mapping features. PIMS will be capable of collection, analysis, and reporting of spatial data and related asset information from multiple data sources.
 
 The system would promote strategic portfolio management approach to the administration of government real property by consolidating Provincial real estate information into one searchable inventory with a GIS functionality to incorporate mapping.
 
