@@ -20,4 +20,4 @@ To support SRES’s overall strategic real estate initiatives a modern Informati
 
 ## Problem Statement
 
-The inability for SRES to rely on it’s current system, data and processes to analyze real estate data in an accurate and efficient way impacts SRES ability to be the source of truth for strategic real estate information, analysis and advice.
+The inability for SRES to rely on it’s current system, data and processes to analyze real estate data in an accurate and efficient way impacts SRES ability to be the source of truth for strategic real estate information, analysis and advice. (Draft Problem Statement) 
