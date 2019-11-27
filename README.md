@@ -6,13 +6,15 @@ Property Inventory Management System
 
 ## Introduction:
 
-Strategic Real Estate Services (SRES), formerly known as Release of Assets for Economic Generation, is comprised of professionals from a variety of backgrounds (sales, marketing, First Nations consultation, environmental management and communications) was formed to dispose of assets surplus to government, in order to help government meet its commitment to balance the provincial budget, and to generate economic activity in communities throughout BC.  The SRES team is tasked with coordinating the province-wide management of this initiative ensuring that all issues are addressed appropriately and the return to government is maximized.
+Strategic Real Estate Services (SRES), comprised of professionals from a variety of backgrounds (sales, marketing, First Nations consultation, environmental management and communications) was formed to dispose of assets surplus to government, in order to help government meet its commitment to balance the provincial budget, and to generate economic activity in communities throughout BC.  The SRES team is tasked with coordinating the province-wide management of this initiative ensuring that all issues are addressed appropriately and the return to government is maximized.
 
 SRES is responsible for:
 
 - maintaining a complete inventory of titled real estate assets
+- tracking Ministry and BPS compliance with policies related to real estate assets
 - marketing property internally for repurposing (transfer to another ministry)
-- First Nations Consultation and Accomodations as related to disposal of real estate assets 
+- tracking external sales and providing real estate advice
+- First Nations Consultation and Accommodations as related to disposal of real estate assets 
 - providing strategic real estate analysis and advice to Ministries and Broader Public Sectors 
 
 
