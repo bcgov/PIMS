@@ -1,7 +1,6 @@
+
 # PIMS
 Property Inventory Management System
-
-
 
 
 ## Introduction:
@@ -10,12 +9,13 @@ Strategic Real Estate Services (SRES), comprised of professionals from a variety
 
 SRES is responsible for:
 
-- maintaining a complete inventory of titled real estate assets
-- tracking Ministry and BPS compliance with policies related to real estate assets
-- marketing property internally for repurposing (transfer to another ministry)
-- tracking external sales and providing real estate advice
-- First Nations Consultation and Accommodations as related to disposal of real estate assets 
-- providing strategic real estate analysis and advice to Ministries and Broader Public Sectors 
+- Maintaining a complete inventory of the Province’s real estate assets
+- Tracking Ministry organizations compliance with policies related to disposition of real estate assets 
+- Marketing property internally for repurposing (transfer to another ministry)
+- Oversight of sales process from pre-marketing to completion
+- First Nations Consultation real estate development and dispositions 
+- Providing strategic real estate analysis and advice to Ministries and Broader Public Sectors
+- Reporting to Treasury Board
 
 
 To support SRES’s overall strategic real estate initiatives a modern Information Management System is required that will aid in strategic decision making, support its client Ministries and the Broader Public Sector, and remain compliant with current Inventory Policies (CPPM Policy Chapter 8: Asset Management).  Ideally the system will be flexible to allow for ad hoc customized reporting and adaptable to support unforeseen future real estate strategies.
@@ -23,6 +23,11 @@ To support SRES’s overall strategic real estate initiatives a modern Informati
 ## Problem Statement:
 
 The Province is not able to make the most informed, timely, and strategic decisions on the optimal use of its real property assets on behalf of the people and priorities of British Columbia.
+
+## Hypothesis:
+
+If we have a modern easy to use system built in collaboration with, and for the benefit of, clients they will want to use it to provide Strategic Real Estate Services (SRES) with the data required to support real time executive decision making and to remain compliant with core policy. 
+
 
 ## Goal:
 
@@ -33,6 +38,7 @@ The system will support the management of titled properties through the governme
 Ideally reporting and query requirements would allow SRES staff to run technical detailed reports through the GIS and linked database.  Simple query, collaboration and reporting should be available to non-technical users such as external stakeholders.
 
 Objectives include:
+
 - Increase the total amount of properties in the inventory Map 
 - Ensure data validation occurs at time of project submission – BC Assessment and/or Land Title Survey Authority 
 - Increase client satisfaction with system
