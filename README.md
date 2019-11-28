@@ -46,4 +46,6 @@ Objectives include:
 - Accurate, customizable, instant financial reporting 
 - Seamless data migration from clients to PIMS 
  
-	 
+## Project Status
+
+Currently running a Sprint With Us 
