@@ -1,0 +1,24 @@
+{
+  "dotnet-test-explorer.testProjectPath": "./test/BackendApi.Test",
+  "csharpfixformat.style.braces.onSameLine": false,
+  "sqltools.connections": [
+    {
+      "database": "keycloak",
+      "dialect": "PostgreSQL",
+      "name": "Keycloak",
+      "askForPassword": true,
+      "port": 5432,
+      "server": "localhost",
+      "username": "keycloak"
+    },
+    {
+      "database": "geospatial",
+      "dialect": "PostgreSQL",
+      "name": "Geo-spatial",
+      "password": "password",
+      "port": 5433,
+      "server": "localhost",
+      "username": "postgres"
+    }
+  ]
+}
