@@ -1,0 +1,106 @@
+version: "3"
+
+services:
+  ####################### Keycloak #######################
+  keycloak-db:
+    container_name: keycloak-db
+    build:
+      context: ./auth/postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - auth/.env
+    volumes:
+      - keycloak-db-data:/var/lib/pgsql/data
+    networks:
+      - starter_kit
+
+  keycloak:
+    container_name: keycloak
+    build:
+      context: ./auth/keycloak
+    env_file:
+      - auth/.env
+    volumes:
+      - ./auth/keycloak/config:/tmp
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak-db
+    networks:
+      - starter_kit
+
+  ####################### Database #######################
+  database:
+    restart: always
+    container_name: starter_db
+    build:
+      context: database
+    env_file:
+      - database/.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - starter_kit
+
+  ####################### Backend #######################
+  backend:
+    restart: always
+    container_name: starter_backend
+    build:
+      context: backend
+    env_file: backend/.env
+    ports:
+      - "5000:80"
+    depends_on:
+      - database
+    # volumes:
+    #   - $(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    networks:
+      - starter_kit
+
+  ####################### Frontend #######################
+  frontend:
+    restart: always
+    container_name: starter_frontend
+    build:
+      context: frontend
+    volumes:
+      - ./frontend/src/:/usr/app/src/
+      - frontend-node-cache:/usr/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    env_file: ./frontend/.env
+    environment:
+      - NODE_ENV=development
+      - KEYCLOAK_URL=http://host.docker.internal:8080/auth/admin/realms/quartech/users
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - starter_kit
+
+  ####################### Local SMTP Server #######################
+  # mailhog:
+  #   container_name: mailhog
+  #   restart: always
+  #   image: mailhog/mailhog:latest
+  #   ports:
+  #     - 25:1025
+  #     - 1025:1025
+  #     - 8025:8025 # visit localhost:8025 to see the list of captured emails
+  #   networks:
+  #     - starter_kit
+
+####################### Networks Definition #######################
+networks:
+  starter_kit:
+    driver: bridge
+
+####################### Volumes Definition #######################
+volumes:
+  postgres-data:
+  frontend-node-cache:
+  keycloak-db-data:
