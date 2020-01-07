@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "ae99465b-3b51-4db4-bfe2-2f181480b8e8",
+		"name": "Geo-spatial Real Estate Inventory System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "unauthenticated",
+			"item": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "authenticated",
+			"item": [
+				{
+					"name": "places",
+					"item": [
+						{
+							"name": "My Places",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/my/places",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"my",
+										"places"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "My Place",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/my/places/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"my",
+										"places",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add My Places",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"Latitude\": 0,\n\t\"Longitude\": 0,\n\t\"Note\": \"test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/my/places",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"my",
+										"places"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update My Places",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"latitude\": 2,\r\n    \"longitude\": 2,\r\n    \"note\": \"test\",\r\n    \"ownerId\": \"40dfa2b5-dd18-42d6-a3b4-1011da23a017\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/my/places/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"my",
+										"places",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete My Places",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/api/my/places/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"my",
+										"places",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "all places",
+					"item": [
+						{
+							"name": "All Places",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/all/places",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"all",
+										"places"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Places Filtered",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/all/places?userId=40dfa2b5-dd18-42d6-a3b4-1011da23a017",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"all",
+										"places"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "40dfa2b5-dd18-42d6-a3b4-1011da23a017"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "All Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "KeyCloak Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/auth/realms/bcsc-swu/protocol/openid-connect/userinfo",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"realms",
+										"bcsc-swu",
+										"protocol",
+										"openid-connect",
+										"userinfo"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "accessToken",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxU0I4RVJHY0xGTldWQ2xMSFJXYmlMWDFsc1lwX3g4RkQ0aURnVUNlYjNVIn0.eyJqdGkiOiI2YmM5ZTg2YS0zZmQ3LTQxZWItODU0ZS05OTY5MzkwZmIwZjMiLCJleHAiOjE1NzY2MjUwMjAsIm5iZiI6MCwiaWF0IjoxNTc2NjI0NzIwLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvYXV0aC9yZWFsbXMvYmNzYy1zd3UiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiNDFhNDZlYTMtZTgxNS00MjcyLTlhMTctNjkzYmEyNDA5ODQxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidGVhbS1ibHVlLWFwcCIsIm5vbmNlIjoiYWU5MDVhZmQtOGVmZC00YzJmLWJiNzItNzQ0YTBhOTlkY2YwIiwiYXV0aF90aW1lIjoxNTc2NjI0NzIwLCJzZXNzaW9uX3N0YXRlIjoiZGE2NWY3YTQtYTMzNS00YzU3LTg3NTQtZDYyMzQ0MWMxNzU4IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjMwMDAiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImFkbWluaXN0cmF0b3IiLCJjb250cmlidXRvciIsIm1hbmFnZS11c2VycyIsIm9mZmxpbmVfYWNjZXNzIiwidmlldy11c2VycyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJtYW5hZ2UtdXNlcnMiLCJ2aWV3LXVzZXJzIiwicXVlcnktZ3JvdXBzIiwicXVlcnktdXNlcnMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIFVzZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbmlzdHJhdG9yIiwiZ2l2ZW5fbmFtZSI6IkFkbWluaXN0cmF0b3IiLCJmYW1pbHlfbmFtZSI6IlVzZXIiLCJlbWFpbCI6ImFkbWluaXN0cmF0b3JAZW1haWwuY29tIn0.RIE1OdzSBc_lrre0gMdflhYFnDnIIR2iMWt0hT8sT8hdXc8W9yjITn1KEhOd8eaSLdyaLUmiye1nUq3LydLssfykF-IyaEL-SQnuJ7JFg80NJPR-hijf1oStqNS5qbQjSH-NBexjun4u1TSqWShUdRI2XoB4SiIUb8syxvlDdR82JzRs2PYd5zhaekzkegSWxciBmisqUJEGa5cGptTo7EThZvPteO0Nje5CnXa88mcEwRTzhCN4jrF_jacrytbnEcCSoCIy7fJA5bDvJS1uGUZ7wn4UyOPpLqULkKn2wZV5jRJFOeXNP3zhr4ZZRX5dUcyNIye1hRoge4uzdthMJQ",
+						"type": "string"
+					},
+					{
+						"key": "tokenType",
+						"value": "bearer",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4803a30e-d41c-439f-b328-6af8fb811878",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c9f5a90-f993-4981-938d-baec7aefe17c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
