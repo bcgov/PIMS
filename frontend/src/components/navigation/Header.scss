@@ -1,0 +1,92 @@
+.Logout {
+  padding: 5px;
+  background-color: #036;
+  border-bottom: 2px solid #fcba19;
+  padding: 0 0px 0 40px;
+  color: #fff;
+  display: flex;
+  height: 70px;
+  top: 0px;
+  width: 100%;
+  white-space: nowrap;
+
+  h1 {
+    margin-top: 15px;
+    margin-left: 25px;
+    height: 34px;
+    font-family: Arial;
+    font-size: 30px;
+    color: #ffffff;
+    text-decoration: none solid rgb(255, 255, 255);
+    overflow: hidden;
+  }
+
+  h2 {
+    margin-top: 15px;
+    padding-right: 20px;
+    font-family: Arial;
+    font-size: 20px;
+    color: #ffffff;
+    text-decoration: none solid rgb(255, 255, 255);
+    overflow: hidden;
+  }
+
+  .banner {
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 10px 0 0;
+    display: flex;
+    /* border-style: dotted;
+    border-width: 1px;
+    border-color: lightgrey; */
+  }
+
+  .exit {
+    height: 68px;
+    width: 70px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    background-color: #38598a;
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  p {
+    width: 49px;
+    height: 18px;
+    font-family: Arial;
+    font-size: 16px;
+    color: #ffffff;
+    text-decoration: none solid rgb(255, 255, 255);
+  }
+
+  .other {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: center;
+    /* border-style: dotted;
+    border-width: 1px;
+    border-color: lightgrey; */
+  }
+
+  p {
+    padding-right: 50px;
+    margin: 0;
+  }
+
+  #user-list-dropdown {
+    width: 240px;
+    height: 64px;
+    margin-right: 16px;
+    background-color: #fcba19;
+    font-family: Arial;
+    font-size: 20px;
+    color: #ffffff;
+    text-decoration: none solid rgb(255, 255, 255);
+    text-align: left;
+    overflow: visible;
+  }
+}

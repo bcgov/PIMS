@@ -1,0 +1,10 @@
+.dockerignore
+./log
+./tmp
+.git
+*Dockerfile*
+*docker-compose*
+dist/
+build/
+node_modules/
+.vscode/

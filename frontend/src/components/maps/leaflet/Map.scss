@@ -1,0 +1,12 @@
+.leaflet-container {
+  /* Subtract the header size */
+  min-height: calc(100vh - 110px);
+  margin-top: 10px;
+  padding-top: 20px;
+  width: 100%;
+  margin: auto;
+
+  .leaflet-popup-content {
+    margin: 0px;
+  }
+}
