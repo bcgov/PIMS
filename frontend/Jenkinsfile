@@ -8,10 +8,10 @@ def APP_NAME = 'node-app'
 def TAG_NAMES = ['dev', 'test', 'prod']
 
 // You shouldn't have to edit these if you're following the conventions
-def BUILD_CONFIG = "${APP_NAME}-build"
+def BUILD_CONFIG = "yarn-builder"
 
 //EDIT LINE BELOW (Change `IMAGESTREAM_NAME` so it matches the name of your *output*/deployable image stream.)
-def IMAGESTREAM_NAME = 'node-on-nginx'
+def IMAGESTREAM_NAME = 'frontend'
 
 // you'll need to change this to point to your application component's folder within your repository
 def CONTEXT_DIRECTORY = 'frontend'
@@ -22,10 +22,11 @@ def CONTEXT_DIRECTORY = 'frontend'
 def RUNTIME_BUILD_CONFIG = 'nginx-runtime'
 
 // EDIT LINE BELOW (Add a reference to the CHAINED_BUILD_CONFIG)
-def CHAINED_BUILD_CONFIG = 'node-on-nginx-build'
+def ARTIFACT_BUILD = 'frontend-artifacts-build'
+def CHAINED_BUILD_CONFIG = 'frontend-nginx-runtime-build'
 
 // The name of your deployment configuration; used to verify the deployment
-def DEPLOYMENT_CONFIG_NAME= 'node-on-nginx'
+def DEPLOYMENT_CONFIG_NAME= 'frontend'
 
 // The namespace of you dev deployment environment.
 def DEV_NAME_SPACE = 'jcxjin-dev'
@@ -132,6 +133,7 @@ node {
           openshift.withProject() {
 
             echo "Building the ${IMAGESTREAM_NAME} image ..."
+            build("${ARTIFACT_BUILD}", WAIT_TIMEOUT)
             build("${CHAINED_BUILD_CONFIG}", WAIT_TIMEOUT)
           }
         }
