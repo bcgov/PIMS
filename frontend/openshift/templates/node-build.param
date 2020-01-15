@@ -1,0 +1,18 @@
+#=========================================================
+# OpenShift template parameters for:
+# Component: .
+# Template File: ../frontend/openshift/templates/node-build.json
+#=========================================================
+NAME=node
+OUTPUT_IMAGE_TAG=latest
+GIT_REPO_URL=https://github.com/bcgov/PIMS.git
+GIT_REF=master
+SOURCE_CONTEXT_DIR=frontend
+SOURCE_IMAGE_NAMESPACE=jcxjin-tools
+SOURCE_IMAGE_NAME=nodejs
+SOURCE_IMAGE_TAG=latest
+PIMS_THEME=default
+CPU_LIMIT=1
+MEMORY_LIMIT=4Gi
+CPU_REQUEST=250m
+MEMORY_REQUEST=2Gi
