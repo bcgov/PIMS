@@ -1,10 +1,8 @@
 # Use the offical nginx (based on debian)
-FROM nginx:stable
+FROM nginx:mainline
 
 # Required for HTTP Basic feature
-RUN apt-get update -y && \
-  apt-get install -y openssl ca-certificates && \
-  rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install openssl
 
 # Copy our OpenShift s2i scripts over to default location
 COPY ./s2i/bin/ /usr/libexec/s2i/
