@@ -1,0 +1,173 @@
+// Implementation Details
+// The solr build depends on the solr-base build (more precisely the solr-base image stream)
+// which only needs to be rebuilt when there are changes to it's associated repository (https://github.com/bcgov/openshift-solr)
+// Therefore, it is unnecessary to build it as part of this pipeline.
+
+def PROJECT_NAMESPACE = 'jcxjin'
+def APP_NAME = 'pims'
+def COMP_NAME = 'app'
+def BUILD_ENV = 'tools'
+def CONTEXT_DIRECTORY = 'frontend'
+def ENVIRONMENTS = ['dev', 'test']
+def TAG_NAMES = ['dev', 'test' ]
+def WAIT_TIMEOUT = 10 // minutes
+
+// Determine whether there were any changes the files within the project's context directory.
+@NonCPS
+boolean triggerBuild(String contextDirectory) {
+  // Determine if code has changed within the source context directory.
+  def changeLogSets = currentBuild.changeSets
+  def filesChangeCnt = 0
+  for (int i = 0; i < changeLogSets.size(); i++) {
+    def entries = changeLogSets[i].items
+    for (int j = 0; j < entries.length; j++) {
+      def entry = entries[j]
+      def files = new ArrayList(entry.affectedFiles)
+      for (int k = 0; k < files.size(); k++) {
+        def file = files[k]
+        def filePath = file.path
+        if (filePath.contains(contextDirectory)) {
+          filesChangeCnt = 1
+          k = files.size()
+          j = entries.length
+        }
+      }
+    }
+  }
+
+  if ( filesChangeCnt < 1 ) {
+    echo('The changes do not require a build.')
+    return false
+  }
+  else {
+    echo('The changes require a build.')
+    return true
+  }
+}
+
+// Get an image's hash tag
+String getImageTagHash(String imageName, String tag = "") {
+
+  if(!tag?.trim()) {
+    tag = "latest"
+  }
+
+  def istag = openshift.raw("get istag ${imageName}:${tag} -o template --template='{{.image.dockerImageReference}}'")
+  return istag.out.tokenize('@')[1].trim()
+}
+
+// Build the objects that are found by the filter.
+void build(buildconfigs, int waitTimeout) {
+  // Find all of the build configurations associated to the application ...
+  echo "Found ${buildconfigs.count()} buildconfigs: ${buildconfigs.names()}"
+
+  // Kick off all the builds in parallel ...
+  def builds = buildconfigs.startBuild()
+  echo "Started ${builds.count()} builds: ${builds.names()}"
+
+  timeout(waitTimeout) {
+    // Wait for all the builds to complete ...
+    // This section will exit after the last build completes.
+    echo "Waiting for builds to complete ..."
+    builds.withEach {
+      // untilEach and watch - do not support watching multiple named resources,
+      // so we have to feed it one at a time.
+      it.untilEach(1) {
+          echo "${it.object().status.phase} - ${it.name()}"
+          return (it.object().status.phase == "Complete")
+      }
+    }
+  }
+
+  echo "Builds complete ..."
+}
+
+node {
+  // Determine if we should force build.
+  def do_build = triggerBuild(CONTEXT_DIRECTORY)
+  if( !do_build ) {
+    try {
+      timeout(time:1, unit:'MINUTES') {
+        do_build = input(message: "Force build?", ok: "Build", parameters: [booleanParam(defaultValue: true, description: "Do you want to force build?", name: "Build?")])
+      }
+    } catch (err) {
+      // proceed to "No Changes" stage.
+    }
+  }
+
+  if( do_build ) {
+
+    // Build the node application.
+    def build_config = "${APP_NAME}-${COMP_NAME}-base-${ENVIRONMENTS[0]}"
+    stage("Build ${build_config}") {
+      script {
+        openshift.withCluster() {
+          def project = "${PROJECT_NAMESPACE}-${BUILD_ENV}"
+          openshift.withProject(project) {
+            build(openshift.selector("bc", build_config), WAIT_TIMEOUT)
+          }
+        }
+      }
+    }
+
+    // Build the runtime image, if you are not using an off the shelf one.
+    def runtime_build_config = "${APP_NAME}-${COMP_NAME}-${ENVIRONMENTS[0]}";
+    stage("Build ${runtime_build_config}") {
+      script {
+        openshift.withCluster() {
+          def project = "${PROJECT_NAMESPACE}-${BUILD_ENV}"
+          openshift.withProject(project) {
+            build(openshift.selector("bc", runtime_build_config), WAIT_TIMEOUT)
+          }
+        }
+      }
+    }
+
+    try {
+      // Loop through each environment to deploy to it.
+      ENVIRONMENTS.each { env ->
+        stage("Deploy ${COMP_NAME} to ${env}") {
+
+          timeout(time:1, unit:'DAYS') {
+            input message: "Deploy to ${env}?", ok: "Deploy"
+          }
+
+          script {
+            openshift.withCluster() {
+              def source_project = "${PROJECT_NAMESPACE}-${BUILD_ENV}"
+              openshift.withProject(source_project) {
+                def tag = TAG_NAMES[0]
+                def image_name = "${APP_NAME}-${COMP_NAME}"
+                echo "Tagging ${image_name} for deployment to ${tag} ..."
+
+                // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
+                // Tag the images for deployment based on the image's hash
+                def hash = getImageTagHash("${image_name}")
+                echo "IMAGE HASH: ${hash}"
+                openshift.tag("${image_name}@${hash}", "${image_name}:${tag}")
+              }
+
+              def dest_project = "${PROJECT_NAMESPACE}-${env}"
+              openshift.withProject(dest_project) {
+                  def dc = openshift.selector("dc", [ app : APP_NAME, component : COMP_NAME ])
+                  // Wait for the deployment to complete.
+                  // This will wait until the desired replicas are all available
+                  dc.rollout().status()
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      echo "Error: ${err}"
+      echo "Not Deployed ..."
+      currentBuild.result = 'FAILURE'
+    }
+  }
+  else {
+    stage('No Changes') {
+      echo "No changes ..."
+      currentBuild.result = 'ABORTED'
+    }
+  }
+}

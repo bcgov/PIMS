@@ -1,0 +1,134 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${COMP_NAME}-deployment-template
+  annotations:
+    openshift.io/display-name: Microsoft SQL Server
+    description: Relational database management system developed by Microsoft.
+objects:
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}-secret
+    stringData:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}
+      annotations:
+        description: Exposes the database server
+    spec:
+      ports:
+        - name: 1433-tcp
+          protocol: TCP
+          port: 1433
+          targetPort: 1433
+      selector:
+        name: ${COMP_NAME}-${SUFFIX}
+      type: ClusterIP
+      sessionAffinity: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}
+      annotations:
+        description: Defines how to deploy the database server
+    spec:
+      strategy:
+        type: Rolling
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${COMP_NAME}-${SUFFIX}
+            from:
+              kind: ImageStreamTag
+              namespace: ${TOOLS_NAMESPACE}
+              name: ${SQL_SERVER_RUNTIME_IMAGE}
+      replicas: 1
+      selector:
+        name: ${COMP_NAME}-${SUFFIX}
+      template:
+        metadata:
+          name: ${COMP_NAME}-${SUFFIX}
+          labels:
+            name: ${COMP_NAME}-${SUFFIX}
+        spec:
+          volumes:
+            - name: mssql-data
+              persistentVolumeClaim:
+                claimName: ${COMP_NAME}-${SUFFIX}-data
+          containers:
+            - name: ${COMP_NAME}-${SUFFIX}
+              image: ""
+              ports:
+                - containerPort: 1433
+                  protocol: TCP
+              env:
+                - name: ACCEPT_EULA
+                  value: "Y"
+                - name: MSSQL_SA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMP_NAME}-${SUFFIX}-secret
+                      key: MSSQL_SA_PASSWORD
+              resources:
+                limits:
+                  memory: ${MEMORY_LIMIT}
+              volumeMounts:
+                - mountPath: /var/opt/mssql
+                  name: mssql-data
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${VOLUME_CAPACITY}
+parameters:
+  - name: APP_NAME
+    displayName: App Name
+    description: The name of the application (grouped).
+    required: true
+    value: pims
+  - name: COMP_NAME
+    displayName: Component Name
+    description: The name of the application component (e.g ui, backend, database).
+    required: true
+    value: database
+  - name: SUFFIX
+    displayName: Name Suffix
+    description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
+    required: true
+    value: dev
+  - name: TOOLS_NAMESPACE
+    displayName: Image Namespace
+    description: The OpenShift namespace where the SQL Server image resides.
+    required: true
+    value: jcxjin-tools
+  - name: SQL_SERVER_RUNTIME_IMAGE
+    displayName: Microsoft SQL Server image
+    description: The Microsoft SQL Server image tag.
+    required: true
+    value: mssql-rhel-server:2019-latest
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    description: Maximum amount of memory the container can use.
+    required: true
+    value: 4Gi
+  - name: VOLUME_CAPACITY
+    displayName: Persistent Volume Capacity
+    description: Volume space available for data, e.g. 512Mi, 2Gi
+    value: 5Gi
+    required: true
+  - name: MSSQL_SA_PASSWORD
+    displayName: Administrator Password
+    description: Administrator Password
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
