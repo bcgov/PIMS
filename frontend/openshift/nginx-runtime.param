@@ -4,7 +4,7 @@
 # Template File: ../frontend/openshift/templates/nginx-runtime/nginx-runtime.json
 #=========================================================
 NAME=nginx-runtime
-GIT_REPO_URL=https://github.com/bcgov/PIMS.git
+GIT_REPO_URL=https://github.com/devinleighsmith/PIMS.git
 GIT_REF=master
 SOURCE_CONTEXT_DIR=frontend/openshift/templates/nginx-runtime/
 OUTPUT_IMAGE_TAG=latest
