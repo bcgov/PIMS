@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Map from '../components/maps/leaflet/Map';
 import './MapView.scss';
 

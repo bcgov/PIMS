@@ -11,5 +11,5 @@ REAL_IP_FROM=172.51.0.0/16
 API_URL=
 API_SERVICE_NAME=api
 API_PATH=/api
-APPLICATION_DOMAIN=frontend-jcxjin-dev.pathfinder.gov.bc.ca
+APPLICATION_DOMAIN=pims-dev.pathfinder.gov.bc.ca
 TAG_NAME=dev

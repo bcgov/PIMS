@@ -1,9 +1,7 @@
 import { useKeycloak } from 'react-keycloak';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Image, } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import * as Permission from "constants/permissions";
-import { USER_ROLES } from "constants/environment";
 import './Header.scss';
 import logoUrl from './logo-banner.svg';
 import logout from './logout.svg';
@@ -11,12 +9,12 @@ import logout from './logout.svg';
 function Header() {
   const history = useHistory();
   const { keycloak } = useKeycloak();
-  const isAdmin = keycloak?.realmAccess?.roles.includes(USER_ROLES[Permission.ADMIN]) == true;
+  //example of how to check role: const isAdmin = keycloak?.realmAccess?.roles.includes(USER_ROLES[Permission.ADMIN]) == true;
   return (
     <header className="App-header">
       <div className="bar">
         <div className="banner">
-          <a href="https://gov.bc.ca">
+          <a href="https://gov.bc.ca" className="bc-gov-icon">
             <img
               src={logoUrl}
               width="156"
