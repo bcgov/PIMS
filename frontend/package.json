@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bcgov/bc-sans": "^1.0.1",
+    "@react-keycloak/web": "^1.0.0-alpha.6",
     "@testing-library/jest-dom": "~4.2.4",
     "@testing-library/react": "~9.3.3",
     "@testing-library/user-event": "~7.1.2",
