@@ -6,10 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import Keycloak from 'keycloak-js';
 import { KeycloakProvider } from 'react-keycloak';
 import { Spinner } from 'react-bootstrap';
+import { KEYCLOAK } from 'constants/environment'
 
-const keycloak = new Keycloak('/keycloak.json');
+const keycloak = new Keycloak(KEYCLOAK);
 const Index = () => {
-
     return <KeycloakProvider
         keycloak={keycloak}
         LoadingComponent={<Spinner animation="border"></Spinner>}>
