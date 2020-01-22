@@ -6,44 +6,36 @@ import PrivateRoute from './PrivateRoute';
 import Login from './pages/Login';
 import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
+import { Spinner } from 'react-bootstrap';
+import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
+import { KeycloakInstance } from 'keycloak-js';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
 
 //import Debug from './components/Debug/Debug';
 
-type DefaultProps = {
-  activeUserId: string;
-};
+interface IState {
+  keycloak?: KeycloakInstance<"native">,
+  keycloakInitialized: boolean
+}
 
-class App extends Component<{}, DefaultProps> {
-  static defaultProps: DefaultProps = {
-    activeUserId: 'all',
-  };
+class App extends Component<ReactKeycloakInjectedProps, IState> {
 
-  constructor(props: DefaultProps) {
+  constructor(props: ReactKeycloakInjectedProps) {
     super(props);
-    this.state = App.defaultProps;
+    this.state = { keycloak: props.keycloak, keycloakInitialized: this.props.keycloakInitialized };
   }
-
-  setActiveUserId = (userId: string) => {
-    this.setState({ activeUserId: userId });
-  };
-
-  componentDidMount() {}
 
   render() {
     return (
       <Router>
         <div className="App">
-          <header className="App-header">
-            <Header setActiveUserId={this.setActiveUserId}></Header>
-          </header>
+          <Header></Header>
           <div className="App-content">
             <Route path="/" component={Login}></Route>
             <PrivateRoute
               path="/mapview"
-              render={() => <MapView activeUserId={this.state.activeUserId} />}
               component={MapView}
-              activeUserId={this.state.activeUserId}
             />
           </div>
           <Footer></Footer>
@@ -53,4 +45,4 @@ class App extends Component<{}, DefaultProps> {
   }
 }
 
-export default App;
+export default withKeycloak(App);

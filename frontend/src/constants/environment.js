@@ -17,18 +17,17 @@ export const ENVIRONMENT = {
 // TODO: Expand these once we get keycloak in place...
 
 export const KEYCLOAK = {
-  realm: '(REALM)',
-  url: '(URL)',
+  realm: process.env.REACT_APP_KEYCLOAK_REALM,
+  url: process.env.REACT_APP_KEYCLOAK_URL,
   idpHint: 'idir',
   'ssl-required': 'external',
-  resource: '(RESOURCE)',
+  resource: process.env.REACT_APP_KEYCLOAK_RESOURCE,
   'public-client': true,
   'confidential-port': 0,
-  clientId: '(CLIENT_ID)',
+  clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID,
 };
 
 export const USER_ROLES = {
-  role_view: 'core_view_all',
-  role_edit: 'core_edit',
-  role_admin: 'core_admin',
+  role_contrib: 'contributor',
+  role_admin: 'administrator'
 };
