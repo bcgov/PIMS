@@ -46,9 +46,9 @@ http {
         add_header X-XSS-Protection 1;
         add_header X-Frame-Options DENY;
 
-        location /api {
-            proxy_pass          %API_URL%;
-        }
+        #location /api {
+        #    proxy_pass          %API_URL%;
+        #}
 
         # serve our app here
         location / {

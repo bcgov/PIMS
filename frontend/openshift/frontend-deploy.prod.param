@@ -11,5 +11,5 @@
 # API_URL=
 # API_SERVICE_NAME=api
 # API_PATH=/api
-APPLICATION_DOMAIN=frontend-jcxjin-prod.pathfinder.gov.bc.ca
+APPLICATION_DOMAIN=pims-prod.pathfinder.gov.bc.ca
 TAG_NAME=prod

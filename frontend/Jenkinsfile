@@ -2,7 +2,7 @@
 def WAIT_TIMEOUT = 10
 
 // Edit your app's name below
-def APP_NAME = 'node-app'
+def APP_NAME = 'pims-app'
 
 // Edit your environment TAG names below
 def TAG_NAMES = ['dev', 'test', 'prod']
@@ -162,19 +162,6 @@ node {
           }
 
           echo "Deployment Complete."
-        }
-      }
-    }
-
-    stage('Trigger ZAP Scan') {
-      script {
-        openshift.withCluster() {
-          openshift.withProject() {
-
-            echo "Triggering an asynchronous ZAP Scan ..."
-            def zapScan = openshift.selector("bc", "zap-pipeline")
-            zapScan.startBuild()
-          }
         }
       }
     }

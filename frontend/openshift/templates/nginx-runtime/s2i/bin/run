@@ -71,7 +71,6 @@ fi
 echo "---> Replacing Configuration ..."
 echo "Setting:"
 echo "RealIpFrom = ${RealIpFrom:-172.51.0.0/16}"
-API_URL="http://localhost:5000"
 echo "API_URL = ${API_URL}"
 
 sed "s~%RealIpFrom%~${RealIpFrom:-172.51.0.0/16}~g; s~%API_URL%~${API_URL}~g;" /tmp/nginx.conf.template > /etc/nginx/nginx.conf
