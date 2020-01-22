@@ -10,9 +10,3 @@ export -a skip_git_overrides=""
 
 # The builds to be triggered after buildconfigs created (not auto-triggered)
 export builds=""
-
-# The images to be tagged after build
-export images="node-on-nginx"
-
-# The routes for the project
-export routes="node-on-nginx"

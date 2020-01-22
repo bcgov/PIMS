@@ -1,5 +1,4 @@
 .bar {
-  padding: 5px;
   background-color: #036;
   border-bottom: 2px solid #fcba19;
   color: #fff;
@@ -7,6 +6,7 @@
   top: 0px;
   width: 100%;
   white-space: nowrap;
+  display: inline-flex;
 
   h1 {
     font-family: Arial;
@@ -16,56 +16,42 @@
     font-family: "BCSans" Fallback, sans-serif;
     font-weight: 700;
     overflow: hidden;
+    justify-content: center;
   }
 
-  a {
+  .bc-gov-icon {
+    padding-top: 5px;
     width: 30%;
     text-align: right;
     padding-right: 27px; 
   }
 
   .title {
-    margin-top: 15px;
+    margin-top: 20px;
     width: 70%;
     text-align: left;
   }
 
-  h2 {
-    margin-top: 15px;
-    padding-right: 20px;
-    font-family: Arial;
-    font-size: 20px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    overflow: hidden;
-  }
-
   .banner {
-    display: inline-flex;
     width: 100%;
-    /* border-style: dotted;
-    border-width: 1px;
-    border-color: lightgrey; */
+    display: inline-flex;
   }
 
   .exit {
     height: 68px;
-    width: 70px;
-    flex-flow: column;
-    align-items: center;
+    width: 68px;
     background-color: #38598a;
+    text-align: center;
     :hover {
       cursor: pointer;
     }
-  }
-
-  p {
-    width: 49px;
-    height: 18px;
-    font-family: Arial;
-    font-size: 16px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
+    p {
+      padding-left: 3px;
+      font-family: Arial;
+      font-size: 16px;
+      color: #ffffff;
+      text-decoration: none solid rgb(255, 255, 255);
+    }
   }
 
   .other {
@@ -75,23 +61,5 @@
     /* border-style: dotted;
     border-width: 1px;
     border-color: lightgrey; */
-  }
-
-  p {
-    padding-right: 50px;
-    margin: 0;
-  }
-
-  #user-list-dropdown {
-    width: 240px;
-    height: 64px;
-    margin-right: 16px;
-    background-color: #fcba19;
-    font-family: Arial;
-    font-size: 20px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-align: left;
-    overflow: visible;
   }
 }
