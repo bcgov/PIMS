@@ -6,7 +6,6 @@ import PrivateRoute from './PrivateRoute';
 import Login from './pages/Login';
 import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
-import { Spinner } from 'react-bootstrap';
 import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
 import { KeycloakInstance } from 'keycloak-js';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';

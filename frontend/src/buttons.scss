@@ -1,0 +1,42 @@
+.btn {
+  width: 130px;
+  height: 44px;
+}
+
+.btn:hover {
+  text-decoration: underline !important;
+}
+
+.btn.btn-primary {
+  background-color: #003366;
+  font-family: "BCSans" Fallback, sans-serif;
+  text-decoration: none solid rgb(255, 255, 255);
+  color: #ffffff;
+  font-size: 16px;
+  border-color: transparent;
+}
+
+.btn.btn-primary:hover {
+  opacity: 0.8;
+  background-color: #003366;
+}
+
+.btn.btn-secondary {
+  background-color: #ffffff;
+  font-family: "BCSans" Fallback, sans-serif;
+  text-decoration: none solid rgb(255, 255, 255);
+  color: #494949;
+  font-size: 16px;
+}
+
+.btn.btn-secondary:hover {
+  background-color: #ffffff;
+  color: #494949;
+}
+
+.btn:focus,
+.btn:active,
+.btn.active {
+  background-color: #3b99fc !important;
+}
+

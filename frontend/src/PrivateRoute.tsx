@@ -14,7 +14,6 @@ const PrivateRoute = (props: PrivateRouteProps) => {
     <Route
       {...rest}
       render={props => {
-        console.log(keycloak);
         return !!keycloak.authenticated ? (
           <Component {...props} />
         ) : (
