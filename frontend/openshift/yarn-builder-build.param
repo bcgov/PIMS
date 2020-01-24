@@ -4,7 +4,7 @@
 # Template File: ../frontend/openshift/templates/yarn-builder/yarn-builder-build.json
 #=========================================================
 NAME=yarn-builder
-GIT_REPO_URL=https://github.com/devinleighsmith/PIMS.git
+GIT_REPO_URL=https://github.com/bcgov/PIMS.git
 GIT_REF=dev
 SOURCE_CONTEXT_DIR=frontend/openshift/templates/yarn-builder/
 OUTPUT_IMAGE_TAG=latest
