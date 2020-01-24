@@ -1,92 +1,67 @@
-.Logout {
-  padding: 5px;
+@import "../../fonts.scss";
+
+.App-header.navbar {
   background-color: #036;
   border-bottom: 2px solid #fcba19;
-  padding: 0 0px 0 40px;
   color: #fff;
-  display: flex;
-  height: 70px;
-  top: 0px;
-  width: 100%;
-  white-space: nowrap;
+  padding: 0px;
+  min-height: 70px;
 
-  h1 {
-    margin-top: 15px;
-    margin-left: 25px;
-    height: 34px;
-    font-family: Arial;
-    font-size: 30px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    overflow: hidden;
-  }
+  .bar {
+    margin: 0px;
+    padding: 0px;
 
-  h2 {
-    margin-top: 15px;
-    padding-right: 20px;
-    font-family: Arial;
-    font-size: 20px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    overflow: hidden;
-  }
+    .brand {
+      min-width: 156px;
+    }
 
-  .banner {
-    justify-content: flex-start;
-    align-items: center;
-    margin: 0 10px 0 0;
-    display: flex;
-    /* border-style: dotted;
-    border-width: 1px;
-    border-color: lightgrey; */
-  }
+    .brand-box {
+      padding-top:10px;
+    }
 
-  .exit {
-    height: 68px;
-    width: 70px;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    background-color: #38598a;
-    :hover {
-      cursor: pointer;
+    .title {
+      @media (min-width: 992px) {
+        text-align: left;
+        padding-left: 40px;
+      }
+      margin-top: 10px;
+      text-align: center;
+      font-size: 24px;
+      color: #ffffff;
+      text-decoration: none solid rgb(255, 255, 255);
+      font-family: "BCSans" Fallback, sans-serif;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .exit {
+      width: 68px;
+      height: 100%;
+      background-color: #38598a;
+      text-align: center;
+      :hover {
+        cursor: pointer;
+      }
+      p {
+        padding-left: 3px;
+        font-family: Arial;
+        font-size: 16px;
+        color: #ffffff;
+        text-decoration: none solid rgb(255, 255, 255);
+      }
+    }
+
+    .other {
+      display: flex;
+      flex-direction: row-reverse;
+      padding: 0;
     }
   }
-
-  p {
-    width: 49px;
-    height: 18px;
-    font-family: Arial;
-    font-size: 16px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
+  .col {
+    padding: 0;
   }
-
-  .other {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-    align-items: center;
-    /* border-style: dotted;
-    border-width: 1px;
-    border-color: lightgrey; */
-  }
-
-  p {
-    padding-right: 50px;
-    margin: 0;
-  }
-
-  #user-list-dropdown {
-    width: 240px;
-    height: 64px;
-    margin-right: 16px;
-    background-color: #fcba19;
-    font-family: Arial;
-    font-size: 20px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-align: left;
-    overflow: visible;
+  .row {
+    width: 100%;
+    margin: 0px;
   }
 }

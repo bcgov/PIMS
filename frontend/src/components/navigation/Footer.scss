@@ -2,8 +2,39 @@
   background-color: #036;
   color: #fff;
   bottom: 0;
-  width: 100%;
-  padding: 20px 15px;
-  text-align: center;
-  position: absolute;
+  padding: 10px 0;
+  border-top: 2px solid #fcba19;
+
+  .container {
+    margin: 0;
+  }
+
+  .content {
+    width:100%;
+  }
+
+  .navs {
+    justify-items: left;
+    display: flex;
+  }
+
+  a {
+    display: inline;
+  }
+
+  a:link{
+    color: #ffffff;
+    font-size: 16px;
+    font-family: "BCSans" Fallback, sans-serif;
+    padding: 0 10px;
+    border-right: 1px solid #666;
+  }
+
+  a:visited{
+    color: #ffffff;
+    font-size: 16px;
+    font-family: "BCSans" Fallback, sans-serif;
+    padding: 0 10px;
+    border-right: 1px solid #666;
+  }
 }
