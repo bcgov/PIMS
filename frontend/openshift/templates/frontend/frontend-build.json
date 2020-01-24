@@ -213,7 +213,7 @@
       "displayName": "GIT Source Repo URL",
       "description": "A GIT URL to your source code.",
       "required": true,
-      "value": "https://github.com/devinleighsmith/PIMS.git"
+      "value": "https://github.com/bcgov/PIMS.git"
     },
     {
       "name": "GIT_REF",
