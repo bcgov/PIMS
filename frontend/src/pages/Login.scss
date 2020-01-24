@@ -1,16 +1,17 @@
-@import "../fonts.scss";
 @import "../buttons.scss";
 
 .unauth {
-  width: 776px;
   font-size: 24px;
   margin: 91px auto;
 
+  .row {
+    justify-content: center;
+  }
+
   .block {
-    width: 776px;
-    height: 332px;
     background-color: #f2f2f2;
-    padding-top: 43px;
+    padding: 43px 0;
+    max-width: 776px;
   }
 
   h1 {
@@ -26,12 +27,11 @@
     color: #494949;
     font-family: 'BCSans' Fallback, sans-serif;
     line-height: 130%;
+    width: 75%;
   }
 
   .blockText {
-    margin: 0 auto 18px auto;
-    width: 568px;
-    height: 80px;
+    margin: 0 auto 38px auto;
   }
   
   .or {

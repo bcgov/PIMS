@@ -1,65 +1,67 @@
-.bar {
+@import "../../fonts.scss";
+
+.App-header.navbar {
   background-color: #036;
   border-bottom: 2px solid #fcba19;
   color: #fff;
-  height: 70px;
-  top: 0px;
-  width: 100%;
-  white-space: nowrap;
-  display: inline-flex;
+  padding: 0px;
+  min-height: 70px;
 
-  h1 {
-    font-family: Arial;
-    font-size: 24px;
-    color: #ffffff;
-    text-decoration: none solid rgb(255, 255, 255);
-    font-family: "BCSans" Fallback, sans-serif;
-    font-weight: 700;
-    overflow: hidden;
-    justify-content: center;
-  }
+  .bar {
+    margin: 0px;
+    padding: 0px;
 
-  .bc-gov-icon {
-    padding-top: 5px;
-    width: 30%;
-    text-align: right;
-    padding-right: 27px; 
-  }
-
-  .title {
-    margin-top: 20px;
-    width: 70%;
-    text-align: left;
-  }
-
-  .banner {
-    width: 100%;
-    display: inline-flex;
-  }
-
-  .exit {
-    height: 68px;
-    width: 68px;
-    background-color: #38598a;
-    text-align: center;
-    :hover {
-      cursor: pointer;
+    .brand {
+      min-width: 156px;
     }
-    p {
-      padding-left: 3px;
-      font-family: Arial;
-      font-size: 16px;
+
+    .brand-box {
+      padding-top:10px;
+    }
+
+    .title {
+      @media (min-width: 992px) {
+        text-align: left;
+        padding-left: 40px;
+      }
+      margin-top: 10px;
+      text-align: center;
+      font-size: 24px;
       color: #ffffff;
       text-decoration: none solid rgb(255, 255, 255);
+      font-family: "BCSans" Fallback, sans-serif;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .exit {
+      width: 68px;
+      height: 100%;
+      background-color: #38598a;
+      text-align: center;
+      :hover {
+        cursor: pointer;
+      }
+      p {
+        padding-left: 3px;
+        font-family: Arial;
+        font-size: 16px;
+        color: #ffffff;
+        text-decoration: none solid rgb(255, 255, 255);
+      }
+    }
+
+    .other {
+      display: flex;
+      flex-direction: row-reverse;
+      padding: 0;
     }
   }
-
-  .other {
-    flex-grow: 1;
-    justify-content: flex-end;
-    align-items: center;
-    /* border-style: dotted;
-    border-width: 1px;
-    border-color: lightgrey; */
+  .col {
+    padding: 0;
+  }
+  .row {
+    width: 100%;
+    margin: 0px;
   }
 }
