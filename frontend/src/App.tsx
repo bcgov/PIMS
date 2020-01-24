@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Container, Row } from 'react-bootstrap';
 import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import MapView from './pages/MapView';
@@ -28,17 +29,17 @@ class App extends Component<ReactKeycloakInjectedProps, IState> {
   render() {
     return (
       <Router>
-        <div className="App">
+        <Container className="App" fluid={true}>
           <Header></Header>
-          <div className="App-content">
+          <Row className="App-content">
             <Route path="/" component={Login}></Route>
             <PrivateRoute
               path="/mapview"
               component={MapView}
             />
-          </div>
+          </Row>
           <Footer></Footer>
-        </div>
+        </Container>
       </Router>
     );
   }

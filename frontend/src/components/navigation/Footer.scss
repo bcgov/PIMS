@@ -2,11 +2,24 @@
   background-color: #036;
   color: #fff;
   bottom: 0;
-  width: 100%;
-  padding: 10px 15px;
+  padding: 10px 0;
   border-top: 2px solid #fcba19;
+
+  .container {
+    margin: 0;
+  }
+
   .content {
-    margin: 0 80% 0 20%;
+    width:100%;
+  }
+
+  .navs {
+    justify-items: left;
+    display: flex;
+  }
+
+  a {
+    display: inline;
   }
 
   a:link{
