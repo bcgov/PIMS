@@ -31,6 +31,8 @@ WORKDIR /app
 COPY --from=build-env /app/out ./
 COPY --from=build-env /app/entrypoint.sh ./entrypoint.sh
 
+RUN chmod +x /app/entrypoint.sh
+
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 EXPOSE 80 433
