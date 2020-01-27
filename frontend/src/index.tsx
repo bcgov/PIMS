@@ -4,7 +4,7 @@ import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
-import { KeycloakProvider } from 'react-keycloak';
+import { KeycloakProvider } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
 
 //@ts-ignore

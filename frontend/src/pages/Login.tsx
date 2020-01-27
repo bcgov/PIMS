@@ -1,14 +1,15 @@
 import { Redirect } from 'react-router-dom';
-import { useKeycloak } from 'react-keycloak';
-import { Button } from 'react-bootstrap';
-import { Container, Row, Col } from 'react-bootstrap';
+import { useKeycloak } from '@react-keycloak/web';
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import React from 'react';
 import './Login.scss';
 
 function Login() {
   const { keycloak } = useKeycloak();
-
-  if (keycloak.authenticated) {
+  if(!keycloak) {
+    return <Spinner animation="border"></Spinner>;
+  }
+  if (keycloak?.authenticated) {
     return <Redirect to={{ pathname: '/mapview' }} />;
   }
 
