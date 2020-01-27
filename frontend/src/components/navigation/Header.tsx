@@ -27,8 +27,7 @@ function Header() {
                   />
                 </Navbar.Brand>
               </Col>
-              <Col xs={11} sm={12} md={4} lg={4} className="title">Property Inventory Management System</Col>
-              <Col md={4} lg={3}></Col>
+              <Col xs={11} sm={12} md={8} lg={7} className="title">Property Inventory Management System</Col>
             </Row>
           </Col>
           <Col xs={2} sm={1} md={1} lg={1} className="other">

@@ -1,8 +1,8 @@
 {
-  "realm": "xz0xtue5",
-  "auth-server-url": "https://sso-dev.pathfinder.gov.bc.ca/auth",
+  "realm": "quartech",
+  "auth-server-url": "http://localhost:8080/auth",
   "ssl-required": "external",
-  "resource": "pims-app",
+  "resource": "team-blue-app",
   "public-client": true,
   "confidential-port": 0
 }
