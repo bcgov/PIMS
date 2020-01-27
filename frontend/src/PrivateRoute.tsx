@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { useKeycloak } from 'react-keycloak';
+import { useKeycloak } from '@react-keycloak/web';
 
 interface PrivateRouteProps extends RouteProps {
   // tslint:disable-next-line:no-any
@@ -14,7 +14,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
     <Route
       {...rest}
       render={props => {
-        return !!keycloak.authenticated ? (
+        return !!keycloak?.authenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: '/login', state: { referer: props.location } }} />
