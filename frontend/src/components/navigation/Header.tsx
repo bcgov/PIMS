@@ -1,4 +1,4 @@
-import { useKeycloak } from 'react-keycloak';
+import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import { Image, Navbar, Container, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
@@ -32,7 +32,7 @@ function Header() {
             </Row>
           </Col>
           <Col xs={2} sm={1} md={1} lg={1} className="other">
-            {!!keycloak.authenticated ? (
+            {!!keycloak?.authenticated ? (
               <div className="exit" onClick={() => {
                 history.push('/');
                 keycloak.logout();
