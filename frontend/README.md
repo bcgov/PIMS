@@ -21,6 +21,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
+<b>Note that at time of writing react-scripts 3.3.0 has a defect that prevents ie from displaying via webpack (dev only). this is fixed with
+https://github.com/facebook/create-react-app/issues/8084#issuecomment-562981098</b>
 
 ### `npm test`
 
