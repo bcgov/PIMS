@@ -78,6 +78,12 @@ objects:
               env:
                 - name: ASPNETCORE_ENVIRONMENT
                   value: "${ASPNETCORE_ENVIRONMENT}"
+                - name: Keycloak__Secret
+                  value: "${KEYCLOAK_SECRET}"
+                - name: Keycloak__Authority
+                  value: "${KEYCLOAK_AUTHORITY}"
+                - name: Keycloak__Audience
+                  value: "${KEYCLOAK_AUDIENCE}"
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
@@ -146,6 +152,19 @@ parameters:
       Staging, Production
     required: true
     value: Production
+  - name: KEYCLOAK_SECRET
+    displayName: Keycloak Secret
+    description: The KeyCloak secret to use for authentication
+    required: false
+    value: ""
+  - name: KEYCLOAK_AUTHORITY
+    displayName: Keycloak Authority
+    description: The KeyCloak Authority to use for authentication
+    required: true
+  - name: KEYCLOAK_AUDIENCE
+    displayName: Keycloak Audience
+    description: The KeyCloak Audience to use for authentication
+    required: true
   - name: CPU_LIMIT
     displayName: CPU Limit
     description: Maximum amount of CPU the container can use.
