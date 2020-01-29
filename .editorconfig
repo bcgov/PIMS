@@ -13,3 +13,6 @@ indent_style = tab
 [{*.json,*.md,*.yml}]
 indent_style = space
 indent_size = 2
+
+[*.env]
+insert_final_newline = false
