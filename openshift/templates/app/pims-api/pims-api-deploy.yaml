@@ -161,7 +161,6 @@ parameters:
     displayName: Keycloak Authority
     description: The KeyCloak Authority to use for authentication
     required: true
-    value: "https://sso-${ENV_NAME}.pathfinder.gov.bc.ca/auth/realms/xz0xtue5"
   - name: KEYCLOAK_AUDIENCE
     displayName: Keycloak Audience
     description: The KeyCloak Audience (client id) to use for authentication
