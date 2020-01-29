@@ -4,7 +4,7 @@ The following commands are used to apply these files.
 
 ## Before you start
 
-Set `${oc_env_*}` to match your OpenShift project namespace (e.g. **jcxjin** or **zwmtib**)
+Set `${oc_env_*}` to match the OpenShift project namespace you have been assigned in the cluster (e.g. **jcxjin** for PIMS)
 
 ```bash
 export oc_env_tools=jcxjin-tools
