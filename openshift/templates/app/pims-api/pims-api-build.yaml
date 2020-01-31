@@ -39,7 +39,7 @@ objects:
         sourceStrategy:
           from:
             kind: ImageStreamTag
-            name: ${DOTNET_BUILDER_IMAGE}:latest
+            name: ${DOTNET_BUILDER_IMAGE}
           env:
             - name: DOTNET_STARTUP_PROJECT
               value: ${DOTNET_STARTUP_PROJECT}
@@ -61,7 +61,7 @@ parameters:
     displayName: Component Name
     description: The name of the application component (e.g ui, backend, database).
     required: true
-    value: backend-api
+    value: pims-api
   - name: SUFFIX
     displayName: Name Suffix
     description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
@@ -86,7 +86,7 @@ parameters:
     displayName: .NET builder
     description: The s2i image which is used to build the code.
     required: true
-    value: dotnet-31-rhel7
+    value: dotnet-31-rhel7:3.1
   - name: DOTNET_STARTUP_PROJECT
     displayName: Startup Project
     description:
