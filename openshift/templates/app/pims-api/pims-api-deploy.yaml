@@ -119,9 +119,9 @@ parameters:
     value: pims
   - name: COMP_NAME
     displayName: Component Name
-    description: The name of the application component.
+    description: The name of the application component (e.g ui, backend, database).
     required: true
-    value: backend-api
+    value: api
   - name: SUFFIX
     displayName: Name Suffix
     description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
@@ -161,7 +161,6 @@ parameters:
     displayName: Keycloak Authority
     description: The KeyCloak Authority to use for authentication
     required: true
-    value: "https://sso-${ENV_NAME}.pathfinder.gov.bc.ca/auth/realms/xz0xtue5"
   - name: KEYCLOAK_AUDIENCE
     displayName: Keycloak Audience
     description: The KeyCloak Audience (client id) to use for authentication
