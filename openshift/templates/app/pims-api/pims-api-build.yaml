@@ -61,7 +61,7 @@ parameters:
     displayName: Component Name
     description: The name of the application component (e.g ui, backend, database).
     required: true
-    value: pims-api
+    value: api
   - name: SUFFIX
     displayName: Name Suffix
     description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
