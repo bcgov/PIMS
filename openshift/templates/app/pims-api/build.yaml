@@ -1,0 +1,142 @@
+# This is a build template for .NET Core 3.1
+# It will build a new image from the specified source control repo
+# that will run your application.
+kind: Template
+apiVersion: v1
+metadata:
+  name: pims-api-build
+  annotations:
+    openshift.io/display-name: .NET Core 3.1 Build Template
+    description: Build template for a .NET Core 3.1 application.
+    tags: pims-api
+labels:
+  app: pims
+  component: api
+  role: backend
+objects:
+# The final build image.
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: ${APP_NAME}-${COMP_NAME}
+    annotations:
+      description: Image containing the built ${APP_NAME}-${COMP_NAME}
+  labels:
+    name: ${APP_NAME}-${COMP_NAME}
+    app: ${APP_NAME}
+    component: ${COMP_NAME}
+# The build config that will be created will be named for the branch you created it for.
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
+    annotations:
+      description: Defines how to build the application
+  labels:
+    name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
+    app: ${APP_NAME}
+    component: ${COMP_NAME}
+    branch: ${GIT_REF}
+  spec:
+    runPolicy: Serial
+    triggers:
+      - type: ImageChange
+      - type: ConfigChange
+    source:
+      type: Git
+      git:
+        uri: ${GIT_REPO_URL}
+        ref: ${GIT_REF}
+      contextDir: ${SOURCE_CONTEXT_DIR}
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: "${SOURCEIMAGE_NAMESPACE}"
+          name: ${SOURCEIMAGE_NAME}:${SOURCEIMAGE_TAG}
+        env:
+          - name: DOTNET_CONFIGURATION
+            value: ${DOTNET_CONFIGURATION}
+          - name: DOTNET_STARTUP_PROJECT
+            value: ${DOTNET_STARTUP_PROJECT}
+          - name: DOTNET_PUBLISH_READYTORUN
+            value: ${DOTNET_PUBLISH_READYTORUN}
+          - name: DOTNET_TEST_PROJECTS
+            value: ${DOTNET_TEST_PROJECTS}
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}-${COMP_NAME}:${OUTPUT_IMAGE_TAG}
+    resources:
+      limits:
+        cpu: ${CPU_LIMIT}
+        memory: ${MEMORY_LIMIT}
+parameters:
+- name: APP_NAME
+  displayName: App Name
+  description: The name of the application (grouped).
+  required: true
+  value: "pims"
+- name: COMP_NAME
+  displayName: Component Name
+  description: The name of the application component.
+  required: true
+  value: "api"
+- name: GIT_REPO_URL
+  displayName: Git Repository URL
+  description: The URL of the repository with your application source code.
+  value: "https://github.com/bcgov/PIMS.git"
+- name: GIT_REF
+  displayName: Git Reference
+  required: true
+  description:
+    Set this to a branch name, tag or other ref of your repository if you
+    are not using the default branch. [dev, test, prod]
+  value: "dev"
+- name: SOURCE_CONTEXT_DIR
+  displayName: Context Directory
+  description: Set this to use a subdirectory of the source code repository
+  value: "backend"
+- name: SOURCEIMAGE_NAMESPACE
+  displayName: Source Image Namespace
+  description: The s2i image namespace which is used to build the code.
+  value: "jcxjin-tools"
+- name: SOURCEIMAGE_NAME
+  displayName: Source Image Name
+  description: The s2i image name which is used to build the code.
+  value: "dotnet-31-rhel7"
+- name: SOURCEIMAGE_TAG
+  displayName: Source Image Tag
+  description: The s2i image tag which is used to build the code.
+  value: "3.1"
+- name: OUTPUT_IMAGE_TAG
+  displayName: Output Image Tag
+  description: The tag given to the built image.
+  required: true
+  value: latest
+- name: DOTNET_STARTUP_PROJECT
+  displayName: Startup Project
+  description:
+    Set this to a project file (e.g. csproj) or a folder containing a single
+    project file.
+  value: BackendApi.csproj
+- name: DOTNET_PUBLISH_READYTORUN
+  displayName: Ahead-of-time compilation
+  description: Set this to 'true' to perform an ahead-of-time compilation.
+  value: "true"
+- name: DOTNET_TEST_PROJECTS
+  displayName: Test projects
+  description: Set this to a space separated list of test projects to run before publishing.
+- name: DOTNET_CONFIGURATION
+  displayName: Configuration
+  description: Set this to configuration (Release/Debug).
+  value: "Release"
+- name: CPU_LIMIT
+  displayName: Resources CPU Limit
+  description: The resources CPU limit (in cores) for this build.
+  value: "1"
+- name: MEMORY_LIMIT
+  displayName: Memory Limit
+  description: Maximum amount of memory the container can use.
+  value: "6Gi"

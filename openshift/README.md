@@ -1,6 +1,28 @@
 # OpenShift environment configuration
 
-This project uses OpenShift container platform (v3.x) for hosting the application and deploying/running any services required by it.
+This project uses OpenShift container platform (v3.11) for hosting the application and deploying/running any services required by it.
+
+# Setup
+
+## Templates
+
+To configure OpenShift environments first create Templates. Then create the Objects from the Templates.
+1 Login `oc login`
+2 Select the appropriate Project `oc project [name]`
+
+### PIMS API Build
+
+1 `oc create -f openshift/templates/app/pims-api/build.yaml`
+2 View the parameters `oc process --parameters pims-api-build`
+3 Create a build.env file that contains the values for the parameters within the template
+4 Create Objects `oc process pims-api-build --param-file=[.env] | oc create -f -`
+
+### PIMS API Deploy
+
+1 `oc create -f openshift/templates/app/pims-api/deploy.yaml`
+2 View the parameters `oc process --parameters pims-api-deploy`
+3 Create a deploy.env file that contains the values for the parameters within the template
+4 Create Objects `oc process pims-api-deploy --param-file=[.env] | oc create -f -`
 
 # Environments
 
@@ -15,9 +37,9 @@ There are 4 environments setup in the OpenShift Platform.
 
 Files are named with the following convention in mind:
 
-- APPLICATION-build.yaml: Build configuration for the application. Used for building any images required by the deployment configuration.
+- [APPLICATION]-build.yaml: Build configuration for the application. Used for building any images required by the deployment configuration.
 
-- APPLICATION-deploy.json: Deployment configuration for the application. These deployment pods are long lived.
+- [APPLICATION]-deploy.json: Deployment configuration for the application. These deployment pods are long lived.
 
 # CI/CD Tools
 
@@ -60,4 +82,3 @@ The app uses a .NET Core (v3.1) environment to create a REST API that handles in
 The app uses a PostgresSQL database to store and retrieve data from.
 
 [Link to image](https://github.com/sclorg/postgresql-container/tree/generated/10)
-
