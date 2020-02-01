@@ -101,7 +101,7 @@ parameters:
     displayName: Component Name
     description: The name of the application component (e.g ui, backend, database).
     required: true
-    value: pims-db
+    value: database
   - name: SUFFIX
     displayName: Name Suffix
     description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
@@ -129,5 +129,6 @@ parameters:
     required: true
   - name: MSSQL_SA_PASSWORD
     displayName: Administrator Password
+    description: Administrator Password
     generate: expression
     from: "[a-zA-Z0-9]{16}"
