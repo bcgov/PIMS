@@ -1,0 +1,184 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${COMP_NAME}-deployment-template
+  annotations:
+    openshift.io/display-name: .NET Core 3.1 Deployment Template
+    description: Deployment template for a .NET Core 3.1 application.
+    tags: ${COMP_NAME}
+labels:
+  name: ${COMP_NAME}-${SUFFIX}
+  app: ${APP_NAME}
+  role: backend
+objects:
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}
+    spec:
+      host: ${APPLICATION_DOMAIN}
+      path: "/api"
+      to:
+        kind: Service
+        name: ${COMP_NAME}-${SUFFIX}
+        weight: 100
+      port:
+        targetPort: 8080-tcp
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}
+      annotations:
+        description: Exposes and load balances the application pods.
+    spec:
+      ports:
+        - name: 8080-tcp
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: ${COMP_NAME}-${SUFFIX}
+      type: ClusterIP
+      sessionAffinity: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${COMP_NAME}-${SUFFIX}
+      annotations:
+        description: "Defines how to deploy ${COMP_NAME}"
+    spec:
+      strategy:
+        type: Rolling
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${COMP_NAME}-${SUFFIX}
+            from:
+              kind: ImageStreamTag
+              namespace: "${TOOLS_NAMESPACE}"
+              name: "${COMP_NAME}:${SUFFIX}"
+      replicas: 1
+      selector:
+        name: ${COMP_NAME}-${SUFFIX}
+      template:
+        metadata:
+          name: ${COMP_NAME}-${SUFFIX}
+          labels:
+            name: ${COMP_NAME}-${SUFFIX}
+        spec:
+          containers:
+            - name: ${COMP_NAME}-${SUFFIX}
+              image: ""
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              env:
+                - name: ASPNETCORE_ENVIRONMENT
+                  value: "${ASPNETCORE_ENVIRONMENT}"
+                - name: Keycloak__Secret
+                  value: "${KEYCLOAK_SECRET}"
+                - name: Keycloak__Authority
+                  value: "${KEYCLOAK_AUTHORITY}"
+                - name: Keycloak__Audience
+                  value: "${KEYCLOAK_AUDIENCE}"
+              resources:
+                limits:
+                  cpu: "${CPU_LIMIT}"
+                  memory: "${MEMORY_LIMIT}"
+                requests:
+                  cpu: "${CPU_REQUEST}"
+                  memory: "${MEMORY_REQUEST}"
+              # readinessProbe:
+              #   httpGet:
+              #     path: /hc
+              #     port: 8080
+              #     scheme: HTTP
+              #   initialDelaySeconds: 10
+              #   timeoutSeconds: 1
+              #   periodSeconds: 10
+              #   successThreshold: 1
+              #   failureThreshold: 3
+              # livenessProbe:
+              #   httpGet:
+              #     path: /hc
+              #     port: 8080
+              #     scheme: HTTP
+              #   initialDelaySeconds: 10
+              #   timeoutSeconds: 1
+              #   periodSeconds: 10
+              #   successThreshold: 1
+              #   failureThreshold: 3
+parameters:
+  - name: APP_NAME
+    displayName: App Name
+    description: The name of the application (grouped).
+    required: true
+    value: pims
+  - name: COMP_NAME
+    displayName: Component Name
+    description: The name of the application component (e.g ui, backend, database).
+    required: true
+    value: api
+  - name: SUFFIX
+    displayName: Name Suffix
+    description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
+    required: true
+    value: dev
+  - name: APPLICATION_DOMAIN
+    displayName: Application Hostname
+    description:
+      The exposed hostname that will route to the the .NET Core service, if left blank a
+      value will be defaulted.
+    value: pims-dev.pathfinder.gov.bc.ca
+  - name: TOOLS_NAMESPACE
+    displayName: Image Namespace
+    description:
+      The namespace of the OpenShift project containing the imagestream for the
+      application.
+    required: true
+    value: jcxjin-tools
+  - name: ENV_NAME
+    displayName: Environment TAG name
+    description: The TAG name for this environment, e.g., dev, test, prod
+    required: true
+    value: dev
+  - name: ASPNETCORE_ENVIRONMENT
+    displayName: AspNetCore Environment
+    description:
+      The ASP Net Core deployment environment setting, e.g., Development,
+      Staging, Production
+    required: true
+    value: Production
+  - name: KEYCLOAK_SECRET
+    displayName: Keycloak Secret
+    description: The KeyCloak secret to use for authentication
+    required: false
+    value: ""
+  - name: KEYCLOAK_AUTHORITY
+    displayName: Keycloak Authority
+    description: The KeyCloak Authority to use for authentication
+    required: true
+  - name: KEYCLOAK_AUDIENCE
+    displayName: Keycloak Audience
+    description: The KeyCloak Audience (client id) to use for authentication
+    required: true
+    value: pims-api
+  - name: CPU_LIMIT
+    displayName: CPU Limit
+    description: Maximum amount of CPU the container can use.
+    value: "1"
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    description: Maximum amount of memory the container can use.
+    value: 4Gi
+  - name: CPU_REQUEST
+    displayName: CPU Request
+    description: Starting amount of CPU the container can use.
+    value: 100m
+  - name: MEMORY_REQUEST
+    displayName: Memory Request
+    description: Starting amount of memory the container can use.
+    value: 2Gi

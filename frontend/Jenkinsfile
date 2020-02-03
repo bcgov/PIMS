@@ -74,9 +74,9 @@ String getImageTagHash(String imageName, String tag = "") {
   return istag.out.tokenize('@')[1].trim()
 }
 
-void build(String filter, int waitTimeout) {
+void build(String buildConfigName, int waitTimeout) {
   // Find all of the build configurations associated to the application ...
-  def buildconfigs = openshift.selector("bc", filter)
+  def buildconfigs = openshift.selector("bc", "${buildConfigName}")
   echo "Found ${buildconfigs.count()} buildconfigs: ${buildconfigs.names()}"
 
   // Kick off all the builds in parallel ...
