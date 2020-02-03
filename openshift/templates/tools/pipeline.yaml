@@ -1,69 +1,73 @@
+# This is a generic pipeline template
+# that supports a Jenkinsfile for configuration.
+# Simply point it to the source control repo Jenkinsfile and it will run.
 kind: "Template"
 apiVersion: "v1"
 metadata:
-  name: "${NAME}-pipeline-template"
+  name: "pims-pipeline"
   creationTimestamp: null
 objects:
-  - kind: "BuildConfig"
-    apiVersion: "v1"
-    metadata:
-      name: "${NAME}-pipeline"
-      creationTimestamp: null
-      labels:
-        app: "${NAME}-pipeline"
-        name: "${NAME}-pipeline"
-        template: "${NAME}-pipeline"
-    spec:
-      triggers:
-        - type: "GitHub"
-          github:
-            secret: "${GITHUB_WEBHOOK_SECRET}"
-        - type: "Generic"
-          generic:
-            secret: "${GENERIC_WEBHOOK_SECRET}"
-      runPolicy: "Parallel"
-      source:
-        type: "Git"
-        git:
-          uri: ${GIT_REPO_URL}
-          ref: ${GIT_REF}
-        contextDir: ${SOURCE_CONTEXT_DIR}
-      strategy:
-        type: "JenkinsPipeline"
-        jenkinsPipelineStrategy:
-          jenkinsfilePath: "${JENKINSFILE_PATH}"
-      output: {}
-      resources: {}
-      postCommit: {}
-    status:
-      lastVersion: 0
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: "${APP_NAME}-${COMP_NAME}-pipeline-${GIT_REF}"
+    creationTimestamp: null
+    labels:
+      app: "${APP_NAME}"
+      name: "${APP_NAME}-${COMP_NAME}"
+      template: "pims-pipeline"
+  spec:
+    triggers:
+      - type: "GitHub"
+        github:
+          secret: "${GITHUB_WEBHOOK_SECRET}"
+      - type: "Generic"
+        generic:
+          secret: "${GENERIC_WEBHOOK_SECRET}"
+    runPolicy: "Parallel"
+    source:
+      type: "Git"
+      git:
+        uri: ${GIT_REPO_URL}
+        ref: ${GIT_REF}
+    strategy:
+      type: "JenkinsPipeline"
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: "${JENKINSFILE_PATH}"
+    output: {}
+    resources: {}
+    postCommit: {}
+  status:
+    lastVersion: 0
 parameters:
-  - name: "NAME"
-    displayName: "name of pipeline"
-    description: "name of pipeline"
-    required: true
-  - name: "GITHUB_WEBHOOK_SECRET"
-    displayName: "GitHub Webhook Secret"
-    description: "A secret string used to configure the GitHub webhook."
-    generate: "expression"
-    from: "[a-zA-Z0-9]{40}"
-  - name: "GENERIC_WEBHOOK_SECRET"
-    displayName: "Generic Webhook Secret"
-    description: "A secret string used to configure the Generic webhook."
-    generate: "expression"
-    from: "[a-zA-Z0-9]{40}"
-  - name: GIT_REPO_URL
-    displayName: "Git Repository URL"
-    description: "The URL of the repository containing the Jenkinsfile the pipeline buildconfig will use."
-    value: https://github.com/bcgov/PIMS.git
-    required: true
-  - name: GIT_REF
-    displayName: "Git Reference"
-    description: "Set this to a branch name, tag or other ref of your repository if you are not using the default branch."
-    value: master
-  - name: SOURCE_CONTEXT_DIR
-    displayName: "Context Directory"
-    description: "Set this to the relative path to your project if it is not in the root of your repository."
-  - name: "JENKINSFILE_PATH"
-    displayName: "Jenkinsfile path"
-    description: "Set this to the path to your Jenkinsfile (include the filename), relative to the contextDir."
+- name: "APP_NAME"
+  displayName: "Application Name"
+  description: "Name of the application this pipeline will build and deploy."
+  required: true
+- name: "COMP_NAME"
+  displayName: "Component Name"
+  description: "Name of the application component this pipeline will build and deploy."
+  required: true
+- name: "GITHUB_WEBHOOK_SECRET"
+  displayName: "GitHub Webhook Secret"
+  description: "A secret string used to configure the GitHub webhook."
+  generate: "expression"
+  from: "[a-zA-Z0-9]{40}"
+- name: "GENERIC_WEBHOOK_SECRET"
+  displayName: "Generic Webhook Secret"
+  description: "A secret string used to configure the Generic webhook."
+  generate: "expression"
+  from: "[a-zA-Z0-9]{40}"
+- name: GIT_REPO_URL
+  displayName: "Git Repository URL"
+  description: "The URL of the repository containing the Jenkinsfile the pipeline buildconfig will use."
+  value: https://github.com/bcgov/PIMS.git
+  required: true
+- name: GIT_REF
+  displayName: "Git Reference"
+  description: "Set this to a branch name, tag or other ref of your repository if you are not using the default branch."
+  value: dev
+- name: "JENKINSFILE_PATH"
+  displayName: "Jenkinsfile path"
+  description: "Set this to the path to your Jenkinsfile (include the filename), relative to the contextDir."
+  value: Jenkinsfile
