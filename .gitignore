@@ -1,2 +1,3 @@
 **/sh.exe.stackdump
 bash.exe.stackdump
+*.env
