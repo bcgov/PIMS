@@ -1,6 +1,6 @@
 using System;
 
-namespace BackendApi.Membership
+namespace Pims.Api.Membership
 {
     /// <summary>
     /// ApplicationUser class, provides a way to manage application users.
