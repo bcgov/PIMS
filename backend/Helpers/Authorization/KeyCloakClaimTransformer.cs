@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 
-namespace BackendApi.Helpers.Authorization
+namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
     /// KeyCloakClaimTransformer class, provides a way to extract keycloak claims and convert them into role claims.
