@@ -6,15 +6,15 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using BackendApi.Models;
+using Pims.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MembershipModel = BackendApi.Membership.Models;
-using Model = BackendApi.Models;
+using MembershipModel = Pims.Api.Membership.Models;
+using Model = Pims.Api.Models;
 
-namespace BackendApi.Controllers
+namespace Pims.Api.Controllers
 {
     /// <summary>
     /// UserController class, provides endpoints for managing users.

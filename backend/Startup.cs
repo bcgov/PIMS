@@ -4,9 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BackendApi.Data;
-using BackendApi.Helpers.Authorization;
-using BackendApi.Membership;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,8 +20,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Pims.Api.Data;
+using Pims.Api.Helpers.Authorization;
+using Pims.Api.Membership;
 
-namespace BackendApi
+namespace pims.api
 {
     /// <summary>
     /// Startup class, provides a way to startup the .netcore RESTful API and configure it.
@@ -112,11 +112,12 @@ namespace BackendApi
                 options.AddPolicy ("Administrator", policy => policy.Requirements.Add (new RealmAccessRoleRequirement ("administrator")));
             });
 
-            services.AddDbContext<GeoSpatialContext> (options =>
+            services.AddDbContext<PIMSContext> (options =>
             {
-                options.UseNpgsql (Configuration.GetConnectionString ("GeoSpatial"));
+                // options.UseNpgsql (Configuration.GetConnectionString ("GeoSpatial"));
+                options.UseSqlServer (Configuration.GetConnectionString ("GeoSpatial"));
 
-                // var context = new GeoSpatialContext (options.Options);
+                // var context = new PIMSContext (options.Options);
                 // context.Database.EnsureCreated ();
             });
 
@@ -178,7 +179,7 @@ namespace BackendApi
                 .GetRequiredService<IServiceScopeFactory> ()
                 .CreateScope ())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<GeoSpatialContext> ())
+                using (var context = serviceScope.ServiceProvider.GetService<PIMSContext> ())
                 {
                     context.Database.Migrate ();
                 }
