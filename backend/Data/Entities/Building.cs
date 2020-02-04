@@ -115,14 +115,14 @@ namespace Pims.Api.Data.Entities
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
-        public Building () { }
+        public Building() { }
 
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public Building (double lat, double lng)
+        public Building(double lat, double lng)
         {
             this.Latitude = lat;
             this.Longitude = lng;

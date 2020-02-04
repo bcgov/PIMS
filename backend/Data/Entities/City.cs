@@ -37,14 +37,14 @@ namespace Pims.Api.Data.Entities
         /// <summary>
         /// Create a new instance of a City class.
         /// </summary>
-        public City () { }
+        public City() { }
 
         /// <summary>
         /// Create a new instance of a City class.
         /// </summary>
         /// <param name="code"></param>
         /// <param name="name"></param>
-        public City (string code, string name)
+        public City(string code, string name)
         {
             this.Code = code;
             this.Name = name;
