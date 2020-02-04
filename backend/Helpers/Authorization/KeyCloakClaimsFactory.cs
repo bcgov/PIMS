@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BackendApi.Membership;
+using Pims.Api.Membership;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace BackendApi.Helpers.Authorization
+namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
     /// KeyCloakClaimsFactory class, provides a way to add claims to a user.
