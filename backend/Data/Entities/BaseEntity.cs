@@ -37,7 +37,7 @@ namespace Pims.Api.Data.Entities
         /// get/set - The concurrency row version.
         /// </summary>
         /// <value></value>
-        public byte RowVersion { get; set; }
+        public byte[] RowVersion { get; set; }
         #endregion
 
         #region Constructors

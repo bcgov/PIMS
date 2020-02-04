@@ -27,6 +27,7 @@ namespace Pims.Api.Data.Configuration
             builder.HasOne (m => m.Status).WithMany ().HasForeignKey (m => m.StatusId).OnDelete (DeleteBehavior.ClientSetNull);
             builder.HasOne (m => m.Classification).WithMany ().HasForeignKey (m => m.ClassificationId).IsRequired ().OnDelete (DeleteBehavior.ClientSetNull);
             builder.HasOne (m => m.Address).WithMany ().HasForeignKey (m => m.AddressId).OnDelete (DeleteBehavior.ClientSetNull);
+            builder.HasOne (m => m.Agency).WithMany (m => m.Parcels).HasForeignKey (m => m.AgencyId).OnDelete (DeleteBehavior.ClientSetNull);
 
             builder.HasIndex (m => new { m.ParcelId }).IsUnique ();
             builder.HasIndex (m => new { m.Latitude, m.Longitude, m.StatusId, m.ClassificationId, m.LocalId, m.AssessedValue, m.LandArea });

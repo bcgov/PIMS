@@ -25,6 +25,12 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <value></value>
         public string Code { get; set; }
+
+        /// <summary>
+        /// get/set - Whether this row is disabled.
+        /// </summary>
+        /// <value></value>
+        public bool IsDisabled { get; set; }
         #endregion
 
         #region Constructors

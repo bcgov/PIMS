@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pims.Api.Data;
 
-namespace Pims.Api.Migrations
+namespace pims.api.Migrations
 {
     [DbContext(typeof(PIMSContext))]
     partial class PIMSContextModelSnapshot : ModelSnapshot
@@ -56,9 +56,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -79,6 +78,69 @@ namespace Pims.Api.Migrations
                     b.HasIndex("Postal", "Address1");
 
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.Agency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(6)")
+                        .HasMaxLength(6);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("Code", "ParentId")
+                        .IsUnique()
+                        .HasFilter("[ParentId] IS NOT NULL");
+
+                    b.HasIndex("IsDisabled", "Code", "Name", "ParentId");
+
+                    b.ToTable("Agencies");
                 });
 
             modelBuilder.Entity("Pims.Api.Data.Entities.Building", b =>
@@ -132,11 +194,13 @@ namespace Pims.Api.Migrations
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
 
+                    b.Property<float>("RentableArea")
+                        .HasColumnType("real");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -177,9 +241,7 @@ namespace Pims.Api.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("1");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,9 +250,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -206,6 +267,8 @@ namespace Pims.Api.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("BuildingConstructionTypes");
                 });
@@ -224,9 +287,7 @@ namespace Pims.Api.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("1");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -235,9 +296,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -253,6 +313,8 @@ namespace Pims.Api.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("BuildingPredominateUses");
                 });
@@ -277,6 +339,9 @@ namespace Pims.Api.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)")
@@ -284,9 +349,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -301,9 +365,9 @@ namespace Pims.Api.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("Cities");
                 });
@@ -316,6 +380,9 @@ namespace Pims.Api.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AgencyId")
                         .HasColumnType("int");
 
                     b.Property<float>("AssessedValue")
@@ -335,6 +402,9 @@ namespace Pims.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
+
+                    b.Property<int>("FiscalYear")
+                        .HasColumnType("int");
 
                     b.Property<float>("LandArea")
                         .HasColumnType("real");
@@ -357,9 +427,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -373,6 +442,8 @@ namespace Pims.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("AgencyId");
 
                     b.HasIndex("ClassificationId");
 
@@ -404,9 +475,7 @@ namespace Pims.Api.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("1");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -415,9 +484,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -433,6 +501,8 @@ namespace Pims.Api.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("PropertyClassifications");
                 });
@@ -451,9 +521,7 @@ namespace Pims.Api.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("1");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -462,9 +530,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -480,6 +547,8 @@ namespace Pims.Api.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("PropertyStatus");
                 });
@@ -498,9 +567,7 @@ namespace Pims.Api.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("1");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -509,9 +576,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -527,6 +593,8 @@ namespace Pims.Api.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("PropertyTypes");
                 });
@@ -552,9 +620,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -572,6 +639,56 @@ namespace Pims.Api.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.ToTable("Provinces");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Pims.Api.Data.Entities.User", b =>
@@ -616,9 +733,8 @@ namespace Pims.Api.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("ROWVERSION");
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -635,9 +751,85 @@ namespace Pims.Api.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("LastName", "FirstName");
+                    b.HasIndex("IsDisabled", "LastName", "FirstName");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.UserAgency", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("UserId", "AgencyId");
+
+                    b.HasIndex("AgencyId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("UserAgencies");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.UserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Pims.Api.Data.Entities.Address", b =>
@@ -655,6 +847,21 @@ namespace Pims.Api.Migrations
                         .WithMany()
                         .HasForeignKey("ProvinceId")
                         .IsRequired();
+
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.Agency", b =>
+                {
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.Agency", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
 
                     b.HasOne("Pims.Api.Data.Entities.User", null)
                         .WithMany()
@@ -732,6 +939,11 @@ namespace Pims.Api.Migrations
                         .HasForeignKey("AddressId")
                         .IsRequired();
 
+                    b.HasOne("Pims.Api.Data.Entities.Agency", "Agency")
+                        .WithMany("Parcels")
+                        .HasForeignKey("AgencyId")
+                        .IsRequired();
+
                     b.HasOne("Pims.Api.Data.Entities.PropertyClassification", "Classification")
                         .WithMany()
                         .HasForeignKey("ClassificationId")
@@ -795,6 +1007,17 @@ namespace Pims.Api.Migrations
                         .HasForeignKey("UpdatedById");
                 });
 
+            modelBuilder.Entity("Pims.Api.Data.Entities.Role", b =>
+                {
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
             modelBuilder.Entity("Pims.Api.Data.Entities.User", b =>
                 {
                     b.HasOne("Pims.Api.Data.Entities.User", null)
@@ -804,6 +1027,52 @@ namespace Pims.Api.Migrations
                     b.HasOne("Pims.Api.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.UserAgency", b =>
+                {
+                    b.HasOne("Pims.Api.Data.Entities.Agency", "Agency")
+                        .WithMany("Users")
+                        .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.User", "User")
+                        .WithMany("Agencies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pims.Api.Data.Entities.UserRole", b =>
+                {
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Api.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.HasOne("Pims.Api.Data.Entities.User", "User")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

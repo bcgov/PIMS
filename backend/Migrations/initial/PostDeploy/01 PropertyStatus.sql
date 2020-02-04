@@ -1,10 +1,15 @@
+PRINT 'Adding PropertyStatus'
+
 INSERT INTO dbo.[PropertyStatus] (
     [Id]
     , [Name]
+    , [IsDisabled]
 ) VALUES (
     0
-    , 'Active'
+    , 'Disposed'
+    , 0
 ), (
     1
-    , 'Disposed'
+    , 'Active'
+    , 0
 )

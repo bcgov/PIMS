@@ -14,6 +14,7 @@ namespace Pims.Api.Data
     {
         #region Properties
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Agency> Agencies { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<BuildingConstructionType> BuildingConstructionTypes { get; set; }
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
@@ -24,6 +25,7 @@ namespace Pims.Api.Data
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         #endregion
 
         #region Constructors
@@ -97,6 +99,29 @@ namespace Pims.Api.Data
             // }
 
             base.OnModelCreating (modelBuilder);
+        }
+
+        /// <summary>
+        /// Wrap the save changes in a transaction for rollback.
+        /// </summary>
+        /// <returns></returns>
+        public int CommitTransaction ()
+        {
+            var result = 0;
+            using (var transaction = this.Database.BeginTransaction ())
+            {
+                try
+                {
+                    result = this.SaveChanges ();
+                    transaction.Commit ();
+                }
+                catch (DbUpdateException)
+                {
+                    transaction.Rollback ();
+                    throw;
+                }
+            }
+            return result;
         }
         #endregion
     }

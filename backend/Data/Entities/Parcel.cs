@@ -67,10 +67,28 @@ namespace Pims.Api.Data.Entities
         public PropertyClassification Classification { get; set; }
 
         /// <summary>
+        /// get/set - The foreign key to the agency that owns this parcel.
+        /// </summary>
+        /// <value></value>
+        public int AgencyId { get; set; }
+
+        /// <summary>
+        /// get/set - The agency this parcel belongs to.
+        /// /summary>
+        /// <value></value>
+        public Agency Agency { get; set; }
+
+        /// <summary>
         /// get/set - The property description.
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// get/set - The fiscal year this parcel was assessed.
+        /// </summary>
+        /// <value></value>
+        public int FiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The assessed value of the property.

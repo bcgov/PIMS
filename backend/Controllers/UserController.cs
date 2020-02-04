@@ -6,11 +6,11 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Pims.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Pims.Api.Models;
 using MembershipModel = Pims.Api.Membership.Models;
 using Model = Pims.Api.Models;
 
@@ -25,7 +25,7 @@ namespace Pims.Api.Controllers
     public class UserController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _clientFactory;
         #endregion
@@ -37,7 +37,7 @@ namespace Pims.Api.Controllers
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
         /// <param name="clientFactory"></param>
-        public UserController (ILogger<AuthController> logger, IConfiguration configuration, IHttpClientFactory clientFactory)
+        public UserController (ILogger<UserController> logger, IConfiguration configuration, IHttpClientFactory clientFactory)
         {
             _logger = logger;
             _configuration = configuration;

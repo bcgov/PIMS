@@ -10,22 +10,21 @@ namespace Pims.Api.Data.Configuration
     public class BuildingConstructionTypeConfiguration : BaseEntityConfiguration<BuildingConstructionType>
     {
         #region Methods
-        public override void Configure (EntityTypeBuilder<BuildingConstructionType> builder)
+        public override void Configure(EntityTypeBuilder<BuildingConstructionType> builder)
         {
-            builder.ToTable ("BuildingConstructionTypes");
+            builder.ToTable("BuildingConstructionTypes");
 
-            builder.HasKey (m => m.Id);
-            builder.Property (m => m.Id).IsRequired ();
-            builder.Property (m => m.Id).ValueGeneratedNever ();
+            builder.HasKey(m => m.Id);
+            builder.Property(m => m.Id).IsRequired();
+            builder.Property(m => m.Id).ValueGeneratedNever();
 
-            builder.Property (m => m.Name).IsRequired ();
-            builder.Property (m => m.Name).HasMaxLength (150);
+            builder.Property(m => m.Name).IsRequired();
+            builder.Property(m => m.Name).HasMaxLength(150);
 
-            builder.Property (m => m.IsDisabled).HasDefaultValueSql ("1");
+            builder.HasIndex(m => new { m.Name }).IsUnique();
+            builder.HasIndex(m => new { m.IsDisabled, m.Name });
 
-            builder.HasIndex (m => new { m.Name }).IsUnique ();
-
-            base.Configure (builder);
+            base.Configure(builder);
         }
         #endregion
     }

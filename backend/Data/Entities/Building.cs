@@ -99,6 +99,12 @@ namespace Pims.Api.Data.Entities
         public string BuildingTenancy { get; set; }
 
         /// <summary>
+        /// get/set - The building rentable area.
+        /// </summary>
+        /// <value></value>
+        public float RentableArea { get; set; }
+
+        /// <summary>
         /// get/set - The net-book value for this building.
         /// /// </summary>
         /// <value></value>
