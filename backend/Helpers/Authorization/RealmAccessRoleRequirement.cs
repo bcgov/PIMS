@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace BackendApi.Helpers.Authorization
+namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
     /// RealmAccessRequirement class, provides a way to ensure a user has the specified role.
