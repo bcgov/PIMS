@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "BackendApi": {
+    "pims.api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",

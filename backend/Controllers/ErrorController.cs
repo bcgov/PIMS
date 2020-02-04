@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace BackendApi.Controllers
+namespace Pims.Api.Controllers
 {
     /// <summary>
     /// ErrorController class, provides endpoints to handle exception errors.
