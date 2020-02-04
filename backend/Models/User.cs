@@ -1,6 +1,6 @@
 using System;
 
-namespace BackendApi.Models
+namespace Pims.Api.Models
 {
     /// <summary>
     /// User class, provides a model for users.
@@ -42,7 +42,7 @@ namespace BackendApi.Models
         /// Creates a new instance of a User class.
         /// </summary>
         /// <param name="user"></param>
-        public User (BackendApi.Membership.Models.User user)
+        public User (Pims.Api.Membership.Models.User user)
         {
             this.Id = user.id;
             this.Username = user.username;

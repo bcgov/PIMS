@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace BackendApi.Controllers
+namespace Pims.Api.Controllers
 {
     /// <summary>
     /// AuthController class, provides endpoints for authentication.
