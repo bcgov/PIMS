@@ -4,14 +4,14 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BackendApi.Data;
+using Pims.Api.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace BackendApi
+namespace pims.api
 {
     /// <summary>
     /// Program class, provides the main program starting point for the Geo-spatial application.

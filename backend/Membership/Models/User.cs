@@ -1,6 +1,6 @@
 using System;
 
-namespace BackendApi.Membership.Models
+namespace Pims.Api.Membership.Models
 {
     /// <summary>
     /// User class, provides a way to manage user information from the membership datasource.
