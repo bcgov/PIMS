@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
-namespace BackendApi.Helpers.Authorization
+namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
     /// RealmAccessRoleHandler class, provides a way to validate whether the user has a specified role.
