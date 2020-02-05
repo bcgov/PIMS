@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pims.Api.Helpers.Extensions;
 
-namespace backend.Helpers.Middleware
+namespace Pims.Api.Helpers.Middleware
 {
     /// <summary>
     /// ErrorHandlingMidleware class, provides a way to catch and handle unhandled errors in a generic way.

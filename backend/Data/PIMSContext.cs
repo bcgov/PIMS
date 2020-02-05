@@ -33,7 +33,7 @@ namespace Pims.Api.Data
         /// Creates a new instance of a PIMSContext class.
         /// </summary>
         /// <returns></returns>
-        public PIMSContext ()
+        public PIMSContext()
         {
 
         }
@@ -43,7 +43,7 @@ namespace Pims.Api.Data
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public PIMSContext (DbContextOptions<PIMSContext> options) : base (options)
+        public PIMSContext(DbContextOptions<PIMSContext> options) : base(options)
         {
 
         }
@@ -54,24 +54,24 @@ namespace Pims.Api.Data
         /// Configures the DbContext with the specified options.
         /// </summary>
         /// <param name="optionsBuilder"></param>
-        protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.EnableSensitiveDataLogging ();
+                optionsBuilder.EnableSensitiveDataLogging();
                 //optionsBuilder.UseInMemoryDatabase("Schedule", options => { });
             }
 
-            base.OnConfiguring (optionsBuilder);
+            base.OnConfiguring(optionsBuilder);
         }
 
         /// <summary>
         /// Creates the datasource.
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating (ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyAllConfigurations (typeof (AddressConfiguration));
+            modelBuilder.ApplyAllConfigurations(typeof(AddressConfiguration));
 
             // modelBuilder.Properties<DateTime> ()
             //     .Configure (m =>
@@ -98,26 +98,26 @@ namespace Pims.Api.Data
             //     }
             // }
 
-            base.OnModelCreating (modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         /// <summary>
         /// Wrap the save changes in a transaction for rollback.
         /// </summary>
         /// <returns></returns>
-        public int CommitTransaction ()
+        public int CommitTransaction()
         {
             var result = 0;
-            using (var transaction = this.Database.BeginTransaction ())
+            using (var transaction = this.Database.BeginTransaction())
             {
                 try
                 {
-                    result = this.SaveChanges ();
-                    transaction.Commit ();
+                    result = this.SaveChanges();
+                    transaction.Commit();
                 }
                 catch (DbUpdateException)
                 {
-                    transaction.Rollback ();
+                    transaction.Rollback();
                     throw;
                 }
             }

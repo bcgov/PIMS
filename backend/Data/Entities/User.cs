@@ -56,28 +56,28 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>
         /// <returns></returns>
-        public ICollection<UserAgency> Agencies { get; } = new List<UserAgency> ();
+        public ICollection<UserAgency> Agencies { get; } = new List<UserAgency>();
 
         /// <summary>
         /// get - A collection of roles this user belongs to.
         /// </summary>
         /// <typeparam name="Role"></typeparam>
         /// <returns></returns>
-        public ICollection<UserRole> Roles { get; } = new List<UserRole> ();
+        public ICollection<UserRole> Roles { get; } = new List<UserRole>();
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a User class.
         /// </summary>
-        public User () { }
+        public User() { }
 
         /// <summary>
         /// Create a new instance of a User class.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="displayName"></param>
-        public User (Guid id, string displayName)
+        public User(Guid id, string displayName)
         {
             this.Id = id;
             this.DisplayName = displayName;
