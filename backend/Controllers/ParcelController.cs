@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pims.Api.Data;
 using Model = Pims.Api.Models;
@@ -48,8 +49,7 @@ namespace Pims.Api.Controllers
         [HttpGet]
         public IActionResult GetMyParcels (double? neLat, double? neLong, double? swLat, double? swLong)
         {
-            var userId = new Guid (this.User.FindFirstValue (ClaimTypes.NameIdentifier));
-            var parcels = _dbContext.Parcels.Where (p => p.CreatedById == userId);
+            IEnumerable<Entity.Parcel> parcels = _dbContext.Parcels.ToArray();
             if(neLat != null && neLong != null && swLat != null && swLong != null) {
                 parcels = parcels.Where(parcel => 
                     parcel.Latitude <= neLat 
@@ -67,15 +67,10 @@ namespace Pims.Api.Controllers
         [HttpGet ("{id}")]
         public IActionResult GetMyParcels (int id)
         {
-            var userId = new Guid (this.User.FindFirstValue (ClaimTypes.NameIdentifier));
             var entity = _dbContext.Parcels.Find (id);
-
-            // Only admins can update other users parcels.
-            if (!IsAllowed (entity))
-            {
-                return new UnauthorizedResult ();
+            if(entity == null) {
+                return NotFound(); 
             }
-
             return new JsonResult (new Model.ParcelDetail (entity));
         }
 
