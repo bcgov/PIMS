@@ -31,7 +31,8 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.Classification, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
-                .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id));
+                .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
+                .ForMember(dest => dest.Buildings, opt => opt.Ignore());
         }
         #endregion
     }
