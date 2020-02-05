@@ -1,10 +1,15 @@
+PRINT 'Adding PropertyTypes'
+
 INSERT INTO dbo.[PropertyTypes] (
     [Id]
     , [Name]
+    , [IsDisabled]
 ) VALUES (
     0
-    , 'Building'
+    , 'Land'
+    , 0
 ), (
     1
-    , 'Land'
+    , 'Building'
+    , 0
 )

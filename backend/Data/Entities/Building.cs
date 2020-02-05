@@ -30,7 +30,7 @@ namespace Pims.Api.Data.Entities
         /// get/set - The local identification number.
         /// </summary>
         /// <value></value>
-        public int LocalId { get; set; }
+        public string LocalId { get; set; }
 
         /// <summary>
         /// get/set - The property description.
@@ -99,6 +99,12 @@ namespace Pims.Api.Data.Entities
         public string BuildingTenancy { get; set; }
 
         /// <summary>
+        /// get/set - The building rentable area.
+        /// </summary>
+        /// <value></value>
+        public float RentableArea { get; set; }
+
+        /// <summary>
         /// get/set - The net-book value for this building.
         /// /// </summary>
         /// <value></value>
@@ -109,14 +115,14 @@ namespace Pims.Api.Data.Entities
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
-        public Building () { }
+        public Building() { }
 
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public Building (double lat, double lng)
+        public Building(double lat, double lng)
         {
             this.Latitude = lat;
             this.Longitude = lng;

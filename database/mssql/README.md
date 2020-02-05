@@ -12,7 +12,7 @@ If you want to use a MSSQL DB change the *database* service in the *docker-compo
     ports:
       - "5433:1433"
     volumes:
-      - database-data:/var/opt/msql
+      - database-data:/var/opt/msql/data
     networks:
       - starter_kit
 ```
