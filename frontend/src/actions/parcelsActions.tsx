@@ -33,6 +33,7 @@ export interface Building {
   address: Address,
   latitude: number,
   longitude: number,
+  localId: string,
   constructionType: string,
   postal: string,
   buildingFloorCount: number,
@@ -44,8 +45,6 @@ export interface Building {
 export interface ParcelDetail {
   id: number,
   pid: string,
-  localId: number,
-  lid: string,
   latitude: number,
   longitude: number,
   propertyStatus: string,
