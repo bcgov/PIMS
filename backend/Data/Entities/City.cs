@@ -25,20 +25,26 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <value></value>
         public string Code { get; set; }
+
+        /// <summary>
+        /// get/set - Whether this row is disabled.
+        /// </summary>
+        /// <value></value>
+        public bool IsDisabled { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a City class.
         /// </summary>
-        public City () { }
+        public City() { }
 
         /// <summary>
         /// Create a new instance of a City class.
         /// </summary>
         /// <param name="code"></param>
         /// <param name="name"></param>
-        public City (string code, string name)
+        public City(string code, string name)
         {
             this.Code = code;
             this.Name = name;

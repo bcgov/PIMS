@@ -1,3 +1,5 @@
+PRINT 'Adding Provinces'
+
 INSERT INTO dbo.[Provinces] (
     [Id]
     , [Name]

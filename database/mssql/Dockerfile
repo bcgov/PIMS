@@ -10,4 +10,4 @@ COPY . /usr/config
 
 EXPOSE 1433
 
-VOLUME ["/var/opt/mssql/data"]
+VOLUME ["/var/opt/mssql"]

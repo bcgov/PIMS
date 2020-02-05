@@ -37,7 +37,7 @@ namespace Pims.Api.Data.Entities
         /// get/set - The concurrency row version.
         /// </summary>
         /// <value></value>
-        public byte RowVersion { get; set; }
+        public byte[] RowVersion { get; set; }
         #endregion
 
         #region Constructors
@@ -45,7 +45,7 @@ namespace Pims.Api.Data.Entities
         /// Creates a new instance of a BaseEntity class.
         /// Initializes the default values.
         /// /// </summary>
-        public BaseEntity ()
+        public BaseEntity()
         {
             this.CreatedOn = DateTime.UtcNow;
         }
