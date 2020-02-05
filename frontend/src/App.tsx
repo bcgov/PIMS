@@ -9,9 +9,10 @@ import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
 import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
 import { KeycloakInstance } from 'keycloak-js';
+import configureStore from "configureStore";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-
+export const store = configureStore();
 //import Debug from './components/Debug/Debug';
 
 interface IState {
