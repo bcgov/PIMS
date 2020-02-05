@@ -12,8 +12,6 @@ namespace Pims.Api.Models
     #region Properties
     public int Id { get; set; }
     public string PID { get; set; }
-    public int LocalId { get; set; }
-    public string LID { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string PropertyStatus { get; set; }
@@ -50,8 +48,6 @@ namespace Pims.Api.Models
       this.Longitude = parcelDetail.Longitude;
       this.LandArea = parcelDetail.LandArea;
       this.LandLegalDescription = parcelDetail.LandLegalDescription;
-      this.LID = parcelDetail.LID;
-      this.LocalId = parcelDetail.LocalId;
       this.Longitude = parcelDetail.Longitude;
       this.PID = parcelDetail.PID;
       this.PropertyClassification = parcelDetail.Classification?.Name;
