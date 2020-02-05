@@ -44,7 +44,6 @@ getApiUrl (){
   #
   #   Results in API_URL=https://django-devex-von-dev.pathfinder.gov.bc.ca/api/v1/   
   # ================================================================================
-  echo ${API_SERVICE_NAME}
   if [ ! -z "${API_SERVICE_NAME}" ]; then
     _SERVICE_NAME="$(tr '[:lower:]' '[:upper:]' <<< ${API_SERVICE_NAME/-/_})"
     _SERVICE_HOST_NAME=${_SERVICE_NAME}_SERVICE_HOST
@@ -62,7 +61,7 @@ getApiUrl (){
 }
 
 API_URL=$(getApiUrl)
-echo ${API_URL}
+
 if [ -z "$API_URL" ]; then
   echo "Could not find API Service to proxy to, exiting"
   exit 1
@@ -74,5 +73,6 @@ echo "RealIpFrom = ${RealIpFrom:-172.51.0.0/16}"
 echo "API_URL = ${API_URL}"
 
 sed "s~%RealIpFrom%~${RealIpFrom:-172.51.0.0/16}~g; s~%API_URL%~${API_URL}~g;" /tmp/nginx.conf.template > /etc/nginx/nginx.conf
+sed "s~%RealIpFrom%~${RealIpFrom:-172.51.0.0/16}~g; s~%API_URL%~${API_URL}~g;" /tmp/nginx.conf.template 
 echo "---> Starting nginx ..."
 /usr/sbin/nginx -g "daemon off;"
