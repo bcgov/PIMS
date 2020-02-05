@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using backend.Helpers.Middleware;
+using Pims.Api.Helpers.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

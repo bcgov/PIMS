@@ -137,21 +137,21 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <typeparam name="Building"></typeparam>
         /// <returns></returns>
-        public ICollection<Building> Buildings { get; set; } = new List<Building> ();
+        public ICollection<Building> Buildings { get; set; } = new List<Building>();
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a Parcel class.
         /// </summary>
-        public Parcel () { }
+        public Parcel() { }
 
         /// <summary>
         /// Create a new instance of a Parcel class.
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public Parcel (double lat, double lng)
+        public Parcel(double lat, double lng)
         {
             this.Latitude = lat;
             this.Longitude = lng;
