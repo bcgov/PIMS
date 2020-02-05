@@ -16,8 +16,6 @@ namespace Pims.Api.Helpers.Profiles
             CreateMap<Model.Parts.ParcelModel, Entity.Parcel>()
                 .ForMember(dest => dest.PID, opt => opt.Ignore())
                 .ForMember(dest => dest.ParcelId, opt => opt.ConvertUsing(new ParcelIdConverter()))
-                .ForMember(dest => dest.LID, opt => opt.Ignore())
-                .ForMember(dest => dest.LocalId, opt => opt.ConvertUsing(new ParcelIdConverter()))
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.Classification, opt => opt.Ignore());
 
@@ -30,8 +28,6 @@ namespace Pims.Api.Helpers.Profiles
             CreateMap<Model.ParcelModel, Entity.Parcel>()
                 .ForMember(dest => dest.PID, opt => opt.Ignore())
                 .ForMember(dest => dest.ParcelId, opt => opt.MapFrom<ParcelIdResolver>())
-                .ForMember(dest => dest.LID, opt => opt.Ignore())
-                .ForMember(dest => dest.LocalId, opt => opt.MapFrom<LocalIdResolver>())
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.Classification, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())

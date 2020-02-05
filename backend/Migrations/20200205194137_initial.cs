@@ -466,7 +466,6 @@ namespace pims.api.Migrations
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     ParcelId = table.Column<int>(nullable: false),
-                    LocalId = table.Column<int>(nullable: false),
                     StatusId = table.Column<int>(nullable: false),
                     ClassificationId = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
@@ -532,7 +531,7 @@ namespace pims.api.Migrations
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     ParcelId = table.Column<int>(nullable: false),
-                    LocalId = table.Column<int>(nullable: false),
+                    LocalId = table.Column<string>(maxLength: 50, nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     AddressId = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
@@ -772,9 +771,9 @@ namespace pims.api.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_Latitude_Longitude_StatusId_ClassificationId_LocalId_AssessedValue_LandArea",
+                name: "IX_Parcels_Latitude_Longitude_StatusId_ClassificationId_AssessedValue_LandArea",
                 table: "Parcels",
-                columns: new[] { "Latitude", "Longitude", "StatusId", "ClassificationId", "LocalId", "AssessedValue", "LandArea" });
+                columns: new[] { "Latitude", "Longitude", "StatusId", "ClassificationId", "AssessedValue", "LandArea" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_CreatedById",

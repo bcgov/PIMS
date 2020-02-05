@@ -10,8 +10,6 @@ namespace Pims.Api.Areas.Admin.Models
 
         public string PID { get; set; }
 
-        public string LID { get; set; }
-
         public int StatusId { get; set; }
 
         public string Status { get; set; }

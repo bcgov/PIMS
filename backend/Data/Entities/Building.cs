@@ -30,7 +30,7 @@ namespace Pims.Api.Data.Entities
         /// get/set - The local identification number.
         /// </summary>
         /// <value></value>
-        public int LocalId { get; set; }
+        public string LocalId { get; set; }
 
         /// <summary>
         /// get/set - The property description.
