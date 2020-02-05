@@ -30,19 +30,6 @@ namespace Pims.Api.Data.Entities
         public string PID { get { return $"{this.ParcelId:000-000-000}"; } }
 
         /// <summary>
-        /// get/set - The local identification number.
-        /// </summary>
-        /// <value></value>
-        public int LocalId { get; set; }
-
-        /// <summary>
-        /// get - The friendly formated Local Id.
-        /// </summary>
-        /// <value></value>
-        [NotMapped]
-        public string LID { get { return $"{this.LocalId:000-000}"; } }
-
-        /// <summary>
         /// get/set - The foreign key to the property status.
         /// </summary>
         /// <value></value>

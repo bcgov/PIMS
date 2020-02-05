@@ -10,7 +10,7 @@ using Pims.Api.Data;
 namespace pims.api.Migrations
 {
     [DbContext(typeof(PIMSContext))]
-    [Migration("20200205063915_initial")]
+    [Migration("20200205194137_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,8 +187,9 @@ namespace pims.api.Migrations
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
-                    b.Property<int>("LocalId")
-                        .HasColumnType("int");
+                    b.Property<string>("LocalId")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
@@ -418,9 +419,6 @@ namespace pims.api.Migrations
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
-                    b.Property<int>("LocalId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
@@ -458,7 +456,7 @@ namespace pims.api.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "StatusId", "ClassificationId", "LocalId", "AssessedValue", "LandArea");
+                    b.HasIndex("Latitude", "Longitude", "StatusId", "ClassificationId", "AssessedValue", "LandArea");
 
                     b.ToTable("Parcels");
                 });
