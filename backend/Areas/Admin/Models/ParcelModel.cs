@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pims.Api.Models;
 
 namespace Pims.Api.Areas.Admin.Models
@@ -37,6 +38,8 @@ namespace Pims.Api.Areas.Admin.Models
         public string Description { get; set; }
 
         public string LandLegalDescription { get; set; }
+
+        public IEnumerable<Parts.ParcelBuildingModel> Buildings { get; set; } = new List<Parts.ParcelBuildingModel>();
         #endregion
     }
 }
