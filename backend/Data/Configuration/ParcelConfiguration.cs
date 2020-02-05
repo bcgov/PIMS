@@ -18,7 +18,6 @@ namespace Pims.Api.Data.Configuration
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
             builder.Property(m => m.ParcelId).IsRequired();
-            builder.Property(m => m.LocalId).IsRequired();
             builder.Property(m => m.Description).HasMaxLength(2000);
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
@@ -30,7 +29,7 @@ namespace Pims.Api.Data.Configuration
             builder.HasOne(m => m.Agency).WithMany(m => m.Parcels).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasIndex(m => new { m.ParcelId }).IsUnique();
-            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.StatusId, m.ClassificationId, m.LocalId, m.AssessedValue, m.LandArea });
+            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.StatusId, m.ClassificationId, m.AssessedValue, m.LandArea });
 
             base.Configure(builder);
         }
