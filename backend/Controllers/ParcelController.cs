@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Pims.Api.Data;
 using Model = Pims.Api.Models;
 using Entity = Pims.Api.Data.Entities;
-using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,10 +46,17 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetMyParcels ()
+        public IActionResult GetMyParcels (double? neLat, double? neLong, double? swLat, double? swLong)
         {
             var userId = new Guid (this.User.FindFirstValue (ClaimTypes.NameIdentifier));
             var parcels = _dbContext.Parcels.Where (p => p.CreatedById == userId);
+            if(neLat != null && neLong != null && swLat != null && swLong != null) {
+                parcels = parcels.Where(parcel => 
+                    parcel.Latitude <= neLat 
+                    && parcel.Latitude >= swLong
+                    && parcel.Longitude <= neLong 
+                    && parcel.Longitude >= swLong);
+            }
             return new JsonResult (parcels.Select (p => new Model.Parcel (p)).ToArray ());
         }
 
@@ -72,7 +76,7 @@ namespace Pims.Api.Controllers
                 return new UnauthorizedResult ();
             }
 
-            return new JsonResult (new Model.Parcel (entity));
+            return new JsonResult (new Model.ParcelDetail (entity));
         }
 
         /// <summary>
