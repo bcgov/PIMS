@@ -61,7 +61,7 @@ namespace Pims.Api.Data.Entities
         /// <summary>
         /// Create a new instance of a Address class.
         /// </summary>
-        public Address () { }
+        public Address() { }
 
         /// <summary>
         /// Create a new instance of a Address class.
@@ -71,7 +71,7 @@ namespace Pims.Api.Data.Entities
         /// <param name="cityId"></param>
         /// <param name="provinceId"></param>
         /// <param name="postal"></param>
-        public Address (string address1, string address2, int cityId, string provinceId, string postal)
+        public Address(string address1, string address2, int cityId, string provinceId, string postal)
         {
             this.Address1 = address1;
             this.Address2 = address2;
@@ -89,15 +89,26 @@ namespace Pims.Api.Data.Entities
         /// <param name="city"></param>
         /// <param name="province"></param>
         /// <param name="postal"></param>
-        public Address (string address1, string address2, City city, Province province, string postal)
+        public Address(string address1, string address2, City city, Province province, string postal)
         {
             this.Address1 = address1;
             this.Address2 = address2;
             this.CityId = city?.Id ??
-                throw new ArgumentNullException (nameof (city));
+                throw new ArgumentNullException(nameof(city));
             this.ProvinceId = province?.Id ??
-                throw new ArgumentNullException (nameof (province));
+                throw new ArgumentNullException(nameof(province));
             this.Postal = postal;
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Return the address as a string.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{this.Address1}{(String.IsNullOrWhiteSpace(this.Address2) ? null : $" {this.Address2}")}, {this.City?.Name} {this.ProvinceId}, {this.Postal}";
         }
         #endregion
     }

@@ -15,7 +15,7 @@ namespace Pims.Api.Data.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the parcel.
+        /// get/set - The foreign key to the parcel.  This is not the PID value.
         /// </summary>
         /// <value></value>
         public int ParcelId { get; set; }
