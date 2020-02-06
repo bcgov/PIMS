@@ -150,7 +150,7 @@ objects:
 - kind: Secret
   apiVersion: v1
   data:
-    ConnectionStrings__GeoSpatial: ${CONNECTIONSTRINGS_GEOSPATIAL}
+    DB_PASSWORD: ${DB_PASSWORD}
     Keycloak__Secret: ${KEYCLOAK_SECRET}
   metadata:
     name: ${APP_NAME}-${COMP_NAME}
@@ -215,10 +215,9 @@ parameters:
   displayName: Application Port
   description: The port used to communicate with the Pod
   value: "8080"
-- name: CONNECTIONSTRINGS_GEOSPATIAL
-  displayName: Connection String - Geo-spatial DB
-  description:
-    The connection string to the Geo-spatial database.
+- name: DB_PASSWORD
+  displayName: Database Password
+  description: The API DB password.
   required: true
   value:
 - name: KEYCLOAK_AUTHORITY

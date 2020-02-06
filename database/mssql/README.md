@@ -1,5 +1,6 @@
 # MSSQL DB
-If you want to use a MSSQL DB change the *database* service in the *docker-compose.yml* file with the following;
+
+If you want to use a MSSQL DB change the _database_ service in the _docker-compose.yml_ file with the following;
 
 ```
   database:
@@ -12,7 +13,7 @@ If you want to use a MSSQL DB change the *database* service in the *docker-compo
     ports:
       - "5433:1433"
     volumes:
-      - database-data:/var/opt/msql/data
+      - database-data:/var/opt/msql
     networks:
       - starter_kit
 ```
@@ -23,6 +24,7 @@ To get the database running and initialized do the following;
 
 - Create a `.env` file in the `/database` folder
 - Populate it with the following environment variables;
+
 ```
 DB_USER=postgres
 DB_PASSWORD=password
@@ -48,4 +50,5 @@ Once inside the container, connect locally with sqlcmd. Note that sqlcmd is not 
 `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<YourPassword>'`
 
 ## Related Information
+
 Configuration - https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15
