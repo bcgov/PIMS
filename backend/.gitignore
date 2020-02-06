@@ -1,6 +1,7 @@
 # Environment variables
 .env
 connectionstrings.*json
+.vscode/settings.json
 
 *.swp
 *.*~

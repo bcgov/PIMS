@@ -29,34 +29,34 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\initial\PostDeploy\01 Agencies.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-Agencies.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 BuildingConstructionTypes.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-BuildingConstructionTypes.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 BuildingPredominantUses.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-BuildingPredominantUses.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Cities.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-Cities.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 PropertyClassifications.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-PropertyClassifications.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 PropertyStatus.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-PropertyStatus.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 PropertyTypes.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-PropertyTypes.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Provinces.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-Provinces.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Roles.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-Roles.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Users.sql">
+    <Content Include="Migrations\initial\PostDeploy\01-Users.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

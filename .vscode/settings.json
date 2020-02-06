@@ -19,6 +19,26 @@
       "port": 5433,
       "server": "localhost",
       "username": "postgres"
+    },
+    {
+      "database": "master",
+      "dialect": "MSSQL",
+      "name": "MSSQL-RedHat-master",
+      "password": "6I6KXYc6SDscXq7j",
+      "port": 1433,
+      "server": "localhost",
+      "username": "sa"
+    },
+    {
+      "database": "geospatial",
+      "dialect": "MSSQL",
+      "isActive": true,
+      "isConnected": true,
+      "name": "MSSQL-RedHat-geospatial",
+      "password": "6I6KXYc6SDscXq7j",
+      "port": 1433,
+      "server": "localhost",
+      "username": "sa"
     }
   ]
 }
