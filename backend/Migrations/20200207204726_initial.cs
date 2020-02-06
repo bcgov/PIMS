@@ -471,7 +471,9 @@ namespace pims.api.Migrations
                     AgencyId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     FiscalYear = table.Column<int>(nullable: false),
+                    EstimatedValue = table.Column<float>(nullable: false),
                     AssessedValue = table.Column<float>(nullable: false),
+                    NetBookValue = table.Column<float>(nullable: false),
                     AddressId = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
@@ -541,7 +543,9 @@ namespace pims.api.Migrations
                     BuildingPredominateUseId = table.Column<int>(nullable: false),
                     BuildingTenancy = table.Column<string>(maxLength: 100, nullable: false),
                     RentableArea = table.Column<float>(nullable: false),
-                    BuildingNetBookValue = table.Column<float>(nullable: false)
+                    EstimatedValue = table.Column<float>(nullable: false),
+                    AssessedValue = table.Column<float>(nullable: false),
+                    NetBookValue = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
