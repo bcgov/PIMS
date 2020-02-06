@@ -41,7 +41,7 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - database-data:/var/opt/msql
+      - database-data:/var/opt/mssql
     networks:
       - starter_kit
 
