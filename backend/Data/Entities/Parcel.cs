@@ -78,10 +78,22 @@ namespace Pims.Api.Data.Entities
         public int FiscalYear { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value of the property.
+        /// get/set - The estimated value of the parcel.
+        /// </summary>
+        /// <value></value>
+        public float EstimatedValue { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value of the parcel.
         /// </summary>
         /// <value></value>
         public float AssessedValue { get; set; }
+
+        /// <summary>
+        /// get/set - The net-book value for this parcel.
+        //// </summary>
+        /// <value></value>
+        public float NetBookValue { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property address.
