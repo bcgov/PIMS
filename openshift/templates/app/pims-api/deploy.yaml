@@ -102,11 +102,31 @@ objects:
           - name: ${APP_NAME}-${COMP_NAME}
             image: ""
             ports:
-              - containerPort: ${{APP_PORT}}
-                protocol: TCP
+            - containerPort: ${{APP_PORT}}
+              protocol: TCP
             env:
-              - name: ASPNETCORE_ENVIRONMENT
-                value: "${ASPNETCORE_ENVIRONMENT}"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "${ASPNETCORE_ENVIRONMENT}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP_NAME}-db-${ENV_NAME}-secret
+                  key: MSSQL_SA_PASSWORD
+            - name: Keycloak__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP_NAME}-${COMP_NAME}
+                  key: KEYCLOAK_SECRET
+            - name: Keycloak__Authority
+              valueFrom:
+                configMapKeyRef:
+                  name: ${APP_NAME}-${COMP_NAME}
+                  key: KEYCLOAK_AUTHORITY
+            - name: Keycloak__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: ${APP_NAME}-${COMP_NAME}
+                  key: KEYCLOAK_AUDIENCE
             resources:
               limits:
                 cpu: "${CPU_LIMIT}"
@@ -138,8 +158,8 @@ objects:
   apiVersion: v1
   data:
     ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-    KeyCloak__Authority: ${KEYCLOAK_AUTHORITY}
-    KeyCloak__Audience: ${KEYCLOAK_AUDIENCE}
+    KEYCLOAK_AUTHORITY: ${KEYCLOAK_AUTHORITY}
+    KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE}
   metadata:
     name: ${APP_NAME}-${COMP_NAME}
     namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
@@ -150,8 +170,7 @@ objects:
 - kind: Secret
   apiVersion: v1
   data:
-    DB_PASSWORD: ${DB_PASSWORD}
-    Keycloak__Secret: ${KEYCLOAK_SECRET}
+    KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
   metadata:
     name: ${APP_NAME}-${COMP_NAME}
     namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
@@ -200,7 +219,7 @@ parameters:
     The ASP Net Core deployment environment setting, e.g., Development,
     Staging, Production
   required: true
-  value: "Production"
+  value: "Development"
 - name: APP_DOMAIN
   displayName: Application Hostname
   description:
@@ -215,11 +234,6 @@ parameters:
   displayName: Application Port
   description: The port used to communicate with the Pod
   value: "8080"
-- name: DB_PASSWORD
-  displayName: Database Password
-  description: The API DB password.
-  required: true
-  value:
 - name: KEYCLOAK_AUTHORITY
   displayName: KeyCloak realm URL
   description:

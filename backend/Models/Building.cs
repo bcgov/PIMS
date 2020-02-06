@@ -18,7 +18,9 @@ namespace Pims.Models
         public int BuldingFloorCount { get; set; }
         public string BuildingPredominateUse { get; set; }
         public string BuildingTenancy { get; set; }
-        public float BuildingNetBookValue { get; set; }
+        public float EstimatedValue { get; set; }
+        public float AssessedValue { get; set; }
+        public float NetBookValue { get; set; }
         #endregion
 
         #region Constructors
@@ -34,7 +36,9 @@ namespace Pims.Models
         public Building(Pims.Api.Data.Entities.Building building)
         {
             this.Address = building.Address != null ? new Pims.Models.Address(building.Address) : null;
-            this.BuildingNetBookValue = building.BuildingNetBookValue;
+            this.EstimatedValue = building.EstimatedValue;
+            this.AssessedValue = building.AssessedValue;
+            this.NetBookValue = building.NetBookValue;
             this.BuildingPredominateUse = building.BuildingPredominateUse?.Name;
             this.BuildingTenancy = building.BuildingTenancy;
             this.BuldingFloorCount = building.BuildingFloorCount;
