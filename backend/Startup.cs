@@ -1,6 +1,7 @@
+using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Text.Json;
 using AutoMapper;
-using Pims.Api.Helpers.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pims.Api.Data;
 using Pims.Api.Helpers.Authorization;
-using System.Text.Json;
+using Pims.Api.Helpers.Middleware;
 
 namespace pims.api
 {
@@ -23,10 +24,6 @@ namespace pims.api
     public class Startup
     {
         #region Properties
-        /// <summary>
-        /// get/set - The configuration for the application.
-        /// </summary>
-        /// <value></value>
         public IConfiguration Configuration { get; }
 
         /// <summary>
@@ -112,8 +109,11 @@ namespace pims.api
 
             services.AddDbContext<PIMSContext>(options =>
             {
-                // options.UseNpgsql (Configuration.GetConnectionString ("PIMS"));
-                options.UseSqlServer(Configuration.GetConnectionString("PIMS"));
+                var cs = Configuration.GetConnectionString("PIMS");
+                var builder = new SqlConnectionStringBuilder(cs);
+                builder.Password = Configuration["DB_PASSWORD"];
+                // options.UseNpgsql (builder.ConnectionString);
+                options.UseSqlServer(builder.ConnectionString);
 
                 // var context = new PIMSContext (options.Options);
                 // context.Database.EnsureCreated ();

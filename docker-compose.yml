@@ -39,9 +39,9 @@ services:
     env_file:
       - database/.env
     ports:
-      - "5433:1433"
+      - "1433:1433"
     volumes:
-      - database-data:/var/opt/mssql
+      - database-data:/var/opt/msql
     networks:
       - starter_kit
 
