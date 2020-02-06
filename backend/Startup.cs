@@ -171,7 +171,7 @@ namespace pims.api
         }
 
         /// <summary>
-        /// Intialize the database when the application starts.
+        /// Initialize the database when the application starts.
         /// This isn't an ideal way to do this, but will work for our purposes.
         /// </summary>
         /// <param name="app"></param>
