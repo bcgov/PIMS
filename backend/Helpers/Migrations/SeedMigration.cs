@@ -23,8 +23,8 @@ namespace Pims.Api.Helpers.Migrations
         {
             get
             {
-                var type = this.GetType ();
-                var attr = type.GetCustomAttribute<MigrationAttribute> (true);
+                var type = this.GetType();
+                var attr = type.GetCustomAttribute<MigrationAttribute>(true);
 
                 return $"{attr?.Id.Substring(15) ?? type.Name}";
             }
@@ -46,9 +46,9 @@ namespace Pims.Api.Helpers.Migrations
         /// <summary>
         /// Creates a new instances of a SeedMigration object.
         /// </summary>
-        public SeedMigration ()
+        public SeedMigration()
         {
-            _migrationPath = $"{AppDomain.CurrentDomain.BaseDirectory}Migrations";
+            _migrationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Migrations");
         }
         #endregion
 
@@ -57,26 +57,26 @@ namespace Pims.Api.Helpers.Migrations
         /// Execute any scripts in the migration \PreDeploy\ folder.
         /// </summary>
         /// <param name="migrationBuilder"></param>
-        protected void PreDeploy (MigrationBuilder migrationBuilder)
+        protected void PreDeploy(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql ($"PRINT 'PreDeploy Scripts'");
+            migrationBuilder.Sql($"PRINT 'PreDeploy Scripts'");
             if (migrationBuilder == null)
-                throw new ArgumentNullException (nameof (migrationBuilder));
+                throw new ArgumentNullException(nameof(migrationBuilder));
 
-            ScriptDeploy (migrationBuilder, $"{this.DefaultMigrationsPath}\\{this.Version}\\PreDeploy");
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PreDeploy"));
         }
 
         /// <summary>
         /// Execute any scripts in the migration \PostDeploy\ folder.
         /// </summary>
         /// <param name="migrationBuilder"></param>
-        protected void PostDeploy (MigrationBuilder migrationBuilder)
+        protected void PostDeploy(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql ($"PRINT 'PostDeploy Scripts'");
+            migrationBuilder.Sql($"PRINT 'PostDeploy Scripts'");
             if (migrationBuilder == null)
-                throw new ArgumentNullException (nameof (migrationBuilder));
+                throw new ArgumentNullException(nameof(migrationBuilder));
 
-            ScriptDeploy (migrationBuilder, $"{this.DefaultMigrationsPath}\\{this.Version}\\PostDeploy");
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PostDeploy"));
         }
 
         /// <summary>
@@ -84,32 +84,32 @@ namespace Pims.Api.Helpers.Migrations
         /// </summary>
         /// <param name="migrationBuilder"></param>
         /// <param name="path"></param>
-        protected void ScriptDeploy (MigrationBuilder migrationBuilder, string path)
+        protected void ScriptDeploy(MigrationBuilder migrationBuilder, string path)
         {
             if (migrationBuilder == null)
-                throw new ArgumentNullException (nameof (migrationBuilder));
+                throw new ArgumentNullException(nameof(migrationBuilder));
 
             if (path == null)
-                throw new ArgumentNullException (nameof (path));
+                throw new ArgumentNullException(nameof(path));
 
-            if (!Directory.Exists (path) && !File.Exists (path))
+            if (!Directory.Exists(path) && !File.Exists(path))
             {
-                migrationBuilder.Sql ($"PRINT 'Script does not exist {path}.'");
+                migrationBuilder.Sql($"PRINT 'Script does not exist {path}.'");
                 return;
             }
 
-            var attr = File.GetAttributes (path);
+            var attr = File.GetAttributes(path);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                var seed_files = System.IO.Directory.GetFiles (path, "*.sql").OrderBy (n => n);
+                var seed_files = System.IO.Directory.GetFiles(path, "*.sql").OrderBy(n => n);
                 foreach (var file_name in seed_files)
                 {
-                    ExecuteScript (migrationBuilder, file_name);
+                    ExecuteScript(migrationBuilder, file_name);
                 }
             }
             else
             {
-                ExecuteScript (migrationBuilder, path);
+                ExecuteScript(migrationBuilder, path);
             }
         }
 
@@ -118,14 +118,14 @@ namespace Pims.Api.Helpers.Migrations
         /// </summary>
         /// <param name="migrationBuilder"></param>
         /// <param name="path"></param>
-        private void ExecuteScript (MigrationBuilder migrationBuilder, string path)
+        private void ExecuteScript(MigrationBuilder migrationBuilder, string path)
         {
-            migrationBuilder.Sql ($"PRINT '---------------> {path}'");
-            var sql = File.ReadAllText (path).Trim ();
+            migrationBuilder.Sql($"PRINT '---------------> {path}'");
+            var sql = File.ReadAllText(path).Trim();
 
-            if (!String.IsNullOrEmpty (sql))
+            if (!String.IsNullOrEmpty(sql))
             {
-                migrationBuilder.Sql (sql);
+                migrationBuilder.Sql(sql);
             }
         }
         #endregion
