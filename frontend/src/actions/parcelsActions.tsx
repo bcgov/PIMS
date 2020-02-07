@@ -2,25 +2,25 @@ import * as ActionTypes from "constants/actionTypes";
 
 //Parcel List API action
 
-export interface Parcel {
+export interface IParcel {
   id: number,
   latitude: number,
   longitude: number
 }
 
-export interface StoreParcelsAction {
+export interface IStoreParcelsAction {
   type: typeof ActionTypes.STORE_PARCEL_RESULTS
-  parcelList: Parcel[]
+  parcelList: IParcel[]
 }
 
-export const storeParcelsAction = (parcelList:Parcel[]) => ({
+export const storeParcelsAction = (parcelList:IParcel[]) => ({
   type: ActionTypes.STORE_PARCEL_RESULTS,
   parcelList: parcelList,
 });
 
 //Parcel Detail API action
 
-export interface Address {
+export interface IAddress {
   line1: string,
   line2: string,
   city: string,
@@ -28,9 +28,9 @@ export interface Address {
   postal: string,
 }
 
-export interface Building {
+export interface IBuilding {
   description: string,
-  address: Address,
+  address: IAddress,
   latitude: number,
   longitude: number,
   localId: string,
@@ -42,7 +42,7 @@ export interface Building {
   buildingNetBookValue: number
 }
 
-export interface ParcelDetail {
+export interface IParcelDetail {
   id: number,
   pid: string,
   latitude: number,
@@ -51,18 +51,19 @@ export interface ParcelDetail {
   propertyClassification: string,
   description: string,
   assessedValue: number,
-  address: Address,
+  address: IAddress,
   landArea: string,
   landLegalDescription: string,
-  buildings: Building[]
+  buildings: IBuilding[],
+  agency: string,
 }
 
-export interface StoreParcelDetail {
+export interface IStoreParcelDetail {
   type: typeof ActionTypes.STORE_PARCEL_DETAIL
-  parcelDetail: ParcelDetail
+  parcelDetail: IParcelDetail
 }
 
-export const storeParcelDetail = (parcelDetail:ParcelDetail) => ({
+export const storeParcelDetail = (parcelDetail:IParcelDetail) => ({
   type: ActionTypes.STORE_PARCEL_DETAIL,
   parcelDetail: parcelDetail,
 });
