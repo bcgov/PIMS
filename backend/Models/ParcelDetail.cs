@@ -10,6 +10,8 @@ namespace Pims.Api.Models
   public class ParcelDetail
   {
     #region Properties
+
+    public string Agency { get; set; }
     public int Id { get; set; }
     public string PID { get; set; }
     public double Latitude { get; set; }
@@ -52,6 +54,7 @@ namespace Pims.Api.Models
       this.PID = parcelDetail.PID;
       this.PropertyClassification = parcelDetail.Classification?.Name;
       this.PropertyStatus = parcelDetail.Status?.Name;
+      this.Agency = parcelDetail.Agency?.Name;
     }
     #endregion
   }
