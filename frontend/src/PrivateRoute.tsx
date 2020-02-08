@@ -2,12 +2,12 @@ import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 
-interface PrivateRouteProps extends RouteProps {
+interface IPrivateRouteProps extends RouteProps {
   // tslint:disable-next-line:no-any
   component: any;
 }
 
-const PrivateRoute = (props: PrivateRouteProps) => {
+const PrivateRoute = (props: IPrivateRouteProps) => {
   const { keycloak } = useKeycloak();
   let { component: Component, ...rest } = props;
   return (

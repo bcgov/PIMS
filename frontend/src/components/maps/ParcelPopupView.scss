@@ -1,0 +1,31 @@
+@import "../../fonts.scss";
+.parcelPopup {
+  max-width: 211px;
+  box-shadow: 1px 2px 2px;
+  text-align: left;
+  padding: 12px;
+  
+  .row .col :first-child {
+    margin-top: 0px;
+  }
+
+  .label {
+    font-weight: 700;
+  }
+
+  .list-group {
+    margin-top: 6px;
+  }
+  .list-group-item {
+    padding: 0;
+    border: none;
+    font-family: "BCSans" Fallback, sans-serif;
+    font-size: 12px;
+  }
+  p {
+      margin: 0;
+  }
+  .alert {
+    margin: 0;
+  }
+}
