@@ -235,7 +235,7 @@ parameters:
     API endpoint within the same project; overriding the URL defined by API_URL.
   displayName: API Service Name
   required: false
-  value: api
+  value: pims-api
 - name: API_PATH
   description: The root path for the API.  Used in conjunction with API_SERVICE_NAME.
   displayName: API Path

@@ -8,7 +8,7 @@ import CustomAxios from "customAxios";
 import { AxiosResponse } from "axios";
 import { createRequestHeader } from "utils/RequestHeaders";
 
-export const fetchParcels = (parcelBounds: API.ParcelListParams) => (dispatch:Function) => {
+export const fetchParcels = (parcelBounds: API.IParcelListParams) => (dispatch:Function) => {
   dispatch(request(reducerTypes.GET_PARCELS));
   dispatch(showLoading());
   return CustomAxios()
@@ -25,7 +25,7 @@ export const fetchParcels = (parcelBounds: API.ParcelListParams) => (dispatch:Fu
     .finally(() => dispatch(hideLoading()));
 };
 
-export const fetchParcelDetail = (parcelBounds: API.ParcelDetailParams) => (dispatch:Function) => {
+export const fetchParcelDetail = (parcelBounds: API.IParcelDetailParams) => (dispatch:Function) => {
   dispatch(request(reducerTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
