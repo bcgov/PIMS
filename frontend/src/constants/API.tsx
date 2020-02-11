@@ -8,9 +8,9 @@ export interface IParcelListParams {
   swLat: number,
   swLong: number
 }
-export const PARCELS = (params: IParcelListParams) => (params ? `/my/parcel?${queryString.stringify(params)}` : "/my/parcel"); // get filtered properties or all if not specified.
+export const PARCELS = (params: IParcelListParams | null) => (params ? `/my/parcel?${queryString.stringify(params)}` : "/my/parcel"); // get filtered properties or all if not specified.
 
 export interface IParcelDetailParams {
-  pid: number
+  id: number
 }
-export const PARCELDETAIL = (params: IParcelDetailParams) => (`/my/parcel/${params.pid}`);
+export const PARCELDETAIL = (params: IParcelDetailParams) => (`/my/parcel/${params.id}`);
