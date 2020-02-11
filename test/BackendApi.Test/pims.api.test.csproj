@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\backend\BackendApi.csproj" />
+    <ProjectReference Include="..\..\backend\pims.api.csproj" />
   </ItemGroup>
 
 </Project>
