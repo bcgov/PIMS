@@ -27,7 +27,11 @@ namespace Pims.Api.Areas.Admin.Models
 
         public AddressModel Address { get; set; }
 
+        public float EstimatedValue { get; set; }
+
         public float AssessedValue { get; set; }
+
+        public float NetBookValue { get; set; }
 
         public double Latitude { get; set; }
 

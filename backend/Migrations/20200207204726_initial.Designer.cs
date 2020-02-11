@@ -10,7 +10,7 @@ using Pims.Api.Data;
 namespace pims.api.Migrations
 {
     [DbContext(typeof(PIMSContext))]
-    [Migration("20200205194137_initial")]
+    [Migration("20200207204726_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,14 +155,14 @@ namespace pims.api.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<float>("AssessedValue")
+                        .HasColumnType("real");
+
                     b.Property<int>("BuildingConstructionTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("BuildingFloorCount")
                         .HasColumnType("int");
-
-                    b.Property<float>("BuildingNetBookValue")
-                        .HasColumnType("real");
 
                     b.Property<int>("BuildingPredominateUseId")
                         .HasColumnType("int");
@@ -184,6 +184,9 @@ namespace pims.api.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<float>("EstimatedValue")
+                        .HasColumnType("real");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
@@ -193,6 +196,9 @@ namespace pims.api.Migrations
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
+
+                    b.Property<float>("NetBookValue")
+                        .HasColumnType("real");
 
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
@@ -406,6 +412,9 @@ namespace pims.api.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<float>("EstimatedValue")
+                        .HasColumnType("real");
+
                     b.Property<int>("FiscalYear")
                         .HasColumnType("int");
 
@@ -421,6 +430,9 @@ namespace pims.api.Migrations
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
+
+                    b.Property<float>("NetBookValue")
+                        .HasColumnType("real");
 
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
