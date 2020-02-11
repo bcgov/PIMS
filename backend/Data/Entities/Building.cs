@@ -81,13 +81,13 @@ namespace Pims.Api.Data.Entities
         public int BuildingFloorCount { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the property building predominant use.
+        /// get/set - The foreign key to the building predominant use.
         /// </summary>
         /// <value></value>
         public int BuildingPredominateUseId { get; set; }
 
         /// <summary>
-        /// get/set - The building predominant use for this property.
+        /// get/set - The building predominant use for this building.
         /// </summary>
         /// <value></value>
         public BuildingPredominateUse BuildingPredominateUse { get; set; }
@@ -105,10 +105,22 @@ namespace Pims.Api.Data.Entities
         public float RentableArea { get; set; }
 
         /// <summary>
-        /// get/set - The net-book value for this building.
-        /// /// </summary>
+        /// get/set - The estimated value of the building.
+        /// </summary>
         /// <value></value>
-        public float BuildingNetBookValue { get; set; }
+        public float EstimatedValue { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value of the building.
+        /// </summary>
+        /// <value></value>
+        public float AssessedValue { get; set; }
+
+        /// <summary>
+        /// get/set - The net-book value for this building.
+        //// </summary>
+        /// <value></value>
+        public float NetBookValue { get; set; }
         #endregion
 
         #region Constructors

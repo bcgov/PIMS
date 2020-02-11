@@ -34,7 +34,11 @@ namespace Pims.Api.Areas.Admin.Models
 
         public float RentableArea { get; set; }
 
-        public float BuildingNetBookValue { get; set; }
+        public float EstimatedValue { get; set; }
+
+        public float AssessedValue { get; set; }
+
+        public float NetBookValue { get; set; }
         #endregion
     }
 }
