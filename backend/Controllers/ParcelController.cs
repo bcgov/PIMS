@@ -47,13 +47,13 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetMyParcels (double? neLat, double? neLong, double? swLat, double? swLong)
+        public IActionResult GetMyParcels (double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
         {
             IEnumerable<Entity.Parcel> parcels = _dbContext.Parcels.ToArray();
             if(neLat != null && neLong != null && swLat != null && swLong != null) {
                 parcels = parcels.Where(parcel => 
                     parcel.Latitude <= neLat 
-                    && parcel.Latitude >= swLong
+                    && parcel.Latitude >= swLat
                     && parcel.Longitude <= neLong 
                     && parcel.Longitude >= swLong);
             }
@@ -69,7 +69,7 @@ namespace Pims.Api.Controllers
         {
             var entity = _dbContext.Parcels.Find (id);
             if(entity == null) {
-                return NotFound(); 
+                return NoContent(); 
             }
             return new JsonResult (new Model.ParcelDetail (entity));
         }
