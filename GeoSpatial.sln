@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pims.api", "backend\pims.api.csproj", "{16BC0468-78F6-4C91-87DA-7403C919E646}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pims.api.test", "test\BackendApi.Test\pims.api.test.csproj", "{19A6829C-20D8-4F66-9889-55C553ACE2B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{16BC0468-78F6-4C91-87DA-7403C919E646}.Release|x64.Build.0 = Release|Any CPU
 		{16BC0468-78F6-4C91-87DA-7403C919E646}.Release|x86.ActiveCfg = Release|Any CPU
 		{16BC0468-78F6-4C91-87DA-7403C919E646}.Release|x86.Build.0 = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|x64.Build.0 = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|x64.ActiveCfg = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|x64.Build.0 = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
