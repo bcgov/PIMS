@@ -29,6 +29,19 @@ namespace Pims.Api.Models
             this.Latitude = parcel.Latitude;
             this.Longitude = parcel.Longitude;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Parcel parcel &&
+                   Id == parcel.Id &&
+                   Latitude == parcel.Latitude &&
+                   Longitude == parcel.Longitude;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Latitude, Longitude);
+        }
         #endregion
     }
 }
