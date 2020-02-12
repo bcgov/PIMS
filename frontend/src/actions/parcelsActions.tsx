@@ -13,7 +13,7 @@ export interface IStoreParcelsAction {
   parcelList: IParcel[]
 }
 
-export const storeParcelsAction = (parcelList:IParcel[]) => ({
+export const storeParcelsAction = (parcelList: IParcel[]) => ({
   type: ActionTypes.STORE_PARCEL_RESULTS,
   parcelList: parcelList,
 });
@@ -63,7 +63,7 @@ export interface IStoreParcelDetail {
   parcelDetail: IParcelDetail
 }
 
-export const storeParcelDetail = (parcelDetail:IParcelDetail) => ({
+export const storeParcelDetail = (parcelDetail: IParcelDetail | null) => ({
   type: ActionTypes.STORE_PARCEL_DETAIL,
   parcelDetail: parcelDetail,
 });
