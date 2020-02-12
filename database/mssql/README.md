@@ -2,20 +2,20 @@
 
 If you want to use a MSSQL DB change the _database_ service in the _docker-compose.yml_ file with the following;
 
-```
-  database:
-    restart: always
-    container_name: starter_db
-    build:
-      context: database/mssql
-    env_file:
-      - database/.env
-    ports:
-      - "5433:1433"
-    volumes:
-      - database-data:/var/opt/mssql
-    networks:
-      - starter_kit
+```yaml
+database:
+  restart: always
+  container_name: starter_db
+  build:
+    context: database/mssql
+  env_file:
+    - database/.env
+  ports:
+    - "1433:1433"
+  volumes:
+    - database-data:/var/opt/mssql
+  networks:
+    - starter_kit
 ```
 
 ## Setup
@@ -25,15 +25,13 @@ To get the database running and initialized do the following;
 - Create a `.env` file in the `/database` folder
 - Populate it with the following environment variables;
 
-```
-DB_USER=postgres
-DB_PASSWORD=password
-BD_NAME=geospatial
-
+```conf
 ACCEPT_EULA=Y
-MSSQL_SA_PASSWORD=<YourPassword>
+MSSQL_SA_PASSWORD=<password>
 MSSQL_PID=Developer
 ```
+
+Enter the `password` you want to secure the DB with.
 
 ## Connection
 
@@ -47,7 +45,7 @@ Copy the docker container Id for the database and past it into the next command.
 
 Once inside the container, connect locally with sqlcmd. Note that sqlcmd is not in the path by default, so you have to specify the full path.
 
-`/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<YourPassword>'`
+`/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<password>'`
 
 ## Related Information
 
