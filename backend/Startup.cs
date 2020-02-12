@@ -16,7 +16,7 @@ using Pims.Api.Data;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 
-namespace pims.api
+namespace Pims.Api
 {
     /// <summary>
     /// Startup class, provides a way to startup the .netcore RESTful API and configure it.
