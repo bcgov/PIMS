@@ -11,16 +11,17 @@ namespace Pims.Api.Data
     {
         public PIMSContext CreateDbContext(string[] args)
         {
+            DotNetEnv.Env.Load();
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
                 .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"connectionstrings.{environment}.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<PIMSContextFactory>()
-                .AddEnvironmentVariables()
+                .AddUserSecrets<Startup>()
                 .Build();
 
             var cs = config.GetConnectionString("PIMS");

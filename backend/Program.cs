@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Pims.Api.Data;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
-namespace pims.api
+namespace Pims.Api
 {
     /// <summary>
     /// Program class, provides the main program starting point for the Geo-spatial application.
@@ -22,10 +12,10 @@ namespace pims.api
         /// The primary entry point for the application.
         /// </summary>
         /// <param name="args"></param>
-        public static void Main (string[] args)
+        public static void Main(string[] args)
         {
-            var builder = CreateWebHostBuilder (args);
-            builder.Build ().Run ();
+            var builder = CreateWebHostBuilder(args);
+            builder.Build().Run();
         }
 
         /// <summary>
@@ -33,9 +23,9 @@ namespace pims.api
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IWebHostBuilder CreateWebHostBuilder (string[] args) =>
-            WebHost.CreateDefaultBuilder (args)
-            .UseStartup<Startup> ();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+            .UseStartup<Startup>();
 
     }
 }
