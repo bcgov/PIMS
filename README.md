@@ -45,11 +45,11 @@ Objectives include:
 
 ## Project Status
 
-Currently running a Sprint With Us
+IN DEVELOPMENT
 
 ## Development
 
-Read the documentation [here](./docs/SETUP.md)
+Read the documentation [here](./docs/README.md)
 
 ## Licencse
 

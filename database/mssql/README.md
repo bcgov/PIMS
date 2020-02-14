@@ -31,7 +31,7 @@ MSSQL_SA_PASSWORD=<password>
 MSSQL_PID=Developer
 ```
 
-Enter the `password` you want to secure the DB with.
+Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft.
 
 ## Connection
 
