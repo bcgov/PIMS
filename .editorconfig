@@ -10,7 +10,7 @@ insert_final_newline = true
 [*.ts]
 indent_style = tab
 
-[{*.json,*.md,*.yml}]
+[{*.json,*.md,*.yml,*.groovy,Jenkinsfile*}]
 indent_style = space
 indent_size = 2
 

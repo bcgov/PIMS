@@ -1,0 +1,323 @@
+#!groovy
+
+// ------------------
+// Pipeline Variables
+// ------------------
+def cli
+def notify
+
+// --------------------
+// Declarative Pipeline
+// --------------------
+pipeline {
+  agent none
+  options {
+    disableResume()
+    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+  }
+  environment {
+    CI = "true"
+    PROJECT_NAMESPACE = "jcxjin"
+    APP_NAME = "pims"
+    BUILD_ENV = "tools"
+    DEPLOY_TO = "dev"
+    DEPLOY_TO_UPPER = DEPLOY_TO.toUpperCase()
+    PATHFINDER_URL = "pathfinder.gov.bc.ca"
+    VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
+
+    WAIT_TIMEOUT = 10 // minutes
+
+    // enable pipeline verbose debug output if greater than 0
+    DEBUG_OUTPUT = "false"
+
+    // monorepo folder structure
+    API_CONTEXT_DIRECTORY = "backend"
+    FE_CONTEXT_DIRECTORY = "frontend"
+
+    TOOLS_PROJECT = "${PROJECT_NAMESPACE}-${BUILD_ENV}"
+    DEV_PROJECT = "${PROJECT_NAMESPACE}-${DEPLOY_TO}"
+  }
+  stages {
+    stage("Initialize") {
+      agent any
+      steps {
+        script {
+          // load supporting functions from external script files
+          cli = load "./openshift/jenkins/common.groovy"
+          notify = load "./openshift/jenkins/notify.groovy"
+
+          // ensure required secrets and credentials are available in the CI environment
+          // [add more secrets here if needed...]
+          sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+
+          // initialize CI environment values
+          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
+          env.CHANGELOG = cli.getChangeLog()
+
+          // back-end CI flags
+          def api_changes = cli.hasDirectoryChanged(API_CONTEXT_DIRECTORY)
+          env.API_HAS_CHANGES = api_changes.toString()
+          env.API_FORCE_BUILD = "false"
+          env.API_BUILT = "false"
+          env.API_DEPLOYED = "false"
+
+          // front-end CI flags
+          def fe_changes = cli.hasDirectoryChanged(FE_CONTEXT_DIRECTORY)
+          env.FE_HAS_CHANGES = fe_changes.toString()
+          env.FE_FORCE_BUILD = "false"
+          env.FE_BUILT = "false"
+          env.FE_DEPLOYED = "false"
+
+          if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
+            // Force OpenShift Plugin directives to be verbose
+            openshift.logLevel(1)
+
+            // Print all environment variables
+            echo 'DEBUG - All pipeline environment variables:'
+            echo sh(returnStdout: true, script: 'env')
+          }
+        }
+      }
+    }
+    stage("Force API Build?") {
+      agent any
+      steps {
+        script {
+          try {
+            timeout(time: 5, unit: "MINUTES") {
+              input(message: "Should we force the API Build?", ok: "Yes, we should")
+            }
+            echo "[ci/cd]  The API build was forced..."
+            env.API_FORCE_BUILD = "true"
+          } catch (err) {
+            echo "[ci/cd]  No API code changes. Skipping the API build..."
+            env.API_FORCE_BUILD = "false"
+          }
+        }
+      }
+    }
+    stage("Build API") {
+      agent any
+      environment {
+        COMP_NAME = "api"
+      }
+      when {
+        anyOf {
+          environment name: "API_HAS_CHANGES", value: "true"
+          environment name: "API_FORCE_BUILD", value: "true"
+        }
+      }
+      steps {
+        echo "[ci/cd]  Building API artifacts..."
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              def apiSelector = openshift.selector("bc", [ app: APP_NAME, component: COMP_NAME ])
+              if (!apiSelector.exists()) {
+                throw new Exception("Could not find API build with labels: app='${APP_NAME}', component='${COMP_NAME}'")
+              } else {
+                timeout(WAIT_TIMEOUT) {
+                  apiSelector.startBuild("-w")
+                }
+              }
+            }
+          }
+        }
+      }
+      post {
+        success {
+          script {
+            env.API_BUILT = "true"
+          }
+        }
+      }
+    }
+    stage("Force FRONTEND Build?") {
+      agent any
+      steps {
+        script {
+          try {
+            timeout(time: 5, unit: "MINUTES") {
+              input(message: "Should we force the FRONTEND Build?", ok: "Yes, we should")
+            }
+            echo "[ci/cd]  The FRONTEND build was forced..."
+            env.FE_FORCE_BUILD = "true"
+          } catch (err) {
+            echo "[ci/cd]  No FRONTEND code changes. Skipping the FRONTEND build..."
+            env.FE_FORCE_BUILD = "false"
+          }
+        }
+      }
+    }
+    stage("Build Frontend") {
+      agent any
+      environment {
+        COMP_NAME = "app"
+        WAIT_TIMEOUT = 20 // minutes
+      }
+      when {
+        anyOf {
+          environment name: "FE_HAS_CHANGES", value: "true"
+          environment name: "FE_FORCE_BUILD", value: "true"
+        }
+      }
+      steps {
+        echo "[ci/cd]  Building FRONTEND artifacts..."
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              // Build the node application.
+              def build_config = "${APP_NAME}-${COMP_NAME}-base-${DEPLOY_TO}"
+              def feBase = openshift.selector("bc", build_config)
+              if (!feBase.exists()) {
+                throw new Exception("Could not find FRONTEND-base build with name: '${build_config}'")
+              } else {
+                timeout(WAIT_TIMEOUT) {
+                  feBase.startBuild("-w")
+                }
+              }
+
+              // Build the runtime image, if you are not using an off the shelf one.
+              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-${DEPLOY_TO}"
+              def feRuntime = openshift.selector("bc", runtime_build_config)
+              if (!feRuntime.exists()) {
+                throw new Exception("Could not find FRONTEND-runtime build with name: '${runtime_build_config}'")
+              } else {
+                timeout(WAIT_TIMEOUT) {
+                  feRuntime.startBuild("-w")
+                }
+              }
+            }
+          }
+        }
+      }
+      post {
+        success {
+          script {
+            env.FE_BUILT = "true"
+          }
+        }
+      }
+    }
+    stage("Run Tests") {
+      agent any
+      when {
+        anyOf {
+          environment name: "API_BUILT", value: "true"
+          environment name: "FE_BUILT", value: "true"
+        }
+      }
+      steps {
+        echo "[ci/cd]  Tests should be run here"
+      }
+    }
+    stage("Deploy API to DEV") {
+      agent any
+      environment {
+        COMP_NAME = "api"
+      }
+      when { environment name: "API_BUILT", value: "true" }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              def image_name = "${APP_NAME}-${COMP_NAME}"
+              // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
+              // Tag the images for deployment based on the image's hash
+              def hash = cli.getImageTagHash("${image_name}")
+              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DEPLOY_TO} ..."
+              openshift.tag("${image_name}@${hash}", "${image_name}:${DEPLOY_TO}")
+            }
+
+            openshift.withProject(DEV_PROJECT) {
+                def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
+                echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
+                // Wait for the deployment to complete.
+                // This will wait until the desired replicas are all available
+                dc.rollout().status()
+            }
+          }
+        }
+        echo "[ci/cd]  Deployment done!"
+      }
+      post {
+        success {
+          script {
+            env.API_DEPLOYED = "true"
+          }
+        }
+      }
+    }
+    stage("Deploy FRONTEND to DEV") {
+      agent any
+      environment {
+        COMP_NAME = "app"
+      }
+      when { environment name: "FE_BUILT", value: "true" }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              def image_name = "${APP_NAME}-${COMP_NAME}"
+              // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
+              // Tag the images for deployment based on the image's hash
+              def hash = cli.getImageTagHash("${image_name}")
+              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DEPLOY_TO} ..."
+              openshift.tag("${image_name}@${hash}", "${image_name}:${DEPLOY_TO}")
+            }
+
+            openshift.withProject(DEV_PROJECT) {
+                def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
+                echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
+                // Wait for the deployment to complete.
+                // This will wait until the desired replicas are all available
+                dc.rollout().status()
+            }
+          }
+        }
+        echo "[ci/cd]  Deployment done!"
+      }
+      post {
+        success {
+          script {
+            env.FE_DEPLOYED = "true"
+          }
+        }
+      }
+    }
+    stage("Send Notifications") {
+      agent any
+      when {
+        anyOf {
+          environment name: "API_DEPLOYED", value: "true"
+          environment name: "FE_DEPLOYED", value: "true"
+        }
+      }
+      steps {
+        script {
+          if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
+            notify.deploySuccess("pims-api", env.DEPLOY_TO_UPPER, env.CHANGELOG, env.VANITY_URL, env.ROCKET_DEPLOY_WEBHOOK)
+          }
+          if (env.FE_DEPLOYED.equalsIgnoreCase("true")) {
+            notify.deploySuccess("pims-frontend", env.DEPLOY_TO_UPPER, env.CHANGELOG, env.VANITY_URL, env.ROCKET_DEPLOY_WEBHOOK)
+          }
+        }
+      }
+    }
+    stage("No Changes") {
+      agent any
+      when {
+        allOf {
+          environment name: "API_DEPLOYED", value: "false"
+          environment name: "FE_DEPLOYED", value: "false"
+        }
+      }
+      steps {
+        script {
+          echo "[ci/cd]  No changes ..."
+          currentBuild.result = 'ABORTED'
+        }
+      }
+    }
+  }
+}
