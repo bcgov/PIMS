@@ -8,12 +8,12 @@ The current environment is initialized through the environment variable `ASPNETC
 
 When running the solution locally it applies the configuration setting in the following order;
 
-1. appsettings.json
-2. appsettings.`[environment]`.json
-3. UserSecrets `(if environment=Development)`
-4. Environment Variables
+1. appsettings.json (within /api)
+2. appsettings.`[environment]`.json (within /api)
+3. UserSecrets `(if environment=Development)` (within /api and /dal)
+4. Environment Variables (within /api and /dal)
 
-To run the solution with docker-compose create a .env file and populate it with the following;
+To run the solution with docker-compose create a .env file within the /dal and /api directories and populate each with the following;
 
 ```conf
 ASPNETCORE_ENVIRONMENT=Development
@@ -45,9 +45,9 @@ Refer to the CLI documentation [here](https://docs.microsoft.com/en-us/ef/core/m
 
 # Database Migration Management
 
-The DB is setup and configured through Entity Framework Code-First processes.
+The DB is setup and configured through Entity Framework Code-First processes. All dotnet ef commands must be run from the /dal directory.
 
-To use the Entity Framework CLI you will need to install the **.NET SDK version**, **dotnet-ef tool** and add a `connectionstrings.json` configuration file.
+To use the Entity Framework CLI you will need to install the **.NET SDK version**, **dotnet-ef tool** and add a `connectionstrings.json` configuration file to /dal.
 
 **NOTE** - Please do not commit the `connectionstrings.json` file to source code. It is likely to contain secret information that should not be shared. By default `.gitignore` will exclude it.
 
@@ -61,12 +61,12 @@ Install the `dotnet-ef` CLI
 
 > `dotnet tool install --global dotnet-ef`
 
-Create a `connectionstrings.json` configuration file. You can also create one for each environment by creating a file with the naming conventsion `connectionstrings.[environment].json`. Enter the following information into the file;
+Create a `connectionstrings.json` configuration file within the /dal project. You can also create one for each environment by creating a file with the naming conventsion `connectionstrings.[environment].json`. Enter the following information into the file;
 
 ```json
 {
   "ConnectionStrings": {
-    "PIMS": "Server=localhost,<port>;User ID=sa;Database=<database name>"
+    "PIMS": "Server=<localhost or host.docker.internal>,<port>;User ID=sa;Database=<database name>"
   }
 }
 ```
@@ -108,7 +108,7 @@ Or for all migrations after the initial migration.
 
 To add a new database code migration do the following;
 
-Go to the `/backend` folder. Enter the name of the migration you want to create `[name]`.
+Go to the `/backend/dal` folder. Enter the name of the migration you want to create `[name]`.
 
 > `dotnet ef migrations add [name]`
 
@@ -142,7 +142,7 @@ namespace Pims.Api.Migrations
 
 Any script that you want to run must be additionally included as build content in the project file.
 
-Edit the `Pims.Api.csproj` file and add the `<Content>` with a `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>` (see below example).
+Edit the `pims.dal.csproj` file and add the `<Content>` with a `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>` (see below example).
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
