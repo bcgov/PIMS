@@ -23,7 +23,7 @@ Keycloak__Secret=<secret>
 ```
 
 The `DB_PASSWORD` should be the same value used in the database `.env` file.
-The `Keycloak__Secret` should be the value provided by KeyCloak. Currently this value can remain blank.
+The `Keycloak__Secret` should be the value provided by KeyCloak (_Currently this value can remain blank_)
 
 ## Secret Management
 
