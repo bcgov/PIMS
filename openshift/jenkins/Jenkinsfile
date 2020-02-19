@@ -81,10 +81,11 @@ pipeline {
     }
     stage("Force API Build?") {
       agent any
+      when { environment name: "API_HAS_CHANGES", value: "false" }
       steps {
         script {
           try {
-            timeout(time: 5, unit: "MINUTES") {
+            timeout(time: 1, unit: "MINUTES") {
               input(message: "Should we force the API Build?", ok: "Yes, we should")
             }
             echo "[ci/cd]  The API build was forced..."
@@ -134,10 +135,11 @@ pipeline {
     }
     stage("Force FRONTEND Build?") {
       agent any
+      when { environment name: "FE_HAS_CHANGES", value: "false" }
       steps {
         script {
           try {
-            timeout(time: 5, unit: "MINUTES") {
+            timeout(time: 1, unit: "MINUTES") {
               input(message: "Should we force the FRONTEND Build?", ok: "Yes, we should")
             }
             echo "[ci/cd]  The FRONTEND build was forced..."
@@ -316,6 +318,7 @@ pipeline {
         script {
           echo "[ci/cd]  No changes ..."
           currentBuild.result = 'ABORTED'
+          notify.noChanges("PIMS", env.DEPLOY_TO_UPPER, env.ROCKET_DEPLOY_WEBHOOK)
         }
       }
     }
