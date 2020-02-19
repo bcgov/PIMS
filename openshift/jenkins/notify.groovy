@@ -33,7 +33,7 @@ def rocketChatSend(url, text, summary, description, color, image_url = "") {
 def deploySuccess(appName, environment, changelog, vanity_url, rc_url) {
   rocketChatSend(
     rc_url,
-    "New version of **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${vanity_url}) in ${environment} 🚀 \n ${vanity_url}",
+    "New version of **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) in ${environment} 🚀 \n ${vanity_url}",
     "Changes:",
     changelog,
     "#1ee321",  // green
@@ -44,11 +44,22 @@ def deploySuccess(appName, environment, changelog, vanity_url, rc_url) {
 def deployFailure(appName, environment, error, vanity_url, rc_url) {
   rocketChatSend(
     rc_url,
-    "@all Couldn't deploy **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${vanity_url}) to ${environment} 🤕 \n ${env.BUILD_URL}",
+    "@all Couldn't deploy **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) to ${environment} 🤕 \n ${env.BUILD_URL}",
     "Error:",
     error,
     "#e3211e",  // red
     "https://i.imgflip.com/1czxka.jpg"
+  )
+}
+
+def noChanges(appName, environment, rc_url) {
+  rocketChatSend(
+    rc_url,
+    "@all The CI/CD pipeline ran but no changes were detected for **${appName}**. Build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) was **NOT** deployed to ${environment} 🤕",
+    "${appName} Deployment",
+    "",
+    "#e3211e",  // red
+    "https://i.imgflip.com/3pos4b.jpg"
   )
 }
 
