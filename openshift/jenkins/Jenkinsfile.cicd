@@ -16,26 +16,32 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
   }
   environment {
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = "false"
+
+    // Wait timeout in minutes
+    WAIT_TIMEOUT = 10
+
     CI = "true"
-    PROJECT_NAMESPACE = "jcxjin"
-    APP_NAME = "pims"
-    BUILD_ENV = "tools"
-    DEPLOY_TO = "dev"
-    DEPLOY_TO_UPPER = DEPLOY_TO.toUpperCase()
     PATHFINDER_URL = "pathfinder.gov.bc.ca"
     VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
 
-    WAIT_TIMEOUT = 10 // minutes
+    // The name of your application
+    APP_NAME = "pims"
 
-    // enable pipeline verbose debug output if greater than 0
-    DEBUG_OUTPUT = "false"
-
-    // monorepo folder structure
+    // This should match your monorepo folder structure
     API_CONTEXT_DIRECTORY = "backend"
-    FE_CONTEXT_DIRECTORY = "frontend"
+    FRONTEND_CONTEXT_DIRECTORY = "frontend"
 
-    TOOLS_PROJECT = "${PROJECT_NAMESPACE}-${BUILD_ENV}"
-    DEV_PROJECT = "${PROJECT_NAMESPACE}-${DEPLOY_TO}"
+    // The name of the project namespace(s).
+    NAME_SPACE = "jcxjin"
+
+    // Deployment configurations used within this pipeline
+    DEV_ENV = "dev"
+
+    // We are building, then promoting to DEV with this pipeline
+    // (source) -> (build output) -> DEV
+    DESTINATION = "${DEV_ENV}"
   }
   stages {
     stage("Initialize") {
@@ -62,11 +68,11 @@ pipeline {
           env.API_DEPLOYED = "false"
 
           // front-end CI flags
-          def fe_changes = cli.hasDirectoryChanged(FE_CONTEXT_DIRECTORY)
-          env.FE_HAS_CHANGES = fe_changes.toString()
-          env.FE_FORCE_BUILD = "false"
-          env.FE_BUILT = "false"
-          env.FE_DEPLOYED = "false"
+          def fe_changes = cli.hasDirectoryChanged(FRONTEND_CONTEXT_DIRECTORY)
+          env.FRONTEND_HAS_CHANGES = fe_changes.toString()
+          env.FRONTEND_FORCE_BUILD = "false"
+          env.FRONTEND_BUILT = "false"
+          env.FRONTEND_DEPLOYED = "false"
 
           if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
             // Force OpenShift Plugin directives to be verbose
@@ -112,7 +118,7 @@ pipeline {
         echo "[ci/cd]  Building API artifacts..."
         script {
           openshift.withCluster() {
-            openshift.withProject(TOOLS_PROJECT) {
+            openshift.withProject() {
               def apiSelector = openshift.selector("bc", [ app: APP_NAME, component: COMP_NAME ])
               if (!apiSelector.exists()) {
                 throw new Exception("Could not find API build with labels: app='${APP_NAME}', component='${COMP_NAME}'")
@@ -135,7 +141,7 @@ pipeline {
     }
     stage("Force FRONTEND Build?") {
       agent any
-      when { environment name: "FE_HAS_CHANGES", value: "false" }
+      when { environment name: "FRONTEND_HAS_CHANGES", value: "false" }
       steps {
         script {
           try {
@@ -143,33 +149,33 @@ pipeline {
               input(message: "Should we force the FRONTEND Build?", ok: "Yes, we should")
             }
             echo "[ci/cd]  The FRONTEND build was forced..."
-            env.FE_FORCE_BUILD = "true"
+            env.FRONTEND_FORCE_BUILD = "true"
           } catch (err) {
             echo "[ci/cd]  No FRONTEND code changes. Skipping the FRONTEND build..."
-            env.FE_FORCE_BUILD = "false"
+            env.FRONTEND_FORCE_BUILD = "false"
           }
         }
       }
     }
-    stage("Build Frontend") {
+    stage("Build FRONTEND") {
       agent any
       environment {
         COMP_NAME = "app"
-        WAIT_TIMEOUT = 20 // minutes
+        WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
       }
       when {
         anyOf {
-          environment name: "FE_HAS_CHANGES", value: "true"
-          environment name: "FE_FORCE_BUILD", value: "true"
+          environment name: "FRONTEND_HAS_CHANGES", value: "true"
+          environment name: "FRONTEND_FORCE_BUILD", value: "true"
         }
       }
       steps {
         echo "[ci/cd]  Building FRONTEND artifacts..."
         script {
           openshift.withCluster() {
-            openshift.withProject(TOOLS_PROJECT) {
-              // Build the node application.
-              def build_config = "${APP_NAME}-${COMP_NAME}-base-${DEPLOY_TO}"
+            openshift.withProject() {
+              // Build the base image. This image leverages Node to create a production build of the React frontend.
+              def build_config = "${APP_NAME}-${COMP_NAME}-base-dev"
               def feBase = openshift.selector("bc", build_config)
               if (!feBase.exists()) {
                 throw new Exception("Could not find FRONTEND-base build with name: '${build_config}'")
@@ -179,8 +185,8 @@ pipeline {
                 }
               }
 
-              // Build the runtime image, if you are not using an off the shelf one.
-              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-${DEPLOY_TO}"
+              // Build the runtime image. This image serves the compiled React artifacts via an NGINX web-server.
+              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-dev"
               def feRuntime = openshift.selector("bc", runtime_build_config)
               if (!feRuntime.exists()) {
                 throw new Exception("Could not find FRONTEND-runtime build with name: '${runtime_build_config}'")
@@ -196,7 +202,7 @@ pipeline {
       post {
         success {
           script {
-            env.FE_BUILT = "true"
+            env.FRONTEND_BUILT = "true"
           }
         }
       }
@@ -206,7 +212,7 @@ pipeline {
       when {
         anyOf {
           environment name: "API_BUILT", value: "true"
-          environment name: "FE_BUILT", value: "true"
+          environment name: "FRONTEND_BUILT", value: "true"
         }
       }
       steps {
@@ -222,16 +228,16 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject(TOOLS_PROJECT) {
+            openshift.withProject() {
               def image_name = "${APP_NAME}-${COMP_NAME}"
               // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
               // Tag the images for deployment based on the image's hash
               def hash = cli.getImageTagHash("${image_name}")
-              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DEPLOY_TO} ..."
-              openshift.tag("${image_name}@${hash}", "${image_name}:${DEPLOY_TO}")
+              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
+              openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
             }
 
-            openshift.withProject(DEV_PROJECT) {
+            openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
                 def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
                 echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
                 // Wait for the deployment to complete.
@@ -255,20 +261,20 @@ pipeline {
       environment {
         COMP_NAME = "app"
       }
-      when { environment name: "FE_BUILT", value: "true" }
+      when { environment name: "FRONTEND_BUILT", value: "true" }
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject(TOOLS_PROJECT) {
+            openshift.withProject() {
               def image_name = "${APP_NAME}-${COMP_NAME}"
               // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
               // Tag the images for deployment based on the image's hash
               def hash = cli.getImageTagHash("${image_name}")
-              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DEPLOY_TO} ..."
-              openshift.tag("${image_name}@${hash}", "${image_name}:${DEPLOY_TO}")
+              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
+              openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
             }
 
-            openshift.withProject(DEV_PROJECT) {
+            openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
                 def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
                 echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
                 // Wait for the deployment to complete.
@@ -282,7 +288,7 @@ pipeline {
       post {
         success {
           script {
-            env.FE_DEPLOYED = "true"
+            env.FRONTEND_DEPLOYED = "true"
           }
         }
       }
@@ -292,16 +298,16 @@ pipeline {
       when {
         anyOf {
           environment name: "API_DEPLOYED", value: "true"
-          environment name: "FE_DEPLOYED", value: "true"
+          environment name: "FRONTEND_DEPLOYED", value: "true"
         }
       }
       steps {
         script {
           if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("pims-api", env.DEPLOY_TO_UPPER, env.CHANGELOG, env.VANITY_URL, env.ROCKET_DEPLOY_WEBHOOK)
+            notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
           }
-          if (env.FE_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("pims-frontend", env.DEPLOY_TO_UPPER, env.CHANGELOG, env.VANITY_URL, env.ROCKET_DEPLOY_WEBHOOK)
+          if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
+            notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
           }
         }
       }
@@ -311,14 +317,14 @@ pipeline {
       when {
         allOf {
           environment name: "API_DEPLOYED", value: "false"
-          environment name: "FE_DEPLOYED", value: "false"
+          environment name: "FRONTEND_DEPLOYED", value: "false"
         }
       }
       steps {
         script {
           echo "[ci/cd]  No changes ..."
           currentBuild.result = 'ABORTED'
-          notify.noChanges("PIMS", env.DEPLOY_TO_UPPER, env.ROCKET_DEPLOY_WEBHOOK)
+          notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
         }
       }
     }
