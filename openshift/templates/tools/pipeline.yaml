@@ -10,12 +10,11 @@ objects:
 - kind: "BuildConfig"
   apiVersion: "v1"
   metadata:
-    name: "${APP_NAME}-${COMP_NAME}-pipeline-${GIT_REF}"
+    name: "${NAME}-pipeline"
     creationTimestamp: null
     labels:
-      app: "${APP_NAME}"
-      name: "${APP_NAME}-${COMP_NAME}"
-      template: "pims-pipeline"
+      name: "${NAME}-pipeline"
+      role: "pipeline"
   spec:
     triggers:
       - type: "GitHub"
@@ -40,13 +39,9 @@ objects:
   status:
     lastVersion: 0
 parameters:
-- name: "APP_NAME"
-  displayName: "Application Name"
-  description: "Name of the application this pipeline will build and deploy."
-  required: true
-- name: "COMP_NAME"
-  displayName: "Component Name"
-  description: "Name of the application component this pipeline will build and deploy."
+- name: "NAME"
+  displayName: "Pipeline Name (without -pipeline suffix)"
+  description: "Name of the pipeline, e.g cicd, promote-to-test, sonarqube. A -pipeline suffix will be appended to the name provided."
   required: true
 - name: "GITHUB_WEBHOOK_SECRET"
   displayName: "GitHub Webhook Secret"
