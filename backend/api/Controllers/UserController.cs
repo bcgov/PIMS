@@ -1,8 +1,13 @@
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using api.Helpers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Pims.Api.Helpers;
+using Pims.Dal.Exceptions;
+using MembershipModel = Pims.Dal.Membership.Models;
 
 namespace Pims.Api.Controllers
 {
@@ -17,7 +22,7 @@ namespace Pims.Api.Controllers
         #region Variables
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly RequestClient _requestClient;
         #endregion
 
         #region Constructors
@@ -26,12 +31,12 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
-        /// <param name="clientFactory"></param>
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, IHttpClientFactory clientFactory)
+        /// <param name="requestClient"></param>
+        public UserController(ILogger<UserController> logger, IConfiguration configuration, RequestClient requestClient)
         {
             _logger = logger;
             _configuration = configuration;
-            _clientFactory = clientFactory;
+            _requestClient = requestClient;
         }
         #endregion
 
@@ -41,33 +46,25 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/users")]
-        public IActionResult UserList()
+        public async Task<IActionResult> UserListAsync()
         {
-            var usersUrl = _configuration.GetSection("Keycloak:Users");
+            var users_url = _configuration.GetSection("Keycloak:Users") ?? throw new ConfigurationException("The configuration for Keycloak:Users is invalid or missing.");
+            var response = await _requestClient.GetAsync(Request, users_url?.Value);
 
-            return new RedirectResult(usersUrl?.Value);
+            return await response.HandleResponseAsync<IEnumerable<MembershipModel.User>>();
+        }
 
-            // var token = Request.Headers["Authorization"];
-            // var request = new HttpRequestMessage (HttpMethod.Get, usersUrl?.Value);
-            // request.Headers.Add ("Authorization", token.ToString ());
-            // request.Headers.Add ("X-Forwarded-For", Request.Host.Value);
+        /// <summary>
+        /// Redirects user to the keycloak user info endpoint.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("info")]
+        public async Task<IActionResult> UserInfo()
+        {
+            var user_info_url = _configuration.GetSection("Keycloak:UserInfo") ?? throw new ConfigurationException("The configuration for Keycloak:UserInfo is invalid or missing.");
+            var response = await _requestClient.GetAsync(Request, user_info_url?.Value);
 
-            // var client = _clientFactory.CreateClient ();
-            // var response = await client.SendAsync (request);
-
-            // if (response.IsSuccessStatusCode)
-            // {
-            //     using (var responseStream = await response.Content.ReadAsStreamAsync ())
-            //     {
-            //         var results = await JsonSerializer.DeserializeAsync<IEnumerable<MembershipModel.User>> (responseStream);
-            //         var users = results.Select (r => new Model.User (r)).ToArray ();
-            //         return new JsonResult (users);
-            //     }
-            // }
-            // else
-            // {
-            //     return new StatusCodeResult ((int) response.StatusCode);
-            // }
+            return await response.HandleResponseAsync<MembershipModel.User>();
         }
         #endregion
     }

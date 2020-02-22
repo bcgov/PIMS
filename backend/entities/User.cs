@@ -77,10 +77,16 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="id"></param>
         /// <param name="displayName"></param>
-        public User(Guid id, string displayName)
+        /// <param name="email"></param>
+        public User(Guid id, string displayName, string email)
         {
+            if (id == Guid.Empty) throw new ArgumentException("User id must be unique.", nameof(id));
+            if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Display name must be provided.", nameof(displayName));
+            if (String.IsNullOrWhiteSpace(email)) throw new ArgumentException("Email must be provided.", nameof(email));
+
             this.Id = id;
             this.DisplayName = displayName;
+            this.Email = email;
         }
         #endregion
     }

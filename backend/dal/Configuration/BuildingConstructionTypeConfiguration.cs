@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BuildingConstructionTypeConfiguration class, provides a way to configure building construction types in the database.
     ///</summary>
-    public class BuildingConstructionTypeConfiguration : BaseEntityConfiguration<BuildingConstructionType>
+    public class BuildingConstructionTypeConfiguration : LookupEntityConfiguration<BuildingConstructionType>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<BuildingConstructionType> builder)
@@ -22,7 +22,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(150);
 
             builder.HasIndex(m => new { m.Name }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Name });
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }
