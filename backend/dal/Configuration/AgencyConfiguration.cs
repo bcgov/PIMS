@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// AgencyConfiguration class, provides a way to configure addresses in the database.
     ///</summary>
-    public class AgencyConfiguration : BaseEntityConfiguration<Agency>
+    public class AgencyConfiguration : LookupEntityConfiguration<Agency>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<Agency> builder)
@@ -28,7 +28,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Parent).WithMany(m => m.Children).HasForeignKey(m => m.ParentId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasIndex(m => new { m.Code, m.ParentId }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Code, m.Name, m.ParentId });
+            builder.HasIndex(m => new { m.IsDisabled, m.Code, m.Name, m.ParentId, m.SortOrder });
 
             base.Configure(builder);
         }

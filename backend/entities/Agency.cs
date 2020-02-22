@@ -42,6 +42,13 @@ namespace Pims.Dal.Entities
         public ICollection<Parcel> Parcels { get; } = new List<Parcel>();
 
         /// <summary>
+        /// get - A collection of buildings this agency owns.
+        /// </summary>
+        /// <typeparam name="Building"></typeparam>
+        /// <returns></returns>
+        public ICollection<Building> Buildings { get; } = new List<Building>();
+
+        /// <summary>
         /// get - A collection of users that belong to this agency.
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>

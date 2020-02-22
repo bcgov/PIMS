@@ -22,6 +22,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
             builder.Property(m => m.LandLegalDescription).HasMaxLength(500);
+            builder.Property(m => m.IsSensitive).HasDefaultValue(false);
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Classification).WithMany().HasForeignKey(m => m.ClassificationId).IsRequired().OnDelete(DeleteBehavior.ClientSetNull);
@@ -29,7 +30,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Agency).WithMany(m => m.Parcels).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasIndex(m => new { m.ParcelId }).IsUnique();
-            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.StatusId, m.ClassificationId, m.AssessedValue, m.LandArea });
+            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.StatusId, m.IsSensitive, m.AgencyId, m.ClassificationId, m.LandArea });
 
             base.Configure(builder);
         }

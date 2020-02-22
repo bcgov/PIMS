@@ -6,42 +6,45 @@ using Pims.Dal.Helpers.Migrations;
 namespace Pims.Dal
 {
     /// <summary>
-    /// PIMSContext class, provides a data context to manage the datasource for the Geo-spatial application.
+    /// PimsContext class, provides a data context to manage the datasource for the Geo-spatial application.
     /// </summary>
-    public class PIMSContext : DbContext
+    public class PimsContext : DbContext
     {
         #region Properties
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Agency> Agencies { get; set; }
         public DbSet<Building> Buildings { get; set; }
+        public DbSet<BuildingEvaluation> BuildingEvaluations { get; set; }
         public DbSet<BuildingConstructionType> BuildingConstructionTypes { get; set; }
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
+        public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
         public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Claim> Claims { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a PIMSContext class.
+        /// Creates a new instance of a PimsContext class.
         /// </summary>
         /// <returns></returns>
-        public PIMSContext()
+        public PimsContext ()
         {
 
         }
 
         /// <summary>
-        /// /// Creates a new instance of a PIMSContext class.
+        /// Creates a new instance of a PimsContext class.
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public PIMSContext(DbContextOptions<PIMSContext> options) : base(options)
+        public PimsContext (DbContextOptions<PimsContext> options) : base (options)
         {
 
         }
@@ -52,24 +55,24 @@ namespace Pims.Dal
         /// Configures the DbContext with the specified options.
         /// </summary>
         /// <param name="optionsBuilder"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.EnableSensitiveDataLogging ();
                 //optionsBuilder.UseInMemoryDatabase("Schedule", options => { });
             }
 
-            base.OnConfiguring(optionsBuilder);
+            base.OnConfiguring (optionsBuilder);
         }
 
         /// <summary>
         /// Creates the datasource.
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating (ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyAllConfigurations(typeof(AddressConfiguration));
+            modelBuilder.ApplyAllConfigurations (typeof (AddressConfiguration));
 
             // modelBuilder.Properties<DateTime> ()
             //     .Configure (m =>
@@ -96,26 +99,26 @@ namespace Pims.Dal
             //     }
             // }
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating (modelBuilder);
         }
 
         /// <summary>
         /// Wrap the save changes in a transaction for rollback.
         /// </summary>
         /// <returns></returns>
-        public int CommitTransaction()
+        public int CommitTransaction ()
         {
             var result = 0;
-            using (var transaction = this.Database.BeginTransaction())
+            using (var transaction = this.Database.BeginTransaction ())
             {
                 try
                 {
-                    result = this.SaveChanges();
-                    transaction.Commit();
+                    result = this.SaveChanges ();
+                    transaction.Commit ();
                 }
                 catch (DbUpdateException)
                 {
-                    transaction.Rollback();
+                    transaction.Rollback ();
                     throw;
                 }
             }

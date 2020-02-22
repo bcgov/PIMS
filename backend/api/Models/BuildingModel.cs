@@ -1,5 +1,4 @@
 using System;
-using Pims.Dal.Models;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -36,6 +35,8 @@ namespace Pims.Api.Models
 
         public float RentableArea { get; set; }
 
+        public int FiscalYear { get; set; }
+
         public float EstimatedValue { get; set; }
 
         public float AssessedValue { get; set; }
@@ -50,23 +51,24 @@ namespace Pims.Api.Models
         public bool Equals([AllowNull] BuildingModel other)
         {
             return other != null &&
-                   Id == other.Id &&
-                   ParcelId == other.ParcelId &&
-                   LocalId == other.LocalId &&
-                   Description == other.Description &&
-                   EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
-                   Latitude == other.Latitude &&
-                   Longitude == other.Longitude &&
-                   BuildingConstructionTypeId == other.BuildingConstructionTypeId &&
-                   BuildingConstructionType == other.BuildingConstructionType &&
-                   BuildingFloorCount == other.BuildingFloorCount &&
-                   BuildingPredominateUseId == other.BuildingPredominateUseId &&
-                   BuildingPredominateUse == other.BuildingPredominateUse &&
-                   BuildingTenancy == other.BuildingTenancy &&
-                   RentableArea == other.RentableArea &&
-                   EstimatedValue == other.EstimatedValue &&
-                   AssessedValue == other.AssessedValue &&
-                   NetBookValue == other.NetBookValue;
+                Id == other.Id &&
+                ParcelId == other.ParcelId &&
+                LocalId == other.LocalId &&
+                Description == other.Description &&
+                EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
+                Latitude == other.Latitude &&
+                Longitude == other.Longitude &&
+                BuildingConstructionTypeId == other.BuildingConstructionTypeId &&
+                BuildingConstructionType == other.BuildingConstructionType &&
+                BuildingFloorCount == other.BuildingFloorCount &&
+                BuildingPredominateUseId == other.BuildingPredominateUseId &&
+                BuildingPredominateUse == other.BuildingPredominateUse &&
+                BuildingTenancy == other.BuildingTenancy &&
+                RentableArea == other.RentableArea &&
+                FiscalYear == other.FiscalYear &&
+                EstimatedValue == other.EstimatedValue &&
+                AssessedValue == other.AssessedValue &&
+                NetBookValue == other.NetBookValue;
         }
 
         public override int GetHashCode()
@@ -86,6 +88,7 @@ namespace Pims.Api.Models
             hash.Add(BuildingPredominateUse);
             hash.Add(BuildingTenancy);
             hash.Add(RentableArea);
+            hash.Add(FiscalYear);
             hash.Add(EstimatedValue);
             hash.Add(AssessedValue);
             hash.Add(NetBookValue);

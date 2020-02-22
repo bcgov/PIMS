@@ -15,18 +15,26 @@ namespace Pims.Api.Helpers.Profiles
 
             CreateMap<Entity.Building, Models.Parts.ParcelBuildingModel>()
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.MapFrom(src => src.BuildingConstructionType.Name))
+                .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
+                .ForMember(dest => dest.AssessedValue, opt => opt.MapFrom(src => src.Evaluation.AssessedValue))
+                .ForMember(dest => dest.EstimatedValue, opt => opt.MapFrom(src => src.Evaluation.EstimatedValue))
+                .ForMember(dest => dest.NetBookValue, opt => opt.MapFrom(src => src.Evaluation.NetBookValue))
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name));
 
-            CreateMap<Models.Parts.ParcelBuildingModel, Entity.Building>()
+            CreateMap<Models.Parts.ParcelBuildingModel, Entity.Building>() // TODO: Map evaluation
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id));
 
             CreateMap<Entity.Building, BuildingModel>()
+                .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
+                .ForMember(dest => dest.AssessedValue, opt => opt.MapFrom(src => src.Evaluation.AssessedValue))
+                .ForMember(dest => dest.EstimatedValue, opt => opt.MapFrom(src => src.Evaluation.EstimatedValue))
+                .ForMember(dest => dest.NetBookValue, opt => opt.MapFrom(src => src.Evaluation.NetBookValue))
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.MapFrom(src => src.BuildingConstructionType.Name))
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name));
 
-            CreateMap<BuildingModel, Entity.Building>()
+            CreateMap<BuildingModel, Entity.Building>() // TODO: Map evaluation
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id));

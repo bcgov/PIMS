@@ -39,6 +39,13 @@ namespace Pims.Dal.Entities
         /// <typeparam name="UserRole"></typeparam>
         /// <returns></returns>
         public ICollection<UserRole> Users { get; } = new List<UserRole>();
+
+        /// <summary>
+        /// get - A collection of claims for this role.
+        /// </summary>
+        /// <typeparam name="RoleClaim"></typeparam>
+        /// <returns></returns>
+        public ICollection<RoleClaim> Claims { get; } = new List<RoleClaim>();
         #endregion
 
         #region Constructors

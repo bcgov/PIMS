@@ -14,13 +14,13 @@ namespace Pims.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route ("/api/[controller]")]
+    [Route("/api/[controller]")]
     public class LookupController : ControllerBase
     {
         #region Variables
         private readonly ILogger<LookupController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly PIMSContext _dbContext;
+        private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -30,12 +30,13 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
-        /// <param name="dbContext"></param>
-        public LookupController (ILogger<LookupController> logger, IConfiguration configuration, PIMSContext dbContext, IMapper mapper)
+        /// <param name="pimsService"></param>
+        /// <param name="mapper"></param>
+        public LookupController(ILogger<LookupController> logger, IConfiguration configuration, IPimsService pimsService, IMapper mapper)
         {
             _logger = logger;
             _configuration = configuration;
-            _dbContext = dbContext;
+            _pimsService = pimsService;
             _mapper = mapper;
         }
         #endregion
@@ -45,11 +46,10 @@ namespace Pims.Api.Controllers
         /// Get all of the agency code values
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("/api/[controller]/agencies")]
-        public IActionResult GetAgencies ()
+        [HttpGet("agencies")]
+        public IActionResult GetAgencies()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgenciesNoTracking());
             return new JsonResult(agencyCodes.ToArray());
         }
 
@@ -57,11 +57,10 @@ namespace Pims.Api.Controllers
         /// Get all of the property classification code values
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("/api/[controller]/propertyClassifications")]
-        public IActionResult GetPropertyClassifications ()
+        [HttpGet("property/classifications")]
+        public IActionResult GetPropertyClassifications()
         {
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassificationsNoTracking());
             return new JsonResult(propertyClassificationCodes.ToArray());
         }
 
@@ -69,12 +68,11 @@ namespace Pims.Api.Controllers
         /// Get all of the code values
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("/api/[controller]/all")]
+        [HttpGet("all")]
         public IActionResult GetAll()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgenciesNoTracking());
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassificationsNoTracking());
 
             return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).ToArray());
         }

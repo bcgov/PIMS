@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BuildingPredominateUseConfiguration class, provides a way to configure building predominate uses in the database.
     ///</summary>
-    public class BuildingPredominateUseConfiguration : BaseEntityConfiguration<BuildingPredominateUse>
+    public class BuildingPredominateUseConfiguration : LookupEntityConfiguration<BuildingPredominateUse>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<BuildingPredominateUse> builder)
@@ -22,7 +22,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(150);
 
             builder.HasIndex(m => new { m.Name }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Name });
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

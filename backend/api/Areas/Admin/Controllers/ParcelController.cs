@@ -3,19 +3,18 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pims.Dal;
 using Pims.Dal.Helpers.Extensions;
-using Pims.Dal.Services;
-using Microsoft.EntityFrameworkCore;
 using Entity = Pims.Dal.Entities;
 using Pims.Api.Models;
+using Pims.Dal.Services.Admin;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
     /// <summary>
     /// ParcelController class, provides endpoints for managing parcels.
     /// </summary>
-    // [Authorize (Roles = "administrator")]
+    [Authorize(Roles = "system-administrator")]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -23,9 +22,8 @@ namespace Pims.Api.Areas.Admin.Controllers
     {
         #region Variables
         private readonly ILogger<ParcelController> _logger;
-        private readonly IAdminParcelService _adminParcelService;
+        private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
-        private readonly PIMSContext _dbContext;
         #endregion
 
         #region Constructors
@@ -33,15 +31,13 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// Creates a new instance of a ParcelController class.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="adminParcelService"></param>
-        /// <param name="dbContext"></param>
+        /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public ParcelController(ILogger<ParcelController> logger, IAdminParcelService adminParcelService, PIMSContext dbContext, IMapper mapper)
+        public ParcelController(ILogger<ParcelController> logger, IPimsAdminService pimsAdminService, IMapper mapper)
         {
             _logger = logger;
-            _adminParcelService = adminParcelService;
+            _pimsAdminService = pimsAdminService;
             _mapper = mapper;
-            _dbContext = dbContext;
         }
         #endregion
 
@@ -60,10 +56,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var entities = _adminParcelService.GetParcels(page, quantity, sort);
-            var total = entities.Count();
-            var parcels = _mapper.Map<Api.Models.Parts.ParcelModel[]>(entities);
-            var paged = new Pims.Api.Models.Paged<Api.Models.Parts.ParcelModel>(parcels, page, quantity, total);
+            var result = _pimsAdminService.Parcel.GetNoTracking(page, quantity, sort);
+            var entities = _mapper.Map<Api.Models.Parts.ParcelModel[]>(result.Items);
+            var paged = new Pims.Dal.Entities.Models.Paged<Api.Models.Parts.ParcelModel>(entities, page, quantity, result.Total);
 
             return new JsonResult(paged);
         }
@@ -76,7 +71,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetParcel(int id)
         {
-            var entity = _adminParcelService.GetParcel(id);
+            var entity = _pimsAdminService.Parcel.GetNoTracking(id);
 
             if (entity == null) return NoContent();
 
@@ -91,9 +86,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="pid">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("pid/{pid:int}")]
-        public IActionResult GetParcelByPID(int pid)
+        public IActionResult GetParcelByPid(int pid)
         {
-            var entity = GetParcelByPID(pid);
+            var entity = GetParcelByPid(pid);
 
             if (entity == null) return NoContent();
 
@@ -108,12 +103,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="pid">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("pid/{pid}")]
-        public IActionResult GetParcelByPID(string pid)
+        public IActionResult GetParcelByPid(string pid)
         {
             if (!int.TryParse(pid.Replace("-", ""), out int id))
                 return BadRequest("PID is invalid");
 
-            var entity = _adminParcelService.GetParcelByPid(id);
+            var entity = _pimsAdminService.Parcel.GetByPidNoTracking(id);
 
             if (entity == null) return NoContent();
 
@@ -131,17 +126,27 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
-            var userId = this.User.GetUserId();
+            entity.Evaluations.Add(new Entity.ParcelEvaluation(model.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
+            {
+                EstimatedValue = model.EstimatedValue,
+                AssessedValue = model.AssessedValue,
+                NetBookValue = model.NetBookValue
+            });
 
             foreach (var building in model.Buildings)
             {
                 // We only allow adding buildings at this point.  Can't include an existing one.
                 var b_entity = _mapper.Map<Entity.Building>(building);
-                b_entity.CreatedById = userId;
+                b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
+                {
+                    EstimatedValue = building.EstimatedValue,
+                    AssessedValue = building.AssessedValue,
+                    NetBookValue = building.NetBookValue
+                });
                 entity.Buildings.Add(b_entity);
             }
 
-            _adminParcelService.AddParcel(entity);
+            _pimsAdminService.Parcel.Add(entity);
             var parcel = _mapper.Map<ParcelModel>(entity);
 
             return new JsonResult(parcel);
@@ -156,22 +161,31 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddParcels([FromBody] ParcelModel[] models)
         {
             var entities = _mapper.Map<Entity.Parcel[]>(models);
-            var userId = this.User.GetUserId();
 
             for (var i = 0; i < models.Count(); i++)
             {
                 var entity = entities[i];
-                entity.CreatedById = userId;
+                entity.Evaluations.Add(new Entity.ParcelEvaluation(models[i].FiscalYear, entity) // TODO: Move this logic to AutoMapper.
+                {
+                    EstimatedValue = models[i].EstimatedValue,
+                    AssessedValue = models[i].AssessedValue,
+                    NetBookValue = models[i].NetBookValue
+                });
 
                 foreach (var building in models[i].Buildings)
                 {
                     // We only allow adding buildings at this point.  Can't include an existing one.
                     var b_entity = _mapper.Map<Entity.Building>(building);
-                    b_entity.CreatedById = userId;
+                    b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
+                    {
+                        EstimatedValue = building.EstimatedValue,
+                        AssessedValue = building.AssessedValue,
+                        NetBookValue = building.NetBookValue
+                    });
                     entity.Buildings.Add(b_entity);
                 }
             }
-            _adminParcelService.AddParcels(entities);
+            _pimsAdminService.Parcel.Add(entities);
             var parcels = _mapper.Map<ParcelModel[]>(entities);
 
             return new JsonResult(parcels);
@@ -185,21 +199,34 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPut]
         public IActionResult UpdateParcel([FromBody] ParcelModel model)
         {
-            var entity = _dbContext.Parcels
-                .Include(p => p.Address)
-                .Include(p => p.Buildings)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(p => p.Id == model.Id);
+            var entity = _pimsAdminService.Parcel.Get(model.Id);
 
             if (entity == null) return BadRequest("Item does not exist");
             var userId = this.User.GetUserId();
             var address = entity.Address?.ToString();
 
             _mapper.Map(model, entity);
+
+            // Update evaluation.
+            var p_eval = entity.Evaluations.FirstOrDefault(e => e.FiscalYear == model.FiscalYear);
+            if (p_eval == null)
+            {
+                entity.Evaluations.Add(new Entity.ParcelEvaluation(model.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
+                {
+                    EstimatedValue = model.EstimatedValue,
+                    AssessedValue = model.AssessedValue,
+                    NetBookValue = model.NetBookValue,
+                    CreatedById = userId
+                });
+            }
+            else
+            {
+                p_eval.EstimatedValue = model.EstimatedValue;
+                p_eval.AssessedValue = model.AssessedValue;
+                p_eval.NetBookValue = model.NetBookValue;
+                p_eval.UpdatedById = userId; // TODO: Move to DAL.
+                p_eval.UpdatedOn = DateTime.UtcNow;
+            }
 
             foreach (var building in model.Buildings)
             {
@@ -208,6 +235,15 @@ namespace Pims.Api.Areas.Admin.Controllers
                     // Add a new building to the parcel.
                     var b_entity = _mapper.Map<Entity.Building>(building);
                     b_entity.CreatedById = userId;
+
+                    b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
+                    {
+                        EstimatedValue = building.EstimatedValue,
+                        AssessedValue = building.AssessedValue,
+                        NetBookValue = building.NetBookValue,
+                        CreatedById = userId
+                    });
+
                     entity.Buildings.Add(b_entity);
                 }
                 else
@@ -222,14 +258,37 @@ namespace Pims.Api.Areas.Admin.Controllers
                         _mapper.Map(building, b_entity);
                         b_entity.UpdatedById = userId;
                         b_entity.UpdatedOn = DateTime.UtcNow;
-                        _dbContext.Buildings.Update(b_entity);
+
+                        // Update evaluation.
+                        var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == building.FiscalYear);
+
+                        if (b_eval == null)
+                        {
+                            b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
+                            {
+                                EstimatedValue = building.EstimatedValue,
+                                AssessedValue = building.AssessedValue,
+                                NetBookValue = building.NetBookValue,
+                                CreatedById = userId
+                            });
+                        }
+                        else
+                        {
+                            b_eval.EstimatedValue = building.EstimatedValue;
+                            b_eval.AssessedValue = building.AssessedValue;
+                            b_eval.NetBookValue = building.NetBookValue;
+                            b_eval.UpdatedById = userId; // TODO: Move to DAL.
+                            b_eval.UpdatedOn = DateTime.UtcNow;
+                        }
+
+                        _pimsAdminService.Building.UpdateOne(b_entity);
 
                         // Check if the address was updated.
                         if (b_address != b_entity.Address.ToString())
                         {
                             b_entity.Address.UpdatedById = userId;
                             b_entity.Address.UpdatedOn = DateTime.UtcNow;
-                            _dbContext.Addresses.Update(b_entity.Address);
+                            _pimsAdminService.Address.UpdateOne(b_entity.Address);
                         }
                     }
                     else
@@ -244,9 +303,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             {
                 entity.Address.UpdatedById = userId;
                 entity.Address.UpdatedOn = DateTime.UtcNow;
-                _dbContext.Addresses.Update(entity.Address);
+                _pimsAdminService.Address.UpdateOne(entity.Address);
             }
-            _adminParcelService.UpdateParcel(entity);
+            _pimsAdminService.Parcel.Update(entity);
             var parcel = _mapper.Map<ParcelModel>(entity);
 
             return new JsonResult(parcel);
@@ -260,12 +319,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult DeleteParcel([FromBody] ParcelModel model)
         {
-            var entityToDelete = _mapper.Map<Entity.Parcel>(model);
+            var parcel = _mapper.Map<Entity.Parcel>(model);
 
             if (model.RowVersion == null) return BadRequest("Item does not exist");
-            var entity = _adminParcelService.DeleteParcel(entityToDelete);
-
-            if (entity == null) return BadRequest("Item does not exist");
+            _pimsAdminService.Parcel.Remove(parcel);
 
             return new JsonResult(model);
         }
