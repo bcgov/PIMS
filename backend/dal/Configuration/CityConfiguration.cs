@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// CityConfiguration class, provides a way to configure cities in the database.
     ///</summary>
-    public class CityConfiguration : BaseEntityConfiguration<City>
+    public class CityConfiguration : LookupEntityConfiguration<City>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<City> builder)
@@ -25,7 +25,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Code).HasMaxLength(4);
 
             builder.HasIndex(m => new { m.Code }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Name });
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

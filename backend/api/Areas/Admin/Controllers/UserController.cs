@@ -1,23 +1,20 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Pims.Dal;
-using Pims.Dal.Helpers.Extensions;
 using Model = Pims.Api.Areas.Admin.Models;
 using Entities = Pims.Dal.Entities;
-using Pims.Dal.Services;
+using Pims.Dal.Services.Admin;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
     /// <summary>
     /// UserController class, provides endpoints for managing users.
     /// </summary>
-    // [Authorize (Roles = "administrator")]
+    [Authorize(Roles = "system-administrator")]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -27,7 +24,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _clientFactory;
-        private readonly IUserService _userService;
+        private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -38,14 +35,14 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
         /// <param name="clientFactory"></param>
-        /// <param name="userService"></param>
+        /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, IHttpClientFactory clientFactory, IUserService userService, IMapper mapper)
+        public UserController(ILogger<UserController> logger, IConfiguration configuration, IHttpClientFactory clientFactory, IPimsAdminService pimsAdminService, IMapper mapper)
         {
             _logger = logger;
             _configuration = configuration;
             _clientFactory = clientFactory;
-            _userService = userService;
+            _pimsAdminService = pimsAdminService;
             _mapper = mapper;
         }
         #endregion
@@ -65,10 +62,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var entities = _userService.GetUsers(page, quantity, sort);
-            int total = entities.Count();
-            var users = _mapper.Map<Model.UserModel[]>(entities);
-            var paged = new Pims.Api.Models.Paged<Model.UserModel>(users, page, quantity, total);
+            var results = _pimsAdminService.User.GetNoTracking(page, quantity, sort);
+            var users = _mapper.Map<Model.UserModel[]>(results.Items);
+            var paged = new Pims.Dal.Entities.Models.Paged<Model.UserModel>(users, page, quantity, results.Total);
             return new JsonResult(paged);
         }
 
@@ -80,7 +76,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUser(Guid id)
         {
-            var entity = _userService.GetUser(id);
+            var entity = _pimsAdminService.User.GetNoTracking(id);
 
             if (entity == null) return NoContent();
 
@@ -97,7 +93,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entities.User>(model); // TODO: Return bad request.
-            var addedEntity = _userService.AddUser(entity);
+            var addedEntity = _pimsAdminService.User.Add(entity);
             var user = _mapper.Map<Model.UserModel>(addedEntity);
             return new JsonResult(user);
         }
@@ -111,7 +107,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult UpdateUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entities.User>(model);
-            var updatedEntity = _userService.UpdateUser(entity);
+            var updatedEntity = _pimsAdminService.User.Update(entity);
 
             if (updatedEntity == null) return BadRequest("Item does not exist");
             var user = _mapper.Map<Model.UserModel>(updatedEntity);
@@ -127,12 +123,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult DeleteUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entities.User>(model);
-            var deletedEntity = _userService.DeleteUser(entity);
+            _pimsAdminService.User.Remove(entity);
 
-            if (deletedEntity == null) return BadRequest("Item does not exist");
-
-            var user = _mapper.Map<Model.UserModel>(deletedEntity);
-            return new JsonResult(user);
+            return new JsonResult(model);
         }
         #endregion
     }

@@ -8,7 +8,7 @@ namespace Pims.Dal.Helpers.Extensions
     public static class ExceptionExtensions
     {
         /// <summary>
-        /// Get all innner messages
+        /// Get all inner error messages
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>

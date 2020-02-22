@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -9,25 +12,21 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The primary key IDENTITY SEED.
         /// </summary>
-        /// <value></value>
         public int Id { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the parcel.  This is not the PID value.
         /// </summary>
-        /// <value></value>
         public int ParcelId { get; set; }
 
         /// <summary>
         /// get/set - The parcel this building belongs to.
         /// </summary>
-        /// <value></value>
         public Parcel Parcel { get; set; }
 
         /// <summary>
         /// get/set - The local identification number.
         /// </summary>
-        /// <value></value>
         public string LocalId { get; set; }
 
         /// <summary>
@@ -39,100 +38,97 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The foreign key to the property address.
         /// </summary>
-        /// <value></value>
         public int AddressId { get; set; }
 
         /// <summary>
         /// get/set - The address for this property.
         /// </summary>
-        /// <value></value>
         public Address Address { get; set; }
 
         /// <summary>
         /// get/set - The Latitude co-ordinate.
         /// </summary>
-        /// <value></value>
         public double Latitude { get; set; }
 
         /// <summary>
         /// get/set - The longitude co-ordinate.
         /// </summary>
-        /// <value></value>
         public double Longitude { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property building construction type.
         /// </summary>
-        /// <value></value>
         public int BuildingConstructionTypeId { get; set; }
 
         /// <summary>
         /// get/set - The building construction type for this property.
         /// </summary>
-        /// <value></value>
         public BuildingConstructionType BuildingConstructionType { get; set; }
 
         /// <summary>
         /// get/set - The number of floors in the building.
         /// </summary>
-        /// <value></value>
         public int BuildingFloorCount { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the building predominant use.
         /// </summary>
-        /// <value></value>
         public int BuildingPredominateUseId { get; set; }
 
         /// <summary>
         /// get/set - The building predominant use for this building.
         /// </summary>
-        /// <value></value>
         public BuildingPredominateUse BuildingPredominateUse { get; set; }
 
         /// <summary>
         /// get/set - The type of tenancy for this building.
         /// </summary>
-        /// <value></value>
         public string BuildingTenancy { get; set; }
 
         /// <summary>
         /// get/set - The building rentable area.
         /// </summary>
-        /// <value></value>
         public float RentableArea { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value of the building.
+        /// get/set - The foreign key to the agency that owns this building.
         /// </summary>
-        /// <value></value>
-        public float EstimatedValue { get; set; }
+        public int AgencyId { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value of the building.
+        /// get/set - The agency this building belongs to.
         /// </summary>
-        /// <value></value>
-        public float AssessedValue { get; set; }
+        public Agency Agency { get; set; }
 
         /// <summary>
-        /// get/set - The net-book value for this building.
-        //// </summary>
-        /// <value></value>
-        public float NetBookValue { get; set; }
+        /// get/set - Whether this building is considered sensitive and should only be visible to users who are part of the owning agency.
+        /// </summary>
+        public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// get - A collection of evaluations for this building.
+        /// </summary>
+        /// <typeparam name="BuildingEvaluation"></typeparam>
+        public ICollection<BuildingEvaluation> Evaluations { get; } = new List<BuildingEvaluation> ();
+
+        /// <summary>
+        /// get - The most recent evaluation.
+        /// </summary>
+        public BuildingEvaluation Evaluation { get { return this.Evaluations.OrderByDescending (e => e.FiscalYear).FirstOrDefault (); } }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
-        public Building() { }
+        public Building () { }
 
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public Building(double lat, double lng)
+        public Building (double lat, double lng)
         {
             this.Latitude = lat;
             this.Longitude = lng;

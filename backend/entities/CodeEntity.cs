@@ -7,49 +7,32 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// CodeEntity class, provides an entity for the datamodel to manage entities that represent codified values.
     /// </summary>
-    public abstract class CodeEntity : BaseEntity
+    public abstract class CodeEntity : LookupEntity
     {
         #region Properties
-        /// <summary>
-        /// get/set - A unique id for the code.
-        /// </summary>
-        /// <value></value>
-        public int Id { get; set; }
-
         /// <summary>
         /// get/set - A unique code for the lookup.
         /// </summary>
         /// <value></value>
-        public virtual string Code { get; set; }
-
-        /// <summary>
-        /// get/set - The name of the code.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this code is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
+        public string Code { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a CodeEntity class.
         /// </summary>
-        public CodeEntity () { }
+        public CodeEntity() { }
 
         /// <summary>
         /// Create a new instance of a CodeEntity class.
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="id"></param>
         /// <param name="name"></param>
-        public CodeEntity (int id, string name)
+        public CodeEntity(int id, string code, string name) : base(id, name)
         {
-            this.Id = id;
-            this.Name = name;
+            if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException($"Argument '{nameof(code)}' must have a valid value.", nameof(code));
+
+            this.Code = code;
         }
         #endregion
     }

@@ -1,19 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Pims.Dal.Entities;
 
 namespace Pims.Dal.Services
 {
-    /**
-     * Dal adapter for the Parcel Controller.
-     */
+    /// <summary>
+    /// IParcelService interface, provides functions to interact with parcels within the datasource.
+    /// </summary>
     public interface IParcelService
     {
-        IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null);
-        Parcel GetParcel(int id);
-        Parcel AddMyParcel(Parcel parcel);
-        Parcel UpdateMyParcel(Parcel parcel);
-        Parcel DeleteMyParcel(Parcel parcel);
+        IEnumerable<Parcel> GetNoTracking(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null);
+        Parcel GetNoTracking(int id);
+        Parcel Add(Parcel parcel);
+        Parcel Update(Parcel parcel);
+        void Remove(Parcel parcel);
     }
 }

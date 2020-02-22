@@ -1,14 +1,14 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Pims.Dal.Services;
-using AutoMapper;
 using Pims.Dal.Helpers.Extensions;
 using Model = Pims.Api.Models;
-using Entities = Pims.Dal.Entities;
+using Entity = Pims.Dal.Entities;
 using Pims.Api.Models;
+using Pims.Dal;
 
 namespace Pims.Api.Controllers
 {
@@ -23,7 +23,7 @@ namespace Pims.Api.Controllers
         #region Variables
         private readonly ILogger<ParcelController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IParcelService _parcelService;
+        private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -33,13 +33,13 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
-        /// <param name="parcelService"></param>
+        /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public ParcelController(ILogger<ParcelController> logger, IConfiguration configuration, IParcelService parcelService, IMapper mapper)
+        public ParcelController(ILogger<ParcelController> logger, IConfiguration configuration, IPimsService pimsService, IMapper mapper)
         {
             _logger = logger;
             _configuration = configuration;
-            _parcelService = parcelService;
+            _pimsService = pimsService;
             _mapper = mapper;
         }
         #endregion
@@ -54,9 +54,10 @@ namespace Pims.Api.Controllers
         /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "property-view")] // TODO: Use enum values for claim names.
         public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong, int? agencyId = null, int? propertyClassificationId = null)
         {
-            var parcels = _parcelService.GetParcels(neLat, neLong, swLat, swLong, agencyId, propertyClassificationId);
+            var parcels = _pimsService.Parcel.GetNoTracking(neLat, neLong, swLat, swLong, agencyId, propertyClassificationId);
             return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
         }
 
@@ -66,9 +67,10 @@ namespace Pims.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = "property-view")]
         public IActionResult GetMyParcel(int id)
         {
-            var entity = _parcelService.GetParcel(id);
+            var entity = _pimsService.Parcel.GetNoTracking(id);
 
             if (entity == null) return NoContent();
 
@@ -79,25 +81,25 @@ namespace Pims.Api.Controllers
 
         /// <summary>
         /// Add a new parcel to the datasource for the current user.
-        /// /// </summary>
+        /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "property-add")]
         public IActionResult AddMyParcel([FromBody] ParcelModel model)
         {
-            var entity = _mapper.Map<Entities.Parcel>(model);
+            var entity = _mapper.Map<Entity.Parcel>(model);
             var userId = this.User.GetUserId();
 
             foreach (var building in model.Buildings)
             {
                 // We only allow adding buildings at this point.  Can't include an existing one.
-                var b_entity = _mapper.Map<Entities.Building>(building);
+                var b_entity = _mapper.Map<Entity.Building>(building);
                 b_entity.CreatedById = userId;
                 entity.Buildings.Add(b_entity);
             }
 
-            _parcelService.AddMyParcel(entity);
+            _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<ParcelModel>(entity);
 
             return new JsonResult(parcel);
@@ -112,19 +114,9 @@ namespace Pims.Api.Controllers
         [Authorize(Roles = "property-edit")]
         public IActionResult UpdateMyParcel([FromBody] ParcelModel model)
         {
-            var entity = _parcelService.GetParcel(model.Id);
+            var entity = _mapper.Map<Entity.Parcel>(model);
 
-            if (entity == null) return BadRequest("Item does not exist");
-            var userId = this.User.GetUserId();
-            var address = entity.Address?.ToString();
-
-            _mapper.Map(model, entity);
-            entity.UpdatedById = userId;
-            entity.UpdatedOn = DateTime.UtcNow;
-
-            //TODO: rewrite the update controller to properly handle entities related to parcel.
-
-            _parcelService.UpdateMyParcel(entity);
+            _pimsService.Parcel.Update(entity); // TODO: Update related properties (i.e. Address).
             var parcel = _mapper.Map<ParcelModel>(entity);
 
             return new JsonResult(parcel);
@@ -139,11 +131,9 @@ namespace Pims.Api.Controllers
         [Authorize(Roles = "property-add")]
         public IActionResult DeleteMyParcels(ParcelModel model)
         {
-            var entityToDelete = _mapper.Map<Entities.Parcel>(model);
+            var entity = _mapper.Map<Entity.Parcel>(model);
 
-            var entity = _parcelService.DeleteMyParcel(entityToDelete);
-
-            if (entity == null) return BadRequest("Item does not exist");
+            _pimsService.Parcel.Remove(entity);
 
             return new JsonResult(model);
         }
