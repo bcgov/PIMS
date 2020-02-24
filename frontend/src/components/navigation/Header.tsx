@@ -1,14 +1,9 @@
-import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
-import { Image, Navbar, Container, Row, Col } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { Navbar, Container, Row, Col } from 'react-bootstrap';
 import './Header.scss';
 import logoUrl from './logo-banner.svg';
-import logout from './logout.svg';
 
 function Header() {
-  const history = useHistory();
-  const { keycloak } = useKeycloak();
   //example of how to check role: const isAdmin = keycloak?.realmAccess?.roles.includes(USER_ROLES[Permission.ADMIN]) == true;
   return (
     <Navbar fixed="top" expand="xl" className="App-header">
@@ -17,7 +12,7 @@ function Header() {
           <Col>
             <Row className="brand-box">
               <Col md={2} lg={2}></Col>
-              <Col xs={1} sm={12} md={2} lg={1} className="brand">
+              <Col xs={8} sm={6} md={4} lg={1} className="brand">
                 <Navbar.Brand href="https://gov.bc.ca" >
                   <img className="bc-gov-icon"
                     src={logoUrl}
@@ -27,19 +22,13 @@ function Header() {
                   />
                 </Navbar.Brand>
               </Col>
-              <Col xs={11} sm={12} md={8} lg={7} className="title">Property Inventory Management System</Col>
+              <Col xs={3} sm={4} md={2} lg={7} className="title">
+                <h1 className="longAppName">Property Inventory Management System</h1>
+                <h1 className="shortAppName">PIMS</h1>
+              </Col>
             </Row>
           </Col>
-          <Col xs={2} sm={1} md={1} lg={1} className="other">
-            {!!keycloak?.authenticated ? (
-              <div className="exit" onClick={() => {
-                history.push('/');
-                keycloak.logout();
-              }}>
-                <Image src={logout} width="34" height="34" alt="exit"></Image>
-                <p>Sign-out</p>
-              </div>
-            ) : (<span></span>)}
+          <Col xs={3} sm={3} md={3} lg={1} className="other">
           </Col>
         </Row>
       </Container>
