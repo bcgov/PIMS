@@ -19,11 +19,6 @@ function Login() {
       <Row>
         <Col xs={1} md={3}/>
         <Col xs={16} md={6} className="block">
-          <p className="blockText">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Praesent libero nibh, venenatis a ligula a, mattis porta lacus.
-            Praesent sagittis sed velit eget interdum.
-            In cursus pellentesque dui vitae efficitur.
-          </p>
           <Button variant="primary" onClick={() => keycloak.login()}>
             Sign In
           </Button>

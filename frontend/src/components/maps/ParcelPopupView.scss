@@ -1,6 +1,7 @@
 @import "../../fonts.scss";
 .parcelPopup {
-  max-width: 211px;
+  min-width: 211px;
+  max-width: 250px;
   box-shadow: 1px 2px 2px;
   text-align: left;
   padding: 12px;

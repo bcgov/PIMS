@@ -6,14 +6,9 @@ namespace Pims.Api.Data.Entities
     /// <summary>
     /// Agency class, provides an entity for the datamodel to manage property agencies.
     /// </summary>
-    public class Agency : BaseEntity
+    public class Agency : CodeEntity
     {
         #region Properties
-        /// <summary>
-        /// get/set - The primary key IDENTITY SEED.
-        /// </summary>
-        /// <value></value>
-        public int Id { get; set; }
 
         /// <summary>
         /// get/set - A unique code for the agency.
@@ -22,28 +17,21 @@ namespace Pims.Api.Data.Entities
         public string Code { get; set; }
 
         /// <summary>
-        /// get/set - The name of the agency.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// get/set - A description of the agency.
+        /// get/set - A description of the code.
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this agency is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the parent agency.
         /// </summary>
         /// <value></value>
         public int? ParentId { get; set; }
+
+        public override string Type
+        {
+            get { return "agency"; }
+        }
 
         /// <summary>
         /// get/set - The parent agency this agency belongs to.
