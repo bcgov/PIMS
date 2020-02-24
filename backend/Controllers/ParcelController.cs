@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pims.Api.Data;
+using MapperModel = Pims.Api.Areas.Admin.Models;
 using Model = Pims.Api.Models;
 using Entity = Pims.Api.Data.Entities;
 using System.Security.Claims;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Pims.Api.Controllers
 {
@@ -24,6 +27,7 @@ namespace Pims.Api.Controllers
         private readonly ILogger<ParcelController> _logger;
         private readonly IConfiguration _configuration;
         private readonly PIMSContext _dbContext;
+        private readonly IMapper _mapper;
         #endregion
 
         #region Constructors
@@ -33,11 +37,12 @@ namespace Pims.Api.Controllers
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
         /// <param name="dbContext"></param>
-        public ParcelController (ILogger<ParcelController> logger, IConfiguration configuration, PIMSContext dbContext)
+        public ParcelController (ILogger<ParcelController> logger, IConfiguration configuration, PIMSContext dbContext, IMapper mapper)
         {
             _logger = logger;
             _configuration = configuration;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         #endregion
 
@@ -47,7 +52,8 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetMyParcels (double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
+        [Authorize(Roles = "property-view")]
+        public IActionResult GetMyParcels (double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null)
         {
             IEnumerable<Entity.Parcel> parcels = _dbContext.Parcels.ToArray();
             if(neLat != null && neLong != null && swLat != null && swLong != null) {
@@ -57,7 +63,20 @@ namespace Pims.Api.Controllers
                     && parcel.Longitude <= neLong 
                     && parcel.Longitude >= swLong);
             }
-            return new JsonResult (parcels.Select (p => new Model.Parcel (p)).ToArray ());
+            if(agencyId.HasValue)
+            {
+                parcels = parcels.Where(parcel =>
+                    parcel.AgencyId == agencyId.Value
+                );
+            }
+            if (propertyClassificationId.HasValue)
+            {
+                parcels = parcels.Where(parcel =>
+                    parcel.ClassificationId == propertyClassificationId.Value
+                );
+            }
+
+            return new JsonResult(parcels.Select(p => new Model.Parcel(p)).ToArray());
         }
 
         /// <summary>
@@ -65,13 +84,28 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet ("{id}")]
+        [Authorize(Roles = "property-view")]
         public IActionResult GetMyParcels (int id)
         {
-            var entity = _dbContext.Parcels.Find (id);
-            if(entity == null) {
+            var entity = _dbContext.Parcels.Include(p => p.Status)
+                .Include(p => p.Classification)
+                .Include(p => p.Address)
+                .Include(p => p.Address.City)
+                .Include(p => p.Address.Province)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency.Parent)
+                .Include(p => p.Buildings)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
+                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
+                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .AsNoTracking().SingleOrDefault(u => u.Id == id);
+
+            if (entity == null) {
                 return NoContent(); 
             }
-            return new JsonResult (new Model.ParcelDetail (entity));
+            return new JsonResult (_mapper.Map<MapperModel.ParcelModel>(entity));
         }
 
         /// <summary>

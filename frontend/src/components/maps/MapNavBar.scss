@@ -1,0 +1,43 @@
+@import "../../fonts.scss";
+nav.map-nav {
+  background-color: #38598a;
+  width: 100%;
+  font-family: "BCSans" Fallback, sans-serif;
+  max-height: 40px;
+  a.nav-link {
+    color: #fff !important;
+    font-size: 14px;
+  }
+  .dropdown-menu {
+    background-color: #38598a;
+    a.dropdown-item {
+      color: #fff !important;
+      font-size: 12px;
+      line-height: 2.25rem;
+    }
+    .active {
+      background-color: #38598a;
+    }
+    a.dropdown-item:hover {
+      background-color: #428bca;
+    }
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-top: 0;
+    line-height: 0rem;
+  }
+
+  .profile {
+    padding-top: .25rem;
+    img {
+      width: 29px;
+      height: 29px;
+    }
+  }
+
+  .navbar-nav {
+    width: 80%;
+    justify-content: flex-end;
+  }
+}

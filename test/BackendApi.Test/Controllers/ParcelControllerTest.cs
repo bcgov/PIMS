@@ -9,9 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using Pims.Api.Helpers.Profiles;
 using Entity = Pims.Api.Data.Entities;
 using Model = Pims.Api.Models;
+using MapperModel = Pims.Api.Areas.Admin.Models;
 using System.Linq;
+using AutoMapper;
 
 namespace PimsApi.Test.Controllers
 {
@@ -20,11 +23,16 @@ namespace PimsApi.Test.Controllers
         #region Variables
         private readonly ParcelController _parcelController;
         private readonly PIMSContext _dbContext;
+        private readonly IMapper _mapper;
+        private static readonly int AGENCY_ID = 2;
+        private static readonly int CLASSIFICATION_ID = 3;
         private readonly Entity.Parcel _expectedParcel = new Entity.Parcel()
         {
             Id = 1,
             Latitude = 50,
-            Longitude = 25
+            Longitude = 25,
+            AgencyId = AGENCY_ID,
+            ClassificationId = CLASSIFICATION_ID
         };
 
         #endregion
@@ -35,7 +43,12 @@ namespace PimsApi.Test.Controllers
             var logger = new Mock<ILogger<ParcelController>>();
             var config = new Mock<IConfiguration>();
             _dbContext = GetDatabaseContext();
-            _parcelController = new ParcelController(logger.Object, config.Object, _dbContext);
+            var mapperConfig = new MapperConfiguration(cfg => {
+                cfg.AddProfile(new ParcelProfile());
+            });
+            _mapper = mapperConfig.CreateMapper();
+
+            _parcelController = new ParcelController(logger.Object, config.Object, _dbContext, _mapper);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -94,6 +107,40 @@ namespace PimsApi.Test.Controllers
 
             // Act
             var result = _parcelController.GetMyParcels(50, 25, 50, 25);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.Parcel[] actualParcels = Assert.IsType<Model.Parcel[]>(actionResult.Value);
+            Assert.Equal(new Model.Parcel[] { new Model.Parcel(_expectedParcel) }, actualParcels);
+        }
+
+        [Fact]
+        public void GetMyParcels_FilterAgency()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Act
+            var result = _parcelController.GetMyParcels(agencyId: AGENCY_ID);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.Parcel[] actualParcels = Assert.IsType<Model.Parcel[]>(actionResult.Value);
+            Assert.Equal(new Model.Parcel[] { new Model.Parcel(_expectedParcel) }, actualParcels);
+        }
+
+        [Fact]
+        public void GetMyParcels_FilterClassification()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Act
+            var result = _parcelController.GetMyParcels(propertyClassificationId: CLASSIFICATION_ID);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
@@ -211,8 +258,8 @@ namespace PimsApi.Test.Controllers
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
-            Model.ParcelDetail actualParcelDetail = Assert.IsType<Model.ParcelDetail>(jsonResult.Value);
-            Assert.Equal(new Model.ParcelDetail(expectedTestParcel), actualParcelDetail);
+            MapperModel.ParcelModel actualParcelDetail = Assert.IsType<MapperModel.ParcelModel> (jsonResult.Value);
+            Assert.Equal(_mapper.Map<MapperModel.ParcelModel>(expectedTestParcel).Id, actualParcelDetail.Id);
         }
 
         #endregion
