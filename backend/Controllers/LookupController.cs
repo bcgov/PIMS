@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace Pims.Api.Controllers
 {
     /// <summary>
-    /// LookupController class, provides endpoints for managing my parcels.
+    /// LookupController class, provides endpoints for code lookups.
     /// </summary>
     [Authorize]
     [ApiController]
