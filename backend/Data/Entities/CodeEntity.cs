@@ -11,7 +11,7 @@ namespace Pims.Api.Data.Entities
     {
         #region Properties
         /// <summary>
-        /// get/set - A unique code for the code.
+        /// get/set - A unique id for the code.
         /// </summary>
         /// <value></value>
         public int Id { get; set; }
