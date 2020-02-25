@@ -34,8 +34,8 @@ pipeline {
     TEST_ENV = "test"
 
     // We are promoting DEV -> TEST with this pipeline
-    SOURCE = DEV_ENV
-    DESTINATION = TEST_ENV
+    SOURCE = "${DEV_ENV}"
+    DESTINATION = "${TEST_ENV}"
   }
   stages {
     stage("Initialize") {
@@ -43,8 +43,8 @@ pipeline {
       steps {
         script {
           // load supporting functions from external script files
-          cli = load "./openshift/jenkins/common.groovy"
-          notify = load "./openshift/jenkins/notify.groovy"
+          cli = load "openshift/pipelines/scripts/common.groovy"
+          notify = load "openshift/pipelines/scripts/notify.groovy"
 
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
@@ -79,6 +79,9 @@ pipeline {
     }
     stage("Deploy API To TEST") {
       agent any
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
       environment {
         COMP_NAME = "api"
       }
@@ -88,7 +91,7 @@ pipeline {
             openshift.withProject() {
               def image_name = "${APP_NAME}-${COMP_NAME}"
               echo "[ci/cd]  Tagging ${image_name}:${SOURCE} for deployment to ${DESTINATION.toUpperCase()} ..."
-              openshift.tag("${image_name}@${SOURCE}", "${image_name}:${DESTINATION}")
+              openshift.tag("${image_name}:${SOURCE}", "${image_name}:${DESTINATION}")
             }
 
             openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
@@ -105,6 +108,9 @@ pipeline {
     }
     stage("Deploy FRONTEND To TEST") {
       agent any
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
       environment {
         COMP_NAME = "app"
       }
@@ -114,7 +120,7 @@ pipeline {
             openshift.withProject() {
               def image_name = "${APP_NAME}-${COMP_NAME}"
               echo "[ci/cd]  Tagging ${image_name}:${SOURCE} for deployment to ${DESTINATION.toUpperCase()} ..."
-              openshift.tag("${image_name}@${SOURCE}", "${image_name}:${DESTINATION}")
+              openshift.tag("${image_name}:${SOURCE}", "${image_name}:${DESTINATION}")
             }
 
             openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
@@ -136,6 +142,22 @@ pipeline {
           notify.deploySuccess(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
         }
       }
+    }
+  }
+  post {
+    aborted {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        }
+    }
+    }
+    failure {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        }
+    }
     }
   }
 }
