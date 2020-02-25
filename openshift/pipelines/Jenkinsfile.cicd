@@ -49,8 +49,8 @@ pipeline {
       steps {
         script {
           // load supporting functions from external script files
-          cli = load "./openshift/jenkins/common.groovy"
-          notify = load "./openshift/jenkins/notify.groovy"
+          cli = load "openshift/pipelines/scripts/common.groovy"
+          notify = load "openshift/pipelines/scripts/notify.groovy"
 
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
@@ -221,6 +221,9 @@ pipeline {
     }
     stage("Deploy API to DEV") {
       agent any
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
       environment {
         COMP_NAME = "api"
       }
@@ -258,6 +261,9 @@ pipeline {
     }
     stage("Deploy FRONTEND to DEV") {
       agent any
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
       environment {
         COMP_NAME = "app"
       }
@@ -325,6 +331,22 @@ pipeline {
           echo "[ci/cd]  No changes ..."
           currentBuild.result = 'ABORTED'
           notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+        }
+      }
+    }
+  }
+  post {
+    aborted {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        }
+    }
+    }
+    failure {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
         }
       }
     }

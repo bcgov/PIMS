@@ -1,23 +1,22 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: ${COMP_NAME}-deployment-template
+  name: pims-db-deployment-template
   annotations:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
 objects:
-  - kind: Secret
-    apiVersion: v1
-    metadata:
-      name: ${COMP_NAME}-${SUFFIX}-secret
-    stringData:
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${COMP_NAME}-${SUFFIX}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
       annotations:
         description: Exposes the database server
+      labels:
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: database
     spec:
       ports:
         - name: 1433-tcp
@@ -25,15 +24,20 @@ objects:
           port: 1433
           targetPort: 1433
       selector:
-        name: ${COMP_NAME}-${SUFFIX}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
       type: ClusterIP
       sessionAffinity: None
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${COMP_NAME}-${SUFFIX}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
       annotations:
         description: Defines how to deploy the database server
+      labels:
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: database
     spec:
       strategy:
         type: Rolling
@@ -43,26 +47,30 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${COMP_NAME}-${SUFFIX}
+              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
             from:
               kind: ImageStreamTag
-              namespace: ${TOOLS_NAMESPACE}
+              namespace: "${PROJECT_NAMESPACE}-tools"
               name: ${SQL_SERVER_RUNTIME_IMAGE}
       replicas: 1
       selector:
-        name: ${COMP_NAME}-${SUFFIX}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
       template:
         metadata:
-          name: ${COMP_NAME}-${SUFFIX}
+          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
           labels:
-            name: ${COMP_NAME}-${SUFFIX}
+            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+            app: ${APP_NAME}
+            component: ${COMP_NAME}
+            env: ${ENV_NAME}
+            role: database
         spec:
           volumes:
             - name: mssql-data
               persistentVolumeClaim:
-                claimName: ${COMP_NAME}-${SUFFIX}-data
+                claimName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-data
           containers:
-            - name: ${COMP_NAME}-${SUFFIX}
+            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
               image: ""
               ports:
                 - containerPort: 1433
@@ -73,7 +81,7 @@ objects:
                 - name: MSSQL_SA_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${COMP_NAME}-${SUFFIX}-secret
+                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-secret
                       key: MSSQL_SA_PASSWORD
               resources:
                 limits:
@@ -84,7 +92,12 @@ objects:
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: ${COMP_NAME}-${SUFFIX}-data
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-data
+      labels:
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: database
     spec:
       accessModes:
         - ReadWriteOnce
@@ -99,19 +112,20 @@ parameters:
     value: pims
   - name: COMP_NAME
     displayName: Component Name
-    description: The name of the application component (e.g ui, backend, database).
+    description: The name of the application component [app, api, db]
     required: true
-    value: database
-  - name: SUFFIX
-    displayName: Name Suffix
-    description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
+    value: db
+  - name: ENV_NAME
+    displayName: Environment name
+    description: The name for this environment [dev, test, prod]
     required: true
     value: dev
-  - name: TOOLS_NAMESPACE
-    displayName: Image Namespace
-    description: The OpenShift namespace where the SQL Server image resides.
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description:
+      The namespace of the OpenShift project containing the application.
     required: true
-    value: jcxjin-tools
+    value: jcxjin
   - name: SQL_SERVER_RUNTIME_IMAGE
     displayName: Microsoft SQL Server image
     description: The Microsoft SQL Server image tag.
@@ -127,8 +141,3 @@ parameters:
     description: Volume space available for data, e.g. 512Mi, 2Gi
     value: 5Gi
     required: true
-  - name: MSSQL_SA_PASSWORD
-    displayName: Administrator Password
-    description: Administrator Password
-    generate: expression
-    from: "[a-zA-Z0-9]{16}"
