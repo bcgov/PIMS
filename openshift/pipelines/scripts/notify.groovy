@@ -41,12 +41,12 @@ def deploySuccess(appName, environment, changelog, vanity_url, rc_url) {
   )
 }
 
-def deployFailure(appName, environment, error, vanity_url, rc_url) {
+def deployFailure(appName, environment, error_msg, vanity_url, rc_url) {
   rocketChatSend(
     rc_url,
-    "@all Couldn't deploy **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) to ${environment} 🤕 \n ${env.BUILD_URL}",
-    "Error:",
-    error,
+    "@all Could not deploy **${appName}**, build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) to ${environment} 🤕",
+    "${appName} Deployment",
+    error_msg,
     "#e3211e",  // red
     "https://i.imgflip.com/1czxka.jpg"
   )
@@ -55,7 +55,7 @@ def deployFailure(appName, environment, error, vanity_url, rc_url) {
 def noChanges(appName, environment, rc_url) {
   rocketChatSend(
     rc_url,
-    "@all The CI/CD pipeline ran but no changes were detected for **${appName}**. Build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) was **NOT** deployed to ${environment} 🤕",
+    "@all The CI/CD pipeline ran but no changes were detected for **${appName}**. \n Build [${env.BUILD_DISPLAY_NAME}](${env.BUILD_URL}) was **NOT** deployed to ${environment} 🤕",
     "${appName} Deployment",
     "",
     "#e3211e",  // red
