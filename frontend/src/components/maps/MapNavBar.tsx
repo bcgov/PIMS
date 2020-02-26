@@ -20,7 +20,7 @@ function MapNavBar() {
         <NavDropdown title={keycloak?.profile?.firstName} id="user-dropdown" >
           <NavDropdown.Item onClick={() => {
             history.push('/');
-            keycloak!!.logout();
+            keycloak!.logout();
           }}>Sign Out</NavDropdown.Item>
         </NavDropdown>
       </Nav>
