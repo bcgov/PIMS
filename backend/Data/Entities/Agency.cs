@@ -11,12 +11,6 @@ namespace Pims.Api.Data.Entities
         #region Properties
 
         /// <summary>
-        /// get/set - A unique code for the agency.
-        /// </summary>
-        /// <value></value>
-        public string Code { get; set; }
-
-        /// <summary>
         /// get/set - A description of the code.
         /// </summary>
         /// <value></value>
@@ -27,11 +21,6 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <value></value>
         public int? ParentId { get; set; }
-
-        public override string Type
-        {
-            get { return "agency"; }
-        }
 
         /// <summary>
         /// get/set - The parent agency this agency belongs to.

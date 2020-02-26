@@ -49,7 +49,7 @@ namespace Pims.Api.Controllers
         [Route("/api/[controller]/agencies")]
         public IActionResult GetAgencies ()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies);
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
             return new JsonResult(agencyCodes);
         }
 
@@ -61,7 +61,7 @@ namespace Pims.Api.Controllers
         [Route("/api/[controller]/propertyClassifications")]
         public IActionResult GetPropertyClassifications ()
         {
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications);
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
             return new JsonResult(propertyClassificationCodes);
         }
 
@@ -73,8 +73,8 @@ namespace Pims.Api.Controllers
         [Route("/api/[controller]/all")]
         public IActionResult GetAll()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies);
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications);
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
 
             return new JsonResult(agencyCodes.Concat(propertyClassificationCodes));
         }

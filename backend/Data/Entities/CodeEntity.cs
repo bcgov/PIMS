@@ -17,6 +17,12 @@ namespace Pims.Api.Data.Entities
         public int Id { get; set; }
 
         /// <summary>
+        /// get/set - A unique code for the lookup.
+        /// </summary>
+        /// <value></value>
+        public virtual string Code { get; set; }
+
+        /// <summary>
         /// get/set - The name of the code.
         /// </summary>
         /// <value></value>
@@ -27,8 +33,6 @@ namespace Pims.Api.Data.Entities
         /// </summary>
         /// <value></value>
         public bool IsDisabled { get; set; }
-
-        public abstract string Type { get;  }
         #endregion
 
         #region Constructors
