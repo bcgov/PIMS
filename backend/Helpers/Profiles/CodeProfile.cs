@@ -11,6 +11,7 @@ namespace Pims.Api.Helpers.Profiles
         public CodeProfile()
         {
             CreateMap<Entity.CodeEntity, CodeModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
                 .IncludeAllDerived();
 
             CreateMap<CodeModel, Entity.CodeEntity>()
