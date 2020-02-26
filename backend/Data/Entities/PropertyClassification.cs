@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Api.Data.Entities
 {
@@ -7,9 +8,11 @@ namespace Pims.Api.Data.Entities
     /// </summary>
     public class PropertyClassification : CodeEntity
     {
-        public override string Type
+        [NotMapped]
+        public override string Code
         {
-            get { return "propertyClassification"; }
+            get { return Name; }
+            set { throw new InvalidOperationException("PropertyClassification does not support setting the Code property"); }
         }
 
         #region Constructors
