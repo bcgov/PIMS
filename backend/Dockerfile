@@ -3,7 +3,12 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY *.sln ./
+COPY /api/*.csproj ./api/
+COPY /entities/*.csproj ./entities/
+COPY /test/*.csproj ./test/
+COPY /dal/*.csproj ./dal/
+
 RUN dotnet restore
 RUN dotnet tool install --global dotnet-ef --version 3.1.0
 ENV PATH="$PATH:/root/.dotnet/tools"
