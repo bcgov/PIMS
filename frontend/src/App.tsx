@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
 import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
+import { Spinner } from 'react-bootstrap';
 import { KeycloakInstance } from 'keycloak-js';
 import configureStore from "configureStore";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -17,18 +18,23 @@ export const store = configureStore();
 
 interface IState {
   keycloak?: KeycloakInstance<"native">,
-  keycloakInitialized: boolean
+  keycloakInitialized: boolean,
+  keycloakUserLoaded: boolean
 }
 
 class App extends Component<ReactKeycloakInjectedProps, IState> {
 
   constructor(props: ReactKeycloakInjectedProps) {
     super(props);
-    this.state = { keycloak: props.keycloak, keycloakInitialized: this.props.keycloakInitialized };
+    this.state = { keycloak: props.keycloak, keycloakInitialized: this.props.keycloakInitialized, keycloakUserLoaded: false };
+    const self = this;
+    if (this.state.keycloak?.authenticated) {
+      this.state.keycloak?.loadUserProfile().then(() => { self.setState({ keycloakUserLoaded: true }) });
+    }
   }
 
   render() {
-    return (
+    return !this.state.keycloak?.authenticated || this.state.keycloak?.profile ? (
       <Router>
         <Container className="App" fluid={true}>
           <Header></Header>
@@ -42,7 +48,7 @@ class App extends Component<ReactKeycloakInjectedProps, IState> {
           <Footer></Footer>
         </Container>
       </Router>
-    );
+    ) : <Spinner animation="border"></Spinner>;
   }
 }
 
