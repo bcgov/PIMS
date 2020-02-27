@@ -27,6 +27,8 @@ namespace PimsApi.Test.Controllers
         private readonly IParcelService _parcelService;
         private readonly IMapper _mapper;
         private readonly ILogger<ParcelController> _logger;
+        private static readonly int AGENCY_ID = 2;
+        private static readonly int CLASSIFICATION_ID = 3;
         private readonly IConfiguration _config;
         private readonly ClaimsPrincipal _user;
         private readonly Entity.Parcel _expectedParcel = new Entity.Parcel()
@@ -35,6 +37,8 @@ namespace PimsApi.Test.Controllers
             Latitude = 50,
             Longitude = 25,
             RowVersion = new byte[] {12, 13, 14}
+            AgencyId = AGENCY_ID,
+            ClassificationId = CLASSIFICATION_ID
         };
 
         #endregion
@@ -53,6 +57,11 @@ namespace PimsApi.Test.Controllers
             _mapper = mapperConfig.CreateMapper();
             _dbContext = GetDatabaseContext();
             _user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                cfg.AddProfile(new ParcelProfile());
+            });
+            _mapper = mapperConfig.CreateMapper();
+
+            _parcelController = new ParcelController(logger.Object, config.Object, _dbContext, _mapper);
             {
                 new Claim (ClaimTypes.NameIdentifier, Guid.NewGuid ().ToString ()),
                     new Claim (ClaimTypes.Role, "contributor")
@@ -121,7 +130,40 @@ namespace PimsApi.Test.Controllers
         }
 
         [Fact]
-        public void GetMyParcels_FilterLongitude()
+        public void GetMyParcels_FilterAgency()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Act
+            var result = _parcelController.GetMyParcels(agencyId: AGENCY_ID);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.Parcel[] actualParcels = Assert.IsType<Model.Parcel[]>(actionResult.Value);
+            Assert.Equal(new Model.Parcel[] { new Model.Parcel(_expectedParcel) }, actualParcels);
+        }
+
+        [Fact]
+        public void GetMyParcels_FilterClassification()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Act
+            var result = _parcelController.GetMyParcels(propertyClassificationId: CLASSIFICATION_ID);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.Parcel[] actualParcels = Assert.IsType<Model.Parcel[]>(actionResult.Value);
+            Assert.Equal(new Model.Parcel[] { new Model.Parcel(_expectedParcel) }, actualParcels);
+        }
+
+        [Fact]
         {
             // Arrange
             Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);

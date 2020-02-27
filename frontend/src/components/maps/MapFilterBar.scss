@@ -1,0 +1,25 @@
+@import "../../fonts.scss";
+.map-filter-bar.container-fluid {
+  position: fixed;
+  top: 8rem;
+  z-index: 500;
+  color: #494949;
+  .row .col-md-5 {
+    display: inline-flex;
+  }
+  input {
+    border-radius: 0;
+    margin-right: 0.5rem;
+    border: 1px solid #606060;
+    max-width: 30rem;
+    min-width: 15rem;
+    min-height: 2.45rem;
+  }:focus {
+    box-shadow: unset;
+  }
+  .bar-item {
+    padding: 0;
+    margin-right: .5rem;
+    flex-grow: unset;
+  }
+}

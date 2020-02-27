@@ -1,0 +1,20 @@
+button.map-filter-dropdown {
+    background-color: #fff;
+    min-width: 7rem;
+    color: #494949;
+    border: 1px solid #606060;
+    transition: none;
+    opacity: 1;
+    font-size: 14px;
+    font-family: "BCSans" Fallback, sans-serif;
+    padding: 0.5rem;
+  }
+  
+  .dropdown {
+    .dropdown-menu {
+      margin-top: 0;
+    }.show {
+      max-height: 25rem;
+      overflow-y: auto;
+    }
+  }

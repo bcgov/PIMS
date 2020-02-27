@@ -1,29 +1,17 @@
 namespace Pims.Dal.Entities
+using System.ComponentModel.DataAnnotations.Schema;
 {
     /// <summary>
     /// PropertyClassificationClassification class, provides an entity for the datamodel to manage a list of property classifications.
     /// </summary>
-    public class PropertyClassification : BaseEntity
+    public class PropertyClassification : CodeEntity
     {
-        #region Properties
-        /// <summary>
-        /// get/set - The primary key IDENTITY SEED.
-        /// </summary>
-        /// <value></value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// get/set - The unique name of this building type construction.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this row is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
-        #endregion
+        [NotMapped]
+        public override string Code
+        {
+            get { return Name; }
+            set { throw new InvalidOperationException("PropertyClassification does not support setting the Code property"); }
+        }
 
         #region Constructors
         /// <summary>

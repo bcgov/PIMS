@@ -39,7 +39,7 @@ const defaultParcelDetail: IParcelDetail = {
   landArea: "11",
   landLegalDescription: "12",
   pid: "13",
-  propertyClassification: "14",
+  classification: "14",
   propertyStatus: "15",
   agency: "16"
 }
