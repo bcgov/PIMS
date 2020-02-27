@@ -20,17 +20,26 @@ namespace Pims.Dal.Services.Concrete
             _user = user;
         }
 
-        public IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
+        public IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null)
         {
+            IQueryable<Parcel> query = null;
             if (neLat != null && neLong != null && swLat != null && swLong != null)
             {
-                return _dbContext.Parcels.Where(parcel =>
+                query = _dbContext.Parcels.Where(parcel =>
                     parcel.Latitude <= neLat
                     && parcel.Latitude >= swLat
                     && parcel.Longitude <= neLong
                     && parcel.Longitude >= swLong);
             }
-            return _dbContext.Parcels;
+            if(agencyId != null)
+            {
+                query = query.Where(parcel => parcel.AgencyId == agencyId);
+            }
+            if (propertyClassificationId != null)
+            {
+                query = query.Where(parcel => parcel.ClassificationId == propertyClassificationId);
+            }
+            return query.ToArray();
         }
 
         public Parcel GetParcel(int id)

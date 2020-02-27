@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Security.Claims;
 using Pims.Api.Controllers;
-using Pims.Api.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Entity = Pims.Api.Data.Entities;
+using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models;
-using System.Linq;
 using Pims.Api.Helpers.Profiles;
+using Pims.Dal;
 using AutoMapper;
 
 namespace PimsApi.Test.Controllers

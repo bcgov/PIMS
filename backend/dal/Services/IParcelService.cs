@@ -10,7 +10,7 @@ namespace Pims.Dal.Services
      */
     public interface IParcelService
     {
-        IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null);
+        IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null);
         Parcel GetParcel(int id);
         Parcel AddMyParcel(Parcel parcel);
         Parcel UpdateMyParcel(Parcel parcel);

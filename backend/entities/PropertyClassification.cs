@@ -1,5 +1,6 @@
-namespace Pims.Dal.Entities
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
+namespace Pims.Dal.Entities
 {
     /// <summary>
     /// PropertyClassificationClassification class, provides an entity for the datamodel to manage a list of property classifications.

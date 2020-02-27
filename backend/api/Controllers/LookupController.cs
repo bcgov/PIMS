@@ -1,5 +1,5 @@
 using System.Linq;
-using Pims.Api.Data;
+using Pims.Dal;
 using Model = Pims.Api.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -50,7 +50,7 @@ namespace Pims.Api.Controllers
         public IActionResult GetAgencies ()
         {
             var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
-            return new JsonResult(agencyCodes);
+            return new JsonResult(agencyCodes.ToArray());
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Pims.Api.Controllers
         public IActionResult GetPropertyClassifications ()
         {
             var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
-            return new JsonResult(propertyClassificationCodes);
+            return new JsonResult(propertyClassificationCodes.ToArray());
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Pims.Api.Controllers
             var agencyCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.Agencies).OrderBy(a => a.Name);
             var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_dbContext.PropertyClassifications).OrderBy(a => a.Name);
 
-            return new JsonResult(agencyCodes.Concat(propertyClassificationCodes));
+            return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).ToArray());
         }
         #endregion
     }

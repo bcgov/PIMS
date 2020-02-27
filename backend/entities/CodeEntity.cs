@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pims.Api.Data.Entities
+namespace Pims.Dal.Entities
 {
     /// <summary>
     /// CodeEntity class, provides an entity for the datamodel to manage entities that represent codified values.

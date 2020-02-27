@@ -54,9 +54,9 @@ namespace Pims.Api.Controllers
         /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong)
+        public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong, int? agencyId = null, int? propertyClassificationId = null)
         {
-            var parcels = _parcelService.GetParcels(neLat, neLong, swLat, swLong);
+            var parcels = _parcelService.GetParcels(neLat, neLong, swLat, swLong, agencyId, propertyClassificationId);
             return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
         }
 
