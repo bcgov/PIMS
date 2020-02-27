@@ -49,19 +49,20 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Creates a new instance of a ParcelEvaluation class.
         /// </summary>
-        public ParcelEvaluation () { }
+        public ParcelEvaluation() { }
 
         /// <summary>
         /// Creates a new instance of a ParcelEvaluation class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="fiscalYear"></param>
         /// <param name="parcel"></param>
-        public ParcelEvaluation (int fiscalYear, Parcel parcel)
+        public ParcelEvaluation(int fiscalYear, Parcel parcel)
         {
             this.FiscalYear = fiscalYear;
             this.ParcelId = parcel?.Id ??
-                throw new ArgumentNullException (nameof (parcel));
+                throw new ArgumentNullException(nameof(parcel));
             this.Parcel = parcel;
+            parcel.Evaluations.Add(this);
         }
         #endregion
     }

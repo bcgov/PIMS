@@ -46,6 +46,15 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get all cities from the datasource. // TODO: This needs to be filtered by province at some point.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<City> GetAll()
+        {
+            return this.Context.Cities.OrderBy(c => c.SortOrder).ThenBy(c => c.Name).ToArray();
+        }
+
+        /// <summary>
         /// Updates the specified city in the datasource.
         /// </summary>
         /// <param name="entity"></param>
