@@ -22,10 +22,12 @@ namespace Pims.Dal.Services
         }
 
 
-        public IEnumerable<Parcel> GetParcels() // TODO: sort and filter.
+        public IEnumerable<Parcel> GetParcels(int page, int quantity, string sort) 
         {
-            return _dbContext.Parcels
+            var entities = _dbContext.Parcels
                 .AsNoTracking();
+            var pagedEntities = entities.Skip((page - 1) * quantity).Take(quantity);
+            return pagedEntities;
         }
 
         public Parcel GetParcel(int id)

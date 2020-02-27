@@ -33,7 +33,8 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
-        /// <param name="dbContext"></param>
+        /// <param name="parcelService"></param>
+        /// <param name="mapper"></param>
         public ParcelController(ILogger<ParcelController> logger, IConfiguration configuration, IParcelService parcelService, IMapper mapper)
         {
             _logger = logger;
@@ -46,8 +47,11 @@ namespace Pims.Api.Controllers
         #region Endpoints
         /// <summary>
         /// Get all the parcels filtered by the lat/lon coords.
-        /// 
         /// </summary>
+        /// <param name="neLat"></param>
+        /// <param name="neLong"></param>
+        /// <param name="swLat"></param>
+        /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong)
@@ -57,8 +61,9 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
-        /// /// Get the parcel from the datasource if the user is allowed.
+        /// Get the parcel from the datasource if the user is allowed.
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult GetMyParcel(int id)
@@ -75,9 +80,10 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Add a new parcel to the datasource for the current user.
         /// /// </summary>
-        /// <param name="parcel"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "property-add")]
         public IActionResult AddMyParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entities.Parcel>(model);
@@ -100,10 +106,10 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Update the specified parcel in the datasource if the user is allowed.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="parcel"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "property-edit")]
         public IActionResult UpdateMyParcel([FromBody] ParcelModel model)
         {
             var entity = _parcelService.GetParcel(model.Id);
@@ -127,9 +133,10 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Delete the specified parcel from the datasource if the user is allowed.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "property-add")]
         public IActionResult DeleteMyParcels(ParcelModel model)
         {
             var entityToDelete = _mapper.Map<Entities.Parcel>(model);

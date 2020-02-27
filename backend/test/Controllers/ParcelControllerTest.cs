@@ -26,11 +26,15 @@ namespace PimsApi.Test.Controllers
         private readonly PIMSContext _dbContext;
         private readonly IParcelService _parcelService;
         private readonly IMapper _mapper;
+        private readonly ILogger<ParcelController> _logger;
+        private readonly IConfiguration _config;
+        private readonly ClaimsPrincipal _user;
         private readonly Entity.Parcel _expectedParcel = new Entity.Parcel()
         {
             Id = 1,
             Latitude = 50,
-            Longitude = 25
+            Longitude = 25,
+            RowVersion = new byte[] {12, 13, 14}
         };
 
         #endregion
@@ -38,30 +42,65 @@ namespace PimsApi.Test.Controllers
         #region Constructors
         public ParcelControllerTest()
         {
-            var logger = new Mock<ILogger<ParcelController>>();
-            var config = new Mock<IConfiguration>();
+            _logger = new Mock<ILogger<ParcelController>>().Object;
+            _config = new Mock<IConfiguration>().Object;
             var mapperConfig = new MapperConfiguration(cfg => {
                 cfg.AddProfile(new ParcelProfile());
                 cfg.AddProfile(new AddressProfile());
                 cfg.AddProfile(new BuildingProfile());
+                cfg.AddProfile(new BaseProfile());
             });
             _mapper = mapperConfig.CreateMapper();
             _dbContext = GetDatabaseContext();
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            _user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim (ClaimTypes.NameIdentifier, Guid.NewGuid ().ToString ()),
                     new Claim (ClaimTypes.Role, "contributor")
             }, "mock"));
-            _parcelService = new ParcelService(_dbContext, user);
-            _parcelController = new ParcelController(logger.Object, config.Object, _parcelService, _mapper);
+            _parcelService = new ParcelService(_dbContext, _user);
+            _parcelController = new ParcelController(_logger, _config, _parcelService, _mapper);
             _parcelController.ControllerContext = new ControllerContext()
             {
-                HttpContext = new DefaultHttpContext() { User = user }
+                HttpContext = new DefaultHttpContext() { User = _user }
             };
         }
         #endregion
 
         #region Tests
+        #region DeleteMyParcels
+        [Fact]
+        public void DeleteMyParcels_Success()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Execute
+            var parcelController = GetParcelControllerForAdmin();
+            var modelToDelete = _mapper.Map<Model.ParcelModel>(_expectedParcel);
+            var result = parcelController.DeleteMyParcels(modelToDelete);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.ParcelModel actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(_mapper.Map<Model.ParcelModel>(_expectedParcel), actualParcel);
+        }
+
+        [Fact]
+        public void DeleteMyParcels_NoClaim()
+        {
+            // Arrange
+            Entity.Parcel[] testParcels = getTestParcels(_expectedParcel);
+            _dbContext.Parcels.AddRange(testParcels);
+            _dbContext.SaveChanges();
+
+            // Act
+            Assert.Throws<UnauthorizedAccessException>(() =>
+             _parcelController.DeleteMyParcels(_mapper.Map<Model.ParcelModel>(_expectedParcel)));
+        }
+        #endregion
+
         #region GetMyParcels
 
         [Fact]
@@ -244,6 +283,17 @@ namespace PimsApi.Test.Controllers
             var databaseContext = new PIMSContext(options);
             databaseContext.Database.EnsureCreated();
             return databaseContext;
+        }
+
+        private ParcelController GetParcelControllerForAdmin()
+        {
+            ClaimsPrincipal adminUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+{
+                new Claim (ClaimTypes.NameIdentifier, Guid.NewGuid ().ToString ()),
+                    new Claim (ClaimTypes.Role, "administrator")}, "mock"));
+            var parcelService = new ParcelService(_dbContext, adminUser);
+
+            return new ParcelController(_logger, _config, parcelService, _mapper);
         }
         #endregion
     }

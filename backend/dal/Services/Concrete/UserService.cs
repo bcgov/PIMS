@@ -22,9 +22,10 @@ namespace Pims.Dal.Services.Concrete
             _user = user;
         }
 
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<User> GetUsers(int page = 1, int quantity = 10, string sort = null)
         {
             var query = _dbContext.Users.AsNoTracking();
+            query = query.Skip((page - 1) * quantity).Take(quantity);
             return query.ToArray();
         }
 

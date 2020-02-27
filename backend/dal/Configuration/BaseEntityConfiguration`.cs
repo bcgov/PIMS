@@ -16,7 +16,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
             builder.Property(m => m.UpdatedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.RowVersion).IsRowVersion();
-            // builder.Property(m => m.RowVersion).IsConcurrencyToken();
+            builder.Property(m => m.RowVersion).IsConcurrencyToken();
 
             builder.HasOne<User>().WithMany().HasForeignKey(m => m.CreatedById).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne<User>().WithMany().HasForeignKey(m => m.UpdatedById).OnDelete(DeleteBehavior.ClientSetNull);

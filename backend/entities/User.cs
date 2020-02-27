@@ -56,14 +56,14 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>
         /// <returns></returns>
-        public ICollection<UserAgency> Agencies { get; set; } = new List<UserAgency>();
+        public ICollection<UserAgency> Agencies { get; } = new List<UserAgency>();
 
         /// <summary>
         /// get - A collection of roles this user belongs to.
         /// </summary>
         /// <typeparam name="Role"></typeparam>
         /// <returns></returns>
-        public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
+        public ICollection<UserRole> Roles { get; } = new List<UserRole>();
         #endregion
 
         #region Constructors

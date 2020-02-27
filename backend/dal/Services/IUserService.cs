@@ -10,7 +10,7 @@ namespace Pims.Dal.Services
      */
     public interface IUserService
     {
-        public IEnumerable<User> GetUsers();
+        public IEnumerable<User> GetUsers(int page, int quantity, string sort);
         public User GetUser(Guid id);
         public User AddUser(User user);
         public User UpdateUser(User user);

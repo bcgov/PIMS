@@ -10,12 +10,12 @@ namespace Pims.Dal.Services
      */
     public interface IAdminParcelService
     {
-        IEnumerable<Parcel> GetParcels();
+        IEnumerable<Parcel> GetParcels(int page, int quantity, string sort);
         Parcel GetParcel(int id);
         Parcel GetParcelByPid(int pid);
         Parcel AddParcel(Parcel parcel);
         Parcel[] AddParcels(Parcel[] parcels);
         Parcel UpdateParcel(Parcel parcel);
-        Parcel DeleteParcel(int id, Parcel parcel);
+        Parcel DeleteParcel(Parcel parcel);
     }
 }

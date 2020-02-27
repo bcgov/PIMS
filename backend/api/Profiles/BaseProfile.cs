@@ -22,7 +22,10 @@ namespace Pims.Api.Helpers.Profiles
                     if (!String.IsNullOrWhiteSpace(source.RowVersion))
                     {
                         var rowversion = Convert.FromBase64String(source.RowVersion);
-                        dest.RowVersion = rowversion;
+                        if (dest.RowVersion == null)
+                        {
+                            dest.RowVersion = new byte[rowversion.Length];
+                        }
                         Buffer.BlockCopy(rowversion, 0, dest.RowVersion, 0, rowversion.Length);
                     }
                 });

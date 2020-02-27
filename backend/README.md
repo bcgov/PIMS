@@ -47,7 +47,7 @@ Refer to the CLI documentation [here](https://docs.microsoft.com/en-us/ef/core/m
 
 The DB is setup and configured through Entity Framework Code-First processes. All dotnet ef commands must be run from the /dal directory.
 
-To use the Entity Framework CLI you will need to install the **.NET SDK version**, **dotnet-ef tool** and add a `connectionstrings.json` configuration file to /dal.
+To use the Entity Framework CLI you will need to install the **.NET SDK version**, **dotnet-ef tool** and add a `connectionstrings.json` configuration file to /dal. This connection string can also be included in a .env file in the /dal folder.
 
 **NOTE** - Please do not commit the `connectionstrings.json` file to source code. It is likely to contain secret information that should not be shared. By default `.gitignore` will exclude it.
 
@@ -142,7 +142,7 @@ namespace Pims.Api.Migrations
 
 Any script that you want to run must be additionally included as build content in the project file.
 
-Edit the `pims.dal.csproj` file and add the `<Content>` with a `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>` (see below example).
+Edit the `Pims.Dal.csproj` file and add the `<Content>` with a `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>` (see below example). Note that by default all *.sql files within the /backend/dal/Migrations folder will be included in the project as Content.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

@@ -49,6 +49,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// GET - Returns a paged array of parcels from the datasource.
         /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
         /// <returns>Paged object with an array of parcels.</returns>
         [HttpGet("/api/[area]/parcels")]
         public IActionResult GetParcels(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
@@ -57,10 +60,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var entities = _adminParcelService.GetParcels();
+            var entities = _adminParcelService.GetParcels(page, quantity, sort);
             var total = entities.Count();
-            var pagedEntities = entities.Skip((page - 1) * quantity).Take(quantity);
-            var parcels = _mapper.Map<Api.Models.Parts.ParcelModel[]>(pagedEntities);
+            var parcels = _mapper.Map<Api.Models.Parts.ParcelModel[]>(entities);
             var paged = new Pims.Api.Models.Paged<Api.Models.Parts.ParcelModel>(parcels, page, quantity, total);
 
             return new JsonResult(paged);
@@ -255,13 +257,13 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel who was deleted.</returns>
-        [HttpDelete("{id}")]
-        public IActionResult DeleteParcel(int id, [FromBody] ParcelModel model)
+        [HttpDelete]
+        public IActionResult DeleteParcel([FromBody] ParcelModel model)
         {
             var entityToDelete = _mapper.Map<Entity.Parcel>(model);
 
             if (model.RowVersion == null) return BadRequest("Item does not exist");
-            var entity = _adminParcelService.DeleteParcel(id, entityToDelete);
+            var entity = _adminParcelService.DeleteParcel(entityToDelete);
 
             if (entity == null) return BadRequest("Item does not exist");
 

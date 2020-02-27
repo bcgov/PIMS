@@ -54,6 +54,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// GET - Returns a paged array of users from the datasource.
         /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet("/api/admin/users")]
         public IActionResult GetUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
@@ -62,9 +65,8 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var entities = _userService.GetUsers();
-            var total = entities.Count();
-            entities = entities.Skip((page - 1) * quantity).Take(quantity);
+            var entities = _userService.GetUsers(page, quantity, sort);
+            int total = entities.Count();
             var users = _mapper.Map<Model.UserModel[]>(entities);
             var paged = new Pims.Api.Models.Paged<Model.UserModel>(users, page, quantity, total);
             return new JsonResult(paged);
@@ -121,12 +123,11 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="model">The user model.</param>
         /// <returns>The user who was deleted.</returns>
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUser(Guid id, [FromBody] Model.UserModel model)
+        [HttpDelete]
+        public IActionResult DeleteUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entities.User>(model);
-            entity.RowVersion = Convert.FromBase64String(model.RowVersion);
-            var deletedEntity = _userService.DeleteUser(id, entity);
+            var deletedEntity = _userService.DeleteUser(entity);
 
             if (deletedEntity == null) return BadRequest("Item does not exist");
 
