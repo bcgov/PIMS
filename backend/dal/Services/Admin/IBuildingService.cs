@@ -14,6 +14,7 @@ namespace Pims.Dal.Services.Admin
         Building GetByLocalIdNoTracking(string localId);
         Building Get(int id);
         Building GetByLocalId(string localId);
+        Building GetByPidAndLocalId(int pid, string localId);
         IEnumerable<Building> Add(IEnumerable<Building> buildings);
     }
 }

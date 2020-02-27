@@ -109,6 +109,28 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get the building for the specified 'pid' and 'localId'.
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="localId"></param>
+        /// <returns></returns>
+        public Building GetByPidAndLocalId(int pid, string localId)
+        {
+            // TODO: Check for system-administrator role.
+            if (this.User == null) throw new NotAuthorizedException();
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.Address)
+                .Include(p => p.Address.City)
+                .Include(p => p.Address.Province)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency.Parent)
+                .SingleOrDefault(u => u.Parcel.ParcelId == pid && u.LocalId == localId);
+        }
+
+        /// <summary>
         /// Get the building for the specified 'id'.
         /// </summary>
         /// <param name="id"></param>
