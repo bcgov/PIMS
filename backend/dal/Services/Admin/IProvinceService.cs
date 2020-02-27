@@ -9,5 +9,6 @@ namespace Pims.Dal.Services.Admin
     public interface IProvinceService : IBaseService<Province>
     {
         IEnumerable<Province> GetNoTracking();
+        IEnumerable<Province> GetAll();
     }
 }

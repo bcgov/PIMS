@@ -29,6 +29,12 @@ namespace Pims.Dal.Services.Admin
         public IRoleService Role { get { return _serviceProvider.GetService<IRoleService>(); } }
 
         /// <summary>
+        /// get - The agency service.
+        /// </summary>
+        /// <value></value>
+        public IAgencyService Agency { get { return _serviceProvider.GetService<IAgencyService>(); } }
+
+        /// <summary>
         /// get - The parcel service.
         /// </summary>
         /// <value></value>
@@ -57,6 +63,36 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <value></value>
         public ICityService City { get { return _serviceProvider.GetService<ICityService>(); } }
+
+        /// <summary>
+        /// get - The city service.
+        /// </summary>
+        /// <value></value>
+        public IBuildingConstructionTypeService BuildingConstructionType { get { return _serviceProvider.GetService<IBuildingConstructionTypeService>(); } }
+
+        /// <summary>
+        /// get - The city service.
+        /// </summary>
+        /// <value></value>
+        public IBuildingPredominateUseService BuildingPredominateUse { get { return _serviceProvider.GetService<IBuildingPredominateUseService>(); } }
+
+        /// <summary>
+        /// get - The city service.
+        /// </summary>
+        /// <value></value>
+        public IPropertyClassificationService PropertyClassification { get { return _serviceProvider.GetService<IPropertyClassificationService>(); } }
+
+        /// <summary>
+        /// get - The city service.
+        /// </summary>
+        /// <value></value>
+        public IPropertyStatusService PropertyStatus { get { return _serviceProvider.GetService<IPropertyStatusService>(); } }
+
+        /// <summary>
+        /// get - The city service.
+        /// </summary>
+        /// <value></value>
+        public IPropertyTypeService PropertyType { get { return _serviceProvider.GetService<IPropertyTypeService>(); } }
         #endregion
 
         #region Constructors

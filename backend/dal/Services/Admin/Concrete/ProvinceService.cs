@@ -42,6 +42,15 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get all provinces from the datasource.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Province> GetAll()
+        {
+            return this.Context.Provinces.OrderBy(p => p.Name).ToArray();
+        }
+
+        /// <summary>
         /// Updates the specified province in the datasource.
         /// </summary>
         /// <param name="entity"></param>
