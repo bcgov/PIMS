@@ -6,6 +6,16 @@
   color: #fff;
   padding: 0px;
   min-height: 70px;
+  .longAppName {
+    @media  (max-width: 70rem) {
+      display: none;
+    }
+  }
+  .shortAppName {
+    @media not all and (max-width: 70rem) {
+      display: none;
+    }
+  }
 
   .bar {
     margin: 0px;
@@ -16,10 +26,10 @@
     }
 
     .brand-box {
-      padding-top:10px;
+      padding-top: 10px;
     }
 
-    .title {
+    .title h1 {
       @media (min-width: 992px) {
         text-align: left;
         padding-left: 40px;

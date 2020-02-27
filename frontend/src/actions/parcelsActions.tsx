@@ -19,7 +19,6 @@ export const storeParcelsAction = (parcelList: IParcel[]) => ({
 });
 
 //Parcel Detail API action
-
 export interface IAddress {
   line1: string,
   line2: string,
@@ -48,7 +47,7 @@ export interface IParcelDetail {
   latitude: number,
   longitude: number,
   propertyStatus: string,
-  propertyClassification: string,
+  classification: string,
   description: string,
   assessedValue: number,
   address: IAddress,
