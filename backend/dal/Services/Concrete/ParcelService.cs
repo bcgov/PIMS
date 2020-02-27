@@ -105,7 +105,7 @@ namespace Pims.Dal.Services.Concrete
                 throw new UnauthorizedAccessException();
             }
 
-            entity.RowVersion = parcel.RowVersion.ToArray();
+            _dbContext.Entry(entity).OriginalValues["RowVersion"] = parcel.RowVersion;
             _dbContext.Parcels.Remove(entity);
             _dbContext.SaveChanges();
             return entity;

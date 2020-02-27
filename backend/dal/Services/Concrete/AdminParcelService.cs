@@ -114,7 +114,7 @@ namespace Pims.Dal.Services
             var entity = _dbContext.Parcels.Find(parcel.Id);
             if (entity == null) throw new KeyNotFoundException();
 
-            entity.RowVersion = parcel.RowVersion.ToArray();
+            _dbContext.Entry(entity).OriginalValues["RowVersion"] = parcel.RowVersion;
             _dbContext.Parcels.Remove(entity);
             _dbContext.CommitTransaction();
 
