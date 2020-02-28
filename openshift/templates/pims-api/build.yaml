@@ -1,28 +1,38 @@
+# This is a build template for .NET Core 3.1
+# It will build a new image from the specified source control repo
+# that will run your application.
 kind: Template
 apiVersion: v1
 metadata:
-  name: ${COMP_NAME}-build-template
+  name: pims-api-build
   annotations:
     openshift.io/display-name: .NET Core 3.1 Build Template
     description: Build template for a .NET Core 3.1 application.
-    tags: ${COMP_NAME}
-labels:
-  name: ${COMP_NAME}-${SUFFIX}
-  app: ${APP_NAME}
-  role: backend
+    tags: pims-api
 objects:
+  # The final build image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${COMP_NAME}
+      name: ${APP_NAME}-${COMP_NAME}
       annotations:
         description: Keeps track of changes in the application image
+      labels:
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        role: backend
+  # The build config that will be created will be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${COMP_NAME}-${SUFFIX}
+      name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
       annotations:
         description: Defines how to build the application
+      labels:
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        role: backend
+        branch: ${GIT_REF}
     spec:
       triggers:
         - type: ImageChange
@@ -41,12 +51,18 @@ objects:
             kind: ImageStreamTag
             name: ${DOTNET_BUILDER_IMAGE}
           env:
+            - name: DOTNET_CONFIGURATION
+              value: ${DOTNET_CONFIGURATION}
             - name: DOTNET_STARTUP_PROJECT
               value: ${DOTNET_STARTUP_PROJECT}
+            - name: DOTNET_PUBLISH_READYTORUN
+              value: ${DOTNET_PUBLISH_READYTORUN}
+            - name: DOTNET_TEST_PROJECTS
+              value: ${DOTNET_TEST_PROJECTS}
       output:
         to:
           kind: ImageStreamTag
-          name: ${COMP_NAME}:latest
+          name: ${APP_NAME}-${COMP_NAME}:latest
       resources:
         limits:
           cpu: ${CPU_LIMIT}
@@ -62,11 +78,6 @@ parameters:
     description: The name of the application component (e.g ui, backend, database).
     required: true
     value: api
-  - name: SUFFIX
-    displayName: Name Suffix
-    description: A suffix appended to all objects; e.g. '-prod' or '-dev' or '-pr123'
-    required: true
-    value: dev
   - name: GIT_REPO_URL
     displayName: Git Repository URL
     description: The URL of the repository with your application source code.
@@ -86,14 +97,30 @@ parameters:
     displayName: .NET builder
     description: The s2i image which is used to build the code.
     required: true
-    value: dotnet-31-rhel7:3.1
+    value: dotnet-31-rhel7
+  - name: DOTNET_BUILDER_TAG
+    displayName: .NET builder tag
+    description: The s2i image tag which is used to build the code.
+    required: true
+    value: "3.1"
   - name: DOTNET_STARTUP_PROJECT
     displayName: Startup Project
     description:
       Set this to a project file (e.g. csproj) or a folder containing a single
       project file.
     required: true
-    value: BackendApi.csproj
+    value: pims.api.csproj
+  - name: DOTNET_PUBLISH_READYTORUN
+    displayName: Ahead-of-time compilation
+    description: Set this to 'true' to perform an ahead-of-time compilation.
+    value: "true"
+  - name: DOTNET_CONFIGURATION
+    displayName: Configuration
+    description: Set this to configuration (Release/Debug).
+    value: "Release"
+  - name: DOTNET_TEST_PROJECTS
+    displayName: Test projects
+    description: Set this to a space separated list of test projects to run before publishing.
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
