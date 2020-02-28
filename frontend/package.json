@@ -21,7 +21,6 @@
     "keycloak-js": "^8.0.1",
     "leaflet": "~1.6.0",
     "lodash": "^4.17.15",
-    "node-sass": "~4.13.0",
     "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-app-polyfill": "^1.0.5",
