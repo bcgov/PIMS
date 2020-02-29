@@ -300,7 +300,7 @@
         }
       ],
       "security-admin-console": [],
-      "team-blue-app": [],
+      "pims-app": [],
       "admin-cli": [],
       "broker": [
         {
@@ -347,7 +347,7 @@
           "attributes": {}
         }
       ],
-      "team-blue-api": []
+      "pims-api": []
     }
   },
   "groups": [],
@@ -823,7 +823,7 @@
     },
     {
       "id": "f9305753-6adb-4f4e-8f89-075eaac30d60",
-      "clientId": "team-blue-api",
+      "clientId": "pims-api",
       "name": "Team Blue API",
       "surrogateAuthRequired": false,
       "enabled": true,
@@ -875,7 +875,7 @@
     },
     {
       "id": "7fc39596-ee23-4c81-8c19-bfa927b43593",
-      "clientId": "team-blue-app",
+      "clientId": "pims-app",
       "name": "Team Blue App",
       "surrogateAuthRequired": false,
       "enabled": true,

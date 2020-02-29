@@ -1,37 +1,53 @@
 using System;
 using System.Collections.Generic;
-using Pims.Dal.Entities;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Pims.Dal.Entities;
+using Pims.Dal.Exceptions;
+using Pims.Dal.Helpers.Extensions;
 
-namespace Pims.Dal.Services.Concrete
+namespace Pims.Dal.Services
 {
-    /**
-     * EF Core implementation of parcel service
-     */
-    public class ParcelService : IParcelService
+    /// <summary>
+    /// ParcelService class, provides a service layer to interact with parcels within the datasource.
+    /// </summary>
+    public class ParcelService : BaseService<Parcel>, IParcelService
     {
-        private readonly PIMSContext _dbContext;
-        private readonly ClaimsPrincipal _user;
-        public ParcelService(PIMSContext dbContext, ClaimsPrincipal user)
-        {
-            _dbContext = dbContext;
-            _user = user;
-        }
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ParcelService, and initializes it with the specified arguments.
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="user"></param>
+        /// <param name="logger"></param>
+        public ParcelService(PimsContext dbContext, ClaimsPrincipal user, ILogger<ParcelService> logger) : base(dbContext, user, logger) { }
+        #endregion
 
-        public IEnumerable<Parcel> GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null)
+        #region Methods
+        /// <summary>
+        /// Get a collection of parcels within the specified filter.
+        /// </summary>
+        /// <param name="neLat"></param>
+        /// <param name="neLong"></param>
+        /// <param name="swLat"></param>
+        /// <param name="swLong"></param>
+        /// <param name="agencyId"></param>
+        /// <param name="propertyClassificationId"></param>
+        /// <returns></returns>
+        public IEnumerable<Parcel> GetNoTracking(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null)
         {
             IQueryable<Parcel> query = null;
             if (neLat != null && neLong != null && swLat != null && swLong != null)
             {
-                query = _dbContext.Parcels.Where(parcel =>
-                    parcel.Latitude <= neLat
-                    && parcel.Latitude >= swLat
-                    && parcel.Longitude <= neLong
-                    && parcel.Longitude >= swLong);
+                query = this.Context.Parcels.AsNoTracking().Where(parcel =>
+                  parcel.Latitude <= neLat &&
+                  parcel.Latitude >= swLat &&
+                  parcel.Longitude <= neLong &&
+                  parcel.Longitude >= swLong);
             }
-            if(agencyId != null)
+            if (agencyId != null)
             {
                 query = query.Where(parcel => parcel.AgencyId == agencyId);
             }
@@ -42,10 +58,15 @@ namespace Pims.Dal.Services.Concrete
             return query.ToArray();
         }
 
-        public Parcel GetParcel(int id)
+        /// <summary>
+        /// Get the parcel for the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Parcel GetNoTracking(int id)
         {
-            var tmp = _dbContext.Parcels.Where(x => x.Id == id);
-            return _dbContext.Parcels
+            var tmp = this.Context.Parcels.Where(x => x.Id == id);
+            return this.Context.Parcels
                 .Include(p => p.Status)
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
@@ -53,6 +74,7 @@ namespace Pims.Dal.Services.Concrete
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
+                .Include(p => p.Evaluations)
                 .Include(p => p.Buildings)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
@@ -62,68 +84,72 @@ namespace Pims.Dal.Services.Concrete
                 .AsNoTracking().SingleOrDefault(u => u.Id == id);
         }
 
-        public Parcel AddMyParcel(Parcel parcel)
-        {
-            if (parcel == null) throw new ArgumentNullException();
-            var entity = new Parcel(parcel.Latitude, parcel.Longitude);
-
-            _dbContext.Parcels.Add(entity);
-            _dbContext.SaveChanges();
-            return entity;
-        }
-
-        public Parcel UpdateMyParcel(Parcel parcel)
-        {
-            if (parcel == null) throw new ArgumentNullException();
-            var userId = new Guid(this._user.FindFirstValue(ClaimTypes.NameIdentifier));
-            var entity = _dbContext.Parcels.Find(parcel.Id);
-            if (entity == null) throw new KeyNotFoundException();
-
-            // Only admins can update other users parcels.
-            if (!IsAllowed(entity))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            entity.Latitude = parcel.Latitude;
-            entity.Longitude = parcel.Longitude;
-            entity.UpdatedById = userId;
-            entity.UpdatedOn = DateTime.UtcNow;
-            _dbContext.SaveChanges();
-            return entity;
-        }
-
-        public Parcel DeleteMyParcel(Parcel parcel)
-        {
-            if (parcel == null) throw new ArgumentNullException();
-            var entity = _dbContext.Parcels.Find(parcel.Id);
-            if (entity == null) throw new KeyNotFoundException();
-
-            // Only admins can update other users parcels.
-            if (!IsAllowed(entity))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            _dbContext.Entry(entity).OriginalValues["RowVersion"] = parcel.RowVersion;
-            _dbContext.Parcels.Remove(entity);
-            _dbContext.SaveChanges();
-            return entity;
-        }
-
-        #region Methods
         /// <summary>
-        /// Validate that the current user is an administrator or this parcel belongs to them.
+        /// Add the specified parcel to the datasource.
         /// </summary>
-        /// <param name="parcel">The parcel to test.</param>
-        /// <returns>True if the user is allowed.</returns>
-        public bool IsAllowed(Parcel parcel)
+        /// <param name="parcel"></param>
+        /// <returns></returns>
+        public Parcel Add(Parcel parcel)
         {
-            var userId = new Guid(this._user.FindFirstValue(ClaimTypes.NameIdentifier));
-            var isAdmin = this._user.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "administrator");
+            parcel.ThrowIfNull(nameof(parcel));
+            this.User.ThrowIfNotAuthorized("property-add");
 
-            // Only admins can update other users parcels.
-            return isAdmin || parcel?.CreatedById == userId;
+            var agency_id = this.User.GetAgency() ??
+                throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
+
+            parcel.CreatedById = this.User.GetUserId();
+            parcel.AgencyId = agency_id;
+            this.Context.Parcels.Add(parcel);
+            this.Context.CommitTransaction();
+            return parcel;
+        }
+
+        /// <summary>
+        /// Update the specified parcel in the datasource.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <returns></returns>
+        public Parcel Update(Parcel parcel)
+        {
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
+
+            var entity = this.Context.Parcels.Find(parcel.Id);
+            if (entity == null) throw new KeyNotFoundException();
+
+            var agency_ids = this.User.GetAgencies();
+            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+
+            // Do not allow switching agencies through this method.
+            if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+
+            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
+            entity.UpdatedById = this.User.GetUserId();
+            entity.UpdatedOn = DateTime.UtcNow;
+
+            this.Context.Parcels.Update(entity);
+            this.Context.CommitTransaction();
+            return entity;
+        }
+
+        /// <summary>
+        /// Remove the specified parcel from the datasource.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <returns></returns>
+        public void Remove(Parcel parcel)
+        {
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-add");
+
+            var entity = this.Context.Parcels.Find(parcel.Id);
+            if (entity == null) throw new KeyNotFoundException();
+
+            var agency_ids = this.User.GetAgencies();
+            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove parcels outside of their agency.");
+
+            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
+
+            this.Context.Parcels.Remove(entity); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
+            this.Context.CommitTransaction();
         }
         #endregion
     }

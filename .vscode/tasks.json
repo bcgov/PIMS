@@ -1,13 +1,12 @@
 {
   "version": "2.0.0",
-  "tasks": [
-    {
+  "tasks": [{
       "label": "build",
       "command": "dotnet",
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/backend/BackendApi.csproj",
+        "${workspaceFolder}/backend/api/Pims.Api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -19,7 +18,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/backend/BackendApi.csproj",
+        "${workspaceFolder}/backend/api/Pims.Api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -32,7 +31,7 @@
       "args": [
         "watch",
         "run",
-        "${workspaceFolder}/backend/BackendApi.csproj",
+        "${workspaceFolder}/backend/api/Pims.Api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -45,7 +44,7 @@
       "group": "test",
       "args": [
         "test",
-        "${workspaceFolder}/test/BackendApi.Test/BackendApi.Test.csproj"
+        "${workspaceFolder}/backend/test/Pims.Api.Test.csproj"
       ],
       "presentation": {
         "reveal": "silent"

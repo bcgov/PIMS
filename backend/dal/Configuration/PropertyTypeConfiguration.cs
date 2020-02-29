@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// PropertyTypeConfiguration class, provides a way to configure property types in the database.
     ///</summary>
-    public class PropertyTypeConfiguration : BaseEntityConfiguration<PropertyType>
+    public class PropertyTypeConfiguration : LookupEntityConfiguration<PropertyType>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<PropertyType> builder)
@@ -22,7 +22,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(150);
 
             builder.HasIndex(m => new { m.Name }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Name });
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

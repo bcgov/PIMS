@@ -13,7 +13,7 @@ services:
     volumes:
       - keycloak-db-data:/var/lib/pgsql/data
     networks:
-      - starter_kit
+      - pims
 
   keycloak:
     container_name: keycloak
@@ -28,27 +28,27 @@ services:
     depends_on:
       - keycloak-db
     networks:
-      - starter_kit
+      - pims
 
   ####################### Database #######################
   database:
     restart: always
-    container_name: starter_db
+    container_name: api-db
     build:
       context: database/mssql
     env_file:
       - database/.env
     ports:
-      - "1433:1433"
+      - "5433:1433"
     volumes:
-      - database-data:/var/opt/mssql
+      - api-db-data:/var/opt/mssql
     networks:
-      - starter_kit
+      - pims
 
   ####################### Backend #######################
   backend:
     restart: always
-    container_name: starter_backend
+    container_name: backend-api
     build:
       context: backend
     env_file: backend/.env
@@ -60,12 +60,12 @@ services:
     # volumes:
     #   - $(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     networks:
-      - starter_kit
+      - pims
 
   ####################### Frontend #######################
   frontend:
     restart: always
-    container_name: starter_frontend
+    container_name: frontend-app
     build:
       context: frontend
     volumes:
@@ -81,7 +81,7 @@ services:
       - KEYCLOAK_URL=http://host.docker.internal:8080/auth/admin/realms/quartech/users
       - CHOKIDAR_USEPOLLING=true
     networks:
-      - starter_kit
+      - pims
 
   ####################### Local SMTP Server #######################
   # mailhog:
@@ -97,11 +97,11 @@ services:
 
 ####################### Networks Definition #######################
 networks:
-  starter_kit:
+  pims:
     driver: bridge
 
 ####################### Volumes Definition #######################
 volumes:
-  database-data:
+  api-db-data:
   frontend-node-cache:
   keycloak-db-data:

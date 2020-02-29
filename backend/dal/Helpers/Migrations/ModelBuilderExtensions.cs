@@ -44,15 +44,17 @@ namespace Pims.Dal.Helpers.Migrations
         /// Applies all of the IEntityTypeConfiguration objects in the specified assembly.
         /// </summary>
         /// <param name="modelBuilder"></param>
-        /// <param name="assemblyType"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
         public static ModelBuilder ApplyAllConfigurations(this ModelBuilder modelBuilder, Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
 
+            // Find all the configuration classes.
             var type = typeof(IEntityTypeConfiguration<>);
             var configurations = assembly.GetTypes().Where(t => t.IsClass && t.GetInterfaces().Any(i => i.Name.Equals(type.Name)));
 
+            // Fetch the ApplyConfiguration method so that it can be called on each configuration.
             var method = typeof(ModelBuilder).GetMethods(BindingFlags.Instance | BindingFlags.Public).Where(m => m.Name.Equals(nameof(ModelBuilder.ApplyConfiguration)) && m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == type).First();
             foreach (var config in configurations)
             {

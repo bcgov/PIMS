@@ -44,8 +44,8 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Creates a new instance of a BaseEntity class.
         /// Initializes the default values.
-        /// /// </summary>
-        public BaseEntity()
+        /// </summary>
+        public BaseEntity ()
         {
             this.CreatedOn = DateTime.UtcNow;
         }

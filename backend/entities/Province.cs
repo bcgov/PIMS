@@ -30,13 +30,15 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a Province class.
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="id"></param>
         /// <param name="name"></param>
-        public Province(string code, string name)
+        public Province(string id, string name)
         {
-            this.Id = code;
+            if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException($"Argument '{nameof(id)}' must be a valid value.", nameof(id));
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument '{nameof(name)}' must be a valid value.", nameof(name));
+
+            this.Id = id;
             this.Name = name;
-            this.CreatedOn = DateTime.UtcNow;
         }
         #endregion
     }

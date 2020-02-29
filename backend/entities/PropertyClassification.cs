@@ -1,18 +1,12 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System;
 namespace Pims.Dal.Entities
 {
     /// <summary>
     /// PropertyClassificationClassification class, provides an entity for the datamodel to manage a list of property classifications.
     /// </summary>
-    public class PropertyClassification : CodeEntity
+    public class PropertyClassification : LookupEntity
     {
-        [NotMapped]
-        public override string Code
-        {
-            get { return Name; }
-            set { throw new InvalidOperationException("PropertyClassification does not support setting the Code property"); }
-        }
+        #region Properties
+        #endregion
 
         #region Constructors
         /// <summary>
@@ -25,10 +19,8 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        public PropertyClassification(int id, string name)
+        public PropertyClassification(int id, string name) : base(id, name)
         {
-            this.Id = id;
-            this.Name = name;
         }
         #endregion
     }
