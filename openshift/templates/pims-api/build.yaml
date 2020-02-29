@@ -49,7 +49,7 @@ objects:
         sourceStrategy:
           from:
             kind: ImageStreamTag
-            name: ${DOTNET_BUILDER_IMAGE}
+            name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
           env:
             - name: DOTNET_CONFIGURATION
               value: ${DOTNET_CONFIGURATION}
@@ -109,7 +109,7 @@ parameters:
       Set this to a project file (e.g. csproj) or a folder containing a single
       project file.
     required: true
-    value: pims.api.csproj
+    value: api/Pims.Api.csproj
   - name: DOTNET_PUBLISH_READYTORUN
     displayName: Ahead-of-time compilation
     description: Set this to 'true' to perform an ahead-of-time compilation.
