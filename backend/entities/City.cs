@@ -3,32 +3,9 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// City class, provides an entity for the datamodel to manage a list of cities.
     /// </summary>
-    public class City : BaseEntity
+    public class City : CodeEntity
     {
         #region Properties
-        /// <summary>
-        /// get/set - The primary key IDENTITY SEED.
-        /// </summary>
-        /// <value></value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// get/set - The name of the city.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// get/set - The unique code to identify this city.
-        /// </summary>
-        /// <value></value>
-        public string Code { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this row is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
         #endregion
 
         #region Constructors

@@ -28,6 +28,8 @@ namespace Pims.Api.Models
 
         public AddressModel Address { get; set; }
 
+        public int FiscalYear { get; set; }
+
         public float EstimatedValue { get; set; }
 
         public float AssessedValue { get; set; }
@@ -54,26 +56,27 @@ namespace Pims.Api.Models
         public bool Equals([AllowNull] ParcelModel other)
         {
             return other != null &&
-                   base.Equals(other) &&
-                   Id == other.Id &&
-                   PID == other.PID &&
-                   StatusId == other.StatusId &&
-                   Status == other.Status &&
-                   ClassificationId == other.ClassificationId &&
-                   Classification == other.Classification &&
-                   AgencyId == other.AgencyId &&
-                   SubAgency == other.SubAgency &&
-                   Agency == other.Agency &&
-                   EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
-                   EstimatedValue == other.EstimatedValue &&
-                   AssessedValue == other.AssessedValue &&
-                   NetBookValue == other.NetBookValue &&
-                   Latitude == other.Latitude &&
-                   Longitude == other.Longitude &&
-                   LandArea == other.LandArea &&
-                   Description == other.Description &&
-                   LandLegalDescription == other.LandLegalDescription &&
-                   Enumerable.SequenceEqual(Buildings, other.Buildings);
+                base.Equals(other) &&
+                Id == other.Id &&
+                PID == other.PID &&
+                StatusId == other.StatusId &&
+                Status == other.Status &&
+                ClassificationId == other.ClassificationId &&
+                Classification == other.Classification &&
+                AgencyId == other.AgencyId &&
+                SubAgency == other.SubAgency &&
+                Agency == other.Agency &&
+                EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
+                FiscalYear == other.FiscalYear &&
+                EstimatedValue == other.EstimatedValue &&
+                AssessedValue == other.AssessedValue &&
+                NetBookValue == other.NetBookValue &&
+                Latitude == other.Latitude &&
+                Longitude == other.Longitude &&
+                LandArea == other.LandArea &&
+                Description == other.Description &&
+                LandLegalDescription == other.LandLegalDescription &&
+                Enumerable.SequenceEqual(Buildings, other.Buildings);
         }
 
         public override int GetHashCode()
@@ -90,6 +93,7 @@ namespace Pims.Api.Models
             hash.Add(SubAgency);
             hash.Add(Agency);
             hash.Add(Address);
+            hash.Add(FiscalYear);
             hash.Add(EstimatedValue);
             hash.Add(AssessedValue);
             hash.Add(NetBookValue);

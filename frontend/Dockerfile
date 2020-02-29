@@ -1,15 +1,5 @@
 FROM node:10-slim as node
 
-# # Arguments to init environment variables.
-# ARG env=development
-# ARG kcUrl=http://host.docker.internal:8080/auth/admin/realms/quartech/users
-# ARG usePolling=true
-
-# # Copy arguments into environment variables.
-# ENV NODE_ENV=${env}
-# ENV KEYCLOAK_URL=${kcUrl}
-# ENV CHOKIDAR_USEPOLLING=${usePolling}
-
 # Install build toolchain, install node deps and compile native add-ons
 RUN apt-get -yq update && apt-get -yq install make gcc g++ python --no-install-recommends
 

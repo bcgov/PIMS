@@ -25,13 +25,15 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.BuildingFloorCount).IsRequired();
             builder.Property(m => m.BuildingTenancy).IsRequired();
             builder.Property(m => m.BuildingTenancy).HasMaxLength(100);
+            builder.Property(m => m.IsSensitive).HasDefaultValue(false);
 
             builder.HasOne(m => m.Parcel).WithMany(m => m.Buildings).HasForeignKey(m => m.ParcelId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Address).WithMany().HasForeignKey(m => m.AddressId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.BuildingConstructionType).WithMany().HasForeignKey(m => m.BuildingConstructionTypeId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.BuildingPredominateUse).WithMany().HasForeignKey(m => m.BuildingPredominateUseId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(m => m.Agency).WithMany(m => m.Buildings).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.LocalId, m.BuildingConstructionTypeId, m.BuildingPredominateUseId, m.BuildingFloorCount, m.BuildingTenancy });
+            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.LocalId, m.IsSensitive, m.AgencyId, m.BuildingConstructionTypeId, m.BuildingPredominateUseId, m.BuildingFloorCount, m.BuildingTenancy });
 
             base.Configure(builder);
         }
