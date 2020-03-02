@@ -12,7 +12,7 @@ namespace Pims.Dal.Configuration
         #region Methods
         public override void Configure(EntityTypeBuilder<AccessRequest> builder)
         {
-            builder.ToTable("AccessRequest");
+            builder.ToTable("AccessRequests");
 
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).IsRequired();

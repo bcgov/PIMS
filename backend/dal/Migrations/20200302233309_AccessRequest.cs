@@ -18,7 +18,7 @@ namespace Pims.Dal.Migrations
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "AccessRequest",
+                name: "AccessRequests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -29,26 +29,25 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false),
                     IsGranted = table.Column<bool>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: true),
-                    AgencyId = table.Column<int>(nullable: true)
+                    UserId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccessRequest", x => x.Id);
+                    table.PrimaryKey("PK_AccessRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AccessRequest_Users_CreatedById",
+                        name: "FK_AccessRequests_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AccessRequest_Users_UpdatedById",
+                        name: "FK_AccessRequests_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AccessRequest_Users_UserId",
+                        name: "FK_AccessRequests_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -66,38 +65,38 @@ namespace Pims.Dal.Migrations
                 column: "AccessRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRequest_CreatedById",
-                table: "AccessRequest",
+                name: "IX_AccessRequests_CreatedById",
+                table: "AccessRequests",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRequest_UpdatedById",
-                table: "AccessRequest",
+                name: "IX_AccessRequests_UpdatedById",
+                table: "AccessRequests",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRequest_UserId",
-                table: "AccessRequest",
+                name: "IX_AccessRequests_UserId",
+                table: "AccessRequests",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessRequest_IsDisabled_IsGranted",
-                table: "AccessRequest",
+                name: "IX_AccessRequests_IsDisabled_IsGranted",
+                table: "AccessRequests",
                 columns: new[] { "IsDisabled", "IsGranted" });
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Agencies_AccessRequest_AccessRequestId",
+                name: "FK_Agencies_AccessRequests_AccessRequestId",
                 table: "Agencies",
                 column: "AccessRequestId",
-                principalTable: "AccessRequest",
+                principalTable: "AccessRequests",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Roles_AccessRequest_AccessRequestId",
+                name: "FK_Roles_AccessRequests_AccessRequestId",
                 table: "Roles",
                 column: "AccessRequestId",
-                principalTable: "AccessRequest",
+                principalTable: "AccessRequests",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -105,15 +104,15 @@ namespace Pims.Dal.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Agencies_AccessRequest_AccessRequestId",
+                name: "FK_Agencies_AccessRequests_AccessRequestId",
                 table: "Agencies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Roles_AccessRequest_AccessRequestId",
+                name: "FK_Roles_AccessRequests_AccessRequestId",
                 table: "Roles");
 
             migrationBuilder.DropTable(
-                name: "AccessRequest");
+                name: "AccessRequests");
 
             migrationBuilder.DropIndex(
                 name: "IX_Roles_AccessRequestId",

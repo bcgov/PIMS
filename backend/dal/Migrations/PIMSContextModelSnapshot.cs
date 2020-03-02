@@ -24,9 +24,6 @@ namespace Pims.Dal.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("AgencyId")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -65,7 +62,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("IsDisabled", "IsGranted");
 
-                    b.ToTable("AccessRequest");
+                    b.ToTable("AccessRequests");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Address", b =>
