@@ -77,7 +77,7 @@
       "displayName": "Source Context Directory",
       "description": "The source context directory.",
       "required": true,
-      "value": "frontend/openshift/templates/yarn-builder/"
+      "value": "openshift/templates/base-images/yarn-builder/"
     },
     {
       "name": "OUTPUT_IMAGE_TAG",
