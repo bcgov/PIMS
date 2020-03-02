@@ -1,33 +1,30 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
+EXPOSE 80 443
 
 # Copy csproj and restore as distinct layers
-COPY *.sln ./
-COPY /api/*.csproj ./api/
-COPY /entities/*.csproj ./entities/
-COPY /test/*.csproj ./test/
-COPY /dal/*.csproj ./dal/
-
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+WORKDIR /src
+COPY *.sln .
+COPY api/*.csproj api/
+COPY entities/*.csproj entities/
+COPY test/*.csproj test/
+COPY dal/*.csproj dal/
 RUN dotnet restore
-RUN dotnet tool install --global dotnet-ef --version 3.1.0
 ENV PATH="$PATH:/root/.dotnet/tools"
-
+RUN dotnet tool install --global dotnet-ef --version 3.1.0
 # Copy everything else and build
-COPY . ./
-# COPY localhost.pfx ./out/localhost.pfx
-RUN dotnet publish -c Release -o out
-# RUN dotnet ef database update
+COPY . .
+WORKDIR /src/api
+RUN dotnet build "Pims.Api.csproj" -c Release -o /app/build
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+FROM build AS publish
+RUN dotnet publish "Pims.Api.csproj" -c Release -o /app/publish
+
+# Runtime image
+FROM base AS final
 WORKDIR /app
-
-COPY --from=build-env /app/out ./
-COPY --from=build-env /app/entrypoint.sh ./entrypoint.sh
-
+COPY --from=publish /app/publish .
+COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
-
 ENTRYPOINT ["/app/entrypoint.sh"]
-
-EXPOSE 80 433
