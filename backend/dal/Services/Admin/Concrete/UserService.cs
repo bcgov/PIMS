@@ -87,6 +87,24 @@ namespace Pims.Dal.Services.Admin
             this.Context.Entry(user).CurrentValues.SetValues(entity);
             base.Remove(user);
         }
+
+        /// <summary>
+        /// Get all the access requests that users have submitted to the system
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
+        /// <param name="isGranted"></param>
+        public Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
+        {
+            var query = this.Context.AccessRequests.AsNoTracking();
+            if (isGranted.HasValue)
+            {
+                query = query.Where(request => request.IsGranted == isGranted);
+            }
+            var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);
+            return new Paged<AccessRequest>(accessRequests, page, quantity, query.Count());
+        }
         #endregion
     }
 }

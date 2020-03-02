@@ -64,6 +64,19 @@ namespace Pims.Dal.Services
             this.Logger.LogInformation($"User Activated: '{id}' - '{display_name}'.");
             return entity;
         }
+
+        /// <summary>
+        /// Activate the new authenticated user with the PIMS datasource.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public AccessRequest AddAccessRequest(AccessRequest request)
+        {
+            if (request == null) throw new ArgumentNullException();
+            this.Context.AccessRequests.Add(request);
+            this.Context.CommitTransaction();
+            return request;
+        }
         #endregion
     }
 }
