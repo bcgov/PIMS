@@ -59,11 +59,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_construction_type = this.Context.BuildingConstructionTypes.Find(entity.Id);
-            if (building_construction_type == null) throw new KeyNotFoundException();
+            var buildingConstructionType = this.Context.BuildingConstructionTypes.Find(entity.Id);
+            if (buildingConstructionType == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_construction_type).CurrentValues.SetValues(entity);
-            return base.Update(building_construction_type);
+            this.Context.Entry(buildingConstructionType).CurrentValues.SetValues(entity);
+            return base.Update(buildingConstructionType);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_construction_type = this.Context.BuildingConstructionTypes.Find(entity.Id);
-            if (building_construction_type == null) throw new KeyNotFoundException();
+            var buildingConstructionType = this.Context.BuildingConstructionTypes.Find(entity.Id);
+            if (buildingConstructionType == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_construction_type).CurrentValues.SetValues(entity);
-            base.Remove(building_construction_type);
+            this.Context.Entry(buildingConstructionType).CurrentValues.SetValues(entity);
+            base.Remove(buildingConstructionType);
         }
         #endregion
     }

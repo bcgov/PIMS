@@ -59,11 +59,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var property_status = this.Context.PropertyStatus.Find(entity.Id);
-            if (property_status == null) throw new KeyNotFoundException();
+            var propertyStatus = this.Context.PropertyStatus.Find(entity.Id);
+            if (propertyStatus == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(property_status).CurrentValues.SetValues(entity);
-            return base.Update(property_status);
+            this.Context.Entry(propertyStatus).CurrentValues.SetValues(entity);
+            return base.Update(propertyStatus);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var property_status = this.Context.PropertyStatus.Find(entity.Id);
-            if (property_status == null) throw new KeyNotFoundException();
+            var propertyStatus = this.Context.PropertyStatus.Find(entity.Id);
+            if (propertyStatus == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(property_status).CurrentValues.SetValues(entity);
-            base.Remove(property_status);
+            this.Context.Entry(propertyStatus).CurrentValues.SetValues(entity);
+            base.Remove(propertyStatus);
         }
         #endregion
     }
