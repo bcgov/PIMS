@@ -59,11 +59,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var property_classification = this.Context.PropertyClassifications.Find(entity.Id);
-            if (property_classification == null) throw new KeyNotFoundException();
+            var propertyClassification = this.Context.PropertyClassifications.Find(entity.Id);
+            if (propertyClassification == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(property_classification).CurrentValues.SetValues(entity);
-            return base.Update(property_classification);
+            this.Context.Entry(propertyClassification).CurrentValues.SetValues(entity);
+            return base.Update(propertyClassification);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var property_classification = this.Context.PropertyClassifications.Find(entity.Id);
-            if (property_classification == null) throw new KeyNotFoundException();
+            var propertyClassification = this.Context.PropertyClassifications.Find(entity.Id);
+            if (propertyClassification == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(property_classification).CurrentValues.SetValues(entity);
-            base.Remove(property_classification);
+            this.Context.Entry(propertyClassification).CurrentValues.SetValues(entity);
+            base.Remove(propertyClassification);
         }
         #endregion
     }
