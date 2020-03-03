@@ -73,6 +73,7 @@ namespace Pims.Dal.Services
         public AccessRequest AddAccessRequest(AccessRequest request)
         {
             if (request == null) throw new ArgumentNullException();
+            request.CreatedById = this.User.GetUserId();
             this.Context.AccessRequests.Add(request);
             this.Context.CommitTransaction();
             return request;

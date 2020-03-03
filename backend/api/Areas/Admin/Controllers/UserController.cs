@@ -132,9 +132,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// Gets all of the access requests that have been submitted to the system.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/accessRequests")]
+        [HttpGet("/api/access/requests")]
         public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
+            if (page < 1) page = 1;
+            if (quantity < 1) quantity = 1;
+            if (quantity > 20) quantity = 20;
             Entity.Models.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
             var entities = _mapper.Map<Api.Models.AccessRequestModel[]>(result.Items);
             var paged = new Pims.Dal.Entities.Models.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);

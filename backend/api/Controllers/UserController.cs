@@ -38,6 +38,8 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
+        /// <param name="userService"></param>
+        /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
         public UserController(ILogger<UserController> logger, IConfiguration configuration, IUserService userService, IMapper mapper, IRequestClient requestClient)
         {
@@ -80,7 +82,7 @@ namespace Pims.Api.Controllers
         /// Allows a user to submit an access request to the system, associating a role and agency to their user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("/api/accessRequest")]
+        [HttpPost("/api/access/request")]
         public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
         {
             if(accessRequestModel.Agencies.Count() > 1)
