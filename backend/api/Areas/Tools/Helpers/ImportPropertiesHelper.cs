@@ -51,7 +51,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// Adds or updates the property in the datasource.
         /// Determines if the property is a parcel or a building.
         /// Massages some of the data to align with expected values.
-        /// /// </summary>
+        /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
         public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<PropertyModel> properties)
@@ -61,8 +61,8 @@ namespace Pims.Api.Areas.Tools.Helpers
             {
                 _logger.LogDebug($"Add/Update property pid:{property.ParcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}");
 
-                var valid_pid = int.TryParse(property.ParcelId?.Replace("-", ""), out int pid);
-                if (!valid_pid) continue;
+                var validPid = int.TryParse(property.ParcelId?.Replace("-", ""), out int pid);
+                if (!validPid) continue;
 
                 // Change the agency code.
                 switch (property.Agency)
@@ -104,7 +104,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// Get or create a new agency for the specified property.
         /// </summary>
         /// <param name="property"></param>
-        /// <param name="agencies"></param>
         /// <returns></returns>
         private Entity.Agency GetOrCreateAgency(PropertyModel property)
         {
@@ -122,20 +121,20 @@ namespace Pims.Api.Areas.Tools.Helpers
             if (!String.IsNullOrWhiteSpace(property.SubAgency))
             {
                 var code = new string(property.SubAgency.GetFirstLetterOfEachWord(true).Take(6).ToArray());
-                var sub_agency = _agencies.FirstOrDefault(a => a.Code == code.Trim() && a.ParentId == agency.Id);
+                var subAgency = _agencies.FirstOrDefault(a => a.Code == code.Trim() && a.ParentId == agency.Id);
 
-                if (sub_agency == null)
+                if (subAgency == null)
                 {
-                    sub_agency = new Entity.Agency(code.Trim(), property.SubAgency)
+                    subAgency = new Entity.Agency(code.Trim(), property.SubAgency)
                     {
                     ParentId = agency.Id,
                     Parent = agency
                     };
-                    _agencies.Add(sub_agency);
-                    _logger.LogDebug($"Adding sub-agency '{sub_agency.Code}' - '{agency.Name}', parent: '{sub_agency.Parent.Code}'.");
+                    _agencies.Add(subAgency);
+                    _logger.LogDebug($"Adding sub-agency '{subAgency.Code}' - '{agency.Name}', parent: '{subAgency.Parent.Code}'.");
                 }
 
-                return sub_agency;
+                return subAgency;
             }
 
             return agency;
@@ -148,7 +147,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="code"></param>
         /// <param name="name"></param>
-        /// <param name="cities"></param>
         /// <param name="attempts"></param>
         /// <returns></returns>
         private Entity.City GetOrCreateCity(string code, string name, int attempts = 1)
@@ -181,7 +179,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// It will generate a unique city code based on the first initials of the city name, plus the first three characters of the last word.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="cities"></param>
         /// <returns></returns>
         private Entity.City GetOrCreateCity(string name)
         {
@@ -191,7 +188,7 @@ namespace Pims.Api.Areas.Tools.Helpers
             if (city == null)
             {
                 var code = new string(name.GetFirstLetterOfEachWord(true).Take(4).ToArray());
-                var last = new string(name.Split().Last().Take(4).ToArray());
+                var last = new string(name.Split(" ", StringSplitOptions.RemoveEmptyEntries).Last().Take(4).ToArray());
                 if (last.Length >= 4) last = last.Substring(1, 3);
                 else if (last.Length < 4) last = last.Substring(1, last.Length - 1);
 
@@ -244,15 +241,15 @@ namespace Pims.Api.Areas.Tools.Helpers
                 p_e.LandLegalDescription = property.LandLegalDescription;
 
                 // Find foreign key.
-                var prop_classification = _propertyClassifications.FirstOrDefault(pc => pc.Name == property.Classification) ??
+                var propClassification = _propertyClassifications.FirstOrDefault(pc => pc.Name == property.Classification) ??
                     throw new InvalidOperationException($"Property Classification '{property.Classification}' does not exist.");
-                var prop_status = _propertyStatus.FirstOrDefault(ps => ps.Name == property.Status) ??
+                var propStatus = _propertyStatus.FirstOrDefault(ps => ps.Name == property.Status) ??
                     throw new InvalidOperationException($"Property Status '{property.Status}' does not exist.");
 
-                p_e.ClassificationId = prop_classification.Id;
-                p_e.Classification = prop_classification;
-                p_e.StatusId = prop_status.Id;
-                p_e.Status = prop_status;
+                p_e.ClassificationId = propClassification.Id;
+                p_e.Classification = propClassification;
+                p_e.StatusId = propStatus.Id;
+                p_e.Status = propStatus;
 
                 var city = GetOrCreateCity(property.City);
 

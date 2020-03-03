@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -16,7 +17,7 @@ namespace Pims.Dal.Helpers.Extensions
         public static string GetFirstLetterOfEachWord(this string text, bool uppercase = true)
         {
             var result = new StringBuilder();
-            var split = text.Split();
+            var split = text.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             foreach (var part in split)
             {
                 var letter = part.Substring(0, 1);

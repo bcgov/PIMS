@@ -59,11 +59,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_construction_type = this.Context.Agencies.Find(entity.Id);
-            if (building_construction_type == null) throw new KeyNotFoundException();
+            var agency = this.Context.Agencies.Find(entity.Id);
+            if (agency == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_construction_type).CurrentValues.SetValues(entity);
-            return base.Update(building_construction_type);
+            this.Context.Entry(agency).CurrentValues.SetValues(entity);
+            return base.Update(agency);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_construction_type = this.Context.Agencies.Find(entity.Id);
-            if (building_construction_type == null) throw new KeyNotFoundException();
+            var agency = this.Context.Agencies.Find(entity.Id);
+            if (agency == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_construction_type).CurrentValues.SetValues(entity);
-            base.Remove(building_construction_type);
+            this.Context.Entry(agency).CurrentValues.SetValues(entity);
+            base.Remove(agency);
         }
         #endregion
     }
