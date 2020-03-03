@@ -59,11 +59,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_predominate_use = this.Context.BuildingPredominateUses.Find(entity.Id);
-            if (building_predominate_use == null) throw new KeyNotFoundException();
+            var buildingPredominateUse = this.Context.BuildingPredominateUses.Find(entity.Id);
+            if (buildingPredominateUse == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_predominate_use).CurrentValues.SetValues(entity);
-            return base.Update(building_predominate_use);
+            this.Context.Entry(buildingPredominateUse).CurrentValues.SetValues(entity);
+            return base.Update(buildingPredominateUse);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var building_predominate_use = this.Context.BuildingPredominateUses.Find(entity.Id);
-            if (building_predominate_use == null) throw new KeyNotFoundException();
+            var buildingPredominateUse = this.Context.BuildingPredominateUses.Find(entity.Id);
+            if (buildingPredominateUse == null) throw new KeyNotFoundException();
 
-            this.Context.Entry(building_predominate_use).CurrentValues.SetValues(entity);
-            base.Remove(building_predominate_use);
+            this.Context.Entry(buildingPredominateUse).CurrentValues.SetValues(entity);
+            base.Remove(buildingPredominateUse);
         }
         #endregion
     }
