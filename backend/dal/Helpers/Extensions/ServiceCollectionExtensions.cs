@@ -22,13 +22,14 @@ namespace Pims.Dal
         }
 
         /// <summary>
-        /// Add PimsAdminService objects to the dependency injection service collection.
+        /// /// Add PimsAdminService objects to the dependency injection service collection.
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddPimsAdminService(this IServiceCollection services)
         {
             services.AddScoped<Services.Admin.IPimsAdminService, Services.Admin.PimsAdminService>();
+            services.AddScoped<Services.Admin.IAgencyService, Services.Admin.AgencyService>();
             services.AddScoped<Services.Admin.IAddressService, Services.Admin.AddressService>();
             services.AddScoped<Services.Admin.IBuildingService, Services.Admin.BuildingService>();
             services.AddScoped<Services.Admin.ICityService, Services.Admin.CityService>();
@@ -36,6 +37,11 @@ namespace Pims.Dal
             services.AddScoped<Services.Admin.IProvinceService, Services.Admin.ProvinceService>();
             services.AddScoped<Services.Admin.IRoleService, Services.Admin.RoleService>();
             services.AddScoped<Services.Admin.IUserService, Services.Admin.UserService>();
+            services.AddScoped<Services.Admin.IBuildingConstructionTypeService, Services.Admin.BuildingConstructionTypeService>();
+            services.AddScoped<Services.Admin.IBuildingPredominateUseService, Services.Admin.BuildingPredominateUseService>();
+            services.AddScoped<Services.Admin.IPropertyClassificationService, Services.Admin.PropertyClassificationService>();
+            services.AddScoped<Services.Admin.IPropertyStatusService, Services.Admin.PropertyStatusService>();
+            services.AddScoped<Services.Admin.IPropertyTypeService, Services.Admin.PropertyTypeService>();
             return services; // TODO: Use reflection to find all services.
         }
     }
