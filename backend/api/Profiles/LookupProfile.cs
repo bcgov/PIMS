@@ -5,17 +5,18 @@ using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Helpers.Profiles
 {
-    public class CodeProfile : Profile
+    public class LookupProfile : Profile
     {
         #region Constructors
-        public CodeProfile()
+        public LookupProfile()
         {
-            CreateMap<Entity.CodeEntity, CodeModel>()
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
+            CreateMap<Entity.LookupEntity, CodeModel>()
                 .IncludeBase<Entity.BaseEntity, BaseModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Name))
                 .IncludeAllDerived();
 
-            CreateMap<CodeModel, Entity.CodeEntity>()
+            CreateMap<CodeModel, Entity.LookupEntity>()
                 .IncludeBase<BaseModel, Entity.BaseEntity>()
                 .IncludeAllDerived();
         }

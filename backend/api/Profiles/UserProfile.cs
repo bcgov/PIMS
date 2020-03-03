@@ -1,7 +1,6 @@
-using System;
 using AutoMapper;
+using Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models;
 
 namespace Pims.Api.Helpers.Profiles
 {
@@ -10,9 +9,11 @@ namespace Pims.Api.Helpers.Profiles
         #region Constructors
         public UserProfile()
         {
-            CreateMap<Entity.User, Model.UserModel>();
+            CreateMap<Entity.User, UserModel>();
 
-            CreateMap<Model.UserModel, Entity.User>();
+            CreateMap<UserModel, Entity.User>()
+                .ForMember(src => src.Agencies, opt => opt.Ignore())
+                .ForMember(src => src.Roles, opt => opt.Ignore());
         }
         #endregion
     }
