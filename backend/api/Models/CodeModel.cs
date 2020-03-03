@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Models
 {
-    public class CodeModel : IEquatable<CodeModel>
+    public class CodeModel : BaseModel, IEquatable<CodeModel>
     {
         #region Properties
         public int Id { get; set; }
@@ -13,6 +13,8 @@ namespace Pims.Api.Models
         public string Name { get; set; }
 
         public bool IsDisabled { get; set; }
+
+        public int SortOrder { get; set; }
 
         public string Type { get; set; }
 
