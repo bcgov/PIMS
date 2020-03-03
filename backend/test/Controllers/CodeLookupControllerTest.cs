@@ -31,8 +31,11 @@ namespace Pims.Api.Test.Controllers
             var config = new Mock<IConfiguration> ();
             var mapperConfig = new MapperConfiguration (cfg =>
             {
+                cfg.AddProfile(new LookupProfile());
                 cfg.AddProfile (new CodeProfile ());
+                cfg.AddProfile(new BaseProfile());
             });
+            mapperConfig.AssertConfigurationIsValid();
             _mapper = mapperConfig.CreateMapper ();
 
             _pimsService = new Mock<IPimsService> ();
@@ -70,6 +73,25 @@ namespace Pims.Api.Test.Controllers
             JsonResult actionResult = Assert.IsType<JsonResult> (result);
             Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]> (actionResult.Value);
             Assert.Equal (new [] { _mapper.Map<Model.CodeModel> (agency) }, resultValue);
+        }
+
+        [Fact]
+        public void GetPropertyClassificationCodes()
+        {
+            // Arrange
+            var propertyClassification = new Entity.PropertyClassification
+            {
+                Name = "Surplus Active",
+            };
+            _pimsService.Setup(m => m.Lookup.GetPropertyClassificationsNoTracking()).Returns(new[] { propertyClassification });
+
+            // Act
+            var result = _lookupController.GetPropertyClassifications();
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
+            Assert.Equal(new[] { _mapper.Map<Model.CodeModel>(propertyClassification) }, resultValue);
         }
         #endregion
     }

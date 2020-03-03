@@ -11,6 +11,7 @@ namespace Pims.Dal
     public class PimsContext : DbContext
     {
         #region Properties
+        public DbSet<AccessRequest> AccessRequests { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Agency> Agencies { get; set; }
         public DbSet<Building> Buildings { get; set; }

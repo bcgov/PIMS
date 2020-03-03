@@ -17,6 +17,8 @@ namespace Pims.Api.Helpers.Profiles
             CreateMap<BaseModel, Entity.BaseEntity>()
                 .IncludeAllDerived()
                 .ForMember(dest => dest.RowVersion, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedById, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedById, opt => opt.Ignore())
                 .AfterMap((source, dest) =>
                 {
                     if (!String.IsNullOrWhiteSpace(source.RowVersion))
