@@ -26,10 +26,10 @@ namespace Pims.Api.Models
         public bool Equals([AllowNull] CodeModel other)
         {
             return other != null &&
-                   Name == other.Name &&
-                   Id == other.Id &&
-                   IsDisabled == other.IsDisabled &&
-                   Type == other.Type;
+                Name == other.Name &&
+                Id == other.Id &&
+                IsDisabled == other.IsDisabled &&
+                Type == other.Type;
         }
 
         public override int GetHashCode()

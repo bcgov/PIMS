@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Pims.Dal.Entities;
+using Pims.Dal.Helpers.Extensions;
+
+namespace Pims.Dal.Services.Admin
+{
+    /// <summary>
+    /// PropertyTypeService class, provides a service layer to administrate property types within the datasource.
+    /// </summary>
+    public class PropertyTypeService : BaseService<PropertyType>, IPropertyTypeService
+    {
+        #region Variables
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a PropertyTypeService, and initializes it with the specified arguments.
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="user"></param>
+        /// <param name="logger"></param>
+        public PropertyTypeService(PimsContext dbContext, ClaimsPrincipal user, ILogger<PropertyTypeService> logger) : base(dbContext, user, logger) { }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Get a page of property types from the datasource.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public IEnumerable<PropertyType> GetAllNoTracking()
+        {
+            var query = this.Context.PropertyTypes.AsNoTracking();
+            return query.OrderBy(p => p.Name).ToArray();
+        }
+
+        /// <summary>
+        /// /// Get all property types from the datasource.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<PropertyType> GetAll()
+        {
+            return this.Context.PropertyTypes.OrderBy(p => p.Name).ToArray();
+        }
+
+        /// <summary>
+        /// Updates the specified property type in the datasource.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public override PropertyType Update(PropertyType entity)
+        {
+            entity.ThrowIfNull(nameof(entity));
+
+            var propertyType = this.Context.PropertyTypes.Find(entity.Id);
+            if (propertyType == null) throw new KeyNotFoundException();
+
+            this.Context.Entry(propertyType).CurrentValues.SetValues(entity);
+            return base.Update(propertyType);
+        }
+
+        /// <summary>
+        /// Remove the specified property type from the datasource.
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void Remove(PropertyType entity)
+        {
+            entity.ThrowIfNull(nameof(entity));
+
+            var propertyType = this.Context.PropertyTypes.Find(entity.Id);
+            if (propertyType == null) throw new KeyNotFoundException();
+
+            this.Context.Entry(propertyType).CurrentValues.SetValues(entity);
+            base.Remove(propertyType);
+        }
+        #endregion
+    }
+}
