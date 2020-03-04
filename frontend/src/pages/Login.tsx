@@ -4,7 +4,7 @@ import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import React from 'react';
 import './Login.scss';
 
-function Login() {
+const Login = () => {
   const { keycloak } = useKeycloak();
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;

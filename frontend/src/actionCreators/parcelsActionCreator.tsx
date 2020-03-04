@@ -30,7 +30,10 @@ export const fetchParcelDetail = (parcelBounds: API.IParcelDetailParams) => (
   dispatch(request(reducerTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCELDETAIL(parcelBounds), createRequestHeader())
+    .get(
+      ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(parcelBounds),
+      createRequestHeader()
+    )
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data));
