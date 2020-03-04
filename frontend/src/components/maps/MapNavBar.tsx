@@ -15,13 +15,17 @@ function MapNavBar() {
     <Navbar className="map-nav">
       <Nav>
         <Nav.Item className="profile">
-          <Image src={profileUrl} rounded/>
+          <Image src={profileUrl} rounded />
         </Nav.Item>
-        <NavDropdown title={keycloak?.profile?.firstName} id="user-dropdown" >
-          <NavDropdown.Item onClick={() => {
-            history.push('/');
-            keycloak!.logout();
-          }}>Sign Out</NavDropdown.Item>
+        <NavDropdown title={keycloak?.profile?.firstName} id="user-dropdown">
+          <NavDropdown.Item
+            onClick={() => {
+              history.push('/');
+              keycloak!.logout();
+            }}
+          >
+            Sign Out
+          </NavDropdown.Item>
         </NavDropdown>
       </Nav>
     </Navbar>
@@ -29,5 +33,3 @@ function MapNavBar() {
 }
 
 export default MapNavBar;
-
-

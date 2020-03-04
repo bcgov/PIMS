@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import renderer from 'react-test-renderer';
-
-jest.mock('@react-keycloak/web');
 import { useKeycloak } from '@react-keycloak/web';
 import Header from './Header';
+
+jest.mock('@react-keycloak/web');
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
@@ -14,9 +14,7 @@ jest.mock('react-router-dom', () => ({
 
 test('header renders correctly', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
-  const tree = renderer
-    .create(<Header />)
-    .toJSON();
+  const tree = renderer.create(<Header />).toJSON();
   expect(tree).toMatchSnapshot();
 });
 

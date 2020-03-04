@@ -13,8 +13,9 @@ function Header() {
             <Row className="brand-box">
               <Col md={2} lg={2}></Col>
               <Col xs={8} sm={6} md={4} lg={1} className="brand">
-                <Navbar.Brand href="https://gov.bc.ca" >
-                  <img className="bc-gov-icon"
+                <Navbar.Brand href="https://gov.bc.ca">
+                  <img
+                    className="bc-gov-icon"
                     src={logoUrl}
                     width="156"
                     height="43"
@@ -28,8 +29,7 @@ function Header() {
               </Col>
             </Row>
           </Col>
-          <Col xs={3} sm={3} md={3} lg={1} className="other">
-          </Col>
+          <Col xs={3} sm={3} md={3} lg={1} className="other"></Col>
         </Row>
       </Container>
     </Navbar>
@@ -37,5 +37,3 @@ function Header() {
 }
 
 export default Header;
-
-

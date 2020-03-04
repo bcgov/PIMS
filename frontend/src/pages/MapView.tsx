@@ -4,7 +4,7 @@ import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import { fetchParcels, fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { IParcelListParams } from 'constants/API';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IParcel, IParcelDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { IParcelState } from 'reducers/parcelsReducer';
@@ -19,18 +19,28 @@ const parcelBounds: IParcelListParams = {
   swLat: 48.43,
   swLong: -123.37,
   agencyId: null,
-  propertyClassificationId: null
-}
+  propertyClassificationId: null,
+};
 
 const MapView = () => {
-  const parcels = useSelector<RootState, IParcel[]>(state => (state.parcel as IParcelState).parcels);
-  const parcelDetail = useSelector<RootState, IParcelDetail | null>(state => (state.parcel as IParcelState).parcelDetail);
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(state => (state.lookupCode as ILookupCodeState).lookupCodes);
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => { return lookupCode.type === API.AGENCY_CODE_SET_NAME });
-  const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => { return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME });
+  const parcels = useSelector<RootState, IParcel[]>(
+    state => (state.parcel as IParcelState).parcels,
+  );
+  const parcelDetail = useSelector<RootState, IParcelDetail | null>(
+    state => (state.parcel as IParcelState).parcelDetail,
+  );
+  const lookupCodes = useSelector<RootState, ILookupCode[]>(
+    state => (state.lookupCode as ILookupCodeState).lookupCodes,
+  );
+  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
+  });
+  const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
+  });
   const dispatch = useDispatch();
 
-  const getApiParams = (mapFilterModel:MapFilterModel): IParcelListParams | null => {
+  const getApiParams = (mapFilterModel: MapFilterModel): IParcelListParams | null => {
     if (!mapFilterModel || !mapFilterModel.bounds) {
       return null;
     }
@@ -42,7 +52,7 @@ const MapView = () => {
       swLat: sw.lat,
       swLong: sw.lng,
       agencyId: mapFilterModel.agencyId,
-      propertyClassificationId: mapFilterModel.propertyClassificationId
+      propertyClassificationId: mapFilterModel.propertyClassificationId,
     };
     return apiParams;
   };
@@ -63,10 +73,12 @@ const MapView = () => {
       propertyClassifications={propertyClassifications}
       onParcelClick={p => dispatch(fetchParcelDetail({ id: p.id }))}
       onPopupClose={() => dispatch(storeParcelDetail(null))}
-      onViewportChanged={(mapFilterModel:MapFilterModel) => {
+      onViewportChanged={(mapFilterModel: MapFilterModel) => {
         const apiParams = getApiParams(mapFilterModel);
         const action = fetchParcels(apiParams);
-        _.throttle(() => { dispatch(action) }, 250)();
+        _.throttle(() => {
+          dispatch(action);
+        }, 250)();
       }}
     />
   );
