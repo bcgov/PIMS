@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,8 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost("properties")]
         public IActionResult ImportProperties([FromBody] PropertyModel[] models)
         {
+            if (models.Count() > 50) return BadRequest("Must not submit more than 50 properties in a single request.");
+
             var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
             var entities = helper.AddUpdateProperties(models);
             var parcels = _mapper.Map<ParcelModel[]>(entities);
