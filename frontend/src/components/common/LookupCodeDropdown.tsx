@@ -42,7 +42,7 @@ function LookupCodeDropdown(props: LookupCodeDropdownProps) {
     >
       <Dropdown.Item eventKey={'-1'}>Any</Dropdown.Item>
       {props.lookupCodes.map(code => {
-        return <Dropdown.Item eventKey={code.id.toString()}>{code.name}</Dropdown.Item>;
+        return <Dropdown.Item eventKey={code.id.toString()} key={code.id.toString()}>{code.name}</Dropdown.Item>
       })}
     </DropdownButton>
   );

@@ -1,59 +1,63 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import './App.scss';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
 import MapView from './pages/MapView';
+import GuestAccessPage from './pages/GuestAccessPage';
 import PrivateRoute from './PrivateRoute';
 import Login from './pages/Login';
 import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
-import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
-import { KeycloakInstance } from 'keycloak-js';
-import configureStore from 'configureStore';
+import { RootState } from 'reducers/rootReducer';
+import configureStore from "configureStore";
+import { useKeycloak } from '@react-keycloak/web';
+import { getActivateUserAction } from 'actionCreators/authActionCreator';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { IGenericNetworkAction } from 'actions/genericActions';
 
 export const store = configureStore();
-//import Debug from './components/Debug/Debug';
 
-interface IState {
-  keycloak?: KeycloakInstance<'native'>;
-  keycloakInitialized: boolean;
-  keycloakUserLoaded: boolean;
-}
+const App = () => {
+  const { keycloak } = useKeycloak();
+  const [keycloakUserLoaded, setkeycloakUserLoaded] = useState({});
+  const dispatch = useDispatch();
+  const activated = useSelector<RootState, IGenericNetworkAction>(state => (state.activateUser as IGenericNetworkAction));
 
-class App extends Component<ReactKeycloakInjectedProps, IState> {
-  constructor(props: ReactKeycloakInjectedProps) {
-    super(props);
-    this.state = {
-      keycloak: props.keycloak,
-      keycloakInitialized: this.props.keycloakInitialized,
-      keycloakUserLoaded: false,
-    };
-    const self = this;
-    if (this.state.keycloak?.authenticated) {
-      this.state.keycloak?.loadUserProfile().then(() => {
-        self.setState({ keycloakUserLoaded: true });
-      });
+  useEffect(() => {
+    dispatch(getActivateUserAction());
+    keycloak?.loadUserProfile().then(() => { setkeycloakUserLoaded(true) });
+  }, []);
+
+  const isInitialized = () => {
+    return (!keycloak?.authenticated || keycloak?.profile);
+  }
+
+  const GoToGuestPage = () => {
+    if ((activated && activated.status === 201) || !keycloak?.realmAccess?.roles?.length) {
+      return <Redirect to={{ pathname: '/guest' }} />;
     }
+    return null;
   }
 
-  render() {
-    return !this.state.keycloak?.authenticated || this.state.keycloak?.profile ? (
-      <Router>
-        <Container className="App" fluid={true}>
-          <Header></Header>
-          <Row className="App-content">
-            <Route path="/" component={Login}></Route>
-            <PrivateRoute path="/mapview" component={MapView} />
-          </Row>
-          <Footer></Footer>
-        </Container>
-      </Router>
-    ) : (
-      <Spinner animation="border"></Spinner>
-    );
-  }
+  return isInitialized() ? (
+    <Router>
+      <Container className="App" fluid={true}>
+        <Header></Header>
+        <Row className="App-content">
+          <GoToGuestPage />
+          <Route path="/" component={Login}></Route>
+          <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
+          <PrivateRoute
+            path="/mapview"
+            component={MapView}
+          />
+        </Row>
+        <Footer></Footer>
+      </Container>
+    </Router>
+  ) : <Spinner animation="border"></Spinner>;
 }
 
-export default withKeycloak(App);
+export default App;
