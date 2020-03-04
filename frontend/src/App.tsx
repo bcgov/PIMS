@@ -10,26 +10,31 @@ import Footer from './components/navigation/Footer';
 import { withKeycloak, ReactKeycloakInjectedProps } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
 import { KeycloakInstance } from 'keycloak-js';
-import configureStore from "configureStore";
+import configureStore from 'configureStore';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 export const store = configureStore();
 //import Debug from './components/Debug/Debug';
 
 interface IState {
-  keycloak?: KeycloakInstance<"native">,
-  keycloakInitialized: boolean,
-  keycloakUserLoaded: boolean
+  keycloak?: KeycloakInstance<'native'>;
+  keycloakInitialized: boolean;
+  keycloakUserLoaded: boolean;
 }
 
 class App extends Component<ReactKeycloakInjectedProps, IState> {
-
   constructor(props: ReactKeycloakInjectedProps) {
     super(props);
-    this.state = { keycloak: props.keycloak, keycloakInitialized: this.props.keycloakInitialized, keycloakUserLoaded: false };
+    this.state = {
+      keycloak: props.keycloak,
+      keycloakInitialized: this.props.keycloakInitialized,
+      keycloakUserLoaded: false,
+    };
     const self = this;
     if (this.state.keycloak?.authenticated) {
-      this.state.keycloak?.loadUserProfile().then(() => { self.setState({ keycloakUserLoaded: true }) });
+      this.state.keycloak?.loadUserProfile().then(() => {
+        self.setState({ keycloakUserLoaded: true });
+      });
     }
   }
 
@@ -40,15 +45,14 @@ class App extends Component<ReactKeycloakInjectedProps, IState> {
           <Header></Header>
           <Row className="App-content">
             <Route path="/" component={Login}></Route>
-            <PrivateRoute
-              path="/mapview"
-              component={MapView}
-            />
+            <PrivateRoute path="/mapview" component={MapView} />
           </Row>
           <Footer></Footer>
         </Container>
       </Router>
-    ) : <Spinner animation="border"></Spinner>;
+    ) : (
+      <Spinner animation="border"></Spinner>
+    );
   }
 }
 
