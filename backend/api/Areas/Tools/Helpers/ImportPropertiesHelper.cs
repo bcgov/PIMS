@@ -56,10 +56,12 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<PropertyModel> properties)
         {
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+
             var entities = new List<Entity.Parcel>();
             foreach (var property in properties)
             {
-                _logger.LogDebug($"Add/Update property pid:{property.ParcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}");
+                _logger.LogDebug($"Add/Update property pid:{property.ParcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
 
                 var validPid = int.TryParse(property.ParcelId?.Replace("-", ""), out int pid);
                 if (!validPid) continue;
@@ -151,7 +153,10 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.City GetOrCreateCity(string code, string name, int attempts = 1)
         {
-            var city = _cities.FirstOrDefault(c => c.Code == code);
+            if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException($"Argument '{nameof(code)}' is required.");
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument '{nameof(name)}' is required.");
+
+            var city = _cities.FirstOrDefault(c => String.Compare(c.Code, code, true) == 0);
 
             // If City doesn't exist, create it.
             if (city == null)
@@ -182,7 +187,9 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.City GetOrCreateCity(string name)
         {
-            var city = _cities.FirstOrDefault(c => c.Name == name);
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument '{nameof(name)}' is required.");
+
+            var city = _cities.FirstOrDefault(c => String.Compare(c.Name, name, true) == 0);
 
             // If City doesn't exist, create it.
             if (city == null)
@@ -193,7 +200,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 else if (last.Length < 4) last = last.Substring(1, last.Length - 1);
 
                 // Check if the code is unique.
-                city = _cities.FirstOrDefault(c => c.Code == code);
+                city = _cities.FirstOrDefault(c => String.Compare(c.Code, code, true) == 0);
 
                 if (city != null)
                 {
@@ -231,19 +238,23 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Only want to update the properties with the latest evaluation information.
             if (p_e.Id == 0 || p_e.Evaluation?.FiscalYear > fiscal)
             {
+                double.TryParse(property.Latitude, out double latitude);
+                double.TryParse(property.Longitude, out double longitude);
+                float.TryParse(property.LandArea, out float landArea);
+
                 p_e.AgencyId = agency?.Id ??
                     throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
                 p_e.Description = property.Description;
-                p_e.Latitude = double.Parse(property.Latitude);
-                p_e.Longitude = double.Parse(property.Longitude);
-                p_e.LandArea = float.Parse(property.LandArea);
+                p_e.Latitude = latitude;
+                p_e.Longitude = longitude;
+                p_e.LandArea = landArea;
                 p_e.LandLegalDescription = property.LandLegalDescription;
 
                 // Find foreign key.
-                var propClassification = _propertyClassifications.FirstOrDefault(pc => pc.Name == property.Classification) ??
+                var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
                     throw new InvalidOperationException($"Property Classification '{property.Classification}' does not exist.");
-                var propStatus = _propertyStatus.FirstOrDefault(ps => ps.Name == property.Status) ??
+                var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
                     throw new InvalidOperationException($"Property Status '{property.Status}' does not exist.");
 
                 p_e.ClassificationId = propClassification.Id;
@@ -272,9 +283,13 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Add a new evaluation for each year.
             if (!p_e.Evaluations.Any(e => e.FiscalYear == fiscal))
             {
+                float.TryParse(property.AssessedValue, out float assessedValue);
+                float.TryParse(property.NetBookValue, out float netBookValue);
+
                 var evaluation = new Entity.ParcelEvaluation(fiscal, p_e)
                 {
-                AssessedValue = float.Parse(property.AssessedValue)
+                    AssessedValue = assessedValue,
+                    NetBookValue = netBookValue
                 };
             }
 
@@ -321,6 +336,11 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Only want to update the properties with the latest evaluation information.
             if (b_e.Id == 0 || b_e.Evaluation?.FiscalYear > fiscal)
             {
+                double.TryParse(property.Latitude, out double latitude);
+                double.TryParse(property.Longitude, out double longitude);
+                float.TryParse(property.BuildingRentableArea, out float rentableArea);
+                int.TryParse(property.BuildingFloorCount, out int floorCount);
+
                 // Copy properties over to entity.
                 b_e.AgencyId = agency?.Id ??
                     throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
@@ -329,14 +349,15 @@ namespace Pims.Api.Areas.Tools.Helpers
                     throw new InvalidOperationException($"Parcel '{property.ParcelId}' does not exist.");
                 b_e.LocalId = property.LocalId;
                 b_e.Description = property.Description;
-                b_e.Latitude = double.Parse(property.Latitude);
-                b_e.Longitude = double.Parse(property.Longitude);
-                b_e.BuildingFloorCount = int.Parse(property.BuildingFloorCount);
+                b_e.Latitude = latitude;
+                b_e.Longitude = longitude;
+                b_e.RentableArea = rentableArea;
+                b_e.BuildingFloorCount = floorCount;
                 b_e.BuildingTenancy = property.BuildingTenancy;
 
                 // Find foreign key.
-                var build_type = _buildingConstructionTypes.FirstOrDefault(bct => bct.Name == property.BuildingConstructionType);
-                var build_use = _buildingPredominateUses.FirstOrDefault(bpu => bpu.Name == property.BuildingPredominateUse);
+                var build_type = _buildingConstructionTypes.FirstOrDefault(bct => String.Compare(bct.Name, property.BuildingConstructionType, true) == 0);
+                var build_use = _buildingPredominateUses.FirstOrDefault(bpu => String.Compare(bpu.Name, property.BuildingPredominateUse, true) == 0);
 
                 // If the building construction type doesn't exist, create it.
                 if (build_type == null)
@@ -382,9 +403,13 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Add a new evaluation for each year.
             if (!b_e.Evaluations.Any(e => e.FiscalYear == fiscal))
             {
+                float.TryParse(property.AssessedValue, out float assessedValue);
+                float.TryParse(property.NetBookValue, out float netBookValue);
+
                 var evaluation = new Entity.BuildingEvaluation(fiscal, b_e)
                 {
-                AssessedValue = float.Parse(property.AssessedValue)
+                    AssessedValue = assessedValue,
+                    NetBookValue = netBookValue
                 };
             }
 
