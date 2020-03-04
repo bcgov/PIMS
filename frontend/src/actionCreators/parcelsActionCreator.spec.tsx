@@ -65,7 +65,7 @@ describe('fetchParcels action creator', () => {
 describe('fetchParcelDetail action creator', () => {
   it('Request successful, dispatches `success` with correct response', () => {
     const params: IParcelDetailParams = { id: 1 };
-    const url = ENVIRONMENT.apiUrl + API.PARCELDETAIL(params);
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
     return fetchParcelDetail(params)(dispatch).then(() => {
@@ -77,7 +77,7 @@ describe('fetchParcelDetail action creator', () => {
 
   it('Request failure, dispatches `error` with correct response', () => {
     const params: IParcelDetailParams = { id: 1 };
-    const url = ENVIRONMENT.apiUrl + API.PARCELDETAIL(params);
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
     return fetchParcelDetail(params)(dispatch).then(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
