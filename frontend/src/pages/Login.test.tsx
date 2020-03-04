@@ -1,12 +1,12 @@
 import React from 'react';
-import { createMemoryHistory } from 'history'
+import { createMemoryHistory } from 'history';
 import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom'
+import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-
-jest.mock('@react-keycloak/web');
 import { useKeycloak } from '@react-keycloak/web';
 import Login from '../pages/Login';
+
+jest.mock('@react-keycloak/web');
 
 //boilerplate function used by most tests to wrap the Login component with a router.
 const renderLogin = () => {
@@ -14,15 +14,19 @@ const renderLogin = () => {
   return render(
     <Router history={history}>
       <Login />
-    </Router>
+    </Router>,
   );
-}
+};
 
 test('login renders correctly', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
   const history = createMemoryHistory();
   const tree = renderer
-    .create(<Router history={history}><Login></Login></Router>)
+    .create(
+      <Router history={history}>
+        <Login></Login>
+      </Router>,
+    )
     .toJSON();
   expect(tree).toMatchSnapshot();
 });
@@ -33,7 +37,7 @@ test('authenticated users are redirected to the mapview', () => {
   render(
     <Router history={history}>
       <Login />
-    </Router>
+    </Router>,
   );
   expect(history.location.pathname).toBe('/mapview');
 });
