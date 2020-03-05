@@ -116,12 +116,12 @@ namespace Pims.Api.Helpers.Middleware
                 var result = JsonSerializer.Serialize(new
                 {
                     Error = is_dev ? ex.Message : message,
-                    Type = ex.GetType().Name,
-                    StackTrace = is_dev ? ex.StackTrace : null,
-                    Details = is_dev ? ex.GetAllMessages() : null
+                        Type = ex.GetType().Name,
+                        Details = is_dev ? ex.GetAllMessages() : null,
+                        StackTrace = is_dev ? ex.StackTrace : null
                 }, _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)code;
+                context.Response.StatusCode = (int) code;
                 return context.Response.WriteAsync(result);
             }
             else
