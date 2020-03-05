@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Models.Parts
 {
-    public class ParcelModel : IEquatable<ParcelModel>
+    public class ParcelModel : BaseModel, IEquatable<ParcelModel>
     {
         #region Properties
         public int Id { get; set; }

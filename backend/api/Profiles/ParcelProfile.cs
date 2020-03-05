@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using backend.Helpers.Profiles.Converters;
 using Pims.Api.Models;
+using Pims.Api.Profiles.Extensions;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Helpers.Profiles
@@ -14,10 +15,16 @@ namespace Pims.Api.Helpers.Profiles
             CreateMap<Entity.Parcel, Models.Parts.ParcelModel>();
 
             CreateMap<Models.Parts.ParcelModel, Entity.Parcel>()
-                .ForMember(dest => dest.PID, opt => opt.Ignore())
+                .IgnoreAllUnmapped()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.PID, opt => opt.MapFrom(src => src.PID))
+                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
+                .ForMember(dest => dest.ClassificationId, opt => opt.MapFrom(src => src.ClassificationId))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.ParcelId, opt => opt.ConvertUsing(new ParcelIdConverter()))
-                .ForMember(dest => dest.Status, opt => opt.Ignore())
-                .ForMember(dest => dest.Classification, opt => opt.Ignore());
+                .IncludeBase<BaseModel, Entity.BaseEntity>();
 
             CreateMap<Entity.Parcel, ParcelModel>()
                 .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
@@ -27,7 +34,8 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name))
                 .ForMember(dest => dest.Classification, opt => opt.MapFrom(src => src.Classification.Name))
                 .ForMember(dest => dest.Agency, opt => opt.ConvertUsing(new ParcelAgencyConverter()))
-                .ForMember(dest => dest.SubAgency, opt => opt.MapFrom<ParcelSubAgencyResolver>());
+                .ForMember(dest => dest.SubAgency, opt => opt.MapFrom<ParcelSubAgencyResolver>())
+                .IncludeBase<Entity.BaseEntity, BaseModel>();
 
             CreateMap<ParcelModel, Entity.Parcel>()
                 .ForMember(dest => dest.PID, opt => opt.Ignore())
@@ -36,7 +44,9 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.Classification, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
-                .ForMember(dest => dest.Buildings, opt => opt.Ignore());
+                .ForMember(dest => dest.IsSensitive, opt => opt.Ignore())
+                .ForMember(dest => dest.Buildings, opt => opt.Ignore())
+                .IncludeBase<BaseModel, Entity.BaseEntity>();
         }
         #endregion
     }

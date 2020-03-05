@@ -70,7 +70,13 @@ namespace Pims.Api.Test.Helpers
                 cfg.AddProfile (new AddressProfile ());
                 cfg.AddProfile (new BuildingProfile ());
                 cfg.AddProfile (new BaseProfile ());
+                cfg.AddProfile(new AgencyProfile());
+                cfg.AddProfile(new AccessRequestProfile());
+                cfg.AddProfile(new CodeProfile());
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new RoleProfile());
             });
+            mapperConfig.AssertConfigurationIsValid();
             var mapper = mapperConfig.CreateMapper ();
 
             return mapper;
