@@ -1,14 +1,40 @@
+# PIMS Frontend Application - React
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# Setup
+## Frontend Environment Variables
 
 Create a .env file and populate it with this.
 
-```
+```conf
 NODE_ENV=development
-KEYCLOAK_URL=http://host.docker.internal:8080/auth/admin/realms/quartech/users
 CHOKIDAR_USEPOLLING=true
 ```
+
+| Key                 | Value                     | Description                   |
+| ------------------- | ------------------------- | ----------------------------- |
+| NODE_ENV            | [development\|...]        | The node environment setting. |
+| API_URL             | [http://backend:5000/api] | The URL to the API.           |
+| CHOKIDAR_USEPOLLING | [true\|false]             | Whether to use polling.       |
+
+## Keycloak Configuration
+
+Ensure the the following file exists and is configured with your Keycloak client settings.
+
+```json
+{
+  "realm": "quartech",
+  "auth-server-url": "http://keycloak:8080/auth",
+  "ssl-required": "external",
+  "resource": "pims-app",
+  "public-client": true,
+  "confidential-port": 0
+}
+```
+
+Make sure the host name matches both the Docker container name found in the `docker-compose.yaml` and your local host `hosts` file.
+For example here it is set to `keycloak`, which means there is a `hosts` file entry for `127.0.0.1 keycloak` on your local computer and the `docker-compose.yaml` contains a `service` named `keycloak`.
+This is required so that Keycloak will correctly authenticate tokens for the specified **Issuer**.
 
 ## Available Scripts
 

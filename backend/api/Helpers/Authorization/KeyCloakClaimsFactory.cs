@@ -2,24 +2,24 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Pims.Dal.Membership;
+using Pims.Api.Models.Membership;
 
 namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
-    /// KeyCloakClaimsFactory class, provides a way to add claims to a user.
+    /// KeycloakClaimsFactory class, provides a way to add claims to a user.
     /// </summary>
-    public class KeyCloakClaimsFactory : UserClaimsPrincipalFactory<ApplicationUser>
+    public class KeycloakClaimsFactory : UserClaimsPrincipalFactory<ApplicationUserModel>
     {
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a KeyCloakClaimsFactory class.
+        /// Creates a new instance of a KeycloakClaimsFactory class.
         /// </summary>
         /// <param name="userManager"></param>
         /// <param name="optionsAccessor"></param>
         /// <returns></returns>
-        public KeyCloakClaimsFactory(
-            UserManager<ApplicationUser> userManager,
+        public KeycloakClaimsFactory(
+            UserManager<ApplicationUserModel> userManager,
             IOptions<IdentityOptions> optionsAccessor) : base(userManager, optionsAccessor) { }
         #endregion
 
@@ -29,7 +29,7 @@ namespace Pims.Api.Helpers.Authorization
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public override Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
+        public override Task<ClaimsPrincipal> CreateAsync(ApplicationUserModel user)
         {
             return base.CreateAsync(user);
         }
@@ -39,7 +39,7 @@ namespace Pims.Api.Helpers.Authorization
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
+        protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUserModel user)
         {
             var identity = await base.GenerateClaimsAsync(user);
             identity.AddClaim(new Claim("ContactName", "test"));

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Api.Helpers.Exceptions;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 
@@ -58,7 +61,7 @@ namespace Pims.Api.Helpers.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsnyc(context, ex);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
@@ -68,7 +71,7 @@ namespace Pims.Api.Helpers.Middleware
         /// <param name="context"></param>
         /// <param name="ex"></param>
         /// <returns></returns>
-        private Task HandleExceptionAsnyc(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
             var message = "An unhandled error has occured.";
@@ -77,33 +80,55 @@ namespace Pims.Api.Helpers.Middleware
             {
                 code = HttpStatusCode.BadRequest;
                 message = "Data may have been modified or deleted since item was loaded.";
+
                 _logger.LogDebug(ex, "Middleware caught unhandled exception.");
             }
             else if (ex is DbUpdateException)
             {
                 code = HttpStatusCode.BadRequest;
                 message = "An error occured while updating this item.";
+
                 _logger.LogDebug(ex, "Middleware caught unhandled exception.");
             }
             else if (ex is KeyNotFoundException)
             {
                 code = HttpStatusCode.BadRequest;
                 message = "Item does not exist.";
+
+                _logger.LogDebug(ex, "Middleware caught unhandled exception.");
             }
             else if (ex is RowVersionMissingException)
             {
                 code = HttpStatusCode.BadRequest;
                 message = "Item cannot be updated without a row version.";
+
+                _logger.LogDebug(ex, "Middleware caught unhandled exception.");
             }
             else if (ex is NotAuthorizedException)
             {
                 code = HttpStatusCode.Forbidden;
                 message = "User is not authorized to perform this action.";
+
+                _logger.LogWarning(ex, ex.Message);
             }
             else if (ex is ConfigurationException)
             {
                 code = HttpStatusCode.InternalServerError;
                 message = "Application configuration details invalid or missing.";
+
+                _logger.LogError(ex, ex.Message);
+            }
+            else if (ex is ApiHttpRequestException)
+            {
+                var exception = ex as ApiHttpRequestException;
+                using var responseStream = await exception?.Response.Content.ReadAsStreamAsync();
+
+                code = exception.StatusCode;
+                message = ex.Message;
+
+                using var readStream = new StreamReader(responseStream, Encoding.UTF8);
+                var error = readStream.ReadToEnd();
+                _logger.LogError(ex, error);
             }
             else
             {
@@ -122,12 +147,12 @@ namespace Pims.Api.Helpers.Middleware
                 }, _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int) code;
-                return context.Response.WriteAsync(result);
+                await context.Response.WriteAsync(result);
             }
             else
             {
                 // Had to do this because odd errors were occurring when bearer tokens were failing.
-                return context.Response.WriteAsync(string.Empty);
+                await context.Response.WriteAsync(string.Empty);
             }
         }
         #endregion
