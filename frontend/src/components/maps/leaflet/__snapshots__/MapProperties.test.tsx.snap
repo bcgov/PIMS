@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ParcelPopupView renders correctly 1`] = `
+<div
+  className="parcelPopup container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Assessed Value: 
+          </p>
+          $
+          1,000,000.00
+        </div>
+      </div>
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <div>
+            <p
+              className="label"
+            >
+              Address: 
+            </p>
+            1234 mock Street
+          </div>
+          <div>
+            Victoria
+            , 
+            BC
+             
+            V1V1V1
+          </div>
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            PID: 
+          </p>
+           
+          000-000-000
+        </div>
+      </div>
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Agency: 
+          </p>
+          FIN
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Classification: 
+          </p>
+          Core Operational
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

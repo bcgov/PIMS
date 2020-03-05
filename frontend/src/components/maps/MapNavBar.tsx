@@ -17,15 +17,17 @@ function MapNavBar() {
         <Nav.Item className="profile">
           <Image src={profileUrl} rounded />
         </Nav.Item>
-        <NavDropdown title={keycloak?.profile?.firstName} id="user-dropdown">
-          <NavDropdown.Item
-            onClick={() => {
-              history.push('/');
-              keycloak!.logout();
-            }}
-          >
-            Sign Out
-          </NavDropdown.Item>
+        <NavDropdown title={keycloak?.profile?.firstName || 'default'} id="user-dropdown">
+          {history ? (
+            <NavDropdown.Item
+              onClick={() => {
+                history.push('/');
+                keycloak!.logout();
+              }}
+            >
+              Sign Out
+            </NavDropdown.Item>
+          ) : null}
         </NavDropdown>
       </Nav>
     </Navbar>
