@@ -1,11 +1,11 @@
 using System;
 
-namespace Pims.Dal.Membership
+namespace Pims.Api.Models.Membership
 {
     /// <summary>
-    /// ApplicationUser class, provides a way to manage application users.
+    /// ApplicationUserModel class, provides a way to manage application users.
     /// </summary>
-    public class ApplicationUser
+    public class ApplicationUserModel
     {
         #region Properties
         public Guid Id { get; set; }
@@ -14,9 +14,9 @@ namespace Pims.Dal.Membership
         #endregion
 
         #region Constructors
-        public ApplicationUser() { }
+        public ApplicationUserModel() { }
 
-        public ApplicationUser(Guid id, string firstName, string lastName)
+        public ApplicationUserModel(Guid id, string firstName, string lastName)
         {
             this.Id = id;
             this.FirstName = firstName;

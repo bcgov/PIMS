@@ -9,7 +9,7 @@ database:
   build:
     context: database/mssql
   env_file:
-    - database/.env
+    - database/mssql/.env
   ports:
     - "1433:1433"
   volumes:
@@ -18,20 +18,23 @@ database:
     - starter_kit
 ```
 
-## Setup
+## MSSQL Environment Variables
 
 To get the database running and initialized do the following;
 
-- Create a `.env` file in the `/database` folder
+- Create a `.env` file in the `/database/mssql` folder
 - Populate it with the following environment variables;
 
 ```conf
 ACCEPT_EULA=Y
-MSSQL_SA_PASSWORD=<password>
+MSSQL_SA_PASSWORD={password}
 MSSQL_PID=Developer
 ```
-
-Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft.
+| Key               | Value            | Description                                                                                                                             |
+| ----------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| ACCEPT_EULA       | [Y\|N]           | Whether you accept the license agreement.                                                                                               |
+| MSSQL_SA_PASSWORD | {password}       | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft. |
+| MSSQL_PID         | [Developer\|...] | The version of the database to install.                                                                                                 |
 
 ## Connection
 

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Pims.Dal.Helpers.Extensions;
 using Model = Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
+using System.Threading.Tasks;
+using Pims.Api.Helpers;
 using Pims.Api.Models;
 using Pims.Dal;
 

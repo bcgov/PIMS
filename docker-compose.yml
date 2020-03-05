@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - auth/.env
+      - auth/postgres/.env
     volumes:
       - keycloak-db-data:/var/lib/pgsql/data
     networks:
@@ -20,7 +20,7 @@ services:
     build:
       context: ./auth/keycloak
     env_file:
-      - auth/.env
+      - auth/keycloak/.env
     volumes:
       - ./auth/keycloak/config:/tmp
     ports:
@@ -37,7 +37,7 @@ services:
     build:
       context: database/mssql
     env_file:
-      - database/.env
+      - database/mssql/.env
     ports:
       - "5433:1433"
     volumes:
@@ -77,10 +77,6 @@ services:
     depends_on:
       - backend
     env_file: ./frontend/.env
-    environment:
-      - NODE_ENV=development
-      - API_URL=http://host.docker.internal:5000
-      - CHOKIDAR_USEPOLLING=true
     networks:
       - pims
 

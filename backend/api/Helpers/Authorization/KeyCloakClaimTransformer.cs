@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authentication;
 namespace Pims.Api.Helpers.Authorization
 {
     /// <summary>
-    /// KeyCloakClaimTransformer class, provides a way to extract keycloak claims and convert them into role claims.
+    /// KeycloakClaimTransformer class, provides a way to extract keycloak claims and convert them into role claims.
     /// </summary>
-    public class KeyCloakClaimTransformer : IClaimsTransformation
+    public class KeycloakClaimTransformer : IClaimsTransformation
     {
         #region Variables
         private const string REALM_ACCESS = "realm_access";
@@ -36,7 +36,7 @@ namespace Pims.Api.Helpers.Authorization
                 var realm_access_claim = principal.Claims.First(c => c.Type == REALM_ACCESS);
                 var value = realm_access_claim.Value.Replace("\\", "");
                 var realm_access = JsonSerializer.Deserialize<RealmAccess>(value, _options);
-                var identity = ((ClaimsIdentity)principal.Identity);
+                var identity = ((ClaimsIdentity) principal.Identity);
                 foreach (var role in realm_access.Roles)
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, role));

@@ -12,10 +12,10 @@ using Pims.Dal;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models;
-using Pims.Dal.Services;
 using AutoMapper;
-using Pims.Api.Test.Helpers;
 using Pims.Api.Models;
+using Pims.Api.Test.Helpers;
+using Pims.Dal.Services;
 
 namespace PimsApi.Test.Controllers
 {
@@ -36,9 +36,9 @@ namespace PimsApi.Test.Controllers
             UserId = USER_ID,
             User = new Entity.User
             {
-                Id = USER_ID,
-                DisplayName = "TEST",
-                Email = "test@test.ca"
+            Id = USER_ID,
+            DisplayName = "TEST",
+            Email = "test@test.ca"
             },
         };
 
@@ -57,20 +57,20 @@ namespace PimsApi.Test.Controllers
             _expectedAccessRequest.Agencies.Add(new Entity.AccessRequestAgency()
             {
                 AgencyId = AGENCY_ID,
-                Agency = new Entity.Agency()
-                {
-                    Id = AGENCY_ID
-                },
-                AccessRequestId = ACCCESS_REQUEST_ID
+                    Agency = new Entity.Agency()
+                    {
+                        Id = AGENCY_ID
+                    },
+                    AccessRequestId = ACCCESS_REQUEST_ID
             });
             _expectedAccessRequest.Roles.Add(new Entity.AccessRequestRole()
             {
                 RoleId = ROLE_ID,
-                Role = new Entity.Role()
-                {
-                    Id = ROLE_ID
-                },
-                AccessRequestId = ACCCESS_REQUEST_ID
+                    Role = new Entity.Role()
+                    {
+                        Id = ROLE_ID
+                    },
+                    AccessRequestId = ACCCESS_REQUEST_ID
             });
         }
         #endregion

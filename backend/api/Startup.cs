@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlClient;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,6 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Pims.Api.Helpers;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 using Pims.Dal;
@@ -52,84 +56,86 @@ namespace Pims.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration);
+
             services.AddControllers()
                 .AddJsonOptions(options =>
-               {
-                   options.JsonSerializerOptions.WriteIndented = true;
-                   options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-               });
+                {
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
 
             services.AddOptions();
 
-            // var key = Encoding.ASCII.GetBytes(Configuration["Keycloak:Secret"]);
             services.AddAuthentication(options =>
-               {
-                   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-               })
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
-               {
-                   options.RequireHttpsMetadata = false;
-                   options.Authority = Configuration["Keycloak:Authority"];
-                   options.Audience = Configuration["Keycloak:Audience"];
-                   options.SaveToken = true;
-                   options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                   {
-                       ValidateIssuerSigningKey = true,
-                       //IssuerSigningKey = new SymmetricSecurityKey(key),
-                       ValidateIssuer = false,
-                       ValidateAudience = false
-                   };
-                   options.Events = new JwtBearerEvents()
-                   {
-                       OnTokenValidated = context =>
-                           {
-                               return Task.CompletedTask;
-                           },
-                       OnAuthenticationFailed = context =>
-                        {
-                            context.NoResult();
-                            context.Response.StatusCode = 500;
-                            context.Response.ContentType = "text/plain";
-                            if (Environment.IsDevelopment())
+                {
+                    var key = Encoding.ASCII.GetBytes(Configuration["Keycloak:Secret"]);
+                    options.RequireHttpsMetadata = false;
+                    options.Authority = Configuration["Keycloak:Authority"];
+                    options.Audience = Configuration["Keycloak:Audience"];
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                    if (key.Length > 0) options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(key);
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnTokenValidated = context =>
                             {
-                                return context.Response.WriteAsync(context.Exception.ToString());
+                                return Task.CompletedTask;
+                            },
+                            OnAuthenticationFailed = context =>
+                            {
+                                context.NoResult();
+                                context.Response.StatusCode = 500;
+                                context.Response.ContentType = "text/plain";
+                                if (Environment.IsDevelopment())
+                                {
+                                    return context.Response.WriteAsync(context.Exception.ToString());
+                                }
+                                return context.Response.WriteAsync("An error occurred processing your authentication.");
+                            },
+                            OnForbidden = context =>
+                            {
+                                return Task.CompletedTask;
                             }
-                            return context.Response.WriteAsync("An error occurred processing your authentication.");
-                        },
-                       OnForbidden = context =>
-                        {
-                            return Task.CompletedTask;
-                        }
-                   };
-               });
+                    };
+                });
 
             services.AddAuthorization(options =>
-           {
-               options.AddPolicy("Administrator", policy => policy.Requirements.Add(new RealmAccessRoleRequirement("administrator")));
-           });
+            {
+                options.AddPolicy("Administrator", policy => policy.Requirements.Add(new RealmAccessRoleRequirement("administrator")));
+            });
 
             services.AddDbContext<PimsContext>(options =>
-           {
-               var cs = Configuration.GetConnectionString("PIMS");
-               var builder = new SqlConnectionStringBuilder(cs);
-               var pwd = Configuration["DB_PASSWORD"];
-               if (!String.IsNullOrEmpty(pwd))
-               {
-                   builder.Password = pwd;
-               }
-               options.UseSqlServer(builder.ConnectionString);
-           });
+            {
+                var cs = Configuration.GetConnectionString("PIMS");
+                var builder = new SqlConnectionStringBuilder(cs);
+                var pwd = Configuration["DB_PASSWORD"];
+                if (!String.IsNullOrEmpty(pwd))
+                {
+                    builder.Password = pwd;
+                }
+                options.UseSqlServer(builder.ConnectionString);
+            });
 
             services.AddHttpClient();
 
             services.AddPimsService();
             services.AddPimsAdminService();
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
-            services.AddTransient<IClaimsTransformation, KeyCloakClaimTransformer>();
+            services.AddTransient<IClaimsTransformation, KeycloakClaimTransformer>();
             services.AddHttpContextAccessor();
             services.AddTransient<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);
-            services.AddScoped<Pims.Api.Helpers.IRequestClient, Pims.Api.Helpers.RequestClient>();
+            services.AddScoped<IKeycloakRequestClient, KeycloakRequestClient>();
 
             services.AddAutoMapper(typeof(Startup));
         }
@@ -159,22 +165,12 @@ namespace Pims.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.Use(async (context, next) =>
-           {
-               // if (context.User != null && context.User.Identity.IsAuthenticated) {
-               //     context.User.Claims.Append (new Claim ("Role", "Administrator"));
-               // }
-
-               var requestPath = context.Request.Path;
-               var poweredBy = context.Request.Headers["x-powered-by"];
-               var bearer = context.Request.Headers["Authorization"];
-               await next();
-           });
+            app.UseMiddleware(typeof(LogRequestMiddleware));
 
             app.UseEndpoints(endpoints =>
-           {
-               endpoints.MapControllers();
-           });
+            {
+                endpoints.MapControllers();
+            });
         }
 
         /// <summary>
@@ -184,13 +180,22 @@ namespace Pims.Api
         /// <param name="app"></param>
         private static void UpdateDatabase(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices
+            using(var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<PimsContext>())
+                var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
+
+                try
                 {
-                    context.Database.Migrate();
+                    using(var context = serviceScope.ServiceProvider.GetService<PimsContext>())
+                    {
+                        context.Database.Migrate();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogCritical(ex, "Database migration failed on startup.");
                 }
             }
         }
