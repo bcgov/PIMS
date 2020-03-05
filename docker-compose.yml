@@ -57,6 +57,7 @@ services:
       - "5001:443"
     depends_on:
       - database
+      - keycloak
     # volumes:
     #   - $(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     networks:

@@ -1,7 +1,10 @@
 using System;
+using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Pims.Api.Helpers.Profiles;
 
@@ -14,7 +17,7 @@ namespace Pims.Api.Test.Helpers
     {
         #region Variables
         private IServiceProvider _provider;
-        private readonly IServiceCollection _services = new ServiceCollection ();
+        private readonly IServiceCollection _services = new ServiceCollection();
         #endregion
 
         #region Properties
@@ -24,52 +27,74 @@ namespace Pims.Api.Test.Helpers
         /// <summary>
         /// Creates a new instance of a TestHelper class.
         /// </summary>
-        public TestHelper ()
+        public TestHelper()
         {
-            var config = new Mock<IConfiguration> ();
-            this.AddSingleton (config);
-            this.AddSingleton (config.Object);
+            var config = new Mock<IConfiguration>();
+            this.AddSingleton(config);
+            this.AddSingleton(config.Object);
 
-            var mapper = TestHelper.CreateMapper ();
-            this.AddSingleton (mapper);
+            var mapper = TestHelper.CreateMapper();
+            this.AddSingleton(mapper);
         }
         #endregion
 
         #region Methods
-        public IServiceProvider BuildServiceProvider ()
+        /// <summary>
+        /// Build the required services for the provider.
+        /// Once this is called you can no longer add additional services to the provider.
+        /// </summary>
+        /// <returns></returns>
+        public IServiceProvider BuildServiceProvider()
         {
             if (_provider == null)
             {
-                _provider = _services.BuildServiceProvider ();
+                _provider = _services.BuildServiceProvider();
             }
             return _provider;
         }
 
-        public IServiceCollection AddSingleton<T> () where T : class
+        /// <summary>
+        /// Add a singleton service to the provider.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public IServiceCollection AddSingleton<T>() where T : class
         {
-            if (_provider != null) throw new InvalidOperationException ("Cannot add to the service collection once the provider has been built.");
-            return _services.AddSingleton<T> ();
+            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return _services.AddSingleton<T>();
         }
 
-        public IServiceCollection AddSingleton<T> (T item) where T : class
+        /// <summary>
+        /// Add a singleton service to the provider.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public IServiceCollection AddSingleton<T>(T item) where T : class
         {
-            if (_provider != null) throw new InvalidOperationException ("Cannot add to the service collection once the provider has been built.");
-            return _services.AddSingleton<T> (item);
+            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return _services.AddSingleton<T>(item);
         }
 
-        public T GetService<T> ()
+        /// <summary>
+        /// Get the service for the specified 'T' type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetService<T>()
         {
-            return this.BuildServiceProvider ().GetService<T> ();
+            return this.BuildServiceProvider().GetService<T>();
         }
 
-        public static IMapper CreateMapper ()
+        /// <summary>
+        /// Create a AutoMapper mapper.
+        /// </summary>
+        /// <returns></returns>
+        public static IMapper CreateMapper()
         {
-            var mapperConfig = new MapperConfiguration (cfg =>
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile (new ParcelProfile ());
-                cfg.AddProfile (new AddressProfile ());
-                cfg.AddProfile (new BuildingProfile ());
-                cfg.AddProfile (new BaseProfile ());
+                cfg.AddProfile(new ParcelProfile());
+                cfg.AddProfile(new AddressProfile());
+                cfg.AddProfile(new BuildingProfile());
+                cfg.AddProfile(new BaseProfile());
                 cfg.AddProfile(new AgencyProfile());
                 cfg.AddProfile(new AccessRequestProfile());
                 cfg.AddProfile(new CodeProfile());
@@ -77,9 +102,25 @@ namespace Pims.Api.Test.Helpers
                 cfg.AddProfile(new RoleProfile());
             });
             mapperConfig.AssertConfigurationIsValid();
-            var mapper = mapperConfig.CreateMapper ();
+            var mapper = mapperConfig.CreateMapper();
 
             return mapper;
+        }
+
+        /// <summary>
+        /// Creates an instance of a controller of the specified 'T' type and initializes it with the specified 'user'.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T CreateController<T>(ClaimsPrincipal user) where T : ControllerBase
+        {
+            this.AddSingleton<ILogger<T>>(Mock.Of<ILogger<T>>());
+            if (_provider == null) this.BuildServiceProvider();
+            var controller = (T)ActivatorUtilities.CreateInstance(_provider, typeof(T));
+            controller.ControllerContext = ControllerHelper.CreateControllerContext(user);
+
+            return controller;
         }
         #endregion
     }
