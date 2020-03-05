@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -123,9 +124,18 @@ namespace Pims.Tools.Import
                 }
                 else
                 {
-                    var results = await JsonSerializer.DeserializeAsync<object>(stream);
-                    var json = JsonSerializer.Serialize(results);
-                    _logger.LogError(json);
+                    if (response.Content.Headers.ContentType == new MediaTypeHeaderValue("application/json"))
+                    {
+                        var results = await JsonSerializer.DeserializeAsync<object>(stream);
+                        var json = JsonSerializer.Serialize(results);
+                        _logger.LogError(json);
+                    }
+                    else
+                    {
+                        var readStream = new StreamReader(stream, Encoding.UTF8);
+                        var error = readStream.ReadToEnd();
+                        _logger.LogError(error);
+                    }
                 }
 
                 await Task.Delay(new TimeSpan(0, 0, delay));
@@ -141,12 +151,15 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <param name="url"></param>
         /// <param name="token"></param>
-        /// <param name="properties"></param>
+        /// <param name="items"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> RequestAsync(HttpMethod method, string url, string token, IEnumerable<object> properties)
+        private async Task<HttpResponseMessage> RequestAsync(HttpMethod method, string url, string token, IEnumerable<object> items)
         {
-            var json = JsonSerializer.Serialize(properties);
+            var json = JsonSerializer.Serialize(items);
+
+            _logger.LogInformation($"Sending {items.Count()} items to {url}");
+
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("Authorization", $"Bearer {token}");
             request.Headers.Add("User-Agent", "pims.tools.import");
