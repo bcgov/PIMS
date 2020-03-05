@@ -8,20 +8,23 @@ import * as serviceWorker from './serviceWorker';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
 import { KeycloakProvider } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
-import { Provider } from "react-redux";
-import getKeycloakEventHandler from 'utils/KeycloakEventHandler'
+import { Provider } from 'react-redux';
+import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
 //@ts-ignore
 const keycloak: KeycloakInstance = new Keycloak('keycloak.json');
 const Index = () => {
-    return <KeycloakProvider
-        keycloak={keycloak}
-        LoadingComponent={<Spinner animation="border"></Spinner>}
-        onEvent={getKeycloakEventHandler(keycloak)}>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </KeycloakProvider>;
+  return (
+    <KeycloakProvider
+      keycloak={keycloak}
+      LoadingComponent={<Spinner animation="border"></Spinner>}
+      onEvent={getKeycloakEventHandler(keycloak)}
+    >
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </KeycloakProvider>
+  );
 };
 
 ReactDOM.render(<Index />, document.getElementById('root'));

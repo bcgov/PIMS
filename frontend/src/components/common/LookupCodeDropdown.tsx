@@ -12,7 +12,7 @@ type LookupCodeDropdownProps = {
 
 const getNameById = (codeSet: ILookupCode[], codeId: number) => {
   return _.find(codeSet, ['id', codeId])?.name || '';
-}
+};
 
 /**
  * Generic component used to display a dropdown list of {@link ILookupCode}
@@ -24,26 +24,28 @@ function LookupCodeDropdown(props: LookupCodeDropdownProps) {
   const onCodeItemChange = (eventKey: string) => {
     const eventKeyId = parseInt(eventKey);
     if (eventKeyId < 0) {
-      setCodeDropdownTitle("Any");
+      setCodeDropdownTitle('Any');
       props.onSelectCode(null);
       return;
     }
     const agencyName = getNameById(props.lookupCodes, eventKeyId);
     setCodeDropdownTitle(agencyName);
     props.onSelectCode(eventKeyId);
-  }
+  };
 
   return (
-    <DropdownButton id="dropdown-basic-button" title={codeDropdownTitle} bsPrefix="map-filter-dropdown" onSelect={onCodeItemChange}>
+    <DropdownButton
+      id="dropdown-basic-button"
+      title={codeDropdownTitle}
+      bsPrefix="map-filter-dropdown"
+      onSelect={onCodeItemChange}
+    >
       <Dropdown.Item eventKey={'-1'}>Any</Dropdown.Item>
-      {props.lookupCodes.map((code) => {
-        return <Dropdown.Item eventKey={code.id.toString()}>{code.name}</Dropdown.Item>
-      })
-      }
+      {props.lookupCodes.map(code => {
+        return <Dropdown.Item eventKey={code.id.toString()}>{code.name}</Dropdown.Item>;
+      })}
     </DropdownButton>
   );
 }
 
 export default LookupCodeDropdown;
-
-

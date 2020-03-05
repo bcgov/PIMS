@@ -1,38 +1,42 @@
-import axios, { AxiosInstance } from "axios";
-import { isEmpty } from "lodash";
-import { store } from "App";
+import axios, { AxiosInstance } from 'axios';
+import { isEmpty } from 'lodash';
+import { store } from 'App';
 
 const UNAUTHORIZED = 401;
 const MAINTENANCE = 503;
 const TEAPOT = 418;
 
-const defaultEnvelope = (x:any) => ({ data: { records: x } });
+const defaultEnvelope = (x: any) => ({ data: { records: x } });
 
-const sleepRequest = (instance:AxiosInstance, milliseconds:number, originalRequest:any) => {
-  return new Promise((resolve) => {
+const sleepRequest = (instance: AxiosInstance, milliseconds: number, originalRequest: any) => {
+  return new Promise(resolve => {
     setTimeout(() => resolve(instance(originalRequest)), milliseconds);
   });
 };
 
-const errorCount:any = {};
+const errorCount: any = {};
 
-const CustomAxios = ({ errorToastMessage, selector, envelope = defaultEnvelope }: {errorToastMessage?: string; selector?:Function; envelope?: typeof defaultEnvelope} = {}) => {
+const CustomAxios = ({
+  errorToastMessage,
+  selector,
+  envelope = defaultEnvelope,
+}: { errorToastMessage?: string; selector?: Function; envelope?: typeof defaultEnvelope } = {}) => {
   const instance = axios.create();
-  instance.interceptors.request.use((config) => {
+  instance.interceptors.request.use(config => {
     if (selector !== undefined) {
       const state = store.getState();
       const storedValue = selector(state);
 
       if (!isEmpty(storedValue)) {
-        throw new axios.Cancel(JSON.stringify(envelope(storedValue)))
+        throw new axios.Cancel(JSON.stringify(envelope(storedValue)));
       }
     }
     return config;
   });
 
   instance.interceptors.response.use(
-    (response) => response,
-    (error) => {
+    response => response,
+    error => {
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }
@@ -48,7 +52,7 @@ const CustomAxios = ({ errorToastMessage, selector, envelope = defaultEnvelope }
 
       if (status === UNAUTHORIZED || status === MAINTENANCE) {
         window.location.reload(false);
-      } else if (status === TEAPOT || process.env.NODE_ENV === "development") {
+      } else if (status === TEAPOT || process.env.NODE_ENV === 'development') {
         // Do not retry in dev env, or for axios calls made in frontend tests, which are configured to return status code 418
         //TODO: come up with a way of displaying request failures.
         //   notification.error({
@@ -72,7 +76,7 @@ const CustomAxios = ({ errorToastMessage, selector, envelope = defaultEnvelope }
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;
