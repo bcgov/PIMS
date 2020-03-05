@@ -22,6 +22,6 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
       }}
     />
   );
-}
+};
 
 export default PrivateRoute;

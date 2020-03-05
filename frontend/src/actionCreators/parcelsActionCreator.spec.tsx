@@ -1,19 +1,16 @@
-import MockAdapter from "axios-mock-adapter";
-import axios from "axios";
-import {
-  fetchParcelDetail,
-  fetchParcels
-} from "actionCreators/parcelsActionCreator";
-import * as genericActions from "actions/genericActions";
-import * as API from "constants/API";
-import { IParcelListParams, IParcelDetailParams } from "constants/API";
-import * as MOCK from "mocks/dataMocks";
-import { ENVIRONMENT } from "constants/environment";
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import { fetchParcelDetail, fetchParcels } from 'actionCreators/parcelsActionCreator';
+import * as genericActions from 'actions/genericActions';
+import * as API from 'constants/API';
+import { IParcelListParams, IParcelDetailParams } from 'constants/API';
+import * as MOCK from 'mocks/dataMocks';
+import { ENVIRONMENT } from 'constants/environment';
 
 const dispatch = jest.fn();
-const requestSpy = jest.spyOn(genericActions, "request");
-const successSpy = jest.spyOn(genericActions, "success");
-const errorSpy = jest.spyOn(genericActions, "error");
+const requestSpy = jest.spyOn(genericActions, 'request');
+const successSpy = jest.spyOn(genericActions, 'success');
+const errorSpy = jest.spyOn(genericActions, 'error');
 const mockAxios = new MockAdapter(axios);
 
 beforeEach(() => {
@@ -24,9 +21,8 @@ beforeEach(() => {
   errorSpy.mockClear();
 });
 
-describe("fetchParcels action creator", () => {
-
-  it("Null Params - Request successful, dispatches `success` with correct response", () => {
+describe('fetchParcels action creator', () => {
+  it('Null Params - Request successful, dispatches `success` with correct response', () => {
     const url = ENVIRONMENT.apiUrl + API.PARCELS(null);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
@@ -37,8 +33,15 @@ describe("fetchParcels action creator", () => {
     });
   });
 
-  it("Request successful, dispatches `success` with correct response", () => {
-    const params: IParcelListParams = { neLat: 1, neLong: 2, swLat: 3, swLong: 4 };
+  it('Request successful, dispatches `success` with correct response', () => {
+    const params: IParcelListParams = {
+      neLat: 1,
+      neLong: 2,
+      swLat: 3,
+      swLong: 4,
+      agencyId: null,
+      propertyClassificationId: null,
+    };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
@@ -49,7 +52,7 @@ describe("fetchParcels action creator", () => {
     });
   });
 
-  it("Request failure, dispatches `error` with correct response", () => {
+  it('Request failure, dispatches `error` with correct response', () => {
     const url = ENVIRONMENT.apiUrl + API.PARCELS(null);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
     return fetchParcels(null)(dispatch).then(() => {
@@ -59,9 +62,8 @@ describe("fetchParcels action creator", () => {
     });
   });
 });
-describe("fetchParcelDetail action creator", () => {
-
-  it("Request successful, dispatches `success` with correct response", () => {
+describe('fetchParcelDetail action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
     const params: IParcelDetailParams = { id: 1 };
     const url = ENVIRONMENT.apiUrl + API.PARCELDETAIL(params);
     const mockResponse = { data: { success: true } };
@@ -73,7 +75,7 @@ describe("fetchParcelDetail action creator", () => {
     });
   });
 
-  it("Request failure, dispatches `error` with correct response", () => {
+  it('Request failure, dispatches `error` with correct response', () => {
     const params: IParcelDetailParams = { id: 1 };
     const url = ENVIRONMENT.apiUrl + API.PARCELDETAIL(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);

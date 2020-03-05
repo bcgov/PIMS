@@ -1,8 +1,8 @@
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
-import { request, success, error } from "actions/genericActions";
-import * as ReducerTypes from "constants/reducerTypes";
-import * as ActionTypes from "constants/actionTypes";
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { request, success, error } from 'actions/genericActions';
+import * as ReducerTypes from 'constants/reducerTypes';
+import * as ActionTypes from 'constants/actionTypes';
 
 const createMockStore = configureMockStore([thunk]);
 const store = createMockStore({
@@ -13,20 +13,20 @@ const store = createMockStore({
   },
 });
 
-describe("genericActions", () => {
+describe('genericActions', () => {
   afterEach(() => {
     store.clearActions();
   });
 
-  it("`request action` returns `type: REQUEST`", () => {
+  it('`request action` returns `type: REQUEST`', () => {
     const expectedActions = [{ name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST }];
 
     store.dispatch(request(ReducerTypes.GET_PARCELS));
     expect(store.getActions()).toEqual(expectedActions);
   });
 
-  describe("after a `request` action", () => {
-    it("when an API endpoint has been successful, the `success` action returns `type: SUCCESS`", () => {
+  describe('after a `request` action', () => {
+    it('when an API endpoint has been successful, the `success` action returns `type: SUCCESS`', () => {
       const mockData = {};
       const expectedActions = [
         { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST },
@@ -38,8 +38,8 @@ describe("genericActions", () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("when an API endpoint has failed, the `error` action returns `type: ERROR`", () => {
-      const mockError = { response: { status: 400, data: { errors: [], message: "Error" } } };
+    it('when an API endpoint has failed, the `error` action returns `type: ERROR`', () => {
+      const mockError = { response: { status: 400, data: { errors: [], message: 'Error' } } };
       const expectedActions = [
         { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST },
         { name: ReducerTypes.GET_PARCELS, type: ActionTypes.ERROR, errorMessage: mockError },

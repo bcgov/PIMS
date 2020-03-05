@@ -10,9 +10,9 @@ import MapFilterBar from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 
 export type MapFilterModel = {
-  bounds: LatLngBounds | null,
-  agencyId: number | null,
-  propertyClassificationId: number | null
+  bounds: LatLngBounds | null;
+  agencyId: number | null;
+  propertyClassificationId: number | null;
 };
 
 type MapProps = {
@@ -25,7 +25,7 @@ type MapProps = {
   activeParcel?: IParcelDetail | null;
   onParcelClick?: (obj: IParcel) => void;
   onPopupClose?: (obj: IParcel) => void;
-  onViewportChanged?: (mapFilterModel:MapFilterModel) => void;
+  onViewportChanged?: (mapFilterModel: MapFilterModel) => void;
 };
 
 const Map: React.FC<MapProps> = props => {
@@ -40,7 +40,7 @@ const Map: React.FC<MapProps> = props => {
       return null;
     }
     return mapRef.current?.leafletElement.getBounds();
-  }
+  };
   const handleParcelClick = (parcel: IParcel) => {
     if (props.onParcelClick) {
       props.onParcelClick(parcel);
@@ -54,11 +54,11 @@ const Map: React.FC<MapProps> = props => {
   const handleViewportChanged = () => {
     const e = getBounds();
     if (props.onViewportChanged) {
-      const mapFilterModel:MapFilterModel = {
+      const mapFilterModel: MapFilterModel = {
         bounds: e,
         agencyId: agencyId,
-        propertyClassificationId: propertyClassificationId
-      }
+        propertyClassificationId: propertyClassificationId,
+      };
       props.onViewportChanged(mapFilterModel);
     }
   };
@@ -74,28 +74,43 @@ const Map: React.FC<MapProps> = props => {
 
   return (
     <Container fluid={true}>
-      <Row style={{width: "100%", position:"absolute"}}>
+      <Row style={{ width: '100%', position: 'absolute' }}>
         <MapNavBar />
-        <MapFilterBar agencyLookupCodes={props.agencies} propertyClassifications={props.propertyClassifications} onSelectAgency={handleAgencyChanged} onSelectPropertyClassification={handlePropertyClassificationChanged} />
+        <MapFilterBar
+          agencyLookupCodes={props.agencies}
+          propertyClassifications={props.propertyClassifications}
+          onSelectAgency={handleAgencyChanged}
+          onSelectPropertyClassification={handlePropertyClassificationChanged}
+        />
         <LeafletMap
           ref={mapRef}
           center={[props.lat, props.lng]}
           zoom={props.zoom}
           whenReady={() => handleViewportChanged()}
-          onViewportChanged={() => handleViewportChanged()}>
+          onViewportChanged={() => handleViewportChanged()}
+        >
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {parcels && parcels.map(parcel => {
-            return (
-              <Marker key={parcel.id} position={[parcel.latitude, parcel.longitude]} onClick={() => handleParcelClick(parcel)} />
-            );
-          })}
+          {parcels &&
+            parcels.map(parcel => {
+              return (
+                <Marker
+                  key={parcel.id}
+                  position={[parcel.latitude, parcel.longitude]}
+                  onClick={() => handleParcelClick(parcel)}
+                />
+              );
+            })}
 
           {activeParcel && (
-            <Popup position={[activeParcel.latitude, activeParcel.longitude]} offset={[0, -25]} onClose={() => handlePopupClose(activeParcel)}>
+            <Popup
+              position={[activeParcel.latitude, activeParcel.longitude]}
+              offset={[0, -25]}
+              onClose={() => handlePopupClose(activeParcel)}
+            >
               <ParcelPopupView parcelDetail={activeParcel} />
             </Popup>
           )}

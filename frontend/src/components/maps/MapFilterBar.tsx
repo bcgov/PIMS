@@ -18,10 +18,10 @@ type MapFilterProps = {
 function MapFilterBar(props: MapFilterProps) {
   const onSelectAgency = (codeId: number | null) => {
     props.onSelectAgency(codeId);
-  }
+  };
   const onSelectPropertyClassification = (codeId: number | null) => {
     props.onSelectPropertyClassification(codeId);
-  }
+  };
 
   return (
     <Container fluid={true} className="map-filter-bar">
@@ -32,10 +32,18 @@ function MapFilterBar(props: MapFilterProps) {
               <Form.Control type="text" placeholder="Search Bar Not Implemented" />
             </Col>
             <Col className="bar-item">
-              <LookupCodeDropdown lookupCodes={props.agencyLookupCodes || []} defaultTitle={"View Properties in \u00A0"} onSelectCode={onSelectAgency} />
+              <LookupCodeDropdown
+                lookupCodes={props.agencyLookupCodes || []}
+                defaultTitle={'View Properties in \u00A0'}
+                onSelectCode={onSelectAgency}
+              />
             </Col>
             <Col className="bar-item">
-              <LookupCodeDropdown lookupCodes={props.propertyClassifications || []} defaultTitle={"View by Classification \u00A0"} onSelectCode={onSelectPropertyClassification} />
+              <LookupCodeDropdown
+                lookupCodes={props.propertyClassifications || []}
+                defaultTitle={'View by Classification \u00A0'}
+                onSelectCode={onSelectPropertyClassification}
+              />
             </Col>
           </Row>
         </Col>
@@ -45,5 +53,3 @@ function MapFilterBar(props: MapFilterProps) {
 }
 
 export default MapFilterBar;
-
-

@@ -33,9 +33,9 @@
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.3",
     "@testing-library/user-event": "7.1.2",
+    "@types/enzyme": "3.10.5",
+    "@types/enzyme-adapter-react-16": "1.0.6",
     "@types/jest": "24.0.23",
-    "@types/react-test-renderer": "16.9.2",
-    "@types/redux-mock-store": "1.0.2",
     "@types/lodash": "4.14.149",
     "@types/node": "12.12.17",
     "@types/react": "16.9.16",
@@ -43,10 +43,16 @@
     "@types/react-leaflet": "2.5.0",
     "@types/react-redux": "7.1.7",
     "@types/react-router-dom": "5.1.3",
+    "@types/react-test-renderer": "16.9.2",
     "@types/redux-logger": "3.0.7",
+    "@types/redux-mock-store": "1.0.2",
     "axios-mock-adapter": "1.17.0",
+    "enzyme": "3.11.0",
+    "enzyme-adapter-react-16": "1.15.2",
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-prettier": "3.1.1",
+    "husky": "4.2.3",
+    "lint-staged": "10.0.8",
     "prettier": "1.19.1",
     "react-test-renderer": "16.12.0",
     "redux-mock-store": "1.5.4"
@@ -56,7 +62,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tsc --noEmit && eslint src --ext ts,tsx,js,jsx --quiet",
+    "lint": "tsc --noEmit && eslint src --quiet --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\""
   },
   "eslintConfig": {
@@ -67,6 +73,21 @@
     "rules": {
       "react-hooks/exhaustive-deps": "off"
     }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.+(js|jsx|ts|tsx)": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.+(json|css|md)": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "browserslist": {
     "production": [
