@@ -19,7 +19,9 @@ describe('genericActions', () => {
   });
 
   it('`request action` returns `type: REQUEST`', () => {
-    const expectedActions = [{ name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST }];
+    const expectedActions = [
+      { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST, isFetching: true },
+    ];
 
     store.dispatch(request(ReducerTypes.GET_PARCELS));
     expect(store.getActions()).toEqual(expectedActions);
@@ -29,23 +31,35 @@ describe('genericActions', () => {
     it('when an API endpoint has been successful, the `success` action returns `type: SUCCESS`', () => {
       const mockData = {};
       const expectedActions = [
-        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST },
-        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.SUCCESS, data: mockData },
+        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST, isFetching: true },
+        {
+          name: ReducerTypes.GET_PARCELS,
+          type: ActionTypes.SUCCESS,
+          data: mockData,
+          isFetching: false,
+          status: 200,
+        },
       ];
 
       store.dispatch(request(ReducerTypes.GET_PARCELS));
-      store.dispatch(success(ReducerTypes.GET_PARCELS, mockData));
+      store.dispatch(success(ReducerTypes.GET_PARCELS, 200, mockData));
       expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('when an API endpoint has failed, the `error` action returns `type: ERROR`', () => {
       const mockError = { response: { status: 400, data: { errors: [], message: 'Error' } } };
       const expectedActions = [
-        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST },
-        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.ERROR, errorMessage: mockError },
+        { name: ReducerTypes.GET_PARCELS, type: ActionTypes.REQUEST, isFetching: true },
+        {
+          name: ReducerTypes.GET_PARCELS,
+          type: ActionTypes.ERROR,
+          errorMessage: mockError,
+          isFetching: false,
+          status: 400,
+        },
       ];
       store.dispatch(request(ReducerTypes.GET_PARCELS));
-      store.dispatch(error(ReducerTypes.GET_PARCELS, mockError));
+      store.dispatch(error(ReducerTypes.GET_PARCELS, 400, mockError));
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
