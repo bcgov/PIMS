@@ -27,14 +27,14 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
             </ListGroup>
             <ListGroup>
               <ListGroup.Item>
-                <p>
+                <div>
                   <Label>Address: </Label>
                   {parcelDetail?.address?.line1}
-                </p>
-                <p>
+                </div>
+                <div>
                   {parcelDetail?.address?.city}, {parcelDetail?.address?.province}{' '}
                   {parcelDetail?.address?.postal}
-                </p>
+                </div>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Label>PID: </Label> {parcelDetail?.pid}
