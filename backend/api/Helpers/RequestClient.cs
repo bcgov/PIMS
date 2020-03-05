@@ -7,7 +7,7 @@ namespace Pims.Api.Helpers
     /// <summary>
     /// RequestClient class, provides a way to make HTTP requests on behalf of the frontend application.
     /// </summary>
-    public class RequestClient
+    public class RequestClient : IRequestClient
     {
         #region Properties
         private readonly IHttpClientFactory _clientFactory;

@@ -8,6 +8,11 @@ using Microsoft.Extensions.Logging;
 using Pims.Api.Helpers;
 using Pims.Dal.Exceptions;
 using MembershipModel = Pims.Dal.Membership.Models;
+using Pims.Api.Models;
+using Pims.Dal.Services;
+using System.Linq;
+using Entity = Pims.Dal.Entities;
+using AutoMapper;
 
 namespace Pims.Api.Controllers
 {
@@ -22,7 +27,9 @@ namespace Pims.Api.Controllers
         #region Variables
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly RequestClient _requestClient;
+        private readonly IRequestClient _requestClient;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
         #endregion
 
         #region Constructors
@@ -31,12 +38,16 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
+        /// <param name="userService"></param>
+        /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, RequestClient requestClient)
+        public UserController(ILogger<UserController> logger, IConfiguration configuration, IUserService userService, IMapper mapper, IRequestClient requestClient)
         {
             _logger = logger;
             _configuration = configuration;
             _requestClient = requestClient;
+            _userService = userService;
+            _mapper = mapper;
         }
         #endregion
 
@@ -65,6 +76,26 @@ namespace Pims.Api.Controllers
             var response = await _requestClient.GetAsync(Request, user_info_url?.Value);
 
             return await response.HandleResponseAsync<MembershipModel.User>();
+        }
+
+        /// <summary>
+        /// Allows a user to submit an access request to the system, associating a role and agency to their user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/access/request")]
+        public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
+        {
+            if(accessRequestModel.Agencies.Count() > 1)
+            {
+                return BadRequest("Each access request can only contain one agency.");
+            }
+            if(accessRequestModel.Roles.Count() > 1)
+            {
+                return BadRequest("Each access request can only contain one role.");
+            }
+            var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);
+            _userService.AddAccessRequest(entity);
+            return new JsonResult(_mapper.Map<AccessRequestModel>(entity));
         }
         #endregion
     }
