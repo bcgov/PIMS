@@ -1,4 +1,6 @@
 import React from 'react';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IParcelDetail, IParcel } from 'actions/parcelsActions';
@@ -44,19 +46,23 @@ const mockParcels = [
 ] as IParcel[];
 const noParcels = [] as IParcel[];
 
+const history = createMemoryHistory();
+
 // Check that the markers have correct position given the mock parcel 1 above
 it('Renders the marker in correct position', () => {
   const component = mount(
-    <Map
-      lat={48.43}
-      lng={-123.37}
-      zoom={14}
-      parcels={mockParcels}
-      activeParcel={mockDetails}
-      agencies={[]}
-      propertyClassifications={[]}
-      onParcelClick={jest.fn()}
-    />,
+    <Router history={history}>
+      <Map
+        lat={48.43}
+        lng={-123.37}
+        zoom={14}
+        parcels={mockParcels}
+        activeParcel={mockDetails}
+        agencies={[]}
+        propertyClassifications={[]}
+        onParcelClick={jest.fn()}
+      />
+    </Router>,
   );
   const marker = component.find(Marker).first();
   expect(marker.prop('position')).toStrictEqual([48, 123]);
@@ -65,16 +71,18 @@ it('Renders the marker in correct position', () => {
 // Ensure no markers are rendered when there are no parcels
 it('Should render 0 markers when there are no parcels', () => {
   const component = mount(
-    <Map
-      lat={48.43}
-      lng={-123.37}
-      zoom={14}
-      parcels={noParcels}
-      activeParcel={emptyDetails}
-      agencies={[]}
-      propertyClassifications={[]}
-      onParcelClick={jest.fn()}
-    />,
+    <Router history={history}>
+      <Map
+        lat={48.43}
+        lng={-123.37}
+        zoom={14}
+        parcels={noParcels}
+        activeParcel={emptyDetails}
+        agencies={[]}
+        propertyClassifications={[]}
+        onParcelClick={jest.fn()}
+      />
+    </Router>,
   );
   const marker = component.find(Marker);
   expect(marker.length).toBe(0);
@@ -83,16 +91,18 @@ it('Should render 0 markers when there are no parcels', () => {
 // 2 parcels in mock data, check to see 2 markers are created
 it('Marker for each parcel is created', () => {
   const component = mount(
-    <Map
-      lat={48.43}
-      lng={-123.37}
-      zoom={14}
-      parcels={mockParcels}
-      activeParcel={mockDetails}
-      agencies={[]}
-      propertyClassifications={[]}
-      onParcelClick={jest.fn()}
-    />,
+    <Router history={history}>
+      <Map
+        lat={48.43}
+        lng={-123.37}
+        zoom={14}
+        parcels={mockParcels}
+        activeParcel={mockDetails}
+        agencies={[]}
+        propertyClassifications={[]}
+        onParcelClick={jest.fn()}
+      />
+    </Router>,
   );
   const marker = component.find(Marker);
   expect(marker.length).toBe(2);

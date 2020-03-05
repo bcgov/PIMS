@@ -1,6 +1,5 @@
-import { REQUEST, SUCCESS, ERROR } from "../constants/actionTypes";
-import { INetworkAction } from "actions/networkActions";
-import { IGenericNetworkAction } from "actions/genericActions";
+import { REQUEST, SUCCESS, ERROR } from '../constants/actionTypes';
+import { IGenericNetworkAction } from 'actions/genericActions';
 
 /**
  * @file networkReducer.js
@@ -17,7 +16,6 @@ const initialState = {
 
 const networkReducer = (state = initialState, action: IGenericNetworkAction) => {
   switch (action.type) {
-
     case REQUEST:
       return {
         ...state,
