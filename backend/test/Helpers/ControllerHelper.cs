@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Pims.Api.Controllers;
+using AdminController = Pims.Api.Areas.Admin.Controllers;
+using Pims.Api.Helpers;
+using System.Net.Http;
 
 namespace Pims.Api.Test.Helpers
 {
@@ -14,15 +17,43 @@ namespace Pims.Api.Test.Helpers
         /// <param name="helper"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static ParcelController CreateParcelController (this TestHelper helper, ClaimsPrincipal user)
+        public static ParcelController CreateParcelController(this TestHelper helper, ClaimsPrincipal user)
         {
-            var logger = new Mock<ILogger<ParcelController>> ();
-            helper.AddSingleton (logger.Object);
-            helper.AddSingleton<ParcelController> ();
-            helper.AddSingleton (CreateControllerContext (user));
+            var logger = new Mock<ILogger<ParcelController>>();
+            helper.AddSingleton(logger.Object);
+            helper.AddSingleton<ParcelController>();
+            helper.AddSingleton(CreateControllerContext(user));
 
-            var controller = helper.GetService<ParcelController> ();
-            controller.ControllerContext = helper.GetService<ControllerContext> ();
+            var controller = helper.GetService<ParcelController>();
+            controller.ControllerContext = helper.GetService<ControllerContext>();
+            return controller;
+        }
+
+        public static UserController CreateUserController(this TestHelper helper, ClaimsPrincipal user)
+        {
+            var logger = new Mock<ILogger<UserController>>();
+            var requestClient = new Mock<IRequestClient>();
+            helper.AddSingleton(logger.Object);
+            helper.AddSingleton(requestClient.Object);
+            helper.AddSingleton<UserController>();
+            helper.AddSingleton(CreateControllerContext(user));
+
+            var controller = helper.GetService<UserController>();
+            controller.ControllerContext = helper.GetService<ControllerContext>();
+            return controller;
+        }
+
+        public static AdminController.UserController CreateAdminUserController(this TestHelper helper, ClaimsPrincipal user)
+        {
+            var logger = new Mock<ILogger<AdminController.UserController>>();
+            helper.AddSingleton(logger.Object);
+            var httpClientFactory = new Mock<IHttpClientFactory>();
+            helper.AddSingleton(httpClientFactory.Object);
+            helper.AddSingleton<AdminController.UserController>();
+            helper.AddSingleton(CreateControllerContext(user));
+
+            var controller = helper.GetService<AdminController.UserController>();
+            controller.ControllerContext = helper.GetService<ControllerContext>();
             return controller;
         }
 
@@ -31,11 +62,11 @@ namespace Pims.Api.Test.Helpers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static ControllerContext CreateControllerContext (ClaimsPrincipal user)
+        public static ControllerContext CreateControllerContext(ClaimsPrincipal user)
         {
-            return new ControllerContext ()
+            return new ControllerContext()
             {
-                HttpContext = HttpContextHelper.CreateHttpContext (user)
+                HttpContext = HttpContextHelper.CreateHttpContext(user)
             };
         }
     }

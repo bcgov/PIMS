@@ -22,22 +22,23 @@ namespace Pims.Dal
         public ClaimsPrincipal Principal { get; }
 
         /// <summary>
-        /// get - The lookup servies.
+        /// get - The lookup services.
         /// </summary>
         /// <value></value>
         public ILookupService Lookup { get { return _serviceProvider.GetService<ILookupService>(); } }
 
         /// <summary>
-        /// get - The parcel servies.
+        /// get - The parcel services.
         /// </summary>
         /// <value></value>
         public IParcelService Parcel { get { return _serviceProvider.GetService<IParcelService>(); } }
 
         /// <summary>
-        /// get - The user servies.
+        /// get - The user services.
         /// </summary>
         /// <value></value>
         public IUserService User { get { return _serviceProvider.GetService<IUserService>(); } }
+
         #endregion
 
         #region Constructors

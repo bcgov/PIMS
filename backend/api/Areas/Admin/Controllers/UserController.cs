@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models;
-using Entities = Pims.Dal.Entities;
+using Entity = Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
 using Microsoft.AspNetCore.Authorization;
 
@@ -92,7 +92,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddUser([FromBody] Model.UserModel model)
         {
-            var entity = _mapper.Map<Entities.User>(model); // TODO: Return bad request.
+            var entity = _mapper.Map<Entity.User>(model); // TODO: Return bad request.
             var addedEntity = _pimsAdminService.User.Add(entity);
             var user = _mapper.Map<Model.UserModel>(addedEntity);
             return new JsonResult(user);
@@ -106,7 +106,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromBody] Model.UserModel model)
         {
-            var entity = _mapper.Map<Entities.User>(model);
+            var entity = _mapper.Map<Entity.User>(model);
             var updatedEntity = _pimsAdminService.User.Update(entity);
 
             if (updatedEntity == null) return BadRequest("Item does not exist");
@@ -122,10 +122,26 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult DeleteUser([FromBody] Model.UserModel model)
         {
-            var entity = _mapper.Map<Entities.User>(model);
+            var entity = _mapper.Map<Entity.User>(model);
             _pimsAdminService.User.Remove(entity);
 
             return new JsonResult(model);
+        }
+
+        /// <summary>
+        /// Gets all of the access requests that have been submitted to the system.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/access/requests")]
+        public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
+        {
+            if (page < 1) page = 1;
+            if (quantity < 1) quantity = 1;
+            if (quantity > 20) quantity = 20;
+            Entity.Models.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
+            var entities = _mapper.Map<Api.Models.AccessRequestModel[]>(result.Items);
+            var paged = new Pims.Dal.Entities.Models.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
+            return new JsonResult(paged);
         }
         #endregion
     }
