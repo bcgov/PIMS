@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import axios from 'axios';
 import { LatLngBounds } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
 import './Map.scss';
@@ -8,6 +9,7 @@ import { Container, Row } from 'react-bootstrap';
 import MapNavBar from '../MapNavBar';
 import MapFilterBar from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
+import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 
 export type MapFilterModel = {
   bounds: LatLngBounds | null;
@@ -34,6 +36,8 @@ const Map: React.FC<MapProps> = props => {
   const mapRef = useRef<LeafletMap>(null);
   const [agencyId, setAgencyId] = useState<number | null>(null);
   const [propertyClassificationId, setPropertyClassificationId] = useState<number | null>(null);
+  const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
+  const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
 
   const getBounds = () => {
     if (!mapRef.current) {
@@ -65,11 +69,25 @@ const Map: React.FC<MapProps> = props => {
   useEffect(() => {
     handleViewportChanged();
   }, [agencyId, propertyClassificationId]);
+
+  // fetch GIS base layers configuration from /public folder
+  useEffect(() => {
+    axios.get('basemaps.json').then(result => {
+      setBaseLayers(result.data?.basemaps);
+      setActiveBasemap(result.data?.basemaps?.[0]);
+    });
+  }, []);
+
   const handleAgencyChanged = (agencyId: number | null) => {
     setAgencyId(agencyId);
   };
   const handlePropertyClassificationChanged = (propertyClassificationId: number | null) => {
     setPropertyClassificationId(propertyClassificationId);
+  };
+  const handleBasemapToggled = (e: BasemapToggleEvent) => {
+    const { previous, current } = e;
+    setBaseLayers([current, previous]);
+    setActiveBasemap(current);
   };
 
   return (
@@ -82,6 +100,9 @@ const Map: React.FC<MapProps> = props => {
           onSelectAgency={handleAgencyChanged}
           onSelectPropertyClassification={handlePropertyClassificationChanged}
         />
+        {baseLayers?.length > 0 && (
+          <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggled} />
+        )}
         <LeafletMap
           ref={mapRef}
           center={[props.lat, props.lng]}
@@ -89,11 +110,9 @@ const Map: React.FC<MapProps> = props => {
           whenReady={() => handleViewportChanged()}
           onViewportChanged={() => handleViewportChanged()}
         >
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-
+          {activeBasemap && (
+            <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} />
+          )}
           {parcels &&
             parcels.map(parcel => {
               return (
