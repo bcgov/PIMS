@@ -62,6 +62,11 @@ namespace Pims.Dal.Services
         {
             return this.Context.Provinces.AsNoTracking().OrderBy(a => a.Name).ToArray();
         }
+
+        public IEnumerable<Role> GetRolesNoTracking()
+        {
+            return this.Context.Roles.AsNoTracking().OrderBy(a => a.Name).ToArray();
+        }
         #endregion
     }
 }

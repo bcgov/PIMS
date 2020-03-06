@@ -44,14 +44,14 @@ namespace Pims.Dal.Entities
         /// get - the list of agencies that the user is requesting to be added to.
         /// </summary>
         /// <returns></returns>
-        public ICollection<Agency> Agencies { get; set; } = new List<Agency>();
+        public ICollection<AccessRequestAgency> Agencies { get; set; } = new List<AccessRequestAgency>();
 
         /// <summary>
         /// get - the list of roles this user is requesting.
         /// </summary>
         /// <typeparam name="UserRole"></typeparam>
         /// <returns></returns>
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
+        public ICollection<AccessRequestRole> Roles { get; set; } = new List<AccessRequestRole>();
         #endregion
 
         #region Constructors

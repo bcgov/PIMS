@@ -129,7 +129,7 @@ namespace Pims.Api
             services.AddTransient<IClaimsTransformation, KeyCloakClaimTransformer>();
             services.AddHttpContextAccessor();
             services.AddTransient<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);
-            services.AddScoped<Pims.Api.Helpers.RequestClient>();
+            services.AddScoped<Pims.Api.Helpers.IRequestClient, Pims.Api.Helpers.RequestClient>();
 
             services.AddAutoMapper(typeof(Startup));
         }

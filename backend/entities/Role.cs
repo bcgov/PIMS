@@ -6,32 +6,20 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// Role class, provides an entity for the datamodel to manage roles.
     /// </summary>
-    public class Role : BaseEntity
+    public class Role : LookupEntity
     {
         #region Properties
         /// <summary>
         /// get/set - The primary key IDENTITY.
         /// </summary>
         /// <value></value>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// get/set - The roles display name.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
+        public new Guid Id { get; set; }
 
         /// <summary>
         /// get/set - The roles first name.
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - Whether the user is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
 
         /// <summary>
         /// get - A collection of users that have this role.

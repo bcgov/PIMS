@@ -4,7 +4,7 @@ import * as ActionTypes from 'constants/actionTypes';
 
 export interface ILookupCode {
   name: string;
-  id: number;
+  id: string;
   isDisabled: boolean;
   type: string;
 }
