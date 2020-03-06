@@ -18,3 +18,9 @@ button.map-filter-dropdown {
       overflow-y: auto;
     }
   }
+  .error.dropdown {
+    button {
+      border: 1px solid red !important;
+      color: red;
+    }
+  }

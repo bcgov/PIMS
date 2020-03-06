@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
@@ -72,8 +74,18 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public AccessRequest AddAccessRequest(AccessRequest request)
         {
-            if (request == null) throw new ArgumentNullException();
+            if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException();
             request.CreatedById = this.User.GetUserId();
+            request.User = this.Context.Users.Find(this.User.GetUserId()) ?? throw new KeyNotFoundException();
+
+            request.Agencies.ForEach((accessRequestAgency) =>
+            {
+                accessRequestAgency.Agency = this.Context.Agencies.Find(accessRequestAgency.AgencyId);
+            });
+            request.Roles.ForEach((accessRequestRole) =>
+            {
+                accessRequestRole.Role = this.Context.Roles.Find(accessRequestRole.RoleId);
+            });
             this.Context.AccessRequests.Add(request);
             this.Context.CommitTransaction();
             return request;

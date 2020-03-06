@@ -16,5 +16,6 @@ namespace Pims.Dal.Services
         IEnumerable<PropertyType> GetPropertyTypesNoTracking();
         IEnumerable<BuildingConstructionType> GetBuildingConstructionTypesNoTracking();
         IEnumerable<BuildingPredominateUse> GetBuildingPredominateUsesNoTracking();
+        IEnumerable<Role> GetRolesNoTracking();
     }
 }

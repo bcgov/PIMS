@@ -12,6 +12,7 @@ namespace Pims.Api.Helpers.Profiles
         {
             CreateMap<Entity.LookupEntity, CodeModel>()
                 .IncludeBase<Entity.BaseEntity, BaseModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Name))
                 .IncludeAllDerived();

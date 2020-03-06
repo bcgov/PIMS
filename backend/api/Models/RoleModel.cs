@@ -4,12 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Models
 {
-    public class RoleModel : BaseModel, IEquatable<RoleModel>
+    public class RoleModel : CodeModel, IEquatable<RoleModel>
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
-        public bool IsDisabled { get; set; }
         public ICollection<UserModel> Users { get; } = new List<UserModel>();
 
         public override bool Equals(object obj)

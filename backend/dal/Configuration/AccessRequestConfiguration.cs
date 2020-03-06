@@ -5,7 +5,7 @@ using Pims.Dal.Entities;
 namespace Pims.Dal.Configuration
 {
     /// <summary>
-    /// AccessRequestConfiguration class, provides a way to configure users in the database.
+    /// AccessRequestConfiguration class, provides a way to configure users access requests in the database.
     ///</summary>
     public class AccessRequestConfiguration : BaseEntityConfiguration<AccessRequest>
     {
@@ -16,13 +16,11 @@ namespace Pims.Dal.Configuration
 
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).IsRequired();
-            builder.Property(m => m.Id).ValueGeneratedNever();
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
             builder.Property(m => m.IsGranted);
 
             builder.HasOne(m => m.User).WithMany().HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.ClientSetNull);
-            builder.HasMany(m => m.Agencies).WithOne();
-            builder.HasMany(m => m.Roles).WithOne();
 
             builder.HasIndex(m => new { m.IsDisabled, m.IsGranted });
 

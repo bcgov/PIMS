@@ -100,6 +100,7 @@ namespace Pims.Api.Test.Helpers
                 cfg.AddProfile(new CodeProfile());
                 cfg.AddProfile(new UserProfile());
                 cfg.AddProfile(new RoleProfile());
+                cfg.AddProfile(new LookupProfile());
             });
             mapperConfig.AssertConfigurationIsValid();
             var mapper = mapperConfig.CreateMapper();
