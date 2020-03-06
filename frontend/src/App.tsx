@@ -28,7 +28,9 @@ const App = () => {
   );
 
   useEffect(() => {
-    dispatch(getActivateUserAction());
+    if (keycloak?.authenticated) {
+      dispatch(getActivateUserAction());
+    }
     keycloak?.loadUserProfile().then(() => {
       setkeycloakUserLoaded(true);
     });
@@ -38,22 +40,11 @@ const App = () => {
     return !keycloak?.authenticated || keycloak?.profile;
   };
 
-  const GoToGuestPage = () => {
-    if (
-      (activated && activated.status === NEW_PIMS_USER) ||
-      !keycloak?.realmAccess?.roles?.length
-    ) {
-      return <Redirect to={{ pathname: '/guest' }} />;
-    }
-    return null;
-  };
-
   return isInitialized() ? (
     <Router>
       <Container className="App" fluid={true}>
         <Header></Header>
         <Row className="App-content">
-          <GoToGuestPage />
           <Route path="/" component={Login}></Route>
           <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
           <PrivateRoute path="/mapview" component={MapView} />
