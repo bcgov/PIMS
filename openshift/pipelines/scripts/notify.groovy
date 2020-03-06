@@ -27,7 +27,8 @@ def rocketChatSend(url, text, summary, description, color, image_url = "") {
     ]
   ])
 
-  sh "curl -X POST -H 'Content-Type: application/json' --data \'${payload}\' ${rocketChatURL}"
+  writeFile(file: "post.json", text: payload)
+  sh "curl -X POST -H 'Content-Type: application/json' --data @post.json ${rocketChatURL}"
 }
 
 def deploySuccess(appName, environment, changelog, vanity_url, rc_url) {
