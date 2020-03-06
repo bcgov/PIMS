@@ -3,33 +3,64 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class AccessRequestRoleAgency : Migration
+    public partial class AccessRequest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Agencies_AccessRequests_AccessRequestId",
-                table: "Agencies");
+            migrationBuilder.AddColumn<int>(
+                name: "SortOrder",
+                table: "Roles",
+                nullable: false,
+                defaultValue: 0);
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Roles_AccessRequests_AccessRequestId",
-                table: "Roles");
+            migrationBuilder.AddColumn<bool>(
+                name: "IsDisabled",
+                table: "Provinces",
+                nullable: false,
+                defaultValue: false);
 
-            migrationBuilder.DropIndex(
-                name: "IX_Roles_AccessRequestId",
-                table: "Roles");
+            migrationBuilder.AddColumn<int>(
+                name: "SortOrder",
+                table: "Provinces",
+                nullable: false,
+                defaultValue: 0);
 
-            migrationBuilder.DropIndex(
-                name: "IX_Agencies_AccessRequestId",
-                table: "Agencies");
-
-            migrationBuilder.DropColumn(
-                name: "AccessRequestId",
-                table: "Roles");
-
-            migrationBuilder.DropColumn(
-                name: "AccessRequestId",
-                table: "Agencies");
+            migrationBuilder.CreateTable(
+                name: "AccessRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false),
+                    IsGranted = table.Column<bool>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccessRequests_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AccessRequests_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AccessRequests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AccessRequestAgencies",
@@ -142,6 +173,26 @@ namespace Pims.Dal.Migrations
                 name: "IX_AccessRequestRoles_UpdatedById",
                 table: "AccessRequestRoles",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessRequests_CreatedById",
+                table: "AccessRequests",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessRequests_UpdatedById",
+                table: "AccessRequests",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessRequests_UserId",
+                table: "AccessRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessRequests_IsDisabled_IsGranted",
+                table: "AccessRequests",
+                columns: new[] { "IsDisabled", "IsGranted" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -152,43 +203,20 @@ namespace Pims.Dal.Migrations
             migrationBuilder.DropTable(
                 name: "AccessRequestRoles");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "AccessRequestId",
-                table: "Roles",
-                type: "uniqueidentifier",
-                nullable: true);
+            migrationBuilder.DropTable(
+                name: "AccessRequests");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "AccessRequestId",
-                table: "Agencies",
-                type: "uniqueidentifier",
-                nullable: true);
+            migrationBuilder.DropColumn(
+                name: "SortOrder",
+                table: "Roles");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_AccessRequestId",
-                table: "Roles",
-                column: "AccessRequestId");
+            migrationBuilder.DropColumn(
+                name: "IsDisabled",
+                table: "Provinces");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Agencies_AccessRequestId",
-                table: "Agencies",
-                column: "AccessRequestId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Agencies_AccessRequests_AccessRequestId",
-                table: "Agencies",
-                column: "AccessRequestId",
-                principalTable: "AccessRequests",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Roles_AccessRequests_AccessRequestId",
-                table: "Roles",
-                column: "AccessRequestId",
-                principalTable: "AccessRequests",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.DropColumn(
+                name: "SortOrder",
+                table: "Provinces");
         }
     }
 }
