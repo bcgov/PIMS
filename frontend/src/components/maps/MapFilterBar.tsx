@@ -7,8 +7,8 @@ import './MapFilterBar.scss';
 type MapFilterProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
-  onSelectAgency: (agencyId: number | null) => void;
-  onSelectPropertyClassification: (propertyClassificationId: number | null) => void;
+  onSelectAgency: (agencyId: string | null) => void;
+  onSelectPropertyClassification: (propertyClassificationId: string | null) => void;
 };
 
 /**
@@ -16,10 +16,10 @@ type MapFilterProps = {
  * @param props {@link MapFilterProps}
  */
 function MapFilterBar(props: MapFilterProps) {
-  const onSelectAgency = (codeId: number | null) => {
+  const onSelectAgency = (codeId: string | null) => {
     props.onSelectAgency(codeId);
   };
-  const onSelectPropertyClassification = (codeId: number | null) => {
+  const onSelectPropertyClassification = (codeId: string | null) => {
     props.onSelectPropertyClassification(codeId);
   };
 

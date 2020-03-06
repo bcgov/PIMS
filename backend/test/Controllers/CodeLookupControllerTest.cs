@@ -93,6 +93,27 @@ namespace Pims.Api.Test.Controllers
             Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
             Assert.Equal(new[] { _mapper.Map<Model.CodeModel>(propertyClassification) }, resultValue);
         }
+
+        [Fact]
+        public void GetRoleCodes()
+        {
+            // Arrange
+            var role = new Entity.Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Ministry of Health",
+                Description = "The Ministry of Health"
+            };
+            _pimsService.Setup(m => m.Lookup.GetRolesNoTracking()).Returns(new[] { role });
+
+            // Act
+            var result = _lookupController.GetRoles();
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
+            Assert.Equal(new[] { _mapper.Map<Model.CodeModel>(role) }, resultValue);
+        }
         #endregion
     }
 }

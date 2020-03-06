@@ -71,6 +71,9 @@ const Map: React.FC<MapProps> = props => {
   }, [agencyId, propertyClassificationId]);
 
   // fetch GIS base layers configuration from /public folder
+  const handleAgencyChanged = (agencyId: string | null) => {
+    setAgencyId(agencyId ? parseInt(agencyId) : null);
+    
   useEffect(() => {
     axios.get('basemaps.json').then(result => {
       setBaseLayers(result.data?.basemaps);
@@ -78,11 +81,11 @@ const Map: React.FC<MapProps> = props => {
     });
   }, []);
 
-  const handleAgencyChanged = (agencyId: number | null) => {
-    setAgencyId(agencyId);
   };
-  const handlePropertyClassificationChanged = (propertyClassificationId: number | null) => {
-    setPropertyClassificationId(propertyClassificationId);
+  const handlePropertyClassificationChanged = (propertyClassificationId: string | null) => {
+    setPropertyClassificationId(
+      propertyClassificationId ? parseInt(propertyClassificationId) : null,
+    );
   };
   const handleBasemapToggled = (e: BasemapToggleEvent) => {
     const { previous, current } = e;
