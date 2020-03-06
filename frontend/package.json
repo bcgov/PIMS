@@ -62,7 +62,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tsc --noEmit && eslint src --quiet --ext .js,.jsx,.ts,.tsx",
+    "lint": "tsc --noEmit && eslint src --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\""
   },
   "eslintConfig": {
