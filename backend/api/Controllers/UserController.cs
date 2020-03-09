@@ -85,11 +85,15 @@ namespace Pims.Api.Controllers
         [HttpPost("/api/access/request")]
         public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
         {
-            if(accessRequestModel.Agencies.Count() > 1)
+            if(accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
+            {
+                return BadRequest("Invalid access request specified");
+            }
+            if(accessRequestModel.Agencies.Count() != 1)
             {
                 return BadRequest("Each access request can only contain one agency.");
             }
-            if(accessRequestModel.Roles.Count() > 1)
+            if(accessRequestModel.Roles.Count() != 1)
             {
                 return BadRequest("Each access request can only contain one role.");
             }

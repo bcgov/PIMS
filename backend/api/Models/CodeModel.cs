@@ -6,7 +6,7 @@ namespace Pims.Api.Models
     public class CodeModel : BaseModel, IEquatable<CodeModel>
     {
         #region Properties
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Code { get; set; }
 

@@ -35,11 +35,12 @@ namespace PimsApi.Test.Admin.Controllers
         private readonly Entity.AccessRequest _expectedAccessRequest = new Entity.AccessRequest()
         {
             Id = ACCCESS_REQUEST_ID,
-            Agencies = new Entity.Agency[]
+            Agencies = new Entity.AccessRequestAgency[]
             {
-                new Entity.Agency
+                new Entity.AccessRequestAgency
                 {
-                    Id = AGENCY_ID,
+                    AgencyId = AGENCY_ID,
+                    AccessRequestId = ACCCESS_REQUEST_ID
                 }
             },
             UserId = USER_ID,
@@ -49,11 +50,12 @@ namespace PimsApi.Test.Admin.Controllers
                 DisplayName = "TEST",
                 Email = "test@test.ca"
             },
-            Roles = new Entity.Role[]
+            Roles = new Entity.AccessRequestRole[]
             {
-                new Entity.Role
+                new Entity.AccessRequestRole
                 {
-                    Id = ROLE_ID,
+                    RoleId = ROLE_ID,
+                    AccessRequestId = ACCCESS_REQUEST_ID
                 }
             }
         };

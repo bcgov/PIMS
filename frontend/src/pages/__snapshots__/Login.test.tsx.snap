@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`login renders correctly 1`] = `
+<div
+  className="unauth container-fluid"
+>
+  <h1>
+    Search and manage government properties
+  </h1>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-3 col-1"
+    />
+    <div
+      className="block col-md-6 col-16"
+    >
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Sign In
+      </button>
+      <p
+        className="or"
+      >
+        Or
+      </p>
+      <button
+        className="border border-dark btn btn-secondary"
+        disabled={false}
+        type="button"
+      >
+        Sign Up
+      </button>
+    </div>
+    <div
+      className="col-md-3 col-1"
+    />
+  </div>
+</div>
+`;

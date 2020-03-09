@@ -33,11 +33,16 @@ namespace PimsApi.Test.Controllers
         private readonly Entity.AccessRequest _expectedAccessRequest = new Entity.AccessRequest()
         {
             Id = ACCCESS_REQUEST_ID,
-            Agencies = new Entity.Agency[]
+            Agencies = new Entity.AccessRequestAgency[]
             {
-                new Entity.Agency
+                new Entity.AccessRequestAgency
                 {
-                    Id = AGENCY_ID,
+                    AgencyId = AGENCY_ID,
+                    Agency = new Entity.Agency()
+                    {
+                        Id = AGENCY_ID
+                    },
+                    AccessRequestId = ACCCESS_REQUEST_ID
                 }
             },
             UserId = USER_ID,
@@ -47,11 +52,16 @@ namespace PimsApi.Test.Controllers
                 DisplayName = "TEST",
                 Email = "test@test.ca"
             },
-            Roles = new Entity.Role[]
+            Roles = new Entity.AccessRequestRole[]
             {
-                new Entity.Role
+                new Entity.AccessRequestRole
                 {
-                    Id = ROLE_ID,
+                    RoleId = ROLE_ID,
+                    Role = new Entity.Role()
+                    {
+                        Id = ROLE_ID
+                    },
+                    AccessRequestId = ACCCESS_REQUEST_ID
                 }
             }
         };
@@ -75,6 +85,12 @@ namespace PimsApi.Test.Controllers
         [Fact]
         public void AddAccessRequest_Success()
         {
+            var test = new RoleModel()
+            {
+                Id = ROLE_ID.ToString()
+            };
+            _mapper.Map<RoleModel, Entity.Role>(test);
+
             // Execute
             var modelToAdd = _mapper.Map<Entity.AccessRequest, Model.AccessRequestModel>(_expectedAccessRequest);
 

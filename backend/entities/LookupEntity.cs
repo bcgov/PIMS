@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -41,7 +43,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a LookupEntity class.
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="id"></param>
         /// <param name="name"></param>
         public LookupEntity(int id, string name)
         {

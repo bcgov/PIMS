@@ -10,4 +10,5 @@ export const LOOKUP_CODE = 'lookupCode';
 export const GET_LOOKUP_CODES = 'GET_LOOKUP_CODES';
 
 // Auth
-export const POST_ACTIVATE_USER = "activateUser";
+export const POST_ACTIVATE_USER = 'activateUser';
+export const POST_REQUEST_ACCESS = 'requestAccess';

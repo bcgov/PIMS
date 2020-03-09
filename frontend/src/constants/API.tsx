@@ -15,12 +15,26 @@ export const PARCELS = (params: IParcelListParams | null) =>
 export interface IParcelDetailParams {
   id: number;
 }
-export const PARCEL_DETAIL = (params: IParcelDetailParams) => (`/my/parcel/${params.id}`);
+export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/my/parcel/${params.id}`;
 
 // Lookup Codes
 export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`; // get filtered properties or all if not specified.
 export const AGENCY_CODE_SET_NAME = 'Agency';
+export const ROLE_CODE_SET_NAME = 'Role';
 export const PROPERTY_CLASSIFICATION_CODE_SET_NAME = 'PropertyClassification';
 
 // Auth Service
-export const ACTIVATE_USER = () => (`/auth/activate`); // get filtered properties or all if not specified.
+export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties or all if not specified.
+
+// User Service
+export const REQUEST_ACCESS = () => `/access/request`; // get filtered properties or all if not specified.
+export interface Agency {
+  id: string;
+}
+export interface Role {
+  id: string;
+}
+export interface IAccessRequest {
+  agencies: Agency[];
+  roles: Role[];
+}
