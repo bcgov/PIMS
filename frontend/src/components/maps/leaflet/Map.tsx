@@ -6,7 +6,6 @@ import './Map.scss';
 import { IParcel, IParcelDetail } from 'actions/parcelsActions';
 import { ParcelPopupView } from '../ParcelPopupView';
 import { Container, Row } from 'react-bootstrap';
-import MapNavBar from '../MapNavBar';
 import MapFilterBar from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
@@ -71,16 +70,15 @@ const Map: React.FC<MapProps> = props => {
   }, [agencyId, propertyClassificationId]);
 
   // fetch GIS base layers configuration from /public folder
-  const handleAgencyChanged = (agencyId: string | null) => {
-    setAgencyId(agencyId ? parseInt(agencyId) : null);
-    
+
   useEffect(() => {
     axios.get('basemaps.json').then(result => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
   }, []);
-
+  const handleAgencyChanged = (agencyId: string | null) => {
+    setAgencyId(agencyId ? parseInt(agencyId) : null);
   };
   const handlePropertyClassificationChanged = (propertyClassificationId: string | null) => {
     setPropertyClassificationId(
@@ -95,8 +93,7 @@ const Map: React.FC<MapProps> = props => {
 
   return (
     <Container fluid={true}>
-      <Row style={{ width: '100%', position: 'absolute' }}>
-        <MapNavBar />
+      <Row>
         <MapFilterBar
           agencyLookupCodes={props.agencies}
           propertyClassifications={props.propertyClassifications}

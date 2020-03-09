@@ -16,7 +16,6 @@ const initialState = {
 
 const networkReducer = (state = initialState, action: IGenericNetworkAction) => {
   switch (action.type) {
-
     case REQUEST:
       return {
         ...state,

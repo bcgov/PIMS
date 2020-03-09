@@ -31,3 +31,7 @@ export const HIGH_ZOOM = 14;
 export const DEFAULT_PAGE = '1';
 export const DEFAULT_PER_PAGE = '25';
 export const DEFAULT_DASHBOARD_PARAMS = '?page=1&per_page=25';
+
+//roles
+export const ADMINISTRATOR = 'administrator';
+export const PROPERTY_VIEW = 'property-view';
