@@ -46,7 +46,7 @@ test('login renders correctly', () => {
 
 test('authenticated users are redirected to the mapview', () => {
   (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: { authenticated: true, realmAccess: { roles: [{}] } },
+    keycloak: { authenticated: true, realmAccess: { roles: ['property-view'] } },
   });
   const history = createMemoryHistory();
 

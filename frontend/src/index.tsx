@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
 //@ts-ignore
-const keycloak: KeycloakInstance = new Keycloak('keycloak.json');
+const keycloak: KeycloakInstance = new Keycloak('/keycloak.json');
 const Index = () => {
   return (
     <KeycloakProvider

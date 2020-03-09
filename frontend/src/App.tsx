@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import './App.scss';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import MapView from './pages/MapView';
 import GuestAccessPage from './pages/GuestAccessPage';
@@ -13,9 +13,14 @@ import { Spinner } from 'react-bootstrap';
 import { RootState } from 'reducers/rootReducer';
 import configureStore from 'configureStore';
 import { useKeycloak } from '@react-keycloak/web';
-import { getActivateUserAction, NEW_PIMS_USER } from 'actionCreators/authActionCreator';
+import { getActivateUserAction } from 'actionCreators/authActionCreator';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { IGenericNetworkAction } from 'actions/genericActions';
+import AppNavBar from 'components/navigation/AppNavBar';
+import AccessDenied from 'pages/AccessDenied';
+import Administration from 'pages/Administration';
+import { ADMINISTRATOR } from 'constants/strings';
+import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 
 export const store = configureStore();
 
@@ -30,6 +35,7 @@ const App = () => {
   useEffect(() => {
     if (keycloak?.authenticated) {
       dispatch(getActivateUserAction());
+      dispatch(getFetchLookupCodeAction());
     }
     keycloak?.loadUserProfile().then(() => {
       setkeycloakUserLoaded(true);
@@ -43,13 +49,23 @@ const App = () => {
   return isInitialized() ? (
     <Router>
       <Container className="App" fluid={true}>
-        <Header></Header>
-        <Row className="App-content">
-          <Route path="/" component={Login}></Route>
-          <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
-          <PrivateRoute path="/mapview" component={MapView} />
+        <Header />
+
+        <Row className="App-content">{keycloak?.authenticated ? <AppNavBar /> : null}</Row>
+        <Row>
+          <Col style={{ padding: 0 }}>
+            <Route path="/" component={Login}></Route>
+            <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
+            <PrivateRoute
+              path="/admin"
+              component={Administration}
+              role={ADMINISTRATOR}
+            ></PrivateRoute>
+            <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
+            <PrivateRoute path="/mapview" component={MapView} />
+          </Col>
         </Row>
-        <Footer></Footer>
+        <Footer />
       </Container>
     </Router>
   ) : (

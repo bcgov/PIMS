@@ -7,9 +7,12 @@ import './Login.scss';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { RootState } from 'reducers/rootReducer';
 import { NEW_PIMS_USER } from 'actionCreators/authActionCreator';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PROPERTY_VIEW } from 'constants/strings';
 
 const Login = () => {
   const { keycloak } = useKeycloak();
+  const keyCloakWrapper = useKeycloakWrapper();
   const activated = useSelector<RootState, IGenericNetworkAction>(
     state => state.activateUser as IGenericNetworkAction,
   );
@@ -19,7 +22,7 @@ const Login = () => {
   if (keycloak?.authenticated) {
     if (
       (activated && activated.status === NEW_PIMS_USER) ||
-      !keycloak?.realmAccess?.roles?.length
+      !keyCloakWrapper.hasRole(PROPERTY_VIEW)
     ) {
       return <Redirect to={{ pathname: '/guest' }} />;
     }
