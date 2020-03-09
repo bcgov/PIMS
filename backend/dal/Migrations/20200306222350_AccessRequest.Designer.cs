@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200302233309_AccessRequest")]
+    [Migration("20200306222350_AccessRequest")]
     partial class AccessRequest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,7 @@ namespace Pims.Dal.Migrations
             modelBuilder.Entity("Pims.Dal.Entities.AccessRequest", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedById")
@@ -65,6 +66,82 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("IsDisabled", "IsGranted");
 
                     b.ToTable("AccessRequests");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.AccessRequestAgency", b =>
+                {
+                    b.Property<Guid>("AccessRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("AccessRequestId", "AgencyId");
+
+                    b.HasIndex("AgencyId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("AccessRequestAgencies");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.AccessRequestRole", b =>
+                {
+                    b.Property<Guid>("AccessRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("AccessRequestId", "RoleId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("AccessRequestRoles");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Address", b =>
@@ -135,9 +212,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid?>("AccessRequestId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(6)")
@@ -185,8 +259,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccessRequestId");
 
                     b.HasIndex("CreatedById");
 
@@ -867,6 +939,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)")
@@ -876,6 +951,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -898,9 +976,6 @@ namespace Pims.Dal.Migrations
             modelBuilder.Entity("Pims.Dal.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AccessRequestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedById")
@@ -928,6 +1003,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -935,8 +1013,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccessRequestId");
 
                     b.HasIndex("CreatedById");
 
@@ -1144,6 +1220,52 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.AccessRequestAgency", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.AccessRequest", "AccessRequest")
+                        .WithMany("Agencies")
+                        .HasForeignKey("AccessRequestId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.Agency", "Agency")
+                        .WithMany()
+                        .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.AccessRequestRole", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.AccessRequest", "AccessRequest")
+                        .WithMany("Roles")
+                        .HasForeignKey("AccessRequestId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.Address", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.City", "City")
@@ -1167,10 +1289,6 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Agency", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.AccessRequest", null)
-                        .WithMany("Agencies")
-                        .HasForeignKey("AccessRequestId");
-
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -1375,10 +1493,6 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Role", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.AccessRequest", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("AccessRequestId");
-
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedById");

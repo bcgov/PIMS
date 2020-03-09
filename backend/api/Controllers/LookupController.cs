@@ -54,6 +54,17 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// Get all of the role code values
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("agencies")]
+        public IActionResult GetRoles()
+        {
+            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRolesNoTracking());
+            return new JsonResult(roleCodes.ToArray());
+        }
+
+        /// <summary>
         /// Get all of the property classification code values
         /// </summary>
         /// <returns></returns>
@@ -73,8 +84,9 @@ namespace Pims.Api.Controllers
         {
             var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgenciesNoTracking());
             var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassificationsNoTracking());
+            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRolesNoTracking());
 
-            return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).ToArray());
+            return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).Concat(roleCodes).ToArray());
         }
         #endregion
     }

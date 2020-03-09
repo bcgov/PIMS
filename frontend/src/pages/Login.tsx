@@ -1,15 +1,28 @@
 import { Redirect } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import React from 'react';
 import './Login.scss';
+import { IGenericNetworkAction } from 'actions/genericActions';
+import { RootState } from 'reducers/rootReducer';
+import { NEW_PIMS_USER } from 'actionCreators/authActionCreator';
 
 const Login = () => {
   const { keycloak } = useKeycloak();
+  const activated = useSelector<RootState, IGenericNetworkAction>(
+    state => state.activateUser as IGenericNetworkAction,
+  );
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;
   }
   if (keycloak?.authenticated) {
+    if (
+      (activated && activated.status === NEW_PIMS_USER) ||
+      !keycloak?.realmAccess?.roles?.length
+    ) {
+      return <Redirect to={{ pathname: '/guest' }} />;
+    }
     return <Redirect to={{ pathname: '/mapview' }} />;
   }
 
@@ -31,6 +44,6 @@ const Login = () => {
       </Row>
     </Container>
   );
-}
+};
 
 export default Login;
