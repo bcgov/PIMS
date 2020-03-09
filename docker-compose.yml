@@ -79,7 +79,7 @@ services:
     env_file: ./frontend/.env
     environment:
       - NODE_ENV=development
-      - KEYCLOAK_URL=http://host.docker.internal:8080/auth/admin/realms/quartech/users
+      - API_URL=http://host.docker.internal:5000
       - CHOKIDAR_USEPOLLING=true
     networks:
       - pims
