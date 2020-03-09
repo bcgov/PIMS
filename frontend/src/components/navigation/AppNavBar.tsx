@@ -2,14 +2,15 @@ import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
-import './MapNavBar.scss';
+import './AppNavBar.scss';
 import profileUrl from './profile.svg';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 /**
  * Nav bar with with user-related functionality. TODO: potentially move up to the App.tsx level.
  */
-function MapNavBar() {
-  const { keycloak } = useKeycloak();
+function AppNavBar() {
+  const keycloak = useKeycloakWrapper();
   const history = useHistory();
   return (
     <Navbar className="map-nav">
@@ -17,12 +18,20 @@ function MapNavBar() {
         <Nav.Item className="profile">
           <Image src={profileUrl} rounded />
         </Nav.Item>
-        <NavDropdown title={keycloak?.profile?.firstName || 'default'} id="user-dropdown">
+        <NavDropdown title={keycloak.firstName || 'default'} id="user-dropdown">
+          {keycloak.isAdmin() ? (
+            <NavDropdown.Item onClick={() => history.push('/admin')}>
+              Administration
+            </NavDropdown.Item>
+          ) : null}
+          <NavDropdown.Item onClick={() => history.push('/mapview')}>
+            Properties Map
+          </NavDropdown.Item>
           {history ? (
             <NavDropdown.Item
               onClick={() => {
                 history.push('/');
-                keycloak!.logout();
+                keycloak.obj!.logout();
               }}
             >
               Sign Out
@@ -34,4 +43,4 @@ function MapNavBar() {
   );
 }
 
-export default MapNavBar;
+export default AppNavBar;

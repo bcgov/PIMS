@@ -65,7 +65,7 @@ export const FormikLookupCodeDropdown = <T extends unknown>(
   props: FormikLookupCodeDropdownProps & FormikProps<T>,
 ) => {
   if (!props.name) {
-    throw 'Formik field name must be provided';
+    throw new Error('Formik field name must be provided');
   }
   const onSelectCode = (codeId: string | null): void => {
     const nameVal: string = String(props.name);
