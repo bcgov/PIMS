@@ -83,7 +83,7 @@ const GuestAccessPage = () => {
                 <div>
                   <button type="submit">Submit</button>
                 </div>
-                {requestAccess.status == 200 && !requestAccess.isFetching ? (
+                {requestAccess.status === 200 && !requestAccess.isFetching ? (
                   <p>Your request has been submitted</p>
                 ) : null}
               </Form>
