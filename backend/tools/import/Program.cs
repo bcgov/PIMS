@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -23,11 +25,24 @@ namespace Pims.Tools.Import
         /// <param name="args"></param>
         static async Task<int> Main(string[] args)
         {
-            var config = Configure(args).Build();
+            var config = Configure(args)
+                .Build();
+
             var provider = new ServiceCollection()
+                .Configure<ToolOptions>(config)
                 .AddSingleton<IConfiguration>(config)
-                .AddLogging(Configure => Configure.AddConsole())
+                .AddLogging(options =>
+                {
+                    options.AddConfiguration(config.GetSection("Logging"));
+                    options.AddConsole();
+                    options.AddEventLog();
+                })
+                .Configure<LoggerFilterOptions>(options =>
+                {
+                    options.MinLevel = LogLevel.Information;
+                })
                 .AddTransient<Startup>()
+                .AddTransient<JwtSecurityTokenHandler>()
                 .BuildServiceProvider();
 
             var logger = provider.GetService<ILogger<Startup>>();

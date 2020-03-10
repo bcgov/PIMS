@@ -12,21 +12,27 @@ Create a `.env` file and populate it with the following;
 
 ```
 ASPNETCORE_ENVIRONMENT=Development
-Api__Url={url to endpoint (i.e. http://pims-dev.pathfinder.gov.bc.ca/api/tools/import/properties)}
-Api__Token={JWT token}
+Keycloak__TokenUrl={URL to Keycloak token endpoint (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/realms/quartech/protocol/openid-connect/token)}
+Keycloak__ClientId={Keycloak client ID (i.e. pims-app)}
+Api__ImportUrl={URL to endpoint (i.e. http://pims-dev.pathfinder.gov.bc.ca/api/tools/import/properties)}
+Api__AccessToken={JWT access token}
+Api__RefreshToken={JWT refresh token}
 Import__File=./Data/properties.json
 ```
 
 Some of these settings have default values contained in the `appsettings.json` configuration file.
 
-| Key                | Description                                                                               |
-| ------------------ | ----------------------------------------------------------------------------------------- |
-| Api\_\_Url         | The URL to the endpoint you want to send the request to.                                  |
-| Api\_\_Method      | HTTP Method to use in the request (default: POST).                                        |
-| Api\_\_Token       | The JWT Bearer token to send with the request.                                            |
-| Import\_\_File     | The path to the JSON file to parse and iterate through. The JSON should be an array of items. |
-| Import\_\_Delay    | The number of seconds to delay between each request (default: 0).                         |
-| Import\_\_Quantity | The number of items to send in each request (default: 50)                                 |
+| Key                  | Description                                                                                   |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| Keycloak\_\_TokenUrl | The URL to the keycloak token endpoint.                                                       |
+| Keycloak\_\_ClientId | The Keycloak client ID.                                                                       |
+| Api\_\_ImportUrl     | The URL to the endpoint you want to send the request to.                                      |
+| Api\_\_HttpMethod    | HTTP Method to use in the request (default: POST).                                            |
+| Api\_\_AccessToken   | The JWT Bearer access token to send with the request.                                         |
+| Api\_\_RefreshToken  | The JWT Bearer refresh token to send to fetch a new access token after it expires.            |
+| Import\_\_File       | The path to the JSON file to parse and iterate through. The JSON should be an array of items. |
+| Import\_\_Delay      | The number of seconds to delay between each request (default: 0).                             |
+| Import\_\_Quantity   | The number of items to send in each request (default: 50, max: 100)                           |
 
 If you prefer, you can add your JSON files to the `/Data` folder and they will be ignored by **git**.
 
