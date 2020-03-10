@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Tools.Import
 {
@@ -24,21 +26,23 @@ namespace Pims.Tools.Import
     {
         #region Variables
         private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
-
+        private readonly ToolOptions _config;
         private readonly HttpClient _client = new HttpClient();
+        private readonly JwtSecurityTokenHandler _tokenHandler;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new instance of a Startup class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="config"></param>
+        /// <param name="optionsTool"></param>
         /// <param name="logger"></param>
-        public Startup(IConfiguration config, ILogger<Startup> logger)
+        /// <param name="tokenHandler"></param>
+        public Startup(IOptionsMonitor<ToolOptions> optionsTool, ILogger<Startup> logger, JwtSecurityTokenHandler tokenHandler)
         {
-            _configuration = config;
+            _config = optionsTool.CurrentValue;
             _logger = logger;
+            _tokenHandler = tokenHandler;
         }
         #endregion
 
@@ -51,17 +55,10 @@ namespace Pims.Tools.Import
         {
             _logger.LogInformation("Import Started");
 
-            var filePath = _configuration.GetSection("Import:File").Value;
-            var file = new FileInfo(filePath);
-            var url = _configuration.GetSection("Api:Url").Value;
-            var token = _configuration.GetSection("Api:Token").Value;
-            var method = _configuration.GetSection("Api:Method")?.Value?? "POST";
-            int.TryParse(_configuration.GetSection("Import:Quantity").Value, out int quantity);
-            int.TryParse(_configuration.GetSection("Import:Delay").Value, out int delay);
+            var file = new FileInfo(_config.Import.File);
+            _logger.LogInformation($"Import file: {file}");
 
-            _logger.LogInformation($"Run file: {file}");
-
-            return await ImportAsync(file, GetMethod(method), url, token, quantity, delay);
+            return await ImportAsync(file, GetMethod(_config.Api.HttpMethod), _config.Api.ImportUrl, _config.Api.AccessToken, _config.Import.Quantity, _config.Import.Delay);
         }
 
         /// <summary>
@@ -114,7 +111,15 @@ namespace Pims.Tools.Import
             {
                 var items = properties.Skip(iteration).Take(quantity);
 
-                var response = await RequestAsync(method, url, token, items);
+                // Check if token has expired.  If it has refresh it.
+                var jwt = _tokenHandler.ReadJwtToken(token);
+                if (jwt.ValidTo <= DateTime.UtcNow)
+                {
+                    var tokenNew = await SendAsync();
+                    token = tokenNew.access_token;
+                }
+
+                var response = await ImportAsync(method, url, token, items);
                 using var stream = await response.Content.ReadAsStreamAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -162,12 +167,58 @@ namespace Pims.Tools.Import
 
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("Authorization", $"Bearer {token}");
-            request.Headers.Add("User-Agent", "pims.tools.import");
+            request.Headers.Add("User-Agent", "Pims.Tools.Import");
             request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _client.SendAsync(request);
 
             return response;
+        }
+
+        /// <summary>
+        /// Make an HTTP request to refresh the access token.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<Models.TokenModel> SendAsync()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, _config.Keycloak?.TokenUrl);
+            request.Headers.Add("User-Agent", "Pims.Tools.Import");
+
+            var p = new Dictionary<string, string>
+                { { "client_id", _config.Keycloak?.ClientId },
+                    { "grant_type", "refresh_token" },
+                    { "refresh_token", _config.Api.RefreshToken }
+                };
+            var form = new FormUrlEncodedContent(p);
+            form.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            request.Content = form;
+
+            var response = await _client.SendAsync(request);
+            using var stream = await response.Content.ReadAsStreamAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await JsonSerializer.DeserializeAsync<Models.TokenModel>(stream);
+                _logger.LogInformation($"Successfully requested token: {token.access_token}");
+                return token;
+            }
+            else
+            {
+                if (response.Content.Headers.ContentType?.MediaType == "application/json")
+                {
+                    var results = await JsonSerializer.DeserializeAsync<object>(stream);
+                    var json = JsonSerializer.Serialize(results);
+                    _logger.LogError(json);
+                    throw new InvalidOperationException($"Failed to fetch new token. {response.StatusCode} - {json}");
+                }
+                else
+                {
+                    using var reader = new StreamReader(stream, Encoding.UTF8);
+                    var error = reader.ReadToEnd();
+                    _logger.LogError(error);
+                    throw new InvalidOperationException($"Failed to fetch new token. {response.StatusCode} - {error}");
+                }
+            }
         }
     }
 }
