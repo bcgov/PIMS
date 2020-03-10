@@ -33,18 +33,6 @@ namespace PimsApi.Test.Controllers
         private readonly Entity.AccessRequest _expectedAccessRequest = new Entity.AccessRequest()
         {
             Id = ACCCESS_REQUEST_ID,
-            Agencies = new Entity.AccessRequestAgency[]
-            {
-                new Entity.AccessRequestAgency
-                {
-                    AgencyId = AGENCY_ID,
-                    Agency = new Entity.Agency()
-                    {
-                        Id = AGENCY_ID
-                    },
-                    AccessRequestId = ACCCESS_REQUEST_ID
-                }
-            },
             UserId = USER_ID,
             User = new Entity.User
             {
@@ -52,18 +40,6 @@ namespace PimsApi.Test.Controllers
                 DisplayName = "TEST",
                 Email = "test@test.ca"
             },
-            Roles = new Entity.AccessRequestRole[]
-            {
-                new Entity.AccessRequestRole
-                {
-                    RoleId = ROLE_ID,
-                    Role = new Entity.Role()
-                    {
-                        Id = ROLE_ID
-                    },
-                    AccessRequestId = ACCCESS_REQUEST_ID
-                }
-            }
         };
 
         #endregion
@@ -77,6 +53,25 @@ namespace PimsApi.Test.Controllers
             _userController = _helper.CreateUserController(user);
             _mapper = _helper.GetService<IMapper>();
             _pimsService = _helper.GetService<Mock<IPimsService>>();
+
+            _expectedAccessRequest.Agencies.Add(new Entity.AccessRequestAgency()
+            {
+                AgencyId = AGENCY_ID,
+                Agency = new Entity.Agency()
+                {
+                    Id = AGENCY_ID
+                },
+                AccessRequestId = ACCCESS_REQUEST_ID
+            });
+            _expectedAccessRequest.Roles.Add(new Entity.AccessRequestRole()
+            {
+                RoleId = ROLE_ID,
+                Role = new Entity.Role()
+                {
+                    Id = ROLE_ID
+                },
+                AccessRequestId = ACCCESS_REQUEST_ID
+            });
         }
         #endregion
 

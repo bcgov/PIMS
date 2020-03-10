@@ -7,8 +7,13 @@
 
 .App-content {
   padding-top: 70px;
+  margin-bottom: 42px;
 }
 
 .error {
   color: red;
+}
+
+ul.pagination li {
+  cursor: pointer;
 }

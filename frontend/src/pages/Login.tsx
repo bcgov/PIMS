@@ -1,5 +1,4 @@
 import { Redirect } from 'react-router-dom';
-import { useKeycloak } from '@react-keycloak/web';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import React from 'react';
@@ -11,8 +10,8 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { PROPERTY_VIEW } from 'constants/strings';
 
 const Login = () => {
-  const { keycloak } = useKeycloak();
   const keyCloakWrapper = useKeycloakWrapper();
+  const keycloak = keyCloakWrapper.obj;
   const activated = useSelector<RootState, IGenericNetworkAction>(
     state => state.activateUser as IGenericNetworkAction,
   );
