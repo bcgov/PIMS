@@ -103,7 +103,7 @@ namespace Pims.Api.Controllers
         /// Redirect the current user to the keycloak token request endpoint.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         public IActionResult Token()
         {
             var tokenUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Token}";

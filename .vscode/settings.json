@@ -1,7 +1,8 @@
 {
   "dotnet-test-explorer.testProjectPath": "./test/BackendApi.Test",
   "csharpfixformat.style.braces.onSameLine": false,
-  "sqltools.connections": [{
+  "sqltools.connections": [
+    {
       "database": "keycloak",
       "dialect": "PostgreSQL",
       "name": "Keycloak",
@@ -40,7 +41,5 @@
       "username": "sa"
     }
   ],
-  "cSpell.words": [
-    "pims"
-  ]
+  "cSpell.words": ["pims"]
 }
