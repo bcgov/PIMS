@@ -1,4 +1,3 @@
-import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';

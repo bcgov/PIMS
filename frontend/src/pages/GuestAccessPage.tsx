@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 import { ILookupCode } from 'actions/lookupActions';
+import { IAccessRequestParams } from 'actions/adminActions';
 import { getSubmitAccessRequestAction } from 'actionCreators/authActionCreator';
 import { Formik, Form, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +23,7 @@ const GuestAccessPage = () => {
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
-    state => state.requestAccess as IGenericNetworkAction,
+    state => state.postRequestAccess as IGenericNetworkAction,
   );
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
@@ -31,7 +32,7 @@ const GuestAccessPage = () => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME;
   });
   const dispatch = useDispatch();
-  const toRequest = (values: any): API.IAccessRequest => {
+  const toRequest = (values: any): IAccessRequestParams => {
     return { agencies: [{ id: values.agency }], roles: [{ id: values.role }] };
   };
   const AccessRequestSchema = Yup.object().shape({
