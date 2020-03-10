@@ -97,7 +97,14 @@ namespace Pims.Dal.Services.Admin
         /// <param name="isGranted"></param>
         public Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
-            var query = this.Context.AccessRequests.AsNoTracking();
+            var query = this.Context.AccessRequests
+                .Include(p => p.Agencies)
+                .ThenInclude(p => p.Agency)
+                .Include(p => p.Roles)
+                .ThenInclude(p => p.Role)
+                .Include(p => p.User)
+                .AsNoTracking();
+
             if (isGranted.HasValue)
             {
                 query = query.Where(request => request.IsGranted == isGranted);
