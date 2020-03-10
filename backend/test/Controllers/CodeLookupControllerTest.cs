@@ -13,6 +13,7 @@ using Model = Pims.Api.Models;
 using AutoMapper;
 using Pims.Api.Helpers.Profiles;
 using Pims.Dal;
+using Newtonsoft.Json;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -113,6 +114,55 @@ namespace Pims.Api.Test.Controllers
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
             Assert.Equal(new[] { _mapper.Map<Model.CodeModel>(role) }, resultValue);
+        }
+
+        [Fact]
+        public void GetAll()
+        {
+            // Arrange
+            var role = new Entity.Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Ministry of Health",
+                Description = "The Ministry of Health"
+            };
+            _pimsService.Setup(m => m.Lookup.GetRolesNoTracking()).Returns(new[] { role });
+
+            var propertyClassification = new Entity.PropertyClassification
+            {
+                Name = "Surplus Active",
+            };
+            _pimsService.Setup(m => m.Lookup.GetPropertyClassificationsNoTracking()).Returns(new[] { propertyClassification });
+
+            var agency = new Entity.Agency
+            {
+                Code = "MOH",
+                Name = "Ministry of Health",
+                Description = "The Ministry of Health"
+            };
+            _pimsService.Setup (m => m.Lookup.GetAgenciesNoTracking ()).Returns (new [] { agency });
+
+            // Act
+            var agencyResult = _lookupController.GetAgencies();
+            var result = _lookupController.GetAll();
+            var classificationResult = _lookupController.GetPropertyClassifications();
+            var roleResult = _lookupController.GetRoles();
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            JsonResult agencyAction = Assert.IsType<JsonResult>(agencyResult);
+            JsonResult roleAction = Assert.IsType<JsonResult>(roleResult);
+            JsonResult classificationAction = Assert.IsType<JsonResult>(classificationResult);
+
+            string allResult = JsonConvert.SerializeObject(actionResult.Value);
+            string agenciesResult = JsonConvert.SerializeObject(agencyAction.Value);
+            string rolesResult = JsonConvert.SerializeObject(roleAction.Value);
+            string classificationsResult = JsonConvert.SerializeObject(classificationAction.Value);
+
+            // Removing corresponding []'s as GetAll returns [{one,combined,list}]
+            Assert.StartsWith(agenciesResult.Remove(agenciesResult.Length - 1, 1), allResult);
+            Assert.Contains(classificationsResult.Substring(1, classificationsResult.Length -2), allResult);
+            Assert.EndsWith(rolesResult.Substring(1), allResult);
         }
         #endregion
     }
