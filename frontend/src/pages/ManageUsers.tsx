@@ -6,7 +6,7 @@ const ManageUsers = () => {
     <Container fluid={true}>
       <Row>
         <Col>
-          <h1>Manage Users</h1>
+          <h2>Manage Users</h2>
         </Col>
       </Row>
     </Container>

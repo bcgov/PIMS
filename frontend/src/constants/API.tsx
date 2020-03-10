@@ -1,6 +1,13 @@
 // Network URL's
 import queryString from 'query-string';
 
+// Generic Params
+export interface IPaginateParams {
+  page: number;
+  quantity?: number;
+  sort?: string;
+}
+
 // Parcels
 export interface IParcelListParams {
   neLat: number;
@@ -28,13 +35,5 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 
 // User Service
 export const REQUEST_ACCESS = () => `/access/request`; // get filtered properties or all if not specified.
-export interface Agency {
-  id: string;
-}
-export interface Role {
-  id: string;
-}
-export interface IAccessRequest {
-  agencies: Agency[];
-  roles: Role[];
-}
+export const REQUEST_ACCESS_LIST = (params: IPaginateParams) =>
+  `/access/requests/?${queryString.stringify(params)}`; // get paged access requests
