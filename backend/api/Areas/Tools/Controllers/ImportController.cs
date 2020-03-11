@@ -51,7 +51,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost("properties")]
         public IActionResult ImportProperties([FromBody] PropertyModel[] models)
         {
-            if (models.Count() > 50) return BadRequest("Must not submit more than 50 properties in a single request.");
+            if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
 
             var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
             var entities = helper.AddUpdateProperties(models);
