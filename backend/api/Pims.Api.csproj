@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>0ef6255f-9ea0-49ec-8c65-c172304b4926</UserSecretsId>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="1.4.0" />

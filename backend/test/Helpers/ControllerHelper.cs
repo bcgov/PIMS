@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Pims.Api.Controllers;
 using AdminController = Pims.Api.Areas.Admin.Controllers;
-using Pims.Api.Helpers;
 using System.Net.Http;
+using Pims.Api.Helpers;
 
 namespace Pims.Api.Test.Helpers
 {
@@ -32,7 +32,7 @@ namespace Pims.Api.Test.Helpers
         public static UserController CreateUserController(this TestHelper helper, ClaimsPrincipal user)
         {
             var logger = new Mock<ILogger<UserController>>();
-            var requestClient = new Mock<IRequestClient>();
+            var requestClient = new Mock<IKeycloakRequestClient>();
             helper.AddSingleton(logger.Object);
             helper.AddSingleton(requestClient.Object);
             helper.AddSingleton<UserController>();

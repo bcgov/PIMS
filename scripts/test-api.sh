@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ./test/BackendApi.Test
+cd ./backend/test
 dotnet test
 
 $SHELL

@@ -1,33 +1,33 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using api.Helpers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Helpers;
-using Pims.Dal.Exceptions;
-using MembershipModel = Pims.Dal.Membership.Models;
 using Pims.Api.Models;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Services;
-using System.Linq;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
+using Pims.Api.Helpers.Extensions;
+using Keycloak = Pims.Api.Models.Keycloak;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Api.Controllers
 {
     /// <summary>
     /// UserController class, provides endpoints for managing users.
     /// </summary>
-    [Authorize(Roles = "contributor")]
+    [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
     public class UserController : ControllerBase
     {
         #region Variables
         private readonly ILogger<UserController> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly IRequestClient _requestClient;
+        private readonly Pims.Api.Configuration.KeycloakOptions _optionsKeycloak;
+        private readonly IKeycloakRequestClient _requestClient;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         #endregion
@@ -37,14 +37,14 @@ namespace Pims.Api.Controllers
         /// Creates a new instance of a UserController class.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="configuration"></param>
+        /// <param name="optionsKeycloak"></param>
         /// <param name="userService"></param>
         /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, IUserService userService, IMapper mapper, IRequestClient requestClient)
+        public UserController(ILogger<UserController> logger, IOptionsMonitor<Pims.Api.Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
         {
             _logger = logger;
-            _configuration = configuration;
+            _optionsKeycloak = optionsKeycloak.CurrentValue;
             _requestClient = requestClient;
             _userService = userService;
             _mapper = mapper;
@@ -53,29 +53,24 @@ namespace Pims.Api.Controllers
 
         #region Endpoints
         /// <summary>
-        /// Redirects user to the keycloak users list endpoint.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("/api/users")]
-        public async Task<IActionResult> UserListAsync()
-        {
-            var users_url = _configuration.GetSection("Keycloak:Users") ?? throw new ConfigurationException("The configuration for Keycloak:Users is invalid or missing.");
-            var response = await _requestClient.GetAsync(Request, users_url?.Value);
-
-            return await response.HandleResponseAsync<IEnumerable<MembershipModel.User>>();
-        }
-
-        /// <summary>
         /// Redirects user to the keycloak user info endpoint.
         /// </summary>
         /// <returns></returns>
         [HttpGet("info")]
         public async Task<IActionResult> UserInfo()
         {
-            var user_info_url = _configuration.GetSection("Keycloak:UserInfo") ?? throw new ConfigurationException("The configuration for Keycloak:UserInfo is invalid or missing.");
-            var response = await _requestClient.GetAsync(Request, user_info_url?.Value);
+            _optionsKeycloak.Validate(); // TODO: Validate configuration automatically.
+            _optionsKeycloak.OpenIdConnect.Validate();
+            var response = await _requestClient.ProxyGetAsync(Request, $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.UserInfo}");
 
-            return await response.HandleResponseAsync<MembershipModel.User>();
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            var readStream = new System.IO.StreamReader(responseStream, System.Text.Encoding.UTF8);
+            var json = readStream.ReadToEnd();
+            _logger.LogInformation(json);
+            responseStream.Position = 0;
+
+            return await response.HandleResponseAsync<Keycloak.UserInfoModel>();
         }
 
         /// <summary>
@@ -85,15 +80,15 @@ namespace Pims.Api.Controllers
         [HttpPost("/api/access/request")]
         public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
         {
-            if(accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
+            if (accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
             {
                 return BadRequest("Invalid access request specified");
             }
-            if(accessRequestModel.Agencies.Count() != 1)
+            if (accessRequestModel.Agencies.Count() != 1)
             {
                 return BadRequest("Each access request can only contain one agency.");
             }
-            if(accessRequestModel.Roles.Count() != 1)
+            if (accessRequestModel.Roles.Count() != 1)
             {
                 return BadRequest("Each access request can only contain one role.");
             }
