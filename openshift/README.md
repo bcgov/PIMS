@@ -157,3 +157,20 @@ This application uses a .NET Core (v3.1) environment to create a REST API that h
 This application uses a Microsoft SQL Server database to store and retrieve data from.
 
 [Link to docker image](https://hub.docker.com/_/microsoft-mssql-server)
+
+## Remote into Database
+To make a remote connection to a container in OpenShift you will need to open a local port to the remote container.
+
+1) From OpenShift web interface Copy Login Command from the button in the top right corner.
+2) Paste the login command into bash and hit enter to log in.
+3) Switch your openshift environment in bash to the one you intend to modify using the command
+    > oc project jhnamn-foo.
+4) Get pod ids using oc get pods. Find the pod name that hosts your database and you want to remote into and save it for the next step (i.e. $PODNAME=*mssql-00-foo*).
+5) Create a local port to connect your client to using the command:
+    > oc port-forward $PODNAME $LOCALPORT:$CONTAINERPORT
+
+    $LOCALPORT = The port you want to forward to locally.
+
+    $CONTAINERPORT = The port open on the container that communicates with the database.
+6) Configure your client to connect to the $LOCALPORT you have selected with the host name/ip of `127.0.0.1` (please note that *localhost* will not work).
+7) Cancel the command to close the connection.

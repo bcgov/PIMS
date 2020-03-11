@@ -38,7 +38,7 @@ namespace Pims.Tools.Import
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message);
+                logger.LogError(ex, "An unhandled error has occurred.");
                 return 1;
             }
         }

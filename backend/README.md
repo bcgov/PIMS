@@ -1,8 +1,8 @@
-# REST API - .NET CORE
+# PIMS RESTful API - .NET CORE
 
 The PIMS API provides an interface to interact with the configured datasource.
 
-# Configuration
+## API Environment Variables
 
 The current environment is initialized through the environment variable `ASPNETCORE_ENVIRONMENT`.
 
@@ -13,27 +13,34 @@ When running the solution locally it applies the configuration setting in the fo
 3. UserSecrets `(if environment=Development)`
 4. Environment Variables
 
-To run the solution with docker-compose create a .env file within the /api directory and populate with the following;
+To run the solution with docker-compose create a `.env` file within the `/api` directory and populate with the following;
 
 ```conf
 ASPNETCORE_ENVIRONMENT=Development
 ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
-DB_PASSWORD=<password>
-Keycloak__Secret=<secret>
+DB_PASSWORD={password}
+ConnectionStrings__PIMS={connection string}
+Keycloak__Secret={secret}
 ```
 
-The `DB_PASSWORD` should be the same value used in the database `.env` file.
-The `Keycloak__Secret` should be the value provided by KeyCloak (_Currently this value can remain blank_)
+| Key                                 | Value                              | Description                                                                                                                                          |
+| ----------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ASPNETCORE_ENVIRONMENT              | [Development\|Staging\|Production] | The environment name to run under. This will result in apply different configuration settings.                                                       |
+| ASPNETCORE_FORWARDEDHEADERS_ENABLED | [true\|false]                      | Whether to include forwarder headers.                                                                                                                |
+| DB_PASSWORD                         | {password}                         | The password to the database.  If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/.../.env` file. |
+| ConnectionStrings__PIMS             | {connection string}                | To override the `appsettings.[environment].json` configuration files you can set the connection string value here.                                   |
+| Keycloak__Secret                    | {secret}                           | Should be the value provided by KeyCloak (_Currently this value can remain blank_)                                                                   |
 
 ## Secret Management
 
 If you want to keep private keys and user secrets out of source code use the **user-secrets** management tool.
+Please note this will only work if the *environment=Development*, and it does not appear to be currently working all the time within vscode.
 
 > `dotnet user-secrets init`
 
 > `dotnet user-secrets set "ConnectionStrings:PIMS" "Server=localhost,<port>;User ID=sa;Database=<database name>"`
 
-# Database Initalization
+## Database Initalization
 
 The API uses a DB to store data. Currently it is configured and coded to use an MSSQL database.
 
@@ -43,7 +50,7 @@ It is possible with some changes to use a different type of database. Refer to t
 
 Refer to the CLI documentation [here](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet).
 
-# Database Migration Management
+## Database Migration Management
 
 The DB is setup and configured through Entity Framework Code-First processes. All dotnet ef commands must be run from the /dal directory.
 
@@ -61,7 +68,7 @@ Install the `dotnet-ef` CLI
 
 > `dotnet tool install --global dotnet-ef`
 
-You may create a `connectionstrings.json` configuration file within the /dal project, or a .env file to contain this information. You can also create one for each environment by creating a file with the naming conventsion `connectionstrings.[environment].json`. Enter the following information into the file;
+You may create a `connectionstrings.json` configuration file within the `/backend/dal` project, or a `.env` file to contain this information. You can also create one for each environment by creating a file with the naming conventsion `connectionstrings.[environment].json`. Enter the following information into the file;
 
 ```json
 {
@@ -74,7 +81,7 @@ You may create a `connectionstrings.json` configuration file within the /dal pro
 The default `port` for MSSQL is 1433, but set it to the same value used in the `docker-compose.yaml` configuration file.
 The `database name` should be the same value using the in the database `.env` file.
 
-## Entity Framework CLI Information
+### Entity Framework CLI Information
 
 Use command line, Cmd or PowerShell for specific version:
 
@@ -88,7 +95,7 @@ Set the environment path so that the tool is executable.
 
 > `ENV PATH="$PATH:/root/.dotnet/tools"`
 
-## Useful Commands
+### Useful Commands
 
 Kill your database and start over.
 
@@ -104,7 +111,7 @@ Or for all migrations after the initial migration.
 
 > `dotnet ef migrations script 20180904195021_initial`
 
-## Creating New Database Migrations
+### Creating New Database Migrations
 
 To add a new database code migration do the following;
 
@@ -152,22 +159,7 @@ Edit the `Pims.Dal.csproj` file and add the `<Content>` with a `<CopyToOutputDir
   </PropertyGroup>
   ...
   <ItemGroup>
-    <Content Include="Migrations\initial\PostDeploy\01 BuildingConstructionTypes.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 BuildingPredominantUses.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Cities.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 PropertyStatus.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 PropertyTypes.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Migrations\initial\PostDeploy\01 Provinces.sql">
+    <Content Include="Migrations\**\*.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -2,8 +2,8 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Dal;
 using Pims.Dal.Helpers.Extensions;
 
@@ -18,7 +18,7 @@ namespace Pims.Api.Controllers
     {
         #region Variables
         private readonly ILogger<AuthController> _logger;
-        private readonly IConfiguration _configuration;
+        private readonly Pims.Api.Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -28,41 +28,19 @@ namespace Pims.Api.Controllers
         /// Creates a new instance of a AuthController class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="configuration"></param>
+        /// <param name="optionsKeycloak"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public AuthController(ILogger<AuthController> logger, IConfiguration configuration, IPimsService pimsService, IMapper mapper)
+        public AuthController(ILogger<AuthController> logger, IOptionsMonitor<Pims.Api.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService, IMapper mapper)
         {
             _logger = logger;
-            _configuration = configuration;
+            _optionsKeycloak = optionsKeycloak.CurrentValue;
             _pimsService = pimsService;
             _mapper = mapper;
         }
         #endregion
 
         #region Endpoints
-        /// <summary>
-        /// Redirect to the keycloak login page.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("[action]")]
-        public IActionResult Login()
-        {
-            var signinUrl = _configuration["Keycloak:Signin"];
-            return Redirect($"{signinUrl}&redirect_uri=");
-        }
-
-        /// <summary>
-        /// Redirect user to registration page.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("[action]")]
-        public IActionResult Register()
-        {
-            var registerUrl = _configuration["Keycloak:Register"];
-            return Redirect($"{registerUrl}&redirect_uri=");
-        }
-
         /// <summary>
         /// Activates the new authenticated user with PIMS.
         /// If the user is new it will return 201 if successful.
@@ -89,14 +67,36 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
-        /// Log the current user out.
+        /// Redirect to the keycloak login page.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("[action]")]
-        public IActionResult Logout()
+        [HttpGet("[action]")]
+        public IActionResult Login(string redirect_uri)
         {
-            var signoff = _configuration["Keycloak:Signoff"];
-            return Redirect($"{signoff}?redirect_uri=");
+            var loginUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Login}";
+            return Redirect($"{loginUrl}&redirect_uri={redirect_uri}");
+        }
+
+        /// <summary>
+        /// Redirect user to registration page.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("[action]")]
+        public IActionResult Register(string redirect_uri)
+        {
+            var registerUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Register}";
+            return Redirect($"{registerUrl}&redirect_uri={redirect_uri}");
+        }
+
+        /// <summary>
+        /// Log the current user out.
+        /// </summary>
+        /// /// <returns></returns>
+        [HttpPost("[action]")]
+        public IActionResult Logout(string redirect_uri)
+        {
+            var logoutUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Logout}";
+            return Redirect($"{logoutUrl}?redirect_uri={redirect_uri}");
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace Pims.Api.Controllers
         [HttpGet("[action]")]
         public IActionResult Token()
         {
-            var token = _configuration["Keycloak:Token"];
-            return Redirect(token);
+            var tokenUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Token}";
+            return Redirect(tokenUrl);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet("[action]")]
-        public JsonResult Claims()
+        public IActionResult Claims()
         {
             return new JsonResult(User.Claims.Select(c => new { c.Type, c.Value }));
         }

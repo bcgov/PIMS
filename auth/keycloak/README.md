@@ -3,6 +3,8 @@
 https://hub.docker.com/r/jboss/keycloak/
 
 ## Export Realm Configuration
+After configuring Keycloak you can export the configuration to a JSON file so that it can be used to initialize a new Keycloak instance.
+If you use the UI to export it will not contain all the necessary information and settings, thus the need for this CLI option.
 
 https://www.keycloak.org/docs/latest/server_admin/index.html#_export_import
 Once the keycloak container is running, ssh into it and execute the following commands;
