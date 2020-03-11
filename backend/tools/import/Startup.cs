@@ -119,7 +119,7 @@ namespace Pims.Tools.Import
                     token = tokenNew.access_token;
                 }
 
-                var response = await ImportAsync(method, url, token, items);
+                var response = await RequestAsync(method, url, token, items);
                 using var stream = await response.Content.ReadAsStreamAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -137,7 +137,7 @@ namespace Pims.Tools.Import
                     }
                     else
                     {
-                        var readStream = new StreamReader(stream, Encoding.UTF8);
+                        var readStream = new StreamReader(stream);
                         var error = readStream.ReadToEnd();
                         _logger.LogError(error);
                     }
