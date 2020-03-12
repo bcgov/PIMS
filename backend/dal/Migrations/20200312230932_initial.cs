@@ -664,7 +664,8 @@ namespace Pims.Dal.Migrations
                         UpdatedById = table.Column<Guid>(nullable: true),
                         UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
                         RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        ParcelId = table.Column<int>(nullable: false),
+                        PID = table.Column<int>(nullable: false),
+                        PIN = table.Column<int>(nullable: true),
                         StatusId = table.Column<int>(nullable: false),
                         ClassificationId = table.Column<int>(nullable: false),
                         AgencyId = table.Column<int>(nullable: false),
@@ -800,9 +801,10 @@ namespace Pims.Dal.Migrations
                         UpdatedById = table.Column<Guid>(nullable: true),
                         UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
                         RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        EstimatedValue = table.Column<float>(nullable: false),
-                        AssessedValue = table.Column<float>(nullable: false),
-                        NetBookValue = table.Column<float>(nullable: false)
+                        EstimatedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        AppraisedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        AssessedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        NetBookValue = table.Column<decimal>(type: "MONEY", nullable : false)
                 },
                 constraints : table =>
                 {
@@ -838,9 +840,10 @@ namespace Pims.Dal.Migrations
                         UpdatedById = table.Column<Guid>(nullable: true),
                         UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
                         RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        EstimatedValue = table.Column<float>(nullable: false),
-                        AssessedValue = table.Column<float>(nullable: false),
-                        NetBookValue = table.Column<float>(nullable: false)
+                        EstimatedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        AppraisedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        AssessedValue = table.Column<decimal>(type: "MONEY", nullable : false),
+                        NetBookValue = table.Column<decimal>(type: "MONEY", nullable : false)
                 },
                 constraints : table =>
                 {
@@ -1152,12 +1155,6 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_ParcelId",
-                table: "Parcels",
-                column: "ParcelId",
-                unique : true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Parcels_StatusId",
                 table: "Parcels",
                 column: "StatusId");
@@ -1166,6 +1163,13 @@ namespace Pims.Dal.Migrations
                 name: "IX_Parcels_UpdatedById",
                 table: "Parcels",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Parcels_PID_PIN",
+                table: "Parcels",
+                columns : new [] { "PID", "PIN" },
+                unique : true,
+                filter: "[PIN] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_LandArea",
