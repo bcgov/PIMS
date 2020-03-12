@@ -102,19 +102,22 @@ namespace Pims.Tools.Import
             _logger.LogInformation($"url: {url}, quantity: {quantity}");
 
             var properties = await JsonSerializer.DeserializeAsync<IEnumerable<object>>(file.OpenRead());
-            var iteration = 0;
+            var index = 0;
             var total = properties.Count();
 
             _logger.LogInformation($"Properties in file {total}");
 
-            while (total > iteration * quantity)
+            while (total > index)
             {
-                var items = properties.Skip(iteration).Take(quantity);
+                var items = properties.Skip(index).Take(quantity);
+
+                _logger.LogInformation($"Properties remaining: {total - index} ");
 
                 // Check if token has expired.  If it has refresh it.
                 var jwt = _tokenHandler.ReadJwtToken(token);
-                if (jwt.ValidTo <= DateTime.UtcNow)
+                if (DateTime.Compare(jwt.ValidTo, DateTime.UtcNow) < 0)
                 {
+                    _logger.LogInformation($"Access token has expired: {jwt.ValidTo} <= {DateTime.UtcNow}");
                     var tokenNew = await SendAsync();
                     token = tokenNew.access_token;
                 }
@@ -145,7 +148,7 @@ namespace Pims.Tools.Import
 
                 await Task.Delay(new TimeSpan(0, 0, delay));
 
-                iteration++;
+                index = index + quantity;
             }
 
             return 0;

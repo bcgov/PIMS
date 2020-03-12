@@ -42,10 +42,10 @@ namespace Pims.Dal.Services
             if (neLat != null && neLong != null && swLat != null && swLong != null)
             {
                 query = this.Context.Parcels.AsNoTracking().Where(parcel =>
-                  parcel.Latitude <= neLat &&
-                  parcel.Latitude >= swLat &&
-                  parcel.Longitude <= neLong &&
-                  parcel.Longitude >= swLong);
+                    parcel.Latitude <= neLat &&
+                    parcel.Latitude >= swLat &&
+                    parcel.Longitude <= neLong &&
+                    parcel.Longitude >= swLong);
             }
             if (agencyId != null)
             {
@@ -97,6 +97,10 @@ namespace Pims.Dal.Services
             var agency_id = this.User.GetAgency() ??
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
+            // Verify they the PID and PIN are unique.
+            var alreadyExists = this.Context.Parcels.Any(p => (parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN));
+            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
+
             parcel.CreatedById = this.User.GetUserId();
             parcel.AgencyId = agency_id;
             this.Context.Parcels.Add(parcel);
@@ -121,6 +125,10 @@ namespace Pims.Dal.Services
 
             // Do not allow switching agencies through this method.
             if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+
+            // Verify they the PID and PIN are unique.
+            var alreadyExists = this.Context.Parcels.Any(p => p.Id != parcel.Id && (parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN));
+            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
 
             this.Context.Entry(entity).CurrentValues.SetValues(parcel);
             entity.UpdatedById = this.User.GetUserId();
