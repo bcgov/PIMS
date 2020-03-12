@@ -57,7 +57,7 @@ namespace Pims.Api.Controllers
         /// Get all of the role code values
         /// </summary>
         /// <returns></returns>
-        [HttpGet("agencies")]
+        [HttpGet("roles")]
         public IActionResult GetRoles()
         {
             var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRolesNoTracking());
