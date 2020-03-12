@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>17033af2-41c5-4100-a42e-4d11424b0cbb</UserSecretsId>
     <OutputType>Library</OutputType>
+    <Version>0.1.0.0-alpha</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

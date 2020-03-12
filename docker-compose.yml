@@ -3,6 +3,7 @@ version: "3.5"
 services:
   ####################### Keycloak #######################
   keycloak-db:
+    restart: on-failure
     container_name: keycloak-db
     build:
       context: ./auth/postgres
@@ -16,6 +17,7 @@ services:
       - pims
 
   keycloak:
+    restart: on-failure
     container_name: keycloak
     build:
       context: ./auth/keycloak
@@ -32,7 +34,7 @@ services:
 
   ####################### Database #######################
   database:
-    restart: always
+    restart: on-failure
     container_name: api-db
     build:
       context: database/mssql
@@ -47,7 +49,7 @@ services:
 
   ####################### Backend #######################
   backend:
-    restart: always
+    restart: on-failure
     container_name: backend-api
     build:
       context: backend
@@ -65,7 +67,7 @@ services:
 
   ####################### Frontend #######################
   frontend:
-    restart: always
+    restart: on-failure
     container_name: frontend-app
     build:
       context: frontend

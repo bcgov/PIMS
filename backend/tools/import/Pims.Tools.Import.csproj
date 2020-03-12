@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Version>0.1.0.0-alpha</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
