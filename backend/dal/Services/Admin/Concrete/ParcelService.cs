@@ -156,10 +156,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized("system-administrator");
-
-            // Verify they the PID and PIN are unique.
-            var alreadyExists = this.Context.Parcels.Any(p => (entity.PID > 0 && p.PID == entity.PID) || (entity.PIN != null && p.PIN == entity.PIN));
-            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
+            this.Context.Parcels.ThrowIfNotUnique(entity);
 
             var userId = this.User.GetUserId();
             entity.Buildings.ForEach(b =>
@@ -257,9 +254,7 @@ namespace Pims.Dal.Services.Admin
 
             this.Context.Entry(parcel).CurrentValues.SetValues(entity);
 
-            // Verify they the PID and PIN are unique.
-            var alreadyExists = this.Context.Parcels.Any(p => p.Id != parcel.Id && (parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN));
-            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
+            this.Context.Parcels.ThrowIfNotUnique(entity);
 
             // TODO: Update child properties appropriately.
             return base.Update(parcel);

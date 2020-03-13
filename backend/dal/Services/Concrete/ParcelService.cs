@@ -97,9 +97,7 @@ namespace Pims.Dal.Services
             var agency_id = this.User.GetAgency() ??
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
-            // Verify they the PID and PIN are unique.
-            var alreadyExists = this.Context.Parcels.Any(p => (parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN));
-            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
+            this.Context.Parcels.ThrowIfNotUnique(parcel);
 
             parcel.CreatedById = this.User.GetUserId();
             parcel.AgencyId = agency_id;
@@ -126,9 +124,7 @@ namespace Pims.Dal.Services
             // Do not allow switching agencies through this method.
             if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
-            // Verify they the PID and PIN are unique.
-            var alreadyExists = this.Context.Parcels.Any(p => p.Id != parcel.Id && (parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN));
-            if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
+            this.Context.Parcels.ThrowIfNotUnique(parcel);
 
             this.Context.Entry(entity).CurrentValues.SetValues(parcel);
             entity.UpdatedById = this.User.GetUserId();
