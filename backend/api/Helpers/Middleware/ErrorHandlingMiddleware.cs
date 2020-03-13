@@ -74,7 +74,7 @@ namespace Pims.Api.Helpers.Middleware
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
-            var message = "An unhandled error has occured.";
+            var message = "An unhandled error has occurred.";
 
             if (ex is DbUpdateConcurrencyException)
             {
@@ -86,7 +86,7 @@ namespace Pims.Api.Helpers.Middleware
             else if (ex is DbUpdateException)
             {
                 code = HttpStatusCode.BadRequest;
-                message = "An error occured while updating this item.";
+                message = "An error occurred while updating this item.";
 
                 _logger.LogDebug(ex, "Middleware caught unhandled exception.");
             }

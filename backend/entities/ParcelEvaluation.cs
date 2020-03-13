@@ -33,6 +33,12 @@ namespace Pims.Dal.Entities
         public float EstimatedValue { get; set; }
 
         /// <summary>
+        /// get/set - The appraised value of the parcel.
+        /// </summary>
+        /// <value></value>
+        public float AppraisedValue { get; set; }
+
+        /// <summary>
         /// get/set - The assessed value of the parcel.
         /// </summary>
         /// <value></value>
@@ -63,6 +69,27 @@ namespace Pims.Dal.Entities
                 throw new ArgumentNullException(nameof(parcel));
             this.Parcel = parcel;
             parcel.Evaluations.Add(this);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a ParcelEvaluation class, initializes it with the specified arguments.
+        /// </summary>
+        /// <param name="fiscalYear"></param>
+        /// <param name="parcel"></param>
+        /// <param name="estimatedValue"></param>
+        /// <param name="appraisedValue"></param>
+        /// <param name="assessedValue"></param>
+        /// <param name="netBookValue"></param>
+        public ParcelEvaluation(int fiscalYear, Parcel parcel, float estimatedValue, float appraisedValue, float assessedValue, float netBookValue)
+        {
+            this.FiscalYear = fiscalYear;
+            this.ParcelId = parcel?.Id ??
+                throw new ArgumentNullException(nameof(parcel));
+            this.Parcel = parcel;
+            this.EstimatedValue = estimatedValue;
+            this.AppraisedValue = appraisedValue;
+            this.AssessedValue = assessedValue;
+            this.NetBookValue = netBookValue;
         }
         #endregion
     }

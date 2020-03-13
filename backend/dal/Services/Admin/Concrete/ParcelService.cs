@@ -94,7 +94,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .AsNoTracking().SingleOrDefault(u => u.ParcelId == pid);
+                .AsNoTracking().SingleOrDefault(u => u.PID == pid);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(u => u.ParcelId == pid);
+                .SingleOrDefault(u => u.PID == pid);
         }
 
         /// <summary>
@@ -156,30 +156,31 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized("system-administrator");
+            this.Context.Parcels.ThrowIfNotUnique(entity);
 
             var userId = this.User.GetUserId();
             entity.Buildings.ForEach(b =>
-           {
-               b.CreatedById = userId;
-               this.Context.Buildings.Add(b);
+            {
+                b.CreatedById = userId;
+                this.Context.Buildings.Add(b);
 
-               b.Evaluations.ForEach(e =>
-               {
-                   e.CreatedById = userId;
-                   this.Context.BuildingEvaluations.Add(e);
-               });
+                b.Evaluations.ForEach(e =>
+                {
+                    e.CreatedById = userId;
+                    this.Context.BuildingEvaluations.Add(e);
+                });
 
-               if (b.Address != null)
-               {
-                   b.Address.CreatedById = userId;
-               }
-           });
+                if (b.Address != null)
+                {
+                    b.Address.CreatedById = userId;
+                }
+            });
 
             entity.Evaluations.ForEach(e =>
-           {
-               e.CreatedById = userId;
-               this.Context.ParcelEvaluations.Add(e);
-           });
+            {
+                e.CreatedById = userId;
+                this.Context.ParcelEvaluations.Add(e);
+            });
 
             if (entity.Address != null)
             {
@@ -201,38 +202,38 @@ namespace Pims.Dal.Services.Admin
 
             var userId = this.User.GetUserId();
             entities.ForEach((entity) =>
-           {
-               if (entity == null) throw new ArgumentNullException();
-               entity.CreatedById = userId;
+            {
+                if (entity == null) throw new ArgumentNullException();
+                entity.CreatedById = userId;
 
-               entity.Buildings.ForEach(b =>
-               {
-                   b.CreatedById = userId;
-                   this.Context.Buildings.Add(b);
+                entity.Buildings.ForEach(b =>
+                {
+                    b.CreatedById = userId;
+                    this.Context.Buildings.Add(b);
 
-                   b.Evaluations.ForEach(e =>
-                   {
-                       e.CreatedById = userId;
-                       this.Context.BuildingEvaluations.Add(e);
-                   });
+                    b.Evaluations.ForEach(e =>
+                    {
+                        e.CreatedById = userId;
+                        this.Context.BuildingEvaluations.Add(e);
+                    });
 
-                   if (b.Address != null)
-                   {
-                       b.Address.CreatedById = userId;
-                   }
-               });
+                    if (b.Address != null)
+                    {
+                        b.Address.CreatedById = userId;
+                    }
+                });
 
-               entity.Evaluations.ForEach(e =>
-               {
-                   e.CreatedById = userId;
-                   this.Context.ParcelEvaluations.Add(e);
-               });
+                entity.Evaluations.ForEach(e =>
+                {
+                    e.CreatedById = userId;
+                    this.Context.ParcelEvaluations.Add(e);
+                });
 
-               if (entity.Address != null)
-               {
-                   entity.Address.CreatedById = userId;
-               }
-           });
+                if (entity.Address != null)
+                {
+                    entity.Address.CreatedById = userId;
+                }
+            });
 
             this.Context.Parcels.AddRange(entities);
             this.Context.CommitTransaction();
@@ -252,6 +253,8 @@ namespace Pims.Dal.Services.Admin
             if (parcel == null) throw new KeyNotFoundException();
 
             this.Context.Entry(parcel).CurrentValues.SetValues(entity);
+
+            this.Context.Parcels.ThrowIfNotUnique(entity);
 
             // TODO: Update child properties appropriately.
             return base.Update(parcel);

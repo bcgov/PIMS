@@ -16,15 +16,21 @@ namespace Pims.Dal.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// get/set - The parcel identification number.
+        /// get/set - The parcel identification number for Titled land.
         /// </summary>
-        public int ParcelId { get; set; }
+        public int PID { get; set; }
 
         /// <summary>
         /// get - The friendly formated Parcel Id.
         /// </summary>
         [NotMapped]
-        public string PID { get { return $"{this.ParcelId:000-000-000}"; } }
+        public string ParcelIdentity { get { return $"{this.PID:000-000-000}"; } }
+
+        /// <summary>
+        /// get/set - The parcel identification number of Crown Lands Registry that are not Titled.
+        /// </summary>
+        /// <value></value>
+        public int? PIN { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property status.
@@ -100,32 +106,32 @@ namespace Pims.Dal.Entities
         /// get/set - A collection of buildings on this parcel.
         /// </summary>
         /// <typeparam name="Building"></typeparam>
-        public ICollection<Building> Buildings { get; set; } = new List<Building> ();
+        public ICollection<Building> Buildings { get; set; } = new List<Building>();
 
         /// <summary>
         /// get - A collection of evaluations for this parcel.
         /// </summary>
         /// <typeparam name="ParcelEvaluation"></typeparam>
-        public ICollection<ParcelEvaluation> Evaluations { get; } = new List<ParcelEvaluation> ();
+        public ICollection<ParcelEvaluation> Evaluations { get; } = new List<ParcelEvaluation>();
 
         /// <summary>
         /// get - The most recent evaluation.
         /// </summary>
-        public ParcelEvaluation Evaluation { get { return this.Evaluations.OrderByDescending (e => e.FiscalYear).FirstOrDefault (); } }
+        public ParcelEvaluation Evaluation { get { return this.Evaluations.OrderByDescending(e => e.FiscalYear).FirstOrDefault(); } }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Create a new instance of a Parcel class.
         /// </summary>
-        public Parcel () { }
+        public Parcel() { }
 
         /// <summary>
         /// Create a new instance of a Parcel class.
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public Parcel (double lat, double lng)
+        public Parcel(double lat, double lng)
         {
             this.Latitude = lat;
             this.Longitude = lng;
