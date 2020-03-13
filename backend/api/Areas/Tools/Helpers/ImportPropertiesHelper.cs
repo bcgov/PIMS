@@ -92,7 +92,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 else if (String.Compare(property.PropertyType, "Building") == 0)
                 {
                     var parcel = AddUpdateBuilding(property, pid, agency);
-                    if (!entities.Any(p => p.ParcelId == parcel.ParcelId))
+                    if (!entities.Any(p => p.PID == parcel.PID))
                     {
                         entities.Add(parcel);
                     }
@@ -233,7 +233,7 @@ namespace Pims.Api.Areas.Tools.Helpers
             var fiscal = int.Parse(property.FiscalYear);
 
             // Copy properties over to entity.
-            p_e.ParcelId = pid;
+            p_e.PID = pid;
 
             // Only want to update the properties with the latest evaluation information.
             if (p_e.Id == 0 || p_e.Evaluation?.FiscalYear > fiscal)

@@ -17,7 +17,7 @@ namespace Pims.Dal.Configuration
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
-            builder.Property(m => m.ParcelId).IsRequired();
+            builder.Property(m => m.PID).IsRequired();
             builder.Property(m => m.Description).HasMaxLength(2000);
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
@@ -29,7 +29,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Address).WithMany().HasForeignKey(m => m.AddressId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Agency).WithMany(m => m.Parcels).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.ParcelId }).IsUnique();
+            builder.HasIndex(m => new { m.PID, m.PIN }).IsUnique(); // This will allow for Crown Land to set ParcelId=0 and PIN=#######.
             builder.HasIndex(m => new { m.Latitude, m.Longitude, m.StatusId, m.IsSensitive, m.AgencyId, m.ClassificationId, m.LandArea });
 
             base.Configure(builder);

@@ -6,6 +6,23 @@ It provides an OpenIdConnect architecture to allow for IDIR, BCeID, GitHub and p
 For local development it only currently supports private email accounts to authenticate.
 You can extend this by modifying the Keycloak Realm and Client configuration.
 
+## Host Name Configuration
+
+When running the solution with **localhost** it is important to create a _host_ name in your _hosts_ file so that Keycloak will validate the JWT token against the correct issuers.
+
+Add the following host to your _hosts_ file.
+
+> `127.0.0.1 keycloak`
+
+This will then allow your Keycloak configuration files in the _frontend_:app and _backend_:api to references `http://keycloak:8080` instead of `http://localhost:8080`.
+Which will allow your docker containers to use a valid JWT token that can be proxied from the APP to the API to Keycloak.
+
+- NOTE: Chrome is now pushing an update that invalidates cookies without the `SameSite` value. This will result in a rejection of the cookie and make it impossible to remain logged in.
+
+To work around this issue temporarily you can change the Chrome behaviour by **Disabling** the **SameSite by default cookies** setting here - `chrome://flags/#same-site-by-default-cookies`
+
+We will need to find a way to update Keycloak to include the property in the cookie in the near future.
+
 ## Docker Setup
 
 To run Keycloak in a Docker container you will need to create two `.env` files, one in the `/auth/keycloak` folder, and the other in the `/auth/postgres` folder.

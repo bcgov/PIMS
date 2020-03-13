@@ -21,6 +21,11 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.BuildingId).IsRequired();
             builder.Property(m => m.BuildingId).ValueGeneratedNever();
 
+            builder.Property(m => m.EstimatedValue).HasColumnType("MONEY");
+            builder.Property(m => m.AppraisedValue).HasColumnType("MONEY");
+            builder.Property(m => m.AssessedValue).HasColumnType("MONEY");
+            builder.Property(m => m.NetBookValue).HasColumnType("MONEY");
+
             builder.HasOne(m => m.Building).WithMany(m => m.Evaluations).HasForeignKey(m => m.BuildingId).OnDelete(DeleteBehavior.ClientCascade);
 
             builder.HasIndex(m => new { m.AssessedValue, m.EstimatedValue, m.NetBookValue });
