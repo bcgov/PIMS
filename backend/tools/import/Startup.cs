@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ namespace Pims.Tools.Import
         private readonly ToolOptions _config;
         private readonly HttpClient _client = new HttpClient();
         private readonly JwtSecurityTokenHandler _tokenHandler;
+        private string _refreshToken = null;
         #endregion
 
         #region Constructors
@@ -65,7 +67,7 @@ namespace Pims.Tools.Import
         /// Determine what HTTP method to use.
         /// </summary>
         /// <param name="method"></param>
-        /// <return></return>
+        /// /// <return></return>
         private static HttpMethod GetMethod(string method)
         {
             switch (method?.ToLower())
@@ -83,7 +85,7 @@ namespace Pims.Tools.Import
         }
 
         /// <summary>
-        /// Read the JSON package, iterate through it and send the items to the configured endpoint URL.
+        /// /// Read the JSON package, iterate through it and send the items to the configured endpoint URL.
         /// </summary>
         /// <param name="file"></param>
         /// <param name="url"></param>
@@ -92,12 +94,11 @@ namespace Pims.Tools.Import
         /// <param name="quantity"></param>
         /// <param name="delay"></param>
         /// <returns></returns>
-        private async Task<int> ImportAsync(FileInfo file, HttpMethod method, string url, string token, int quantity, int delay)
+        private async Task<int> ImportAsync(FileInfo file, HttpMethod method, string url, string token = null, int quantity = 50, int delay = 0)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
             if (!file.Exists) throw new ArgumentException($"Argument '{nameof(file)}' must be an existing file.");
             if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException($"Argument '{nameof(url)}' is required.");
-            if (String.IsNullOrWhiteSpace(token)) throw new ArgumentException($"Argument '{nameof(token)}' is required.");
 
             _logger.LogInformation($"url: {url}, quantity: {quantity}");
 
@@ -114,12 +115,11 @@ namespace Pims.Tools.Import
                 _logger.LogInformation($"Properties remaining: {total - index} ");
 
                 // Check if token has expired.  If it has refresh it.
-                var jwt = _tokenHandler.ReadJwtToken(token);
-                if (DateTime.Compare(jwt.ValidTo, DateTime.UtcNow) < 0)
+                if (String.IsNullOrWhiteSpace(token) || _tokenHandler.ReadJwtToken(token).ValidTo <= DateTime.UtcNow)
                 {
-                    _logger.LogInformation($"Access token has expired: {jwt.ValidTo} <= {DateTime.UtcNow}");
-                    var tokenNew = await SendAsync();
+                    var tokenNew = await RequestTokenAsync(_refreshToken);
                     token = tokenNew.access_token;
+                    _refreshToken = tokenNew.refresh_token;
                 }
 
                 var response = await RequestAsync(method, url, token, items);
@@ -136,17 +136,18 @@ namespace Pims.Tools.Import
                     {
                         var results = await JsonSerializer.DeserializeAsync<object>(stream);
                         var json = JsonSerializer.Serialize(results);
-                        _logger.LogError(json);
+                        _logger.LogError($"Import failed: status: {response.StatusCode} {json}");
                     }
                     else
                     {
                         var readStream = new StreamReader(stream);
                         var error = readStream.ReadToEnd();
-                        _logger.LogError(error);
+                        _logger.LogError($"Import failed: status: {response.StatusCode} {error}");
                     }
                 }
 
-                await Task.Delay(new TimeSpan(0, 0, delay));
+                if (delay > 0)
+                    Task.Delay(new TimeSpan(0, 0, delay)).Wait();
 
                 index = index + quantity;
             }
@@ -179,20 +180,35 @@ namespace Pims.Tools.Import
         }
 
         /// <summary>
-        /// Make an HTTP request to refresh the access token.
+        /// Make an HTTP request to authenticate or to refresh the access token.
         /// </summary>
+        /// <param name="refreshToken"></param>
         /// <returns></returns>
-        private async Task<Models.TokenModel> SendAsync()
+        private async Task<Models.TokenModel> RequestTokenAsync(string refreshToken = null)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, _config.Keycloak?.TokenUrl);
             request.Headers.Add("User-Agent", "Pims.Tools.Import");
 
-            var p = new Dictionary<string, string>
+            Dictionary<string, string> keys = new Dictionary<string, string>();
+
+            if (String.IsNullOrWhiteSpace(refreshToken))
+            {
+                keys = new Dictionary<string, string>
+                { { "client_id", _config.Keycloak?.ClientId },
+                    { "grant_type", "client_credentials" },
+                    { "client_secret", _config.Keycloak?.ClientSecret },
+                    { "audience", _config.Keycloak?.Audience ?? _config.Keycloak?.ClientId }
+                };
+            }
+            else
+            {
+                keys = new Dictionary<string, string>
                 { { "client_id", _config.Keycloak?.ClientId },
                     { "grant_type", "refresh_token" },
-                    { "refresh_token", _config.Api.RefreshToken }
+                    { "refresh_token", refreshToken }
                 };
-            var form = new FormUrlEncodedContent(p);
+            }
+            var form = new FormUrlEncodedContent(keys);
             form.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
             request.Content = form;
 

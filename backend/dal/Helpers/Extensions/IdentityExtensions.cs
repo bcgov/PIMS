@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Pims.Dal.Exceptions;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -31,7 +32,7 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetAgency(this ClaimsPrincipal user)
         {
             var value = user?.FindFirstValue("agency");
-            return String.IsNullOrWhiteSpace(value) ? null : (int?)Int32.Parse(value);
+            return String.IsNullOrWhiteSpace(value) ? null : (int?) Int32.Parse(value);
         }
 
         /// <summary>
@@ -40,10 +41,10 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static IEnumerable<int> GetAgencies(this ClaimsPrincipal user)
+        public static int[] GetAgencies(this ClaimsPrincipal user)
         {
             var agencies = user?.FindAll("agencies");
-            return agencies?.Select(c => Int32.Parse(c.Value));
+            return agencies?.Select(c => Int32.Parse(c.Value)).ToArray();
         }
 
         /// <summary>
@@ -116,6 +117,38 @@ namespace Pims.Dal.Helpers.Extensions
             if (role.Length == 0) throw new ArgumentOutOfRangeException(nameof(role));
 
             var count = user.Claims.Count(c => c.Type == ClaimTypes.Role && role.Contains(c.Value));
+
+            return count == role.Length;
+        }
+
+        /// <summary>
+        /// Determine if the user any of the specified roles.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="role"></param>
+        /// <returns>True if the user has any of the roles.</returns>
+        public static bool HasRole(this ClaimsPrincipal user, params RoleClaim[] role)
+        {
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (role.Length == 0) throw new ArgumentOutOfRangeException(nameof(role));
+
+            var roles = role.Select(r => r.GetRoleName()).ToArray();
+            return user.Claims.Any(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
+        }
+
+        /// <summary>
+        /// Determine if the user all of the specified roles.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="role"></param>
+        /// <returns>True if the user has all of the roles.</returns>
+        public static bool HasRoles(this ClaimsPrincipal user, params RoleClaim[] role)
+        {
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (role.Length == 0) throw new ArgumentOutOfRangeException(nameof(role));
+
+            var roles = role.Select(r => r.GetRoleName()).ToArray();
+            var count = user.Claims.Count(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
 
             return count == role.Length;
         }

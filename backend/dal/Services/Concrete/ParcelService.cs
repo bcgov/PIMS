@@ -28,6 +28,7 @@ namespace Pims.Dal.Services
         #region Methods
         /// <summary>
         /// Get a collection of parcels within the specified filter.
+        /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="neLat"></param>
         /// <param name="neLong"></param>
@@ -38,14 +39,20 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Parcel> GetNoTracking(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null)
         {
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasRole(Security.RoleClaim.SensitiveView);
+
             IQueryable<Parcel> query = null;
             if (neLat != null && neLong != null && swLat != null && swLong != null)
             {
-                query = this.Context.Parcels.AsNoTracking().Where(parcel =>
-                    parcel.Latitude <= neLat &&
-                    parcel.Latitude >= swLat &&
-                    parcel.Longitude <= neLong &&
-                    parcel.Longitude >= swLong);
+                // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
+                query = this.Context.Parcels.AsNoTracking().Where(p =>
+                    (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
+                    p.Latitude <= neLat &&
+                    p.Latitude >= swLat &&
+                    p.Longitude <= neLong &&
+                    p.Longitude >= swLong);
             }
             if (agencyId != null)
             {
@@ -60,13 +67,14 @@ namespace Pims.Dal.Services
 
         /// <summary>
         /// Get the parcel for the specified 'id'.
+        /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public Parcel GetNoTracking(int id)
         {
             var tmp = this.Context.Parcels.Where(x => x.Id == id);
-            return this.Context.Parcels
+            var parcel = this.Context.Parcels
                 .Include(p => p.Status)
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
@@ -82,6 +90,10 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
                 .AsNoTracking().SingleOrDefault(u => u.Id == id);
+
+            var agencies = this.User.GetAgencies();
+            parcel.Buildings.RemoveAll(b => b.IsSensitive && !agencies.Contains(b.AgencyId));
+            return parcel;
         }
 
         /// <summary>

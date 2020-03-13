@@ -46,8 +46,8 @@ POSTGRES_PASSWORD=password
 POSTGRES_DB=geospatial" >> ./database/postgres/.env
 fi
 
-if test -f "./backend/.env"; then
-    echo "./backend/.env exists"
+if test -f "./backend/api/.env"; then
+    echo "./backend/api/.env exists"
 else
 echo \
 "ASPNETCORE_ENVIRONMENT=Development

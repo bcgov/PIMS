@@ -12,6 +12,8 @@ namespace Pims.Api.Models
 
         public string PID { get; set; }
 
+        public string PIN { get; set; }
+
         public int StatusId { get; set; }
 
         public string Status { get; set; }

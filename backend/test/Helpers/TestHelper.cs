@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Pims.Api.Helpers.Profiles;
 
@@ -32,6 +33,8 @@ namespace Pims.Api.Test.Helpers
             var config = new Mock<IConfiguration>();
             this.AddSingleton(config);
             this.AddSingleton(config.Object);
+            var keycloakOptions = new Mock<IOptionsMonitor<Configuration.KeycloakOptions>>();
+            this.AddSingleton(keycloakOptions.Object);
 
             var mapper = TestHelper.CreateMapper();
             this.AddSingleton(mapper);
@@ -118,7 +121,7 @@ namespace Pims.Api.Test.Helpers
         {
             this.AddSingleton<ILogger<T>>(Mock.Of<ILogger<T>>());
             if (_provider == null) this.BuildServiceProvider();
-            var controller = (T)ActivatorUtilities.CreateInstance(_provider, typeof(T));
+            var controller = (T) ActivatorUtilities.CreateInstance(_provider, typeof(T));
             controller.ControllerContext = ControllerHelper.CreateControllerContext(user);
 
             return controller;
