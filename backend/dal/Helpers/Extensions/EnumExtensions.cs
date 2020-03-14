@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pims.Dal.Security;
 
@@ -9,16 +10,16 @@ namespace Pims.Dal.Helpers.Extensions
     public static class EnumExtensions
     {
         /// <summary>
-        /// Get the Keycloak name value of the specified claim.
+        /// Get the Keycloak name value of the specified permission.
         /// </summary>
-        /// <param name="claim"></param>
+        /// <param name="permission"></param>
         /// <returns></returns>
-        public static string GetRoleName(this RoleClaim claim)
+        public static string GetName(this Permissions permission)
         {
-            var enumType = typeof(RoleClaim);
-            var memberInfos = enumType.GetMember(claim.ToString());
+            var enumType = typeof(Permissions);
+            var memberInfos = enumType.GetMember(permission.ToString());
             var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
-            var attribute = (ClaimNameAttribute) enumValueMemberInfo.GetCustomAttributes(typeof(ClaimNameAttribute), false).FirstOrDefault();
+            var attribute = (DisplayAttribute) enumValueMemberInfo.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault();
             return attribute.Name;
         }
     }

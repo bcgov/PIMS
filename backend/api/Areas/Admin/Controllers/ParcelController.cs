@@ -6,15 +6,16 @@ using Microsoft.Extensions.Logging;
 using Pims.Dal.Helpers.Extensions;
 using Entity = Pims.Dal.Entities;
 using Pims.Api.Models;
+using Pims.Api.Policies;
+using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
     /// <summary>
     /// ParcelController class, provides endpoints for managing parcels.
     /// </summary>
-    [Authorize(Roles = "system-administrator")]
+    [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -127,22 +128,22 @@ namespace Pims.Api.Areas.Admin.Controllers
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
             entity.Evaluations.Add(new Entity.ParcelEvaluation(model.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
-            {
-                EstimatedValue = model.EstimatedValue,
-                AssessedValue = model.AssessedValue,
-                NetBookValue = model.NetBookValue
-            });
+                {
+                    EstimatedValue = model.EstimatedValue,
+                        AssessedValue = model.AssessedValue,
+                        NetBookValue = model.NetBookValue
+                });
 
             foreach (var building in model.Buildings)
             {
                 // We only allow adding buildings at this point.  Can't include an existing one.
                 var b_entity = _mapper.Map<Entity.Building>(building);
                 b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                {
-                    EstimatedValue = building.EstimatedValue,
-                    AssessedValue = building.AssessedValue,
-                    NetBookValue = building.NetBookValue
-                });
+                    {
+                        EstimatedValue = building.EstimatedValue,
+                            AssessedValue = building.AssessedValue,
+                            NetBookValue = building.NetBookValue
+                    });
                 entity.Buildings.Add(b_entity);
             }
 
@@ -166,22 +167,22 @@ namespace Pims.Api.Areas.Admin.Controllers
             {
                 var entity = entities[i];
                 entity.Evaluations.Add(new Entity.ParcelEvaluation(models[i].FiscalYear, entity) // TODO: Move this logic to AutoMapper.
-                {
-                    EstimatedValue = models[i].EstimatedValue,
-                    AssessedValue = models[i].AssessedValue,
-                    NetBookValue = models[i].NetBookValue
-                });
+                    {
+                        EstimatedValue = models[i].EstimatedValue,
+                            AssessedValue = models[i].AssessedValue,
+                            NetBookValue = models[i].NetBookValue
+                    });
 
                 foreach (var building in models[i].Buildings)
                 {
                     // We only allow adding buildings at this point.  Can't include an existing one.
                     var b_entity = _mapper.Map<Entity.Building>(building);
                     b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                    {
-                        EstimatedValue = building.EstimatedValue,
-                        AssessedValue = building.AssessedValue,
-                        NetBookValue = building.NetBookValue
-                    });
+                        {
+                            EstimatedValue = building.EstimatedValue,
+                                AssessedValue = building.AssessedValue,
+                                NetBookValue = building.NetBookValue
+                        });
                     entity.Buildings.Add(b_entity);
                 }
             }
@@ -212,12 +213,12 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (p_eval == null)
             {
                 entity.Evaluations.Add(new Entity.ParcelEvaluation(model.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
-                {
-                    EstimatedValue = model.EstimatedValue,
-                    AssessedValue = model.AssessedValue,
-                    NetBookValue = model.NetBookValue,
-                    CreatedById = userId
-                });
+                    {
+                        EstimatedValue = model.EstimatedValue,
+                            AssessedValue = model.AssessedValue,
+                            NetBookValue = model.NetBookValue,
+                            CreatedById = userId
+                    });
             }
             else
             {
@@ -237,12 +238,12 @@ namespace Pims.Api.Areas.Admin.Controllers
                     b_entity.CreatedById = userId;
 
                     b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                    {
-                        EstimatedValue = building.EstimatedValue,
-                        AssessedValue = building.AssessedValue,
-                        NetBookValue = building.NetBookValue,
-                        CreatedById = userId
-                    });
+                        {
+                            EstimatedValue = building.EstimatedValue,
+                                AssessedValue = building.AssessedValue,
+                                NetBookValue = building.NetBookValue,
+                                CreatedById = userId
+                        });
 
                     entity.Buildings.Add(b_entity);
                 }
@@ -265,12 +266,12 @@ namespace Pims.Api.Areas.Admin.Controllers
                         if (b_eval == null)
                         {
                             b_entity.Evaluations.Add(new Entity.BuildingEvaluation(building.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                            {
-                                EstimatedValue = building.EstimatedValue,
-                                AssessedValue = building.AssessedValue,
-                                NetBookValue = building.NetBookValue,
-                                CreatedById = userId
-                            });
+                                {
+                                    EstimatedValue = building.EstimatedValue,
+                                        AssessedValue = building.AssessedValue,
+                                        NetBookValue = building.NetBookValue,
+                                        CreatedById = userId
+                                });
                         }
                         else
                         {

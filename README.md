@@ -2,7 +2,7 @@
 
 Property Inventory Management System
 
-## Introduction:
+## Introduction
 
 Strategic Real Estate Services (SRES), comprised of professionals from a variety of backgrounds (sales, marketing, First Nations consultation, environmental management and communications) was formed to dispose of assets surplus to government, in order to help government meet its commitment to balance the provincial budget, and to generate economic activity in communities throughout BC. The SRES team is tasked with coordinating the province-wide management of this initiative ensuring that all issues are addressed appropriately and the return to government is maximized.
 
@@ -18,15 +18,15 @@ SRES is responsible for:
 
 To support SRES’s overall strategic real estate initiatives a modern Information Management System is required that will aid in strategic decision making, support its client Ministries and the Broader Public Sector, and remain compliant with current Inventory Policies (CPPM Policy Chapter 8: Asset Management). Ideally the system will be flexible to allow for ad hoc customized reporting and adaptable to support unforeseen future real estate strategies.
 
-## Problem Statement:
+## Problem Statement
 
 The Province is not able to make the most informed, timely, and strategic decisions on the optimal use of its real property assets on behalf of the people and priorities of British Columbia.
 
-## Hypothesis:
+## Hypothesis
 
 If we have a modern easy to use system built in collaboration with, and for the benefit of, clients they will want to use it to provide Strategic Real Estate Services (SRES) with the data required to support real time executive decision making and to remain compliant with core policy.
 
-## Goal:
+## Goal
 
 The goal of the PIMS project team is to create a Geo-spatial Client Relationship Management System to support the Strategic Real Estate Services branch of Real Property Division to manage and oversee the disposal of assets surplus to government, optimize the benefits to the government and citizens of BC related to the management of public real estate assets, and be a trusted source for accurate information for Government owned titled property.
 

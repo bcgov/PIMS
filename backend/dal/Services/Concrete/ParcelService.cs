@@ -41,7 +41,7 @@ namespace Pims.Dal.Services
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasRole(Security.RoleClaim.SensitiveView);
+            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
             IQueryable<Parcel> query = null;
             if (neLat != null && neLong != null && swLat != null && swLong != null)

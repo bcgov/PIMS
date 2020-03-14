@@ -51,8 +51,12 @@ When using `Keycloak:ClientId=pims-service-account` you will need to do the foll
 
 Go to the `/backend/tools/import` folder and execute the following;
 
-> dotnet run
+```bash
+dotnet run
+```
 
 Or you can execute the compiled build directly if you have your environment variables setup.
 
-> ./Pims.Tools.Import.exe
+```bash
+./Pims.Tools.Import.exe
+```
