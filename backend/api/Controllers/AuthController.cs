@@ -91,7 +91,7 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Log the current user out.
         /// </summary>
-        /// /// <returns></returns>
+        /// <returns></returns>
         [HttpPost("[action]")]
         public IActionResult Logout(string redirect_uri)
         {

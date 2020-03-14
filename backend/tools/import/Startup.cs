@@ -67,7 +67,7 @@ namespace Pims.Tools.Import
         /// Determine what HTTP method to use.
         /// </summary>
         /// <param name="method"></param>
-        /// /// <return></return>
+        /// <return></return>
         private static HttpMethod GetMethod(string method)
         {
             switch (method?.ToLower())
@@ -85,7 +85,7 @@ namespace Pims.Tools.Import
         }
 
         /// <summary>
-        /// /// Read the JSON package, iterate through it and send the items to the configured endpoint URL.
+        /// Read the JSON package, iterate through it and send the items to the configured endpoint URL.
         /// </summary>
         /// <param name="file"></param>
         /// <param name="url"></param>

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -36,26 +34,6 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             return item;
-        }
-
-        /// <summary>
-        /// Provides a way to remove all items from the collection that match the find statement.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <param name="find"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> items, Func<T, bool> find)
-        {
-            var list = items.ToList();
-            var remove = list.Where(find);
-
-            foreach (var item in remove)
-            {
-                list.Remove(item);
-            }
-
-            return list;
         }
     }
 }

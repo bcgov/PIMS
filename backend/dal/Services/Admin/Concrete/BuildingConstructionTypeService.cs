@@ -21,7 +21,7 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Creates a new instance of a BuildingConstructionTypeService, and initializes it with the specified arguments.
         /// </summary>
-        /// /// <param name="dbContext"></param>
+        /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
         public BuildingConstructionTypeService(PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingConstructionTypeService> logger) : base(dbContext, user, logger) { }
@@ -42,7 +42,7 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// /// Get all building construction types from the datasource.
+        /// Get all building construction types from the datasource.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<BuildingConstructionType> GetAll()

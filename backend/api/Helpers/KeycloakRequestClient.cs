@@ -259,7 +259,7 @@ namespace Pims.Api.Helpers
         /// Send a PUT request to the specified 'url'.
         /// This will use the API Service account to fetch an access token.
         /// </summary>
-        /// /// <param name="url"></param>
+        /// <param name="url"></param>
         /// <param name="content"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage> PutAsync(string url, HttpContent content)
