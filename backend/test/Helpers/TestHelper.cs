@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Pims.Api.Helpers.Profiles;
+using AdminProfiles = Pims.Api.Helpers.Profiles.Admin;
 
 namespace Pims.Api.Test.Helpers
 {
@@ -99,6 +100,8 @@ namespace Pims.Api.Test.Helpers
                 cfg.AddProfile(new AccessRequestProfile());
                 cfg.AddProfile(new CodeProfile());
                 cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new AdminProfiles.UserProfile());
+                cfg.AddProfile(new AdminProfiles.RoleProfile());
                 cfg.AddProfile(new RoleProfile());
                 cfg.AddProfile(new LookupProfile());
             });

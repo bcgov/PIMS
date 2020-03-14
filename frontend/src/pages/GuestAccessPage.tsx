@@ -3,12 +3,12 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 import { ILookupCode } from 'actions/lookupActions';
 import { IAccessRequestParams } from 'actions/adminActions';
-import { getSubmitAccessRequestAction } from 'actionCreators/authActionCreator';
+import { getSubmitAccessRequestAction } from 'actionCreators/usersActionCreator';
 import { Formik, Form, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import * as Yup from 'yup';
+import * as Schema from 'components/common/FormSchema';
 import * as API from 'constants/API';
 import _ from 'lodash';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -35,15 +35,6 @@ const GuestAccessPage = () => {
   const toRequest = (values: any): IAccessRequestParams => {
     return { agencies: [{ id: values.agency }], roles: [{ id: values.role }] };
   };
-  const AccessRequestSchema = Yup.object().shape({
-    agency: Yup.number()
-      .min(1, 'Invalid Agency')
-      .required('Required')
-      .nullable(),
-    role: Yup.string()
-      .required('Required')
-      .nullable(),
-  });
 
   return (
     <Container fluid={true}>
@@ -59,7 +50,7 @@ const GuestAccessPage = () => {
               agency: null,
               role: null,
             }}
-            validationSchema={AccessRequestSchema}
+            validationSchema={Schema.roleAgency}
             onSubmit={(values, { setSubmitting }) => {
               dispatch(getSubmitAccessRequestAction(toRequest(values)));
               setSubmitting(false);

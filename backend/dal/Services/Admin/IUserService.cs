@@ -10,7 +10,7 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IUserService : IBaseService<User>
     {
-        Paged<User> GetNoTracking(int page, int quantity, string sort);
+        Paged<User> GetNoTracking(int page, int quantity, string sort, Guid? agencyId = null);
         User GetNoTracking(Guid id);
         Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
     }

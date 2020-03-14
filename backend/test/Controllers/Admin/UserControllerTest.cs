@@ -12,6 +12,7 @@ using Pims.Dal;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models;
+using AdminModel = Pims.Api.Areas.Admin.Models;
 using AutoMapper;
 using Pims.Api.Models;
 using Pims.Api.Test.Helpers;
@@ -43,6 +44,12 @@ namespace PimsApi.Test.Admin.Controllers
             Email = "test@test.ca"
             },
         };
+        private readonly Entity.User _expectedUsers = new Entity.User()
+        {
+                Id = USER_ID,
+                DisplayName = "TEST",
+                Email = "test@test.ca"
+        };
 
         #endregion
 
@@ -55,24 +62,37 @@ namespace PimsApi.Test.Admin.Controllers
             _userController = _helper.CreateAdminUserController(user);
             _mapper = _helper.GetService<IMapper>();
             _pimsService = _helper.GetService<Mock<IPimsAdminService>>();
-
+            var agency = new Entity.Agency()
+            {
+                Id = AGENCY_ID
+            };
+            var role = new Entity.Role()
+            {
+                Id = ROLE_ID
+            };
             _expectedAccessRequest.Agencies.Add(new AccessRequestAgency()
             {
                 AgencyId = AGENCY_ID,
-                    Agency = new Entity.Agency()
-                    {
-                        Id = AGENCY_ID
-                    },
-                    AccessRequestId = ACCCESS_REQUEST_ID
+                Agency = agency,
+                AccessRequestId = ACCCESS_REQUEST_ID
             });
             _expectedAccessRequest.Roles.Add(new AccessRequestRole()
             {
                 RoleId = ROLE_ID,
-                    Role = new Entity.Role()
-                    {
-                        Id = ROLE_ID
-                    },
-                    AccessRequestId = ACCCESS_REQUEST_ID
+                Role = role,
+                AccessRequestId = ACCCESS_REQUEST_ID
+            });
+            _expectedUsers.Roles.Add(new UserRole()
+            {
+                RoleId = ROLE_ID,
+                Role = role,
+                UserId = USER_ID
+            });
+            _expectedUsers.Agencies.Add(new UserAgency()
+            {
+                AgencyId = AGENCY_ID,
+                Agency = agency,
+                UserId = USER_ID
             });
         }
         #endregion
@@ -91,6 +111,21 @@ namespace PimsApi.Test.Admin.Controllers
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Pims.Dal.Entities.Models.Paged<AccessRequestModel> actualAccessRequest = Assert.IsType<Pims.Dal.Entities.Models.Paged<AccessRequestModel>>(actionResult.Value);
             Assert.Equal(_mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
+        }
+        #endregion
+        #region GetUsers
+        [Fact]
+        public void GetUsers()
+        {
+            var expectedUsers = new Entity.User[] { _expectedUsers };
+            var expectedPagedUsers = new Pims.Dal.Entities.Models.Paged<User>(expectedUsers);
+            _pimsService.Setup(m => m.User.GetNoTracking(1, 10, null, null)).Returns(expectedPagedUsers);
+            var result = _userController.GetUsers(1, 10, null);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            Pims.Dal.Entities.Models.Paged<AdminModel.UserModel> actualAccessRequest = Assert.IsType<Pims.Dal.Entities.Models.Paged<AdminModel.UserModel>>(actionResult.Value);
+            Assert.Equal(_mapper.Map<AdminModel.UserModel[]>(expectedUsers), actualAccessRequest.Items);
         }
         #endregion
 

@@ -50,4 +50,18 @@ export const getAccessRequestsAction = (params: API.IPaginateParams) => (dispatc
     .finally(() => dispatch(hideLoading()));
 };
 
+export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Function) => {
+  dispatch(request(reducerTypes.GET_USERS));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.GET_USERS(params), createRequestHeader())
+    .then((response: AxiosResponse) => {
+      dispatch(success(reducerTypes.GET_USERS, response.status));
+      dispatch(adminActions.storeUsers(response.data));
+      dispatch(hideLoading());
+    })
+    .catch(() => dispatch(error(reducerTypes.GET_USERS)))
+    .finally(() => dispatch(hideLoading()));
+};
+
 export const NEW_PIMS_USER = 201;

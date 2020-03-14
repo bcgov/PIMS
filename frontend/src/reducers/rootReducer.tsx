@@ -4,6 +4,7 @@ import lookupCodeReducer from 'reducers/lookupCodeReducer';
 import * as reducerTypes from 'constants/reducerTypes';
 import networkReducer from './networkReducer';
 import accessRequestReducer from 'reducers/accessRequestReducer';
+import usersReducer from './usersReducer';
 
 const filteredReducer: any = (reducer: any, name: string) => (
   state: typeof rootReducer,
@@ -18,6 +19,7 @@ const filteredReducer: any = (reducer: any, name: string) => (
 export const reducerObject = {
   [reducerTypes.PARCEL]: parcelsReducer,
   [reducerTypes.ACCESS_REQUEST]: accessRequestReducer,
+  [reducerTypes.GET_USERS]: usersReducer,
   [reducerTypes.LOOKUP_CODE]: lookupCodeReducer,
   [reducerTypes.POST_ACTIVATE_USER]: filteredReducer(
     networkReducer,

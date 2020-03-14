@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
+using Pims.Dal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Areas.Admin.Controllers
@@ -54,9 +55,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
+        /// <param name="userId"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet("/api/admin/users")]
-        public IActionResult GetUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        public IActionResult GetUsers(int page = 1, int quantity = 10, string sort = null, Guid? userId = null) // TODO: sort and filter.
         {
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
@@ -66,6 +68,20 @@ namespace Pims.Api.Areas.Admin.Controllers
             var users = _mapper.Map<Model.UserModel[]>(results.Items);
             var paged = new Pims.Dal.Entities.Models.Paged<Model.UserModel>(users, page, quantity, results.Total);
             return new JsonResult(paged);
+        }
+
+        /// <summary>
+        /// GET - Returns a paged array of users from the datasource that belong to the same agency (or sub-agency) as the current user.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
+        /// <returns>Paged object with an array of users.</returns>
+        [HttpGet("/api/admin/my/users")]
+        public IActionResult GetMyUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        { 
+            var userId = this.User.GetUserId();
+            return GetUsers(page, quantity, sort, userId);
         }
 
         /// <summary>

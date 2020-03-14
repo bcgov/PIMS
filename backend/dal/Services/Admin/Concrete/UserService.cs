@@ -36,11 +36,25 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public Paged<User> GetNoTracking(int page = 1, int quantity = 10, string sort = null)
+        public Paged<User> GetNoTracking(int page = 1, int quantity = 10, string sort = null, Guid? userId = null)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
 
-            var query = this.Context.Users.AsNoTracking();
+            this.User.ThrowIfNotAuthorized("system-administrator");
+            var query = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .Include(r => r.Roles)
+                .ThenInclude(r => r.Role)
+                .AsNoTracking();
+            if (userId.HasValue) {
+                //cannot use AsNoTracking here or all related entities will not be loaded https://github.com/dotnet/efcore/issues/13518
+                var targetUser = this.Context.Users.Include(u => u.Agencies).ThenInclude(a => a.Agency).ThenInclude(a => a.Children).Where(u => u.Id == userId).SingleOrDefault();
+                if(targetUser == null) throw new KeyNotFoundException();
+                var agencyUserIds = targetUser.Agencies.SelectMany(a => a.Agency.Children.Flatten(a => a.Children)).Select(a => a.Id);
+                agencyUserIds = agencyUserIds.Concat(targetUser.Agencies.Select(a => a.AgencyId));
+                query = query.Where(u => u.Agencies.Any(a => agencyUserIds.Contains(a.AgencyId)));
+            }
+
             var users = query.Skip((page - 1) * quantity).Take(quantity);
             return new Paged<User>(users.ToArray(), page, quantity, query.Count());
         }

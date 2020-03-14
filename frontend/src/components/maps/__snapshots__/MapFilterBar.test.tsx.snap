@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapFilterBar renders correctly 1`] = `
+<div
+  className="map-filter-bar container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-8 col-8 offset-md-2 offset-2"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="bar-item col"
+        >
+          <input
+            className="form-control"
+            placeholder="Search Bar Not Implemented"
+            type="text"
+          />
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="dropdown"
+            onKeyDown={[Function]}
+          >
+            <button
+              aria-expanded={false}
+              aria-haspopup={true}
+              className="dropdown-toggle map-filter-dropdown map-filter-dropdown-primary"
+              disabled={false}
+              id="dropdown-basic-button"
+              onClick={[Function]}
+              type="button"
+            >
+              View Properties in  
+            </button>
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="dropdown"
+            onKeyDown={[Function]}
+          >
+            <button
+              aria-expanded={false}
+              aria-haspopup={true}
+              className="dropdown-toggle map-filter-dropdown map-filter-dropdown-primary"
+              disabled={false}
+              id="dropdown-basic-button"
+              onClick={[Function]}
+              type="button"
+            >
+              View by Classification  
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Models;
 
@@ -18,6 +19,10 @@ namespace Pims.Api.Areas.Admin.Models
         public string LastName { get; set; }
 
         public string Email { get; set; }
+
+        public IEnumerable<AgencyModel> Agencies { get; set; }
+
+        public IEnumerable<RoleModel> Roles { get; set; }
 
         public override bool Equals(object obj)
         {
