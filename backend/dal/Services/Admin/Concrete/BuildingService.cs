@@ -127,7 +127,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .SingleOrDefault(u => u.Parcel.ParcelId == pid && u.LocalId == localId);
+                .SingleOrDefault(u => u.Parcel.PID == pid && u.LocalId == localId);
         }
 
         /// <summary>

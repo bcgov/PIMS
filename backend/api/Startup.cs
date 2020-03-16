@@ -5,15 +5,18 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -53,10 +56,14 @@ namespace Pims.Api
         #endregion
 
         #region Methods
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration);
+            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
+            services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -92,21 +99,16 @@ namespace Pims.Api
                             {
                                 return Task.CompletedTask;
                             },
-                            OnAuthenticationFailed = context =>
-                            {
-                                context.NoResult();
-                                context.Response.StatusCode = 500;
-                                context.Response.ContentType = "text/plain";
-                                if (Environment.IsDevelopment())
-                                {
-                                    return context.Response.WriteAsync(context.Exception.ToString());
-                                }
-                                return context.Response.WriteAsync("An error occurred processing your authentication.");
-                            },
-                            OnForbidden = context =>
-                            {
-                                return Task.CompletedTask;
-                            }
+                        OnAuthenticationFailed = context =>
+                        {
+                            context.NoResult();
+                            context.Response.StatusCode = 401;
+                            throw context.Exception;
+                        },
+                        OnForbidden = context =>
+                        {
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -115,15 +117,15 @@ namespace Pims.Api
                 options.AddPolicy("Administrator", policy => policy.Requirements.Add(new RealmAccessRoleRequirement("administrator")));
             });
 
+            var cs = Configuration.GetConnectionString("PIMS");
+            var builder = new SqlConnectionStringBuilder(cs);
+            var pwd = Configuration["DB_PASSWORD"];
+            if (!String.IsNullOrEmpty(pwd))
+            {
+                builder.Password = pwd;
+            }
             services.AddDbContext<PimsContext>(options =>
             {
-                var cs = Configuration.GetConnectionString("PIMS");
-                var builder = new SqlConnectionStringBuilder(cs);
-                var pwd = Configuration["DB_PASSWORD"];
-                if (!String.IsNullOrEmpty(pwd))
-                {
-                    builder.Password = pwd;
-                }
                 options.UseSqlServer(builder.ConnectionString);
             });
 
@@ -138,21 +140,34 @@ namespace Pims.Api
             services.AddScoped<IKeycloakRequestClient, KeycloakRequestClient>();
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddHealthChecks()
+                .AddCheck("liveliness", () => HealthCheckResult.Healthy())
+                .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
+
+            //TODO: Add a health check for keycloak connectivity.
+            services.AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("liveliness", "http://localhost/live");
+                setup.AddHealthCheckEndpoint("readiness", "http://localhost/ready");
+                setup.AddWebhookNotification("rocketchat",
+                    uri: Configuration["ROCKETCHAT_HEALTH_HOOK"],
+                    payload: Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
+                    restorePayload: Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (!env.IsProduction())
             {
                 app.UseDatabaseErrorPage();
-                //app.UseDeveloperExceptionPage();
-
                 UpdateDatabase(app);
-            }
-            else
-            {
-                // app.UseExceptionHandler("/Error");
             }
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
@@ -162,14 +177,24 @@ namespace Pims.Api
             app.UseRouting();
             app.UseCors();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseMiddleware(typeof(LogRequestMiddleware));
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseHealthChecks("/live", new HealthCheckOptions
+            {
+                Predicate = r => r.Name.Contains("liveliness"),
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecks("/ready", new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains("services"),
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecksUI();
             });
         }
 
@@ -180,23 +205,19 @@ namespace Pims.Api
         /// <param name="app"></param>
         private static void UpdateDatabase(IApplicationBuilder app)
         {
-            using(var serviceScope = app.ApplicationServices
+            using var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-            {
-                var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
+                .CreateScope();
+            var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
 
-                try
-                {
-                    using(var context = serviceScope.ServiceProvider.GetService<PimsContext>())
-                    {
-                        context.Database.Migrate();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.LogCritical(ex, "Database migration failed on startup.");
-                }
+            try
+            {
+                using var context = serviceScope.ServiceProvider.GetService<PimsContext>();
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical(ex, "Database migration failed on startup.");
             }
         }
         #endregion

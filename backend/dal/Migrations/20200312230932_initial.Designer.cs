@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200310153544_initial")]
+    [Migration("20200312230932_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -428,8 +428,11 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("BuildingId")
                         .HasColumnType("int");
 
-                    b.Property<float>("AssessedValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("AppraisedValue")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("AssessedValue")
+                        .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -439,11 +442,11 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<float>("EstimatedValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("EstimatedValue")
+                        .HasColumnType("MONEY");
 
-                    b.Property<float>("NetBookValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("NetBookValue")
+                        .HasColumnType("MONEY");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -678,7 +681,10 @@ namespace Pims.Dal.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<int>("ParcelId")
+                    b.Property<int>("PID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PIN")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
@@ -705,12 +711,13 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ParcelId")
-                        .IsUnique();
-
                     b.HasIndex("StatusId");
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("PID", "PIN")
+                        .IsUnique()
+                        .HasFilter("[PIN] IS NOT NULL");
 
                     b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea");
 
@@ -725,8 +732,11 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
 
-                    b.Property<float>("AssessedValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("AppraisedValue")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("AssessedValue")
+                        .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -736,11 +746,11 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<float>("EstimatedValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("EstimatedValue")
+                        .HasColumnType("MONEY");
 
-                    b.Property<float>("NetBookValue")
-                        .HasColumnType("real");
+                    b.Property<decimal>("NetBookValue")
+                        .HasColumnType("MONEY");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

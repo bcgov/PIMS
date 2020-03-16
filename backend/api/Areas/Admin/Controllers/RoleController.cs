@@ -1,14 +1,15 @@
 using System;
 using System.Net.Http;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models;
+using Pims.Api.Policies;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
+using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 
 namespace Pims.Api.Areas.Admin.Controllers
@@ -16,7 +17,7 @@ namespace Pims.Api.Areas.Admin.Controllers
     /// <summary>
     /// RoleController class, provides endpoints for managing roles.
     /// </summary>
-    [Authorize(Roles = "system-administrator")]
+    [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -32,7 +33,7 @@ namespace Pims.Api.Areas.Admin.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a RoleController class.
+        /// Creates a new instance of a RoleController class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>

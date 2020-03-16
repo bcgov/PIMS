@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,9 @@ namespace Pims.Api.Controllers
             return new JsonResult(new
             {
                 environment = _environment.EnvironmentName,
-                version = this.GetType().Assembly.GetName().Version.ToString()
+                    version = this.GetType().Assembly.GetName().Version.ToString(),
+                    fileVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
+                    informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion
             });
         }
         #endregion

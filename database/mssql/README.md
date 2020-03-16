@@ -30,6 +30,7 @@ ACCEPT_EULA=Y
 MSSQL_SA_PASSWORD={password}
 MSSQL_PID=Developer
 ```
+
 | Key               | Value            | Description                                                                                                                             |
 | ----------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | ACCEPT_EULA       | [Y\|N]           | Whether you accept the license agreement.                                                                                               |
@@ -40,16 +41,22 @@ MSSQL_PID=Developer
 
 To connect manually to the database. Get the docker container Id.
 
-`docker ps`
+```bash
+docker ps
+```
 
 Copy the docker container Id for the database and past it into the next command.
 
-`docker exec -it e69e056c702d "bash"`
+```bash
+docker exec -it e69e056c702d "bash"
+```
 
 Once inside the container, connect locally with sqlcmd. Note that sqlcmd is not in the path by default, so you have to specify the full path.
 
-`/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<password>'`
+```bash
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<password>'
+```
 
 ## Related Information
 
-Configuration - https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15
+Configuration details [here](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15)

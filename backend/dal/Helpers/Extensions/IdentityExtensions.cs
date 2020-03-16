@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Pims.Dal.Exceptions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -31,7 +31,7 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetAgency(this ClaimsPrincipal user)
         {
             var value = user?.FindFirstValue("agency");
-            return String.IsNullOrWhiteSpace(value) ? null : (int?)Int32.Parse(value);
+            return String.IsNullOrWhiteSpace(value) ? null : (int?) Int32.Parse(value);
         }
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static IEnumerable<int> GetAgencies(this ClaimsPrincipal user)
+        public static int[] GetAgencies(this ClaimsPrincipal user)
         {
             var agencies = user?.FindAll("agencies");
-            return agencies?.Select(c => Int32.Parse(c.Value));
+            return agencies?.Select(c => Int32.Parse(c.Value)).ToArray();
         }
 
         /// <summary>
@@ -118,6 +118,36 @@ namespace Pims.Dal.Helpers.Extensions
             var count = user.Claims.Count(c => c.Type == ClaimTypes.Role && role.Contains(c.Value));
 
             return count == role.Length;
+        }
+
+        /// <summary>
+        /// Determine if the user any of the specified permission.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <returns>True if the user has any of the permission.</returns>
+        public static bool HasPermission(this ClaimsPrincipal user, params Permissions[] permission)
+        {
+            if (permission == null) throw new ArgumentNullException(nameof(permission));
+            if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
+
+            var roles = permission.Select(r => r.GetName()).ToArray();
+            return user.Claims.Any(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
+        }
+
+        /// <summary>
+        /// Determine if the user all of the specified permissions.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <returns>True if the user has all of the permissions.</returns>
+        public static bool HasPermissions(this ClaimsPrincipal user, params Permissions[] permission)
+        {
+            if (permission == null) throw new ArgumentNullException(nameof(permission));
+            if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
+
+            var roles = permission.Select(r => r.GetName()).ToArray();
+            return user.Claims.All(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
         }
 
         /// <summary>

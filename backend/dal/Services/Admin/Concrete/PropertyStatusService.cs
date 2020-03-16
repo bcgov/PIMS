@@ -19,7 +19,7 @@ namespace Pims.Dal.Services.Admin
 
         #region Constructors
         /// <summary>
-        /// /// Creates a new instance of a PropertyStatusService, and initializes it with the specified arguments.
+        /// Creates a new instance of a PropertyStatusService, and initializes it with the specified arguments.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
@@ -42,7 +42,7 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// /// Get all property status from the datasource.
+        /// Get all property status from the datasource.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<PropertyStatus> GetAll()

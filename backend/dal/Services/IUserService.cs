@@ -8,7 +8,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IUserService
     {
-        public AccessRequest AddAccessRequest(AccessRequest request);
+        AccessRequest AddAccessRequest(AccessRequest request);
         bool UserExists(Guid id);
         User Activate();
     }

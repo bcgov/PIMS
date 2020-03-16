@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -21,7 +20,7 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Creates a new instance of a AgencyService, and initializes it with the specified arguments.
         /// </summary>
-        /// /// <param name="dbContext"></param>
+        /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
         public AgencyService(PimsContext dbContext, ClaimsPrincipal user, ILogger<AgencyService> logger) : base(dbContext, user, logger) { }

@@ -14,10 +14,10 @@ The design of the database schema will change over the course of the project as 
 
 ## Additional Links and Information
 
-- https://www.microsoft.com/en-ca/sql-server/sql-server-2019
-- https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-release-notes-2019?view=sql-server-ver15
-- https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-red-hat?view=sql-server-ver15
-- https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup?view=sql-server-ver15
+- [SQL Server 2019](https://www.microsoft.com/en-ca/sql-server/sql-server-2019)
+- [MSSQL - Linux 2019](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-release-notes-2019?view=sql-server-ver15)
+- [MSSQL - Redhat v15](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-red-hat?view=sql-server-ver15)
+- [MSSQL - Linux v15](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup?view=sql-server-ver15)
 
 ## Architectural Design
 

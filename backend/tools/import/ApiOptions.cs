@@ -32,7 +32,6 @@ namespace Pims.Tools.Import
         /// get/set - The access token.
         /// </summary>
         /// <value></value>
-        [Required]
         public string AccessToken { get; set; }
 
         /// <summary>

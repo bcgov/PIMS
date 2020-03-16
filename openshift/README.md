@@ -55,21 +55,20 @@ This project makes use of several pipelines. For each one, use the generic pipel
 
 1. View the parameters `oc process --parameters -f openshift/templates/tools/pipeline.yaml`
 2. Create a **`cicd.env`** file that contains the values for the parameters within the template
-    ```
-    NAME=cicd
-    JENKINSFILE_PATH=openshift/jenkins/Jenkinsfile.cicd
-    ```
+   ```
+   NAME=cicd
+   JENKINSFILE_PATH=openshift/jenkins/Jenkinsfile.cicd
+   ```
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/tools/pipeline.yaml | oc create -f -`
-
 
 ### promote-to-test-pipeline
 
 1. View the parameters `oc process --parameters -f openshift/templates/tools/pipeline.yaml`
 2. Create a **`cicd.env`** file that contains the values for the parameters within the template
-    ```
-    NAME=promote-to-test
-    JENKINSFILE_PATH=openshift/jenkins/Jenkinsfile.promote-to-test
-    ```
+   ```
+   NAME=promote-to-test
+   JENKINSFILE_PATH=openshift/jenkins/Jenkinsfile.promote-to-test
+   ```
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/tools/pipeline.yaml | oc create -f -`
 
 ### Troubleshooting template files
@@ -158,19 +157,27 @@ This application uses a Microsoft SQL Server database to store and retrieve data
 
 [Link to docker image](https://hub.docker.com/_/microsoft-mssql-server)
 
-## Remote into Database
+# Remote into Database
+
 To make a remote connection to a container in OpenShift you will need to open a local port to the remote container.
 
-1) From OpenShift web interface Copy Login Command from the button in the top right corner.
-2) Paste the login command into bash and hit enter to log in.
-3) Switch your openshift environment in bash to the one you intend to modify using the command
-    > oc project jhnamn-foo.
-4) Get pod ids using oc get pods. Find the pod name that hosts your database and you want to remote into and save it for the next step (i.e. $PODNAME=*mssql-00-foo*).
-5) Create a local port to connect your client to using the command:
-    > oc port-forward $PODNAME $LOCALPORT:$CONTAINERPORT
+1. From OpenShift web interface Copy Login Command from the button in the top right corner.
+2. Paste the login command into bash and hit enter to log in.
+3. Switch your openshift environment in bash to the one you intend to modify using the command
 
-    $LOCALPORT = The port you want to forward to locally.
+   > oc project jhnamn-foo.
 
-    $CONTAINERPORT = The port open on the container that communicates with the database.
-6) Configure your client to connect to the $LOCALPORT you have selected with the host name/ip of `127.0.0.1` (please note that *localhost* will not work).
-7) Cancel the command to close the connection.
+4. Get pod ids. Find the pod name that hosts your database and you want to remote into and save it for the next step (i.e. \$PODNAME=_mssql-00-foo_).
+
+   > oc get pods
+
+5. Create a local port to connect your client to using the command:
+
+   > oc port-forward $PODNAME $LOCALPORT:\$CONTAINERPORT
+
+   \$LOCALPORT = The port you want to forward to locally.
+
+   \$CONTAINERPORT = The port open on the container that communicates with the database.
+
+6. Configure your client to connect to the \$LOCALPORT you have selected with the host name/ip of `127.0.0.1` (please note that _localhost_ will not work).
+7. Cancel the command to close the connection.

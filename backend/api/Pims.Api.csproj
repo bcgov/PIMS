@@ -4,11 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>0ef6255f-9ea0-49ec-8c65-c172304b4926</UserSecretsId>
     <LangVersion>8.0</LangVersion>
+    <Version>0.1.0.0-alpha</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
     <PackageReference Include="DotNetEnv" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />

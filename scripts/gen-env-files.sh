@@ -1,5 +1,17 @@
 #!/bin/bash
 
+echo 'Enter a username for the keycloak database.'
+read -p 'Username: ' varKeycloakDb
+
+echo 'Enter a username for the keycloak realm administrator'
+read -p 'Username: ' varKeycloak
+
+echo 'Enter a username for the API database.'
+read -p 'Username: ' varApiDb
+
+# Generate a random password.
+passvar=$(date +%s | sha256sum | base64 | head -c 32)
+
 # Set environment variables.
 if test -f "./auth/keycloak/.env"; then
     echo "./auth/keycloak/.env exists"
@@ -9,10 +21,10 @@ echo \
 DB_VENDOR=POSTGRES
 DB_ADDR=keycloak-db
 DB_DATABASE=keycloak
-DB_USER=keycloak
-DB_PASSWORD=password
-KEYCLOAK_USER=keycloak
-KEYCLOAK_PASSWORD=password
+DB_USER=$varKeycloakDb
+DB_PASSWORD=$passvar
+KEYCLOAK_USER=$varKeycloak
+KEYCLOAK_PASSWORD=$passvar
 KEYCLOAK_IMPORT=/tmp/realm-export.json
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN" >> ./auth/keycloak/.env
@@ -23,8 +35,8 @@ if test -f "./auth/postgres/.env"; then
 else
 echo \
 "POSTGRESQL_DATABASE=keycloak
-POSTGRESQL_USER=keycloak
-POSTGRESQL_PASSWORD=password
+POSTGRESQL_USER=$varKeycloakDb
+POSTGRESQL_PASSWORD=$passvar
 " >> ./auth/postgres/.env
 fi
 
@@ -33,7 +45,7 @@ if test -f "./database/mssql/.env"; then
 else
 echo \
 "ACCEPT_EULA=Y
-MSSQL_SA_PASSWORD=AC0m934#9(sdf]|
+MSSQL_SA_PASSWORD=$passvar
 MSSQL_PID=Developer" >> ./database/mssql/.env
 fi
 
@@ -41,19 +53,17 @@ if test -f "./database/postgres/.env"; then
     echo "./database/postgres/.env exists"
 else
 echo \
-"POSTGRES_USER=postgres
-POSTGRES_PASSWORD=password
-POSTGRES_DB=geospatial" >> ./database/postgres/.env
+"POSTGRES_USER=$varApiDb
+POSTGRES_PASSWORD=$passvar
+POSTGRES_DB=pims" >> ./database/postgres/.env
 fi
 
-if test -f "./backend/.env"; then
-    echo "./backend/.env exists"
+if test -f "./backend/api/.env"; then
+    echo "./backend/api/.env exists"
 else
 echo \
 "ASPNETCORE_ENVIRONMENT=Development
-DB_PASSWORD=AC0m934#9(sdf]|
-ConnectionStrings__PIMS=Server=database,1433;Database=geospatial;User Id=sa
-Keycloak__Secret=6d182cfd-c085-4c2b-a4f7-65ac245cf68a" >> ./backend/.env
+DB_PASSWORD=$passvar" >> ./backend/.env
 fi
 
 if test -f "./frontend/.env"; then
