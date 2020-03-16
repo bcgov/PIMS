@@ -32,6 +32,7 @@ namespace Pims.Api.Models.Parts
             return other != null &&
                 Id == other.Id &&
                 PID == other.PID &&
+                PIN == other.PIN &&
                 StatusId == other.StatusId &&
                 ClassificationId == other.ClassificationId &&
                 Latitude == other.Latitude &&
@@ -41,7 +42,7 @@ namespace Pims.Api.Models.Parts
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, PID, StatusId, ClassificationId, Latitude, Longitude, Description);
+            return HashCode.Combine(Id, PID, PIN, StatusId, ClassificationId, Latitude, Longitude, Description);
         }
         #endregion
     }
