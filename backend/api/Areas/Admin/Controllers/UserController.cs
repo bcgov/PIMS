@@ -5,9 +5,10 @@ using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
+using Pims.Dal.Services.Admin;
+using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
-using Pims.Dal.Services.Admin;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -47,18 +48,27 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
-        /// <param name="sort"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet("/api/admin/users")]
-        public IActionResult GetUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        public IActionResult GetUsers()
         {
-            if (page < 1) page = 1;
-            if (quantity < 1) quantity = 1;
-            if (quantity > 50) quantity = 50;
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            _logger.LogDebug(query.ToString());
+            return GetUsers(new EModel.UserFilter(query));
+        }
 
-            var results = _pimsAdminService.User.GetNoTracking(page, quantity, sort);
+        /// <summary>
+        /// GET - Returns a paged array of users from the datasource.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns>Paged object with an array of users.</returns>
+        [HttpPost("/api/admin/users")]
+        public IActionResult GetUsers(EModel.UserFilter filter)
+        {
+            var results = _pimsAdminService.User.GetNoTracking(filter);
             var users = _mapper.Map<Model.UserModel[]>(results.Items);
-            var paged = new EModel.Paged<Model.UserModel>(users, page, quantity, results.Total);
+            var paged = new EModel.Paged<Model.UserModel>(users, filter.Page, filter.Quantity, results.Total);
             return new JsonResult(paged);
         }
 
@@ -86,7 +96,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddUser([FromBody] Model.UserModel model)
         {
-            var entity = _mapper.Map<Entity.User>(model); // TODO: Return bad request.
+            var entity = _mapper.Map<Entity.User>(model);
             var addedEntity = _pimsAdminService.User.Add(entity);
             var user = _mapper.Map<Model.UserModel>(addedEntity);
             return new JsonResult(user);
@@ -132,7 +142,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
             if (quantity > 20) quantity = 20;
-            Entity.Models.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
+            EModel.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
             var entities = _mapper.Map<Api.Models.AccessRequestModel[]>(result.Items);
             var paged = new EModel.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
             return new JsonResult(paged);
