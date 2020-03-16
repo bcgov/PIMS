@@ -110,4 +110,34 @@ export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Functi
     .finally(() => dispatch(hideLoading()));
 };
 
+export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Function) => {
+  dispatch(request(reducerTypes.GET_USER_DETAIL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), createRequestHeader())
+    .then((response: AxiosResponse) => {
+      dispatch(success(reducerTypes.GET_USER_DETAIL));
+      dispatch(adminActions.storeUserDetail(response.data));
+      console.log(response.data);
+      dispatch(hideLoading());
+    })
+    .catch(() => dispatch(error(reducerTypes.GET_USER_DETAIL)))
+    .finally(() => dispatch(hideLoading()));
+};
+
+export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => (
+  dispatch: Function,
+) => {
+  dispatch(request(reducerTypes.PUT_USER_DETAIL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .put(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), updatedUser, createRequestHeader())
+    .then((response: AxiosResponse) => {
+      dispatch(success(reducerTypes.PUT_USER_DETAIL));
+      dispatch(hideLoading());
+    })
+    .catch(() => dispatch(error(reducerTypes.PUT_USER_DETAIL)))
+    .finally(() => dispatch(hideLoading()));
+};
+
 export const NEW_PIMS_USER = 201;
