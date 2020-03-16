@@ -1,8 +1,6 @@
-using System;
 using AutoMapper;
 using Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Areas.Admin.Models;
 
 namespace Pims.Api.Helpers.Profiles
 {

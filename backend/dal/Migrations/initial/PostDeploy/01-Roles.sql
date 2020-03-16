@@ -9,43 +9,43 @@ INSERT INTO
     )
 VALUES
     (
-        '363634a5-9e88-4346-832f-01d8713072e2',
-        'system-administrator',
+        'bbf27108-a0dc-4782-8025-7af7af711335',
+        'System Administrator',
         'System Administrator of the PIMS solution.',
         0,
         0
     ),
     (
-        'c3e1dafc-379b-45ce-86e5-babdff3ec5d3',
-        'agency-administrator',
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f',
+        'Agency Administrator',
         'Agency Administrator of the users agency.',
         0,
         0
     ),
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4',
-        'real-estate-manager',
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c',
+        'Real Estate Manager',
         'Real Estate Manager can manage properties within their agencies.',
         0,
         0
     ),
     (
-        '254fab4b-85af-4c3b-accf-66be5635ce2c',
-        'real-estate-assistant',
+        '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5',
+        'Real Estate Assistant',
         'Real Estate Assistant can manage properties within their agencies.',
         0,
         0
     ),
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0',
-        'assistant-deputy-minister',
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd',
+        'Assistant Deputy Minister',
         'Assistant Deputy Minister can manage properties within their agencies.',
         0,
         0
     ),
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458',
-        'executive-director',
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c',
+        'Executive Director',
         'Executive Director can manage properties within their agencies.',
         0,
         0

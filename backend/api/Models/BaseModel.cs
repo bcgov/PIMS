@@ -11,7 +11,9 @@ namespace Pims.Api.Models
         public DateTime? UpdatedOn { get; set; }
 
         public string RowVersion { get; set; }
+        #endregion
 
+        #region Methods
         public override bool Equals(object obj)
         {
             return Equals(obj as BaseModel);

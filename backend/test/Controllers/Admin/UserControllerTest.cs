@@ -1,23 +1,15 @@
 using System;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Pims.Api.Areas.Admin.Controllers;
-using Pims.Dal;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models;
 using AdminModel = Pims.Api.Areas.Admin.Models;
-using AutoMapper;
 using Pims.Api.Models;
 using Pims.Api.Test.Helpers;
 using Pims.Dal.Entities;
-using Pims.Dal.Services;
 using Pims.Dal.Services.Admin;
 using Pims.Dal.Entities.Models;
 
@@ -40,16 +32,16 @@ namespace PimsApi.Test.Admin.Controllers
             UserId = USER_ID,
             User = new Entity.User
             {
-            Id = USER_ID,
-            DisplayName = "TEST",
-            Email = "test@test.ca"
+                Id = USER_ID,
+                DisplayName = "TEST",
+                Email = "test@test.ca"
             },
         };
         private readonly Entity.User _expectedUsers = new Entity.User()
         {
-                Id = USER_ID,
-                DisplayName = "TEST",
-                Email = "test@test.ca"
+            Id = USER_ID,
+            DisplayName = "TEST",
+            Email = "test@test.ca"
         };
 
         #endregion
@@ -103,9 +95,12 @@ namespace PimsApi.Test.Admin.Controllers
         [Fact]
         public void GetAccessRequests()
         {
+            // Arrange
             var expectedAccessRequests = new Entity.AccessRequest[] { _expectedAccessRequest };
             var expectedPagedAccessRequests = new Pims.Dal.Entities.Models.Paged<AccessRequest>(expectedAccessRequests);
             _pimsService.Setup(m => m.User.GetAccessRequestsNoTracking(1, 10, null, null)).Returns(expectedPagedAccessRequests);
+
+            // Act
             var result = _userController.GetAccessRequests(1, 10, null);
 
             // Assert
