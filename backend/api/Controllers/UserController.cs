@@ -3,14 +3,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pims.Api.Helpers;
-using Pims.Api.Models;
-using Pims.Dal.Services;
-using Entity = Pims.Dal.Entities;
+using Microsoft.Extensions.Options;
 using AutoMapper;
 using Pims.Api.Helpers.Extensions;
-using Keycloak = Pims.Api.Models.Keycloak;
-using Microsoft.Extensions.Options;
+using Pims.Api.Models;
+using Pims.Dal.Services;
+using Pims.Keycloak;
+using Entity = Pims.Dal.Entities;
+using KModel = Pims.Keycloak.Models;
+using System.Text;
 
 namespace Pims.Api.Controllers
 {
@@ -24,7 +25,7 @@ namespace Pims.Api.Controllers
     {
         #region Variables
         private readonly ILogger<UserController> _logger;
-        private readonly Configuration.KeycloakOptions _optionsKeycloak;
+        private readonly Keycloak.Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IKeycloakRequestClient _requestClient;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -39,7 +40,7 @@ namespace Pims.Api.Controllers
         /// <param name="userService"></param>
         /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
-        public UserController(ILogger<UserController> logger, IOptionsMonitor<Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
+        public UserController(ILogger<UserController> logger, IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
         {
             _logger = logger;
             _optionsKeycloak = optionsKeycloak.CurrentValue;
@@ -63,12 +64,12 @@ namespace Pims.Api.Controllers
 
             using var responseStream = await response.Content.ReadAsStreamAsync();
 
-            var readStream = new System.IO.StreamReader(responseStream, System.Text.Encoding.UTF8);
+            var readStream = new System.IO.StreamReader(responseStream, Encoding.UTF8);
             var json = readStream.ReadToEnd();
             _logger.LogInformation(json);
             responseStream.Position = 0;
 
-            return await response.HandleResponseAsync<Keycloak.UserInfoModel>();
+            return await response.HandleResponseAsync<KModel.UserInfoModel>();
         }
 
         /// <summary>

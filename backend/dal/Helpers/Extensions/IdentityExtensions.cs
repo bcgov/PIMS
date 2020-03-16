@@ -31,7 +31,7 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetAgency(this ClaimsPrincipal user)
         {
             var value = user?.FindFirstValue("agency");
-            return String.IsNullOrWhiteSpace(value) ? null : (int?) Int32.Parse(value);
+            return String.IsNullOrWhiteSpace(value) ? null : (int?)Int32.Parse(value);
         }
 
         /// <summary>
@@ -171,9 +171,37 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="message"></param>
         /// <exception type="NotAuthorizedException">User does not have the specified 'role'.</exception>
         /// <returns></returns>
-        public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, string role, string message = null)
+        public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, string role, string message)
         {
             if (user == null || !user.HasRole(role)) throw new NotAuthorizedException(message);
+            return user;
+        }
+
+        /// <summary>
+        /// If the user does not have the specified 'permission' throw a NotAuthorizedException.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <exception type="NotAuthorizedException">User does not have the specified 'permission'.</exception>
+        /// <returns></returns>
+        public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, Permissions permission, string message = null)
+        {
+            if (user == null || !user.HasPermission(permission)) throw new NotAuthorizedException(message);
+            return user;
+        }
+
+        /// <summary>
+        /// If the user does not have any of the specified 'permission' throw a NotAuthorizedException.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <exception type="NotAuthorizedException">User does not have the specified 'role'.</exception>
+        /// <returns></returns>
+        public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, params Permissions[] permission)
+        {
+            if (user == null || !user.HasPermission(permission)) throw new NotAuthorizedException();
             return user;
         }
     }

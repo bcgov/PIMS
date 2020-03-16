@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 

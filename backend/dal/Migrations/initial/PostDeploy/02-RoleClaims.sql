@@ -8,115 +8,115 @@ INSERT INTO dbo.[RoleClaims]
 VALUES
     -- system-administrator
     (
-        '363634a5-9e88-4346-832f-01d8713072e2'
+        'bbf27108-a0dc-4782-8025-7af7af711335'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        '363634a5-9e88-4346-832f-01d8713072e2'
+        'bbf27108-a0dc-4782-8025-7af7af711335'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        '363634a5-9e88-4346-832f-01d8713072e2'
+        'bbf27108-a0dc-4782-8025-7af7af711335'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        '363634a5-9e88-4346-832f-01d8713072e2'
+        'bbf27108-a0dc-4782-8025-7af7af711335'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- agency-administrator
     (
-        'c3e1dafc-379b-45ce-86e5-babdff3ec5d3'
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        'c3e1dafc-379b-45ce-86e5-babdff3ec5d3'
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        'c3e1dafc-379b-45ce-86e5-babdff3ec5d3'
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        'c3e1dafc-379b-45ce-86e5-babdff3ec5d3'
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- real-estate-manager
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c'
     , '41747042-ad4a-4511-858b-67ed70c8e7e9'   -- dispose-request
 ),
     (
-        '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'
+        'aad8c03d-892c-4cc3-b992-5b41c4f2392c'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- real-estate-assistant
     (
-        '254fab4b-85af-4c3b-accf-66be5635ce2c'
+        '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        '254fab4b-85af-4c3b-accf-66be5635ce2c'
+        '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        '254fab4b-85af-4c3b-accf-66be5635ce2c'
+        '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        '254fab4b-85af-4c3b-accf-66be5635ce2c'
+        '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- assistant-deputy-minister
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0'
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0'
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0'
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0'
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd'
     , 'd11ce982-f22b-4cd2-87d4-87b8f7f9a3c8'   -- dispose-approve
 ),
     (
-        '495900b6-4354-46e1-a070-8e80dc9625e0'
+        'fbe5fc86-f69e-4610-a746-0113d29e04cd'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- executive-director
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458'
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , '91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1'   -- property-view
 ),
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458'
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , '5fd96f19-abe1-47e7-8a54-0a707bc3e4a4'   -- property-add
 ),
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458'
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
 ),
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458'
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , 'd11ce982-f22b-4cd2-87d4-87b8f7f9a3c8'   -- dispose-approve
 ),
     (
-        'a961f8c6-c226-4e10-a9a6-a058f6db0458'
+        '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 )

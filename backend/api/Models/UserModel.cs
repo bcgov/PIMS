@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Models
@@ -20,11 +19,9 @@ namespace Pims.Api.Models
         public string LastName { get; set; }
 
         public string Email { get; set; }
+        #endregion
 
-        public IEnumerable<AgencyModel> Agencies { get; set; }
-
-        public IEnumerable<RoleModel> Roles { get; set; }
-
+        #region Methods
         public override bool Equals(object obj)
         {
             return Equals(obj as UserModel);
