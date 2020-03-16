@@ -2,11 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Helpers;
 using Pims.Api.Models;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Services;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
@@ -26,7 +24,7 @@ namespace Pims.Api.Controllers
     {
         #region Variables
         private readonly ILogger<UserController> _logger;
-        private readonly Pims.Api.Configuration.KeycloakOptions _optionsKeycloak;
+        private readonly Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IKeycloakRequestClient _requestClient;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -41,7 +39,7 @@ namespace Pims.Api.Controllers
         /// <param name="userService"></param>
         /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
-        public UserController(ILogger<UserController> logger, IOptionsMonitor<Pims.Api.Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
+        public UserController(ILogger<UserController> logger, IOptionsMonitor<Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
         {
             _logger = logger;
             _optionsKeycloak = optionsKeycloak.CurrentValue;
