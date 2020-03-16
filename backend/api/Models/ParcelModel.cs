@@ -12,6 +12,8 @@ namespace Pims.Api.Models
 
         public string PID { get; set; }
 
+        public string PIN { get; set; }
+
         public int StatusId { get; set; }
 
         public string Status { get; set; }
@@ -59,6 +61,7 @@ namespace Pims.Api.Models
                 base.Equals(other) &&
                 Id == other.Id &&
                 PID == other.PID &&
+                PIN == other.PIN &&
                 StatusId == other.StatusId &&
                 Status == other.Status &&
                 ClassificationId == other.ClassificationId &&
@@ -85,6 +88,7 @@ namespace Pims.Api.Models
             hash.Add(base.GetHashCode());
             hash.Add(Id);
             hash.Add(PID);
+            hash.Add(PIN);
             hash.Add(StatusId);
             hash.Add(Status);
             hash.Add(ClassificationId);

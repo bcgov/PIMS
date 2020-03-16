@@ -20,7 +20,7 @@ namespace Pims.Api.Configuration
 
         /// <summary>
         /// get/set - The keycloak client id.
-        /// /// </summary>
+        /// </summary>
         /// <value></value>
         public string Client { get; set; }
         #endregion

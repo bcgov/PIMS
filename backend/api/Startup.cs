@@ -56,10 +56,14 @@ namespace Pims.Api
         #endregion
 
         #region Methods
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration);
+            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
+            services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -95,21 +99,21 @@ namespace Pims.Api
                             {
                                 return Task.CompletedTask;
                             },
-                        OnAuthenticationFailed = context =>
-                        {
-                            context.NoResult();
-                            context.Response.StatusCode = 500;
-                            context.Response.ContentType = "text/plain";
-                            if (Environment.IsDevelopment())
+                            OnAuthenticationFailed = context =>
                             {
-                                return context.Response.WriteAsync(context.Exception.ToString());
+                                context.NoResult();
+                                context.Response.StatusCode = 500;
+                                context.Response.ContentType = "text/plain";
+                                if (Environment.IsDevelopment())
+                                {
+                                    return context.Response.WriteAsync(context.Exception.ToString());
+                                }
+                                return context.Response.WriteAsync("An error occurred processing your authentication.");
+                            },
+                            OnForbidden = context =>
+                            {
+                                return Task.CompletedTask;
                             }
-                            return context.Response.WriteAsync("An error occurred processing your authentication.");
-                        },
-                        OnForbidden = context =>
-                        {
-                            return Task.CompletedTask;
-                        }
                     };
                 });
 
@@ -144,20 +148,24 @@ namespace Pims.Api
 
             services.AddHealthChecks()
                 .AddCheck("liveliness", () => HealthCheckResult.Healthy())
-                .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
+                .AddSqlServer(builder.ConnectionString, tags : new [] { "services" });
             //TODO: Add a health check for keycloak connectivity.
             services.AddHealthChecksUI(setupSettings: setup =>
             {
                 setup.AddHealthCheckEndpoint("liveliness", "http://localhost/live");
                 setup.AddHealthCheckEndpoint("readiness", "http://localhost/ready");
                 setup.AddWebhookNotification("rocketchat",
-                    uri: Configuration["ROCKETCHAT_HEALTH_HOOK"],
-                    payload: Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
-                    restorePayload: Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
+                    uri : Configuration["ROCKETCHAT_HEALTH_HOOK"],
+                    payload : Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
+                    restorePayload : Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (!env.IsProduction())
@@ -186,12 +194,12 @@ namespace Pims.Api
             app.UseHealthChecks("/live", new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
             app.UseHealthChecks("/ready", new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
             app.UseEndpoints(endpoints =>
             {
@@ -207,23 +215,19 @@ namespace Pims.Api
         /// <param name="app"></param>
         private static void UpdateDatabase(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices
+            using var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-            {
-                var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
+                .CreateScope();
+            var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
 
-                try
-                {
-                    using (var context = serviceScope.ServiceProvider.GetService<PimsContext>())
-                    {
-                        context.Database.Migrate();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.LogCritical(ex, "Database migration failed on startup.");
-                }
+            try
+            {
+                using var context = serviceScope.ServiceProvider.GetService<PimsContext>();
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical(ex, "Database migration failed on startup.");
             }
         }
         #endregion

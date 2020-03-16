@@ -38,6 +38,7 @@ Keycloak__Secret={secret}
 If you want to keep private keys and user secrets out of source code use the **user-secrets** management tool.
 Please note this will only work if the _environment=Development_, and it does not appear to be currently working all the time within vscode.
 
-> `dotnet user-secrets init`
-
-> `dotnet user-secrets set "ConnectionStrings:PIMS" "Server=localhost,<port>;User ID=sa;Database=<database name>"`
+```bash
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:PIMS" "Server=localhost,<port>;User ID=sa;Database=<database name>"
+```

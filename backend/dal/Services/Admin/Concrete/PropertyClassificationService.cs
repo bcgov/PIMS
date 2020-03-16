@@ -42,7 +42,7 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// /// Get all property classifications from the datasource.
+        /// Get all property classifications from the datasource.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<PropertyClassification> GetAll()

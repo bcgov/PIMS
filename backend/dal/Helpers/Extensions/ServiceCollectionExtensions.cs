@@ -22,7 +22,7 @@ namespace Pims.Dal
         }
 
         /// <summary>
-        /// /// Add PimsAdminService objects to the dependency injection service collection.
+        /// Add PimsAdminService objects to the dependency injection service collection.
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
