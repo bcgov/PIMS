@@ -1,5 +1,4 @@
 using System;
-using Pims.Dal.Models;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Models

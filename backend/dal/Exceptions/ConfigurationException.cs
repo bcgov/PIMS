@@ -3,7 +3,7 @@ using System;
 namespace Pims.Dal.Exceptions
 {
     /// <summary>
-    /// ConfigurationException class, provides a way to throw an exception when a user is not authorized to perform an action.
+    /// ConfigurationException class, provides a way to throw an exception when a configuration is invalid.
     /// </summary>
     public class ConfigurationException : Exception
     {

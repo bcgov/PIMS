@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions

@@ -1,5 +1,5 @@
 {
-  "realm": "quartech",
+  "realm": "pims",
   "auth-server-url": "http://keycloak:8080/auth",
   "ssl-required": "external",
   "resource": "pims-app",

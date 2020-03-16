@@ -18,7 +18,7 @@ namespace Pims.Api.Controllers
     {
         #region Variables
         private readonly ILogger<AuthController> _logger;
-        private readonly Pims.Api.Configuration.KeycloakOptions _optionsKeycloak;
+        private readonly Keycloak.Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -31,7 +31,7 @@ namespace Pims.Api.Controllers
         /// <param name="optionsKeycloak"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public AuthController(ILogger<AuthController> logger, IOptionsMonitor<Pims.Api.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService, IMapper mapper)
+        public AuthController(ILogger<AuthController> logger, IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService, IMapper mapper)
         {
             _logger = logger;
             _optionsKeycloak = optionsKeycloak.CurrentValue;

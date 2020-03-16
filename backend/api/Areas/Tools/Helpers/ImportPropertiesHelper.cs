@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Models;
+using Pims.Core.Extensions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Services.Admin;
 using Entity = Pims.Dal.Entities;
@@ -129,8 +130,8 @@ namespace Pims.Api.Areas.Tools.Helpers
                 {
                     subAgency = new Entity.Agency(code.Trim(), property.SubAgency)
                     {
-                    ParentId = agency.Id,
-                    Parent = agency
+                        ParentId = agency.Id,
+                        Parent = agency
                     };
                     _agencies.Add(subAgency);
                     _logger.LogDebug($"Adding sub-agency '{subAgency.Code}' - '{agency.Name}', parent: '{subAgency.Parent.Code}'.");

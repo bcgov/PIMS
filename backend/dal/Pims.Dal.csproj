@@ -38,5 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />
+    <ProjectReference Include="..\core\Pims.Core.csproj" />
   </ItemGroup>
 </Project>

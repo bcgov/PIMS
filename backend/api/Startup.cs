@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using HealthChecks.UI.Client;
@@ -20,10 +21,10 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Pims.Api.Helpers;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 using Pims.Dal;
+using Pims.Keycloak;
 
 namespace Pims.Api
 {
@@ -33,6 +34,10 @@ namespace Pims.Api
     public class Startup
     {
         #region Properties
+        /// <summary>
+        /// get - The application configuration settings.
+        /// </summary>
+        /// <value></value>
         public IConfiguration Configuration { get; }
 
         /// <summary>
@@ -62,8 +67,9 @@ namespace Pims.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Pims.Api.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
+            services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
+            services.AddScoped<IKeycloakAdmin, KeycloakAdmin>(); // TODO: Add services extension to Keycloak library.
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -147,6 +153,16 @@ namespace Pims.Api
 
             //TODO: Add a health check for keycloak connectivity.
             services.AddHealthChecksUI();
+
+            services.AddMvcCore()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
         }
 
         /// <summary>
