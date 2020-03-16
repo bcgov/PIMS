@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Dal.Entities;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 
 namespace Pims.Dal.Services
@@ -14,15 +15,23 @@ namespace Pims.Dal.Services
     /// </summary>
     public class UserService : BaseService<User>, IUserService
     {
+        #region Variables
+        private readonly PimsOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a UserService, and initializes it with the specified arguments.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="options"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public UserService(PimsContext dbContext, ClaimsPrincipal user, ILogger<UserService> logger) : base(dbContext, user, logger) { }
+        public UserService(PimsContext dbContext, ClaimsPrincipal user, IOptionsMonitor<PimsOptions> options, ILogger<UserService> logger) : base(dbContext, user, logger)
+        {
+            _options = options.CurrentValue;
+        }
         #endregion
 
         #region Methods
@@ -40,6 +49,7 @@ namespace Pims.Dal.Services
 
         /// <summary>
         /// Activate the new authenticated user with the PIMS datasource.
+        /// If activating a service account, then the configuration must be provided to set the default attributes.
         /// </summary>
         /// <returns></returns>
         public User Activate()
@@ -47,23 +57,30 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized();
 
             var id = this.User.GetUserId();
-            var display_name = this.User.GetDisplayName();
-            var name = this.User.GetFirstName();
-            var surname = this.User.GetLastName();
-            var email = this.User.GetEmail();
 
-            this.Logger.LogDebug($"User Activation: id:{id}, email:{email}, display:{display_name}, first:{name}, surname:{surname}");
+            var entity = this.Context.Users.Find(id);
+            if (entity != null) return entity;
 
-            var entity = new User(id, display_name, email)
+            var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
+                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
+            var surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
+                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
+            var displayName = this.User.GetDisplayName() ?? $"{surname}, {givenName}";
+            var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
+                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
+
+            this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, display:{displayName}, first:{givenName}, surname:{surname}");
+
+            entity = new User(id, displayName, email)
             {
-                FirstName = name,
+                FirstName = givenName,
                 LastName = surname
             };
 
             this.Context.Users.Add(entity);
             this.Context.CommitTransaction();
 
-            this.Logger.LogInformation($"User Activated: '{id}' - '{display_name}'.");
+            this.Logger.LogInformation($"User Activated: '{id}' - '{displayName}'.");
             return entity;
         }
 
@@ -76,7 +93,8 @@ namespace Pims.Dal.Services
         {
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
             request.CreatedById = this.User.GetUserId();
-            request.User = this.Context.Users.Find(this.User.GetUserId()) ?? throw new KeyNotFoundException();
+            request.User = this.Context.Users.Find(this.User.GetUserId()) ??
+                throw new KeyNotFoundException();
 
             request.Agencies.ForEach((accessRequestAgency) =>
             {

@@ -13,12 +13,13 @@ Windows doesn't support mounting volumes locally. You may have to add a `.env` f
 
 ## Initialize Database
 
-To get the database running and initialized do the following;
+To get the database running and initialized do one of the following;
 
 - Follow the MSSQL steps here - [README](./mssql/README.md)
 - Follow the PostgreSQL steps here - [README](./postgres/README.md)
 
 ## Remoting into OpenShift Database
+
 When running a database within OpenShift you may need to remote into the database to debug or make changes.
 
 > Refer to the documentation [here](../openshift/README.md#Remote%20into%20Database) for more information.

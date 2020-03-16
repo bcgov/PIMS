@@ -39,6 +39,7 @@ Enter the `database name` you want to initialize the DB with.
 
 To connect manually to the database.
 
-> `npm install -g psql`
-
-> `psql -h localhost -p 54320 -U john -d mydb`
+```bash
+npm install -g psql
+psql -h localhost -p 54320 -U john -d mydb
+```

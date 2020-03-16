@@ -17,11 +17,17 @@ Add the following host to your _hosts_ file.
 This will then allow your Keycloak configuration files in the _frontend_:app and _backend_:api to references `http://keycloak:8080` instead of `http://localhost:8080`.
 Which will allow your docker containers to use a valid JWT token that can be proxied from the APP to the API to Keycloak.
 
-- NOTE: Chrome is now pushing an update that invalidates cookies without the `SameSite` value. This will result in a rejection of the cookie and make it impossible to remain logged in.
+---
 
-To work around this issue temporarily you can change the Chrome behaviour by **Disabling** the **SameSite by default cookies** setting here - `chrome://flags/#same-site-by-default-cookies`
+### Chrome Cookie Issue and Workaround
 
-We will need to find a way to update Keycloak to include the property in the cookie in the near future.
+Chrome is now pushing an update that invalidates cookies without the `SameSite` value. This will result in a rejection of the cookie and make it impossible to remain logged in.
+
+To workaround this issue temporarily you can change the Chrome behaviour by **Disabling** the **SameSite by default cookies** setting here - `chrome://flags/#same-site-by-default-cookies`
+
+> We will need to find a way to update Keycloak to include the property in the cookie in the near future.
+
+---
 
 ## Docker Setup
 

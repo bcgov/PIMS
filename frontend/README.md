@@ -11,11 +11,11 @@ NODE_ENV=development
 CHOKIDAR_USEPOLLING=true
 ```
 
-| Key                 | Value                     | Description                   |
-| ------------------- | ------------------------- | ----------------------------- |
-| NODE_ENV            | [development\|...]        | The node environment setting. |
-| API_URL             | [http://backend:5000/api] | The URL to the API.           |
-| CHOKIDAR_USEPOLLING | [true\|false]             | Whether to use polling.       |
+| Key                 | Value                                                | Description                   |
+| ------------------- | ---------------------------------------------------- | ----------------------------- |
+| NODE_ENV            | [development\|...]                                   | The node environment setting. |
+| API_URL             | [[http://backend:5000/api](http://backend:5000/api)] | The URL to the API.           |
+| CHOKIDAR_USEPOLLING | [true\|false]                                        | Whether to use polling.       |
 
 ## Keycloak Configuration
 
@@ -42,27 +42,32 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br />
+Runs the app in the development mode.
+
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
+The page will reload if you make edits.
+
 You will also see any lint errors in the console.
-<b>Note that at time of writing react-scripts 3.3.0 has a defect that prevents ie from displaying via webpack (dev only). this is fixed with
-https://github.com/facebook/create-react-app/issues/8084#issuecomment-562981098</b>
+**Note that at time of writing react-scripts 3.3.0 has a defect that prevents ie from displaying via webpack (dev only). this is fixed with this
+[link](https://github.com/facebook/create-react-app/issues/8084#issuecomment-562981098)**.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
+Launches the test runner in the interactive watch mode.
+
 These tests are provided for reference only and do not represent full coverage.
 A reference tests for API, snapshot rendering, and DOM checking are included in AddPlaceForm.test.tsx
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
+Builds the app for production to the `build` folder.
+
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
+The build is minified and the filenames include the hashes.
+
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

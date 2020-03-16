@@ -34,7 +34,7 @@ namespace Pims.Api.Configuration
         public string Token { get; set; }
 
         /// <summary>
-        /// /// get/set - The token introspect path.
+        /// get/set - The token introspect path.
         /// </summary>
         /// <value></value>
         public string TokenIntrospect { get; set; }
