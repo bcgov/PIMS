@@ -85,12 +85,18 @@ export interface IParcel {
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
 export const ADD_PARCEL = `/parcels`;
 
+export interface IUserDetailParams {
+  id: string;
+}
+export const USER_DETAIL = (params: IUserDetailParams) => `/keycloak/users/${params.id}`;
+
 export interface IBuildingDetailParams {
   id: number;
 }
 export const BUILDING_DETAIL = (params: IBuildingDetailParams) => `/buildings/${params.id}`;
 
 // Lookup Codes
+export const LOOKUP_CODE = () => `/lookup`;
 export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`; // get filtered properties or all if not specified.
 export const AGENCY_CODE_SET_NAME = 'Agency';
 export const ROLE_CODE_SET_NAME = 'Role';
