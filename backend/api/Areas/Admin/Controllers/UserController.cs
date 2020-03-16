@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models;
+using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
@@ -57,7 +58,7 @@ namespace Pims.Api.Areas.Admin.Controllers
 
             var results = _pimsAdminService.User.GetNoTracking(page, quantity, sort);
             var users = _mapper.Map<Model.UserModel[]>(results.Items);
-            var paged = new Pims.Dal.Entities.Models.Paged<Model.UserModel>(users, page, quantity, results.Total);
+            var paged = new EModel.Paged<Model.UserModel>(users, page, quantity, results.Total);
             return new JsonResult(paged);
         }
 
@@ -133,7 +134,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity > 20) quantity = 20;
             Entity.Models.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
             var entities = _mapper.Map<Api.Models.AccessRequestModel[]>(result.Items);
-            var paged = new Models.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
+            var paged = new EModel.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
             return new JsonResult(paged);
         }
         #endregion
