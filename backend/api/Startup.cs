@@ -99,21 +99,16 @@ namespace Pims.Api
                             {
                                 return Task.CompletedTask;
                             },
-                            OnAuthenticationFailed = context =>
-                            {
-                                context.NoResult();
-                                context.Response.StatusCode = 500;
-                                context.Response.ContentType = "text/plain";
-                                if (Environment.IsDevelopment())
-                                {
-                                    return context.Response.WriteAsync(context.Exception.ToString());
-                                }
-                                return context.Response.WriteAsync("An error occurred processing your authentication.");
-                            },
-                            OnForbidden = context =>
-                            {
-                                return Task.CompletedTask;
-                            }
+                        OnAuthenticationFailed = context =>
+                        {
+                            context.NoResult();
+                            context.Response.StatusCode = 401;
+                            throw context.Exception;
+                        },
+                        OnForbidden = context =>
+                        {
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -148,16 +143,17 @@ namespace Pims.Api
 
             services.AddHealthChecks()
                 .AddCheck("liveliness", () => HealthCheckResult.Healthy())
-                .AddSqlServer(builder.ConnectionString, tags : new [] { "services" });
+                .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
+
             //TODO: Add a health check for keycloak connectivity.
             services.AddHealthChecksUI(setupSettings: setup =>
             {
                 setup.AddHealthCheckEndpoint("liveliness", "http://localhost/live");
                 setup.AddHealthCheckEndpoint("readiness", "http://localhost/ready");
                 setup.AddWebhookNotification("rocketchat",
-                    uri : Configuration["ROCKETCHAT_HEALTH_HOOK"],
-                    payload : Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
-                    restorePayload : Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
+                    uri: Configuration["ROCKETCHAT_HEALTH_HOOK"],
+                    payload: Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
+                    restorePayload: Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
             });
         }
 
@@ -171,13 +167,7 @@ namespace Pims.Api
             if (!env.IsProduction())
             {
                 app.UseDatabaseErrorPage();
-                //app.UseDeveloperExceptionPage();
-
                 UpdateDatabase(app);
-            }
-            else
-            {
-                // app.UseExceptionHandler("/Error");
             }
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
@@ -187,19 +177,19 @@ namespace Pims.Api
             app.UseRouting();
             app.UseCors();
 
+            app.UseMiddleware(typeof(LogRequestMiddleware));
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseMiddleware(typeof(LogRequestMiddleware));
             app.UseHealthChecks("/live", new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
             app.UseHealthChecks("/ready", new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
             app.UseEndpoints(endpoints =>
             {

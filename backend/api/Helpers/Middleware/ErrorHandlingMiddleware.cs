@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -76,7 +77,27 @@ namespace Pims.Api.Helpers.Middleware
             var code = HttpStatusCode.InternalServerError;
             var message = "An unhandled error has occurred.";
 
-            if (ex is DbUpdateConcurrencyException)
+            if (ex is SecurityTokenException)
+            {
+                code = HttpStatusCode.Unauthorized;
+                message = "The authentication token is invalid.";
+            }
+            else if (ex is SecurityTokenValidationException)
+            {
+                code = HttpStatusCode.Unauthorized;
+                message = "The authentication token is invalid.";
+            }
+            else if (ex is SecurityTokenExpiredException)
+            {
+                code = HttpStatusCode.Unauthorized;
+                message = "The authentication token has expired.";
+            }
+            else if (ex is SecurityTokenNotYetValidException)
+            {
+                code = HttpStatusCode.Unauthorized;
+                message = "The authentication token not yet valid.";
+            }
+            else if (ex is DbUpdateConcurrencyException)
             {
                 code = HttpStatusCode.BadRequest;
                 message = "Data may have been modified or deleted since item was loaded.";
@@ -141,12 +162,12 @@ namespace Pims.Api.Helpers.Middleware
                 var result = JsonSerializer.Serialize(new
                 {
                     Error = is_dev ? ex.Message : message,
-                        Type = ex.GetType().Name,
-                        Details = is_dev ? ex.GetAllMessages() : null,
-                        StackTrace = is_dev ? ex.StackTrace : null
+                    Type = ex.GetType().Name,
+                    Details = is_dev ? ex.GetAllMessages() : null,
+                    StackTrace = is_dev ? ex.StackTrace : null
                 }, _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int) code;
+                context.Response.StatusCode = (int)code;
                 await context.Response.WriteAsync(result);
             }
             else
