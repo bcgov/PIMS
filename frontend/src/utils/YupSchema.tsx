@@ -8,6 +8,15 @@ export const AccessRequestSchema = Yup.object().shape({
     .required('Required'),
 });
 
+export const UserUpdateSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .max(100, 'Email must be less than 100 characters'),
+  firstName: Yup.string().max(100, 'First Name must be less than 100 characters'),
+  middleName: Yup.string().max(100, 'Middle Name must be less than 100 characters'),
+  lastName: Yup.string().max(100, 'Last Name must be less than 100 characters'),
+});
+
 export const UserSchema = Yup.object().shape({
   email: Yup.string()
     .email()
