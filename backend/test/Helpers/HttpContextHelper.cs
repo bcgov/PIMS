@@ -1,3 +1,4 @@
+using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
@@ -16,6 +17,12 @@ namespace Pims.Api.Test.Helpers
             {
                 User = user
             };
+            context.Request.Scheme="http";
+            context.Request.Host=new HostString("localhost");
+            context.Request.Path=new PathString("/test");
+            context.Request.PathBase=new PathString("/");
+            context.Request.Body=new MemoryStream();
+            context.Request.QueryString=new QueryString("?");
             context.Request.Headers["device-id"] = "20317";
             return context;
         }

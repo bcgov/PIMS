@@ -57,14 +57,6 @@ namespace Pims.Dal.Services.Admin
                 .Include(r => r.Roles)
                 .ThenInclude(r => r.Role)
                 .AsNoTracking();
-            if (userId.HasValue) {
-                //cannot use AsNoTracking here or all related entities will not be loaded https://github.com/dotnet/efcore/issues/13518
-                var targetUser = this.Context.Users.Include(u => u.Agencies).ThenInclude(a => a.Agency).ThenInclude(a => a.Children).Where(u => u.Id == userId).SingleOrDefault();
-                if(targetUser == null) throw new KeyNotFoundException();
-                var agencyUserIds = targetUser.Agencies.SelectMany(a => a.Agency.Children.Flatten(a => a.Children)).Select(a => a.Id);
-                agencyUserIds = agencyUserIds.Concat(targetUser.Agencies.Select(a => a.AgencyId));
-                query = query.Where(u => u.Agencies.Any(a => agencyUserIds.Contains(a.AgencyId)));
-            }
 
             if (filter.Page < 1) filter.Page = 1;
             if (filter.Quantity < 1) filter.Quantity = 1;

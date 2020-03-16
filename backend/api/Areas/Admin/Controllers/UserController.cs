@@ -6,6 +6,7 @@ using Model = Pims.Api.Areas.Admin.Models;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
+using Pims.Dal.Helpers.Extensions;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
@@ -82,9 +83,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet("/api/admin/my/users")]
         public IActionResult GetMyUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
-        { 
-            var userId = this.User.GetUserId();
-            return GetUsers(page, quantity, sort, userId);
+        {
+            var agencies = this.User.GetAgencies();
+            if (agencies == null || agencies.Length <= 0) return BadRequest("Current user does not belong to an agency");
+            var filter = new EModel.UserFilter();
+            filter.Agencies = agencies;
+            return GetUsers(filter);
         }
 
         /// <summary>

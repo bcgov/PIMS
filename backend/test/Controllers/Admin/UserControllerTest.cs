@@ -19,6 +19,7 @@ using Pims.Api.Test.Helpers;
 using Pims.Dal.Entities;
 using Pims.Dal.Services;
 using Pims.Dal.Services.Admin;
+using Pims.Dal.Entities.Models;
 
 namespace PimsApi.Test.Admin.Controllers
 {
@@ -119,8 +120,8 @@ namespace PimsApi.Test.Admin.Controllers
         {
             var expectedUsers = new Entity.User[] { _expectedUsers };
             var expectedPagedUsers = new Pims.Dal.Entities.Models.Paged<User>(expectedUsers);
-            _pimsService.Setup(m => m.User.GetNoTracking(1, 10, null, null)).Returns(expectedPagedUsers);
-            var result = _userController.GetUsers(1, 10, null);
+            _pimsService.Setup(m => m.User.GetNoTracking(It.IsAny<UserFilter>())).Returns(expectedPagedUsers);
+            var result = _userController.GetUsers();
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
