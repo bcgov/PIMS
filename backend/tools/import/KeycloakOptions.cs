@@ -23,6 +23,12 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <value></value>
         public string Audience { get; set; }
+
+        /// <summary>
+        /// get/set - The client secret.
+        /// </summary>
+        /// <value></value>
+        public string ClientSecret { get; set; }
         #endregion
     }
 }

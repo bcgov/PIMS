@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +6,10 @@ using Microsoft.Extensions.Logging;
 using Pims.Dal.Helpers.Extensions;
 using Model = Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
-using System.Threading.Tasks;
-using Pims.Api.Helpers;
 using Pims.Api.Models;
+using Pims.Api.Policies;
 using Pims.Dal;
+using Pims.Dal.Security;
 
 namespace Pims.Api.Controllers
 {
@@ -56,7 +55,7 @@ namespace Pims.Api.Controllers
         /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = "property-view")] // TODO: Use enum values for claim names.
+        [HasPermission(Permissions.PropertyView)]
         public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong, int? agencyId = null, int? propertyClassificationId = null)
         {
             var parcels = _pimsService.Parcel.GetNoTracking(neLat, neLong, swLat, swLong, agencyId, propertyClassificationId);
@@ -69,7 +68,7 @@ namespace Pims.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [Authorize(Roles = "property-view")]
+        [HasPermission(Permissions.PropertyView)]
         public IActionResult GetMyParcel(int id)
         {
             var entity = _pimsService.Parcel.GetNoTracking(id);
@@ -87,7 +86,7 @@ namespace Pims.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "property-add")]
+        [HasPermission(Permissions.PropertyAdd)]
         public IActionResult AddMyParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
@@ -113,7 +112,7 @@ namespace Pims.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [Authorize(Roles = "property-edit")]
+        [HasPermission(Permissions.PropertyEdit)]
         public IActionResult UpdateMyParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
@@ -130,7 +129,7 @@ namespace Pims.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "property-add")]
+        [HasPermission(Permissions.PropertyAdd)]
         public IActionResult DeleteMyParcels(ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);

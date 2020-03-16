@@ -2,10 +2,9 @@
 
 This document describes how to work with the GitHub repository.
 
-
 ## 1 Fork in the cloud
 
-1. Visit https://github.com/bcgov/PIMS
+1. Visit [https://github.com/bcgov/PIMS](https://github.com/bcgov/PIMS)
 2. Click `Fork` button (top right) to establish a cloud-based fork.
 
 ## 2 Clone fork to local workstation
@@ -45,6 +44,7 @@ git rebase upstream/dev
 ```
 
 Branch from it:
+
 ```sh
 git checkout -b myfeature
 ```
@@ -68,16 +68,19 @@ ought to be individually understandable and useful (see below).
 
 ## 5 Commit
 
-#### Using the command line:
+### Using the command line
+
 Commit your changes.
 
 ```sh
 git commit
 ```
+
 Likely you go back and edit/build/test some more then `git commit`
 in a few cycles.
 
-#### Using VS Code:
+### Using VS Code
+
 In VS Code left hand navigation, click the Source Control logo to bring up the view.
 
 You will need to "stage" your changes before committing. To stage files that are added or edited, either right-click the file and select _Stage Changes_ or click the _+_ symbol to the right of the filename.
@@ -89,11 +92,14 @@ When ready to commit, enter a message in the text box at the top of the Source C
 When ready to review (or just to establish an offsite backup of your work),
 push your branch to your fork on `github.com`:
 
-#### Using the command line:
+### Push - Using the command line
+
 ```sh
 git push origin myfeature
 ```
-#### Using VS Code:
+
+### Push - Using VS Code
+
 * In VS Code open the Source Control view.
 * Click the three-dot menu (`...`)
 * Click `Push to...` and select _origin_.
@@ -158,7 +164,7 @@ This section covers some advanced use cases with Git.
 
 :zap: These commands shouldn't be part of your daily development workflow, unless things are going badly with your repo.
 
-### How can I undo the last commit?
+## How to undo the last commit
 
 First, before we bring the big guns in, let's make sure you really need them. Because in case you just want to edit your last commit, you can simply use Git's amend feature. It allows you to correct the last commit's message as well as add more changes to it. If that's what you want to do, [read more about amend](https://www.git-tower.com/learn/git/ebook/en/command-line/advanced-topics/undoing-things#start).
 
@@ -178,7 +184,7 @@ If you don't want to keep these changes, simply use the `--hard` flag. This tell
 
 :zap: Be sure to only do this when you're sure you don't need these changes anymore!
 
-### How can I undo MULTIPLE commits?
+### How to undo MULTIPLE commits
 
 The same technique allows you to return to any previous revision:
 
@@ -204,7 +210,7 @@ Using the "git revert" command is one possibility to undo a previous commit. How
 
 In case you wish to revert a commit, use the following instructions.
 
-- Create a branch and sync it with upstream.
+* Create a branch and sync it with upstream.
 
   ```sh
   # create a branch
@@ -214,28 +220,29 @@ In case you wish to revert a commit, use the following instructions.
   git fetch upstream
   git rebase upstream/master
   ```
-- If the commit you wish to revert is a:
-  - **merge commit:**
+
+* If the commit you wish to revert is a:
+  * **merge commit:**
 
     ```sh
     # SHA is the hash of the merge commit you wish to revert
     git revert -m 1 SHA
     ```
 
-  - **single commit:**
+  * **single commit:**
 
     ```sh
     # SHA is the hash of the single commit you wish to revert
     git revert SHA
     ```
 
-- This will create a new commit reverting the changes. Push this new commit to your remote.
+* This will create a new commit reverting the changes. Push this new commit to your remote.
 
 ```sh
 git push origin myrevert
 ```
 
-- [Create a Pull Request](#8-create-a-pull-request) using this branch.
+* [Create a Pull Request](#8-create-a-pull-request) using this branch.
 
 ### Attribution
 

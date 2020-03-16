@@ -1,20 +1,19 @@
 using System;
-using System.Net.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models;
 using Entity = Pims.Dal.Entities;
+using Pims.Api.Policies;
+using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
     /// <summary>
     /// UserController class, provides endpoints for managing users.
     /// </summary>
-    [Authorize(Roles = "system-administrator")]
+    [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -22,8 +21,6 @@ namespace Pims.Api.Areas.Admin.Controllers
     {
         #region Variables
         private readonly ILogger<UserController> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly IHttpClientFactory _clientFactory;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         #endregion
@@ -33,15 +30,11 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// Creates a new instance of a UserController class.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="configuration"></param>
-        /// <param name="clientFactory"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, IHttpClientFactory clientFactory, IPimsAdminService pimsAdminService, IMapper mapper)
+        public UserController(ILogger<UserController> logger, IPimsAdminService pimsAdminService, IMapper mapper)
         {
             _logger = logger;
-            _configuration = configuration;
-            _clientFactory = clientFactory;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
         }
@@ -140,7 +133,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity > 20) quantity = 20;
             Entity.Models.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequestsNoTracking(page, quantity, sort, isGranted);
             var entities = _mapper.Map<Api.Models.AccessRequestModel[]>(result.Items);
-            var paged = new Pims.Dal.Entities.Models.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
+            var paged = new Models.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
             return new JsonResult(paged);
         }
         #endregion

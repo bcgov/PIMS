@@ -26,12 +26,14 @@ To use the Entity Framework CLI you will need to install the **.NET SDK version*
 Install the .NET SDK
 
 > [download .NET SDK - 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0)
-
+\
 > [download .NET SDK - 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 
 Install the `dotnet-ef` CLI
 
-> `dotnet tool install --global dotnet-ef`
+```bash
+dotnet tool install --global dotnet-ef
+```
 
 You may create a `connectionstrings.json` configuration file within the `/backend/dal` project, or a `.env` file to contain this information. You can also create one for each environment by creating a file with the naming conventsion `connectionstrings.[environment].json`. Enter the following information into the file;
 
@@ -50,31 +52,42 @@ The `database name` should be the same value using the in the database `.env` fi
 
 Use command line, Cmd or PowerShell for specific version:
 
-> `dotnet tool update --global dotnet-ef --version 3.1.0`
+```bash
+dotnet tool update --global dotnet-ef --version 3.1.0
+```
 
 or for latest version use (works also for reinstallation):
 
-> `dotnet tool update --global dotnet-ef`
+```bash
+dotnet tool update --global dotnet-ef
+```
 
 Set the environment path so that the tool is executable.
 
-> `ENV PATH="$PATH:/root/.dotnet/tools"`
+```bash
+ENV PATH="$PATH:/root/.dotnet/tools"
+```
 
 ### Useful Commands
 
 Kill your database and start over.
 
-> `dotnet ef database drop --force`
-
-> `dotnet ef database update`
+```bash
+dotnet ef database drop --force
+dotnet ef database update
+```
 
 Generate the SQL for the migration.
 
-> `dotnet ef migrations script 0 initial`
+```bash
+dotnet ef migrations script 0 initial
+```
 
 Or for all migrations after the initial migration.
 
-> `dotnet ef migrations script 20180904195021_initial`
+```bash
+dotnet ef migrations script 20180904195021_initial
+```
 
 ### Creating New Database Migrations
 
@@ -82,7 +95,9 @@ To add a new database code migration do the following;
 
 Go to the `/backend/dal` folder. Enter the name of the migration you want to create `[name]`.
 
-> `dotnet ef migrations add [name]`
+```bash
+dotnet ef migrations add [name]
+```
 
 You should then edit the migration you created `[20200204191656_name].cs` to inherit from our `SeedMigration` class. This is to enable running SQL scripts during migration, for either complex db changes, or seed data.
 

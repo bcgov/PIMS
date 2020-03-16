@@ -42,7 +42,7 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// /// Get all building predominate uses from the datasource.
+        /// Get all building predominate uses from the datasource.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<BuildingPredominateUse> GetAll()

@@ -106,7 +106,7 @@ namespace Pims.Dal.Entities
         /// get/set - A collection of buildings on this parcel.
         /// </summary>
         /// <typeparam name="Building"></typeparam>
-        public ICollection<Building> Buildings { get; set; } = new List<Building>();
+        public ICollection<Building> Buildings { get; } = new List<Building>();
 
         /// <summary>
         /// get - A collection of evaluations for this parcel.

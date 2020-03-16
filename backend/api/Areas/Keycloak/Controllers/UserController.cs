@@ -81,7 +81,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <summary>
         /// Update the user for the specified 'id'.
         /// </summary>
-        /// /// <returns></returns>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserAsync(string id, [FromBody] Model.UserModel model)
         {
