@@ -10,6 +10,7 @@ using Pims.Dal.Helpers.Extensions;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
+using System.Linq;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -81,13 +82,15 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns>Paged object with an array of users.</returns>
-        [HttpGet("/api/admin/my/users")]
-        public IActionResult GetMyUsers(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        [HttpPost("/api/admin/my/users")]
+        public IActionResult GetMyUsers(EModel.UserFilter filter)
         {
-            var agencies = this.User.GetAgencies();
-            if (agencies == null || agencies.Length <= 0) return BadRequest("Current user does not belong to an agency");
-            var filter = new EModel.UserFilter();
-            filter.Agencies = agencies;
+            if (!(filter?.Agencies?.Any() ?? false))
+            {
+                filter.Agencies = this.User.GetAgencies();
+            }
+
+            if (!(filter?.Agencies?.Any() ?? false)) return BadRequest("Current user does not belong to an agency");
             return GetUsers(filter);
         }
 

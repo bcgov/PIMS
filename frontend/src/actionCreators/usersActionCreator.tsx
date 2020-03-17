@@ -54,7 +54,7 @@ export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Functi
   dispatch(request(reducerTypes.GET_USERS));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.GET_USERS(params), createRequestHeader())
+    .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params, createRequestHeader())
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.GET_USERS, response.status));
       dispatch(adminActions.storeUsers(response.data));
