@@ -12,7 +12,6 @@ const initialState: IAccessRequestState = {
 const accessRequestReducer = (state = initialState, action: IStoreAccessRequestsAction) => {
   switch (action.type) {
     case actionTypes.STORE_ACCESS_REQUESTS:
-      console.log('storing access request');
       return {
         ...state,
         pagedAccessRequests: {

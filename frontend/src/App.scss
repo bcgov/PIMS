@@ -17,3 +17,26 @@
 ul.pagination li {
   cursor: pointer;
 }
+
+div.bootstrap-table {
+  .col {
+    border-bottom-width: 2px;
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+  }
+  .row {
+    vertical-align: inherit;
+    margin: 0;
+  }
+  div.row:nth-of-type(even) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  form:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .thead {
+    font-weight: 700;
+  }
+}

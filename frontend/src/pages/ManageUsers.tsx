@@ -1,16 +1,82 @@
-import * as React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { getUsersAction } from 'actionCreators/usersActionCreator';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'reducers/rootReducer';
+import { IStoreUsersAction, IUser } from 'actions/adminActions';
+import { toApiPaginateParams } from 'utils/CommonFunctions';
+import { IGenericNetworkAction } from 'actions/genericActions';
+import _ from 'lodash';
+import WrappedPaginate from 'components/common/WrappedPaginate';
 
-const ManageUsers = () => {
-  return (
+const ManageAccessRequests = () => {
+  const dispatch = useDispatch();
+  const MAX_USERS_PER_PAGE = 10;
+  const pagedUsers = useSelector<RootState, IUser>(
+    state => (state.getUsers as IStoreUsersAction).pagedUsers,
+  );
+  const users = useSelector<RootState, IGenericNetworkAction>(
+    state => state.getUsers as IGenericNetworkAction,
+  );
+  useEffect(() => {
+    dispatch(getUsersAction(toApiPaginateParams(0, MAX_USERS_PER_PAGE)));
+  }, []);
+
+  return !users.isFetching ? (
     <Container fluid={true}>
       <Row>
         <Col>
           <h2>Manage Users</h2>
         </Col>
       </Row>
+      <Row>
+        <Col>
+          {pagedUsers?.items?.length ? (
+            <div className="bootstrap-table">
+              <Row className="thead">
+                <Col>User</Col>
+                <Col>Agency</Col>
+                <Col>Role</Col>
+                <Col>Actions</Col>
+              </Row>
+              {pagedUsers?.items.map((user: any) => {
+                if (!user?.agencies?.length) {
+                  user.agencies = [{}];
+                }
+                if (!user?.roles?.length) {
+                  user.roles = [{}];
+                }
+                return (
+                  <Row key={user?.id}>
+                    <Col>{user?.displayName}</Col>
+                    <Col>{user?.agencies[0]?.name || 'No Agency Requested'}</Col>
+                    <Col>{user?.roles[0]?.name || 'No Role Requested'}</Col>
+                    <Col>
+                      <div>
+                        <button type="submit">Edit</button>
+                      </div>
+                    </Col>
+                  </Row>
+                );
+              })}
+            </div>
+          ) : null}
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <WrappedPaginate
+            onPageChange={(page: any) => {
+              dispatch(getUsersAction(toApiPaginateParams(page.selected, MAX_USERS_PER_PAGE)));
+            }}
+            {...pagedUsers}
+          />
+        </Col>
+      </Row>
     </Container>
+  ) : (
+    <Spinner animation="border"></Spinner>
   );
 };
 
-export default ManageUsers;
+export default ManageAccessRequests;
