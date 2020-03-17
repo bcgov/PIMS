@@ -37,3 +37,4 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 export const REQUEST_ACCESS = () => `/access/request`; // get filtered properties or all if not specified.
 export const REQUEST_ACCESS_LIST = (params: IPaginateParams) =>
   `/access/requests/?${queryString.stringify(params)}`; // get paged access requests
+export const POST_USERS = () => `/admin/my/users`; // get paged list of users

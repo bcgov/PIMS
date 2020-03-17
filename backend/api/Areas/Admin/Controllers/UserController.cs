@@ -6,9 +6,11 @@ using Model = Pims.Api.Areas.Admin.Models;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
+using Pims.Dal.Helpers.Extensions;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
+using System.Linq;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -48,6 +50,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
+        /// <param name="userId"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet("/api/admin/users")]
         public IActionResult GetUsers()
@@ -70,6 +73,25 @@ namespace Pims.Api.Areas.Admin.Controllers
             var users = _mapper.Map<Model.UserModel[]>(results.Items);
             var paged = new EModel.Paged<Model.UserModel>(users, filter.Page, filter.Quantity, results.Total);
             return new JsonResult(paged);
+        }
+
+        /// <summary>
+        /// GET - Returns a paged array of users from the datasource that belong to the same agency (or sub-agency) as the current user.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
+        /// <returns>Paged object with an array of users.</returns>
+        [HttpPost("/api/admin/my/users")]
+        public IActionResult GetMyUsers(EModel.UserFilter filter)
+        {
+            if (!(filter?.Agencies?.Any() ?? false))
+            {
+                filter.Agencies = this.User.GetAgencies();
+            }
+
+            if (!(filter?.Agencies?.Any() ?? false)) return BadRequest("Current user does not belong to an agency");
+            return GetUsers(filter);
         }
 
         /// <summary>

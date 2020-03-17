@@ -11,7 +11,7 @@ import Header from './components/navigation/Header';
 import Footer from './components/navigation/Footer';
 import { Spinner } from 'react-bootstrap';
 import configureStore from 'configureStore';
-import { getActivateUserAction } from 'actionCreators/authActionCreator';
+import { getActivateUserAction } from 'actionCreators/usersActionCreator';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import AppNavBar from 'components/navigation/AppNavBar';
 import AccessDenied from 'pages/AccessDenied';

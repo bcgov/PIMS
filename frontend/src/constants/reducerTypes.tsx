@@ -14,3 +14,4 @@ export const ACCESS_REQUEST = 'accessRequest';
 export const POST_ACTIVATE_USER = 'activateUser';
 export const POST_REQUEST_ACCESS = 'postRequestAccess';
 export const GET_REQUEST_ACCESS = 'getRequestAccess';
+export const GET_USERS = 'getUsers';
