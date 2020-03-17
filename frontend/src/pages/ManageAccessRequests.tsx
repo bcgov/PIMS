@@ -9,7 +9,7 @@ import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { Formik, ErrorMessage, Form } from 'formik';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
-import * as Schema from 'components/common/FormSchema';
+import { AccessRequestSchema } from 'utils/YupSchema';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
@@ -68,7 +68,7 @@ const ManageAccessRequests = () => {
                       agency: accessRequest?.agencies[0]?.id,
                       role: accessRequest?.roles[0]?.id,
                     }}
-                    validationSchema={Schema.roleAgency}
+                    validationSchema={AccessRequestSchema}
                     onSubmit={(values, { setSubmitting }) => {
                       //TODO: the api for this doesn't exist yet.
                       setSubmitting(false);
@@ -134,8 +134,8 @@ const ManageAccessRequests = () => {
       </Row>
     </Container>
   ) : (
-    <Spinner animation="border"></Spinner>
-  );
+      <Spinner animation="border"></Spinner>
+    );
 };
 
 export default ManageAccessRequests;

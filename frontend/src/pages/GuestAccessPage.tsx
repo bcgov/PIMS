@@ -8,10 +8,10 @@ import { Formik, Form, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import * as Schema from 'components/common/FormSchema';
 import * as API from 'constants/API';
 import _ from 'lodash';
 import { IGenericNetworkAction } from 'actions/genericActions';
+import { AccessRequestSchema } from 'utils/YupSchema';
 
 export interface AccessRequestFormValues {
   agencyId: number;
@@ -47,10 +47,10 @@ const GuestAccessPage = () => {
         <Col>
           <Formik
             initialValues={{
-              agency: null,
-              role: null,
+              agency: undefined,
+              role: undefined,
             }}
-            validationSchema={Schema.roleAgency}
+            validationSchema={AccessRequestSchema}
             onSubmit={(values, { setSubmitting }) => {
               dispatch(getSubmitAccessRequestAction(toRequest(values)));
               setSubmitting(false);
