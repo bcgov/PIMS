@@ -6,9 +6,10 @@ import { FormikProps } from 'formik';
 import './LookupCodeDropdown.scss';
 
 type LookupCodeDropdownProps = {
-  defaultTitle: string;
   lookupCodes: ILookupCode[];
   onSelectCode: (codeId: string | null) => void;
+  defaultTitle?: string;
+  defaultValue?: string;
   name?: string;
   hideAny?: boolean;
   errors?: boolean;
@@ -23,7 +24,11 @@ const getNameById = (codeSet: ILookupCode[], codeId: string) => {
  * @param props {@link LookupCodeDropdownProps}
  */
 function LookupCodeDropdown(props: LookupCodeDropdownProps) {
-  const [codeDropdownTitle, setCodeDropdownTitle] = useState<string>(props.defaultTitle);
+  let defaultValue: string = props.defaultTitle || '';
+  if (props.defaultValue) {
+    defaultValue = getNameById(props.lookupCodes, props.defaultValue);
+  }
+  const [codeDropdownTitle, setCodeDropdownTitle] = useState<string>(defaultValue);
 
   const onCodeItemChange = (eventKey: string) => {
     if (parseInt(eventKey) === -1) {
@@ -57,7 +62,8 @@ function LookupCodeDropdown(props: LookupCodeDropdownProps) {
 }
 
 type FormikLookupCodeDropdownProps = {
-  defaultTitle: string;
+  defaultTitle?: string;
+  defaultValue?: string;
   lookupCodes: ILookupCode[];
   name: string;
 };
@@ -80,6 +86,7 @@ export const FormikLookupCodeDropdown = <T extends unknown>(
       hideAny={true}
       onSelectCode={onSelectCode}
       defaultTitle={props.defaultTitle}
+      defaultValue={props.defaultValue}
       lookupCodes={props.lookupCodes}
     ></LookupCodeDropdown>
   );

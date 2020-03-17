@@ -5,7 +5,7 @@ import React from 'react';
 import './Login.scss';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { RootState } from 'reducers/rootReducer';
-import { NEW_PIMS_USER } from 'actionCreators/authActionCreator';
+import { NEW_PIMS_USER } from 'actionCreators/usersActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { PROPERTY_VIEW } from 'constants/strings';
 

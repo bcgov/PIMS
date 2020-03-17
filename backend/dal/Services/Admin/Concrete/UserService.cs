@@ -49,13 +49,19 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Paged<User> GetNoTracking(UserFilter filter = null)
         {
+
             this.User.ThrowIfNotAuthorized("system-administrator");
+            var query = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .Include(r => r.Roles)
+                .ThenInclude(r => r.Role)
+                .AsNoTracking();
 
             if (filter.Page < 1) filter.Page = 1;
             if (filter.Quantity < 1) filter.Quantity = 1;
             if (filter.Quantity > 50) filter.Quantity = 50;
 
-            var query = this.Context.Users.AsNoTracking();
             if (filter != null)
             {
                 if (!string.IsNullOrWhiteSpace(filter.DisplayName))

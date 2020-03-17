@@ -7,9 +7,19 @@ export interface IStoreAccessRequestsAction {
   pagedAccessRequests: IAccessRequest;
 }
 
-export const storeAccessRequests = (pagedAccessRequests: IStoreAccessRequestsAction[]) => ({
+export interface IStoreUsersAction {
+  type: typeof ActionTypes.STORE_USERS;
+  pagedUsers: IUser;
+}
+
+export const storeAccessRequests = (pagedAccessRequests: IStoreAccessRequestsAction) => ({
   type: ActionTypes.STORE_ACCESS_REQUESTS,
   pagedAccessRequests: pagedAccessRequests,
+});
+
+export const storeUsers = (pagedUsers: IStoreUsersAction) => ({
+  type: ActionTypes.STORE_USERS,
+  pagedUsers: pagedUsers,
 });
 
 export interface IAgency {
@@ -21,6 +31,13 @@ export interface IRole {
 export interface IAccessRequestParams {
   agencies: IAgency[];
   roles: IRole[];
+}
+
+export interface IUser {
+  page: number;
+  quantity: number;
+  total: number;
+  items: [];
 }
 export interface IAccessRequest {
   page: number;
