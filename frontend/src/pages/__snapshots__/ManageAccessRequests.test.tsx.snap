@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Manage Access Requests page correctly 1`] = `
+<div
+  className="container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <h2>
+        Manage Access Requests
+      </h2>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <p>
+        No Access Requests
+      </p>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    />
+  </div>
+</div>
+`;

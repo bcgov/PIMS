@@ -7,11 +7,10 @@ import ManageAccessRequests from './ManageAccessRequests';
 const Administration = () => {
   const history = useHistory();
   let { path, url } = useRouteMatch();
+  if (history.location.pathname === '/admin') {
+    history.push('admin/users');
+  }
   const handleSelect = (eventKey: string) => history.push(`${url}/${eventKey}`);
-
-  React.useEffect(() => {
-    handleSelect('users');
-  }, []);
 
   return (
     <Container fluid={true}>
@@ -22,7 +21,7 @@ const Administration = () => {
       </Row>
       <Row>
         <Col>
-          <Nav variant="tabs" defaultActiveKey="/home" onSelect={handleSelect}>
+          <Nav variant="tabs" defaultActiveKey="users" onSelect={handleSelect}>
             <Nav.Item>
               <Nav.Link eventKey="users">Manage Users</Nav.Link>
             </Nav.Item>
