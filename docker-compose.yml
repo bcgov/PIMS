@@ -55,8 +55,8 @@ services:
       context: backend
     env_file: backend/api/.env
     ports:
-      - "5000:80"
       - "5001:443"
+      - "5000:8080"
     depends_on:
       - database
       - keycloak
