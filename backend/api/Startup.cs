@@ -146,15 +146,7 @@ namespace Pims.Api
                 .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
 
             //TODO: Add a health check for keycloak connectivity.
-            services.AddHealthChecksUI(setupSettings: setup =>
-            {
-                setup.AddHealthCheckEndpoint("liveliness", "http://localhost/live");
-                setup.AddHealthCheckEndpoint("readiness", "http://localhost/ready");
-                setup.AddWebhookNotification("rocketchat",
-                    uri: Configuration["ROCKETCHAT_HEALTH_HOOK"],
-                    payload: Configuration["ROCKETCHAT_HEALTH_PAYLOAD"],
-                    restorePayload: Configuration["ROCKETCHAT_HEALTH_RESTORE"]);
-            });
+            services.AddHealthChecksUI();
         }
 
         /// <summary>
@@ -181,12 +173,12 @@ namespace Pims.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHealthChecks("/live", new HealthCheckOptions
+            app.UseHealthChecks("/api/live", new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            app.UseHealthChecks("/ready", new HealthCheckOptions
+            app.UseHealthChecks("/api/ready", new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

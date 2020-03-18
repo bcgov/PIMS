@@ -128,6 +128,11 @@ objects:
                     secretKeyRef:
                       name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-sso-secret
                       key: KEYCLOAK_AUDIENCE
+                - name: HealthChecksUI__Webhooks__0__Uri
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-health-secret
+                      key: HealthChecksUI__Webhooks__0__Uri
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
