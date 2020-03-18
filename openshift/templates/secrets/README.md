@@ -50,21 +50,39 @@ oc process -f database-secrets.yaml -p ENV_NAME=prod | oc create -f -
 cd openshift/templates/app/secrets
 
 oc project $namespace_dev
-oc process -f api-secrets.yaml \
+oc process -f api-sso-secrets.yaml \
   -p ENV_NAME=dev \
   -p KEYCLOAK_AUTHORITY=[sso-dev realm URL] \
   | oc create -f -
 
+oc project $namespace_dev
+oc process -f api-health-secrets.yaml \
+  -p ENV_NAME=dev \
+  -p KEYCLOAK_AUTHORITY=[health-dev realm URL] \
+  | oc create -f -
+
 oc project $namespace_test
-oc process -f api-secrets.yaml \
+oc process -f api-sso-secrets.yaml \
   -p ENV_NAME=test \
   -p KEYCLOAK_AUTHORITY=[sso-test realm URL] \
   | oc create -f -
 
+oc project $namespace_test
+oc process -f api-health-secrets.yaml \
+  -p ENV_NAME=test \
+  -p KEYCLOAK_AUTHORITY=[health-test realm URL] \
+  | oc create -f -
+
 oc project $namespace_prod
-oc process -f api-secrets.yaml \
+oc process -f api-sso-secrets.yaml \
   -p ENV_NAME=prod \
   -p KEYCLOAK_AUTHORITY=[sso-production realm URL] \
+  | oc create -f -
+
+oc project $namespace_prod
+oc process -f api-health-secrets.yaml \
+  -p ENV_NAME=prod \
+  -p KEYCLOAK_AUTHORITY=[health-production realm URL] \
   | oc create -f -
 ```
 
@@ -77,19 +95,19 @@ oc process -f api-secrets.yaml \
 cd openshift/templates/app/secrets
 
 oc project $namespace_dev
-oc process -f app-secrets.yaml \
+oc process -f app-sso-secrets.yaml \
   -p ENV_NAME=dev \
   -p KEYCLOAK_SSO_HOST=[sso-dev host] \
   | oc create -f -
 
 oc project $namespace_test
-oc process -f app-secrets.yaml \
+oc process -f app-sso-secrets.yaml \
   -p ENV_NAME=test \
   -p KEYCLOAK_SSO_HOST=[sso-test host] \
   | oc create -f -
 
 oc project $namespace_prod
-oc process -f app-secrets.yaml \
+oc process -f app-sso-secrets.yaml \
   -p ENV_NAME=prod \
   -p KEYCLOAK_SSO_HOST=[sso-production host] \
   | oc create -f -
