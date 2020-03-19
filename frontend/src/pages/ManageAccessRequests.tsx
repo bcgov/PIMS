@@ -42,7 +42,7 @@ const ManageAccessRequests = () => {
     <Container fluid={true}>
       <Row>
         <Col>
-          <h2>Manage Users</h2>
+          <h2>Manage Access Requests</h2>
         </Col>
       </Row>
       <Row>
@@ -115,7 +115,9 @@ const ManageAccessRequests = () => {
                 );
               })}
             </div>
-          ) : null}
+          ) : (
+            <p>No Access Requests</p>
+          )}
         </Col>
       </Row>
       <Row>
@@ -134,8 +136,8 @@ const ManageAccessRequests = () => {
       </Row>
     </Container>
   ) : (
-      <Spinner animation="border"></Spinner>
-    );
+    <Spinner animation="border"></Spinner>
+  );
 };
 
 export default ManageAccessRequests;
