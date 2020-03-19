@@ -31,8 +31,8 @@ VALUES
     ),
     (
         '7a7b2549-ae85-4ad6-a8d3-3a5f8d4f9ca5',
-        'Real Estate Assistant',
-        'Real Estate Assistant can manage properties within their agencies.',
+        'Real Estate Analyst',
+        'Real Estate Analyst can manage properties within their agencies.',
         0,
         0
     ),
@@ -40,6 +40,13 @@ VALUES
         'fbe5fc86-f69e-4610-a746-0113d29e04cd',
         'Assistant Deputy Minister',
         'Assistant Deputy Minister can manage properties within their agencies.',
+        0,
+        0
+    ),
+    (
+        'c9fb2167-d675-455f-96ff-fb0c416246aa',
+        'Assistant Deputy Minister Assistant',
+        'Assistant Deputy Minister Assistant can manage properties within their agencies.',
         0,
         0
     ),
