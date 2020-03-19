@@ -71,7 +71,7 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// Updates the specified user in the datasource.
+        /// Updates the specified role in the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
@@ -81,14 +81,14 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            var user = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var role = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(user).CurrentValues.SetValues(entity);
-            return base.Update(user);
+            this.Context.Entry(role).CurrentValues.SetValues(entity);
+            return base.Update(role);
         }
 
         /// <summary>
-        /// Remove the specified user from the datasource.
+        /// Remove the specified role from the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
@@ -97,10 +97,30 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            var user = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var role = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(user).CurrentValues.SetValues(entity);
-            base.Remove(user);
+            this.Context.Entry(role).CurrentValues.SetValues(entity);
+            base.Remove(role);
+        }
+
+        /// <summary>
+        /// Remove the roles from the datasource, excluding those listed.
+        /// </summary>
+        /// <param name="exclude"></param>
+        /// <returns></returns>
+        public int RemoveAll(Guid[] exclude)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
+            var roles = this.Context.Roles.Include(r => r.Claims).Include(r => r.Users).Where(r => !exclude.Contains(r.Id));
+            roles.ForEach(r =>
+            {
+                r.Claims.Clear();
+                r.Users.Clear();
+            });
+
+            this.Context.Roles.RemoveRange(roles);
+            var result = this.Context.CommitTransaction();
+            return result;
         }
         #endregion
     }

@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pims.Keycloak;
-using KModel = Pims.Keycloak.Models;
-using Model = Pims.Api.Areas.Keycloak.Models;
-using Pims.Api.Policies;
-using Pims.Dal.Security;
+using Pims.Core.Extensions;
 using Pims.Dal;
 using Entity = Pims.Dal.Entities;
-using Pims.Dal.Helpers.Extensions;
-using Pims.Api.Models;
+using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using Pims.Core.Extensions;
+using Model = Pims.Api.Areas.Keycloak.Models;
+using Pims.Api.Models;
+using Pims.Api.Policies;
+using Pims.Keycloak;
+using KModel = Pims.Keycloak.Models;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {
@@ -77,7 +76,6 @@ namespace Pims.Api.Areas.Keycloak.Controllers
             {
                 // The user does not exist in PIMS, it needs to be added.
                 euser = _mapper.Map<Entity.User>(kuser);
-                euser.DisplayName = $"{kuser.LastName}, {kuser.FirstName}";
                 foreach (var group in kgroups)
                 {
                     var erole = _pimsAdminService.Role.Find(group.Id);
