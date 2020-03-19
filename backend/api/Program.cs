@@ -27,6 +27,7 @@ namespace Pims.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
             .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseUrls("http://*:8080")
             .UseStartup<Startup>();
     }
 }
