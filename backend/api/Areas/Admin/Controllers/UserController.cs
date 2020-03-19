@@ -146,7 +146,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The user model.</param>
         /// <returns>The user who was deleted.</returns>
         [HttpDelete]
-        public ActionResult DeleteUser([FromBody] Model.UserModel model)
+        public IActionResult DeleteUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
             _pimsAdminService.User.Remove(entity);
