@@ -21,7 +21,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
     /// <summary>
     /// UserController class, provides endpoints for managing users within keycloak.
     /// </summary>
-    [HasPermission(Permissions.SystemAdmin)]
+    [HasPermission(Permissions.AdminUsers)]
     [ApiController]
     [Area("keycloak")]
     [Route("/api/[area]/users")]
