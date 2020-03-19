@@ -1,6 +1,5 @@
-using System;
 using AutoMapper;
-using backend.Helpers.Profiles.Converters;
+using Pims.Api.Helpers.Profiles.Converters;
 using Pims.Api.Models;
 using Pims.Api.Profiles.Extensions;
 using Entity = Pims.Dal.Entities;

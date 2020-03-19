@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pims.Dal.Entities;
 
 namespace Pims.Dal.Services
@@ -11,5 +12,6 @@ namespace Pims.Dal.Services
         AccessRequest AddAccessRequest(AccessRequest request);
         bool UserExists(Guid id);
         User Activate();
+        IEnumerable<int> GetAgencies(Guid userId);
     }
 }

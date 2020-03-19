@@ -4,9 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -49,8 +51,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Paged<User> GetNoTracking(UserFilter filter = null)
         {
-
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
             var query = this.Context.Users
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
@@ -85,25 +86,50 @@ namespace Pims.Dal.Services.Admin
         /// Get the user with the specified 'id'.
         /// </summary>
         /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public User GetNoTracking(Guid id)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
-            return this.Context.Users.AsNoTracking().FirstOrDefault(u => u.Id == id);
+            return this.Context.Users
+                .Include(u => u.Roles)
+                .ThenInclude(r => r.Role)
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .AsNoTracking()
+                .SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
+        /// Get the user for the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public User Get(Guid id)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            return this.Context.Users
+                .Include(u => u.Roles)
+                .ThenInclude(r => r.Role)
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
         /// Updates the specified user in the datasource.
         /// </summary>
         /// <param name="entity"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public override User Update(User entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var user = this.Context.Users.Find(entity.Id);
-            if (user == null) throw new KeyNotFoundException();
+            var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(user).CurrentValues.SetValues(entity);
             return base.Update(user);
@@ -112,13 +138,13 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Remove the specified user from the datasource.
         /// </summary>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <param name="entity"></param>
         public override void Remove(User entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var user = this.Context.Users.Find(entity.Id);
-            if (user == null) throw new KeyNotFoundException();
+            var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(user).CurrentValues.SetValues(entity);
             base.Remove(user);
@@ -133,6 +159,8 @@ namespace Pims.Dal.Services.Admin
         /// <param name="isGranted"></param>
         public Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
             var query = this.Context.AccessRequests
                 .Include(p => p.Agencies)
                 .ThenInclude(p => p.Agency)

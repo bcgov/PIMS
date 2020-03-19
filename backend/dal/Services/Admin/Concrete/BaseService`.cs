@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -10,7 +13,7 @@ namespace Pims.Dal.Services.Admin
     /// BaseService abstract class, provides a generic service layer to perform CRUD operations on the datasource.
     /// </summary>
     /// <typeparam name="ET"></typeparam>
-    public abstract class BaseService<ET> : Pims.Dal.Services.BaseService<ET>, IBaseService<ET> where ET : BaseEntity
+    public abstract class BaseService<ET> : Services.BaseService<ET>, IBaseService<ET> where ET : BaseEntity
     {
         #region Constructors
         /// <summary>
@@ -30,7 +33,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public virtual ET Find(params object[] keyValues)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Set<ET>().Find(keyValues);
         }
@@ -42,6 +45,8 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public virtual ET Add(ET entity)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
             this.AddOne(entity);
             this.Context.CommitTransaction();
 
@@ -56,7 +61,7 @@ namespace Pims.Dal.Services.Admin
         public virtual ET AddOne(ET entity)
         {
             entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             entity.CreatedById = this.User.GetUserId();
             this.Context.Set<ET>().Add(entity);
@@ -71,6 +76,9 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public virtual ET Update(ET entity)
         {
+            entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
             this.UpdateOne(entity);
             this.Context.CommitTransaction();
 
@@ -86,7 +94,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfRowVersionNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             entity.UpdatedById = this.User.GetUserId();
             entity.UpdatedOn = DateTime.UtcNow;
@@ -101,6 +109,10 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         public virtual void Remove(ET entity)
         {
+            entity.ThrowIfNull(nameof(entity));
+            entity.ThrowIfRowVersionNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
             this.RemoveOne(entity);
             this.Context.CommitTransaction();
         }
@@ -113,7 +125,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfRowVersionNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             this.Context.Set<ET>().Remove(entity);
         }

@@ -2,7 +2,7 @@ using AutoMapper;
 using Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
 
-namespace backend.Helpers.Profiles.Converters
+namespace Pims.Api.Helpers.Profiles.Converters
 {
     public class ParcelIdResolver : IValueResolver<ParcelModel, Entity.Parcel, int>
     {

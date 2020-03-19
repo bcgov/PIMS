@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -107,6 +109,21 @@ namespace Pims.Dal.Services
             this.Context.AccessRequests.Add(request);
             this.Context.CommitTransaction();
             return request;
+        }
+
+        /// <summary>
+        /// Get an array of agency IDs for the specified 'userId'.
+        /// This only returns the first two layers (direct parents, their immediate children).
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<int> GetAgencies(Guid userId)
+        {
+            var user = this.Context.Users.Include(u => u.Agencies).ThenInclude(a => a.Agency).ThenInclude(a => a.Children).Single(u => u.Id == userId) ?? throw new KeyNotFoundException();
+            var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            agencies.AddRange(user.Agencies.SelectMany(a => a.Agency.Children).Select(a => a.Id));
+
+            return agencies.ToArray();
         }
         #endregion
     }

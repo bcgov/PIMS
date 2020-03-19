@@ -9,11 +9,13 @@ namespace Pims.Api.Helpers.Profiles
         #region Constructors
         public UserProfile()
         {
-            CreateMap<Entity.User, UserModel>();
+            CreateMap<Entity.User, UserModel>()
+                .ForMember(dest => dest.Agencies, opt => opt.MapFrom(src => src.Agencies))
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles));
 
             CreateMap<UserModel, Entity.User>()
-                .ForMember(src => src.Agencies, opt => opt.Ignore())
-                .ForMember(src => src.Roles, opt => opt.Ignore());
+                .ForMember(dest => dest.Agencies, opt => opt.Ignore())
+                .ForMember(dest => dest.Roles, opt => opt.Ignore());
         }
         #endregion
     }

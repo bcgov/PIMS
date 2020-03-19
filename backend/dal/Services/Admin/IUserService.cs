@@ -12,6 +12,7 @@ namespace Pims.Dal.Services.Admin
         Paged<User> GetNoTracking(int page = 1, int quantity = 10);
         Paged<User> GetNoTracking(UserFilter filter);
         User GetNoTracking(Guid id);
+        User Get(Guid id);
         Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
     }
 }

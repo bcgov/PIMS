@@ -4,10 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -36,7 +38,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Paged<Parcel> GetNoTracking(int page, int quantity, string sort)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var entities = this.Context.Parcels.AsNoTracking();
             var pagedEntities = entities.Skip((page - 1) * quantity).Take(quantity);
@@ -47,10 +49,11 @@ namespace Pims.Dal.Services.Admin
         /// Get the parcel for the specified 'id'.
         /// </summary>
         /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel GetNoTracking(int id)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Parcels
                 .Include(p => p.Status)
@@ -67,17 +70,18 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .AsNoTracking().SingleOrDefault(u => u.Id == id);
+                .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
         /// Get the parcel for the specified 'pid'.
         /// </summary>
         /// <param name="pid"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel GetByPidNoTracking(int pid)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Parcels
                 .Include(p => p.Status)
@@ -94,17 +98,18 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .AsNoTracking().SingleOrDefault(u => u.PID == pid);
+                .AsNoTracking().SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
         /// Get the parcel for the specified 'pid'.
         /// </summary>
         /// <param name="pid"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel GetByPid(int pid)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Parcels
                 .Include(p => p.Status)
@@ -121,17 +126,18 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(u => u.PID == pid);
+                .SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
         /// Get the parcel for the specified 'id'.
         /// </summary>
         /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel Get(int id)
         {
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var entity = this.Context.Parcels
                 .Include(p => p.Address)
@@ -142,7 +148,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(p => p.Id == id);
+                .SingleOrDefault(p => p.Id == id) ?? throw new KeyNotFoundException();
 
             return entity;
         }
@@ -155,7 +161,6 @@ namespace Pims.Dal.Services.Admin
         public override Parcel Add(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized("system-administrator");
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
             var userId = this.User.GetUserId();
@@ -198,7 +203,7 @@ namespace Pims.Dal.Services.Admin
         public IEnumerable<Parcel> Add(IEnumerable<Parcel> entities)
         {
             entities.ThrowIfNull(nameof(entities));
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var userId = this.User.GetUserId();
             entities.ForEach((entity) =>
@@ -244,13 +249,13 @@ namespace Pims.Dal.Services.Admin
         /// Update the specified parcel in the datasource.
         /// </summary>
         /// <param name="entity"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public override Parcel Update(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var parcel = this.Context.Parcels.Find(entity.Id);
-            if (parcel == null) throw new KeyNotFoundException();
+            var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(parcel).CurrentValues.SetValues(entity);
 
@@ -263,13 +268,13 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Remove the specified parcel from the datasource.
         /// </summary>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <param name="entity"></param>
         public override void Remove(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var parcel = this.Context.Parcels.Find(entity.Id);
-            if (parcel == null) throw new KeyNotFoundException();
+            var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(parcel).CurrentValues.SetValues(entity);
             base.Remove(parcel);
