@@ -56,13 +56,13 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <returns>Paged object with an array of roles.</returns>
         [HttpGet("/api/admin/roles")]
-        public IActionResult GetRoles(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        public IActionResult GetRoles(int page = 1, int quantity = 10) // TODO: sort and filter.
         {
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var result = _pimsAdminService.Role.GetNoTracking(page, quantity, sort);
+            var result = _pimsAdminService.Role.GetNoTracking(page, quantity);
             var roles = _mapper.Map<Model.RoleModel[]>(result.Items);
             var paged = new Paged<Model.RoleModel>(roles, page, quantity, result.Total); // TODO: Better way to go from one Paged type to another.
             return new JsonResult(paged);

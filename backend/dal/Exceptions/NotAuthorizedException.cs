@@ -19,7 +19,7 @@ namespace Pims.Dal.Exceptions
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public NotAuthorizedException(string message) : base(message) { }
+        public NotAuthorizedException(string message) : base(message ?? "User is not authorized to perform this action.") { }
 
         /// <summary>
         /// Creates a new instance of a NotAuthorizedException class, and initializes it with the specified arguments.
@@ -27,7 +27,7 @@ namespace Pims.Dal.Exceptions
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         /// <returns></returns>
-        public NotAuthorizedException(string message, Exception innerException) : base(message, innerException) { }
+        public NotAuthorizedException(string message, Exception innerException) : base(message ?? "User is not authorized to perform this action.", innerException) { }
         #endregion
     }
 }

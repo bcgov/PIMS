@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
+using Pims.Core.Extensions;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 
@@ -76,6 +77,7 @@ namespace Pims.Api.Helpers.Middleware
         {
             var code = HttpStatusCode.InternalServerError;
             var message = "An unhandled error has occurred.";
+            string details = null;
 
             if (ex is SecurityTokenException)
             {
@@ -142,14 +144,42 @@ namespace Pims.Api.Helpers.Middleware
             else if (ex is ApiHttpRequestException)
             {
                 var exception = ex as ApiHttpRequestException;
-                using var responseStream = await exception?.Response.Content.ReadAsStreamAsync();
-
                 code = exception.StatusCode;
                 message = ex.Message;
 
-                using var readStream = new StreamReader(responseStream, Encoding.UTF8);
-                var error = readStream.ReadToEnd();
-                _logger.LogError(ex, error);
+                try
+                {
+                    using var responseStream = await exception?.Response.Content.ReadAsStreamAsync();
+                    responseStream.Position = 0;
+                    using var readStream = new StreamReader(responseStream, Encoding.UTF8);
+                    details = readStream.ReadToEnd(); // TODO: Rewrite this logic.
+                    _logger.LogError(ex, details);
+                }
+                catch (Exception streamEx)
+                {
+                    // Ignore for now.
+                    _logger.LogError(streamEx, $"Failed to read the {nameof(ApiHttpRequestException)} error stream.");
+                }
+            }
+            else if (ex is Keycloak.Exceptions.KeycloakRequestException)
+            {
+                var exception = ex as Keycloak.Exceptions.KeycloakRequestException;
+                code = exception.StatusCode;
+                message = ex.Message;
+
+                try
+                {
+                    using var responseStream = await exception?.Response.Content.ReadAsStreamAsync();
+                    responseStream.Position = 0;
+                    using var readStream = new StreamReader(responseStream, Encoding.UTF8);
+                    details = readStream.ReadToEnd(); // TODO: Rewrite this logic.
+                    _logger.LogError(ex, details);
+                }
+                catch (Exception streamEx)
+                {
+                    // Ignore for now.
+                    _logger.LogError(streamEx, $"Failed to read the {nameof(Keycloak.Exceptions.KeycloakRequestException)} error stream.");
+                }
             }
             else
             {
@@ -163,7 +193,7 @@ namespace Pims.Api.Helpers.Middleware
                 {
                     Error = is_dev ? ex.Message : message,
                     Type = ex.GetType().Name,
-                    Details = is_dev ? ex.GetAllMessages() : null,
+                    Details = is_dev ? details ?? ex.GetAllMessages() : null,
                     StackTrace = is_dev ? ex.StackTrace : null
                 }, _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";

@@ -24,7 +24,9 @@ namespace Pims.Api.Models
         public IEnumerable<AgencyModel> Agencies { get; set; }
 
         public IEnumerable<RoleModel> Roles { get; set; }
+        #endregion
 
+        #region Methods
         public override bool Equals(object obj)
         {
             return Equals(obj as UserModel);

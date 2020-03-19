@@ -1,9 +1,7 @@
 using AutoMapper;
-using Pims.Dal.Entities;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Areas.Admin.Models;
 
-namespace backend.Helpers.Profiles.Converters
+namespace Pims.Api.Helpers.Profiles.Converters
 {
     public class ParcelSubAgencyConverter : IValueConverter<Entity.Agency, string>
     {

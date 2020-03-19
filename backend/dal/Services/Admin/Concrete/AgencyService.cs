@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 
@@ -53,13 +54,13 @@ namespace Pims.Dal.Services.Admin
         /// Updates the specified agency in the datasource.
         /// </summary>
         /// <param name="entity"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public override Agency Update(Agency entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var agency = this.Context.Agencies.Find(entity.Id);
-            if (agency == null) throw new KeyNotFoundException();
+            var agency = this.Context.Agencies.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(agency).CurrentValues.SetValues(entity);
             return base.Update(agency);
@@ -68,13 +69,13 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Remove the specified agency from the datasource.
         /// </summary>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <param name="entity"></param>
         public override void Remove(Agency entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var agency = this.Context.Agencies.Find(entity.Id);
-            if (agency == null) throw new KeyNotFoundException();
+            var agency = this.Context.Agencies.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(agency).CurrentValues.SetValues(entity);
             base.Remove(agency);

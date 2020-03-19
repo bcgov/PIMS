@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -70,6 +71,7 @@ namespace Pims.Dal.Services
         /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel GetNoTracking(int id)
         {
@@ -89,10 +91,10 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .AsNoTracking().SingleOrDefault(u => u.Id == id);
+                .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
 
             var agencies = this.User.GetAgencies();
-            parcel.Buildings.RemoveAll(b => b.IsSensitive && !agencies.Contains(b.AgencyId));
+            parcel?.Buildings.RemoveAll(b => b.IsSensitive && !agencies.Contains(b.AgencyId));
             return parcel;
         }
 
@@ -122,13 +124,13 @@ namespace Pims.Dal.Services
         /// Update the specified parcel in the datasource.
         /// </summary>
         /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
 
-            var entity = this.Context.Parcels.Find(parcel.Id);
-            if (entity == null) throw new KeyNotFoundException();
+            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
 
             var agency_ids = this.User.GetAgencies();
             if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
@@ -151,13 +153,13 @@ namespace Pims.Dal.Services
         /// Remove the specified parcel from the datasource.
         /// </summary>
         /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
         public void Remove(Parcel parcel)
         {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-add");
 
-            var entity = this.Context.Parcels.Find(parcel.Id);
-            if (entity == null) throw new KeyNotFoundException();
+            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
 
             var agency_ids = this.User.GetAgencies();
             if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove parcels outside of their agency.");

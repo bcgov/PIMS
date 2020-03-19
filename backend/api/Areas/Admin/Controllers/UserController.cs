@@ -1,23 +1,23 @@
 using System;
+using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Pims.Api.Policies;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Services.Admin;
+using Pims.Dal.Security;
 using Model = Pims.Api.Areas.Admin.Models;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
-using Pims.Dal.Services.Admin;
-using Pims.Dal.Helpers.Extensions;
-using Microsoft.AspNetCore.Http.Extensions;
-using Pims.Api.Policies;
-using Pims.Dal.Security;
-using System.Linq;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
     /// <summary>
     /// UserController class, provides endpoints for managing users.
     /// </summary>
-    [HasPermission(Permissions.SystemAdmin)]
+    [HasPermission(Permissions.AdminUsers)]
     [ApiController]
     [Area("admin")]
     [Route("/api/[area]/[controller]")]
@@ -120,6 +120,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         {
             var entity = _mapper.Map<Entity.User>(model);
             var addedEntity = _pimsAdminService.User.Add(entity);
+
             var user = _mapper.Map<Model.UserModel>(addedEntity);
             return new JsonResult(user);
         }
@@ -135,7 +136,6 @@ namespace Pims.Api.Areas.Admin.Controllers
             var entity = _mapper.Map<Entity.User>(model);
             var updatedEntity = _pimsAdminService.User.Update(entity);
 
-            if (updatedEntity == null) return BadRequest("Item does not exist");
             var user = _mapper.Map<Model.UserModel>(updatedEntity);
             return new JsonResult(user);
         }
