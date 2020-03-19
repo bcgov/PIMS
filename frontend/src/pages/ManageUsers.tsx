@@ -9,7 +9,7 @@ import { IGenericNetworkAction } from 'actions/genericActions';
 import _ from 'lodash';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 
-const ManageAccessRequests = () => {
+const ManageUsers = () => {
   const dispatch = useDispatch();
   const MAX_USERS_PER_PAGE = 10;
   const pagedUsers = useSelector<RootState, IUser>(
@@ -60,7 +60,9 @@ const ManageAccessRequests = () => {
                 );
               })}
             </div>
-          ) : null}
+          ) : (
+            <p>No Users available to be managed</p>
+          )}
         </Col>
       </Row>
       <Row>
@@ -79,4 +81,4 @@ const ManageAccessRequests = () => {
   );
 };
 
-export default ManageAccessRequests;
+export default ManageUsers;

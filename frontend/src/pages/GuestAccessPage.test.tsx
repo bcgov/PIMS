@@ -71,10 +71,10 @@ describe('component functionality when requestAccess status is 200 and fetching 
         .find(Formik)
         .first()
         .prop('initialValues'),
-    ).toEqual({ agency: null, role: null });
+    ).toEqual({ agency: undefined, role: undefined });
   });
 
-  it('displayys a success message', () => {
+  it('displays a success message', () => {
     expect(componentRender.find('Your request has been submitted')).toBeTruthy();
   });
 });
