@@ -35,6 +35,9 @@ To run Keycloak in a Docker container you will need to create two `.env` files, 
 
 This will allow Keycloak to initialize with a new PostgreSQL database.
 
+Please note that Keycloak is deprecating the ability to export and import the realm configuration (I have no idea why they would do this).
+There is still a current way to override this, which allows us to setup the environment successfully.
+
 ### Keycloak Environment Variables
 
 ```conf
@@ -42,7 +45,7 @@ This will allow Keycloak to initialize with a new PostgreSQL database.
 PROXY_ADDRESS_FORWARDING=true
 KEYCLOAK_USER=keycloak
 KEYCLOAK_PASSWORD=password
-KEYCLOAK_IMPORT=/tmp/realm-export.json
+KEYCLOAK_IMPORT=/tmp/realm-export.json  -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN
 
@@ -53,19 +56,19 @@ DB_USER=keycloak
 DB_PASSWORD=password
 ```
 
-| Key                      | Value                 | Description                                                         |
-| ------------------------ | --------------------- | ------------------------------------------------------------------- |
-| PROXY_ADDRESS_FORWARDING | [true\|false]         | Informs Keycloak to handle proxy forwarded requests correctly.      |
-| KEYCLOAK_USER            | {keycloak}            | The name of the Keycloak Realm administrator.                       |
-| KEYCLOAK_PASSWORD        | {password}            | The password for the Keycloak Realm administrator.                  |
-| KEYCLOAK_IMPORT          | /tmp/real-export.json | The path to the configuration file to initialize Keycloak with.     |
-| KEYCLOAK_LOGLEVEL        | [WARN\|ERROR\|INFO]   | The logging level for Keycloak.                                     |
-| ROOT_LOGLEVEL            | [WARN\|ERROR\|INFO]   | The logging level for the root user of the container.               |
-| DB_VENDOR                | [POSTGRES\|...]       | The database that Keycloak will use.                                |
-| DB_ADDR                  | {keycloak-db}         | The host name of the Keycloak DB found in the `docker-compose.yaml` |
-| DB_DATABASE              | {keycloak}            | Name of the Keycloak database.                                      |
-| DB_USER                  | {keycloak}            | The name of the default database user administrator.                |
-| DB_PASSWORD              | {password}            | The password for the default database user administrator.           |
+| Key                      | Value                                                                    | Description                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| PROXY_ADDRESS_FORWARDING | [true\|false]                                                            | Informs Keycloak to handle proxy forwarded requests correctly.                                                                 |
+| KEYCLOAK_USER            | {keycloak}                                                               | The name of the Keycloak Realm administrator.                                                                                  |
+| KEYCLOAK_PASSWORD        | {password}                                                               | The password for the Keycloak Realm administrator.                                                                             |
+| KEYCLOAK_IMPORT          | /tmp/real-export.json  -Dkeycloak.profile.feature.upload_scripts=enabled | The path to the configuration file to initialize Keycloak with. This also includes an override to enable uploading the script. |
+| KEYCLOAK_LOGLEVEL        | [WARN\|ERROR\|INFO]                                                      | The logging level for Keycloak.                                                                                                |
+| ROOT_LOGLEVEL            | [WARN\|ERROR\|INFO]                                                      | The logging level for the root user of the container.                                                                          |
+| DB_VENDOR                | [POSTGRES\|...]                                                          | The database that Keycloak will use.                                                                                           |
+| DB_ADDR                  | {keycloak-db}                                                            | The host name of the Keycloak DB found in the `docker-compose.yaml`                                                            |
+| DB_DATABASE              | {keycloak}                                                               | Name of the Keycloak database.                                                                                                 |
+| DB_USER                  | {keycloak}                                                               | The name of the default database user administrator.                                                                           |
+| DB_PASSWORD              | {password}                                                               | The password for the default database user administrator.                                                                      |
 
 ### Keycloak Database Environment Variables
 
