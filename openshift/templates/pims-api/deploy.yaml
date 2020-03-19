@@ -143,9 +143,9 @@ objects:
               readinessProbe:
                 failureThreshold: 3
                 httpGet:
-                  path: /api/ready
-                  port: 8080
-                  scheme: HTTP
+                  path: ${READINESS_PATH}
+                  port: ${{APP_PORT}}
+                  scheme: ${HEALTH_SCHEME}
                 initialDelaySeconds: 1
                 periodSeconds: 10
                 successThreshold: 1
@@ -153,9 +153,9 @@ objects:
               livenessProbe:
                 failureThreshold: 3
                 httpGet:
-                  path: /api/live
-                  port: 8080
-                  scheme: HTTP
+                  path: ${LIVENESS_PATH}
+                  port: ${{APP_PORT}}
+                  scheme: ${HEALTH_SCHEME}
                 initialDelaySeconds: 1
                 periodSeconds: 10
                 successThreshold: 1
@@ -219,3 +219,15 @@ parameters:
     displayName: Memory Request
     description: Starting amount of memory the container can use.
     value: 2Gi
+  - name: LIVENESS_PATH
+    displayName: Liveness Path
+    description: Liveness health check api path.
+    value: /api/live
+  - name: READINESS_PATH
+    displayName: Readiness Path
+    description: Readiness health check api path.
+    value: /api/ready
+  - name: HEALTH_SCHEME
+    displayName: Health Scheme
+    description: Scheme used to connect to health check endpoints (HTTP or HTTPS).
+    value: HTTP
