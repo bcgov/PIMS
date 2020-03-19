@@ -1,6 +1,5 @@
 using AutoMapper;
 using Pims.Api.Models;
-using Pims.Api.Profiles.Extensions;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models;
 

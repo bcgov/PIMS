@@ -84,6 +84,11 @@ namespace Pims.Api.Areas.Keycloak.Controllers
 
                 _pimsAdminService.CommitTransaction();
             }
+
+            // Remove groups in PIMS that don't exist in keycloak.
+            var groupIds = groups.Select(g => g.Id).ToArray();
+            _pimsAdminService.Role.RemoveAll(groupIds);
+
             var result = _mapper.Map<Model.GroupModel[]>(groups);
 
             return new JsonResult(result);

@@ -1,9 +1,7 @@
-using System.Data;
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Keycloak.Models;
 using KModel = Pims.Keycloak.Models;
-using Pims.Api.Profiles.Extensions;
 
 namespace Pims.Api.Areas.Keycloak.Profiles
 {
@@ -16,6 +14,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles
         public UserProfile()
         {
             CreateMap<KModel.UserModel, Entity.User>()
+                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => $"{src.LastName}, {src.FirstName}"))
                 .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => !src.Enabled))
                 .ForMember(dest => dest.Roles, opt => opt.Ignore())
                 .ForMember(dest => dest.Agencies, opt => opt.MapFrom<Resolvers.AttributeMapToAgencyResolver>());

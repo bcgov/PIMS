@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 
@@ -13,5 +12,6 @@ namespace Pims.Dal.Services.Admin
         Paged<Role> GetNoTracking(int page, int quantity);
         Role GetNoTracking(Guid id);
         Role GetByName(string name);
+        int RemoveAll(Guid[] exclude);
     }
 }
