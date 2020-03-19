@@ -140,26 +140,26 @@ objects:
                 requests:
                   cpu: "${CPU_REQUEST}"
                   memory: "${MEMORY_REQUEST}"
-              # readinessProbe:
-              #   httpGet:
-              #     path: /hc
-              #     port: ${{APP_PORT}}
-              #     scheme: HTTP
-              #   initialDelaySeconds: 10
-              #   timeoutSeconds: 1
-              #   periodSeconds: 10
-              #   successThreshold: 1
-              #   failureThreshold: 3
-              # livenessProbe:
-              #   httpGet:
-              #     path: /hc
-              #     port: ${{APP_PORT}}
-              #     scheme: HTTP
-              #   initialDelaySeconds: 10
-              #   timeoutSeconds: 1
-              #   periodSeconds: 10
-              #   successThreshold: 1
-              #   failureThreshold: 3
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /api/ready
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 1
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /api/live
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 1
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3
 parameters:
   - name: APP_NAME
     displayName: App Name
