@@ -189,12 +189,12 @@ namespace Pims.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHealthChecks("/api/live", new HealthCheckOptions
+            app.UseHealthChecks("/api/live", 8080, new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            app.UseHealthChecks("/api/ready", new HealthCheckOptions
+            app.UseHealthChecks("/api/ready", 8080, new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -202,7 +202,18 @@ namespace Pims.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecksUI();
+                endpoints.MapHealthChecksUI(
+                    setup =>
+                    {
+                        setup.UIPath = "/api/healthchecks-ui"; // this is ui path in your browser
+                        setup.ApiPath = "/api";
+                        setup.ResourcesPath = "/api/ui/resources";
+                        setup.WebhookPath = "/api/hooks";
+                        setup.UseRelativeResourcesPath = false;
+                        setup.UseRelativeApiPath = false;
+                        setup.UseRelativeWebhookPath = false;
+                    }
+                );
             });
         }
 

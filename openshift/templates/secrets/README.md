@@ -58,7 +58,7 @@ oc process -f api-sso-secrets.yaml \
 oc project $namespace_dev
 oc process -f api-health-secrets.yaml \
   -p ENV_NAME=dev \
-  -p KEYCLOAK_AUTHORITY=[health-dev realm URL] \
+  -p ROCKETCHAT_HEALTH_HOOK_URI=[health-dev webhook URL] \
   | oc create -f -
 
 oc project $namespace_test
@@ -70,7 +70,7 @@ oc process -f api-sso-secrets.yaml \
 oc project $namespace_test
 oc process -f api-health-secrets.yaml \
   -p ENV_NAME=test \
-  -p KEYCLOAK_AUTHORITY=[health-test realm URL] \
+  -p ROCKETCHAT_HEALTH_HOOK_URI=[health-test webhook URL] \
   | oc create -f -
 
 oc project $namespace_prod
@@ -82,7 +82,7 @@ oc process -f api-sso-secrets.yaml \
 oc project $namespace_prod
 oc process -f api-health-secrets.yaml \
   -p ENV_NAME=prod \
-  -p KEYCLOAK_AUTHORITY=[health-production realm URL] \
+  -p ROCKETCHAT_HEALTH_HOOK_URI=[health-production webhook URL] \
   | oc create -f -
 ```
 
