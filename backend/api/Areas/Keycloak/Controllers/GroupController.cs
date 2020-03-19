@@ -18,7 +18,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
     /// <summary>
     /// GroupController class, provides endpoints for managing groups within keycloak.
     /// </summary>
-    [HasPermission(Permissions.SystemAdmin)]
+    [HasPermission(Permissions.AdminRoles)]
     [ApiController]
     [Area("keycloak")]
     [Route("/api/[area]/groups")]
