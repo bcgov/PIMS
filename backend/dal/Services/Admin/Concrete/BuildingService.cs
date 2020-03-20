@@ -64,7 +64,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .AsNoTracking().SingleOrDefault(u => u.Id == id);
+                .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .AsNoTracking().SingleOrDefault(u => u.LocalId == localId);
+                .AsNoTracking().SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .SingleOrDefault(u => u.LocalId == localId);
+                .SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .SingleOrDefault(u => u.Parcel.PID == pid && u.LocalId == localId);
+                .SingleOrDefault(u => u.Parcel.PID == pid && u.LocalId == localId) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Pims.Dal.Services.Admin
         {
             var entity = this.Context.Buildings
                 .Include(p => p.Address)
-                .SingleOrDefault(p => p.Id == id);
+                .SingleOrDefault(p => p.Id == id) ?? throw new KeyNotFoundException();
 
             return entity;
         }

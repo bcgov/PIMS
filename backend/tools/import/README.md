@@ -21,19 +21,23 @@ Import__File=./Data/properties.json
 
 Some of these settings have default values contained in the `appsettings.json` configuration file.
 
-| Key                      | Required | Description                                                                                   |
-| ------------------------ | :------: | --------------------------------------------------------------------------------------------- |
-| Keycloak\_\_TokenUrl     |    X     | The URL to the keycloak token endpoint.                                                       |
-| Keycloak\_\_Audience     |          | The Keycloak realm (default: ClientId) audience.                                              |
-| Keycloak\_\_ClientId     |    X     | The Keycloak client ID.                                                                       |
-| Keycloak\_\_ClientSecret |    ?     | The Keycloak client secret.  **Required if Api:AccessToken not provided.**                    |
-| Api\_\_ImportUrl         |    X     | The URL to the endpoint you want to send the request to.                                      |
-| Api\_\_HttpMethod        |          | HTTP Method to use in the request (default: POST).                                            |
-| Api\_\_AccessToken       |          | The JWT Bearer access token to send with the request.                                         |
-| Api\_\_RefreshToken      |          | The JWT Bearer refresh token to send to fetch a new access token after it expires.            |
-| Import\_\_File           |    X     | The path to the JSON file to parse and iterate through. The JSON should be an array of items. |
-| Import\_\_Delay          |          | The number of seconds to delay between each request (default: 0).                             |
-| Import\_\_Quantity       |          | The number of items to send in each request (default: 50, max: 100)                           |
+| Key                         | Required | Description                                                                                       |
+| --------------------------- | :------: | ------------------------------------------------------------------------------------------------- |
+| Keycloak\_\_TokenUrl        |    X     | The URL to the keycloak token endpoint.                                                           |
+| Keycloak\_\_Audience        |          | The Keycloak realm (default: ClientId) audience.                                                  |
+| Keycloak\_\_ClientId        |    X     | The Keycloak client ID.                                                                           |
+| Keycloak\_\_ClientSecret    |    ?     | The Keycloak client secret.  **Required if Api:AccessToken not provided.**                        |
+| Api\_\_ImportUrl            |    X     | The URL to the endpoint you want to send the request to.                                          |
+| Api\_\_HttpMethod           |          | HTTP Method to use in the request (default: POST).                                                |
+| Api\_\_AccessToken          |          | The JWT Bearer access token to send with the request.                                             |
+| Import\_\_File              |    X     | The path to the JSON file to parse and iterate through. The JSON should be an array of items.     |
+| Import\_\_Delay             |          | The number of seconds to delay between each request (default: 0).                                 |
+| Import\_\_Quantity          |          | The number of items to send in each request (default: 50, max: 100)                               |
+| Import\_\_Skip              |          | The number of items to skip in the imported JSON array.                                           |
+| Import\_\_Iterations        |          | The number of requests to make before cancelling the import (default = 0, which means don't stop) |
+| Import\_\_RetryAfterFailure |          | Whether to retry a request after a failure.                                                       |
+| Import\_\_RetryAttempts     |          | How many retries after a failure should be sent.                                                  |
+| Import\_\_AbortAfterFailure |          | After how many failures should the import be aborted.                                             |
 
 If you prefer, you can add your JSON files to the `/Data` folder and they will be ignored by **git**.
 

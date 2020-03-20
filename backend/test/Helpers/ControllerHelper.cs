@@ -33,10 +33,10 @@ namespace Pims.Api.Test.Helpers
         {
             var logger = new Mock<ILogger<UserController>>();
             var requestClient = new Mock<IKeycloakRequestClient>();
-            var keycloakAdmin = new Mock<IKeycloakAdmin>();
+            var keycloakService = new Mock<IKeycloakService>();
             helper.AddSingleton(logger.Object);
             helper.AddSingleton(requestClient.Object);
-            helper.AddSingleton(keycloakAdmin.Object);
+            helper.AddSingleton(keycloakService.Object);
             helper.AddSingleton<UserController>();
             helper.AddSingleton(CreateControllerContext(user));
 
@@ -50,11 +50,11 @@ namespace Pims.Api.Test.Helpers
             var logger = new Mock<ILogger<AdminController.UserController>>();
             var httpClientFactory = new Mock<IHttpClientFactory>();
             var requestClient = new Mock<IKeycloakRequestClient>();
-            var keycloakAdmin = new Mock<IKeycloakAdmin>();
+            var keycloakService = new Mock<IKeycloakService>();
             helper.AddSingleton(logger.Object);
             helper.AddSingleton(httpClientFactory.Object);
             helper.AddSingleton(requestClient.Object);
-            helper.AddSingleton(keycloakAdmin.Object);
+            helper.AddSingleton(keycloakService.Object);
             helper.AddSingleton<AdminController.UserController>();
             helper.AddSingleton(CreateControllerContext(user));
 

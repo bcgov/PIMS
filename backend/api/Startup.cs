@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 using Pims.Dal;
+using Pims.Dal.Keycloak;
 using Pims.Keycloak;
 
 namespace Pims.Api
@@ -69,7 +70,6 @@ namespace Pims.Api
         {
             services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
-            services.AddScoped<IKeycloakAdmin, KeycloakAdmin>(); // TODO: Add services extension to Keycloak library.
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -137,8 +137,8 @@ namespace Pims.Api
 
             services.AddHttpClient();
 
-            services.AddPimsService();
-            services.AddPimsAdminService();
+            services.AddPimsServices();
+            services.AddPimsKeycloakService();
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
             services.AddTransient<IClaimsTransformation, KeycloakClaimTransformer>();
             services.AddHttpContextAccessor();

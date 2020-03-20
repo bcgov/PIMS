@@ -8,6 +8,18 @@ namespace Pims.Dal
     public static class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Add PimsService and PimsAdminService objects to dependency injection service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddPimsServices(this IServiceCollection services)
+        {
+            return services
+                .AddPimsService()
+                .AddPimsAdminService();
+        }
+
+        /// <summary>
         /// Add PimsService objects to the dependency injection service collection.
         /// </summary>
         /// <param name="services"></param>

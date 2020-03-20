@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Keycloak", "keycloak\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Core", "core\Pims.Core.csproj", "{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Dal.Keycloak", "dal.keycloak\Pims.Dal.Keycloak.csproj", "{5697DD19-62CC-4377-ABA8-1E192376F4F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}.Release|x64.Build.0 = Release|Any CPU
 		{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}.Release|x86.ActiveCfg = Release|Any CPU
 		{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}.Release|x86.Build.0 = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|x64.Build.0 = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x64.Build.0 = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

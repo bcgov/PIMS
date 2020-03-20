@@ -8,10 +8,14 @@ namespace Pims.Dal.Services.Admin
     /// <typeparam name="ET"></typeparam>
     public interface IBaseService<ET> where ET : BaseEntity
     {
-        #region Properties
-        #endregion
-
         #region Methods
+        /// <summary>
+        /// Copies the values from the 'source' into the 'destination' so that EF can update appropriately.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        void SetCurrentValues(ET source, ET destination);
+
         /// <summary>
         /// Find the entity with the specified key in the datasource.
         ///</summary>

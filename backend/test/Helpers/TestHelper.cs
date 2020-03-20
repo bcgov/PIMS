@@ -111,7 +111,7 @@ namespace Pims.Api.Test.Helpers
                 cfg.AddProfile(new AdminProfiles.RoleProfile());
                 cfg.AddProfile(new KeycloakProfiles.BaseProfile());
                 cfg.AddProfile(new KeycloakProfiles.UserProfile());
-                cfg.AddProfile(new KeycloakProfiles.GroupProfile());
+                cfg.AddProfile(new KeycloakProfiles.RoleProfile());
                 cfg.AddProfile(new KeycloakProfiles.AgencyProfile());
             });
             // mapperConfig.AssertConfigurationIsValid(); // TODO: Fix this.

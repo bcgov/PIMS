@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Pims.Keycloak
 {
-    public interface IKeycloakAdmin
+    public interface IKeycloakService
     {
         #region Attack Detection
         Task DeleteAttackDetectionAsync();
