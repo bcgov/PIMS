@@ -47,3 +47,6 @@ msbuild.wrn
 
 # SonarQube
 .sonarqube/
+
+# NET Core Healthchecks UI
+healthchecksdb
