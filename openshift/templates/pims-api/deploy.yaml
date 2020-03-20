@@ -140,26 +140,26 @@ objects:
                 requests:
                   cpu: "${CPU_REQUEST}"
                   memory: "${MEMORY_REQUEST}"
-              # readinessProbe:
-              #   httpGet:
-              #     path: /hc
-              #     port: ${{APP_PORT}}
-              #     scheme: HTTP
-              #   initialDelaySeconds: 10
-              #   timeoutSeconds: 1
-              #   periodSeconds: 10
-              #   successThreshold: 1
-              #   failureThreshold: 3
-              # livenessProbe:
-              #   httpGet:
-              #     path: /hc
-              #     port: ${{APP_PORT}}
-              #     scheme: HTTP
-              #   initialDelaySeconds: 10
-              #   timeoutSeconds: 1
-              #   periodSeconds: 10
-              #   successThreshold: 1
-              #   failureThreshold: 3
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: ${READINESS_PATH}
+                  port: ${{APP_PORT}}
+                  scheme: ${HEALTH_SCHEME}
+                initialDelaySeconds: 1
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: ${LIVENESS_PATH}
+                  port: ${{APP_PORT}}
+                  scheme: ${HEALTH_SCHEME}
+                initialDelaySeconds: 1
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3
 parameters:
   - name: APP_NAME
     displayName: App Name
@@ -219,3 +219,15 @@ parameters:
     displayName: Memory Request
     description: Starting amount of memory the container can use.
     value: 2Gi
+  - name: LIVENESS_PATH
+    displayName: Liveness Path
+    description: Liveness health check api path.
+    value: /api/live
+  - name: READINESS_PATH
+    displayName: Readiness Path
+    description: Readiness health check api path.
+    value: /api/ready
+  - name: HEALTH_SCHEME
+    displayName: Health Scheme
+    description: Scheme used to connect to health check endpoints (HTTP or HTTPS).
+    value: HTTP
