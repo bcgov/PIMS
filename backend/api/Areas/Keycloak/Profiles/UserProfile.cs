@@ -19,8 +19,13 @@ namespace Pims.Api.Areas.Keycloak.Profiles
                 .ForMember(dest => dest.Roles, opt => opt.Ignore())
                 .ForMember(dest => dest.Agencies, opt => opt.MapFrom<Resolvers.AttributeMapToAgencyResolver>());
 
+            CreateMap<Entity.User, KModel.UserModel>()
+                .ForMember(dest => dest.Enabled, opt => opt.MapFrom(src => !src.IsDisabled))
+                .ForMember(dest => dest.Attributes, opt => opt.Ignore())
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom<Resolvers.EntityRoleResolver>());
+
             CreateMap<Entity.User, Model.UserModel>()
-                .ForMember(dest => dest.Groups, opt => opt.MapFrom<Resolvers.UserRoleToGroupResolver>())
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom<Resolvers.UserRoleToRoleResolver>())
                 .ForMember(dest => dest.Agencies, opt => opt.MapFrom<Resolvers.AgencyToAgencyResolver>())
                 .IncludeBase<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -31,8 +36,8 @@ namespace Pims.Api.Areas.Keycloak.Profiles
 
             // Update models
             CreateMap<Model.Update.UserModel, Entity.User>()
-                .ForMember(dest => dest.Agencies, opt => opt.Ignore())
-                .ForMember(dest => dest.Roles, opt => opt.Ignore())
+                .ForMember(dest => dest.Agencies, opt => opt.MapFrom<Resolvers.UpdateAgencyToEntityResolver>())
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom<Resolvers.UpdateRoleToEntityResolver>())
                 .IncludeBase<Model.Update.BaseModel, Entity.BaseEntity>();
 
             CreateMap<Model.Update.UserModel, KModel.UserModel>()

@@ -8,6 +8,7 @@ using Entity = Pims.Dal.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Pims.Dal.Services.Admin;
+using System;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -31,12 +32,7 @@ namespace Pims.Api.Test.Controllers
             helper.CreatePimsAdminService();
             var controller = helper.CreateController<ImportController>(user);
 
-            var service = helper.GetService<Mock<IPimsAdminService>>();
-            service.Setup(m => m.Agency.GetAll()).Returns(new [] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
-            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new [] { new Entity.PropertyClassification(1, "Classification") });
-            service.Setup(m => m.PropertyStatus.GetAll()).Returns(new [] { new Entity.PropertyStatus(1, "Status") });
-
-            var properties = new []
+            var properties = new[]
             {
                 new Model.PropertyModel()
                 {
@@ -55,6 +51,17 @@ namespace Pims.Api.Test.Controllers
                 LandArea = "45.55"
                 }
             };
+
+            var parcel = new Entity.Parcel()
+            {
+                Id = 123123123
+            };
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
+            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
+            service.Setup(m => m.PropertyStatus.GetAll()).Returns(new[] { new Entity.PropertyStatus(1, "Status") });
+            service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Returns(parcel);
 
             // Act
             var result = controller.ImportProperties(properties);

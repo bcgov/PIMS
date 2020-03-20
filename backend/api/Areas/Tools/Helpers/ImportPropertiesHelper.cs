@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Models;
 using Pims.Core.Extensions;
+using Pims.Core.Helpers;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Services.Admin;
 using Entity = Pims.Dal.Entities;
@@ -230,7 +231,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateParcel(PropertyModel property, int pid, Entity.Agency agency)
         {
-            var p_e = _pimsAdminService.Parcel.GetByPid(pid) ?? new Entity.Parcel();
+            var p_e = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
             var fiscal = int.Parse(property.FiscalYear);
 
             // Copy properties over to entity.
@@ -320,11 +321,11 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Parcel AddUpdateBuilding(PropertyModel property, int pid, Entity.Agency agency)
         {
             var lid = property.LocalId;
-            var b_e = _pimsAdminService.Building.GetByPidAndLocalId(pid, lid) ?? new Entity.Building();
+            var b_e = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
             var fiscal = int.Parse(property.FiscalYear);
 
             // Find parcel
-            var parcel = _pimsAdminService.Parcel.GetByPid(pid);
+            var parcel = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid), null);
 
             // If the parcel doesn't exist yet we'll need to create a temporary one.
             if (parcel == null)

@@ -10,8 +10,10 @@ COPY api/*.csproj api/
 COPY entities/*.csproj entities/
 COPY test/*.csproj test/
 COPY dal/*.csproj dal/
+COPY dal.keycloak/*.csproj dal.keycloak/
 COPY keycloak/*.csproj keycloak/
 COPY core/*.csproj core/
+
 RUN dotnet restore
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef --version 3.1.0

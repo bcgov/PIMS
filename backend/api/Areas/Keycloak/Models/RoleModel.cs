@@ -1,41 +1,41 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Models;
-using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Areas.Keycloak.Models
 {
-    public class GroupModel : BaseModel, IEquatable<GroupModel>
+    /// <summary>
+    /// RoleModel class, provides a model that represents a role.
+    /// </summary>
+    public class RoleModel : BaseModel, IEquatable<RoleModel>
     {
         #region Properties
+        /// <summary>
+        /// get/set - A unique identify for the role.
+        /// </summary>
+        /// <value></value>
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// get/set - A unique name to identify the role.
+        /// </summary>
+        /// <value></value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// get/set - The role description.
+        /// </summary>
+        /// <value></value>
         public string Description { get; set; }
-        #endregion
-
-        #region Constructors
-        public GroupModel() { }
-
-        public GroupModel(Entity.Role role)
-        {
-            this.Id = role.Id;
-            this.Name = role.Name;
-            this.Description = role.Description;
-            this.CreatedOn = role.CreatedOn;
-            this.UpdatedOn = role.UpdatedOn;
-            this.RowVersion = role.RowVersion == null ? null : Convert.ToBase64String(role.RowVersion);
-        }
         #endregion
 
         #region Methods
         public override bool Equals(object obj)
         {
-            return Equals(obj as GroupModel);
+            return Equals(obj as RoleModel);
         }
 
-        public bool Equals([AllowNull] GroupModel other)
+        public bool Equals([AllowNull] RoleModel other)
         {
             return other != null &&
                    Id.Equals(other.Id) &&
