@@ -15,6 +15,7 @@ using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Keycloak;
 using KModel = Pims.Keycloak.Models;
+using Pims.Dal.Keycloak;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {
@@ -28,29 +29,20 @@ namespace Pims.Api.Areas.Keycloak.Controllers
     public class UserController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<UserController> _logger;
-        private readonly IPimsService _pimsService;
-        private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
-        private readonly IKeycloakAdmin _keycloakAdmin;
+        private readonly IPimsKeycloakService _keycloakService;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new instance of a UserController class.
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="pimsService"></param>
-        /// <param name="pimsAdminService"></param>
+        /// <param name="keycloakService"></param>
         /// <param name="mapper"></param>
-        /// <param name="keycloakAdmin"></param>
-        public UserController(ILogger<UserController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper, IKeycloakAdmin keycloakAdmin)
+        public UserController(IPimsKeycloakService keycloakService, IMapper mapper)
         {
-            _logger = logger;
-            _pimsService = pimsService;
-            _pimsAdminService = pimsAdminService;
+            _keycloakService = keycloakService;
             _mapper = mapper;
-            _keycloakAdmin = keycloakAdmin;
         }
         #endregion
 
@@ -68,56 +60,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [HttpPost("sync/{id}")]
         public async Task<IActionResult> SyncUserAsync(Guid id)
         {
-            var kuser = await _keycloakAdmin.GetUserAsync(id) ?? throw new KeyNotFoundException();
-            var kgroups = await _keycloakAdmin.GetUserGroupsAsync(id);
+            var user = await _keycloakService.SyncUserAsync(id);
+            var result = _mapper.Map<Model.UserModel>(user);
 
-            var euser = _pimsAdminService.User.Find(id);
-            if (euser == null)
-            {
-                // The user does not exist in PIMS, it needs to be added.
-                euser = _mapper.Map<Entity.User>(kuser);
-                foreach (var group in kgroups)
-                {
-                    var erole = _pimsAdminService.Role.Find(group.Id);
-
-                    // If the role doesn't exist, create it.
-                    if (erole == null)
-                    {
-                        erole = _mapper.Map<Entity.Role>(group);
-                        _pimsAdminService.Role.AddOne(erole);
-                    }
-
-                    euser.Roles.Add(new Entity.UserRole(euser, erole));
-                }
-                _pimsAdminService.User.AddOne(euser);
-            }
-            else
-            {
-                // The user exists in PIMS, it only needs to be updated.
-                var roles = euser?.Roles.ToArray();
-                _mapper.Map(kuser, euser);
-                foreach (var group in kgroups)
-                {
-                    var erole = _pimsAdminService.Role.Find(group.Id);
-
-                    // If the role doesn't exist, create it.
-                    if (erole == null)
-                    {
-                        erole = _mapper.Map<Entity.Role>(group);
-                        _pimsAdminService.Role.AddOne(erole);
-                    }
-
-                    // If the user isn't associated with the role, add a link.
-                    if (!roles.Any(r => r.RoleId == group.Id))
-                    {
-                        euser.Roles.Add(new Entity.UserRole(euser, erole));
-                    }
-                }
-                _pimsAdminService.User.UpdateOne(euser);
-            }
-            _pimsAdminService.CommitTransaction();
-
-            return new JsonResult(kuser);
+            return new JsonResult(result);
         }
 
 
@@ -132,18 +78,8 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersAsync(int page = 1, int quantity = 10, string search = null)
         {
-            var kusers = await _keycloakAdmin.GetUsersAsync((page - 1) * quantity, quantity, search);
-
-            // TODO: Need better performing solution.
-            var eusers = kusers.Select(u => _pimsAdminService.User.Find(u.Id) ?? new Entity.User(u.Id, $"{u.LastName}, {u.FirstName}", u.Email)
-            {
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                IsDisabled = u.Enabled
-            });
-            // TODO: Apply search to this query.
-            // TODO: Use a mapper.
-            var result = eusers.Select(u => new Model.UserModel(u));
+            var users = await _keycloakService.GetUsersAsync((page - 1) * quantity, quantity, search);
+            var result = _mapper.Map<IEnumerable<Model.UserModel>>(users);
 
             return new JsonResult(result);
         }
@@ -157,9 +93,8 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserAsync(Guid id)
         {
-            var kuser = await _keycloakAdmin.GetUserAsync(id) ?? throw new KeyNotFoundException();
-            var euser = _pimsAdminService.User.Get(kuser.Id) ?? throw new KeyNotFoundException();
-            var result = _mapper.Map<Model.UserModel>(euser);
+            var user = await _keycloakService.GetUserAsync(id);
+            var result = _mapper.Map<Model.UserModel>(user);
 
             return new JsonResult(result);
         }
@@ -173,85 +108,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] Model.Update.UserModel model)
         {
-            var euser = _pimsAdminService.User.Get(model.Id) ?? throw new KeyNotFoundException();
-            var kuser = await _keycloakAdmin.GetUserAsync(id) ?? throw new KeyNotFoundException();
-
-            // Update PIMS
-            _mapper.Map(model, euser);
-            _pimsAdminService.User.UpdateOne(euser);
-            var eroles = euser.Roles.ToArray();
-            var eagencies = euser.Agencies.ToArray();
-
-            foreach (var group in model.Groups)
-            {
-                switch (group.Action)
-                {
-                    case (UpdateActions.Add):
-                        {
-                            var erole = _pimsAdminService.Role.Find(group.Id) ?? throw new InvalidOperationException("Cannot assign a role to a user, when the role does not exist.");
-                            if (!eroles.Any(r => r.RoleId == group.Id))
-                            {
-                                euser.Roles.Add(new Entity.UserRole(euser, erole));
-                            }
-                            break;
-                        }
-                    case (UpdateActions.Remove):
-                        {
-                            var erole = eroles.FirstOrDefault(r => r.RoleId == group.Id);
-                            if (erole != null)
-                            {
-                                euser.Roles.Remove(erole);
-                            }
-                            break;
-                        }
-                }
-            }
-
-            foreach (var agency in model.Agencies)
-            {
-                switch (agency.Action)
-                {
-                    case (UpdateActions.Add):
-                        {
-                            var eagency = _pimsAdminService.Agency.Find(agency.Id) ?? throw new InvalidOperationException("Cannot assign an agency to a user, when the agency does not exist.");
-                            if (!eagencies.Any(a => a.AgencyId == agency.Id))
-                            {
-                                euser.Agencies.Add(new Entity.UserAgency(euser, eagency));
-                            }
-                            break;
-                        }
-                    case (UpdateActions.Remove):
-                        {
-                            var eagency = eagencies.FirstOrDefault(r => r.AgencyId == agency.Id);
-                            if (eagency != null)
-                            {
-                                euser.Agencies.Remove(eagency);
-                            }
-                            break;
-                        }
-                }
-            }
-
-            _pimsAdminService.CommitTransaction();
-
-            // Now update keycloak
-            var kmodel = _mapper.Map<KModel.UserModel>(model);
-            if (kmodel.Attributes == null)
-                kmodel.Attributes = new Dictionary<string, string[]>();
-            kmodel.Attributes["agencies"] = _pimsService.User.GetAgencies(euser.Id).Select(a => a.ToString()).ToArray();
-            await _keycloakAdmin.UpdateUserAsync(kmodel);  // TODO: Fix issue where EmailVerified will be set to false.
-
-            // Update user group membership.
-            model.Groups.Where(g => g.Action == UpdateActions.Add).ForEach(async g =>
-            {
-                await _keycloakAdmin.AddGroupToUserAsync(id, g.Id);
-            });
-            model.Groups.Where(g => g.Action == UpdateActions.Remove).ForEach(async g =>
-            {
-                await _keycloakAdmin.RemoveGroupFromUserAsync(id, g.Id);
-            });
-
-            var result = _mapper.Map<Model.UserModel>(euser);
+            var user = _mapper.Map<Entity.User>(model);
+            user.Id = id;
+            await _keycloakService.UpdateUserAsync(user);
+            var result = _mapper.Map<Model.UserModel>(user);
 
             return new JsonResult(result);
         }

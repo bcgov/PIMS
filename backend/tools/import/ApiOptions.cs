@@ -33,12 +33,6 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <value></value>
         public string AccessToken { get; set; }
-
-        /// <summary>
-        /// get/set - The refresh token.
-        /// </summary>
-        /// <value></value>
-        public string RefreshToken { get; set; }
         #endregion
     }
 }

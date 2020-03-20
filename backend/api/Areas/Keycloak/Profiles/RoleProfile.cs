@@ -7,26 +7,26 @@ using Pims.Api.Profiles.Extensions;
 namespace Pims.Api.Areas.Keycloak.Profiles
 {
     /// <summary>
-    /// GroupProfile class, provides automapper configuration for groups.
+    /// RoleProfile class, provides automapper configuration for groups.
     /// </summary>
-    public class GroupProfile : Profile
+    public class RoleProfile : Profile
     {
         #region Constructors
-        public GroupProfile()
+        public RoleProfile()
         {
-            CreateMap<KModel.GroupModel, Entity.Role>();
+            CreateMap<KModel.RoleModel, Entity.Role>();
 
-            CreateMap<Entity.Role, Model.GroupModel>()
+            CreateMap<Entity.Role, Model.RoleModel>()
                 .IncludeBase<Entity.BaseEntity, Api.Models.BaseModel>();
 
-            CreateMap<KModel.GroupModel, Model.GroupModel>();
-            CreateMap<Model.GroupModel, KModel.GroupModel>();
+            CreateMap<KModel.RoleModel, Model.RoleModel>();
+            CreateMap<Model.RoleModel, KModel.RoleModel>();
 
             // Update models
-            CreateMap<Model.Update.GroupModel, Entity.Role>()
+            CreateMap<Model.Update.RoleModel, Entity.Role>()
                 .IncludeBase<Model.Update.BaseModel, Entity.BaseEntity>();
 
-            CreateMap<Model.Update.GroupModel, KModel.GroupModel>();
+            CreateMap<Model.Update.RoleModel, KModel.RoleModel>();
         }
         #endregion
     }
