@@ -1,7 +1,7 @@
 @import "../../fonts.scss";
 .map-filter-bar.container-fluid {
-  position: fixed;
-  top: 8rem;
+  position: absolute;
+  top: 1rem;
   z-index: 500;
   color: #494949;
   .row .col-md-5 {

@@ -2,8 +2,13 @@ import React from 'react';
 import { Navbar, Container, Row, Col } from 'react-bootstrap';
 import './Header.scss';
 import logoUrl from './logo-banner.svg';
+import { useHistory } from 'react-router-dom';
 
 function Header() {
+  const history = useHistory();
+  if (history.location.pathname === '/') {
+    history.replace('/mapview');
+  }
   //example of how to check role: const isAdmin = keycloak?.realmAccess?.roles.includes(USER_ROLES[Permission.ADMIN]) == true;
   return (
     <Navbar fixed="top" expand="xl" className="App-header">
