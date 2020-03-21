@@ -48,6 +48,17 @@ nav.map-nav {
   }
 
   .navbar-collapse {
+    margin-top: 10px;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    height: 20px;
+    .nav-link {
+      border-right: 1px solid #fff;
+      padding: 0 2rem;
+    }
+  }
+
+  .navbar-collapse {
     .nav-link {
       border-right: 1px solid #fff;
       padding: .5rem 2rem;
