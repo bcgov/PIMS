@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Pims.Core.Extensions;
-using Pims.Dal;
-using Entity = Pims.Dal.Entities;
+using System.Collections.Generic;
+using System;
 using Pims.Dal.Security;
-using Pims.Dal.Services.Admin;
-using Model = Pims.Api.Areas.Keycloak.Models;
-using Pims.Api.Models;
-using Pims.Api.Policies;
-using Pims.Keycloak;
-using KModel = Pims.Keycloak.Models;
 using Pims.Dal.Keycloak;
+using Pims.Api.Policies;
+using Model = Pims.Api.Areas.Keycloak.Models;
+using Microsoft.AspNetCore.Mvc;
+using Entity = Pims.Dal.Entities;
+using AutoMapper;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {
@@ -78,8 +70,8 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersAsync(int page = 1, int quantity = 10, string search = null)
         {
-            var users = await _keycloakService.GetUsersAsync((page - 1) * quantity, quantity, search);
-            var result = _mapper.Map<IEnumerable<Model.UserModel>>(users);
+            var users = await _keycloakService.GetUsersAsync(page, quantity, search);
+            var result = _mapper.Map<Model.UserModel[]>(users);
 
             return new JsonResult(result);
         }

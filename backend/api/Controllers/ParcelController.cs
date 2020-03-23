@@ -72,9 +72,6 @@ namespace Pims.Api.Controllers
         public IActionResult GetMyParcel(int id)
         {
             var entity = _pimsService.Parcel.GetNoTracking(id);
-
-            if (entity == null) return NoContent();
-
             var parcel = _mapper.Map<ParcelModel>(entity);
 
             return new JsonResult(parcel);

@@ -134,6 +134,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                         ParentId = agency.Id,
                         Parent = agency
                     };
+                    _pimsAdminService.Agency.Add(subAgency);
                     _agencies.Add(subAgency);
                     _logger.LogDebug($"Adding sub-agency '{subAgency.Code}' - '{agency.Name}', parent: '{subAgency.Parent.Code}'.");
                 }
