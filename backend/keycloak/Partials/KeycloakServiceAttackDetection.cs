@@ -7,7 +7,7 @@ namespace Pims.Keycloak
     /// KeycloakAdmin class, provides a service for sending HTTP requests to the keycloak admin API.
     ///     - https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_overview
     /// </summary>
-    public partial class KeycloakAdmin : IKeycloakAdmin
+    public partial class KeycloakService : IKeycloakService
     {
         #region Methods
         /// <summary>

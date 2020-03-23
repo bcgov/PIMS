@@ -1,10 +1,10 @@
 namespace Pims.Keycloak
 {
     /// <summary>
-    /// KeycloakAdmin class, provides a service for sending HTTP requests to the keycloak admin API.
+    /// KeycloakService class, provides a service for sending HTTP requests to the keycloak admin API.
     ///     - https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_overview
     /// </summary>
-    public partial class KeycloakAdmin : IKeycloakAdmin
+    public partial class KeycloakService : IKeycloakService
     {
         #region Variables
         private readonly IKeycloakRequestClient _client;
@@ -15,7 +15,7 @@ namespace Pims.Keycloak
         /// Creates a new instance of a KeycloakAdmin class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="client"></param>
-        public KeycloakAdmin(IKeycloakRequestClient client)
+        public KeycloakService(IKeycloakRequestClient client)
         {
             client.Options.Validate(); // TODO: Figure out how to automatically validate.
             client.Options.Admin.Validate();

@@ -5,9 +5,9 @@ using KModel = Pims.Keycloak.Models;
 namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
 {
     /// <summary>
-    /// GroupToRoleResolver class, provides a way for automapper to convert a gropu to a role.
+    /// KeycloakGroupResolver class, provides a way for automapper to convert a group to a role.
     /// </summary>
-    public class GroupToRoleResolver : IValueResolver<KModel.GroupModel, Entity.Role, Entity.Role>
+    public class KeycloakGroupResolver : IValueResolver<KModel.GroupModel, Entity.Role, Entity.Role>
     {
         public Entity.Role Resolve(KModel.GroupModel source, Entity.Role destination, Entity.Role destMember, ResolutionContext context)
         {

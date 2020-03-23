@@ -27,6 +27,16 @@ namespace Pims.Dal.Services.Admin
 
         #region Methods
         /// <summary>
+        /// Copies the values from the 'source' into the 'destination' so that EF can update appropriately.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        public void SetCurrentValues(ET source, ET destination)
+        {
+            this.Context.Entry(source).CurrentValues.SetValues(destination);
+        }
+
+        /// <summary>
         /// Find the entity within the datasource with the specified key values.
         /// </summary>
         /// <param name="key"></param>

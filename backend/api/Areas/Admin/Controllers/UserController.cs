@@ -57,7 +57,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            _logger.LogDebug(query.ToString());
             return GetUsers(new EModel.UserFilter(query));
         }
 

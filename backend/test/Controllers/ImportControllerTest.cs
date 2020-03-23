@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Pims.Api.Areas.Admin.Controllers;
-using Pims.Api.Test.Helpers;
 using Xunit;
-using Model = Pims.Api.Areas.Tools.Models;
-using Entity = Pims.Dal.Entities;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using Pims.Dal.Services.Admin;
+using Pims.Api.Test.Helpers;
+using Pims.Api.Areas.Admin.Controllers;
+using Moq;
+using Model = Pims.Api.Areas.Tools.Models;
+using Microsoft.AspNetCore.Mvc;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -23,20 +23,14 @@ namespace Pims.Api.Test.Controllers
         #region Tests
         #region ImportProperties
         [Fact]
-        public void ImportProperties_Success()
+        public void ImportProperties_UpdateParcel_Success()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole("system-administrator");
             var helper = new TestHelper();
-            helper.CreatePimsAdminService();
             var controller = helper.CreateController<ImportController>(user);
 
-            var service = helper.GetService<Mock<IPimsAdminService>>();
-            service.Setup(m => m.Agency.GetAll()).Returns(new [] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
-            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new [] { new Entity.PropertyClassification(1, "Classification") });
-            service.Setup(m => m.PropertyStatus.GetAll()).Returns(new [] { new Entity.PropertyStatus(1, "Status") });
-
-            var properties = new []
+            var properties = new[]
             {
                 new Model.PropertyModel()
                 {
@@ -56,6 +50,20 @@ namespace Pims.Api.Test.Controllers
                 }
             };
 
+            var parcel = new Entity.Parcel()
+            {
+                Id = 123123123
+            };
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new Entity.BuildingConstructionType[0]);
+            service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new Entity.BuildingPredominateUse[0]);
+            service.Setup(m => m.PropertyStatus.GetAll()).Returns(new[] { new Entity.PropertyStatus(1, "Status") });
+            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
+            service.Setup(m => m.City.GetAll()).Returns(new Entity.City[0]);
+            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
+            service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Returns(parcel);
+
             // Act
             var result = controller.ImportProperties(properties);
 
@@ -63,6 +71,14 @@ namespace Pims.Api.Test.Controllers
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Pims.Api.Models.ParcelModel>>(actionResult.Value);
             Assert.Equal(properties.First().ParcelId, data.First().PID);
+            service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
+            service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
+            service.Verify(m => m.PropertyStatus.GetAll(), Times.Once());
+            service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
+            service.Verify(m => m.City.GetAll(), Times.Once());
+            service.Verify(m => m.Agency.GetAll(), Times.Once());
+            service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
+            service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
         }
 
         #endregion

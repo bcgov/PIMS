@@ -8,13 +8,13 @@ using Model = Pims.Api.Areas.Keycloak.Models;
 namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
 {
     /// <summary>
-    /// UserRoleToGroupResolver class, provides a way for automapper to convert user roles to groups.
+    /// UserRoleToRoleResolver class, provides a way for automapper to convert user roles to groups.
     /// </summary>
-    public class UserRoleToGroupResolver : IValueResolver<Entity.User, Model.UserModel, IEnumerable<Model.GroupModel>>
+    public class UserRoleToRoleResolver : IValueResolver<Entity.User, Model.UserModel, IEnumerable<Model.RoleModel>>
     {
-        public IEnumerable<Model.GroupModel> Resolve(Entity.User source, Model.UserModel destination, IEnumerable<Model.GroupModel> destMember, ResolutionContext context)
+        public IEnumerable<Model.RoleModel> Resolve(Entity.User source, Model.UserModel destination, IEnumerable<Model.RoleModel> destMember, ResolutionContext context)
         {
-            return source.Roles.Select(r => new Model.GroupModel()
+            return source.Roles.Select(r => new Model.RoleModel()
             {
                 Id = r.RoleId,
                 Name = r.Role?.Name,

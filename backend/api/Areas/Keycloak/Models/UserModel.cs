@@ -1,52 +1,71 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Pims.Api.Models;
-using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Areas.Keycloak.Models
 {
+    /// <summary>
+    /// UserModel class, provides a model to represent a user.
+    /// </summary>
     public class UserModel : BaseModel, IEquatable<UserModel>
     {
         #region Properties
+        /// <summary>
+        /// get/set - An unique identifier for the user.
+        /// </summary>
+        /// <value></value>
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// get/set - The user's display name.
+        /// </summary>
+        /// <value></value>
         public string DisplayName { get; set; }
 
+        /// <summary>
+        /// get/set - The user's given name.
+        /// </summary>
+        /// <value></value>
         public string FirstName { get; set; }
 
+        /// <summary>
+        /// get/set - The user's middle name.
+        /// </summary>
+        /// <value></value>
         public string MiddleName { get; set; }
 
+        /// <summary>
+        /// get/set - The user's last name.
+        /// </summary>
+        /// <value></value>
         public string LastName { get; set; }
 
+        /// <summary>
+        /// get/set - The user's email.
+        /// </summary>
+        /// <value></value>
         public string Email { get; set; }
 
+        /// <summary>
+        /// get/set - Whether the user is disabled.
+        /// </summary>
+        /// <value></value>
         public bool IsDisabled { get; set; }
 
+        /// <summary>
+        /// get/set - An array of agencies the user belongs to.
+        /// </summary>
+        /// <typeparam name="AgencyModel"></typeparam>
+        /// <returns></returns>
         public IEnumerable<AgencyModel> Agencies { get; set; } = new List<AgencyModel>();
 
-        public IEnumerable<GroupModel> Groups { get; set; } = new List<GroupModel>();
-        #endregion
-
-        #region Constructors
-        public UserModel() { }
-
-        public UserModel(Entity.User user)
-        {
-            this.Id = user.Id;
-            this.DisplayName = user.DisplayName;
-            this.FirstName = user.FirstName;
-            this.MiddleName = user.MiddleName;
-            this.LastName = user.LastName;
-            this.Email = user.Email;
-            this.IsDisabled = user.IsDisabled;
-            this.Agencies = user.Agencies.Select(a => new AgencyModel(a.Agency));
-            this.Groups = user.Roles.Select(r => new GroupModel(r.Role));
-            this.CreatedOn = user.CreatedOn;
-            this.UpdatedOn = user.UpdatedOn;
-            this.RowVersion = user.RowVersion == null ? null : Convert.ToBase64String(user.RowVersion);
-        }
+        /// <summary>
+        /// get/set - An array of roles the user is a member of.
+        /// </summary>
+        /// <typeparam name="RoleModel"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<RoleModel> Roles { get; set; } = new List<RoleModel>();
         #endregion
 
         #region Methods
