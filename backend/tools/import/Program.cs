@@ -1,12 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Pims.Tools.Import
@@ -28,8 +26,10 @@ namespace Pims.Tools.Import
             var config = Configure(args)
                 .Build();
 
-            var provider = new ServiceCollection()
+            var services = new ServiceCollection()
                 .Configure<ToolOptions>(config)
+                .Configure<KeycloakOptions>(config.GetSection("Keycloak"))
+                .Configure<ImportOptions>(config.GetSection("Import"))
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging(options =>
                 {
@@ -43,19 +43,28 @@ namespace Pims.Tools.Import
                 })
                 .AddTransient<Startup>()
                 .AddTransient<JwtSecurityTokenHandler>()
-                .BuildServiceProvider();
+                .AddTransient<IImporter, Importer>()
+                .AddSingleton<IOpenIdConnector, OpenIdConnector>();
+
+            services.AddHttpClient("Pims.Tools.Import", client => { });
+
+            var provider = services.BuildServiceProvider();
 
             var logger = provider.GetService<ILogger<Startup>>();
 
+            var result = 0;
             try
             {
-                return await provider.GetService<Startup>().Run(args);
+                result = await provider.GetService<Startup>().Run(args);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An unhandled error has occurred.");
-                return 1;
+                logger.LogCritical(ex, "An unhandled error has occurred.");
+                result = 1;
             }
+
+            provider.Dispose();
+            return result;
         }
 
         /// <summary>
@@ -71,7 +80,7 @@ namespace Pims.Tools.Import
             return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{environment}.json", optional : true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(args ?? new string[0]);
         }
