@@ -1,9 +1,9 @@
-using System.Collections.Immutable;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using System.Linq;
+using System.Collections.Immutable;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System;
 
 namespace Pims.Core.Extensions
 {
@@ -17,6 +17,7 @@ namespace Pims.Core.Extensions
         /// To speed things up so that we don't have to use reflection to gather properties every time we cache them after doing it the first time.
         /// </summary>
         private static readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _typeCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
+        private static readonly ConcurrentDictionary<Type, IEnumerable<ConstructorInfo>> _typeConstructorCache = new ConcurrentDictionary<Type, IEnumerable<ConstructorInfo>>();
         #endregion
 
         #region Methods
@@ -39,31 +40,37 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static IEnumerable<PropertyInfo> GetCachedProperties(this Type type, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
         {
-            if (!_typeCache.TryGetValue(type, out IEnumerable<PropertyInfo> props))
-            {
-                props = from p in type.GetProperties(bindingFlags)
-                        select p;
-                _typeCache.TryAdd(type, props);
-            }
-            return props;
+            return _typeCache.GetOrAdd(type, (key) => from p in type.GetProperties(bindingFlags)
+                                                      select p);
         }
 
         /// <summary>
         /// Get the properties for the specified <typeparamref name="Type"/> and cache them in memory.
         /// This method is only useful for instance type objects.
+        /// Note
+        ///     If there are multiple property members with the same name this will throw an exception
+        ///     because it's expecting unique property names.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="bindingFlags"></param>
         /// <returns></returns>
         public static IDictionary<string, PropertyInfo> GetCachedPropertiesAsDictionary(this Type type, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
         {
-            if (!_typeCache.TryGetValue(type, out IEnumerable<PropertyInfo> props))
-            {
-                props = from p in type.GetProperties(bindingFlags)
-                        select p;
-                _typeCache.TryAdd(type, props);
-            }
-            return _typeCache[type].ToImmutableDictionary(p => p.Name);
+            return _typeCache.GetOrAdd(type, (key) => from p in type.GetProperties(bindingFlags)
+                                                      select p).ToImmutableDictionary(p => p.Name);
+        }
+
+        /// <summary>
+        /// Get the constructors for the specified <typeparamref name="Type"/> and cache them in memory.
+        /// This method is only useful for instance type objects.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="bindingFlags"></param>
+        /// <returns></returns>
+        public static IEnumerable<ConstructorInfo> GetCachedConstructors(this Type type, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
+        {
+            return _typeConstructorCache.GetOrAdd(type, (key) => from p in type.GetConstructors(bindingFlags)
+                                                                 select p);
         }
 
         /// <summary>

@@ -1,15 +1,12 @@
+using System.Linq;
+using System.Collections.Generic;
 using System;
-using System.Security.Claims;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Pims.Core.Extensions;
 using Moq;
-using Pims.Api.Helpers.Profiles;
-using AdminProfiles = Pims.Api.Areas.Admin.Profiles;
-using KeycloakProfiles = Pims.Api.Areas.Keycloak.Profiles;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using AutoMapper;
 
 namespace Pims.Api.Test.Helpers
 {
@@ -19,6 +16,7 @@ namespace Pims.Api.Test.Helpers
     public class TestHelper
     {
         #region Variables
+        private readonly static IEnumerable<Type> _profiles;
         private IServiceProvider _provider;
         private readonly IServiceCollection _services = new ServiceCollection();
         #endregion
@@ -27,6 +25,16 @@ namespace Pims.Api.Test.Helpers
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Initialize static variables used TestHelper.
+        /// </summary>
+        static TestHelper()
+        {
+            // Find all map profiles in assembly.
+            var ptype = typeof(Profile);
+            _profiles = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Pims")).SelectMany(a => a.GetTypes().Where(at => ptype.IsAssignableFrom(at)));
+        }
+
         /// <summary>
         /// Creates a new instance of a TestHelper class.
         /// </summary>
@@ -71,11 +79,24 @@ namespace Pims.Api.Test.Helpers
         /// <summary>
         /// Add a singleton service to the provider.
         /// </summary>
+        /// <param name="item"></param>
         /// <typeparam name="T"></typeparam>
         public IServiceCollection AddSingleton<T>(T item) where T : class
         {
             if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
             return _services.AddSingleton<T>(item);
+        }
+
+        /// <summary>
+        /// Add a singleton service to the provider.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        public IServiceCollection AddSingleton(Type type, object item)
+        {
+            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return _services.AddSingleton(type, item);
         }
 
         /// <summary>
@@ -89,30 +110,14 @@ namespace Pims.Api.Test.Helpers
         }
 
         /// <summary>
-        /// Create a AutoMapper mapper.
+        /// Create a AutoMapper object and configure it with all the profiles created in the Pims assemblies.
         /// </summary>
         /// <returns></returns>
         public static IMapper CreateMapper()
         {
             var mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new ParcelProfile());
-                cfg.AddProfile(new AddressProfile());
-                cfg.AddProfile(new BuildingProfile());
-                cfg.AddProfile(new BaseProfile());
-                cfg.AddProfile(new AgencyProfile());
-                cfg.AddProfile(new AccessRequestProfile());
-                cfg.AddProfile(new CodeProfile());
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new RoleProfile());
-                cfg.AddProfile(new LookupProfile());
-                cfg.AddProfile(new AdminProfiles.AgencyProfile());
-                cfg.AddProfile(new AdminProfiles.UserProfile());
-                cfg.AddProfile(new AdminProfiles.RoleProfile());
-                cfg.AddProfile(new KeycloakProfiles.BaseProfile());
-                cfg.AddProfile(new KeycloakProfiles.UserProfile());
-                cfg.AddProfile(new KeycloakProfiles.RoleProfile());
-                cfg.AddProfile(new KeycloakProfiles.AgencyProfile());
+                _profiles.ForEach(p => cfg.AddProfile(p));
             });
             // mapperConfig.AssertConfigurationIsValid(); // TODO: Fix this.
             var mapper = mapperConfig.CreateMapper();
@@ -121,19 +126,13 @@ namespace Pims.Api.Test.Helpers
         }
 
         /// <summary>
-        /// Creates an instance of a controller of the specified 'T' type and initializes it with the specified 'user'.
+        /// Creates an instance of the specified type 'T', using dependency injection for any constructor arguments.
         /// </summary>
-        /// <param name="user"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T CreateController<T>(ClaimsPrincipal user) where T : ControllerBase
+        public T CreateInstance<T>()
         {
-            this.AddSingleton<ILogger<T>>(Mock.Of<ILogger<T>>());
-            if (_provider == null) this.BuildServiceProvider();
-            var controller = (T)ActivatorUtilities.CreateInstance(_provider, typeof(T));
-            controller.ControllerContext = ControllerHelper.CreateControllerContext(user);
-
-            return controller;
+            return (T)ActivatorUtilities.CreateInstance(_provider, typeof(T));
         }
         #endregion
     }
