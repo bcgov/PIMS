@@ -1,66 +1,66 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Linq;
+using System;
+using Pims.Core.Extensions;
 using Moq;
-using Pims.Api.Controllers;
-using AdminController = Pims.Api.Areas.Admin.Controllers;
-using System.Net.Http;
-using Pims.Keycloak;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Pims.Api.Test.Helpers
 {
+    /// <summary>
+    /// ControllerHelper static class, provides helper functions for setting up tests for controllers.
+    /// </summary>
     public static class ControllerHelper
     {
+        #region Methods
         /// <summary>
-        /// Provides a quick way to create ParcelController for testing.
+        /// Creates an instance of a controller of the specified 'T' type and initializes it with the specified 'user'.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a controller you can no longer add to the services collection.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="args"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CreateController<T>(this TestHelper helper, ClaimsPrincipal user, params object[] args) where T : ControllerBase
+        {
+            helper.MockConstructorArguments<T>(args);
+            helper.AddSingleton(TestHelper.CreateMapper());
+
+            helper.BuildServiceProvider();
+            var controller = helper.CreateInstance<T>();
+            controller.ControllerContext = CreateControllerContext(user);
+
+            return controller;
+        }
+
+        /// <summary>
+        /// Mock all constructor arguments of the specified type of 'T'.
+        /// Will only work with a type that has a single constructor.
+        /// Will use any 'args' passed in instead of generating defaults.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static ParcelController CreateParcelController(this TestHelper helper, ClaimsPrincipal user)
+        /// <param name="args"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void MockConstructorArguments<T>(this TestHelper helper, params object[] args)
         {
-            var logger = new Mock<ILogger<ParcelController>>();
-            helper.AddSingleton(logger.Object);
-            helper.AddSingleton<ParcelController>();
-            helper.AddSingleton(CreateControllerContext(user));
+            var type = typeof(T);
+            var constructors = type.GetCachedConstructors();
+            var ci = constructors.SingleOrDefault() ?? throw new ArgumentException($"The type '{type.Name}' has more than one constructor.");
 
-            var controller = helper.GetService<ParcelController>();
-            controller.ControllerContext = helper.GetService<ControllerContext>();
-            return controller;
-        }
+            var gmock = typeof(Mock<>);
+            var cargs = ci.GetParameters();
+            foreach (var carg in cargs)
+            {
+                var gmake = gmock.MakeGenericType(carg.ParameterType);
+                var mockObjectProp = gmock.GetCachedProperties().FirstOrDefault(p => p.Name == nameof(Mock.Object) && !p.PropertyType.IsGenericParameter) ?? throw new InvalidOperationException($"The mocked type '{type.Name}' was unable to determine the correct 'Object' property.");
 
-        public static UserController CreateUserController(this TestHelper helper, ClaimsPrincipal user)
-        {
-            var logger = new Mock<ILogger<UserController>>();
-            var requestClient = new Mock<IKeycloakRequestClient>();
-            var keycloakService = new Mock<IKeycloakService>();
-            helper.AddSingleton(logger.Object);
-            helper.AddSingleton(requestClient.Object);
-            helper.AddSingleton(keycloakService.Object);
-            helper.AddSingleton<UserController>();
-            helper.AddSingleton(CreateControllerContext(user));
-
-            var controller = helper.GetService<UserController>();
-            controller.ControllerContext = helper.GetService<ControllerContext>();
-            return controller;
-        }
-
-        public static AdminController.UserController CreateAdminUserController(this TestHelper helper, ClaimsPrincipal user)
-        {
-            var logger = new Mock<ILogger<AdminController.UserController>>();
-            var httpClientFactory = new Mock<IHttpClientFactory>();
-            var requestClient = new Mock<IKeycloakRequestClient>();
-            var keycloakService = new Mock<IKeycloakService>();
-            helper.AddSingleton(logger.Object);
-            helper.AddSingleton(httpClientFactory.Object);
-            helper.AddSingleton(requestClient.Object);
-            helper.AddSingleton(keycloakService.Object);
-            helper.AddSingleton<AdminController.UserController>();
-            helper.AddSingleton(CreateControllerContext(user));
-
-            var controller = helper.GetService<AdminController.UserController>();
-            controller.ControllerContext = helper.GetService<ControllerContext>();
-            return controller;
+                // If an 'args' type matches, use it for the mock.
+                var arg = args.FirstOrDefault(a => a.GetType() == carg.ParameterType);
+                var mock = arg != null ? Activator.CreateInstance(gmake, arg) : Activator.CreateInstance(gmake);
+                helper.AddSingleton(gmake, mock);
+                helper.AddSingleton(carg.ParameterType, mockObjectProp.GetValue(mock));
+            }
         }
 
         /// <summary>
@@ -75,5 +75,6 @@ namespace Pims.Api.Test.Helpers
                 HttpContext = HttpContextHelper.CreateHttpContext(user)
             };
         }
+        #endregion
     }
 }
