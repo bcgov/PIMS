@@ -249,9 +249,9 @@ namespace Pims.Api.Areas.Tools.Helpers
                     throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
                 p_e.Description = property.Description;
-                p_e.Latitude = latitude;
-                p_e.Longitude = longitude;
-                p_e.LandArea = landArea;
+                p_e.Latitude = latitude != 0 ? latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
+                p_e.Longitude = longitude != 0 ? longitude : p_e.Longitude;
+                p_e.LandArea = landArea != 0 ? landArea : p_e.LandArea;
                 p_e.LandLegalDescription = property.LandLegalDescription;
 
                 // Find foreign key.
