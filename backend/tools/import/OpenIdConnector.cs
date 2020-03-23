@@ -64,6 +64,7 @@ namespace Pims.Tools.Import
                 keys = new Dictionary<string, string>
                 { { "client_id", _options.ClientId },
                     { "grant_type", "refresh_token" },
+                    { "client_secret", _options.ClientSecret },
                     { "refresh_token", refreshToken }
                 };
             }
