@@ -33,5 +33,19 @@ export const DEFAULT_PER_PAGE = '25';
 export const DEFAULT_DASHBOARD_PARAMS = '?page=1&per_page=25';
 
 //roles
-export const ADMINISTRATOR = 'administrator';
+export const SYSTEM_ADMINISTRATOR = 'System Administrator';
+export const AGENCY_ADMINISTRATOR = 'Agency Administrator';
+export const REAL_ESTATE_MANAGER = 'Real Estate Manager';
+export const ASSISTANT_DEPUTY_MINISTER = 'Assistant Deputy Minister';
+export const ASSISTANT_DEPUTY_MINISTER_ASSISTANT = 'Assistant Deputy Minister Assistant';
+export const EXECUTIVE_DIRECTOR = 'Executive Director';
 export const PROPERTY_VIEW = 'property-view';
+
+export const Roles = {
+  ADMINISTRATOR: SYSTEM_ADMINISTRATOR,
+  AGENCY_ADMINISTRATOR,
+  REAL_ESTATE_MANAGER,
+  ASSISTANT_DEPUTY_MINISTER,
+  ASSISTANT_DEPUTY_MINISTER_ASSISTANT,
+  EXECUTIVE_DIRECTOR,
+};

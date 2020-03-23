@@ -16,7 +16,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import AppNavBar from 'components/navigation/AppNavBar';
 import AccessDenied from 'pages/AccessDenied';
 import Administration from 'pages/Administration';
-import { ADMINISTRATOR } from 'constants/strings';
+import { SYSTEM_ADMINISTRATOR } from 'constants/strings';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
@@ -33,13 +33,13 @@ const App = () => {
       dispatch(getActivateUserAction());
       dispatch(getFetchLookupCodeAction());
     }
-    keycloak?.loadUserProfile().then(() => {
+    keycloak?.loadUserInfo().then(() => {
       setkeycloakUserLoaded(true);
     });
   }, []);
 
   const isInitialized = () => {
-    return !keycloak?.authenticated || keycloak?.profile;
+    return !keycloak?.authenticated || keycloak?.userInfo;
   };
 
   return isInitialized() ? (
@@ -50,12 +50,12 @@ const App = () => {
         <Row className="App-content">
           {keycloak?.authenticated ? <AppNavBar /> : null}
           <Col style={{ padding: 0 }}>
-            <Route path="/" component={Login}></Route>
+            <Route path="/login" component={Login}></Route>
             <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
             <PrivateRoute
               path="/admin"
               component={Administration}
-              role={ADMINISTRATOR}
+              role={SYSTEM_ADMINISTRATOR}
             ></PrivateRoute>
             <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
             <PrivateRoute path="/mapview" component={MapView} />
