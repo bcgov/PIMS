@@ -7,7 +7,6 @@ import { IGenericNetworkAction } from 'actions/genericActions';
 import { RootState } from 'reducers/rootReducer';
 import { NEW_PIMS_USER } from 'actionCreators/usersActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PROPERTY_VIEW } from 'constants/strings';
 
 const Login = () => {
   const keyCloakWrapper = useKeycloakWrapper();
@@ -19,10 +18,7 @@ const Login = () => {
     return <Spinner animation="border"></Spinner>;
   }
   if (keycloak?.authenticated) {
-    if (
-      (activated && activated.status === NEW_PIMS_USER) ||
-      !keyCloakWrapper.hasRole(PROPERTY_VIEW)
-    ) {
+    if ((activated && activated.status === NEW_PIMS_USER) || !keyCloakWrapper?.roles?.length) {
       return <Redirect to={{ pathname: '/guest' }} />;
     }
     return <Redirect to={{ pathname: '/mapview' }} />;
