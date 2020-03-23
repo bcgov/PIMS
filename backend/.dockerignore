@@ -1,12 +1,6 @@
 .vs/
 .env
 
-**/bin
-**/obj
-**/out
-**/.vscode
-**/.vs
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
