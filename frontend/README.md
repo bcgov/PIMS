@@ -8,14 +8,15 @@ Create a .env file and populate it with this.
 
 ```conf
 NODE_ENV=development
+API_URL=http://backend:8080/
 CHOKIDAR_USEPOLLING=true
 ```
 
-| Key                 | Value                                                | Description                   |
-| ------------------- | ---------------------------------------------------- | ----------------------------- |
-| NODE_ENV            | [development\|...]                                   | The node environment setting. |
-| API_URL             | [[http://backend:5000/api](http://backend:5000/api)] | The URL to the API.           |
-| CHOKIDAR_USEPOLLING | [true\|false]                                        | Whether to use polling.       |
+| Key                 | Value                                          | Description                                         |
+| ------------------- | ---------------------------------------------- | --------------------------------------------------- |
+| NODE_ENV            | [development\|production]                      | Node.js environment setting.                        |
+| API_URL             | [[http://backend:8080/](http://backend:8080/)] | The API root URL; do not include "/api"             |
+| CHOKIDAR_USEPOLLING | [true\|false]                                  | Whether to use polling; set to true for containers. |
 
 ## Keycloak Configuration
 
@@ -23,7 +24,7 @@ Ensure the the following file exists and is configured with your Keycloak client
 
 ```json
 {
-  "realm": "quartech",
+  "realm": "pims",
   "auth-server-url": "http://keycloak:8080/auth",
   "ssl-required": "external",
   "resource": "pims-app",
