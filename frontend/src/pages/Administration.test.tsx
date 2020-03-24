@@ -35,6 +35,7 @@ jest.mock('react-router-dom', () => ({
 const store = mockStore({
   [reducerTypes.GET_USERS]: {},
   [reducerTypes.ACCESS_REQUEST]: {},
+  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {},
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
