@@ -11,15 +11,15 @@ import { createRequestHeader } from 'utils/RequestHeaders';
 import { IAccessRequest } from 'actions/adminActions';
 
 export const getActivateUserAction = () => (dispatch: Function) => {
-  dispatch(request(reducerTypes.POST_ACTIVATE_USER));
+  dispatch(request(reducerTypes.ADD_ACTIVATE_USER));
   dispatch(showLoading());
   return CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.ACTIVATE_USER(), null, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.POST_ACTIVATE_USER, response.status));
+      dispatch(success(reducerTypes.ADD_ACTIVATE_USER, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.POST_ACTIVATE_USER)))
+    .catch(() => dispatch(error(reducerTypes.ADD_ACTIVATE_USER)))
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -36,30 +36,30 @@ export const toAccessRequest = (values: any): adminActions.IAccessRequest => {
 export const getSubmitAccessRequestAction = (accessRequest: IAccessRequest) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.POST_REQUEST_ACCESS));
+  dispatch(request(reducerTypes.ADD_REQUEST_ACCESS));
   dispatch(showLoading());
   return CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS(), accessRequest, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.POST_REQUEST_ACCESS, response.status));
+      dispatch(success(reducerTypes.ADD_REQUEST_ACCESS, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.POST_REQUEST_ACCESS)))
+    .catch(() => dispatch(error(reducerTypes.ADD_REQUEST_ACCESS)))
     .finally(() => dispatch(hideLoading()));
 };
 
 export const getSubmitAdminAccessRequestAction = (accessRequest: IAccessRequest) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.POST_REQUEST_ACCESS_ADMIN));
+  dispatch(request(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN));
   dispatch(showLoading());
   return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest, createRequestHeader())
+    .put(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.POST_REQUEST_ACCESS_ADMIN, response.status));
+      dispatch(success(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.POST_REQUEST_ACCESS_ADMIN)))
+    .catch(() => dispatch(error(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN)))
     .finally(() => dispatch(hideLoading()));
 };
 

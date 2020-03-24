@@ -157,7 +157,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// Update an access request, generally to grant/deny it.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("/api/admin/access/request/")]
+        [HttpPut("/api/admin/access/request/")]
         public IActionResult UpdateAccessRequests(Pims.Api.Models.AccessRequestModel updateModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);

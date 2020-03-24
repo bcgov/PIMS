@@ -23,7 +23,7 @@ const GuestAccessPage = () => {
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
-    state => state.postRequestAccess as IGenericNetworkAction,
+    state => state.addRequestAccess as IGenericNetworkAction,
   );
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;

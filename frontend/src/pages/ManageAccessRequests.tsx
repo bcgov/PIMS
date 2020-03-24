@@ -29,8 +29,8 @@ const ManageAccessRequests = () => {
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
     state => state.accessRequest as IGenericNetworkAction,
   );
-  const postRequestAccessAdmin = useSelector<RootState, IGenericNetworkAction>(
-    state => state.postRequestAccessAdmin as IGenericNetworkAction,
+  const updateRequestAccessAdmin = useSelector<RootState, IGenericNetworkAction>(
+    state => state.updateRequestAccessAdmin as IGenericNetworkAction,
   );
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -42,14 +42,14 @@ const ManageAccessRequests = () => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME;
   });
   useEffect(() => {
-    if (!postRequestAccessAdmin.isFetching) {
+    if (!updateRequestAccessAdmin.isFetching) {
       const paginateParams: API.IPaginateParams & {
         isGranted?: boolean | null;
       } = toApiPaginateParams(0, MAX_ACCESS_RESULTS_PER_PAGE);
       paginateParams.isGranted = null;
       dispatch(getAccessRequestsAction(paginateParams));
     }
-  }, [postRequestAccessAdmin]);
+  }, [updateRequestAccessAdmin]);
 
   return !requestAccess.isFetching ? (
     <Container fluid={true}>

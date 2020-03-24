@@ -158,12 +158,9 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public AccessRequest Update(AccessRequest entity)
         {
-            if(entity.UserId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
             entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            entity.ThrowIfNull(nameof(entity.UserId));
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
 
             var accessRequest = this.Context.AccessRequests
                 .Include(p => p.Agencies)
@@ -172,38 +169,38 @@ namespace Pims.Dal.Services.Admin
                 .ThenInclude(p => p.Role)
                 .Include(p => p.User)
                 .FirstOrDefault(a => a.Id == entity.Id) ?? throw new KeyNotFoundException();
-            if(!accessRequest.IsGranted != true && entity.IsGranted == true && accessRequest.UserId.HasValue)
+            if(!accessRequest.IsGranted != true && entity.IsGranted == true)
             {
                 User user = Get(accessRequest.UserId.Value);
                 entity.Agencies.ForEach((accessRequestAgency) =>
                 {
-                    if (!user.Agencies.Select(a => a.AgencyId).Contains(accessRequestAgency.AgencyId))
+                    if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))
                     {
                         user.Agencies.Add(new UserAgency()
                         {
                             User = user,
-                            Agency = this.Context.Agencies.Find(accessRequestAgency.AgencyId)
+                            AgencyId = accessRequestAgency.AgencyId
                         });
                     }
                 });
                 entity.Roles.ForEach((accessRequestRole) =>
                 {
-                    if (!user.Roles.Select(r => r.RoleId).Contains(accessRequestRole.RoleId))
+                    if (!user.Roles.Any(r => r.RoleId == accessRequestRole.RoleId))
                     {
                         user.Roles.Add(new UserRole()
                         {
                             User = user,
-                            Role = this.Context.Roles.Find(accessRequestRole.RoleId)
+                            RoleId = accessRequestRole.RoleId
                         });
                     }
                 });
-                Update(user);
+                UpdateOne(user);
             }
 
             this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
             accessRequest.UpdatedById = this.User.GetUserId();
             accessRequest.UpdatedOn = DateTime.UtcNow;
-            this.Context.Set<AccessRequest>().Update(accessRequest);
+            this.Context.AccessRequests.Update(accessRequest);
 
             this.Context.CommitTransaction();
             return accessRequest;
@@ -226,8 +223,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Roles)
                 .ThenInclude(p => p.Role)
                 .Include(p => p.User)
-                .AsNoTracking()
-                .Where(ar => ar.User != null); // Access Requests with no user cannot be granted.
+                .AsNoTracking();
 
             query = query.Where(request => request.IsGranted == isGranted);
             var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);

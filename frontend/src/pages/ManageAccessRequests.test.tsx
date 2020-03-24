@@ -34,7 +34,7 @@ jest.mock('react-router-dom', () => ({
 // Empty response
 const store = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {},
-  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
+  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
     isFetching: true,
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
@@ -56,7 +56,7 @@ const successStore = mockStore({
       ],
     },
   },
-  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
+  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
     isFetching: false,
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
@@ -65,7 +65,7 @@ const loadingStore = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {
     isFetching: true,
   },
-  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
+  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
     isFetching: true,
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,

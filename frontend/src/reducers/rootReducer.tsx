@@ -21,17 +21,14 @@ export const reducerObject = {
   [reducerTypes.ACCESS_REQUEST]: accessRequestReducer,
   [reducerTypes.GET_USERS]: usersReducer,
   [reducerTypes.LOOKUP_CODE]: lookupCodeReducer,
-  [reducerTypes.POST_ACTIVATE_USER]: filteredReducer(
+  [reducerTypes.ADD_ACTIVATE_USER]: filteredReducer(networkReducer, reducerTypes.ADD_ACTIVATE_USER),
+  [reducerTypes.ADD_REQUEST_ACCESS]: filteredReducer(
     networkReducer,
-    reducerTypes.POST_ACTIVATE_USER,
+    reducerTypes.ADD_REQUEST_ACCESS,
   ),
-  [reducerTypes.POST_REQUEST_ACCESS]: filteredReducer(
+  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: filteredReducer(
     networkReducer,
-    reducerTypes.POST_REQUEST_ACCESS,
-  ),
-  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: filteredReducer(
-    networkReducer,
-    reducerTypes.POST_REQUEST_ACCESS_ADMIN,
+    reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN,
   ),
 };
 
