@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import { Container, Row, Col, Spinner, ButtonGroup, Button } from 'react-bootstrap';
-import { getAccessRequestsAction } from 'actionCreators/usersActionCreator';
+import {
+  getAccessRequestsAction,
+  getSubmitAdminAccessRequestAction,
+  toAccessRequest,
+} from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IAccessRequest } from 'actions/adminActions';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';
-import { toApiPaginateParams } from 'utils/CommonFunctions';
+import { toApiPaginateParams, IPaginate } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { Formik, ErrorMessage, Form } from 'formik';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
@@ -19,11 +23,14 @@ import WrappedPaginate from 'components/common/WrappedPaginate';
 const ManageAccessRequests = () => {
   const dispatch = useDispatch();
   const MAX_ACCESS_RESULTS_PER_PAGE = 5;
-  const pagedAccessRequests = useSelector<RootState, IAccessRequest>(
+  const pagedAccessRequests = useSelector<RootState, IPaginate>(
     state => (state.accessRequest as IAccessRequestState).pagedAccessRequests,
   );
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
     state => state.accessRequest as IGenericNetworkAction,
+  );
+  const postRequestAccessAdmin = useSelector<RootState, IGenericNetworkAction>(
+    state => state.postRequestAccessAdmin as IGenericNetworkAction,
   );
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -35,8 +42,14 @@ const ManageAccessRequests = () => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME;
   });
   useEffect(() => {
-    dispatch(getAccessRequestsAction(toApiPaginateParams(0, MAX_ACCESS_RESULTS_PER_PAGE)));
-  }, []);
+    if (!postRequestAccessAdmin.isFetching) {
+      const paginateParams: API.IPaginateParams & {
+        isGranted?: boolean | null;
+      } = toApiPaginateParams(0, MAX_ACCESS_RESULTS_PER_PAGE);
+      paginateParams.isGranted = null;
+      dispatch(getAccessRequestsAction(paginateParams));
+    }
+  }, [postRequestAccessAdmin]);
 
   return !requestAccess.isFetching ? (
     <Container fluid={true}>
@@ -55,7 +68,7 @@ const ManageAccessRequests = () => {
                 <Col>Role</Col>
                 <Col>Actions</Col>
               </Row>
-              {pagedAccessRequests?.items.map((accessRequest: any) => {
+              {pagedAccessRequests?.items.map((accessRequest: IAccessRequest) => {
                 if (!accessRequest?.agencies?.length) {
                   accessRequest.agencies = [{}];
                 }
@@ -65,12 +78,15 @@ const ManageAccessRequests = () => {
                 return (
                   <Formik
                     initialValues={{
+                      id: accessRequest?.id,
+                      userId: accessRequest?.user.id,
                       agency: accessRequest?.agencies[0]?.id,
                       role: accessRequest?.roles[0]?.id,
+                      isGranted: false,
                     }}
                     validationSchema={AccessRequestSchema}
                     onSubmit={(values, { setSubmitting }) => {
-                      //TODO: the api for this doesn't exist yet.
+                      dispatch(getSubmitAdminAccessRequestAction(toAccessRequest(values)));
                       setSubmitting(false);
                     }}
                   >
@@ -100,10 +116,18 @@ const ManageAccessRequests = () => {
                           </Col>
                           <Col>
                             <ButtonGroup>
-                              <Button variant="success" type="submit">
+                              <Button
+                                variant="success"
+                                type="submit"
+                                onClick={() => (props.values.isGranted = true)}
+                              >
                                 Approve
                               </Button>
-                              <Button variant="danger" type="submit">
+                              <Button
+                                variant="danger"
+                                type="submit"
+                                onClick={() => (props.values.isGranted = false)}
+                              >
                                 Deny
                               </Button>
                             </ButtonGroup>

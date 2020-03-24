@@ -29,6 +29,10 @@ export const reducerObject = {
     networkReducer,
     reducerTypes.POST_REQUEST_ACCESS,
   ),
+  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: filteredReducer(
+    networkReducer,
+    reducerTypes.POST_REQUEST_ACCESS_ADMIN,
+  ),
 };
 
 export const rootReducer = combineReducers(reducerObject);

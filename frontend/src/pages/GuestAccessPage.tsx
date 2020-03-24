@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 import { ILookupCode } from 'actions/lookupActions';
-import { IAccessRequestParams } from 'actions/adminActions';
-import { getSubmitAccessRequestAction } from 'actionCreators/usersActionCreator';
+import { IPagedItems } from 'actions/adminActions';
+import { getSubmitAccessRequestAction, toAccessRequest } from 'actionCreators/usersActionCreator';
 import { Formik, Form, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -32,9 +32,6 @@ const GuestAccessPage = () => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME;
   });
   const dispatch = useDispatch();
-  const toRequest = (values: any): IAccessRequestParams => {
-    return { agencies: [{ id: values.agency }], roles: [{ id: values.role }] };
-  };
 
   return (
     <Container fluid={true}>
@@ -52,7 +49,7 @@ const GuestAccessPage = () => {
             }}
             validationSchema={AccessRequestSchema}
             onSubmit={(values, { setSubmitting }) => {
-              dispatch(getSubmitAccessRequestAction(toRequest(values)));
+              dispatch(getSubmitAccessRequestAction(toAccessRequest(values)));
               setSubmitting(false);
             }}
           >

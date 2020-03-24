@@ -1,8 +1,9 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IAccessRequest, IStoreAccessRequestsAction } from 'actions/adminActions';
+import { IPagedItems, IStoreAccessRequestsAction } from 'actions/adminActions';
+import { IPaginate } from 'utils/CommonFunctions';
 
 export interface IAccessRequestState {
-  pagedAccessRequests: IAccessRequest;
+  pagedAccessRequests: IPagedItems;
 }
 
 const initialState: IAccessRequestState = {

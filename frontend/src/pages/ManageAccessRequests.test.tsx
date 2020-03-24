@@ -3,17 +3,15 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import Administration from './Administration';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import ManageAccessRequests from './ManageAccessRequests';
-import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -34,7 +32,13 @@ jest.mock('react-router-dom', () => ({
 }));
 
 // Empty response
-const store = mockStore({ [reducerTypes.ACCESS_REQUEST]: {}, [reducerTypes.LOOKUP_CODE]: lCodes });
+const store = mockStore({
+  [reducerTypes.ACCESS_REQUEST]: {},
+  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
+    isFetching: true,
+  },
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+});
 const successStore = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {
     pagedAccessRequests: {
@@ -52,10 +56,16 @@ const successStore = mockStore({
       ],
     },
   },
+  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
+    isFetching: false,
+  },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 const loadingStore = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {
+    isFetching: true,
+  },
+  [reducerTypes.POST_REQUEST_ACCESS_ADMIN]: {
     isFetching: true,
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,

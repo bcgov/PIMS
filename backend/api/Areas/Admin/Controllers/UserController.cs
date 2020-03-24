@@ -154,10 +154,24 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// Update an access request, generally to grant/deny it.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/admin/access/request/")]
+        public IActionResult UpdateAccessRequests(Pims.Api.Models.AccessRequestModel updateModel)
+        {
+            var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
+            var updatedEntity = _pimsAdminService.User.Update(entity);
+
+            var user = _mapper.Map<Pims.Api.Models.AccessRequestModel>(updatedEntity);
+            return new JsonResult(user);
+        }
+
+        /// <summary>
         /// Gets all of the access requests that have been submitted to the system.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/access/requests")]
+        [HttpGet("/api/admin/access/requests")]
         public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
             if (page < 1) page = 1;

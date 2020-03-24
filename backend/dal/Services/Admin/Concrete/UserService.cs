@@ -151,6 +151,65 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Updates the specified access request in the datasource. if the request is granted, update the associated user as well.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public AccessRequest Update(AccessRequest entity)
+        {
+            if(entity.UserId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+            entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            var accessRequest = this.Context.AccessRequests
+                .Include(p => p.Agencies)
+                .ThenInclude(p => p.Agency)
+                .Include(p => p.Roles)
+                .ThenInclude(p => p.Role)
+                .Include(p => p.User)
+                .FirstOrDefault(a => a.Id == entity.Id) ?? throw new KeyNotFoundException();
+            if(!accessRequest.IsGranted != true && entity.IsGranted == true && accessRequest.UserId.HasValue)
+            {
+                User user = Get(accessRequest.UserId.Value);
+                entity.Agencies.ForEach((accessRequestAgency) =>
+                {
+                    if (!user.Agencies.Select(a => a.AgencyId).Contains(accessRequestAgency.AgencyId))
+                    {
+                        user.Agencies.Add(new UserAgency()
+                        {
+                            User = user,
+                            Agency = this.Context.Agencies.Find(accessRequestAgency.AgencyId)
+                        });
+                    }
+                });
+                entity.Roles.ForEach((accessRequestRole) =>
+                {
+                    if (!user.Roles.Select(r => r.RoleId).Contains(accessRequestRole.RoleId))
+                    {
+                        user.Roles.Add(new UserRole()
+                        {
+                            User = user,
+                            Role = this.Context.Roles.Find(accessRequestRole.RoleId)
+                        });
+                    }
+                });
+                Update(user);
+            }
+
+            this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
+            accessRequest.UpdatedById = this.User.GetUserId();
+            accessRequest.UpdatedOn = DateTime.UtcNow;
+            this.Context.Set<AccessRequest>().Update(accessRequest);
+
+            this.Context.CommitTransaction();
+            return accessRequest;
+        }
+
+        /// <summary>
         /// Get all the access requests that users have submitted to the system
         /// </summary>
         /// <param name="page"></param>
@@ -167,12 +226,10 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Roles)
                 .ThenInclude(p => p.Role)
                 .Include(p => p.User)
-                .AsNoTracking();
+                .AsNoTracking()
+                .Where(ar => ar.User != null); // Access Requests with no user cannot be granted.
 
-            if (isGranted.HasValue)
-            {
-                query = query.Where(request => request.IsGranted == isGranted);
-            }
+            query = query.Where(request => request.IsGranted == isGranted);
             var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);
             return new Paged<AccessRequest>(accessRequests, page, quantity, query.Count());
         }

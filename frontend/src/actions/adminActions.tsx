@@ -4,12 +4,12 @@ import * as ActionTypes from 'constants/actionTypes';
 
 export interface IStoreAccessRequestsAction {
   type: typeof ActionTypes.STORE_ACCESS_REQUESTS;
-  pagedAccessRequests: IAccessRequest;
+  pagedAccessRequests: IPagedItems;
 }
 
 export interface IStoreUsersAction {
   type: typeof ActionTypes.STORE_USERS;
-  pagedUsers: IUser;
+  pagedUsers: IPagedItems;
 }
 
 export const storeAccessRequests = (pagedAccessRequests: IStoreAccessRequestsAction) => ({
@@ -23,23 +23,25 @@ export const storeUsers = (pagedUsers: IStoreUsersAction) => ({
 });
 
 export interface IAgency {
-  id: string;
+  id?: string;
 }
 export interface IRole {
-  id: string;
+  id?: string;
 }
-export interface IAccessRequestParams {
+export interface IAccessRequest {
   agencies: IAgency[];
   roles: IRole[];
+  id: string;
+  user: IUser;
+  isGranted?: boolean;
 }
 
 export interface IUser {
-  page: number;
-  quantity: number;
-  total: number;
-  items: [];
+  id: string;
+  displayName?: string;
 }
-export interface IAccessRequest {
+
+export interface IPagedItems {
   page: number;
   quantity: number;
   total: number;

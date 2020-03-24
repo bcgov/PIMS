@@ -9,11 +9,17 @@ function useKeycloakWrapper() {
   const hasRole = (role?: string) => {
     return !role || (keycloak?.userInfo as any)?.Groups?.includes(role);
   };
+  interface UserInfo {
+    Groups: any[];
+    given_name: string;
+  }
   const roles = () => {
-    return (keycloak?.userInfo as any)?.Groups;
+    return (keycloak?.userInfo as UserInfo)?.Groups
+      ? [...(keycloak?.userInfo as UserInfo)?.Groups]
+      : [];
   };
   const firstName = () => {
-    return (keycloak?.userInfo as any)?.given_name;
+    return (keycloak?.userInfo as UserInfo)?.given_name;
   };
   return {
     firstName: firstName(),

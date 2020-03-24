@@ -4,6 +4,7 @@ export interface IPaginate {
   page: number;
   total: number;
   quantity: number;
+  items: any;
 }
 export const PAGINATION_MARGIN_PAGES = 3;
 export const PAGINATION_MAX_PAGES = 9;
