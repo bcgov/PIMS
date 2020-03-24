@@ -3,7 +3,7 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { getUsersAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IStoreUsersAction, IUser } from 'actions/adminActions';
+import { IStoreUsersAction, IPagedItems } from 'actions/adminActions';
 import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import _ from 'lodash';
@@ -12,7 +12,7 @@ import WrappedPaginate from 'components/common/WrappedPaginate';
 const ManageUsers = () => {
   const dispatch = useDispatch();
   const MAX_USERS_PER_PAGE = 10;
-  const pagedUsers = useSelector<RootState, IUser>(
+  const pagedUsers = useSelector<RootState, IPagedItems>(
     state => (state.getUsers as IStoreUsersAction).pagedUsers,
   );
   const users = useSelector<RootState, IGenericNetworkAction>(

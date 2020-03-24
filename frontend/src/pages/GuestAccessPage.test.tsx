@@ -34,10 +34,10 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
 // Simulating a succesful submit
-const successStore = mockStore({ lookupCode: lCodes, postRequestAccess: requestAccess });
+const successStore = mockStore({ lookupCode: lCodes, addRequestAccess: requestAccess });
 
 // Store without status of 200
-const store = mockStore({ lookupCode: lCodes, postRequestAccess: noSuccess });
+const store = mockStore({ lookupCode: lCodes, addRequestAccess: noSuccess });
 
 it('renders GuestAccessPage correctly', () => {
   const tree = renderer

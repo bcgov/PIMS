@@ -9,6 +9,7 @@ jest.mock('@react-keycloak/web');
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
+    location: {},
   }),
 }));
 
