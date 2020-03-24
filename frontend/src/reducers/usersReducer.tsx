@@ -1,8 +1,8 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IAccessRequest, IStoreUsersAction } from 'actions/adminActions';
+import { IPagedItems, IStoreUsersAction } from 'actions/adminActions';
 
 export interface IUsersState {
-  pagedUsers: IAccessRequest;
+  pagedUsers: IPagedItems;
 }
 
 const initialState: IUsersState = {

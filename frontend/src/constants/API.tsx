@@ -8,6 +8,13 @@ export interface IPaginateParams {
   sort?: string;
 }
 
+export interface IPaginateAccessRequests {
+  page: number;
+  quantity?: number;
+  sort?: string;
+  isGranted?: boolean | null;
+}
+
 // Parcels
 export interface IParcelListParams {
   neLat: number;
@@ -34,7 +41,8 @@ export const PROPERTY_CLASSIFICATION_CODE_SET_NAME = 'PropertyClassification';
 export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties or all if not specified.
 
 // User Service
-export const REQUEST_ACCESS = () => `/access/request`; // get filtered properties or all if not specified.
-export const REQUEST_ACCESS_LIST = (params: IPaginateParams) =>
-  `/access/requests/?${queryString.stringify(params)}`; // get paged access requests
+export const REQUEST_ACCESS = () => `/access/request`; //request access url.
+export const REQUEST_ACCESS_ADMIN = () => `/admin/access/request`; //request access admin url.
+export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
+  `/admin/access/requests/?${queryString.stringify(params)}`; // get paged access requests
 export const POST_USERS = () => `/admin/my/users`; // get paged list of users
