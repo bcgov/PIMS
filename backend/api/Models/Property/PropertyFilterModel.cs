@@ -56,13 +56,13 @@ namespace Pims.Api.Models.Property
 
         #region Parcel Filters
         /// <summary>
-        /// get/set - Building classification Id.
+        /// get/set - Parcel classification Id.
         /// </summary>
         /// <value></value>
         public int? ClassificationId { get; set; }
 
         /// <summary>
-        /// get/set - Building status Id.
+        /// get/set - Parcel status Id.
         /// </summary>
         /// <value></value>
         public int? StatusId { get; set; }
