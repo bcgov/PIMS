@@ -14,38 +14,42 @@ using System.Security.Claims;
 namespace Pims.Dal.Services
 {
     /// <summary>
-    /// ParcelService class, provides a service layer to interact with parcels within the datasource.
+    /// BuildingService class, provides a service layer to interact with buildings within the datasource.
     /// </summary>
-    public class ParcelService : BaseService<Parcel>, IParcelService
+    public class BuildingService : BaseService<Building>, IBuildingService
     {
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ParcelService, and initializes it with the specified arguments.
+        /// Creates a new instance of a BuildingService, and initializes it with the specified arguments.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public ParcelService(PimsContext dbContext, ClaimsPrincipal user, ILogger<ParcelService> logger) : base(dbContext, user, logger) { }
+        public BuildingService(PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger) { }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Get an array of parcels within the specified filter.
-        /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// Get a collection of buildings within the specified filter.
+        /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="neLat"></param>
         /// <param name="neLong"></param>
         /// <param name="swLat"></param>
         /// <param name="swLong"></param>
         /// <returns></returns>
-        public IEnumerable<Parcel> GetNoTracking(double neLat, double neLong, double swLat, double swLong)
+        public IEnumerable<Building> GetNoTracking(double neLat, double neLong, double swLat, double swLong)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
+            IQueryable<Building> query = null;
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            IQueryable<Parcel> query = this.Context.Parcels.AsNoTracking().Where(p =>
+            query = this.Context.Buildings
+                .Include(b => b.Parcel)
+                .AsNoTracking()
+                .Where(p =>
                 (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
                 p.Latitude != 0 &&
                 p.Longitude != 0 &&
@@ -57,12 +61,12 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get an array of parcels within the specified filter.
-        /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// Get an array of buildings within the specified filter.
+        /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<Parcel> GetNoTracking(ParcelFilter filter)
+        public IEnumerable<Building> GetNoTracking(BuildingFilter filter)
         {
             filter.ThrowIfNull(nameof(filter));
 
@@ -71,7 +75,7 @@ namespace Pims.Dal.Services
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = this.Context.Parcels.AsNoTracking().Where(p =>
+            var query = this.Context.Buildings.AsNoTracking().Where(p =>
                 !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
@@ -85,20 +89,24 @@ namespace Pims.Dal.Services
 
             if (filter.Agencies?.Any() == true)
                 query = query.Where(p => filter.Agencies.Contains(p.AgencyId));
-            if (filter.ClassificationId.HasValue)
-                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
+            if (filter.ConstructionTypeId.HasValue)
+                query = query.Where(p => p.BuildingConstructionTypeId == filter.ConstructionTypeId);
+            if (filter.PredominateUseId.HasValue)
+                query = query.Where(p => p.BuildingPredominateUseId == filter.PredominateUseId);
+            if (filter.FloorCount.HasValue)
+                query = query.Where(p => p.BuildingFloorCount == filter.FloorCount);
+            if (!String.IsNullOrWhiteSpace(filter.Tenancy))
+                query = query.Where(p => p.BuildingTenancy == filter.Tenancy);
 
             if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
                 query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%"));
 
-            if (filter.MinLandArea.HasValue && filter.MaxLandArea.HasValue)
-                query = query.Where(p => p.LandArea >= filter.MinLandArea && p.LandArea <= filter.MaxLandArea);
-            else if (filter.MinLandArea.HasValue)
-                query = query.Where(p => p.LandArea >= filter.MinLandArea);
-            else if (filter.MaxLandArea.HasValue)
-                query = query.Where(p => p.LandArea <= filter.MaxLandArea);
+            if (filter.MinRentableArea.HasValue && filter.MaxRentableArea.HasValue)
+                query = query.Where(p => p.RentableArea >= filter.MinRentableArea && p.RentableArea <= filter.MaxRentableArea);
+            else if (filter.MinRentableArea.HasValue)
+                query = query.Where(p => p.RentableArea >= filter.MinRentableArea);
+            else if (filter.MaxRentableArea.HasValue)
+                query = query.Where(p => p.RentableArea <= filter.MaxRentableArea);
 
             if (filter.MinEstimatedValue.HasValue && filter.MaxEstimatedValue.HasValue) // TODO: Review performance of the evaluation query component.
                 query = query.Where(p =>
@@ -153,111 +161,104 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get the parcel for the specified 'id'.
+        /// Get the building for the specified 'id'.
         /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Parcel GetNoTracking(int id)
+        public Building GetNoTracking(int id)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
-            var parcel = this.Context.Parcels
-                .Include(p => p.Status)
-                .Include(p => p.Classification)
+            var building = this.Context.Buildings
+                .Include(p => p.Parcel)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingConstructionType)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Evaluations)
-                .Include(p => p.Buildings)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
                 .AsNoTracking()
-                .FirstOrDefault(p => p.Id == id &&
-                    (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
+                .FirstOrDefault(b => b.Id == id &&
+                    (!b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
 
-            // Remove any sensitive buildings from the results if the user is not allowed to view them.
-            parcel?.Buildings.RemoveAll(b => b.IsSensitive && !userAgencies.Contains(b.AgencyId));
-            return parcel;
+            return building;
         }
 
         /// <summary>
-        /// Add the specified parcel to the datasource.
+        /// Add the specified building to the datasource.
         /// </summary>
-        /// <param name="parcel"></param>
+        /// <param name="building"></param>
         /// <returns></returns>
-        public Parcel Add(Parcel parcel)
+        public Building Add(Building building)
         {
-            parcel.ThrowIfNull(nameof(parcel));
+            building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
             var agency_id = this.User.GetAgency() ??
-                throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
+                throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
-            this.Context.Parcels.ThrowIfNotUnique(parcel);
+            this.Context.Buildings.ThrowIfNotUnique(building);
 
-            parcel.CreatedById = this.User.GetUserId();
-            parcel.AgencyId = agency_id;
-            this.Context.Parcels.Add(parcel);
+            building.CreatedById = this.User.GetUserId();
+            building.AgencyId = agency_id;
+            this.Context.Buildings.Add(building);
             this.Context.CommitTransaction();
-            return parcel;
+            return building;
         }
 
         /// <summary>
-        /// Update the specified parcel in the datasource.
+        /// Update the specified building in the datasource.
         /// </summary>
-        /// <param name="parcel"></param>
+        /// <param name="building"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Parcel Update(Parcel parcel)
+        public Building Update(Building building)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, Permissions.PropertyEdit);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, Permissions.PropertyEdit);
 
-            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+            if (!userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+            if (entity.AgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
 
-            this.Context.Parcels.ThrowIfNotUnique(parcel);
+            this.Context.Buildings.ThrowIfNotUnique(building);
 
-            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
+            this.Context.Entry(entity).CurrentValues.SetValues(building);
             entity.UpdatedById = this.User.GetUserId();
             entity.UpdatedOn = DateTime.UtcNow;
 
-            this.Context.Parcels.Update(entity);
+            this.Context.Buildings.Update(entity);
             this.Context.CommitTransaction();
             return entity;
         }
 
         /// <summary>
-        /// Remove the specified parcel from the datasource.
+        /// Remove the specified building from the datasource.
         /// </summary>
-        /// <param name="parcel"></param>
+        /// <param name="building"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public void Remove(Parcel parcel)
+        public void Remove(Building building)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, Permissions.PropertyAdd);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, Permissions.PropertyAdd);
 
-            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
             var agency_ids = this.User.GetAgencies();
-            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove parcels outside of their agency.");
+            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
-            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
+            this.Context.Entry(entity).CurrentValues.SetValues(building);
 
-            this.Context.Parcels.Remove(entity); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
+            this.Context.Buildings.Remove(entity); // TODO: Shouldn't be allowed to permanently delete buildings entirely.
             this.Context.CommitTransaction();
         }
         #endregion

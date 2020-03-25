@@ -1,15 +1,19 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Pims.Dal.Helpers.Extensions;
-using Model = Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Model = Pims.Api.Models;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Api.Helpers.Extensions;
 using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal;
+using Pims.Dal.Entities.Models;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System;
 
 namespace Pims.Api.Controllers
 {
@@ -18,12 +22,11 @@ namespace Pims.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/my/[controller]")]
+    [Route("/api/parcels")]
     public class ParcelController : ControllerBase
     {
         #region Variables
         private readonly ILogger<ParcelController> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -33,13 +36,11 @@ namespace Pims.Api.Controllers
         /// Creates a new instance of a ParcelController class.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="configuration"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public ParcelController(ILogger<ParcelController> logger, IConfiguration configuration, IPimsService pimsService, IMapper mapper)
+        public ParcelController(ILogger<ParcelController> logger, IPimsService pimsService, IMapper mapper)
         {
             _logger = logger;
-            _configuration = configuration;
             _pimsService = pimsService;
             _mapper = mapper;
         }
@@ -56,9 +57,49 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetMyParcels(double neLat, double neLong, double swLat, double swLong, int? agencyId = null, int? propertyClassificationId = null)
+        public IActionResult GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
         {
-            var parcels = _pimsService.Parcel.GetNoTracking(neLat, neLong, swLat, swLong, agencyId, propertyClassificationId);
+            if (neLat == null) throw new BadRequestException($"Query parameter {nameof(neLat)} required.");
+            if (neLong == null) throw new BadRequestException($"Query parameter {nameof(neLong)} required.");
+            if (swLat == null) throw new BadRequestException($"Query parameter {nameof(swLat)} required.");
+            if (swLong == null) throw new BadRequestException($"Query parameter {nameof(swLong)} required.");
+
+            var parcels = _pimsService.Parcel.GetNoTracking(neLat.Value, neLong.Value, swLat.Value, swLong.Value);
+            return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
+        }
+
+        /// <summary>
+        /// Get all the parcels that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="neLat"></param>
+        /// <param name="neLong"></param>
+        /// <param name="swLat"></param>
+        /// <param name="swLong"></param>
+        /// <returns></returns>
+        [HttpGet("filter")]
+        [HasPermission(Permissions.PropertyView)]
+        public IActionResult GetParcelsWithFilter()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetParcelsWithFilter(new ParcelFilter(query));
+        }
+
+        /// <summary>
+        /// Get all the parcels that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="neLat"></param>
+        /// <param name="neLong"></param>
+        /// <param name="swLat"></param>
+        /// <param name="swLong"></param>
+        /// <returns></returns>
+        [HttpPost("filter")]
+        [HasPermission(Permissions.PropertyView)]
+        public IActionResult GetParcelsWithFilter([FromBody]ParcelFilter filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+
+            var parcels = _pimsService.Parcel.GetNoTracking(filter);
             return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
         }
 
@@ -69,7 +110,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetMyParcel(int id)
+        public IActionResult GetParcel(int id)
         {
             var entity = _pimsService.Parcel.GetNoTracking(id);
             var parcel = _mapper.Map<ParcelModel>(entity);
@@ -84,7 +125,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [HasPermission(Permissions.PropertyAdd)]
-        public IActionResult AddMyParcel([FromBody] ParcelModel model)
+        public IActionResult AddParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
             var userId = this.User.GetUserId();
@@ -110,7 +151,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [HasPermission(Permissions.PropertyEdit)]
-        public IActionResult UpdateMyParcel([FromBody] ParcelModel model)
+        public IActionResult UpdateParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
@@ -127,7 +168,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpDelete("{id}")]
         [HasPermission(Permissions.PropertyAdd)]
-        public IActionResult DeleteMyParcels(ParcelModel model)
+        public IActionResult DeleteParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
@@ -135,9 +176,6 @@ namespace Pims.Api.Controllers
 
             return new JsonResult(model);
         }
-        #endregion
-
-        #region Methods
         #endregion
     }
 }

@@ -24,20 +24,6 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
-        /// Throw an ArgumentNullException if the item is null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static T ThrowIfNull<T>(this T item, string paramName) where T : class
-        {
-            if (item == null)
-            {
-                throw new ArgumentNullException(paramName);
-            }
-
-            return item;
-        }
-
-        /// <summary>
         /// Recursively flatten a tree structure of IEnumerables.
         /// </summary>
         /// <typeparam name="T"></typeparam>

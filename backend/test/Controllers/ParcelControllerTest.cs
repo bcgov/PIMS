@@ -10,6 +10,8 @@ using Model = Pims.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
+using Pims.Dal.Security;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -36,12 +38,12 @@ namespace Pims.Api.Test.Controllers
         #endregion
 
         #region Tests
-        #region DeleteMyParcels
+        #region DeleteParcel
         [Fact]
-        public void DeleteMyParcels_Success()
+        public void DeleteParcel_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-add");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
@@ -53,7 +55,7 @@ namespace Pims.Api.Test.Controllers
             var modelToDelete = mapper.Map<Model.ParcelModel>(_expectedParcel);
 
             // Act
-            var result = controller.DeleteMyParcels(modelToDelete);
+            var result = controller.DeleteParcel(modelToDelete);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
@@ -63,10 +65,10 @@ namespace Pims.Api.Test.Controllers
         }
 
         [Fact]
-        public void DeleteMyParcels_NoClaim()
+        public void DeleteParcel_NoClaim()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
@@ -81,157 +83,165 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<NotAuthorizedException>(() =>
-                controller.DeleteMyParcels(mapper.Map<Model.ParcelModel>(_expectedParcel)));
+                controller.DeleteParcel(mapper.Map<Model.ParcelModel>(_expectedParcel)));
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
 
-        #region GetMyParcels
+        #region GetParcels
         [Fact]
-        public void GetMyParcels_FilterLatitude()
+        public void GetParcels_FilterLatitude()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), null, null)).Returns(new[] { _expectedParcel });
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetMyParcels(50, 25, 50, 20);
+            var result = controller.GetParcels(50, 25, 50, 20);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 20, null, null), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 20), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcels_FilterLongitude()
+        public void GetParcels_FilterLongitude()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), null, null)).Returns(new[] { _expectedParcel });
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetMyParcels(50, 25, 50, 25);
+            var result = controller.GetParcels(50, 25, 50, 25);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 25, null, null), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 25), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcels_FilterAgency()
+        public void GetParcels_FilterAgency()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<int?>(), null)).Returns(new[] { _expectedParcel });
+            var filter = new ParcelFilter()
+            {
+                Agencies = new int[] { AGENCY_ID }
+            };
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetMyParcels(100, 100, 0, 0, agencyId: AGENCY_ID);
+            var result = controller.GetParcelsWithFilter(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(100, 100, 0, 0, AGENCY_ID, null), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcels_FilterClassification()
+        public void GetParcels_FilterClassification()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new[] { _expectedParcel });
+            var filter = new ParcelFilter()
+            {
+                ClassificationId = CLASSIFICATION_ID
+            };
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetMyParcels(100, 100, 0, 0, null, propertyClassificationId: CLASSIFICATION_ID);
+            var result = controller.GetParcelsWithFilter(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(100, 100, 0, 0, null, CLASSIFICATION_ID), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcels_GetMultiple()
+        public void GetParcels_GetMultiple()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(testParcels);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(testParcels);
 
             // Act
-            var result = controller.GetMyParcels(100, 100, 0, 0);
+            var result = controller.GetParcels(100, 100, 0, 0);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Model.Parts.ParcelModel[] expectedParcels = mapper.Map<Model.Parts.ParcelModel[]>(testParcels);
             Assert.Equal(expectedParcels, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(100, 100, 0, 0, null, null), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(100, 100, 0, 0), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcels_FilterAll()
+        public void GetParcels_FilterAll()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.Parcel[0]);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new Entity.Parcel[0]);
 
             // Act
-            var result = controller.GetMyParcels(0, 25, 10, 20);
+            var result = controller.GetParcels(0, 25, 10, 20);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Empty(actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(0, 25, 10, 20, null, null), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(0, 25, 10, 20), Times.Once());
         }
         #endregion
 
-        #region GetMyParcelDetail
+        #region GetParcel
         [Fact]
-        public void GetMyParcelDetail_NoData()
+        public void GetParcel_NoData()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
             var service = helper.GetService<Mock<IPimsService>>();
@@ -241,15 +251,15 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<KeyNotFoundException>(() =>
-                controller.GetMyParcel(expectedParcelId));
+                controller.GetParcel(expectedParcelId));
             service.Verify(m => m.Parcel.GetNoTracking(expectedParcelId), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcelDetail_NonMatchingId()
+        public void GetParcel_NonMatchingId()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
@@ -260,15 +270,15 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<KeyNotFoundException>(() =>
-                controller.GetMyParcel(expectedParcelId));
+                controller.GetParcel(expectedParcelId));
             service.Verify(m => m.Parcel.GetNoTracking(expectedParcelId), Times.Once());
         }
 
         [Fact]
-        public void GetMyParcelDetail_Matching()
+        public void GetParcel_Matching()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("property-view");
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(user);
 
@@ -310,7 +320,7 @@ namespace Pims.Api.Test.Controllers
             int expectedParcelId = 1;
 
             // Act
-            var result = controller.GetMyParcel(expectedParcelId);
+            var result = controller.GetParcel(expectedParcelId);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);

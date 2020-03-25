@@ -28,6 +28,7 @@ namespace Pims.Dal
         {
             services.AddScoped<IPimsService, PimsService>();
             services.AddScoped<Services.ILookupService, Services.LookupService>();
+            services.AddScoped<Services.IBuildingService, Services.BuildingService>();
             services.AddScoped<Services.IParcelService, Services.ParcelService>();
             services.AddScoped<Services.IUserService, Services.UserService>();
             return services; // TODO: Use reflection to find all services.

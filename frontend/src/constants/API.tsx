@@ -25,11 +25,11 @@ export interface IParcelListParams {
   propertyClassificationId: number | null;
 }
 export const PARCELS = (params: IParcelListParams | null) =>
-  params ? `/my/parcel?${queryString.stringify(params)}` : '/my/parcel'; // get filtered properties or all if not specified.
+  params ? `/parcels?${queryString.stringify(params)}` : '/parcels'; // get filtered properties or all if not specified.
 export interface IParcelDetailParams {
   id: number;
 }
-export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/my/parcel/${params.id}`;
+export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
 
 // Lookup Codes
 export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`; // get filtered properties or all if not specified.

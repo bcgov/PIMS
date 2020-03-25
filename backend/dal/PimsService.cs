@@ -22,6 +22,12 @@ namespace Pims.Dal
         public ClaimsPrincipal Principal { get; }
 
         /// <summary>
+        /// get - The building services.
+        /// </summary>
+        /// <value></value>
+        public IBuildingService Building { get { return _serviceProvider.GetService<IBuildingService>(); } }
+
+        /// <summary>
         /// get - The lookup services.
         /// </summary>
         /// <value></value>
