@@ -48,54 +48,26 @@ namespace Pims.Api.Controllers
 
         #region Endpoints
         /// <summary>
-        /// Get all the parcels filtered by the lat/lon coords.
+        /// Get all the parcels that satisfy the filter parameters.
         /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetParcels(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
-        {
-            if (neLat == null) throw new BadRequestException($"Query parameter {nameof(neLat)} required.");
-            if (neLong == null) throw new BadRequestException($"Query parameter {nameof(neLong)} required.");
-            if (swLat == null) throw new BadRequestException($"Query parameter {nameof(swLat)} required.");
-            if (swLong == null) throw new BadRequestException($"Query parameter {nameof(swLong)} required.");
-
-            var parcels = _pimsService.Parcel.GetNoTracking(neLat.Value, neLong.Value, swLat.Value, swLong.Value);
-            return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
-        }
-
-        /// <summary>
-        /// Get all the parcels that satisfy the filter parameters.
-        /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
-        /// <returns></returns>
-        [HttpGet("filter")]
-        [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetParcelsWithFilter()
+        public IActionResult GetParcels()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetParcelsWithFilter(new ParcelFilter(query));
+            return GetParcels(new ParcelFilter(query));
         }
 
         /// <summary>
         /// Get all the parcels that satisfy the filter parameters.
         /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost("filter")]
+        [HttpPost]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetParcelsWithFilter([FromBody]ParcelFilter filter)
+        public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
 

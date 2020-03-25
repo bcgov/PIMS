@@ -46,55 +46,26 @@ namespace Pims.Api.Controllers
 
         #region Endpoints
         /// <summary>
-        /// Get all the properties that satisfy the latitude and longitude parameters.
+        /// Get all the properties that satisfy the filter parameters.
         /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetProperties(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null)
-        {
-            if (neLat == null) throw new BadRequestException($"Query parameter {nameof(neLat)} required.");
-            if (neLong == null) throw new BadRequestException($"Query parameter {nameof(neLong)} required.");
-            if (swLat == null) throw new BadRequestException($"Query parameter {nameof(swLat)} required.");
-            if (swLong == null) throw new BadRequestException($"Query parameter {nameof(swLong)} required.");
-
-            var properties = new List<PropertyModel>(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.GetNoTracking(neLat.Value, neLong.Value, swLat.Value, swLong.Value)));
-            properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.GetNoTracking(neLat.Value, neLong.Value, swLat.Value, swLong.Value)));
-            return new JsonResult(properties.ToArray());
-        }
-
-        /// <summary>
-        /// Get all the properties that satisfy the filter parameters.
-        /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
-        /// <returns></returns>
-        [HttpGet("filter")]
-        [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetPropertiesWithFilter()
+        public IActionResult GetProperties()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetPropertiesWithFilter(new PropertyFilterModel(query));
+            return GetProperties(new PropertyFilterModel(query));
         }
 
         /// <summary>
         /// Get all the properties that satisfy the filter parameters.
         /// </summary>
-        /// <param name="neLat"></param>
-        /// <param name="neLong"></param>
-        /// <param name="swLat"></param>
-        /// <param name="swLong"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost("filter")]
+        [HttpPost]
         [HasPermission(Permissions.PropertyView)]
-        public IActionResult GetPropertiesWithFilter([FromBody]PropertyFilterModel filter)
+        public IActionResult GetProperties([FromBody]PropertyFilterModel filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");

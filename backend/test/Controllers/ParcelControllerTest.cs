@@ -100,16 +100,17 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new[] { _expectedParcel });
+            var filter = new ParcelFilter(50, 25, 50, 20);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetParcels(50, 25, 50, 20);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 20), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
 
         [Fact]
@@ -123,16 +124,17 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new[] { _expectedParcel });
+            var filter = new ParcelFilter(50, 25, 50, 25);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetParcels(50, 25, 50, 25);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Equal(new Model.Parts.ParcelModel[] { mapper.Map<Model.Parts.ParcelModel>(_expectedParcel) }, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(50, 25, 50, 25), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
 
         [Fact]
@@ -153,7 +155,7 @@ namespace Pims.Api.Test.Controllers
             service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetParcelsWithFilter(filter);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
@@ -180,7 +182,7 @@ namespace Pims.Api.Test.Controllers
             service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new[] { _expectedParcel });
 
             // Act
-            var result = controller.GetParcelsWithFilter(filter);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
@@ -200,17 +202,18 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(testParcels);
+            var filter = new ParcelFilter(100, 100, 0, 0);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(testParcels);
 
             // Act
-            var result = controller.GetParcels(100, 100, 0, 0);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Model.Parts.ParcelModel[] expectedParcels = mapper.Map<Model.Parts.ParcelModel[]>(testParcels);
             Assert.Equal(expectedParcels, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(100, 100, 0, 0), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
 
         [Fact]
@@ -223,16 +226,17 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var testParcels = GetTestParcels(_expectedParcel);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>())).Returns(new Entity.Parcel[0]);
+            var filter = new ParcelFilter(0, 25, 10, 20);
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new Entity.Parcel[0]);
 
             // Act
-            var result = controller.GetParcels(0, 25, 10, 20);
+            var result = controller.GetParcels(filter);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             Model.Parts.ParcelModel[] actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
             Assert.Empty(actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(0, 25, 10, 20), Times.Once());
+            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
         }
         #endregion
 

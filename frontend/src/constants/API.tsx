@@ -17,10 +17,10 @@ export interface IPaginateAccessRequests {
 
 // Parcels
 export interface IParcelListParams {
-  neLat: number;
-  neLong: number;
-  swLat: number;
-  swLong: number;
+  neLatitude: number;
+  neLongitude: number;
+  swLatitude: number;
+  swLongitude: number;
   agencyId: number | null;
   propertyClassificationId: number | null;
 }

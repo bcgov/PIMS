@@ -191,6 +191,21 @@ namespace Pims.Api.Models.Property
         public PropertyFilterModel() { }
 
         /// <summary>
+        /// Creates a new instance of a PropertyFilterModel class.
+        /// </summary>
+        /// <param name="neLat"></param>
+        /// <param name="neLong"></param>
+        /// <param name="swLat"></param>
+        /// <param name="swLong"></param>
+        public PropertyFilterModel(double neLat, double neLong, double swLat, double swLong)
+        {
+            this.NELatitude = neLat;
+            this.NELongitude = neLong;
+            this.SWLatitude = swLat;
+            this.SWLongitude = swLong;
+        }
+
+        /// <summary>
         /// Creates a new instance of a PropertyFilterModel class, initializes with the specified arguments.
         /// </summary>
         /// <param name="query"></param>
