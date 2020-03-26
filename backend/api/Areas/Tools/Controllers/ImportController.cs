@@ -1,11 +1,12 @@
 using System.Linq;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Areas.Tools.Models;
 using Pims.Api.Models;
+using Pims.Api.Policies;
+using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 
 namespace Pims.Api.Areas.Admin.Controllers
@@ -13,7 +14,7 @@ namespace Pims.Api.Areas.Admin.Controllers
     /// <summary>
     /// ImportController class, provides endpoints for managing parcels.
     /// </summary>
-    [Authorize(Roles = "system-administrator")]
+    [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("tools")]
     [Route("/api/[area]/[controller]")]

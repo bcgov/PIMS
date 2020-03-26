@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
 {
@@ -107,22 +108,14 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            if (filter.TryGetValue(nameof(this.Page), out Microsoft.Extensions.Primitives.StringValues pageValue) && int.TryParse(pageValue, out int page))
-                this.Page = page;
-            if (filter.TryGetValue(nameof(this.Quantity), out Microsoft.Extensions.Primitives.StringValues quantityValue) && int.TryParse(quantityValue, out int quantity))
-                this.Quantity = quantity;
-            if (filter.TryGetValue(nameof(this.DisplayName), out Microsoft.Extensions.Primitives.StringValues displayName))
-                this.DisplayName = displayName;
-            if (filter.TryGetValue(nameof(this.LastName), out Microsoft.Extensions.Primitives.StringValues lastName))
-                this.LastName = lastName;
-            if (filter.TryGetValue(nameof(this.FirstName), out Microsoft.Extensions.Primitives.StringValues firstName))
-                this.FirstName = firstName;
-            if (filter.TryGetValue(nameof(this.Email), out Microsoft.Extensions.Primitives.StringValues email))
-                this.Email = email;
-            if (filter.TryGetValue(nameof(this.Sort), out Microsoft.Extensions.Primitives.StringValues sort))
-                this.Sort = sort.ToString().Split(",");
-            if (filter.TryGetValue(nameof(this.Agencies), out Microsoft.Extensions.Primitives.StringValues agencies))
-                this.Agencies = agencies.ToString().Split(",").Select(a => { int.TryParse(a, out int id); return id; }).Where(a => a != 0).ToArray();
+            this.Page = filter.GetIntValue(nameof(this.Page), 1);
+            this.Quantity = filter.GetIntValue(nameof(this.Quantity), 10);
+            this.DisplayName = filter.GetStringValue(nameof(this.DisplayName));
+            this.LastName = filter.GetStringValue(nameof(this.LastName));
+            this.FirstName = filter.GetStringValue(nameof(this.FirstName));
+            this.Email = filter.GetStringValue(nameof(this.Email));
+            this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
+            this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
         }
         #endregion
     }

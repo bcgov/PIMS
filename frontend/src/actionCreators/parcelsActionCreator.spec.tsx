@@ -35,10 +35,10 @@ describe('fetchParcels action creator', () => {
 
   it('Request successful, dispatches `success` with correct response', () => {
     const params: IParcelListParams = {
-      neLat: 1,
-      neLong: 2,
-      swLat: 3,
-      swLong: 4,
+      neLatitude: 1,
+      neLongitude: 2,
+      swLatitude: 3,
+      swLongitude: 4,
       agencyId: null,
       propertyClassificationId: null,
     };

@@ -23,15 +23,17 @@ ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 DB_PASSWORD={password}
 ConnectionStrings__PIMS={connection string}
 Keycloak__Secret={secret}
+Keycloak__ServiceAccount__Secret={secret}
 ```
 
-| Key                                 | Value                              | Description                                                                                                                                         |
-| ----------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ASPNETCORE_ENVIRONMENT              | [Development\|Staging\|Production] | The environment name to run under. This will result in apply different configuration settings.                                                      |
-| ASPNETCORE_FORWARDEDHEADERS_ENABLED | [true\|false]                      | Whether to include forwarder headers.                                                                                                               |
-| DB_PASSWORD                         | {password}                         | The password to the database. If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/.../.env` file. |
-| ConnectionStrings\_\_PIMS           | {connection string}                | To override the `appsettings.[environment].json` configuration files you can set the connection string value here.                                  |
-| Keycloak\_\_Secret                  | {secret}                           | Should be the value provided by KeyCloak (_Currently this value can remain blank_)                                                                  |
+| Key                                 | Required | Value                              | Description                                                                                                                                                      |
+| ----------------------------------- | :------: | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ASPNETCORE_ENVIRONMENT              |    x     | [Development\|Staging\|Production] | The environment name to run under. This will result in apply different configuration settings.                                                                   |
+| ASPNETCORE_FORWARDEDHEADERS_ENABLED |          | [true\|false]                      | Whether to include forwarder headers.                                                                                                                            |
+| DB_PASSWORD                         |    x     | {password}                         | The password to the database. If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/.../.env` file.              |
+| ConnectionStrings\_\_PIMS           |          | {connection string}                | To override the `appsettings.[environment].json` configuration files you can set the connection string value here.                                               |
+| Keycloak\_\_Secret                  |    x     | {secret}                           | Should be the value provided by KeyCloak (_Currently this value can remain blank_)                                                                               |
+| Keycloak\_\_ServiceAccout\_\_Secret |    x     | {secret}                           | Should be the value provided by KeyCloak for the *pims-service-account* client.      This is required for administrative endpoints that integrate with Keycloak. |
 
 ## Secret Management
 
