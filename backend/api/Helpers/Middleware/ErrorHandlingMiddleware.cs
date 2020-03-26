@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
-using Pims.Core.Extensions;
 using Pims.Dal.Exceptions;
 
 namespace Pims.Api.Helpers.Middleware
@@ -193,13 +192,7 @@ namespace Pims.Api.Helpers.Middleware
             if (!context.Response.HasStarted)
             {
                 var is_dev = _env.IsDevelopment();
-                var result = JsonSerializer.Serialize(new
-                {
-                    Error = is_dev ? ex.Message : message,
-                    Type = ex.GetType().Name,
-                    Details = is_dev ? details ?? ex.GetAllMessages() : null,
-                    StackTrace = is_dev ? ex.StackTrace : null
-                }, _options.JsonSerializerOptions);
+                var result = JsonSerializer.Serialize(new Models.ErrorResponseModel(_env, ex, message, details), _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)code;
                 await context.Response.WriteAsync(result);
