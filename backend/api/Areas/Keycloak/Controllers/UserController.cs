@@ -8,6 +8,7 @@ using Model = Pims.Api.Areas.Keycloak.Models;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {
@@ -17,7 +18,9 @@ namespace Pims.Api.Areas.Keycloak.Controllers
     [HasPermission(Permissions.AdminUsers)]
     [ApiController]
     [Area("keycloak")]
-    [Route("/api/[area]/users")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[area]/users")]
+    [Route("[area]/users")]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -50,6 +53,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The user does not exist in keycloak.</exception>
         /// <returns></returns>
         [HttpPost("sync/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         public async Task<IActionResult> SyncUserAsync(Guid id)
         {
             var user = await _keycloakService.SyncUserAsync(id);
@@ -68,6 +75,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <param name="search"></param>
         /// <returns></returns>
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         public async Task<IActionResult> GetUsersAsync(int page = 1, int quantity = 10, string search = null)
         {
             var users = await _keycloakService.GetUsersAsync(page, quantity, search);
@@ -83,6 +94,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The user does not exist in keycloak.</exception>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         public async Task<IActionResult> GetUserAsync(Guid id)
         {
             var user = await _keycloakService.GetUserAsync(id);
@@ -98,6 +113,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The user does not exist in Keycloak or PIMS.</exception>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] Model.Update.UserModel model)
         {
             var user = _mapper.Map<Entity.User>(model);
@@ -108,11 +127,16 @@ namespace Pims.Api.Areas.Keycloak.Controllers
             return new JsonResult(result);
         }
 
+        #region Access Request
         /// <summary>
         /// Update an access request, generally to grant/deny it.
         /// </summary>
         /// <returns></returns>
         [HttpPut("access/request")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         public async Task<IActionResult> UpdateAccessRequestAsync(Pims.Api.Models.AccessRequestModel updateModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
@@ -121,6 +145,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
             var user = _mapper.Map<Pims.Api.Models.AccessRequestModel>(updatedEntity);
             return new JsonResult(user);
         }
+        #endregion
         #endregion
     }
 }

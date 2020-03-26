@@ -74,12 +74,12 @@ namespace Pims.Dal.Helpers.Extensions
         /// If the RowVersion of the specified entity is null it will throw a RowVersionMissingException.
         /// </summary>
         /// <param name="entity"></param>
-        /// <param name="paramName"></param>
+        /// <param name="message"></param>
         /// <typeparam name="T"></typeparam>
         /// <exception type="RowVersionException">The RowVersion cannot be null.</exception>
-        public static void ThrowIfRowVersionNull<T>(this T entity, string paramName) where T : BaseEntity
+        public static void ThrowIfRowVersionNull<T>(this T entity, string message = null) where T : BaseEntity
         {
-            if (entity?.RowVersion == null) throw new RowVersionMissingException(paramName);
+            if (entity?.RowVersion == null) throw new RowVersionMissingException(message);
         }
     }
 }

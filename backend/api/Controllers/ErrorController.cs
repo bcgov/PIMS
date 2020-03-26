@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Pims.Api.Controllers
@@ -13,7 +12,6 @@ namespace Pims.Api.Controllers
     {
         #region Variables
         private readonly ILogger<ErrorController> _logger;
-        private readonly IConfiguration _configuration;
         #endregion
 
         #region Constructors
@@ -21,11 +19,9 @@ namespace Pims.Api.Controllers
         /// Creates a new instance of a ErrorController class.
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="configuration"></param>
-        public ErrorController(ILogger<ErrorController> logger, IConfiguration configuration)
+        public ErrorController(ILogger<ErrorController> logger)
         {
             _logger = logger;
-            _configuration = configuration;
         }
         #endregion
 
@@ -35,18 +31,11 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
+        [Produces("application/json")]
         public IActionResult Error()
         {
-            // TODO: Log errors and only return appropriate errors for production.
             var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            // if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
-            // {
-            //     ExceptionMessage = "File error thrown";
-            // }
-            // if (exceptionHandlerPathFeature?.Path == "/index")
-            // {
-            //     ExceptionMessage += " from home page";
-            // }
+            _logger.LogError(exceptionHandlerPathFeature.Error, "Unhandled error occured.");
             return new JsonResult(new { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         #endregion

@@ -51,11 +51,11 @@ namespace Pims.Api.Models
         /// <param name="details"></param>
         public ErrorResponseModel(IWebHostEnvironment environment, Exception ex, string message, string details)
         {
-            var isDev = environment.IsDevelopment();
-            this.Error = isDev ? ex.Message : message;
+            var showError = !environment.IsProduction();
+            this.Error = showError ? ex.Message : message;
             this.Type = ex.GetType().Name;
-            this.Details = isDev ? details ?? ex.GetAllMessages() : null;
-            this.StackTrace = isDev ? ex.StackTrace : null;
+            this.Details = showError ? details ?? ex.GetAllMessages() : null;
+            this.StackTrace = showError ? ex.StackTrace : null;
         }
 
         /// <summary>

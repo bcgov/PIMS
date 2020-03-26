@@ -200,5 +200,33 @@ namespace Pims.Dal.Entities.Models
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
         }
         #endregion
+
+        #region Methods
+
+
+        /// <summary>
+        /// Determine if a valid filter was provided.
+        /// </summary>
+        /// <returns></returns>
+        public bool ValidFilter()
+        {
+            return this.NELatitude.HasValue
+                || this.NELongitude.HasValue
+                || this.SWLatitude.HasValue
+                || this.SWLongitude.HasValue
+                || !String.IsNullOrWhiteSpace(this.Address)
+                || this.MaxAssessedValue.HasValue
+                || this.MinAssessedValue.HasValue
+                || this.MinEstimatedValue.HasValue
+                || this.MaxEstimatedValue.HasValue
+                || this.Agencies?.Any() == true
+                || this.ConstructionTypeId.HasValue
+                || this.PredominateUseId.HasValue
+                || this.FloorCount.HasValue
+                || this.MinRentableArea.HasValue
+                || this.MaxRentableArea.HasValue
+                || !String.IsNullOrWhiteSpace(this.Tenancy);
+        }
+        #endregion
     }
 }

@@ -88,6 +88,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            entity.ThrowIfRowVersionNull(nameof(entity));
 
             this.UpdateOne(entity);
             this.Context.CommitTransaction();
