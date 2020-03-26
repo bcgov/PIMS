@@ -90,56 +90,37 @@ namespace Pims.Dal.Services
             if (filter.StatusId.HasValue)
                 query = query.Where(p => p.StatusId == filter.StatusId);
 
-            if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
-                query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%"));
+            // TODO: Parse the address information by City, Postal, etc.
+            if (!String.IsNullOrWhiteSpace(filter.Address))
+                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
 
-            if (filter.MinLandArea.HasValue && filter.MaxLandArea.HasValue)
-                query = query.Where(p => p.LandArea >= filter.MinLandArea && p.LandArea <= filter.MaxLandArea);
-            else if (filter.MinLandArea.HasValue)
+            if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);
-            else if (filter.MaxLandArea.HasValue)
+            if (filter.MaxLandArea.HasValue)
                 query = query.Where(p => p.LandArea <= filter.MaxLandArea);
 
-            if (filter.MinEstimatedValue.HasValue && filter.MaxEstimatedValue.HasValue) // TODO: Review performance of the evaluation query component.
-                query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue &&
-                    filter.MaxEstimatedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
-            else if (filter.MinEstimatedValue.HasValue)
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinEstimatedValue.HasValue)
                 query = query.Where(p =>
                     filter.MinEstimatedValue <= p.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
                     .Where(pe => pe.ParcelId == p.Id)
                     .Max(pe => pe.FiscalYear)).EstimatedValue);
-            else if (filter.MaxEstimatedValue.HasValue)
+            if (filter.MaxEstimatedValue.HasValue)
                 query = query.Where(p =>
                     filter.MaxEstimatedValue >= p.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
                     .Where(pe => pe.ParcelId == p.Id)
                     .Max(pe => pe.FiscalYear)).EstimatedValue);
 
-            if (filter.MinAssessedValue.HasValue && filter.MaxAssessedValue.HasValue) // TODO: Review performance of the evaluation query component.
-                query = query.Where(p =>
-                    filter.MinAssessedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue &&
-                    filter.MaxAssessedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
-            else if (filter.MinAssessedValue.HasValue)
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MinAssessedValue <= p.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
                     .Where(pe => pe.ParcelId == p.Id)
                     .Max(pe => pe.FiscalYear)).AssessedValue);
-            else if (filter.MaxAssessedValue.HasValue)
+            if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MaxAssessedValue >= p.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations

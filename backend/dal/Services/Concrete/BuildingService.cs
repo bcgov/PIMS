@@ -75,83 +75,63 @@ namespace Pims.Dal.Services
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = this.Context.Buildings.AsNoTracking().Where(p =>
-                !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
+            var query = this.Context.Buildings.AsNoTracking().Where(b =>
+                !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)));
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
-                query = query.Where(p =>
-                    p.Latitude != 0 &&
-                    p.Longitude != 0 &&
-                    p.Latitude <= filter.NELatitude &&
-                    p.Latitude >= filter.SWLatitude &&
-                    p.Longitude <= filter.NELongitude &&
-                    p.Longitude >= filter.SWLongitude);
+                query = query.Where(b =>
+                    b.Latitude != 0 &&
+                    b.Longitude != 0 &&
+                    b.Latitude <= filter.NELatitude &&
+                    b.Latitude >= filter.SWLatitude &&
+                    b.Longitude <= filter.NELongitude &&
+                    b.Longitude >= filter.SWLongitude);
 
             if (filter.Agencies?.Any() == true)
-                query = query.Where(p => filter.Agencies.Contains(p.AgencyId));
+                query = query.Where(b => filter.Agencies.Contains(b.AgencyId));
             if (filter.ConstructionTypeId.HasValue)
-                query = query.Where(p => p.BuildingConstructionTypeId == filter.ConstructionTypeId);
+                query = query.Where(b => b.BuildingConstructionTypeId == filter.ConstructionTypeId);
             if (filter.PredominateUseId.HasValue)
-                query = query.Where(p => p.BuildingPredominateUseId == filter.PredominateUseId);
+                query = query.Where(b => b.BuildingPredominateUseId == filter.PredominateUseId);
             if (filter.FloorCount.HasValue)
-                query = query.Where(p => p.BuildingFloorCount == filter.FloorCount);
+                query = query.Where(b => b.BuildingFloorCount == filter.FloorCount);
             if (!String.IsNullOrWhiteSpace(filter.Tenancy))
-                query = query.Where(p => p.BuildingTenancy == filter.Tenancy);
+                query = query.Where(b => b.BuildingTenancy == filter.Tenancy);
 
             if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
-                query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%"));
+                query = query.Where(b => EF.Functions.Like(b.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(b.Address.City.Name, $"%{filter.Address}%"));
 
-            if (filter.MinRentableArea.HasValue && filter.MaxRentableArea.HasValue)
-                query = query.Where(p => p.RentableArea >= filter.MinRentableArea && p.RentableArea <= filter.MaxRentableArea);
-            else if (filter.MinRentableArea.HasValue)
-                query = query.Where(p => p.RentableArea >= filter.MinRentableArea);
-            else if (filter.MaxRentableArea.HasValue)
-                query = query.Where(p => p.RentableArea <= filter.MaxRentableArea);
+            if (filter.MinRentableArea.HasValue)
+                query = query.Where(b => b.RentableArea >= filter.MinRentableArea);
+            if (filter.MaxRentableArea.HasValue)
+                query = query.Where(b => b.RentableArea <= filter.MaxRentableArea);
 
-            if (filter.MinEstimatedValue.HasValue && filter.MaxEstimatedValue.HasValue) // TODO: Review performance of the evaluation query component.
-                query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Evaluations
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinEstimatedValue.HasValue)
+                query = query.Where(b =>
+                    filter.MinEstimatedValue <= b.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue &&
-                    filter.MaxEstimatedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
+                    .Where(pe => pe.ParcelId == b.Id)
                     .Max(pe => pe.FiscalYear)).EstimatedValue);
-            else if (filter.MinEstimatedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Evaluations
+            if (filter.MaxEstimatedValue.HasValue)
+                query = query.Where(b =>
+                    filter.MaxEstimatedValue >= b.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
-            else if (filter.MaxEstimatedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MaxEstimatedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
+                    .Where(pe => pe.ParcelId == b.Id)
                     .Max(pe => pe.FiscalYear)).EstimatedValue);
 
-            if (filter.MinAssessedValue.HasValue && filter.MaxAssessedValue.HasValue) // TODO: Review performance of the evaluation query component.
-                query = query.Where(p =>
-                    filter.MinAssessedValue <= p.Evaluations
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinAssessedValue.HasValue)
+                query = query.Where(b =>
+                    filter.MinAssessedValue <= b.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue &&
-                    filter.MaxAssessedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
+                    .Where(pe => pe.ParcelId == b.Id)
                     .Max(pe => pe.FiscalYear)).AssessedValue);
-            else if (filter.MinAssessedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MinAssessedValue <= p.Evaluations
+            if (filter.MaxAssessedValue.HasValue)
+                query = query.Where(b =>
+                    filter.MaxAssessedValue >= b.Evaluations
                     .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
-            else if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MaxAssessedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
+                    .Where(pe => pe.ParcelId == b.Id)
                     .Max(pe => pe.FiscalYear)).AssessedValue);
 
             if (filter.Sort?.Any() == true)

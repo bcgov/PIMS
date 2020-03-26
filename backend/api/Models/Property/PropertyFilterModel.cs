@@ -54,6 +54,42 @@ namespace Pims.Api.Models.Property
         /// <value></value>
         public float? MaxLotArea { get; set; }
 
+        /// <summary>
+        /// get/set - Building minimum estimated value.
+        /// </summary>
+        /// <value></value>
+        public float? MinEstimatedValue { get; set; }
+
+        /// <summary>
+        /// get/set - Building maximum estimated value.
+        /// </summary>
+        /// <value></value>
+        public float? MaxEstimatedValue { get; set; }
+
+        /// <summary>
+        /// get/set - Parcel minimum assessed value.
+        /// </summary>
+        /// <value></value>
+        public float? MinAssessedValue { get; set; }
+
+        /// <summary>
+        /// get/set - Parcel maximum assessed value.
+        /// </summary>
+        /// <value></value>
+        public float? MaxAssessedValue { get; set; }
+
+        /// <summary>
+        /// get/set - An array of agencies.
+        /// </summary>
+        /// <value></value>
+        public int[] Agencies { get; set; }
+
+        /// <summary>
+        /// get/set - An array of sorting parcel conditions (i.e. AgencyId desc, ClassificationId asc)
+        /// </summary>
+        /// <value></value>
+        public string[] Sort { get; set; }
+
         #region Parcel Filters
         /// <summary>
         /// get/set - Parcel classification Id.
@@ -120,41 +156,9 @@ namespace Pims.Api.Models.Property
         #endregion
 
         /// <summary>
-        /// get/set - Building minimum estimated value.
+        /// get - Determine if the filter should include parcels.
         /// </summary>
         /// <value></value>
-        public float? MinEstimatedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Building maximum estimated value.
-        /// </summary>
-        /// <value></value>
-        public float? MaxEstimatedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Parcel minimum assessed value.
-        /// </summary>
-        /// <value></value>
-        public float? MinAssessedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Parcel maximum assessed value.
-        /// </summary>
-        /// <value></value>
-        public float? MaxAssessedValue { get; set; }
-
-        /// <summary>
-        /// get/set - An array of agencies.
-        /// </summary>
-        /// <value></value>
-        public int[] Agencies { get; set; }
-
-        /// <summary>
-        /// get/set - An array of sorting parcel conditions (i.e. AgencyId desc, ClassificationId asc)
-        /// </summary>
-        /// <value></value>
-        public string[] Sort { get; set; }
-
         public bool IncludeParcels
         {
             get
@@ -170,6 +174,10 @@ namespace Pims.Api.Models.Property
             }
         }
 
+        /// <summary>
+        /// get - Determine if the filter should include buildings.
+        /// </summary>
+        /// <value></value>
         public bool IncludeBuildings
         {
             get
@@ -244,6 +252,10 @@ namespace Pims.Api.Models.Property
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Convert to a ParcelFilter.
+        /// </summary>
+        /// <param name="model"></param>
         public static explicit operator ParcelFilter(PropertyFilterModel model)
         {
             var parcel = new ParcelFilter
@@ -270,6 +282,10 @@ namespace Pims.Api.Models.Property
             return parcel;
         }
 
+        /// <summary>
+        /// Convert to a BuildingFilter.
+        /// </summary>
+        /// <param name="model"></param>
         public static explicit operator BuildingFilter(PropertyFilterModel model)
         {
             var parcel = new BuildingFilter
@@ -304,26 +320,26 @@ namespace Pims.Api.Models.Property
         /// <returns></returns>
         public bool ValidFilter()
         {
-            return !(!this.NELatitude.HasValue
-                && !this.NELongitude.HasValue
-                && !this.SWLatitude.HasValue
-                && !this.SWLongitude.HasValue
-                && String.IsNullOrWhiteSpace(this.Address)
-                && !this.MaxAssessedValue.HasValue
-                && !this.MinAssessedValue.HasValue
-                && !this.MinEstimatedValue.HasValue
-                && !this.MaxEstimatedValue.HasValue
-                && (this.Agencies == null || !this.Agencies.Any())
-                && !this.StatusId.HasValue
-                && !this.ClassificationId.HasValue
-                && !this.MinLandArea.HasValue
-                && !this.MaxLandArea.HasValue
-                && !this.ConstructionTypeId.HasValue
-                && !this.PredominateUseId.HasValue
-                && !this.FloorCount.HasValue
-                && !this.MinRentableArea.HasValue
-                && !this.MaxRentableArea.HasValue
-                && String.IsNullOrWhiteSpace(this.Tenancy));
+            return this.NELatitude.HasValue
+                || this.NELongitude.HasValue
+                || this.SWLatitude.HasValue
+                || this.SWLongitude.HasValue
+                || !String.IsNullOrWhiteSpace(this.Address)
+                || this.MaxAssessedValue.HasValue
+                || this.MinAssessedValue.HasValue
+                || this.MinEstimatedValue.HasValue
+                || this.MaxEstimatedValue.HasValue
+                || this.Agencies?.Any() == true
+                || this.StatusId.HasValue
+                || this.ClassificationId.HasValue
+                || this.MinLandArea.HasValue
+                || this.MaxLandArea.HasValue
+                || this.ConstructionTypeId.HasValue
+                || this.PredominateUseId.HasValue
+                || this.FloorCount.HasValue
+                || this.MinRentableArea.HasValue
+                || this.MaxRentableArea.HasValue
+                || !String.IsNullOrWhiteSpace(this.Tenancy);
         }
         #endregion
     }
