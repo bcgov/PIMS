@@ -16,7 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Core.Extensions;
 using Pims.Dal.Exceptions;
-using Pims.Dal.Helpers.Extensions;
 
 namespace Pims.Api.Helpers.Middleware
 {
@@ -140,6 +139,11 @@ namespace Pims.Api.Helpers.Middleware
                 message = "Application configuration details invalid or missing.";
 
                 _logger.LogError(ex, ex.Message);
+            }
+            else if (ex is BadRequestException)
+            {
+                code = HttpStatusCode.BadRequest;
+                message = ex.Message;
             }
             else if (ex is ApiHttpRequestException)
             {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 
 namespace Pims.Api
@@ -24,10 +25,13 @@ namespace Pims.Api
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-            .UseContentRoot(Directory.GetCurrentDirectory())
-            .UseUrls("http://*:8080")
-            .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            DotNetEnv.Env.Load();
+            return WebHost.CreateDefaultBuilder(args)
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS"))
+                .UseStartup<Startup>();
+        }
     }
 }

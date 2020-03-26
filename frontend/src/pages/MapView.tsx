@@ -14,10 +14,10 @@ import * as API from 'constants/API';
 import _ from 'lodash';
 
 const parcelBounds: IParcelListParams = {
-  neLat: 48.43,
-  neLong: -123.37,
-  swLat: 48.43,
-  swLong: -123.37,
+  neLatitude: 48.43,
+  neLongitude: -123.37,
+  swLatitude: 48.43,
+  swLongitude: -123.37,
   agencyId: null,
   propertyClassificationId: null,
 };
@@ -47,10 +47,10 @@ const MapView = () => {
     const ne = mapFilterModel.bounds.getNorthEast();
     const sw = mapFilterModel.bounds.getSouthWest();
     const apiParams = {
-      neLat: ne.lat,
-      neLong: ne.lng,
-      swLat: sw.lat,
-      swLong: sw.lng,
+      neLatitude: ne.lat,
+      neLongitude: ne.lng,
+      swLatitude: sw.lat,
+      swLongitude: sw.lng,
       agencyId: mapFilterModel.agencyId,
       propertyClassificationId: mapFilterModel.propertyClassificationId,
     };

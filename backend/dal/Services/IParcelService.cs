@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Dal.Services
 {
@@ -8,7 +9,8 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IParcelService
     {
-        IEnumerable<Parcel> GetNoTracking(double? neLat = null, double? neLong = null, double? swLat = null, double? swLong = null, int? agencyId = null, int? propertyClassificationId = null);
+        IEnumerable<Parcel> GetNoTracking(double neLat, double neLong, double swLat, double swLong);
+        IEnumerable<Parcel> GetNoTracking(ParcelFilter filter);
         Parcel GetNoTracking(int id);
         Parcel Add(Parcel parcel);
         Parcel Update(Parcel parcel);
