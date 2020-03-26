@@ -22,6 +22,17 @@ namespace Pims.Api.Test.Helpers
         #endregion
 
         #region Properties
+        /// <summary>
+        /// get - The service provider.
+        /// </summary>
+        /// <value></value>
+        public IServiceProvider Provider { get { return _provider; } }
+
+        /// <summary>
+        /// get - The services collection.
+        /// </summary>
+        /// <value></value>
+        public IServiceCollection Services { get { return _services; } }
         #endregion
 
         #region Constructors

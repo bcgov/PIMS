@@ -145,6 +145,35 @@ namespace Pims.Core.Extensions
             if (!type.IsGenericType || !type.IsEnumerable()) return type;
             return type.GetGenericArguments()[0];
         }
+
+        /// <summary>
+        /// Get the method for the specified 'name', 'bindingFlags' and 'parameterTypes'.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="bindingFlags"></param>
+        /// <param name="parameterTypes"></param>
+        /// <returns></returns>
+        public static MethodInfo FindMethod(this Type type, string name, BindingFlags bindingFlags, params Type[] parameterTypes)
+        {
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument cannot be null, empty or whitespace.", nameof(name));
+
+            return type.GetMethod(name, bindingFlags, null, CallingConventions.Any, parameterTypes, null);
+        }
+
+        /// <summary>
+        /// Get the default public instance method for the specified 'name' and 'parameterTypes'.
+        /// By default it will find the method without parameters.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="parameterTypes"></param>
+        /// <returns></returns>
+        public static MethodInfo FindMethod(this Type type, string name, params Type[] parameterTypes)
+        {
+            if (!parameterTypes.Any()) parameterTypes = new Type[0];
+            return type.FindMethod(name, BindingFlags.Instance | BindingFlags.Public, parameterTypes);
+        }
         #endregion
     }
 }

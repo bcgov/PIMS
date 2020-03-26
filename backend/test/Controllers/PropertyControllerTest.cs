@@ -1,14 +1,17 @@
-using Xunit;
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Model = Pims.Api.Models;
 using Moq;
 using Pims.Api.Controllers;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Api.Models.Property;
 using Pims.Api.Test.Helpers;
 using Pims.Dal;
 using Pims.Dal.Security;
-using Pims.Api.Models.Property;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -25,8 +28,11 @@ namespace Pims.Api.Test.Controllers
 
         #region Tests
         #region GetProperties
+        /// <summary>
+        /// Make a successful request that includes the latitude.
+        /// </summary>
         [Fact]
-        public void GetProperties_FilterLatitude()
+        public void GetProperties_FilterLatitude_Success()
         {
             // Arrange
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
@@ -35,12 +41,14 @@ namespace Pims.Api.Test.Controllers
 
             var parcel = new Entity.Parcel(51, 25);
             var parcels = new[] { parcel };
+            var building = new Entity.Building(51, 25);
+            var buildings = new[] { building };
+            var filter = new PropertyFilterModel(50, 25, 50, 20);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            var filter = new PropertyFilterModel(50, 25, 50, 20);
             service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
+            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -48,13 +56,17 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Property.PropertyModel[]>(parcels), actualProperties);
+            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels).Concat(mapper.Map<Model.Property.PropertyModel[]>(buildings));
+            Assert.Equal(expectedProperties, actualProperties);
             service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
+        /// <summary>
+        /// Make a successful request that includes longitude.
+        /// </summary>
         [Fact]
-        public void GetProperties_FilterLongitude()
+        public void GetProperties_FilterLongitude_Success()
         {
             // Arrange
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
@@ -63,12 +75,14 @@ namespace Pims.Api.Test.Controllers
 
             var parcel = new Entity.Parcel(51, 25);
             var parcels = new[] { parcel };
+            var building = new Entity.Building(51, 25);
+            var buildings = new[] { building };
             var filter = new PropertyFilterModel(50, 25, 50, 25);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
+            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -76,13 +90,17 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Property.PropertyModel[]>(parcels), actualProperties);
+            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels).Concat(mapper.Map<Model.Property.PropertyModel[]>(buildings));
+            Assert.Equal(expectedProperties, actualProperties);
             service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
+        /// <summary>
+        /// Make a successful request that only returns parcels.
+        /// </summary>
         [Fact]
-        public void GetProperties_GetMultiple()
+        public void GetProperties_OnlyParcels_Success()
         {
             // Arrange
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
@@ -92,12 +110,11 @@ namespace Pims.Api.Test.Controllers
             var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
             var parcels = new[] { parcel1, parcel2 };
-            var filter = new PropertyFilterModel(100, 100, 0, 0);
+            var filter = new PropertyFilterModel(100, 100, 0, 0) { StatusId = 1 };
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -108,7 +125,113 @@ namespace Pims.Api.Test.Controllers
             var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels);
             Assert.Equal(expectedProperties, actualProperties);
             service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+        }
+
+        /// <summary>
+        /// Make a successful request that only returns buildings.
+        /// </summary>
+        [Fact]
+        public void GetProperties_OnlyBuildings_Success()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var helper = new TestHelper();
+            var controller = helper.CreateController<PropertyController>(user);
+
+            var building1 = new Entity.Building(51, 25) { Id = 1 };
+            var building2 = new Entity.Building(51, 26) { Id = 2 };
+            var buildings = new[] { building1, building2 };
+            var filter = new PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 };
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+
+            // Act
+            var result = controller.GetProperties(filter);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(buildings);
+            Assert.Equal(expectedProperties, actualProperties);
+            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
             service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a successful request that passes the filter in the query string.
+        /// </summary>
+        [Fact]
+        public void GetProperties_Query_Success()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var helper = new TestHelper();
+            var controller = helper.CreateController<PropertyController>(user, new Uri("http://host/api/properties?Agencies=1,2"));
+
+            var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
+            var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
+            var parcels = new[] { parcel1, parcel2 };
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
+
+            // Act
+            var result = controller.GetProperties();
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels);
+            Assert.Equal(expectedProperties, actualProperties);
+            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a failed request because the query doesn't contain filter values.
+        /// </summary>
+        [Fact]
+        public void GetProperties_Query_NoFilter_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var helper = new TestHelper();
+            var controller = helper.CreateController<PropertyController>(user);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetProperties());
+            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+        }
+
+        /// <summary>
+        /// Make a failed request because the body doesn't contain a fitler object.
+        /// </summary>
+        [Fact]
+        public void GetProperties_NoFilter_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var helper = new TestHelper();
+            var controller = helper.CreateController<PropertyController>(user);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetProperties(null));
+            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
         }
         #endregion
         #endregion

@@ -10,6 +10,7 @@ namespace Pims.Api.Helpers.Extensions
         /// <summary>
         /// Throw an BadRequestException if the item is null.
         /// </summary>
+        /// <param name="item"></param>
         /// <param name="message"></param>
         /// <typeparam name="T"></typeparam>
         /// <exception type="BadRequestException">The item cannot be null.</exception>
