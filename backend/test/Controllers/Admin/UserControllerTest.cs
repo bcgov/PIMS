@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
 using AdminModel = Pims.Api.Areas.Admin.Models;
+using Pims.Dal.Security;
 
 namespace PimsApi.Test.Admin.Controllers
 {
@@ -157,7 +158,7 @@ namespace PimsApi.Test.Admin.Controllers
         public void GetUsers()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
+            var user = PrincipalHelper.CreateForPermission(Permissions.AdminUsers);
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
