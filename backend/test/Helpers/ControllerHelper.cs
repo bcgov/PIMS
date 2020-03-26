@@ -24,12 +24,28 @@ namespace Pims.Api.Test.Helpers
         /// <returns></returns>
         public static T CreateController<T>(this TestHelper helper, ClaimsPrincipal user, params object[] args) where T : ControllerBase
         {
+            return helper.CreateController<T>(user, null, args);
+        }
+
+        /// <summary>
+        /// Creates an instance of a controller of the specified 'T' type and initializes it with the specified 'user'.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a controller you can no longer add to the services collection.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="uri"></param>
+        /// <param name="args"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CreateController<T>(this TestHelper helper, ClaimsPrincipal user, Uri uri, params object[] args) where T : ControllerBase
+        {
             helper.MockConstructorArguments<T>(args);
             helper.AddSingleton(TestHelper.CreateMapper());
+            var context = helper.CreateControllerContext(user, uri);
 
             helper.BuildServiceProvider();
             var controller = helper.CreateInstance<T>();
-            controller.ControllerContext = CreateControllerContext(user);
+            controller.ControllerContext = context;
 
             return controller;
         }
@@ -67,12 +83,13 @@ namespace Pims.Api.Test.Helpers
         /// Provides a quick way to create a ControllerContext with the specified user.
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="uri"></param>
         /// <returns></returns>
-        public static ControllerContext CreateControllerContext(ClaimsPrincipal user)
+        public static ControllerContext CreateControllerContext(this TestHelper helper, ClaimsPrincipal user, Uri uri = null)
         {
             return new ControllerContext()
             {
-                HttpContext = HttpContextHelper.CreateHttpContext(user)
+                HttpContext = helper.CreateHttpContext(user, uri)
             };
         }
         #endregion
