@@ -1,6 +1,6 @@
 import { ILookupCode } from '../actions/lookupActions';
 import { IParcelDetail, IParcel } from 'actions/parcelsActions';
-import { MapFilterModel } from 'components/maps/leaflet/Map';
+import { MapViewportChangeEvent } from 'components/maps/leaflet/Map';
 
 export const SELECTEDCLASSIFICATION = {
   name: 'Core Operational',
@@ -172,6 +172,8 @@ export const ACTIVE = {
 
 export const mockAgencyModel = {
   bounds: null,
-  agencyId: 1,
-  propertyClassificationId: null,
-} as MapFilterModel;
+  filter: {
+    agencies: '1',
+    classificationId: null,
+  },
+} as MapViewportChangeEvent;

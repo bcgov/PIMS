@@ -21,8 +21,12 @@ export interface IParcelListParams {
   neLongitude: number;
   swLatitude: number;
   swLongitude: number;
-  agencyId: number | null;
-  propertyClassificationId: number | null;
+  address: string | null;
+  /** comma-separated list of agencies to filter by */
+  agencies: string | null;
+  classificationId: number | null;
+  minLandArea: number | null;
+  maxLandArea: number | null;
 }
 export const PARCELS = (params: IParcelListParams | null) =>
   params ? `/parcels?${queryString.stringify(params)}` : '/parcels'; // get filtered properties or all if not specified.

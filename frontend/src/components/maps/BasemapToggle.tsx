@@ -24,7 +24,7 @@ const BasemapToggle: React.FC<BasemapToggleProps> = props => {
   const [currentBasemap, secondaryBasemap] = props.baseLayers;
 
   const toggle = () => {
-    const e = {
+    const e: BasemapToggleEvent = {
       current: secondaryBasemap,
       previous: currentBasemap,
     };

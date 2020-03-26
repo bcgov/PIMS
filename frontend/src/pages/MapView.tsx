@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Map, { MapFilterModel } from '../components/maps/leaflet/Map';
+import Map, { MapViewportChangeEvent } from '../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import { fetchParcels, fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
@@ -18,8 +18,17 @@ const parcelBounds: IParcelListParams = {
   neLongitude: -123.37,
   swLatitude: 48.43,
   swLongitude: -123.37,
-  agencyId: null,
-  propertyClassificationId: null,
+  address: null,
+  agencies: null,
+  classificationId: null,
+  minLandArea: null,
+  maxLandArea: null,
+};
+
+// This could also come from the API, a local file, etc -OR- replacing the <select> fields with free text inputs.
+// Hard-coding it here until further requirements say otherwise.
+const fetchLotSizes = () => {
+  return [1, 2, 5, 10, 50, 100, 200, 300, 400, 500, 1000, 10000];
 };
 
 const MapView = () => {
@@ -38,21 +47,27 @@ const MapView = () => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
+  const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
 
-  const getApiParams = (mapFilterModel: MapFilterModel): IParcelListParams | null => {
-    if (!mapFilterModel || !mapFilterModel.bounds) {
+  const getApiParams = (e: MapViewportChangeEvent): IParcelListParams | null => {
+    if (!e || !e.bounds) {
       return null;
     }
-    const ne = mapFilterModel.bounds.getNorthEast();
-    const sw = mapFilterModel.bounds.getSouthWest();
-    const apiParams = {
+    const { address, agencies, classificationId, minLotSize, maxLotSize } = e.filter ?? {};
+
+    const ne = e.bounds.getNorthEast();
+    const sw = e.bounds.getSouthWest();
+    const apiParams: IParcelListParams = {
       neLatitude: ne.lat,
       neLongitude: ne.lng,
       swLatitude: sw.lat,
       swLongitude: sw.lng,
-      agencyId: mapFilterModel.agencyId,
-      propertyClassificationId: mapFilterModel.propertyClassificationId,
+      address: address ?? null,
+      agencies: agencies ?? null,
+      classificationId: classificationId ?? null,
+      minLandArea: minLotSize ?? null,
+      maxLandArea: maxLotSize ?? null,
     };
     return apiParams;
   };
@@ -71,9 +86,10 @@ const MapView = () => {
       activeParcel={parcelDetail}
       agencies={agencies}
       propertyClassifications={propertyClassifications}
+      lotSizes={lotSizes}
       onParcelClick={p => dispatch(fetchParcelDetail({ id: p.id }))}
       onPopupClose={() => dispatch(storeParcelDetail(null))}
-      onViewportChanged={(mapFilterModel: MapFilterModel) => {
+      onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
         const apiParams = getApiParams(mapFilterModel);
         const action = fetchParcels(apiParams);
         _.throttle(() => {
