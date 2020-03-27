@@ -30,14 +30,6 @@ namespace Pims.Api.Models
 
         public AddressModel Address { get; set; }
 
-        public int FiscalYear { get; set; }
-
-        public float EstimatedValue { get; set; }
-
-        public float AssessedValue { get; set; }
-
-        public float NetBookValue { get; set; }
-
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
@@ -48,6 +40,7 @@ namespace Pims.Api.Models
 
         public string LandLegalDescription { get; set; }
 
+        public IEnumerable<EvaluationModel> Evaluations { get; set; } = new List<EvaluationModel>();
         public IEnumerable<Parts.ParcelBuildingModel> Buildings { get; set; } = new List<Parts.ParcelBuildingModel>();
 
         public override bool Equals(object obj)
@@ -70,16 +63,13 @@ namespace Pims.Api.Models
                 SubAgency == other.SubAgency &&
                 Agency == other.Agency &&
                 EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
-                FiscalYear == other.FiscalYear &&
-                EstimatedValue == other.EstimatedValue &&
-                AssessedValue == other.AssessedValue &&
-                NetBookValue == other.NetBookValue &&
                 Latitude == other.Latitude &&
                 Longitude == other.Longitude &&
                 LandArea == other.LandArea &&
                 Description == other.Description &&
                 LandLegalDescription == other.LandLegalDescription &&
-                Enumerable.SequenceEqual(Buildings, other.Buildings);
+                Enumerable.SequenceEqual(Buildings, other.Buildings) &&
+                Enumerable.SequenceEqual(Evaluations, other.Evaluations);
         }
 
         public override int GetHashCode()
@@ -97,16 +87,13 @@ namespace Pims.Api.Models
             hash.Add(SubAgency);
             hash.Add(Agency);
             hash.Add(Address);
-            hash.Add(FiscalYear);
-            hash.Add(EstimatedValue);
-            hash.Add(AssessedValue);
-            hash.Add(NetBookValue);
             hash.Add(Latitude);
             hash.Add(Longitude);
             hash.Add(LandArea);
             hash.Add(Description);
             hash.Add(LandLegalDescription);
             hash.Add(Buildings);
+            hash.Add(Evaluations);
             return hash.ToHashCode();
         }
 

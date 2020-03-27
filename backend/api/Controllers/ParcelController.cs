@@ -67,6 +67,7 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [HasPermission(Permissions.PropertyView)]
+        [Route("/api/parcels/filter")]
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
@@ -101,14 +102,6 @@ namespace Pims.Api.Controllers
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
             var userId = this.User.GetUserId();
-
-            foreach (var building in model.Buildings)
-            {
-                // We only allow adding buildings at this point.  Can't include an existing one.
-                var b_entity = _mapper.Map<Entity.Building>(building);
-                b_entity.CreatedById = userId;
-                entity.Buildings.Add(b_entity);
-            }
 
             _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<ParcelModel>(entity);

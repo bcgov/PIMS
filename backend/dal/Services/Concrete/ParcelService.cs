@@ -161,6 +161,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&
                     (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
@@ -200,25 +201,106 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, Permissions.PropertyEdit);
+            var existingParcel = this.Context.Parcels
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
 
             var userAgencies = this.User.GetAgencies();
-            if (!userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+            if (!userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+            if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
 
-            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
-            entity.UpdatedById = this.User.GetUserId();
-            entity.UpdatedOn = DateTime.UtcNow;
+            //Add/Update a parcel and all child collections
+            if (existingParcel == null)
+            {
+                this.Context.Add(parcel);
+            }
+            else
+            {
+                this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
+                this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
+                foreach (var building in parcel.Buildings)
+                {
+                    var existingBuilding = existingParcel.Buildings
+                        .FirstOrDefault(b => b.Id == building.Id);
+                    this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
+                    if (existingBuilding == null)
+                    {
+                        existingParcel.Buildings.Add(building);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 
-            this.Context.Parcels.Update(entity);
+                        foreach (var buildingEvaluation in building.Evaluations)
+                        {
+                            var existingBuildingEvaluation = existingBuilding.Evaluations
+                                .FirstOrDefault(e => e.BuildingId == buildingEvaluation.BuildingId && e.FiscalYear == buildingEvaluation.FiscalYear);
+
+                            if (existingBuildingEvaluation == null)
+                            {
+                                existingBuilding.Evaluations.Add(buildingEvaluation);
+                            }
+                            else
+                            {
+                                this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                            }
+                        }
+                    }
+                }
+                foreach (var parcelEvaluation in parcel.Evaluations)
+                {
+                    var existingEvaluation = existingParcel.Evaluations
+                        .FirstOrDefault(e => e.ParcelId == parcelEvaluation.ParcelId && e.FiscalYear == parcelEvaluation.FiscalYear);
+
+                    if (existingEvaluation == null)
+                    {
+                        existingParcel.Evaluations.Add(parcelEvaluation);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
+                    }
+                }
+            }
+
+            //Delete any missing records in child collections.
+            foreach (var building in existingParcel.Buildings)
+            {
+                var matchingBuilding = parcel.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                if (matchingBuilding == null)
+                {
+                    this.Context.Buildings.Remove(building);
+                    continue;
+                }
+                foreach (var buildingEvaluation in building.Evaluations)
+                {
+                    if (!matchingBuilding.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.FiscalYear == buildingEvaluation.FiscalYear)))
+                    {
+                        this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                    }
+                }
+            }
+            foreach (var parcelEvaluation in existingParcel.Evaluations)
+            {
+                if (!parcel.Evaluations.Any(e => (e.ParcelId == parcelEvaluation.ParcelId && e.FiscalYear == parcelEvaluation.FiscalYear)))
+                {
+                    this.Context.ParcelEvaluations.Remove(parcelEvaluation);
+                }
+            }
+
+            this.Context.SaveChanges();
             this.Context.CommitTransaction();
-            return entity;
+            return parcel;
         }
 
         /// <summary>
