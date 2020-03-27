@@ -180,7 +180,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.User)
                 .AsNoTracking()
                 .Where(ar => ar.Id == id)
-                .SingleOrDefault();
+                .FirstOrDefault() ?? throw new KeyNotFoundException();
         }
 
         /// <summary>

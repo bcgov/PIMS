@@ -169,7 +169,7 @@ namespace Pims.Dal.Keycloak
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public async Task<Entity.AccessRequest> UpdateAccessRequest(Entity.AccessRequest entity)
+        public async Task<Entity.AccessRequest> UpdateAccessRequestAsync(Entity.AccessRequest entity)
         {
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfNull(nameof(entity.UserId));

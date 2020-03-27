@@ -113,10 +113,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("access/request")]
-        public async Task<IActionResult> UpdateAccessRequests(Pims.Api.Models.AccessRequestModel updateModel)
+        public async Task<IActionResult> UpdateAccessRequestAsync(Pims.Api.Models.AccessRequestModel updateModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
-            var updatedEntity = await _keycloakService.UpdateAccessRequest(entity);
+            var updatedEntity = await _keycloakService.UpdateAccessRequestAsync(entity);
 
             var user = _mapper.Map<Pims.Api.Models.AccessRequestModel>(updatedEntity);
             return new JsonResult(user);
