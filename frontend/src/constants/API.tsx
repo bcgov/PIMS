@@ -42,7 +42,7 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 
 // User Service
 export const REQUEST_ACCESS = () => `/access/request`; //request access url.
-export const REQUEST_ACCESS_ADMIN = () => `/admin/access/request`; //request access admin url.
+export const REQUEST_ACCESS_ADMIN = () => `/keycloak/users/access/request`; //request access admin url.
 export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
   `/admin/access/requests/?${queryString.stringify(params)}`; // get paged access requests
 export const POST_USERS = () => `/admin/my/users`; // get paged list of users

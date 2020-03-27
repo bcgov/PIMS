@@ -28,6 +28,7 @@ export const toReactPaginateProps = (props: IPaginate): ReactPaginateProps => {
     nextClassName: 'page-item',
     nextLinkClassName: 'page-link',
     activeClassName: 'active',
+    disableInitialCallback: true,
   };
   return reactPaginateProps;
 };
