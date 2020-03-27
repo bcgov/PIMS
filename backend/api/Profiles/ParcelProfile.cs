@@ -28,10 +28,6 @@ namespace Pims.Api.Helpers.Profiles
 
             CreateMap<Entity.Parcel, Models.ParcelModel>()
                 .ForMember(dest => dest.PID, opt => opt.MapFrom(src => src.ParcelIdentity))
-                .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
-                .ForMember(dest => dest.EstimatedValue, opt => opt.MapFrom(src => src.Evaluation.EstimatedValue))
-                .ForMember(dest => dest.AssessedValue, opt => opt.MapFrom(src => src.Evaluation.AssessedValue))
-                .ForMember(dest => dest.NetBookValue, opt => opt.MapFrom(src => src.Evaluation.NetBookValue))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name))
                 .ForMember(dest => dest.Classification, opt => opt.MapFrom(src => src.Classification.Name))
                 .ForMember(dest => dest.Agency, opt => opt.ConvertUsing(new ParcelAgencyConverter()))
@@ -46,7 +42,8 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
                 .ForMember(dest => dest.IsSensitive, opt => opt.Ignore())
-                .ForMember(dest => dest.Buildings, opt => opt.Ignore())
+                .ForMember(dest => dest.Buildings, opt => opt.MapFrom(src => src.Buildings))
+                .ForMember(dest => dest.Evaluations, opt => opt.MapFrom(src => src.Evaluations))
                 .IncludeBase<BaseModel, Entity.BaseEntity>();
         }
         #endregion

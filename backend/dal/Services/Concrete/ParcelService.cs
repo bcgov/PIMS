@@ -161,6 +161,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&
                     (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
@@ -200,25 +201,27 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, Permissions.PropertyEdit);
+            var existingParcel = this.Context.Parcels
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .AsNoTracking()
+                .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
 
             var userAgencies = this.User.GetAgencies();
-            if (!userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+            if (!userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (entity.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+            if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
-
-            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
-            entity.UpdatedById = this.User.GetUserId();
-            entity.UpdatedOn = DateTime.UtcNow;
-
-            this.Context.Parcels.Update(entity);
+            this.Context.Update(parcel);
             this.Context.CommitTransaction();
-            return entity;
+            return parcel;
         }
 
         /// <summary>

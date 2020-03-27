@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Pims.Api.Models
 {
@@ -35,13 +36,7 @@ namespace Pims.Api.Models
 
         public float RentableArea { get; set; }
 
-        public int FiscalYear { get; set; }
-
-        public float EstimatedValue { get; set; }
-
-        public float AssessedValue { get; set; }
-
-        public float NetBookValue { get; set; }
+        public IEnumerable<EvaluationModel> Evaluations { get; set; } = new List<EvaluationModel>();
 
         public override bool Equals(object obj)
         {
@@ -65,10 +60,7 @@ namespace Pims.Api.Models
                 BuildingPredominateUse == other.BuildingPredominateUse &&
                 BuildingTenancy == other.BuildingTenancy &&
                 RentableArea == other.RentableArea &&
-                FiscalYear == other.FiscalYear &&
-                EstimatedValue == other.EstimatedValue &&
-                AssessedValue == other.AssessedValue &&
-                NetBookValue == other.NetBookValue;
+                Enumerable.SequenceEqual(Evaluations, other.Evaluations);
         }
 
         public override int GetHashCode()
@@ -88,10 +80,7 @@ namespace Pims.Api.Models
             hash.Add(BuildingPredominateUse);
             hash.Add(BuildingTenancy);
             hash.Add(RentableArea);
-            hash.Add(FiscalYear);
-            hash.Add(EstimatedValue);
-            hash.Add(AssessedValue);
-            hash.Add(NetBookValue);
+            hash.Add(Evaluations);
             return hash.ToHashCode();
         }
         #endregion
