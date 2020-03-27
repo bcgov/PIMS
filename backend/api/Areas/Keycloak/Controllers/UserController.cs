@@ -107,6 +107,20 @@ namespace Pims.Api.Areas.Keycloak.Controllers
 
             return new JsonResult(result);
         }
+
+        /// <summary>
+        /// Update an access request, generally to grant/deny it.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("access/request")]
+        public async Task<IActionResult> UpdateAccessRequestAsync(Pims.Api.Models.AccessRequestModel updateModel)
+        {
+            var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
+            var updatedEntity = await _keycloakService.UpdateAccessRequestAsync(entity);
+
+            var user = _mapper.Map<Pims.Api.Models.AccessRequestModel>(updatedEntity);
+            return new JsonResult(user);
+        }
         #endregion
     }
 }
