@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Pims.Core.Extensions;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
 
@@ -159,6 +161,51 @@ namespace Pims.Dal.Keycloak
             await _keycloakService.UpdateUserAsync(kmodel);  // TODO: Fix issue where EmailVerified will be set to false.
 
             return euser;
+        }
+
+        /// <summary>
+        /// Updates the specified access request in the datasource. if the request is granted, update the associated user as well.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public async Task<Entity.AccessRequest> UpdateAccessRequest(Entity.AccessRequest entity)
+        {
+            entity.ThrowIfNull(nameof(entity));
+            entity.ThrowIfNull(nameof(entity.UserId));
+
+            this._user.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
+            var accessRequest = _pimsAdminService.User.GetAccessRequestNoTracking(entity.Id);
+            if (!accessRequest.IsGranted != true && entity.IsGranted == true)
+            {
+                Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId.Value);
+                entity.Agencies.ForEach((accessRequestAgency) =>
+                {
+                    if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))
+                    {
+                        user.Agencies.Add(new Entity.UserAgency()
+                        {
+                            User = user,
+                            AgencyId = accessRequestAgency.AgencyId
+                        });
+                    }
+                });
+                entity.Roles.ForEach((accessRequestRole) =>
+                {
+                    if (!user.Roles.Any(r => r.RoleId == accessRequestRole.RoleId))
+                    {
+                        user.Roles.Add(new Entity.UserRole()
+                        {
+                            User = user,
+                            RoleId = accessRequestRole.RoleId
+                        });
+                    }
+                });
+                await UpdateUserAsync(user);
+            }
+
+            return _pimsAdminService.User.UpdateAccessRequest(entity);
+
         }
     }
     #endregion

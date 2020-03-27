@@ -151,59 +151,36 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// Updates the specified access request in the datasource. if the request is granted, update the associated user as well.
+        /// Update the database using the passed AccessRequest
         /// </summary>
         /// <param name="entity"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
-        public AccessRequest Update(AccessRequest entity)
+        public AccessRequest UpdateAccessRequest(AccessRequest entity)
         {
-            entity.ThrowIfNull(nameof(entity));
-            entity.ThrowIfNull(nameof(entity.UserId));
-            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
+            var accessRequest = GetAccessRequestNoTracking(entity.Id);
+            entity.UpdatedById = this.User.GetUserId();
+            entity.UpdatedOn = DateTime.UtcNow;
+            this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
+            this.Context.CommitTransaction();
+            return entity;
+        }
 
-            var accessRequest = this.Context.AccessRequests
+        /// <summary>
+        /// Get the access request with matching id
+        /// </summary>
+        /// <param name="id"></param>
+        public AccessRequest GetAccessRequestNoTracking(Guid id)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            return this.Context.AccessRequests
                 .Include(p => p.Agencies)
                 .ThenInclude(p => p.Agency)
                 .Include(p => p.Roles)
                 .ThenInclude(p => p.Role)
                 .Include(p => p.User)
-                .FirstOrDefault(a => a.Id == entity.Id) ?? throw new KeyNotFoundException();
-            if(!accessRequest.IsGranted != true && entity.IsGranted == true)
-            {
-                User user = Get(accessRequest.UserId.Value);
-                entity.Agencies.ForEach((accessRequestAgency) =>
-                {
-                    if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))
-                    {
-                        user.Agencies.Add(new UserAgency()
-                        {
-                            User = user,
-                            AgencyId = accessRequestAgency.AgencyId
-                        });
-                    }
-                });
-                entity.Roles.ForEach((accessRequestRole) =>
-                {
-                    if (!user.Roles.Any(r => r.RoleId == accessRequestRole.RoleId))
-                    {
-                        user.Roles.Add(new UserRole()
-                        {
-                            User = user,
-                            RoleId = accessRequestRole.RoleId
-                        });
-                    }
-                });
-                UpdateOne(user);
-            }
-
-            this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
-            accessRequest.UpdatedById = this.User.GetUserId();
-            accessRequest.UpdatedOn = DateTime.UtcNow;
-            this.Context.AccessRequests.Update(accessRequest);
-
-            this.Context.CommitTransaction();
-            return accessRequest;
+                .AsNoTracking()
+                .Where(ar => ar.Id == id)
+                .SingleOrDefault();
         }
 
         /// <summary>

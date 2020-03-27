@@ -19,6 +19,7 @@ namespace Pims.Dal.Keycloak
         Task<IEnumerable<Entity.User>> GetUsersAsync(int page = 1, int quantity = 10, string search = null);
         Task<Entity.User> GetUserAsync(Guid id);
         Task<Entity.User> UpdateUserAsync(Entity.User user);
+        Task<Entity.AccessRequest> UpdateAccessRequest(Entity.AccessRequest entity);
         #endregion
     }
 }
