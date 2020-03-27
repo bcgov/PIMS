@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pims.Dal.Configuration;
 using Pims.Dal.Entities;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal
@@ -114,7 +115,7 @@ namespace Pims.Dal
             // get entries that are being Added or Updated
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId != null)
             {
                 foreach (var entry in modifiedEntries)
@@ -123,11 +124,14 @@ namespace Pims.Dal
 
                     if (entry.State == EntityState.Added)
                     {
-                        entity.CreatedById = new Guid(userId);
+                        entity.CreatedById = userId;
                         entity.CreatedOn = DateTime.UtcNow;
                     }
-                    entity.UpdatedById = new Guid(userId);
-                    entity.UpdatedOn = DateTime.UtcNow;
+                    else if (entry.State != EntityState.Deleted)
+                    { 
+                        entity.UpdatedById = userId;
+                        entity.UpdatedOn = DateTime.UtcNow;
+                    }
                 }
             }
 
