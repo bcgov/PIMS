@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Pims.Api.Models.Parts
 {
@@ -8,6 +9,10 @@ namespace Pims.Api.Models.Parts
     {
         #region Properties
         public int Id { get; set; }
+
+        public int ParcelId { get; set; }
+
+        public int AgencyId { get; set; }
 
         public string LocalId { get; set; }
 
@@ -33,13 +38,7 @@ namespace Pims.Api.Models.Parts
 
         public float RentableArea { get; set; }
 
-        public int FiscalYear { get; set; }
-
-        public float EstimatedValue { get; set; }
-
-        public float AssessedValue { get; set; }
-
-        public float NetBookValue { get; set; }
+        public IEnumerable<EvaluationModel> Evaluations { get; set; } = new List<EvaluationModel>();
 
         public override bool Equals(object obj)
         {
@@ -51,6 +50,8 @@ namespace Pims.Api.Models.Parts
             return other != null &&
                 Id == other.Id &&
                 LocalId == other.LocalId &&
+                ParcelId == other.ParcelId &&
+                AgencyId == other.AgencyId &&
                 Description == other.Description &&
                 EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
                 Latitude == other.Latitude &&
@@ -62,10 +63,7 @@ namespace Pims.Api.Models.Parts
                 BuildingPredominateUse == other.BuildingPredominateUse &&
                 BuildingTenancy == other.BuildingTenancy &&
                 RentableArea == other.RentableArea &&
-                FiscalYear == other.FiscalYear &&
-                EstimatedValue == other.EstimatedValue &&
-                AssessedValue == other.AssessedValue &&
-                NetBookValue == other.NetBookValue;
+                Enumerable.SequenceEqual(Evaluations, other.Evaluations);
         }
 
         public override int GetHashCode()
@@ -73,6 +71,8 @@ namespace Pims.Api.Models.Parts
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(LocalId);
+            hash.Add(ParcelId);
+            hash.Add(AgencyId);
             hash.Add(Description);
             hash.Add(Address);
             hash.Add(Latitude);
@@ -84,10 +84,7 @@ namespace Pims.Api.Models.Parts
             hash.Add(BuildingPredominateUse);
             hash.Add(BuildingTenancy);
             hash.Add(RentableArea);
-            hash.Add(FiscalYear);
-            hash.Add(EstimatedValue);
-            hash.Add(AssessedValue);
-            hash.Add(NetBookValue);
+            hash.Add(Evaluations);
             return hash.ToHashCode();
         }
         #endregion

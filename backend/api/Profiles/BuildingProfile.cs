@@ -30,28 +30,19 @@ namespace Pims.Api.Helpers.Profiles
 
             CreateMap<Entity.Building, Models.Parts.ParcelBuildingModel>()
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.MapFrom(src => src.BuildingConstructionType.Name))
-                .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
-                .ForMember(dest => dest.AssessedValue, opt => opt.MapFrom(src => src.Evaluation.AssessedValue))
-                .ForMember(dest => dest.EstimatedValue, opt => opt.MapFrom(src => src.Evaluation.EstimatedValue))
-                .ForMember(dest => dest.NetBookValue, opt => opt.MapFrom(src => src.Evaluation.NetBookValue))
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name));
 
-            CreateMap<Models.Parts.ParcelBuildingModel, Entity.Building>() // TODO: Map evaluation
+            CreateMap<Models.Parts.ParcelBuildingModel, Entity.Building>()
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
-                .ForMember(dest => dest.ParcelId, opt => opt.Ignore())
                 .ForMember(dest => dest.Parcel, opt => opt.Ignore())
-                .ForMember(dest => dest.AgencyId, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
                 .ForMember(dest => dest.IsSensitive, opt => opt.Ignore())
+                .ForMember(dest => dest.Evaluations, opt => opt.MapFrom(src => src.Evaluations))
                 .IncludeBase<BaseModel, Entity.BaseEntity>();
 
             CreateMap<Entity.Building, BuildingModel>()
-                .ForMember(dest => dest.FiscalYear, opt => opt.MapFrom(src => src.Evaluation.FiscalYear))
-                .ForMember(dest => dest.AssessedValue, opt => opt.MapFrom(src => src.Evaluation.AssessedValue))
-                .ForMember(dest => dest.EstimatedValue, opt => opt.MapFrom(src => src.Evaluation.EstimatedValue))
-                .ForMember(dest => dest.NetBookValue, opt => opt.MapFrom(src => src.Evaluation.NetBookValue))
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.MapFrom(src => src.BuildingConstructionType.Name))
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name));
 
