@@ -1,6 +1,11 @@
+using System;
+using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pims.Dal.Configuration;
 using Pims.Dal.Entities;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal
@@ -27,7 +32,9 @@ namespace Pims.Dal
         public DbSet<Province> Provinces { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Claim> Claims { get; set; }
+        public DbSet<Pims.Dal.Entities.Claim> Claims { get; set; }
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Constructors
@@ -45,9 +52,9 @@ namespace Pims.Dal
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public PimsContext(DbContextOptions<PimsContext> options) : base(options)
+        public PimsContext(DbContextOptions<PimsContext> options, IHttpContextAccessor httpContextAccessor = null) : base(options)
         {
-
+            _httpContextAccessor = httpContextAccessor;
         }
         #endregion
 
@@ -101,6 +108,34 @@ namespace Pims.Dal
             // }
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            // get entries that are being Added or Updated
+            var modifiedEntries = ChangeTracker.Entries()
+                    .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId != null)
+            {
+                foreach (var entry in modifiedEntries)
+                {
+                    var entity = entry.Entity as BaseEntity;
+
+                    if (entry.State == EntityState.Added)
+                    {
+                        entity.CreatedById = userId;
+                        entity.CreatedOn = DateTime.UtcNow;
+                    }
+                    else if (entry.State != EntityState.Deleted)
+                    { 
+                        entity.UpdatedById = userId;
+                        entity.UpdatedOn = DateTime.UtcNow;
+                    }
+                }
+            }
+
+            return base.SaveChanges();
         }
 
         /// <summary>
