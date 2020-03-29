@@ -1,13 +1,15 @@
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Areas.Tools.Models;
-using Pims.Api.Models;
+using Model = Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -17,7 +19,9 @@ namespace Pims.Api.Areas.Admin.Controllers
     [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("tools")]
-    [Route("/api/[area]/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[area]/import")]
+    [Route("[area]/import")]
     public class ImportController : ControllerBase
     {
         #region Variables
@@ -50,13 +54,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="models">An array of property models.</param>
         /// <returns>The properties added.</returns>
         [HttpPost("properties")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "tools-import" })]
         public IActionResult ImportProperties([FromBody] PropertyModel[] models)
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
 
             var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
             var entities = helper.AddUpdateProperties(models);
-            var parcels = _mapper.Map<ParcelModel[]>(entities);
+            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
 
             return new JsonResult(parcels);
         }

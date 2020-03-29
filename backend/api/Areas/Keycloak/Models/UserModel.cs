@@ -56,14 +56,12 @@ namespace Pims.Api.Areas.Keycloak.Models
         /// <summary>
         /// get/set - An array of agencies the user belongs to.
         /// </summary>
-        /// <typeparam name="AgencyModel"></typeparam>
         /// <returns></returns>
         public IEnumerable<AgencyModel> Agencies { get; set; } = new List<AgencyModel>();
 
         /// <summary>
         /// get/set - An array of roles the user is a member of.
         /// </summary>
-        /// <typeparam name="RoleModel"></typeparam>
         /// <returns></returns>
         public IEnumerable<RoleModel> Roles { get; set; } = new List<RoleModel>();
         #endregion

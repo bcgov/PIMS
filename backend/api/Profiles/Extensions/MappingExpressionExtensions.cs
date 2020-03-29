@@ -10,7 +10,6 @@ namespace Pims.Api.Profiles.Extensions
         /// <summary>
         /// Ignores all unmapped members.
         /// </summary>
-        /// <param name="IMappingExpression<TSource"></param>
         /// <param name="expression"></param>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TDest"></typeparam>

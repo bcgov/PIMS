@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 
 namespace Pims.Api
 {
@@ -28,9 +28,18 @@ namespace Pims.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             DotNetEnv.Env.Load();
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"connectionstrings.{env}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
             return WebHost.CreateDefaultBuilder(args)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS"))
+                .UseUrls(config.GetValue<string>("ASPNETCORE_URLS"))
                 .UseStartup<Startup>();
         }
     }

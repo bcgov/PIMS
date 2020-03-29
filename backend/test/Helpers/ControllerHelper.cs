@@ -4,6 +4,7 @@ using System;
 using Pims.Core.Extensions;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using Pims.Dal.Security;
 
 namespace Pims.Api.Test.Helpers
 {
@@ -18,6 +19,7 @@ namespace Pims.Api.Test.Helpers
         /// Will use any 'args' passed in instead of generating defaults.
         /// Once you create a controller you can no longer add to the services collection.
         /// </summary>
+        /// <param name="helper"></param>
         /// <param name="user"></param>
         /// <param name="args"></param>
         /// <typeparam name="T"></typeparam>
@@ -28,10 +30,45 @@ namespace Pims.Api.Test.Helpers
         }
 
         /// <summary>
+        /// Creates an instance of a controller of the specified 'T' type and initializes it with a user with the specified 'permission'.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a controller you can no longer add to the services collection.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <param name="args"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CreateController<T>(this TestHelper helper, Permissions permission, params object[] args) where T : ControllerBase
+        {
+            var user = PrincipalHelper.CreateForPermission(permission);
+            return helper.CreateController<T>(user, null, args);
+        }
+
+        /// <summary>
+        /// Creates an instance of a controller of the specified 'T' type and initializes it with a user with the specified 'permission'.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a controller you can no longer add to the services collection.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="permission"></param>
+        /// <param name="uri"></param>
+        /// <param name="args"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CreateController<T>(this TestHelper helper, Permissions permission, Uri uri, params object[] args) where T : ControllerBase
+        {
+            var user = PrincipalHelper.CreateForPermission(permission);
+            return helper.CreateController<T>(user, uri, args);
+        }
+
+        /// <summary>
         /// Creates an instance of a controller of the specified 'T' type and initializes it with the specified 'user'.
         /// Will use any 'args' passed in instead of generating defaults.
         /// Once you create a controller you can no longer add to the services collection.
         /// </summary>
+        /// <param name="helper"></param>
         /// <param name="user"></param>
         /// <param name="uri"></param>
         /// <param name="args"></param>

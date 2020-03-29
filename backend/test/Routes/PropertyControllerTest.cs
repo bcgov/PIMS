@@ -30,7 +30,8 @@ namespace Pims.Api.Test.Routes
             // Assert
             var type = typeof(PropertyController);
             type.HasAuthorize();
-            type.HasRoute("/api/properties");
+            type.HasRoute("properties");
+            type.HasRoute("v{version:apiVersion}/properties");
         }
 
         #region GetProperties
@@ -54,7 +55,7 @@ namespace Pims.Api.Test.Routes
 
             // Act
             // Assert
-            endpoint.HasPost();
+            endpoint.HasPost("filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
         #endregion

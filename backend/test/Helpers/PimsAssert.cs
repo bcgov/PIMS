@@ -78,9 +78,9 @@ namespace Pims.Api.Test.Helpers
         /// <param name="template"></param>
         public static void HasRoute(this Type controller, string template)
         {
-            var route = controller.GetCustomAttribute<RouteAttribute>();
-            Assert.NotNull(route);
-            route.HasTemplate(template);
+            var routes = controller.GetCustomAttributes<RouteAttribute>();
+            Assert.NotEmpty(routes);
+            Assert.Contains(routes, r => template == null ? r.Template == null : r.Template == template);
         }
 
         /// <summary>

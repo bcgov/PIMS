@@ -1,16 +1,17 @@
-using System;
-using System.Linq;
 using AutoMapper;
+using EModel = Pims.Dal.Entities.Models;
+using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Model = Pims.Api.Areas.Admin.Models;
 using Pims.Api.Policies;
 using Pims.Dal.Helpers.Extensions;
-using Pims.Dal.Services.Admin;
 using Pims.Dal.Security;
-using Model = Pims.Api.Areas.Admin.Models;
-using EModel = Pims.Dal.Entities.Models;
-using Entity = Pims.Dal.Entities;
+using Pims.Dal.Services.Admin;
+using System;
+using System.Linq;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -20,7 +21,9 @@ namespace Pims.Api.Areas.Admin.Controllers
     [HasPermission(Permissions.AdminUsers)]
     [ApiController]
     [Area("admin")]
-    [Route("/api/[area]/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[area]/users")]
+    [Route("[area]/users")]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -48,11 +51,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// GET - Returns a paged array of users from the datasource.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
-        /// <param name="userId"></param>
         /// <returns>Paged object with an array of users.</returns>
-        [HttpGet("/api/admin/users")]
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetUsers()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -65,7 +69,11 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
-        [HttpPost("/api/admin/users")]
+        [HttpPost("filter")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetUsers(EModel.UserFilter filter)
         {
             var results = _pimsAdminService.User.GetNoTracking(filter);
@@ -77,11 +85,13 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// GET - Returns a paged array of users from the datasource that belong to the same agency (or sub-agency) as the current user.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
-        /// <param name="sort"></param>
+        /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
-        [HttpPost("/api/admin/my/users")]
+        [HttpPost("my/agency")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetMyUsers(EModel.UserFilter filter)
         {
             if (!(filter?.Agencies?.Any() ?? false))
@@ -99,6 +109,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="id">The unique 'id' for the user to return.</param>
         /// <returns>The user requested.</returns>
         [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetUser(Guid id)
         {
             var entity = _pimsAdminService.User.GetNoTracking(id);
@@ -115,22 +129,32 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The user model.</param>
         /// <returns>The user added.</returns>
         [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 201)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult AddUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
             var addedEntity = _pimsAdminService.User.Add(entity);
 
             var user = _mapper.Map<Model.UserModel>(addedEntity);
-            return new JsonResult(user);
+
+            return new CreatedAtActionResult(nameof(GetUser), nameof(UserController), new { id = user.Id }, user);
         }
 
         /// <summary>
         /// PUT - Update the user in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model">The user model.</param>
         /// <returns>The user updated.</returns>
-        [HttpPut]
-        public IActionResult UpdateUser([FromBody] Model.UserModel model)
+        [HttpPut("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
+        public IActionResult UpdateUser(Guid id, [FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
             var updatedEntity = _pimsAdminService.User.Update(entity);
@@ -142,10 +166,15 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// DELETE - Delete the user from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model">The user model.</param>
         /// <returns>The user who was deleted.</returns>
-        [HttpDelete]
-        public IActionResult DeleteUser([FromBody] Model.UserModel model)
+        [HttpDelete("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
+        public IActionResult DeleteUser(Guid id, [FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
             _pimsAdminService.User.Remove(entity);
@@ -153,11 +182,20 @@ namespace Pims.Api.Areas.Admin.Controllers
             return new JsonResult(model);
         }
 
+        #region Access Request
         /// <summary>
         /// Gets all of the access requests that have been submitted to the system.
         /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="sort"></param>
+        /// <param name="isGranted"></param>
         /// <returns></returns>
-        [HttpGet("/api/admin/access/requests")]
+        [HttpGet("access/requests")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(EModel.Paged<Entity.AccessRequest>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
             if (page < 1) page = 1;
@@ -168,6 +206,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             var paged = new EModel.Paged<Api.Models.AccessRequestModel>(entities, page, quantity, result.Total);
             return new JsonResult(paged);
         }
+        #endregion
         #endregion
     }
 }

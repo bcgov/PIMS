@@ -10,6 +10,7 @@ using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +21,9 @@ namespace Pims.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/properties")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/properties")]
+    [Route("properties")]
     public class PropertyController : ControllerBase
     {
         #region Variables
@@ -51,6 +54,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetProperties()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -63,8 +69,11 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetProperties([FromBody]PropertyFilterModel filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");

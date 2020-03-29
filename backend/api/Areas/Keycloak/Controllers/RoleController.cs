@@ -7,6 +7,8 @@ using Model = Pims.Api.Areas.Keycloak.Models;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Keycloak;
+using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {
@@ -16,7 +18,9 @@ namespace Pims.Api.Areas.Keycloak.Controllers
     [HasPermission(Permissions.AdminRoles)]
     [ApiController]
     [Area("keycloak")]
-    [Route("/api/[area]/roles")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[area]/roles")]
+    [Route("[area]/roles")]
     public class RoleController : ControllerBase
     {
         #region Variables
@@ -43,6 +47,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("sync")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.RoleModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-role" })]
         public async Task<IActionResult> SyncRolesAsync()
         {
             var roles = await _keycloakService.SyncRolesAsync();
@@ -59,6 +67,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <param name="search"></param>
         /// <returns></returns>
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.RoleModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-role" })]
         public async Task<IActionResult> GetRolesAsync(int page = 1, int quantity = 10, string search = null)
         {
             var roles = await _keycloakService.GetRolesAsync(page, quantity, search);
@@ -75,6 +87,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The role does not exist for the specified 'id'.</exception>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.RoleModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-role" })]
         public async Task<IActionResult> GetRoleAsync(Guid id)
         {
             var role = await _keycloakService.GetRoleAsync(id);
@@ -91,6 +107,10 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The role does not exist for the specified 'id'.</exception>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.RoleModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "keycloak-role" })]
         public async Task<IActionResult> UpdateRoleAsync(Guid id, [FromBody] Model.Update.RoleModel model)
         {
             var role = _mapper.Map<Entity.Role>(model);

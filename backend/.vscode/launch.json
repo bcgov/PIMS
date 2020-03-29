@@ -13,8 +13,8 @@
             "cwd": "${workspaceFolder}/api",
             "stopAtEntry": false,
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:5000"
+                "ASPNETCORE_ENVIRONMENT": "Local",
+                "ASPNETCORE_URLS": "http://*:5000;https://*:433"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

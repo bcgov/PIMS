@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 
 namespace Pims.Dal.Helpers.Extensions
