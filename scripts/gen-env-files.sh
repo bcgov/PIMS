@@ -63,6 +63,7 @@ if test -f "./backend/api/.env"; then
 else
 echo \
 "ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://*:8080
 DB_PASSWORD=$passvar
 Keycloak__Secret=
 Keycloak__ServiceAccount__Secret=" >> ./backend/.env

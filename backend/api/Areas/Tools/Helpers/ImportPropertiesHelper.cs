@@ -232,7 +232,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateParcel(PropertyModel property, int pid, Entity.Agency agency)
         {
-            var p_e = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
+            var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
             var fiscal = int.Parse(property.FiscalYear);
 
             // Copy properties over to entity.
@@ -322,11 +322,11 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Parcel AddUpdateBuilding(PropertyModel property, int pid, Entity.Agency agency)
         {
             var lid = property.LocalId;
-            var b_e = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
             var fiscal = int.Parse(property.FiscalYear);
 
             // Find parcel
-            var parcel = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid), null);
+            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
 
             // If the parcel doesn't exist yet we'll need to create a temporary one.
             if (parcel == null)

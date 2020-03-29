@@ -1,11 +1,5 @@
-using System;
-using System.Data.SqlClient;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using AutoMapper;
+using dal.Helpers.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,18 +8,33 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
+using Pims.Api.Helpers.Routes.Constraints;
 using Pims.Dal;
 using Pims.Dal.Keycloak;
 using Pims.Keycloak;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Pims.Api
 {
@@ -79,6 +88,11 @@ namespace Pims.Api
                 });
 
             services.AddOptions();
+
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap.Add("pid", typeof(PidConstraint));
+            });
 
             services.AddAuthentication(options =>
                 {
@@ -163,6 +177,43 @@ namespace Pims.Api
                     options.JsonSerializerOptions.WriteIndented = true;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                // options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+            services.AddVersionedApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+
+            });
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, Helpers.Swagger.ConfigureSwaggerOptions>();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.EnableAnnotations(true);
+                options.CustomSchemaIds(o => o.FullName);
+                options.OperationFilter<Helpers.Swagger.SwaggerDefaultValues>();
+                options.DocumentFilter<Helpers.Swagger.SwaggerDocumentFilter>();
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+            });
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+                options.AllowedHosts = this.Configuration.GetValue<string>("AllowedHosts")?.Split(';').ToList<string>();
+            });
         }
 
         /// <summary>
@@ -170,13 +221,31 @@ namespace Pims.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="provider"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (!env.IsProduction())
             {
                 app.UseDatabaseErrorPage();
-                UpdateDatabase(app);
+                app.UpdateDatabase<Startup>();
             }
+
+            var baseUrl = this.Configuration.GetValue<string>("BaseUrl");
+            app.UsePathBase(baseUrl);
+            app.UseForwardedHeaders();
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "/swagger/{documentname}/swagger.json";
+            });
+            app.UseSwaggerUI(options =>
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+                }
+                options.RoutePrefix = "swagger";
+            });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
@@ -189,55 +258,35 @@ namespace Pims.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHealthChecks("/api/live", 8080, new HealthCheckOptions
+
+            var healthPort = this.Configuration.GetValue<int>("HealthChecks:Port");
+            app.UseHealthChecks("/health/live", healthPort, new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            app.UseHealthChecks("/api/ready", 8080, new HealthCheckOptions
+            app.UseHealthChecks("/health/ready", healthPort, new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            app.UseEndpoints(endpoints =>
+
+            app.UseEndpoints(config =>
             {
-                endpoints.MapControllers();
-                endpoints.MapHealthChecksUI(
+                config.MapControllers();
+                config.MapHealthChecksUI(
                     setup =>
                     {
-                        setup.UIPath = "/api/healthchecks-ui"; // this is ui path in your browser
-                        setup.ApiPath = "/api";
-                        setup.ResourcesPath = "/api/ui/resources";
-                        setup.WebhookPath = "/api/hooks";
+                        setup.UIPath = "/healthchecks-ui"; // this is ui path in your browser
+                        // setup.ApiPath = "/api";
+                        setup.ResourcesPath = "/ui/resources";
+                        setup.WebhookPath = "/hooks";
                         setup.UseRelativeResourcesPath = false;
                         setup.UseRelativeApiPath = false;
                         setup.UseRelativeWebhookPath = false;
                     }
                 );
             });
-        }
-
-        /// <summary>
-        /// Initialize the database when the application starts.
-        /// This isn't an ideal way to do this, but will work for our purposes.
-        /// </summary>
-        /// <param name="app"></param>
-        private static void UpdateDatabase(IApplicationBuilder app)
-        {
-            using var serviceScope = app.ApplicationServices
-                .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope();
-            var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
-
-            try
-            {
-                using var context = serviceScope.ServiceProvider.GetService<PimsContext>();
-                context.Database.Migrate();
-            }
-            catch (Exception ex)
-            {
-                logger.LogCritical(ex, "Database migration failed on startup.");
-            }
         }
         #endregion
     }

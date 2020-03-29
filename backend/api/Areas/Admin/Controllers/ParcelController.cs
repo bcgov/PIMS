@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Helpers.Extensions;
 using Entity = Pims.Dal.Entities;
-using Pims.Api.Models;
+using Model = Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
+using Pims.Core.Helpers;
+using System.Collections.Generic;
+using Pims.Api.Helpers.Exceptions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -18,7 +22,9 @@ namespace Pims.Api.Areas.Admin.Controllers
     [HasPermission(Permissions.SystemAdmin)]
     [ApiController]
     [Area("admin")]
-    [Route("/api/[area]/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[area]/parcels")]
+    [Route("[area]/parcels")]
     public class ParcelController : ControllerBase
     {
         #region Variables
@@ -50,7 +56,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns>Paged object with an array of parcels.</returns>
-        [HttpGet("/api/[area]/parcels")]
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Entity.Models.Paged<Model.Parts.ParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcels(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
         {
             if (page < 1) page = 1;
@@ -58,8 +67,8 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity > 50) quantity = 50;
 
             var result = _pimsAdminService.Parcel.GetNoTracking(page, quantity, sort);
-            var entities = _mapper.Map<Api.Models.Parts.ParcelModel[]>(result.Items);
-            var paged = new Pims.Dal.Entities.Models.Paged<Api.Models.Parts.ParcelModel>(entities, page, quantity, result.Total);
+            var entities = _mapper.Map<Model.Parts.ParcelModel[]>(result.Items);
+            var paged = new Entity.Models.Paged<Model.Parts.ParcelModel>(entities, page, quantity, result.Total);
 
             return new JsonResult(paged);
         }
@@ -70,13 +79,15 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="id">The unique 'id' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("{id:int}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcel(int id)
         {
             var entity = _pimsAdminService.Parcel.GetNoTracking(id);
 
-            if (entity == null) return NoContent();
-
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -84,16 +95,19 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// GET - Returns a parcel for the specified 'id' from the datasource.
         /// </summary>
-        /// <param name="pid">The unique 'PID' for the parcel to return.</param>
+        /// <param name="id">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
-        [HttpGet("pid/{pid:int}")]
-        public IActionResult GetParcelByPid(int pid)
+        [HttpGet("pid/{id:int}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [ProducesResponseType(204)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult GetParcelByPid(int id)
         {
-            var entity = GetParcelByPid(pid);
-
+            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidNoTracking(id));
             if (entity == null) return NoContent();
 
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -103,17 +117,20 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="pid">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
-        [HttpGet("pid/{pid}")]
+        [HttpGet("pid/{pid:pid}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcelByPid(string pid)
         {
-            if (!int.TryParse(pid.Replace("-", ""), out int id))
-                return BadRequest("PID is invalid");
+            if (!int.TryParse(pid.Replace("-", ""), out int id)) throw new BadRequestException("PID is invalid");
 
-            var entity = _pimsAdminService.Parcel.GetByPidNoTracking(id);
-
+            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidNoTracking(id));
             if (entity == null) return NoContent();
 
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -124,14 +141,18 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel added.</returns>
         [HttpPost]
-        public IActionResult AddParcel([FromBody] ParcelModel model)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 201)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
             _pimsAdminService.Parcel.Add(entity);
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
-            return new JsonResult(parcel);
+            return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
         }
 
         /// <summary>
@@ -139,12 +160,16 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="models">An array of parcel models.</param>
         /// <returns>The parcels added.</returns>
-        [HttpPost("/api/[area]/parcels")]
-        public IActionResult AddParcels([FromBody] ParcelModel[] models)
+        [HttpPost("many")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult AddParcels([FromBody] Model.ParcelModel[] models)
         {
             var entities = _mapper.Map<Entity.Parcel[]>(models);
             _pimsAdminService.Parcel.Add(entities);
-            var parcels = _mapper.Map<ParcelModel[]>(entities);
+            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
 
             return new JsonResult(parcels);
         }
@@ -152,11 +177,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// PUT - Update the parcel in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel updated.</returns>
-        [HttpPut]
-        public IActionResult UpdateParcel([FromBody] ParcelModel model)
+        [HttpPut("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
+
             var entity = _pimsAdminService.Parcel.Get(model.Id);
 
             if (entity == null) return BadRequest("Item does not exist");
@@ -272,7 +303,7 @@ namespace Pims.Api.Areas.Admin.Controllers
                 _pimsAdminService.Address.UpdateOne(entity.Address);
             }
             _pimsAdminService.Parcel.Update(entity);
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -280,14 +311,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// DELETE - Delete the parcel from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel who was deleted.</returns>
-        [HttpDelete]
-        public IActionResult DeleteParcel([FromBody] ParcelModel model)
+        [HttpDelete("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult DeleteParcel(Guid id, [FromBody] Model.ParcelModel model)
         {
             var parcel = _mapper.Map<Entity.Parcel>(model);
-
-            if (model.RowVersion == null) return BadRequest("Item does not exist");
             _pimsAdminService.Parcel.Remove(parcel);
 
             return new JsonResult(model);

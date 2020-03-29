@@ -1,17 +1,18 @@
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Entity = Pims.Dal.Entities;
+using KModel = Pims.Keycloak.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using AutoMapper;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Models;
 using Pims.Dal.Services;
 using Pims.Keycloak;
-using Entity = Pims.Dal.Entities;
-using KModel = Pims.Keycloak.Models;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Controllers
 {
@@ -20,7 +21,9 @@ namespace Pims.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/users")]
+    [Route("users")]
     public class UserController : ControllerBase
     {
         #region Variables
@@ -56,6 +59,9 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("info")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(KModel.UserInfoModel), 200)]
+        [SwaggerOperation(Tags = new[] { "user" })]
         public async Task<IActionResult> UserInfo()
         {
             _optionsKeycloak.Validate(); // TODO: Validate configuration automatically.
@@ -76,7 +82,10 @@ namespace Pims.Api.Controllers
         /// Allows a user to submit an access request to the system, associating a role and agency to their user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("/api/access/request")]
+        [HttpPost("access/request")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(AccessRequestModel), 200)]
+        [SwaggerOperation(Tags = new[] { "user" })]
         public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
         {
             if (accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
@@ -93,7 +102,7 @@ namespace Pims.Api.Controllers
             }
             var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);
             _userService.AddAccessRequest(entity);
-            return new JsonResult(_mapper.Map<AccessRequestModel>(entity));
+            return new JsonResult(_mapper.Map<AccessRequestModel>(entity)); // TODO: Should return 201.
         }
         #endregion
     }

@@ -1,8 +1,8 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Controllers
 {
@@ -10,12 +10,13 @@ namespace Pims.Api.Controllers
     /// HealthController class, provides endpoints to check the health of the api.
     /// </summary>
     [ApiController]
-    [Route("/api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/health")]
+    [Route("health")]
     public class HealthController : ControllerBase
     {
         #region Variables
         private readonly ILogger<HealthController> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _environment;
         #endregion
 
@@ -23,13 +24,11 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Creates a new instances of a HealthController class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="configuration"></param>
         /// <param name="environment"></param>
-        public HealthController(ILogger<HealthController> logger, IConfiguration configuration, IWebHostEnvironment environment)
+        /// <param name="logger"></param>
+        public HealthController(IWebHostEnvironment environment, ILogger<HealthController> logger)
         {
             _logger = logger;
-            _configuration = configuration;
             _environment = environment;
         }
         #endregion
@@ -39,16 +38,13 @@ namespace Pims.Api.Controllers
         /// Return environment information.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/env")]
+        [HttpGet("env")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.Health.EnvModel), 200)]
+        [SwaggerOperation(Tags = new[] { "health" })]
         public IActionResult Environment()
         {
-            return new JsonResult(new
-            {
-                environment = _environment.EnvironmentName,
-                    version = this.GetType().Assembly.GetName().Version.ToString(),
-                    fileVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
-                    informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion
-            });
+            return new JsonResult(new Models.Health.EnvModel(_environment));
         }
         #endregion
     }
