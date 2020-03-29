@@ -10,8 +10,8 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200312230932_initial")]
-    partial class initial
+    [Migration("20200329131456_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1091,13 +1091,20 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<bool>("EmailVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<bool>("IsDisabled")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -1105,6 +1112,14 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("MiddleName")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("Position")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
@@ -1119,6 +1134,11 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -1127,6 +1147,9 @@ namespace Pims.Dal.Migrations
                         .IsUnique();
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.HasIndex("IsDisabled", "LastName", "FirstName");
 

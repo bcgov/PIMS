@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Pims.Core.Extensions;
+using Pims.Core.Helpers;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
@@ -89,7 +90,7 @@ namespace Pims.Dal.Keycloak
             var kusers = await _keycloakService.GetUsersAsync((page - 1) * quantity, quantity, search);
 
             // TODO: Need better performing solution.
-            var eusers = kusers.Select(u => _pimsAdminService.User.Find(u.Id) ?? _mapper.Map<Entity.User>(u));
+            var eusers = kusers.Select(u => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.User.GetNoTracking(u.Id)) ?? _mapper.Map<Entity.User>(u));
 
             return eusers;
         }
@@ -116,6 +117,8 @@ namespace Pims.Dal.Keycloak
         {
             var kuser = await _keycloakService.GetUserAsync(user.Id) ?? throw new KeyNotFoundException();
             var euser = _pimsAdminService.User.Get(user.Id);
+
+            if (user.Username != kuser.Username) throw new InvalidOperationException($"Cannot change the username from '{kuser.Username}' to '{user.Username}'.");
 
             var addRoles = user.Roles.Except(euser.Roles).ToArray();
             var removeRoles = euser.Roles.Except(user.Roles).ToArray();
@@ -156,7 +159,8 @@ namespace Pims.Dal.Keycloak
             var kmodel = _mapper.Map<KModel.UserModel>(user);
             kmodel.Attributes = new Dictionary<string, string[]>
             {
-                ["agencies"] = _pimsService.User.GetAgencies(euser.Id).Select(a => a.ToString()).ToArray()
+                ["agencies"] = _pimsService.User.GetAgencies(euser.Id).Select(a => a.ToString()).ToArray(),
+                ["displayName"] = new[] { user.DisplayName }
             };
             await _keycloakService.UpdateUserAsync(kmodel);  // TODO: Fix issue where EmailVerified will be set to false.
 

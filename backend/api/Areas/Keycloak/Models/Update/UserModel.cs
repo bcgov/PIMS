@@ -11,10 +11,22 @@ namespace Pims.Api.Areas.Keycloak.Models.Update
     {
         #region Properties
         /// <summary>
-        /// get/set - The display name of the user.
+        /// get/set - A unique username to identify the user.
         /// </summary>
-        /// <returns></returns>
+        /// <value></value>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// get/set - The user's display name.
+        /// </summary>
+        /// <value></value>
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// get/set - The user's position title.
+        /// </summary>
+        /// <value></value>
+        public string Position { get; set; }
 
         /// <summary>
         /// get/set - The user's given name.
@@ -47,6 +59,18 @@ namespace Pims.Api.Areas.Keycloak.Models.Update
         public bool IsDisabled { get; set; }
 
         /// <summary>
+        /// get/set - Whether the email has been verified.
+        /// </summary>
+        /// <value></value>
+        public bool EmailVerified { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the user.
+        /// </summary>
+        /// <value></value>
+        public string Note { get; set; }
+
+        /// <summary>
         /// get/set - An array of agencies the user belongs to.
         /// </summary>
         /// <returns></returns>
@@ -68,16 +92,19 @@ namespace Pims.Api.Areas.Keycloak.Models.Update
         public bool Equals([AllowNull] UserModel other)
         {
             return other != null &&
+                   Username == other.Username &&
+                   Position == other.Position &&
                    DisplayName == other.DisplayName &&
                    FirstName == other.FirstName &&
                    MiddleName == other.MiddleName &&
                    LastName == other.LastName &&
+                   Note == other.Note &&
                    Email == other.Email;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(DisplayName, FirstName, MiddleName, LastName, Email);
+            return HashCode.Combine(Username, Position, DisplayName, FirstName, MiddleName, LastName, Email, Note);
         }
         #endregion
     }

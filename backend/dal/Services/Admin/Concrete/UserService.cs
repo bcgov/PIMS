@@ -65,6 +65,8 @@ namespace Pims.Dal.Services.Admin
 
             if (filter != null)
             {
+                if (!string.IsNullOrWhiteSpace(filter.Username))
+                    query = query.Where(u => EF.Functions.Like(u.Username, $"{filter.Username}"));
                 if (!string.IsNullOrWhiteSpace(filter.DisplayName))
                     query = query.Where(u => EF.Functions.Like(u.DisplayName, $"{filter.DisplayName}"));
                 if (!string.IsNullOrWhiteSpace(filter.FirstName))
@@ -131,7 +133,8 @@ namespace Pims.Dal.Services.Admin
 
             var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(user).CurrentValues.SetValues(entity);
+            this.Context.Entry(user).CurrentValues.SetValues(entity); // TODO: Do not user CurrentValue.SetValues(...) unless you reset the Original RowVersion.
+            this.Context.Entry(user).OriginalValues[nameof(entity.RowVersion)] = user.RowVersion;
             return base.Update(user);
         }
 
@@ -147,6 +150,7 @@ namespace Pims.Dal.Services.Admin
             var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(user).CurrentValues.SetValues(entity);
+            this.Context.Entry(user).OriginalValues[nameof(entity.RowVersion)] = user.RowVersion;
             base.Remove(user);
         }
 
@@ -157,7 +161,7 @@ namespace Pims.Dal.Services.Admin
         public AccessRequest UpdateAccessRequest(AccessRequest entity)
         {
             var accessRequest = GetAccessRequestNoTracking(entity.Id);
-            entity.UpdatedById = this.User.GetUserId();
+            entity.UpdatedById = this.User.GetUserId(); // TODO: No longer needed.
             entity.UpdatedOn = DateTime.UtcNow;
             this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
             this.Context.CommitTransaction();

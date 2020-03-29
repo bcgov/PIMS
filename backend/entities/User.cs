@@ -16,6 +16,12 @@ namespace Pims.Dal.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - The unique user name to identify the user.
+        /// </summary>
+        /// <value></value>
+        public string Username { get; set; }
+
+        /// <summary>
         /// get/set - The users display name.
         /// </summary>
         /// <value></value>
@@ -46,10 +52,28 @@ namespace Pims.Dal.Entities
         public string Email { get; set; }
 
         /// <summary>
+        /// get/set - The user's position title.
+        /// </summary>
+        /// <value></value>
+        public string Position { get; set; }
+
+        /// <summary>
         /// get/set - Whether the user is disabled.
         /// </summary>
         /// <value></value>
         public bool IsDisabled { get; set; }
+
+        /// <summary>
+        /// get/set - Whether their email has been verified.
+        /// </summary>
+        /// <value></value>
+        public bool EmailVerified { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the user.
+        /// </summary>
+        /// <value></value>
+        public string Note { get; set; }
 
         /// <summary>
         /// get - A collection of agencies this user belongs to.
@@ -73,20 +97,35 @@ namespace Pims.Dal.Entities
         public User() { }
 
         /// <summary>
-        /// Create a new instance of a User class.
+        /// Create a new instance of a User class, initializes with specified arguments.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="displayName"></param>
+        /// <param name="userName"></param>
         /// <param name="email"></param>
-        public User(Guid id, string displayName, string email)
+        public User(Guid id, string userName, string email)
         {
             if (id == Guid.Empty) throw new ArgumentException("User id must be unique.", nameof(id));
-            if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Display name must be provided.", nameof(displayName));
-            if (String.IsNullOrWhiteSpace(email)) throw new ArgumentException("Email must be provided.", nameof(email));
+            if (String.IsNullOrWhiteSpace(userName)) throw new ArgumentException("Argument cannot be null, whitespace or empty.", nameof(userName));
+            if (String.IsNullOrWhiteSpace(email)) throw new ArgumentException("Argument cannot be null, whitespace or empty.", nameof(email));
 
             this.Id = id;
-            this.DisplayName = displayName;
+            this.Username = userName;
             this.Email = email;
+        }
+
+        /// <summary>
+        /// Create a new instance of a User class, initializes with specified arguments.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userName"></param>
+        /// <param name="email"></param>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        public User(Guid id, string userName, string email, string firstName, string lastName) : this(id, userName, email)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.DisplayName = $"{lastName}, {firstName}";
         }
         #endregion
     }

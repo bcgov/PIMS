@@ -14,7 +14,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
     {
         public IEnumerable<Model.RoleModel> Resolve(Entity.User source, Model.UserModel destination, IEnumerable<Model.RoleModel> destMember, ResolutionContext context)
         {
-            return source.Roles.Select(r => new Model.RoleModel()
+            return source.Roles?.Select(r => new Model.RoleModel()
             {
                 Id = r.RoleId,
                 Name = r.Role?.Name,
@@ -22,7 +22,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
                 CreatedOn = r.Role?.CreatedOn ?? new DateTime(),
                 UpdatedOn = r.Role?.UpdatedOn,
                 RowVersion = r.Role == null ? null : Convert.ToBase64String(r.Role.RowVersion)
-            });
+            }) ?? new Model.RoleModel[0];
         }
     }
 }
