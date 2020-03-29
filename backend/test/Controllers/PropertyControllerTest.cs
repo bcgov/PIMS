@@ -35,9 +35,8 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_FilterLatitude_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var parcel = new Entity.Parcel(51, 25);
             var parcels = new[] { parcel };
@@ -69,9 +68,8 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_FilterLongitude_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var parcel = new Entity.Parcel(51, 25);
             var parcels = new[] { parcel };
@@ -103,9 +101,8 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_OnlyParcels_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
@@ -135,9 +132,8 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_OnlyBuildings_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var building1 = new Entity.Building(51, 25) { Id = 1 };
             var building2 = new Entity.Building(51, 26) { Id = 2 };
@@ -167,9 +163,8 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_Query_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user, new Uri("http://host/api/properties?Agencies=1,2"));
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, new Uri("http://host/api/properties?Agencies=1,2"));
 
             var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
@@ -199,12 +194,10 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_Query_NoFilter_BadRequest()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
 
             // Act
             // Assert
@@ -220,12 +213,10 @@ namespace Pims.Api.Test.Controllers
         public void GetProperties_NoFilter_BadRequest()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(user);
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
 
             // Act
             // Assert

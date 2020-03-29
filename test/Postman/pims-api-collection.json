@@ -9,6 +9,37 @@
 			"name": "unauthenticated",
 			"item": [
 				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/auth/login",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "environment variables",
 					"request": {
 						"auth": {
@@ -17,7 +48,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{scheme}}://{{host}}:{{port}}/api/env",
+							"raw": "{{scheme}}://{{host}}:{{port}}/api/health/env",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{host}}"
@@ -25,6 +56,7 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"health",
 								"env"
 							]
 						}
@@ -37,7 +69,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{scheme}}://{{host}}:{{port}}/api/live",
+							"raw": "{{scheme}}://{{host}}:{{port}}/api/health/live",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{host}}"
@@ -45,6 +77,7 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"health",
 								"live"
 							]
 						}
@@ -57,7 +90,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{scheme}}://{{host}}:{{port}}/api/ready",
+							"raw": "{{scheme}}://{{host}}:{{port}}/api/health/ready",
 							"protocol": "{{scheme}}",
 							"host": [
 								"{{host}}"
@@ -65,6 +98,7 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"health",
 								"ready"
 							]
 						}
@@ -786,7 +820,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/user/41a46ea3-e815-4272-9a17-693ba2409841",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/41a46ea3-e815-4272-9a17-693ba2409841",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -795,7 +829,7 @@
 													"path": [
 														"api",
 														"admin",
-														"user",
+														"users",
 														"41a46ea3-e815-4272-9a17-693ba2409841"
 													]
 												}
@@ -824,7 +858,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/user",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -833,7 +867,7 @@
 													"path": [
 														"api",
 														"admin",
-														"user"
+														"users"
 													]
 												}
 											},
@@ -861,7 +895,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/user",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/41a46ea3-e815-4272-9a17-693ba2409841",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -870,7 +904,8 @@
 													"path": [
 														"api",
 														"admin",
-														"user"
+														"users",
+														"41a46ea3-e815-4272-9a17-693ba2409841"
 													]
 												}
 											},
@@ -898,7 +933,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/user/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -907,7 +942,7 @@
 													"path": [
 														"api",
 														"admin",
-														"user",
+														"users",
 														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
@@ -948,7 +983,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/role/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/roles/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -957,7 +992,7 @@
 													"path": [
 														"api",
 														"admin",
-														"role",
+														"roles",
 														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
@@ -1023,7 +1058,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/role",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/roles/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1032,7 +1067,8 @@
 													"path": [
 														"api",
 														"admin",
-														"role"
+														"roles",
+														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
 											},
@@ -1060,7 +1096,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/role/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/roles/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1069,7 +1105,7 @@
 													"path": [
 														"api",
 														"admin",
-														"role",
+														"roles",
 														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
@@ -1110,7 +1146,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel/1",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/1",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1119,7 +1155,7 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel",
+														"parcels",
 														"1"
 													]
 												}
@@ -1132,7 +1168,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel/pid/000-000-095",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/p-id/029-539-142",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1141,9 +1177,9 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel",
-														"pid",
-														"000-000-095"
+														"parcels",
+														"p-id",
+														"029-539-142"
 													]
 												}
 											},
@@ -1155,7 +1191,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel/pid/95",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/pid/95",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1164,7 +1200,7 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel",
+														"parcels",
 														"pid",
 														"95"
 													]
@@ -1192,7 +1228,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1201,7 +1237,7 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel"
+														"parcels"
 													]
 												}
 											},
@@ -1229,7 +1265,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/many",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1238,7 +1274,8 @@
 													"path": [
 														"api",
 														"admin",
-														"parcels"
+														"parcels",
+														"many"
 													]
 												}
 											},
@@ -1266,7 +1303,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1275,7 +1312,8 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel"
+														"parcels",
+														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
 											},
@@ -1303,7 +1341,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcel/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1312,7 +1350,7 @@
 													"path": [
 														"api",
 														"admin",
-														"parcel",
+														"parcels",
 														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
 													]
 												}
@@ -1507,12 +1545,12 @@
 							"response": []
 						},
 						{
-							"name": "token",
+							"name": "logout",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/auth/token",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/auth/logout?redirect_uri={{scheme}}://{{host}}:{{port}}/api/health/env",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1521,7 +1559,13 @@
 									"path": [
 										"api",
 										"auth",
-										"token"
+										"logout"
+									],
+									"query": [
+										{
+											"key": "redirect_uri",
+											"value": "{{scheme}}://{{host}}:{{port}}/api/health/env"
+										}
 									]
 								}
 							},
@@ -1633,7 +1677,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/user/info",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/info",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1641,7 +1685,7 @@
 									"port": "{{port}}",
 									"path": [
 										"api",
-										"user",
+										"users",
 										"info"
 									]
 								}
@@ -1649,12 +1693,12 @@
 							"response": []
 						},
 						{
-							"name": "user list",
+							"name": "access request",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/users",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/request",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1662,7 +1706,9 @@
 									"port": "{{port}}",
 									"path": [
 										"api",
-										"users"
+										"users",
+										"access",
+										"request"
 									]
 								}
 							},
@@ -1681,7 +1727,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?neLat=48.46654767913532&neLong=-123.330717086792&swLat=48.398949765641426&swLong=-123.40882301330568",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1693,19 +1739,19 @@
 									],
 									"query": [
 										{
-											"key": "neLat",
+											"key": "neLatitude",
 											"value": "48.46654767913532"
 										},
 										{
-											"key": "neLong",
+											"key": "neLongitude",
 											"value": "-123.330717086792"
 										},
 										{
-											"key": "swLat",
+											"key": "swLatitude",
 											"value": "48.398949765641426"
 										},
 										{
-											"key": "swLong",
+											"key": "swLongitude",
 											"value": "-123.40882301330568"
 										}
 									]
@@ -1714,49 +1760,19 @@
 							"response": []
 						},
 						{
-							"name": "parcels filter",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels/filter?neLat=48.46654767913532&neLong=-123.330717086792&swLat=48.398949765641426&swLong=-123.40882301330568",
-									"protocol": "{{scheme}}",
-									"host": [
-										"{{host}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"api",
-										"parcels",
-										"filter"
-									],
-									"query": [
-										{
-											"key": "neLat",
-											"value": "48.46654767913532"
-										},
-										{
-											"key": "neLong",
-											"value": "-123.330717086792"
-										},
-										{
-											"key": "swLat",
-											"value": "48.398949765641426"
-										},
-										{
-											"key": "swLong",
-											"value": "-123.40882301330568"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "parcels filter",
+							"name": "parcels",
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"MinEstimatedValue\": 50000,\n\t\"MaxEstimatedValue\": 10000000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels/filter",
 									"protocol": "{{scheme}}",
@@ -1781,12 +1797,12 @@
 					"name": "property",
 					"item": [
 						{
-							"name": "property",
+							"name": "properties",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/properties?neLat=48.46654767913532&neLong=-123.330717086792&swLat=48.398949765641426&swLong=-123.40882301330568",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/properties?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1798,19 +1814,19 @@
 									],
 									"query": [
 										{
-											"key": "neLat",
+											"key": "neLatitude",
 											"value": "48.46654767913532"
 										},
 										{
-											"key": "neLong",
+											"key": "neLongitude",
 											"value": "-123.330717086792"
 										},
 										{
-											"key": "swLat",
+											"key": "swLatitude",
 											"value": "48.398949765641426"
 										},
 										{
-											"key": "swLong",
+											"key": "swLongitude",
 											"value": "-123.40882301330568"
 										}
 									]
@@ -1819,51 +1835,21 @@
 							"response": []
 						},
 						{
-							"name": "property filter",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/filter?neLat=48.46654767913532&neLong=-123.330717086792&swLat=48.398949765641426&swLong=-123.40882301330568",
-									"protocol": "{{scheme}}",
-									"host": [
-										"{{host}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"api",
-										"properties",
-										"filter"
-									],
-									"query": [
-										{
-											"key": "neLat",
-											"value": "48.46654767913532"
-										},
-										{
-											"key": "neLong",
-											"value": "-123.330717086792"
-										},
-										{
-											"key": "swLat",
-											"value": "48.398949765641426"
-										},
-										{
-											"key": "swLong",
-											"value": "-123.40882301330568"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "property filter",
+							"name": "properties",
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"MinAssessedValue\": 45000,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/filter",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/v0.1-alpha/properties/filter",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1871,6 +1857,7 @@
 									"port": "{{port}}",
 									"path": [
 										"api",
+										"v0.1-alpha",
 										"properties",
 										"filter"
 									]

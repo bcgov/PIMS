@@ -1,3 +1,4 @@
+ARG BUILD_CONFIGURATION=Release
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 443 8080
@@ -20,10 +21,10 @@ RUN dotnet tool install --global dotnet-ef --version 3.1.0
 # Copy everything else and build
 COPY . .
 WORKDIR /src/api
-RUN dotnet build "Pims.Api.csproj" -c Release -o /app/build
+RUN dotnet build "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Pims.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish
 
 # Runtime image
 FROM base AS final

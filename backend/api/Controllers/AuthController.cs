@@ -1,11 +1,15 @@
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Core.Extensions;
 using Pims.Dal;
 using Pims.Dal.Helpers.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Controllers
 {
@@ -13,7 +17,9 @@ namespace Pims.Api.Controllers
     /// AuthController class, provides endpoints for authentication.
     /// </summary>
     [ApiController]
-    [Route("/api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/auth")]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         #region Variables
@@ -49,7 +55,10 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpPost("activate")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.Auth.UserModel), 200)]
+        [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
             var user_id = this.User.GetUserId();
@@ -58,56 +67,54 @@ namespace Pims.Api.Controllers
             if (!exists)
             {
                 var user = _pimsService.User.Activate();
-                return new CreatedResult($"{user.Id}", new { user.Id });
+                return new CreatedResult($"{user.Id}", new Models.Auth.UserModel(user));
             }
             else
             {
-                return new JsonResult(new { Id = user_id });
+                return new JsonResult(new Models.Auth.UserModel(user_id));
             }
-        }
-
-        /// <summary>
-        /// Redirect to the keycloak login page.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("[action]")]
-        public IActionResult Login(string redirect_uri)
-        {
-            var loginUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Login}";
-            return Redirect($"{loginUrl}&redirect_uri={redirect_uri}");
         }
 
         /// <summary>
         /// Redirect user to registration page.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]")]
+        [HttpGet("register")]
+        [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Register(string redirect_uri)
         {
-            var registerUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Register}";
-            return Redirect($"{registerUrl}&redirect_uri={redirect_uri}");
+            var uri = new UriBuilder($"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Register}");
+            uri.AppendQuery("client_id", _optionsKeycloak.Client);
+            uri.AppendQuery("redirect_uri", redirect_uri);
+            return Redirect(uri.ToString());
+        }
+
+        /// <summary>
+        /// Redirect to the keycloak login page.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("login")]
+        [SwaggerOperation(Tags = new[] { "auth" })]
+        public IActionResult Login(string redirect_uri)
+        {
+            var uri = new UriBuilder($"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Login}");
+            uri.AppendQuery("client_id", _optionsKeycloak.Client);
+            uri.AppendQuery("redirect_uri", redirect_uri);
+            return Redirect(uri.ToString());
         }
 
         /// <summary>
         /// Log the current user out.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("[action]")]
+        [HttpPost("logout")]
+        [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Logout(string redirect_uri)
         {
-            var logoutUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Logout}";
-            return Redirect($"{logoutUrl}?redirect_uri={redirect_uri}");
-        }
-
-        /// <summary>
-        /// Redirect the current user to the keycloak token request endpoint.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("[action]")]
-        public IActionResult Token()
-        {
-            var tokenUrl = $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Token}";
-            return Redirect(tokenUrl);
+            var uri = new UriBuilder($"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.Logout}");
+            uri.AppendQuery("client_id", _optionsKeycloak.Client);
+            uri.AppendQuery("redirect_uri", redirect_uri);
+            return Redirect(uri.ToString());
         }
 
         /// <summary>
@@ -115,10 +122,13 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet("claims")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Models.Auth.ClaimModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Claims()
         {
-            return new JsonResult(User.Claims.Select(c => new { c.Type, c.Value }));
+            return new JsonResult(User.Claims.Select(c => new Models.Auth.ClaimModel(c.Type, c.Value)));
         }
         #endregion
     }

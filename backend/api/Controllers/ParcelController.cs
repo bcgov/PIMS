@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Models;
-using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Models;
 using Pims.Api.Policies;
@@ -14,6 +13,9 @@ using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Annotations;
+using Pims.Api.Helpers.Exceptions;
 
 namespace Pims.Api.Controllers
 {
@@ -22,7 +24,9 @@ namespace Pims.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/parcels")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/parcels")]
+    [Route("parcels")]
     public class ParcelController : ControllerBase
     {
         #region Variables
@@ -53,6 +57,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.Parts.ParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcels()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -65,12 +72,15 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
-        [Route("/api/parcels/filter")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.Parts.ParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
             var parcels = _pimsService.Parcel.GetNoTracking(filter);
             return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
@@ -83,6 +93,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcel(int id)
         {
             var entity = _pimsService.Parcel.GetNoTracking(id);
@@ -98,6 +111,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [HasPermission(Permissions.PropertyAdd)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult AddParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
@@ -105,8 +121,7 @@ namespace Pims.Api.Controllers
 
             _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<ParcelModel>(entity);
-
-            return new JsonResult(parcel);
+            return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
         }
 
         /// <summary>
@@ -116,6 +131,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [HasPermission(Permissions.PropertyEdit)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult UpdateParcel([FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
@@ -129,11 +147,15 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Delete the specified parcel from the datasource if the user is allowed.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [HasPermission(Permissions.PropertyAdd)]
-        public IActionResult DeleteParcel([FromBody] ParcelModel model)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult DeleteParcel(Guid id, [FromBody] ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
