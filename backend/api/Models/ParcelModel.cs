@@ -40,6 +40,8 @@ namespace Pims.Api.Models
 
         public string LandLegalDescription { get; set; }
 
+        public bool IsSensitive { get; set; }
+
         public IEnumerable<EvaluationModel> Evaluations { get; set; } = new List<EvaluationModel>();
         public IEnumerable<Parts.ParcelBuildingModel> Buildings { get; set; } = new List<Parts.ParcelBuildingModel>();
 

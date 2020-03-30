@@ -38,6 +38,8 @@ namespace Pims.Api.Models.Parts
 
         public float RentableArea { get; set; }
 
+        public bool IsSensitive { get; set; }
+
         public IEnumerable<EvaluationModel> Evaluations { get; set; } = new List<EvaluationModel>();
 
         public override bool Equals(object obj)

@@ -157,7 +157,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             _pimsAdminService.Parcel.Add(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
-            return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
+            return CreatedAtAction(nameof(GetParcel), new { id = parcel.Id }, parcel);
         }
 
         /// <summary>
@@ -182,6 +182,7 @@ namespace Pims.Api.Areas.Admin.Controllers
 
         /// <summary>
         /// PUT - Update the parcel in the datasource.
+        /// This function will not delete evaluations, only add or update.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model">The parcel model.</param>
@@ -194,13 +195,8 @@ namespace Pims.Api.Areas.Admin.Controllers
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
-
             var entity = _pimsAdminService.Parcel.Get(model.Id);
-
-            if (entity == null) return BadRequest("Item does not exist");
             var userId = this.User.GetUserId();
-            var address = entity.Address?.ToString();
-
             _mapper.Map(model, entity);
 
             foreach (var evaluation in model.Evaluations)
@@ -209,40 +205,25 @@ namespace Pims.Api.Areas.Admin.Controllers
                 var p_eval = entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
                 if (p_eval == null)
                 {
-                    entity.Evaluations.Add(new Entity.ParcelEvaluation(evaluation.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
-                    {
-                        EstimatedValue = evaluation.EstimatedValue,
-                        AssessedValue = evaluation.AssessedValue,
-                        NetBookValue = evaluation.NetBookValue,
-                        CreatedById = userId
-                    });
+                    entity.Evaluations.Add(new Entity.ParcelEvaluation(evaluation.FiscalYear, entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                 }
                 else
                 {
-                    p_eval.EstimatedValue = evaluation.EstimatedValue;
-                    p_eval.AssessedValue = evaluation.AssessedValue;
-                    p_eval.NetBookValue = evaluation.NetBookValue;
-                    p_eval.UpdatedById = userId; // TODO: Move to DAL.
-                    p_eval.UpdatedOn = DateTime.UtcNow;
+                    _mapper.Map(evaluation, p_eval);
                 }
             }
 
             foreach (var building in model.Buildings)
             {
-                if (building.Id == 0)
+
+                var b_entity = entity.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                if (b_entity == null)
                 {
                     // Add a new building to the parcel.
-                    var b_entity = _mapper.Map<Entity.Building>(building);
-                    b_entity.CreatedById = userId;
+                    b_entity = _mapper.Map<Entity.Building>(building);
                     foreach (var evaluation in building.Evaluations)
                     {
-                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                        {
-                            EstimatedValue = evaluation.EstimatedValue,
-                            AssessedValue = evaluation.AssessedValue,
-                            NetBookValue = evaluation.NetBookValue,
-                            CreatedById = userId
-                        });
+                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                     }
 
                     entity.Buildings.Add(b_entity);
@@ -250,65 +231,24 @@ namespace Pims.Api.Areas.Admin.Controllers
                 else
                 {
                     // Update existing building on the parcel.
-                    var b_entity = entity.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                    _mapper.Map(building, b_entity);
 
-                    // We will ignore building Ids that don't match.
-                    if (b_entity != null)
+                    foreach (var evaluation in building.Evaluations)
                     {
-                        var b_address = b_entity.Address?.ToString();
-                        _mapper.Map(building, b_entity);
-                        b_entity.UpdatedById = userId;
-                        b_entity.UpdatedOn = DateTime.UtcNow;
-
-                        foreach (var evaluation in building.Evaluations)
+                        // Update evaluation.
+                        var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
+                        if (b_eval == null)
                         {
-                            // Update evaluation.
-                            var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
-
-                            if (b_eval == null)
-                            {
-                                b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                                {
-                                    EstimatedValue = evaluation.EstimatedValue,
-                                    AssessedValue = evaluation.AssessedValue,
-                                    NetBookValue = evaluation.NetBookValue,
-                                    CreatedById = userId
-                                });
-                            }
-                            else
-                            {
-                                b_eval.EstimatedValue = evaluation.EstimatedValue;
-                                b_eval.AssessedValue = evaluation.AssessedValue;
-                                b_eval.NetBookValue = evaluation.NetBookValue;
-                                b_eval.UpdatedById = userId; // TODO: Move to DAL.
-                                b_eval.UpdatedOn = DateTime.UtcNow;
-                            }
+                            b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                         }
-
-                        _pimsAdminService.Building.UpdateOne(b_entity);
-
-                        // Check if the address was updated.
-                        if (b_address != b_entity.Address.ToString())
+                        else
                         {
-                            b_entity.Address.UpdatedById = userId;
-                            b_entity.Address.UpdatedOn = DateTime.UtcNow;
-                            _pimsAdminService.Address.UpdateOne(b_entity.Address);
+                            _mapper.Map(evaluation, b_eval);
                         }
-                    }
-                    else
-                    {
-                        _logger.LogDebug($"Invalid - Attempting to update parcel with invalid building - PID:{entity.PID}, BuildingId:{building.Id}");
                     }
                 }
             }
 
-            // Check if the address was updated.
-            if (address != entity.Address.ToString())
-            {
-                entity.Address.UpdatedById = userId;
-                entity.Address.UpdatedOn = DateTime.UtcNow;
-                _pimsAdminService.Address.UpdateOne(entity.Address);
-            }
             _pimsAdminService.Parcel.Update(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 

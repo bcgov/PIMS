@@ -148,6 +148,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .SingleOrDefault(p => p.Id == id) ?? throw new KeyNotFoundException();
 
             return entity;

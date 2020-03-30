@@ -68,7 +68,6 @@ namespace Pims.Dal.Entities
             this.ParcelId = parcel?.Id ??
                 throw new ArgumentNullException(nameof(parcel));
             this.Parcel = parcel;
-            parcel.Evaluations.Add(this);
         }
 
         /// <summary>

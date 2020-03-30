@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             _pimsAdminService.Role.Add(entity);
             var role = _mapper.Map<Model.RoleModel>(entity);
 
-            return new CreatedAtActionResult(nameof(GetRole), nameof(RoleController), new { id = role.Id }, role);
+            return CreatedAtAction(nameof(GetRole), new { id = role.Id }, role);
         }
 
         /// <summary>
