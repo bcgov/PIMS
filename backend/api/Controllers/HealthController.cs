@@ -1,8 +1,8 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
+using Model = Pims.Api.Models.Health;
 
 namespace Pims.Api.Controllers
 {
@@ -40,11 +40,11 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("env")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.Health.EnvModel), 200)]
+        [ProducesResponseType(typeof(Model.EnvModel), 200)]
         [SwaggerOperation(Tags = new[] { "health" })]
         public IActionResult Environment()
         {
-            return new JsonResult(new Models.Health.EnvModel(_environment));
+            return new JsonResult(new Model.EnvModel(_environment));
         }
         #endregion
     }

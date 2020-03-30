@@ -9,9 +9,9 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IParcelService
     {
-        IEnumerable<Parcel> GetNoTracking(double neLat, double neLong, double swLat, double swLong);
-        IEnumerable<Parcel> GetNoTracking(ParcelFilter filter);
-        Parcel GetNoTracking(int id);
+        IEnumerable<Parcel> Get(double neLat, double neLong, double swLat, double swLong);
+        IEnumerable<Parcel> Get(ParcelFilter filter);
+        Parcel Get(int id);
         Parcel Add(Parcel parcel);
         Parcel Update(Parcel parcel);
         void Remove(Parcel parcel);

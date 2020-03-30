@@ -4,13 +4,16 @@ using Pims.Dal.Services;
 using Pims.Api.Test.Helpers;
 using Pims.Api.Controllers;
 using Moq;
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
 
 namespace PimsApi.Test.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("group", "user")]
     public class UserControllerTest
     {
         #region Variables
@@ -80,7 +83,6 @@ namespace PimsApi.Test.Controllers
             service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
         }
         #endregion
-
         #endregion
     }
 }

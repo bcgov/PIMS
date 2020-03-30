@@ -38,7 +38,7 @@ namespace Pims.Dal.Services
         /// <param name="swLat"></param>
         /// <param name="swLong"></param>
         /// <returns></returns>
-        public IEnumerable<Parcel> GetNoTracking(double neLat, double neLong, double swLat, double swLong)
+        public IEnumerable<Parcel> Get(double neLat, double neLong, double swLat, double swLong)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -62,7 +62,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<Parcel> GetNoTracking(ParcelFilter filter)
+        public IEnumerable<Parcel> Get(ParcelFilter filter)
         {
             filter.ThrowIfNull(nameof(filter));
 
@@ -140,7 +140,7 @@ namespace Pims.Dal.Services
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Parcel GetNoTracking(int id)
+        public Parcel Get(int id)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -186,7 +186,6 @@ namespace Pims.Dal.Services
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
 
-            parcel.CreatedById = this.User.GetUserId();
             parcel.AgencyId = agency_id;
             this.Context.Parcels.Add(parcel);
             this.Context.CommitTransaction();
@@ -219,6 +218,7 @@ namespace Pims.Dal.Services
             if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
+
             this.Context.Update(parcel);
             this.Context.CommitTransaction();
             return parcel;

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
-using Pims.Dal.Helpers.Extensions;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -36,7 +35,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<City> GetNoTracking(string name)
+        public IEnumerable<City> Get(string name)
         {
             var query = this.Context.Cities.AsNoTracking();
 

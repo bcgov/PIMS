@@ -10,6 +10,10 @@ namespace Pims.Api.Test.Routes
     /// <summary>
     /// PropertyControllerTest class, provides a way to test endpoint routes.
     /// </summary>
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("group", "property")]
+    [Trait("group", "route")]
     public class PropertyControllerTest
     {
         #region Variables

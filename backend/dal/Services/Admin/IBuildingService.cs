@@ -9,9 +9,7 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IBuildingService : IBaseService<Building>
     {
-        Paged<Building> GetNoTracking(int page, int quantity, string sort);
-        Building GetNoTracking(int id);
-        Building GetByLocalIdNoTracking(string localId);
+        Paged<Building> Get(int page, int quantity, string sort);
         Building Get(int id);
         Building GetByLocalId(string localId);
         Building GetByPidAndLocalId(int pid, string localId);

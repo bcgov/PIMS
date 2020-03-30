@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IBuildingPredominateUseService : IBaseService<BuildingPredominateUse>
     {
-        IEnumerable<BuildingPredominateUse> GetAllNoTracking();
         IEnumerable<BuildingPredominateUse> GetAll();
     }
 }

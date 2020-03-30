@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Pims.Api.Areas.Tools.Models;
+using Model = Pims.Api.Areas.Tools.Models.Import;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
 using Pims.Dal.Helpers.Extensions;
@@ -56,7 +56,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<PropertyModel> properties)
+        public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<Model.PropertyModel> properties)
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
@@ -109,7 +109,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        private Entity.Agency GetOrCreateAgency(PropertyModel property)
+        private Entity.Agency GetOrCreateAgency(Model.PropertyModel property)
         {
             // Find the agency or create a new one.
             var agency = _agencies.FirstOrDefault(a => a.Code == property.Agency.Trim());
@@ -230,7 +230,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        private Entity.Parcel AddUpdateParcel(PropertyModel property, int pid, Entity.Agency agency)
+        private Entity.Parcel AddUpdateParcel(Model.PropertyModel property, int pid, Entity.Agency agency)
         {
             var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
             var fiscal = int.Parse(property.FiscalYear);
@@ -319,7 +319,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        private Entity.Parcel AddUpdateBuilding(PropertyModel property, int pid, Entity.Agency agency)
+        private Entity.Parcel AddUpdateBuilding(Model.PropertyModel property, int pid, Entity.Agency agency)
         {
             var lid = property.LocalId;
             var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));

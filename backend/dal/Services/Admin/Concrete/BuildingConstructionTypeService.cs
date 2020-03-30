@@ -36,19 +36,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<BuildingConstructionType> GetAllNoTracking()
-        {
-            var query = this.Context.BuildingConstructionTypes.AsNoTracking();
-            return query.OrderBy(p => p.Name).ToArray();
-        }
-
-        /// <summary>
-        /// Get all building construction types from the datasource.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<BuildingConstructionType> GetAll()
         {
-            return this.Context.BuildingConstructionTypes.OrderBy(p => p.Name).ToArray();
+            return this.Context.BuildingConstructionTypes.AsNoTracking().OrderBy(p => p.Name).ToArray();
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 using AutoMapper;
 
-namespace Pims.Api.Helpers.Profiles.Converters
+namespace Pims.Api.Profiles.Converters
 {
     public class ParcelIdConverter : IValueConverter<string, int>
     {

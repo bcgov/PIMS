@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IProvinceService : IBaseService<Province>
     {
-        IEnumerable<Province> GetNoTracking();
         IEnumerable<Province> GetAll();
     }
 }
