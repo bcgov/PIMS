@@ -41,9 +41,35 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Api.Models.ParcelModel>(parcel), actualParcel);
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+        #endregion
+
+        #region AddParcel
+        [Fact]
+        public void AddParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyEdit);
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>())).Returns(parcel);
+            var model = mapper.Map<Api.Models.ParcelModel>(parcel);
+
+            // Act
+            var result = controller.AddParcel(model);
+
+            // Assert
+            var actionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(201, actionResult.StatusCode);
+            var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
+            service.Verify(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
 
@@ -67,6 +93,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model, actualParcel);
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
@@ -97,6 +124,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Evaluations.Count(), actualParcel.Evaluations.Count());
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
@@ -126,6 +154,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Evaluations.Count(), actualParcel.Evaluations.Count());
             Assert.Equal(model.Evaluations.First().EstimatedValue, actualParcel.Evaluations.First().EstimatedValue);
@@ -164,6 +193,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Buildings.Count(), actualParcel.Buildings.Count());
             Assert.Equal(model.Buildings.First().LocalId, actualParcel.Buildings.First().LocalId);
@@ -199,6 +229,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Buildings.Count(), actualParcel.Buildings.Count());
             Assert.Equal(model.Buildings.First().LocalId, actualParcel.Buildings.First().LocalId);
@@ -236,6 +267,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Buildings.Count(), actualParcel.Buildings.Count());
             Assert.Equal(model.Buildings.First().LocalId, actualParcel.Buildings.First().LocalId);
@@ -272,6 +304,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Equal(200, actionResult.StatusCode);
             var actualParcel = Assert.IsType<Api.Models.ParcelModel>(actionResult.Value);
             Assert.Equal(model.Buildings.Count(), actualParcel.Buildings.Count());
             Assert.Equal(model.Buildings.First().LocalId, actualParcel.Buildings.First().LocalId);
