@@ -13,7 +13,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
     {
         public ICollection<Entity.UserAgency> Resolve(KModel.UserModel source, Entity.User destination, ICollection<Entity.UserAgency> destMember, ResolutionContext context)
         {
-            if (source.Attributes?.ContainsKey("agencies") ?? false)
+            if (source.Attributes?.ContainsKey("agencies") == true)
             {
                 return source.Attributes["agencies"].Select(a =>
                 {

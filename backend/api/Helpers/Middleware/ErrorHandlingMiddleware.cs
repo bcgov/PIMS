@@ -139,7 +139,7 @@ namespace Pims.Api.Helpers.Middleware
 
                 _logger.LogError(ex, ex.Message);
             }
-            else if (ex is BadRequestException)
+            else if (ex is BadRequestException || ex is InvalidOperationException)
             {
                 code = HttpStatusCode.BadRequest;
                 message = ex.Message;
