@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Models;
 using Pims.Api.Helpers.Extensions;
-using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
@@ -94,12 +93,12 @@ namespace Pims.Api.Controllers
         [HttpGet("{id}")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcel(int id)
         {
             var entity = _pimsService.Parcel.GetNoTracking(id);
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -112,15 +111,15 @@ namespace Pims.Api.Controllers
         [HttpPost]
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult AddParcel([FromBody] ParcelModel model)
+        public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
             var userId = this.User.GetUserId();
 
             _pimsService.Parcel.Add(entity);
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
             return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
         }
 
@@ -132,14 +131,14 @@ namespace Pims.Api.Controllers
         [HttpPut("{id}")]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult UpdateParcel([FromBody] ParcelModel model)
+        public IActionResult UpdateParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
             _pimsService.Parcel.Update(entity); // TODO: Update related properties (i.e. Address).
-            var parcel = _mapper.Map<ParcelModel>(entity);
+            var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
         }
@@ -153,9 +152,9 @@ namespace Pims.Api.Controllers
         [HttpDelete("{id}")]
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ParcelModel), 200)]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult DeleteParcel(Guid id, [FromBody] ParcelModel model)
+        public IActionResult DeleteParcel(Guid id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 

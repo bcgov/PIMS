@@ -57,6 +57,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="sort"></param>
         /// <returns>Paged object with an array of parcels.</returns>
         [HttpGet]
+        [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Entity.Models.Paged<Model.Parts.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
@@ -79,6 +80,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="id">The unique 'id' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("{id:int}")]
+        [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
@@ -98,6 +100,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="id">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("pid/{id:int}")]
+        [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(204)]
@@ -118,6 +121,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="pid">The unique 'PID' for the parcel to return.</param>
         /// <returns>The parcel requested.</returns>
         [HttpGet("pid/{pid:pid}")]
+        [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(204)]
@@ -141,6 +145,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel added.</returns>
         [HttpPost]
+        [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 201)]
         [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
@@ -161,6 +166,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="models">An array of parcel models.</param>
         /// <returns>The parcels added.</returns>
         [HttpPost("many")]
+        [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
@@ -181,6 +187,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel updated.</returns>
         [HttpPut("{id}")]
+        [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
@@ -315,6 +322,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The parcel model.</param>
         /// <returns>The parcel who was deleted.</returns>
         [HttpDelete("{id}")]
+        [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]

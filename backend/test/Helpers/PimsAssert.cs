@@ -84,6 +84,30 @@ namespace Pims.Api.Test.Helpers
         }
 
         /// <summary>
+        /// Assert the specified 'controller' has the specified 'version'.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="version"></param>
+        public static void HasApiVersion(this Type controller, params string[] versions)
+        {
+            var attrs = controller.GetCustomAttributes<ApiVersionAttribute>();
+            Assert.NotEmpty(attrs);
+            Assert.Contains(attrs, a => versions.All(v => a.Versions.Any(av => av.ToString() == v)));
+        }
+
+        /// <summary>
+        /// Assert the specified 'controller' has the specified 'areaName'.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="areaName"></param>
+        public static void HasArea(this Type controller, string areaName)
+        {
+            var attr = controller.GetCustomAttribute<AreaAttribute>();
+            Assert.NotNull(attr);
+            Assert.Equal(attr.RouteValue, areaName);
+        }
+
+        /// <summary>
         /// Assert the specified 'endpoint' has the specified method 'template'.
         /// </summary>
         /// <param name="endpoint"></param>
