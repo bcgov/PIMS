@@ -18,10 +18,22 @@ namespace Pims.Api.Areas.Keycloak.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - A unique username to identify the user.
+        /// </summary>
+        /// <value></value>
+        public string Username { get; set; }
+
+        /// <summary>
         /// get/set - The user's display name.
         /// </summary>
         /// <value></value>
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// get/set - The user's position title.
+        /// </summary>
+        /// <value></value>
+        public string Position { get; set; }
 
         /// <summary>
         /// get/set - The user's given name.
@@ -54,6 +66,18 @@ namespace Pims.Api.Areas.Keycloak.Models
         public bool IsDisabled { get; set; }
 
         /// <summary>
+        /// get/set - Whether the email has been verified.
+        /// </summary>
+        /// <value></value>
+        public bool EmailVerified { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the user.
+        /// </summary>
+        /// <value></value>
+        public string Note { get; set; }
+
+        /// <summary>
         /// get/set - An array of agencies the user belongs to.
         /// </summary>
         /// <returns></returns>
@@ -76,6 +100,8 @@ namespace Pims.Api.Areas.Keycloak.Models
         {
             return other != null &&
                    Id.Equals(other.Id) &&
+                   Username == other.Username &&
+                   Position == other.Position &&
                    DisplayName == other.DisplayName &&
                    FirstName == other.FirstName &&
                    MiddleName == other.MiddleName &&
@@ -85,7 +111,7 @@ namespace Pims.Api.Areas.Keycloak.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, DisplayName, FirstName, MiddleName, LastName, Email);
+            return HashCode.Combine(Id, Username, Position, DisplayName, FirstName, MiddleName, LastName, Email);
         }
         #endregion
     }

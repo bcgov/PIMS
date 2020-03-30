@@ -24,6 +24,12 @@ namespace Pims.Dal.Entities.Models
         public int Quantity { get; set; } = 10;
 
         /// <summary>
+        /// get/set - The username.
+        /// </summary>
+        /// <value></value>
+        public string Username { get; set; }
+
+        /// <summary>
         /// get/set - The user display name.
         /// </summary>
         /// <value></value>
@@ -83,15 +89,17 @@ namespace Pims.Dal.Entities.Models
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <param name="agencyId"></param>
+        /// <param name="username"></param>
         /// <param name="displayName"></param>
         /// <param name="lastName"></param>
         /// <param name="firstName"></param>
         /// <param name="email"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public UserFilter(int page, int quantity, int agencyId, string displayName, string lastName, string firstName, string email, string[] sort) : this(page, quantity)
+        public UserFilter(int page, int quantity, int agencyId, string username, string displayName, string lastName, string firstName, string email, string[] sort) : this(page, quantity)
         {
             this.Agencies = new[] { agencyId };
+            this.Username = username;
             this.DisplayName = displayName;
             this.LastName = lastName;
             this.FirstName = firstName;
@@ -110,6 +118,7 @@ namespace Pims.Dal.Entities.Models
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
             this.Page = filter.GetIntValue(nameof(this.Page), 1);
             this.Quantity = filter.GetIntValue(nameof(this.Quantity), 10);
+            this.Username = filter.GetStringValue(nameof(this.Username));
             this.DisplayName = filter.GetStringValue(nameof(this.DisplayName));
             this.LastName = filter.GetStringValue(nameof(this.LastName));
             this.FirstName = filter.GetStringValue(nameof(this.FirstName));

@@ -11,6 +11,10 @@ namespace Pims.Api.Models
 
         public bool IsDisabled { get; set; }
 
+        public string Username { get; set; }
+
+        public string Position { get; set; }
+
         public string DisplayName { get; set; }
 
         public string FirstName { get; set; }
@@ -20,6 +24,8 @@ namespace Pims.Api.Models
         public string LastName { get; set; }
 
         public string Email { get; set; }
+
+        public string Note { get; set; }
 
         public IEnumerable<AgencyModel> Agencies { get; set; }
 
@@ -37,16 +43,30 @@ namespace Pims.Api.Models
             return other != null &&
                    Id.Equals(other.Id) &&
                    IsDisabled == other.IsDisabled &&
+                   Username == other.Username &&
                    DisplayName == other.DisplayName &&
                    FirstName == other.FirstName &&
                    MiddleName == other.MiddleName &&
                    LastName == other.LastName &&
+                   Position == other.Position &&
+                   Note == other.Note &&
                    Email == other.Email;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, IsDisabled, DisplayName, FirstName, MiddleName, LastName, Email);
+            var hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(IsDisabled);
+            hash.Add(Username);
+            hash.Add(DisplayName);
+            hash.Add(FirstName);
+            hash.Add(MiddleName);
+            hash.Add(LastName);
+            hash.Add(Email);
+            hash.Add(Position);
+            hash.Add(Note);
+            return hash.ToHashCode();
         }
 
         #endregion

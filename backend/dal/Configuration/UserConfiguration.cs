@@ -18,6 +18,9 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Id).IsRequired();
             builder.Property(m => m.Id).ValueGeneratedNever();
 
+            builder.Property(m => m.Username).IsRequired();
+            builder.Property(m => m.Username).HasMaxLength(25);
+
             builder.Property(m => m.DisplayName).IsRequired();
             builder.Property(m => m.DisplayName).HasMaxLength(100);
 
@@ -32,7 +35,14 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Email).IsRequired();
             builder.Property(m => m.Email).HasMaxLength(100);
 
+            builder.Property(m => m.Position).HasMaxLength(100);
+            builder.Property(m => m.Note).HasMaxLength(1000);
+
+            builder.Property(m => m.EmailVerified).HasDefaultValue(false);
+            builder.Property(m => m.IsDisabled).HasDefaultValue(false);
+
             builder.HasIndex(m => new { m.Email }).IsUnique();
+            builder.HasIndex(m => new { m.Username }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.LastName, m.FirstName });
 
             base.Configure(builder);

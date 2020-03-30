@@ -14,7 +14,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
     {
         public IEnumerable<Model.AgencyModel> Resolve(Entity.User source, Model.UserModel destination, IEnumerable<Model.AgencyModel> destMember, ResolutionContext context)
         {
-            return source.Agencies.Select(a => new Model.AgencyModel()
+            return source.Agencies?.Select(a => new Model.AgencyModel()
             {
                 Id = a.AgencyId,
                 Name = a.Agency?.Name,
@@ -24,7 +24,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Resolvers
                 CreatedOn = a.Agency?.CreatedOn ?? new DateTime(),
                 UpdatedOn = a.Agency?.UpdatedOn,
                 RowVersion = a.Agency == null ? null : Convert.ToBase64String(a.Agency.RowVersion)
-            });
+            }) ?? new Model.AgencyModel[0];
         }
     }
 }
