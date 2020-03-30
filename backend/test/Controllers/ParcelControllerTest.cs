@@ -49,28 +49,6 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualParcel);
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
-
-        [Fact]
-        public void DeleteParcel_NotAuthorized()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()));
-            service.Setup(m => m.Principal).Returns((ClaimsPrincipal)null);
-            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>())).Throws<NotAuthorizedException>();
-            var controller_context = helper.GetService<ControllerContext>();
-
-            // Act
-            // Assert
-            Assert.Throws<NotAuthorizedException>(() =>
-                controller.DeleteParcel(Guid.NewGuid(), mapper.Map<Model.ParcelModel>(parcel)));
-            service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
-        }
         #endregion
 
         #region GetParcels

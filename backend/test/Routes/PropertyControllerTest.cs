@@ -43,6 +43,7 @@ namespace Pims.Api.Test.Routes
 
             // Act
             // Assert
+            Assert.NotNull(endpoint);
             endpoint.HasGet();
             endpoint.HasPermissions(Permissions.PropertyView);
         }
@@ -55,6 +56,7 @@ namespace Pims.Api.Test.Routes
 
             // Act
             // Assert
+            Assert.NotNull(endpoint);
             endpoint.HasPost("filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
