@@ -51,6 +51,21 @@ namespace Pims.Api.Test.Routes.Admin
             endpoint.HasPermissions(Permissions.PropertyAdd);
         }
         #endregion
+
+        #region UpdateParcel
+        [Fact]
+        public void UpdateParcel_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.UpdateParcel), typeof(int), typeof(Model.ParcelModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("{id}");
+            endpoint.HasPermissions(Permissions.PropertyEdit);
+        }
+        #endregion
         #endregion
     }
 }

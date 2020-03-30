@@ -41,9 +41,10 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.Classification, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
-                .ForMember(dest => dest.IsSensitive, opt => opt.Ignore())
-                .ForMember(dest => dest.Buildings, opt => opt.MapFrom(src => src.Buildings))
-                .ForMember(dest => dest.Evaluations, opt => opt.MapFrom(src => src.Evaluations))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+                .ForMember(dest => dest.IsSensitive, opt => opt.MapFrom(src => src.IsSensitive))
+                .ForMember(dest => dest.Buildings, opt => opt.Ignore())
+                .ForMember(dest => dest.Evaluations, opt => opt.Ignore())
                 .IncludeBase<BaseModel, Entity.BaseEntity>();
         }
         #endregion

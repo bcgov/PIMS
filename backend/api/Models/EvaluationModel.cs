@@ -12,6 +12,8 @@ namespace Pims.Api.Models
 
         public float EstimatedValue { get; set; }
 
+        public float AppraisedValue { get; set; }
+
         public float AssessedValue { get; set; }
 
         public float NetBookValue { get; set; }
@@ -28,6 +30,7 @@ namespace Pims.Api.Models
                 PropertyId == other.PropertyId &&
                 FiscalYear == other.FiscalYear &&
                 EstimatedValue == other.EstimatedValue &&
+                AppraisedValue == other.AppraisedValue &&
                 AssessedValue == other.AssessedValue &&
                 NetBookValue == other.NetBookValue;
         }
@@ -39,6 +42,7 @@ namespace Pims.Api.Models
             hash.Add(PropertyId);
             hash.Add(FiscalYear);
             hash.Add(EstimatedValue);
+            hash.Add(AppraisedValue);
             hash.Add(AssessedValue);
             hash.Add(NetBookValue);
             return hash.ToHashCode();

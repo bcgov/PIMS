@@ -36,10 +36,13 @@ namespace Pims.Api.Helpers.Profiles
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.Ignore())
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+                .ForMember(dest => dest.ParcelId, opt => opt.MapFrom(src => src.ParcelId))
                 .ForMember(dest => dest.Parcel, opt => opt.Ignore())
+                .ForMember(dest => dest.AgencyId, opt => opt.MapFrom(src => src.AgencyId))
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
-                .ForMember(dest => dest.IsSensitive, opt => opt.Ignore())
-                .ForMember(dest => dest.Evaluations, opt => opt.MapFrom(src => src.Evaluations))
+                .ForMember(dest => dest.IsSensitive, opt => opt.MapFrom(src => src.IsSensitive))
+                .ForMember(dest => dest.Evaluations, opt => opt.Ignore())
                 .IncludeBase<BaseModel, Entity.BaseEntity>();
 
             CreateMap<Entity.Building, BuildingModel>()

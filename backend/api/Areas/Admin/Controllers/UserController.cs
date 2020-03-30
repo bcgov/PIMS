@@ -140,7 +140,7 @@ namespace Pims.Api.Areas.Admin.Controllers
 
             var user = _mapper.Map<Model.UserModel>(addedEntity);
 
-            return new CreatedAtActionResult(nameof(GetUser), nameof(UserController), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
         /// <summary>
