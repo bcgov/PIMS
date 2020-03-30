@@ -63,26 +63,22 @@ namespace Pims.Dal.Services
             var entity = this.Context.Users.Find(id);
             if (entity != null) return entity;
 
+            var username = this.User.GetFirstName() ?? _options.ServiceAccount?.Username ??
+                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
             var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
                 throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
             var surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
                 throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
-            var displayName = this.User.GetDisplayName() ?? $"{surname}, {givenName}";
             var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
                 throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
 
-            this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, display:{displayName}, first:{givenName}, surname:{surname}");
+            this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
 
-            entity = new User(id, displayName, email)
-            {
-                FirstName = givenName,
-                LastName = surname
-            };
-
+            entity = new User(id, username, email, givenName, surname);
             this.Context.Users.Add(entity);
             this.Context.CommitTransaction();
 
-            this.Logger.LogInformation($"User Activated: '{id}' - '{displayName}'.");
+            this.Logger.LogInformation($"User Activated: '{id}' - '{username}'.");
             return entity;
         }
 

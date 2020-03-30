@@ -4,7 +4,7 @@ using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class initial : SeedMigration
+    public partial class Initial : SeedMigration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,860 +12,864 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        DisplayName = table.Column<string>(maxLength: 100, nullable: false),
-                        FirstName = table.Column<string>(maxLength: 100, nullable: false),
-                        MiddleName = table.Column<string>(maxLength: 100, nullable: true),
-                        LastName = table.Column<string>(maxLength: 100, nullable: false),
-                        Email = table.Column<string>(maxLength: 100, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Username = table.Column<string>(maxLength: 25, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(maxLength: 100, nullable: false),
+                    MiddleName = table.Column<string>(maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(maxLength: 100, nullable: false),
+                    Email = table.Column<string>(maxLength: 100, nullable: false),
+                    Position = table.Column<string>(maxLength: 100, nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    EmailVerified = table.Column<bool>(nullable: false, defaultValue: false),
+                    Note = table.Column<string>(maxLength: 1000, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Users_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AccessRequests",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        IsDisabled = table.Column<bool>(nullable: false),
-                        IsGranted = table.Column<bool>(nullable: true),
-                        UserId = table.Column<Guid>(nullable: true)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false),
+                    IsGranted = table.Column<bool>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_AccessRequests", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AccessRequests_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequests_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequests_Users_UserId",
-                        column : x => x.UserId,
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Agencies",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
-                        Code = table.Column<string>(maxLength: 6, nullable: false),
-                        Description = table.Column<string>(maxLength: 500, nullable: true),
-                        ParentId = table.Column<int>(nullable: true)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    Code = table.Column<string>(maxLength: 6, nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    ParentId = table.Column<int>(nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Agencies", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Agencies_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Agencies_Agencies_ParentId",
-                        column : x => x.ParentId,
+                        column: x => x.ParentId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Agencies_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BuildingConstructionTypes",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_BuildingConstructionTypes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BuildingConstructionTypes_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingConstructionTypes_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BuildingPredominateUses",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_BuildingPredominateUses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BuildingPredominateUses_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingPredominateUses_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Cities",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
-                        Code = table.Column<string>(maxLength: 4, nullable: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    Code = table.Column<string>(maxLength: 4, nullable: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Cities_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Cities_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Claims",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 100, nullable: false),
-                        Description = table.Column<string>(maxLength: 500, nullable: true),
-                        IsDisabled = table.Column<bool>(nullable: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Claims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Claims_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Claims_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PropertyClassifications",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_PropertyClassifications", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PropertyClassifications_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PropertyClassifications_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PropertyStatus",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_PropertyStatus", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PropertyStatus_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PropertyStatus_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PropertyTypes",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                        SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_PropertyTypes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PropertyTypes_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PropertyTypes_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Provinces",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 2, nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 150, nullable: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Provinces", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Provinces_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Provinces_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Name = table.Column<string>(maxLength: 100, nullable: false),
-                        IsDisabled = table.Column<bool>(nullable: false),
-                        SortOrder = table.Column<int>(nullable: false),
-                        Description = table.Column<string>(maxLength: 500, nullable: true)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false),
+                    SortOrder = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Roles_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Roles_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AccessRequestAgencies",
-                columns : table => new
+                columns: table => new
                 {
                     AccessRequestId = table.Column<Guid>(nullable: false),
-                        AgencyId = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    AgencyId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_AccessRequestAgencies", x => new { x.AccessRequestId, x.AgencyId });
                     table.ForeignKey(
                         name: "FK_AccessRequestAgencies_AccessRequests_AccessRequestId",
-                        column : x => x.AccessRequestId,
+                        column: x => x.AccessRequestId,
                         principalTable: "AccessRequests",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequestAgencies_Agencies_AgencyId",
-                        column : x => x.AgencyId,
+                        column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccessRequestAgencies_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequestAgencies_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserAgencies",
-                columns : table => new
+                columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                        AgencyId = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    AgencyId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAgencies", x => new { x.UserId, x.AgencyId });
                     table.ForeignKey(
                         name: "FK_UserAgencies_Agencies_AgencyId",
-                        column : x => x.AgencyId,
+                        column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserAgencies_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserAgencies_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserAgencies_Users_UserId",
-                        column : x => x.UserId,
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Addresses",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        Address1 = table.Column<string>(maxLength: 150, nullable: true),
-                        Address2 = table.Column<string>(maxLength: 150, nullable: true),
-                        CityId = table.Column<int>(nullable: false),
-                        ProvinceId = table.Column<string>(maxLength: 2, nullable: false),
-                        Postal = table.Column<string>(maxLength: 6, nullable: true)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Address1 = table.Column<string>(maxLength: 150, nullable: true),
+                    Address2 = table.Column<string>(maxLength: 150, nullable: true),
+                    CityId = table.Column<int>(nullable: false),
+                    ProvinceId = table.Column<string>(maxLength: 2, nullable: false),
+                    Postal = table.Column<string>(maxLength: 6, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Addresses_Cities_CityId",
-                        column : x => x.CityId,
+                        column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Addresses_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Addresses_Provinces_ProvinceId",
-                        column : x => x.ProvinceId,
+                        column: x => x.ProvinceId,
                         principalTable: "Provinces",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Addresses_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AccessRequestRoles",
-                columns : table => new
+                columns: table => new
                 {
                     AccessRequestId = table.Column<Guid>(nullable: false),
-                        RoleId = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_AccessRequestRoles", x => new { x.AccessRequestId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AccessRequestRoles_AccessRequests_AccessRequestId",
-                        column : x => x.AccessRequestId,
+                        column: x => x.AccessRequestId,
                         principalTable: "AccessRequests",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequestRoles_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccessRequestRoles_Roles_RoleId",
-                        column : x => x.RoleId,
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccessRequestRoles_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RoleClaims",
-                columns : table => new
+                columns: table => new
                 {
                     RoleId = table.Column<Guid>(nullable: false),
-                        ClaimId = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    ClaimId = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_RoleClaims", x => new { x.RoleId, x.ClaimId });
                     table.ForeignKey(
                         name: "FK_RoleClaims_Claims_ClaimId",
-                        column : x => x.ClaimId,
+                        column: x => x.ClaimId,
                         principalTable: "Claims",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoleClaims_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoleClaims_Roles_RoleId",
-                        column : x => x.RoleId,
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoleClaims_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserRoles",
-                columns : table => new
+                columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                        RoleId = table.Column<Guid>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_UserRoles_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserRoles_Roles_RoleId",
-                        column : x => x.RoleId,
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserRoles_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserRoles_Users_UserId",
-                        column : x => x.UserId,
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Parcels",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        PID = table.Column<int>(nullable: false),
-                        PIN = table.Column<int>(nullable: true),
-                        StatusId = table.Column<int>(nullable: false),
-                        ClassificationId = table.Column<int>(nullable: false),
-                        AgencyId = table.Column<int>(nullable: false),
-                        Description = table.Column<string>(maxLength: 2000, nullable: true),
-                        AddressId = table.Column<int>(nullable: false),
-                        Latitude = table.Column<double>(nullable: false),
-                        Longitude = table.Column<double>(nullable: false),
-                        LandArea = table.Column<float>(nullable: false),
-                        LandLegalDescription = table.Column<string>(maxLength: 500, nullable: true),
-                        IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    PID = table.Column<int>(nullable: false),
+                    PIN = table.Column<int>(nullable: true),
+                    StatusId = table.Column<int>(nullable: false),
+                    ClassificationId = table.Column<int>(nullable: false),
+                    AgencyId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 2000, nullable: true),
+                    AddressId = table.Column<int>(nullable: false),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
+                    LandArea = table.Column<float>(nullable: false),
+                    LandLegalDescription = table.Column<string>(maxLength: 500, nullable: true),
+                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Parcels", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Parcels_Addresses_AddressId",
-                        column : x => x.AddressId,
+                        column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Parcels_Agencies_AgencyId",
-                        column : x => x.AgencyId,
+                        column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Parcels_PropertyClassifications_ClassificationId",
-                        column : x => x.ClassificationId,
+                        column: x => x.ClassificationId,
                         principalTable: "PropertyClassifications",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Parcels_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Parcels_PropertyStatus_StatusId",
-                        column : x => x.StatusId,
+                        column: x => x.StatusId,
                         principalTable: "PropertyStatus",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Parcels_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Buildings",
-                columns : table => new
+                columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        ParcelId = table.Column<int>(nullable: false),
-                        LocalId = table.Column<string>(maxLength: 50, nullable: true),
-                        Description = table.Column<string>(maxLength: 2000, nullable: true),
-                        AddressId = table.Column<int>(nullable: false),
-                        Latitude = table.Column<double>(nullable: false),
-                        Longitude = table.Column<double>(nullable: false),
-                        BuildingConstructionTypeId = table.Column<int>(nullable: false),
-                        BuildingFloorCount = table.Column<int>(nullable: false),
-                        BuildingPredominateUseId = table.Column<int>(nullable: false),
-                        BuildingTenancy = table.Column<string>(maxLength: 100, nullable: false),
-                        RentableArea = table.Column<float>(nullable: false),
-                        AgencyId = table.Column<int>(nullable: false),
-                        IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    ParcelId = table.Column<int>(nullable: false),
+                    LocalId = table.Column<string>(maxLength: 50, nullable: true),
+                    Description = table.Column<string>(maxLength: 2000, nullable: true),
+                    AddressId = table.Column<int>(nullable: false),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
+                    BuildingConstructionTypeId = table.Column<int>(nullable: false),
+                    BuildingFloorCount = table.Column<int>(nullable: false),
+                    BuildingPredominateUseId = table.Column<int>(nullable: false),
+                    BuildingTenancy = table.Column<string>(maxLength: 100, nullable: false),
+                    RentableArea = table.Column<float>(nullable: false),
+                    AgencyId = table.Column<int>(nullable: false),
+                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_Buildings", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Buildings_Addresses_AddressId",
-                        column : x => x.AddressId,
+                        column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_Agencies_AgencyId",
-                        column : x => x.AgencyId,
+                        column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_BuildingConstructionTypes_BuildingConstructionTypeId",
-                        column : x => x.BuildingConstructionTypeId,
+                        column: x => x.BuildingConstructionTypeId,
                         principalTable: "BuildingConstructionTypes",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_BuildingPredominateUses_BuildingPredominateUseId",
-                        column : x => x.BuildingPredominateUseId,
+                        column: x => x.BuildingPredominateUseId,
                         principalTable: "BuildingPredominateUses",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_Parcels_ParcelId",
-                        column : x => x.ParcelId,
+                        column: x => x.ParcelId,
                         principalTable: "Parcels",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Buildings_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ParcelEvaluations",
-                columns : table => new
+                columns: table => new
                 {
                     FiscalYear = table.Column<int>(nullable: false),
-                        ParcelId = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        EstimatedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        AppraisedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        AssessedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        NetBookValue = table.Column<decimal>(type: "MONEY", nullable : false)
+                    ParcelId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    EstimatedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    AppraisedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    AssessedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    NetBookValue = table.Column<decimal>(type: "MONEY", nullable: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_ParcelEvaluations", x => new { x.FiscalYear, x.ParcelId });
                     table.ForeignKey(
                         name: "FK_ParcelEvaluations_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ParcelEvaluations_Parcels_ParcelId",
-                        column : x => x.ParcelId,
+                        column: x => x.ParcelId,
                         principalTable: "Parcels",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ParcelEvaluations_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BuildingEvaluations",
-                columns : table => new
+                columns: table => new
                 {
                     FiscalYear = table.Column<int>(nullable: false),
-                        BuildingId = table.Column<int>(nullable: false),
-                        CreatedById = table.Column<Guid>(nullable: true),
-                        CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : false, defaultValueSql: "GETUTCDATE()"),
-                        UpdatedById = table.Column<Guid>(nullable: true),
-                        UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable : true),
-                        RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                        EstimatedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        AppraisedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        AssessedValue = table.Column<decimal>(type: "MONEY", nullable : false),
-                        NetBookValue = table.Column<decimal>(type: "MONEY", nullable : false)
+                    BuildingId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    EstimatedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    AppraisedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    AssessedValue = table.Column<decimal>(type: "MONEY", nullable: false),
+                    NetBookValue = table.Column<decimal>(type: "MONEY", nullable: false)
                 },
-                constraints : table =>
+                constraints: table =>
                 {
                     table.PrimaryKey("PK_BuildingEvaluations", x => new { x.FiscalYear, x.BuildingId });
                     table.ForeignKey(
                         name: "FK_BuildingEvaluations_Buildings_BuildingId",
-                        column : x => x.BuildingId,
+                        column: x => x.BuildingId,
                         principalTable: "Buildings",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingEvaluations_Users_CreatedById",
-                        column : x => x.CreatedById,
+                        column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingEvaluations_Users_UpdatedById",
-                        column : x => x.UpdatedById,
+                        column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete : ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -916,7 +920,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AccessRequests_IsDisabled_IsGranted",
                 table: "AccessRequests",
-                columns : new [] { "IsDisabled", "IsGranted" });
+                columns: new[] { "IsDisabled", "IsGranted" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CityId",
@@ -941,7 +945,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_Postal_Address1",
                 table: "Addresses",
-                columns : new [] { "Postal", "Address1" });
+                columns: new[] { "Postal", "Address1" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Agencies_CreatedById",
@@ -961,14 +965,14 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Agencies_Code_ParentId",
                 table: "Agencies",
-                columns : new [] { "Code", "ParentId" },
-                unique : true,
+                columns: new[] { "Code", "ParentId" },
+                unique: true,
                 filter: "[ParentId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Agencies_IsDisabled_Code_Name_ParentId_SortOrder",
                 table: "Agencies",
-                columns : new [] { "IsDisabled", "Code", "Name", "ParentId", "SortOrder" });
+                columns: new[] { "IsDisabled", "Code", "Name", "ParentId", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingConstructionTypes_CreatedById",
@@ -979,7 +983,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_BuildingConstructionTypes_Name",
                 table: "BuildingConstructionTypes",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingConstructionTypes_UpdatedById",
@@ -989,7 +993,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingConstructionTypes_IsDisabled_Name_SortOrder",
                 table: "BuildingConstructionTypes",
-                columns : new [] { "IsDisabled", "Name", "SortOrder" });
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingEvaluations_BuildingId",
@@ -1009,7 +1013,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingEvaluations_AssessedValue_EstimatedValue_NetBookValue",
                 table: "BuildingEvaluations",
-                columns : new [] { "AssessedValue", "EstimatedValue", "NetBookValue" });
+                columns: new[] { "AssessedValue", "EstimatedValue", "NetBookValue" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingPredominateUses_CreatedById",
@@ -1020,7 +1024,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_BuildingPredominateUses_Name",
                 table: "BuildingPredominateUses",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingPredominateUses_UpdatedById",
@@ -1030,7 +1034,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingPredominateUses_IsDisabled_Name_SortOrder",
                 table: "BuildingPredominateUses",
-                columns : new [] { "IsDisabled", "Name", "SortOrder" });
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Buildings_AddressId",
@@ -1070,13 +1074,13 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_BuildingConstructionTypeId_BuildingPredominateUseId_BuildingFloorC~",
                 table: "Buildings",
-                columns : new [] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingFloorCount", "BuildingTenancy" });
+                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingFloorCount", "BuildingTenancy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",
                 table: "Cities",
                 column: "Code",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CreatedById",
@@ -1091,7 +1095,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_IsDisabled_Name_SortOrder",
                 table: "Cities",
-                columns : new [] { "IsDisabled", "Name", "SortOrder" });
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Claims_CreatedById",
@@ -1102,7 +1106,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Claims_Name",
                 table: "Claims",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Claims_UpdatedById",
@@ -1112,7 +1116,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Claims_IsDisabled_Name",
                 table: "Claims",
-                columns : new [] { "IsDisabled", "Name" });
+                columns: new[] { "IsDisabled", "Name" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParcelEvaluations_CreatedById",
@@ -1132,7 +1136,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ParcelEvaluations_AssessedValue_EstimatedValue_NetBookValue",
                 table: "ParcelEvaluations",
-                columns : new [] { "AssessedValue", "EstimatedValue", "NetBookValue" });
+                columns: new[] { "AssessedValue", "EstimatedValue", "NetBookValue" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_AddressId",
@@ -1167,14 +1171,14 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_PID_PIN",
                 table: "Parcels",
-                columns : new [] { "PID", "PIN" },
-                unique : true,
+                columns: new[] { "PID", "PIN" },
+                unique: true,
                 filter: "[PIN] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_LandArea",
                 table: "Parcels",
-                columns : new [] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea" });
+                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_CreatedById",
@@ -1185,7 +1189,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_PropertyClassifications_Name",
                 table: "PropertyClassifications",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_UpdatedById",
@@ -1195,7 +1199,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_IsDisabled_Name",
                 table: "PropertyClassifications",
-                columns : new [] { "IsDisabled", "Name" });
+                columns: new[] { "IsDisabled", "Name" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyStatus_CreatedById",
@@ -1206,7 +1210,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_PropertyStatus_Name",
                 table: "PropertyStatus",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyStatus_UpdatedById",
@@ -1216,7 +1220,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyStatus_IsDisabled_Name_SortOrder",
                 table: "PropertyStatus",
-                columns : new [] { "IsDisabled", "Name", "SortOrder" });
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyTypes_CreatedById",
@@ -1227,7 +1231,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_PropertyTypes_Name",
                 table: "PropertyTypes",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyTypes_UpdatedById",
@@ -1237,7 +1241,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyTypes_IsDisabled_Name_SortOrder",
                 table: "PropertyTypes",
-                columns : new [] { "IsDisabled", "Name", "SortOrder" });
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Provinces_CreatedById",
@@ -1248,7 +1252,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Provinces_Name",
                 table: "Provinces",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Provinces_UpdatedById",
@@ -1279,7 +1283,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Roles_Name",
                 table: "Roles",
                 column: "Name",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_UpdatedById",
@@ -1289,7 +1293,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_IsDisabled_Name",
                 table: "Roles",
-                columns : new [] { "IsDisabled", "Name" });
+                columns: new[] { "IsDisabled", "Name" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAgencies_AgencyId",
@@ -1330,7 +1334,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
-                unique : true);
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UpdatedById",
@@ -1338,9 +1342,15 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
+                table: "Users",
+                column: "Username",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_IsDisabled_LastName_FirstName",
                 table: "Users",
-                columns : new [] { "IsDisabled", "LastName", "FirstName" });
+                columns: new[] { "IsDisabled", "LastName", "FirstName" });
 
             PostDeploy(migrationBuilder);
         }

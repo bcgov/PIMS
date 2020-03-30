@@ -33,7 +33,8 @@ namespace Pims.Dal.Services.Admin
         /// <param name="destination"></param>
         public void SetCurrentValues(ET source, ET destination)
         {
-            this.Context.Entry(source).CurrentValues.SetValues(destination);
+            this.Context.Entry(destination).CurrentValues.SetValues(source);
+            this.Context.Entry(destination).OriginalValues[nameof(destination.RowVersion)] = destination.RowVersion; // Need to do this to resolve the concurrency bug/feature in EF.
         }
 
         /// <summary>

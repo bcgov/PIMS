@@ -2,6 +2,7 @@ PRINT 'Adding Users'
 
 INSERT INTO dbo.[Users] (
     [Id]
+    , [Username]
     , [DisplayName]
     , [FirstName]
     , [LastName]
@@ -9,6 +10,7 @@ INSERT INTO dbo.[Users] (
     , [IsDisabled]
 ) VALUES (
     '00000000-0000-0000-0000-000000000000'
+    , 'system'
     , 'system'
     , 'system'
     , 'system'
