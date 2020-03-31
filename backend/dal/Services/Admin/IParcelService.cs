@@ -9,9 +9,7 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IParcelService : IBaseService<Parcel>
     {
-        Paged<Parcel> GetNoTracking(int page, int quantity, string sort);
-        Parcel GetNoTracking(int id);
-        Parcel GetByPidNoTracking(int pid);
+        Paged<Parcel> Get(int page, int quantity, string sort);
         Parcel Get(int id);
         Parcel GetByPid(int pid);
         IEnumerable<Parcel> Add(IEnumerable<Parcel> parcels);

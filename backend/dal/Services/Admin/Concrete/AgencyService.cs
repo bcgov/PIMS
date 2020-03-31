@@ -34,19 +34,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<Agency> GetAllNoTracking()
-        {
-            var query = this.Context.Agencies.AsNoTracking();
-            return query.OrderBy(p => p.Name).ToArray();
-        }
-
-        /// <summary>
-        /// Get all agencies from the datasource.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<Agency> GetAll()
         {
-            return this.Context.Agencies.OrderBy(p => p.Name).ToArray();
+            return this.Context.Agencies.AsNoTracking().OrderBy(p => p.Name).ToArray();
         }
 
         /// <summary>

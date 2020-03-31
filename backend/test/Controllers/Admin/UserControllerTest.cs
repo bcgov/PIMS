@@ -1,18 +1,21 @@
-using Xunit;
-using System;
-using Pims.Dal.Services.Admin;
-using Pims.Api.Test.Helpers;
-using Pims.Api.Areas.Admin.Controllers;
-using Moq;
-using Model = Pims.Api.Models;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
 using AutoMapper;
-using AdminModel = Pims.Api.Areas.Admin.Models;
+using Entity = Pims.Dal.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Model = Pims.Api.Areas.Admin.Models.User;
+using Moq;
+using Pims.Api.Areas.Admin.Controllers;
+using Pims.Api.Test.Helpers;
 using Pims.Dal.Security;
+using Pims.Dal.Services.Admin;
+using System;
+using Xunit;
 
 namespace PimsApi.Test.Admin.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("area", "admin")]
+    [Trait("group", "user")]
     public class UserControllerTest
     {
         #region Variables
@@ -84,15 +87,14 @@ namespace PimsApi.Test.Admin.Controllers
         public void GetAccessRequests_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var expectedAccessRequests = new Entity.AccessRequest[] { _expectedAccessRequest };
             var expectedPagedAccessRequests = new Entity.Models.Paged<Entity.AccessRequest>(expectedAccessRequests);
-            service.Setup(m => m.User.GetAccessRequestsNoTracking(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
+            service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
 
             // Act
             var result = controller.GetAccessRequests(1, 10);
@@ -101,22 +103,21 @@ namespace PimsApi.Test.Admin.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
-            service.Verify(m => m.User.GetAccessRequestsNoTracking(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
+            service.Verify(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
         }
 
         [Fact]
         public void GetAccessRequests_PageMin_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var expectedAccessRequests = new Entity.AccessRequest[] { _expectedAccessRequest };
             var expectedPagedAccessRequests = new Entity.Models.Paged<Entity.AccessRequest>(expectedAccessRequests);
-            service.Setup(m => m.User.GetAccessRequestsNoTracking(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
+            service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
 
             // Act
             var result = controller.GetAccessRequests(-1, -10);
@@ -125,22 +126,21 @@ namespace PimsApi.Test.Admin.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
-            service.Verify(m => m.User.GetAccessRequestsNoTracking(1, 1, null, null), Times.Once());
+            service.Verify(m => m.User.GetAccessRequests(1, 1, null, null), Times.Once());
         }
 
         [Fact]
         public void GetAccessRequests_PageMax_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var expectedAccessRequests = new Entity.AccessRequest[] { _expectedAccessRequest };
             var expectedPagedAccessRequests = new Entity.Models.Paged<Entity.AccessRequest>(expectedAccessRequests);
-            service.Setup(m => m.User.GetAccessRequestsNoTracking(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
+            service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(expectedPagedAccessRequests);
 
             // Act
             var result = controller.GetAccessRequests(2, 100);
@@ -149,7 +149,7 @@ namespace PimsApi.Test.Admin.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
-            service.Verify(m => m.User.GetAccessRequestsNoTracking(2, 20, null, null), Times.Once());
+            service.Verify(m => m.User.GetAccessRequests(2, 20, null, null), Times.Once());
         }
         #endregion
 
@@ -166,16 +166,16 @@ namespace PimsApi.Test.Admin.Controllers
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var expectedUsers = new Entity.User[] { _expectedUsers };
             var expectedPagedUsers = new Entity.Models.Paged<Entity.User>(expectedUsers);
-            service.Setup(m => m.User.GetNoTracking(It.IsAny<Entity.Models.UserFilter>())).Returns(expectedPagedUsers);
+            service.Setup(m => m.User.Get(It.IsAny<Entity.Models.UserFilter>())).Returns(expectedPagedUsers);
 
             // Act
             var result = controller.GetUsers();
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualAccessRequest = Assert.IsType<Entity.Models.Paged<AdminModel.UserModel>>(actionResult.Value);
-            Assert.Equal(mapper.Map<AdminModel.UserModel[]>(expectedUsers), actualAccessRequest.Items);
-            service.Verify(m => m.User.GetNoTracking(It.IsAny<Entity.Models.UserFilter>()), Times.Once());
+            var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.UserModel>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.UserModel[]>(expectedUsers), actualAccessRequest.Items);
+            service.Verify(m => m.User.Get(It.IsAny<Entity.Models.UserFilter>()), Times.Once());
         }
         #endregion
 

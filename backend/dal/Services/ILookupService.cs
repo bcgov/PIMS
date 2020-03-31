@@ -8,14 +8,14 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface ILookupService
     {
-        IEnumerable<Agency> GetAgenciesNoTracking();
-        IEnumerable<City> GetCitiesNoTracking();
-        IEnumerable<Province> GetProvincesNoTracking();
-        IEnumerable<PropertyStatus> GetPropertyStatusNoTracking();
-        IEnumerable<PropertyClassification> GetPropertyClassificationsNoTracking();
-        IEnumerable<PropertyType> GetPropertyTypesNoTracking();
-        IEnumerable<BuildingConstructionType> GetBuildingConstructionTypesNoTracking();
-        IEnumerable<BuildingPredominateUse> GetBuildingPredominateUsesNoTracking();
-        IEnumerable<Role> GetRolesNoTracking();
+        IEnumerable<Agency> GetAgencies();
+        IEnumerable<City> GetCities();
+        IEnumerable<Province> GetProvinces();
+        IEnumerable<PropertyStatus> GetPropertyStatus();
+        IEnumerable<PropertyClassification> GetPropertyClassifications();
+        IEnumerable<PropertyType> GetPropertyTypes();
+        IEnumerable<BuildingConstructionType> GetBuildingConstructionTypes();
+        IEnumerable<BuildingPredominateUse> GetBuildingPredominateUses();
+        IEnumerable<Role> GetRoles();
     }
 }

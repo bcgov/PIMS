@@ -9,8 +9,8 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IRoleService : IBaseService<Role>
     {
-        Paged<Role> GetNoTracking(int page, int quantity);
-        Role GetNoTracking(Guid id);
+        Paged<Role> Get(int page, int quantity);
+        Role Get(Guid id);
         Role GetByName(string name);
         int RemoveAll(Guid[] exclude);
     }

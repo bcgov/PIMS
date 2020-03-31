@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IBuildingConstructionTypeService : IBaseService<BuildingConstructionType>
     {
-        IEnumerable<BuildingConstructionType> GetAllNoTracking();
         IEnumerable<BuildingConstructionType> GetAll();
     }
 }

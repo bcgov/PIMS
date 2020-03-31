@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using Pims.Dal.Entities;
 
 namespace Pims.Dal.Services
 {

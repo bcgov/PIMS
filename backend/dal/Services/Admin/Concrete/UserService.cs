@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -38,9 +39,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public Paged<User> GetNoTracking(int page = 1, int quantity = 10)
+        public Paged<User> Get(int page = 1, int quantity = 10)
         {
-            return GetNoTracking(new UserFilter(page, quantity));
+            return Get(new UserFilter(page, quantity));
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Paged<User> GetNoTracking(UserFilter filter = null)
+        public Paged<User> Get(UserFilter filter = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
             var query = this.Context.Users
@@ -90,7 +91,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public User GetNoTracking(Guid id)
+        public User Get(Guid id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
@@ -104,24 +105,6 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// Get the user for the specified 'id'.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
-        public User Get(Guid id)
-        {
-            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
-
-            return this.Context.Users
-                .Include(u => u.Roles)
-                .ThenInclude(r => r.Role)
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
-        }
-
-        /// <summary>
         /// Updates the specified user in the datasource.
         /// </summary>
         /// <param name="entity"></param>
@@ -131,11 +114,27 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .Include(u => u.Roles)
+                .AsNoTracking()
+                .FirstOrDefault(u => u.Id == entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(user).CurrentValues.SetValues(entity); // TODO: Do not user CurrentValue.SetValues(...) unless you reset the Original RowVersion.
-            this.Context.Entry(user).OriginalValues[nameof(entity.RowVersion)] = user.RowVersion;
-            return base.Update(user);
+            this.Context.SetOriginalRowVersion(user);
+
+            var addRoles = entity.Roles.Except(user.Roles, new UserRoleRoleIdComparer());
+            addRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Added);
+            var removeRoles = user.Roles.Except(entity.Roles, new UserRoleRoleIdComparer());
+            removeRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Deleted);
+
+            var addAgencies = entity.Agencies.Except(user.Agencies, new UserAgencyAgencyIdComparer());
+            addAgencies.ForEach(a => this.Context.Entry(a).State = EntityState.Added);
+            var removeAgencies = user.Agencies.Except(entity.Agencies, new UserAgencyAgencyIdComparer());
+            removeAgencies.ForEach(a => this.Context.Entry(a).State = EntityState.Deleted);
+
+            base.Update(entity);
+            this.Context.Detach(entity);
+            return entity;
         }
 
         /// <summary>
@@ -147,10 +146,17 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var user = this.Context.Users.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .Include(u => u.Roles)
+                .AsNoTracking()
+                .FirstOrDefault(u => u.Id == entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(user).CurrentValues.SetValues(entity);
-            this.Context.Entry(user).OriginalValues[nameof(entity.RowVersion)] = user.RowVersion;
+            this.Context.SetOriginalRowVersion(user);
+
+            user.Roles.Clear();
+            user.Agencies.Clear();
+
             base.Remove(user);
         }
 
@@ -160,7 +166,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         public AccessRequest UpdateAccessRequest(AccessRequest entity)
         {
-            var accessRequest = GetAccessRequestNoTracking(entity.Id);
+            var accessRequest = GetAccessRequest(entity.Id);
             entity.UpdatedById = this.User.GetUserId(); // TODO: No longer needed.
             entity.UpdatedOn = DateTime.UtcNow;
             this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
@@ -172,7 +178,7 @@ namespace Pims.Dal.Services.Admin
         /// Get the access request with matching id
         /// </summary>
         /// <param name="id"></param>
-        public AccessRequest GetAccessRequestNoTracking(Guid id)
+        public AccessRequest GetAccessRequest(Guid id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
@@ -194,7 +200,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <param name="isGranted"></param>
-        public Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
+        public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 

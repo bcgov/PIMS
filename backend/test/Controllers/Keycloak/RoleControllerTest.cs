@@ -3,7 +3,7 @@ using System;
 using Pims.Api.Test.Helpers;
 using Pims.Api.Areas.Keycloak.Controllers;
 using Moq;
-using Model = Pims.Api.Areas.Keycloak.Models;
+using Model = Pims.Api.Areas.Keycloak.Models.Role;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
@@ -13,6 +13,10 @@ using System.Collections.Generic;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("area", "keycloak")]
+    [Trait("group", "role")]
     public class RoleControllerTest
     {
         #region Variables

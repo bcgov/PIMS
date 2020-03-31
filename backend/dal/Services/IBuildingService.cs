@@ -9,9 +9,9 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IBuildingService
     {
-        IEnumerable<Building> GetNoTracking(double neLat, double neLong, double swLat, double swLong);
-        IEnumerable<Building> GetNoTracking(BuildingFilter filter);
-        Building GetNoTracking(int id);
+        IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong);
+        IEnumerable<Building> Get(BuildingFilter filter);
+        Building Get(int id);
         Building Add(Building parcel);
         Building Update(Building parcel);
         void Remove(Building parcel);

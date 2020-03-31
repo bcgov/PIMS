@@ -1,18 +1,19 @@
-using System;
-using System.Linq;
 using AutoMapper;
+using BModel = Pims.Api.Models;
+using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pims.Dal.Helpers.Extensions;
-using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Areas.Admin.Models.Parcel;
+using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Policies;
+using Pims.Core.Helpers;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using Pims.Core.Helpers;
-using System.Collections.Generic;
-using Pims.Api.Helpers.Exceptions;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -59,7 +60,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Entity.Models.Paged<Model.Parts.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Entity.Models.Paged<Model.PartialParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcels(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
         {
@@ -67,9 +68,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var result = _pimsAdminService.Parcel.GetNoTracking(page, quantity, sort);
-            var entities = _mapper.Map<Model.Parts.ParcelModel[]>(result.Items);
-            var paged = new Entity.Models.Paged<Model.Parts.ParcelModel>(entities, page, quantity, result.Total);
+            var result = _pimsAdminService.Parcel.Get(page, quantity, sort);
+            var entities = _mapper.Map<Model.PartialParcelModel[]>(result.Items);
+            var paged = new Entity.Models.Paged<Model.PartialParcelModel>(entities, page, quantity, result.Total);
 
             return new JsonResult(paged);
         }
@@ -83,11 +84,11 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcel(int id)
         {
-            var entity = _pimsAdminService.Parcel.GetNoTracking(id);
+            var entity = _pimsAdminService.Parcel.Get(id);
 
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
@@ -107,7 +108,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcelByPid(int id)
         {
-            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidNoTracking(id));
+            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(id));
             if (entity == null) return NoContent();
 
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
@@ -125,13 +126,13 @@ namespace Pims.Api.Areas.Admin.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcelByPid(string pid)
         {
             if (!int.TryParse(pid.Replace("-", ""), out int id)) throw new BadRequestException("PID is invalid");
 
-            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidNoTracking(id));
+            var entity = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(id));
             if (entity == null) return NoContent();
 
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
@@ -148,7 +149,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 201)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
@@ -157,7 +158,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             _pimsAdminService.Parcel.Add(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
-            return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
+            return CreatedAtAction(nameof(GetParcel), new { id = parcel.Id }, parcel);
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult AddParcels([FromBody] Model.ParcelModel[] models)
         {
@@ -182,6 +183,7 @@ namespace Pims.Api.Areas.Admin.Controllers
 
         /// <summary>
         /// PUT - Update the parcel in the datasource.
+        /// This function will not delete evaluations, only add or update.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model">The parcel model.</param>
@@ -190,17 +192,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
-
             var entity = _pimsAdminService.Parcel.Get(model.Id);
-
-            if (entity == null) return BadRequest("Item does not exist");
             var userId = this.User.GetUserId();
-            var address = entity.Address?.ToString();
-
             _mapper.Map(model, entity);
 
             foreach (var evaluation in model.Evaluations)
@@ -209,40 +206,25 @@ namespace Pims.Api.Areas.Admin.Controllers
                 var p_eval = entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
                 if (p_eval == null)
                 {
-                    entity.Evaluations.Add(new Entity.ParcelEvaluation(evaluation.FiscalYear, entity) // TODO: Move this logic to AutoMapper.
-                    {
-                        EstimatedValue = evaluation.EstimatedValue,
-                        AssessedValue = evaluation.AssessedValue,
-                        NetBookValue = evaluation.NetBookValue,
-                        CreatedById = userId
-                    });
+                    entity.Evaluations.Add(new Entity.ParcelEvaluation(evaluation.FiscalYear, entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                 }
                 else
                 {
-                    p_eval.EstimatedValue = evaluation.EstimatedValue;
-                    p_eval.AssessedValue = evaluation.AssessedValue;
-                    p_eval.NetBookValue = evaluation.NetBookValue;
-                    p_eval.UpdatedById = userId; // TODO: Move to DAL.
-                    p_eval.UpdatedOn = DateTime.UtcNow;
+                    _mapper.Map(evaluation, p_eval);
                 }
             }
 
             foreach (var building in model.Buildings)
             {
-                if (building.Id == 0)
+
+                var b_entity = entity.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                if (b_entity == null)
                 {
                     // Add a new building to the parcel.
-                    var b_entity = _mapper.Map<Entity.Building>(building);
-                    b_entity.CreatedById = userId;
+                    b_entity = _mapper.Map<Entity.Building>(building);
                     foreach (var evaluation in building.Evaluations)
                     {
-                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                        {
-                            EstimatedValue = evaluation.EstimatedValue,
-                            AssessedValue = evaluation.AssessedValue,
-                            NetBookValue = evaluation.NetBookValue,
-                            CreatedById = userId
-                        });
+                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                     }
 
                     entity.Buildings.Add(b_entity);
@@ -250,65 +232,24 @@ namespace Pims.Api.Areas.Admin.Controllers
                 else
                 {
                     // Update existing building on the parcel.
-                    var b_entity = entity.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                    _mapper.Map(building, b_entity);
 
-                    // We will ignore building Ids that don't match.
-                    if (b_entity != null)
+                    foreach (var evaluation in building.Evaluations)
                     {
-                        var b_address = b_entity.Address?.ToString();
-                        _mapper.Map(building, b_entity);
-                        b_entity.UpdatedById = userId;
-                        b_entity.UpdatedOn = DateTime.UtcNow;
-
-                        foreach (var evaluation in building.Evaluations)
+                        // Update evaluation.
+                        var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
+                        if (b_eval == null)
                         {
-                            // Update evaluation.
-                            var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
-
-                            if (b_eval == null)
-                            {
-                                b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity) // TODO: Move this logic to AutoMapper.
-                                {
-                                    EstimatedValue = evaluation.EstimatedValue,
-                                    AssessedValue = evaluation.AssessedValue,
-                                    NetBookValue = evaluation.NetBookValue,
-                                    CreatedById = userId
-                                });
-                            }
-                            else
-                            {
-                                b_eval.EstimatedValue = evaluation.EstimatedValue;
-                                b_eval.AssessedValue = evaluation.AssessedValue;
-                                b_eval.NetBookValue = evaluation.NetBookValue;
-                                b_eval.UpdatedById = userId; // TODO: Move to DAL.
-                                b_eval.UpdatedOn = DateTime.UtcNow;
-                            }
+                            b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
                         }
-
-                        _pimsAdminService.Building.UpdateOne(b_entity);
-
-                        // Check if the address was updated.
-                        if (b_address != b_entity.Address.ToString())
+                        else
                         {
-                            b_entity.Address.UpdatedById = userId;
-                            b_entity.Address.UpdatedOn = DateTime.UtcNow;
-                            _pimsAdminService.Address.UpdateOne(b_entity.Address);
+                            _mapper.Map(evaluation, b_eval);
                         }
-                    }
-                    else
-                    {
-                        _logger.LogDebug($"Invalid - Attempting to update parcel with invalid building - PID:{entity.PID}, BuildingId:{building.Id}");
                     }
                 }
             }
 
-            // Check if the address was updated.
-            if (address != entity.Address.ToString())
-            {
-                entity.Address.UpdatedById = userId;
-                entity.Address.UpdatedOn = DateTime.UtcNow;
-                _pimsAdminService.Address.UpdateOne(entity.Address);
-            }
             _pimsAdminService.Parcel.Update(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
@@ -325,9 +266,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
-        public IActionResult DeleteParcel(Guid id, [FromBody] Model.ParcelModel model)
+        public IActionResult DeleteParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var parcel = _mapper.Map<Entity.Parcel>(model);
             _pimsAdminService.Parcel.Remove(parcel);

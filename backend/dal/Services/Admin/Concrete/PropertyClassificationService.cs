@@ -36,19 +36,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyClassification> GetAllNoTracking()
-        {
-            var query = this.Context.PropertyClassifications.AsNoTracking();
-            return query.OrderBy(p => p.Name).ToArray();
-        }
-
-        /// <summary>
-        /// Get all property classifications from the datasource.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<PropertyClassification> GetAll()
         {
-            return this.Context.PropertyClassifications.OrderBy(p => p.Name).ToArray();
+            return this.Context.PropertyClassifications.AsNoTracking().OrderBy(p => p.Name).ToArray();
         }
 
         /// <summary>

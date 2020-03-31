@@ -110,6 +110,10 @@ namespace Pims.Dal
             base.OnModelCreating(modelBuilder);
         }
 
+        /// <summary>
+        /// Save the entities with who created them or updated them.
+        /// </summary>
+        /// <returns></returns>
         public override int SaveChanges()
         {
             // get entries that are being Added or Updated
@@ -128,7 +132,7 @@ namespace Pims.Dal
                         entity.CreatedOn = DateTime.UtcNow;
                     }
                     else if (entry.State != EntityState.Deleted)
-                    { 
+                    {
                         entity.UpdatedById = userId;
                         entity.UpdatedOn = DateTime.UtcNow;
                     }
@@ -145,7 +149,7 @@ namespace Pims.Dal
         public int CommitTransaction()
         {
             var result = 0;
-            using(var transaction = this.Database.BeginTransaction())
+            using (var transaction = this.Database.BeginTransaction())
             {
                 try
                 {

@@ -31,5 +31,33 @@ namespace Pims.Core.Extensions
         {
             return e.SelectMany(c => f(c).Flatten(f)).Concat(e);
         }
+
+        /// <summary>
+        /// Quick way to skip and take one.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="skip"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Next<T>(this IEnumerable<T> items, int skip)
+        {
+            if (skip < 0) throw new ArgumentException("Argument must be greater than or equal to zero.", nameof(skip));
+            return items.Skip(skip).First();
+        }
+
+        /// <summary>
+        /// Quick way to skip and take the specified quantity.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> Next<T>(this IEnumerable<T> items, int skip, int take)
+        {
+            if (skip < 0) throw new ArgumentException("Argument must be greater than or equal to zero.", nameof(skip));
+            if (take < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(take));
+            return items.Skip(skip).Take(take);
+        }
     }
 }

@@ -9,13 +9,43 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Api.Test", "test\Pims.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal", "dal\Pims.Dal.csproj", "{6DFFF5E1-1B87-403B-99D0-A9E03D8A8EB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Dal.Entities", "entities\Pims.Dal.Entities.csproj", "{1C724CD5-CD24-46CD-835A-A83F673F97B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal.Entities", "entities\Pims.Dal.Entities.csproj", "{1C724CD5-CD24-46CD-835A-A83F673F97B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Keycloak", "keycloak\Pims.Keycloak.csproj", "{970903E9-BC53-436F-BA77-C62349546425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Keycloak", "keycloak\Pims.Keycloak.csproj", "{970903E9-BC53-436F-BA77-C62349546425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Core", "core\Pims.Core.csproj", "{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Core", "core\Pims.Core.csproj", "{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Dal.Keycloak", "dal.keycloak\Pims.Dal.Keycloak.csproj", "{5697DD19-62CC-4377-ABA8-1E192376F4F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal.Keycloak", "dal.keycloak\Pims.Dal.Keycloak.csproj", "{5697DD19-62CC-4377-ABA8-1E192376F4F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E5C0D5F1-5433-42D8-A9FB-A887A42F5C06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libraries", "libraries", "{1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F7A19B7-123A-44AF-9737-BBBD8CBD0E55}"
+	ProjectSection(SolutionItems) = preProject
+		docs\API.md = docs\API.md
+		docs\DAL.md = docs\DAL.md
+		docs\DATABASE.md = docs\DATABASE.md
+		docs\SETUP.md = docs\SETUP.md
+		docs\TOOLS.md = docs\TOOLS.md
+		docs\VERSIONING.md = docs\VERSIONING.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{BBBAAD5E-6C48-4B44-A35D-70571BC90C41}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Dockerfile = Dockerfile
+		entrypoint.sh = entrypoint.sh
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{8610ED92-BF22-4A27-963A-F27C961EE333}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "import", "import", "{C3863C8F-4B5B-4990-AE5D-D6E63D5214DE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Tools.Import", "tools\import\Pims.Tools.Import.csproj", "{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,9 +141,31 @@ Global
 		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x64.Build.0 = Release|Any CPU
 		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x86.ActiveCfg = Release|Any CPU
 		{5697DD19-62CC-4377-ABA8-1E192376F4F6}.Release|x86.Build.0 = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|x64.Build.0 = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2} = {E5C0D5F1-5433-42D8-A9FB-A887A42F5C06}
+		{6DFFF5E1-1B87-403B-99D0-A9E03D8A8EB3} = {1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}
+		{1C724CD5-CD24-46CD-835A-A83F673F97B5} = {1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}
+		{970903E9-BC53-436F-BA77-C62349546425} = {1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}
+		{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A} = {1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6} = {1CDE14FF-8E56-45D0-BA1D-ED4C49BDE0B2}
+		{C3863C8F-4B5B-4990-AE5D-D6E63D5214DE} = {8610ED92-BF22-4A27-963A-F27C961EE333}
+		{13BF0B7D-1BA6-4B62-BA01-6150059B81EC} = {C3863C8F-4B5B-4990-AE5D-D6E63D5214DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3433C5DD-DC49-4A96-A1AE-90C1A1EBA87C}

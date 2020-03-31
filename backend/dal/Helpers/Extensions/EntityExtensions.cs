@@ -1,7 +1,7 @@
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -53,6 +53,16 @@ namespace Pims.Dal.Helpers.Extensions
             user.ThrowIfNotAuthorized(permission, message);
 
             return entity;
+        }
+
+        /// <summary>
+        /// When manipulating entities it is necessary to reset the original value for 'RowVersion' so that concurrency checking can occur.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="context"></param>
+        public static void SetOriginalRowVersion<T>(this T source, DbContext context) where T : BaseEntity
+        {
+            context.SetOriginalRowVersion(source);
         }
     }
 }
