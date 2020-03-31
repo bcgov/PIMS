@@ -37,7 +37,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public Paged<Role> GetNoTracking(int page = 1, int quantity = 10)
+        public Paged<Role> Get(int page = 1, int quantity = 10)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
@@ -52,7 +52,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Role GetNoTracking(Guid id)
+        public Role Get(Guid id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
@@ -67,7 +67,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Role GetByName(string name)
         {
-            return this.Context.Roles.SingleOrDefault(r => r.Name == name) ?? throw new KeyNotFoundException();
+            return this.Context.Roles.AsNoTracking().FirstOrDefault(r => r.Name == name) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -84,7 +84,9 @@ namespace Pims.Dal.Services.Admin
             var role = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(role).CurrentValues.SetValues(entity);
-            return base.Update(role);
+            base.Update(role);
+            this.Context.Detach(role);
+            return role;
         }
 
         /// <summary>

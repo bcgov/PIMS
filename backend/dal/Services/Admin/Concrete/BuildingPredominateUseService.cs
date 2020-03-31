@@ -36,19 +36,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<BuildingPredominateUse> GetAllNoTracking()
-        {
-            var query = this.Context.BuildingPredominateUses.AsNoTracking();
-            return query.OrderBy(p => p.Name).ToArray();
-        }
-
-        /// <summary>
-        /// Get all building predominate uses from the datasource.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<BuildingPredominateUse> GetAll()
         {
-            return this.Context.BuildingPredominateUses.OrderBy(p => p.Name).ToArray();
+            return this.Context.BuildingPredominateUses.AsNoTracking().OrderBy(p => p.Name).ToArray();
         }
 
         /// <summary>

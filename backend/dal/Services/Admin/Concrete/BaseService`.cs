@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -27,17 +26,6 @@ namespace Pims.Dal.Services.Admin
 
         #region Methods
         /// <summary>
-        /// Copies the values from the 'source' into the 'destination' so that EF can update appropriately.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        public void SetCurrentValues(ET source, ET destination)
-        {
-            this.Context.Entry(destination).CurrentValues.SetValues(source);
-            this.Context.Entry(destination).OriginalValues[nameof(destination.RowVersion)] = destination.RowVersion; // Need to do this to resolve the concurrency bug/feature in EF.
-        }
-
-        /// <summary>
         /// Find the entity within the datasource with the specified key values.
         /// </summary>
         /// <param name="key"></param>
@@ -46,7 +34,9 @@ namespace Pims.Dal.Services.Admin
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            return this.Context.Set<ET>().Find(keyValues);
+            var result = this.Context.Set<ET>().Find(keyValues);
+            this.Context.Entry(result).State = Microsoft.EntityFrameworkCore.EntityState.Detached; // Force detach so that outside the DAL the DB cannot be manipulated.
+            return result;
         }
 
         /// <summary>
@@ -73,9 +63,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
-
-            entity.CreatedById = this.User.GetUserId();
-            this.Context.Set<ET>().Add(entity);
+            this.Context.Entry(entity).State = EntityState.Added;
 
             return entity;
         }
@@ -107,10 +95,7 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfRowVersionNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
-
-            entity.UpdatedById = this.User.GetUserId();
-            entity.UpdatedOn = DateTime.UtcNow;
-            this.Context.Set<ET>().Update(entity);
+            this.Context.Entry(entity).State = EntityState.Modified;
 
             return entity;
         }
@@ -138,8 +123,7 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfRowVersionNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
-
-            this.Context.Set<ET>().Remove(entity);
+            this.Context.Entry(entity).State = EntityState.Deleted;
         }
         #endregion
     }

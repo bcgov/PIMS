@@ -4,7 +4,7 @@ using System;
 using Pims.Dal.Security;
 using Pims.Dal.Keycloak;
 using Pims.Api.Policies;
-using Model = Pims.Api.Areas.Keycloak.Models;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
@@ -120,7 +120,6 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] Model.Update.UserModel model)
         {
             var user = _mapper.Map<Entity.User>(model);
-            user.Id = id;
             await _keycloakService.UpdateUserAsync(user);
             var result = _mapper.Map<Model.UserModel>(user);
 
@@ -134,15 +133,15 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <returns></returns>
         [HttpPut("access/request")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
-        public async Task<IActionResult> UpdateAccessRequestAsync(Pims.Api.Models.AccessRequestModel updateModel)
+        public async Task<IActionResult> UpdateAccessRequestAsync(Model.AccessRequestModel updateModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
             var updatedEntity = await _keycloakService.UpdateAccessRequestAsync(entity);
 
-            var user = _mapper.Map<Pims.Api.Models.AccessRequestModel>(updatedEntity);
+            var user = _mapper.Map<Model.AccessRequestModel>(updatedEntity);
             return new JsonResult(user);
         }
         #endregion

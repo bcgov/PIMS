@@ -1,22 +1,23 @@
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Parcel;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models;
 using Moq;
 using Pims.Api.Controllers;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Test.Helpers;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using Xunit;
 
 namespace Pims.Api.Test.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("group", "parcel")]
     public class ParcelControllerTest
     {
         #region Constructors
@@ -26,31 +27,6 @@ namespace Pims.Api.Test.Controllers
         #endregion
 
         #region Tests
-        #region DeleteParcel
-        [Fact]
-        public void DeleteParcel_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyAdd);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()));
-            var modelToDelete = mapper.Map<Model.ParcelModel>(parcel);
-
-            // Act
-            var result = controller.DeleteParcel(Guid.NewGuid(), modelToDelete);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualParcel);
-            service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
-        }
-        #endregion
-
         #region GetParcels
         [Fact]
         public void GetParcels_FilterLatitude_Success()
@@ -63,16 +39,17 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
             var filter = new ParcelFilter(50, 25, 50, 20);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Parts.ParcelModel[]>(parcels), actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         [Fact]
@@ -86,16 +63,17 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
             var filter = new ParcelFilter(50, 25, 50, 25);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Parts.ParcelModel[]>(parcels), actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         [Fact]
@@ -112,16 +90,17 @@ namespace Pims.Api.Test.Controllers
             {
                 Agencies = new int[] { 3 }
             };
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Parts.ParcelModel[]>(parcels), actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         [Fact]
@@ -138,16 +117,17 @@ namespace Pims.Api.Test.Controllers
             {
                 ClassificationId = 2
             };
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.Parts.ParcelModel[]>(parcels), actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         [Fact]
@@ -159,16 +139,17 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var filter = new ParcelFilter(0, 25, 10, 20);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<ParcelFilter>())).Returns(new Entity.Parcel[0]);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(new Entity.Parcel[0]);
 
             // Act
             var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
             Assert.Empty(actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(filter), Times.Once());
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         /// <summary>
@@ -187,17 +168,18 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetParcels();
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualParcels = Assert.IsType<Model.Parts.ParcelModel[]>(actionResult.Value);
-            var expectedParcels = mapper.Map<Model.Parts.ParcelModel[]>(parcels);
+            Assert.Null(actionResult.StatusCode);
+            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            var expectedParcels = mapper.Map<Model.PartialParcelModel[]>(parcels);
             Assert.Equal(expectedParcels, actualParcels);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -215,7 +197,7 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.GetParcels());
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
         }
 
         /// <summary>
@@ -233,7 +215,7 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.GetParcels(null));
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
         }
         #endregion
 
@@ -246,18 +228,18 @@ namespace Pims.Api.Test.Controllers
             var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<int>())).Throws<KeyNotFoundException>();
+            service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Throws<KeyNotFoundException>();
             int expectedParcelId = 1;
 
             // Act
             // Assert
             Assert.Throws<KeyNotFoundException>(() =>
                 controller.GetParcel(expectedParcelId));
-            service.Verify(m => m.Parcel.GetNoTracking(expectedParcelId), Times.Once());
+            service.Verify(m => m.Parcel.Get(expectedParcelId), Times.Once());
         }
 
         [Fact]
-        public void GetParcel_Sucess()
+        public void GetParcel_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -266,19 +248,95 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var expectedTestParcel = new Entity.Parcel(45, 45);
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<int>())).Returns(expectedTestParcel);
+            service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(expectedTestParcel);
             int expectedParcelId = 1;
 
             // Act
             var result = controller.GetParcel(expectedParcelId);
 
             // Assert
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            var actualParcelDetail = Assert.IsType<Model.ParcelModel>(jsonResult.Value);
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualParcelDetail = Assert.IsType<Model.ParcelModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ParcelModel>(expectedTestParcel), actualParcelDetail);
-            service.Verify(m => m.Parcel.GetNoTracking(expectedParcelId), Times.Once());
+            service.Verify(m => m.Parcel.Get(expectedParcelId), Times.Once());
         }
+        #endregion
 
+        #region AddParcel
+        [Fact]
+        public void AddParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyAdd);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()));
+            var model = mapper.Map<Model.ParcelModel>(parcel);
+
+            // Act
+            var result = controller.AddParcel(model);
+
+            // Assert
+            var actionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(201, actionResult.StatusCode);
+            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            service.Verify(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+        #endregion
+
+        #region UpdateParcel
+        [Fact]
+        public void UpdateParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyEdit);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()));
+            var model = mapper.Map<Model.ParcelModel>(parcel);
+
+            // Act
+            var result = controller.UpdateParcel(parcel.Id, model);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+        #endregion
+
+        #region DeleteParcel
+        [Fact]
+        public void DeleteParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyAdd);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()));
+            var modelToDelete = mapper.Map<Model.ParcelModel>(parcel);
+
+            // Act
+            var result = controller.DeleteParcel(parcel.Id, modelToDelete);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualParcel);
+            service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
         #endregion
         #endregion
     }

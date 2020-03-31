@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Areas.Tools.Models;
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Areas.Tools.Models.Import;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
@@ -56,9 +56,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost("properties")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
-        [ProducesResponseType(typeof(Model.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-import" })]
-        public IActionResult ImportProperties([FromBody] PropertyModel[] models)
+        public IActionResult ImportProperties([FromBody] Model.PropertyModel[] models)
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
 

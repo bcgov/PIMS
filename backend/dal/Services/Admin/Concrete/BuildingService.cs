@@ -35,7 +35,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public Paged<Building> GetNoTracking(int page, int quantity, string sort)
+        public Paged<Building> Get(int page, int quantity, string sort)
         {
             // TODO: Check for system-administrator role.
             if (this.User == null) throw new NotAuthorizedException();
@@ -51,7 +51,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Building GetNoTracking(int id)
+        public Building Get(int id)
         {
             // TODO: Check for system-administrator role.
             if (this.User == null) throw new NotAuthorizedException();
@@ -72,27 +72,6 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="localId"></param>
         /// <returns></returns>
-        public Building GetByLocalIdNoTracking(string localId)
-        {
-            // TODO: Check for system-administrator role.
-            if (this.User == null) throw new NotAuthorizedException();
-
-            return this.Context.Buildings
-                .Include(p => p.BuildingConstructionType)
-                .Include(p => p.BuildingPredominateUse)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
-                .AsNoTracking().SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        /// Get the building for the specified 'localId'.
-        /// </summary>
-        /// <param name="localId"></param>
-        /// <returns></returns>
         public Building GetByLocalId(string localId)
         {
             // TODO: Check for system-administrator role.
@@ -106,7 +85,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
-                .SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
+                .AsNoTracking().SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
@@ -128,21 +107,8 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
+                .AsNoTracking()
                 .SingleOrDefault(u => u.Parcel.PID == pid && u.LocalId == localId) ?? throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        /// Get the building for the specified 'id'.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Building Get(int id)
-        {
-            var entity = this.Context.Buildings
-                .Include(p => p.Address)
-                .SingleOrDefault(p => p.Id == id) ?? throw new KeyNotFoundException();
-
-            return entity;
         }
 
         /// <summary>

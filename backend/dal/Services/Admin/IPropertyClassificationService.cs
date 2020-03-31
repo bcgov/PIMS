@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IPropertyClassificationService : IBaseService<PropertyClassification>
     {
-        IEnumerable<PropertyClassification> GetAllNoTracking();
         IEnumerable<PropertyClassification> GetAll();
     }
 }

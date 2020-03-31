@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Model = Pims.Api.Models.Auth;
 
 namespace Pims.Api.Controllers
 {
@@ -57,7 +58,7 @@ namespace Pims.Api.Controllers
         [Authorize]
         [HttpPost("activate")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.Auth.UserModel), 200)]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
@@ -67,11 +68,11 @@ namespace Pims.Api.Controllers
             if (!exists)
             {
                 var user = _pimsService.User.Activate();
-                return new CreatedResult($"{user.Id}", new Models.Auth.UserModel(user));
+                return new CreatedResult($"{user.Id}", new Model.UserModel(user));
             }
             else
             {
-                return new JsonResult(new Models.Auth.UserModel(user_id));
+                return new JsonResult(new Model.UserModel(user_id));
             }
         }
 
@@ -124,11 +125,11 @@ namespace Pims.Api.Controllers
         [Authorize]
         [HttpGet("claims")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Models.Auth.ClaimModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.ClaimModel>), 200)]
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Claims()
         {
-            return new JsonResult(User.Claims.Select(c => new Models.Auth.ClaimModel(c.Type, c.Value)));
+            return new JsonResult(User.Claims.Select(c => new Model.ClaimModel(c.Type, c.Value)));
         }
         #endregion
     }

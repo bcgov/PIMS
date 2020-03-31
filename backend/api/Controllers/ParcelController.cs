@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Models.Parcel;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace Pims.Api.Controllers
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.Parts.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.PartialParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcels()
         {
@@ -74,15 +73,16 @@ namespace Pims.Api.Controllers
         [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.Parts.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.PartialParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
-            var parcels = _pimsService.Parcel.GetNoTracking(filter);
-            return new JsonResult(_mapper.Map<Model.Parts.ParcelModel[]>(parcels));
+            var parcels = _pimsService.Parcel.Get(filter);
+            var result = _mapper.Map<Model.PartialParcelModel[]>(parcels);
+            return new JsonResult(result);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcel(int id)
         {
-            var entity = _pimsService.Parcel.GetNoTracking(id);
+            var entity = _pimsService.Parcel.Get(id);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
@@ -116,16 +116,17 @@ namespace Pims.Api.Controllers
         public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
-            var userId = this.User.GetUserId();
 
             _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
-            return new CreatedAtActionResult(nameof(GetParcel), nameof(ParcelController), new { id = parcel.Id }, parcel);
+
+            return CreatedAtAction(nameof(GetParcel), new { id = parcel.Id }, parcel);
         }
 
         /// <summary>
         /// Update the specified parcel in the datasource if the user is allowed.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
@@ -133,7 +134,7 @@ namespace Pims.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult UpdateParcel([FromBody] Model.ParcelModel model)
+        public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
@@ -154,7 +155,7 @@ namespace Pims.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult DeleteParcel(Guid id, [FromBody] Model.ParcelModel model)
+        public IActionResult DeleteParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 

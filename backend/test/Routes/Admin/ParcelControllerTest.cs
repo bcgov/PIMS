@@ -1,4 +1,4 @@
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Areas.Admin.Models.Parcel;
 using Pims.Api.Areas.Admin.Controllers;
 using Pims.Api.Test.Helpers;
 using Pims.Core.Extensions;
@@ -11,6 +11,11 @@ namespace Pims.Api.Test.Routes.Admin
     /// <summary>
     /// ParcelControllerTest class, provides a way to test endpoint routes.
     /// </summary>
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("area", "admin")]
+    [Trait("group", "parcel")]
+    [Trait("group", "route")]
     public class ParcelControllerTest
     {
         #region Variables
@@ -37,12 +42,42 @@ namespace Pims.Api.Test.Routes.Admin
             type.HasApiVersion("1.0");
         }
 
+        #region AddParcel
+        [Fact]
+        public void AddParcel_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.AddParcel), typeof(Model.ParcelModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost();
+            endpoint.HasPermissions(Permissions.PropertyAdd);
+        }
+        #endregion
+
+        #region UpdateParcel
+        [Fact]
+        public void UpdateParcel_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.UpdateParcel), typeof(int), typeof(Model.ParcelModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("{id}");
+            endpoint.HasPermissions(Permissions.PropertyEdit);
+        }
+        #endregion
+
         #region DeleteParcel
         [Fact]
         public void DeleteParcel_Route()
         {
             // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.DeleteParcel), typeof(Guid), typeof(Model.ParcelModel));
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.DeleteParcel), typeof(int), typeof(Model.ParcelModel));
 
             // Act
             // Assert

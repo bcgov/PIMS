@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 
@@ -36,7 +35,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public Paged<Parcel> GetNoTracking(int page, int quantity, string sort)
+        public Paged<Parcel> Get(int page, int quantity, string sort)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -51,7 +50,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Parcel GetNoTracking(int id)
+        public Parcel Get(int id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -79,34 +78,6 @@ namespace Pims.Dal.Services.Admin
         /// <param name="pid"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Parcel GetByPidNoTracking(int pid)
-        {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
-
-            return this.Context.Parcels
-                .Include(p => p.Status)
-                .Include(p => p.Classification)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
-                .Include(p => p.Evaluations)
-                .Include(p => p.Buildings)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .AsNoTracking().SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        /// Get the parcel for the specified 'pid'.
-        /// </summary>
-        /// <param name="pid"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
         public Parcel GetByPid(int pid)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -126,31 +97,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
-        }
-
-        /// <summary>
-        /// Get the parcel for the specified 'id'.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
-        public Parcel Get(int id)
-        {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
-
-            var entity = this.Context.Parcels
-                .Include(p => p.Address)
-                .Include(p => p.Evaluations)
-                .Include(p => p.Buildings)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .SingleOrDefault(p => p.Id == id) ?? throw new KeyNotFoundException();
-
-            return entity;
+                .AsNoTracking().SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>

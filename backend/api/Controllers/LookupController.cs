@@ -52,7 +52,7 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetAgencies()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgenciesNoTracking());
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgencies());
             return new JsonResult(agencyCodes.ToArray());
         }
 
@@ -66,7 +66,7 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetRoles()
         {
-            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRolesNoTracking());
+            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRoles());
             return new JsonResult(roleCodes.ToArray());
         }
 
@@ -80,7 +80,7 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetPropertyClassifications()
         {
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassificationsNoTracking());
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassifications());
             return new JsonResult(propertyClassificationCodes.ToArray());
         }
 
@@ -94,9 +94,9 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetAll()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgenciesNoTracking());
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassificationsNoTracking());
-            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRolesNoTracking());
+            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgencies());
+            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassifications());
+            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRoles());
 
             return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).Concat(roleCodes).ToArray());
         }

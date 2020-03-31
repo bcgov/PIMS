@@ -36,19 +36,10 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyType> GetAllNoTracking()
+        public IEnumerable<PropertyType> GetAll()
         {
             var query = this.Context.PropertyTypes.AsNoTracking();
             return query.OrderBy(p => p.Name).ToArray();
-        }
-
-        /// <summary>
-        /// Get all property types from the datasource.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<PropertyType> GetAll()
-        {
-            return this.Context.PropertyTypes.OrderBy(p => p.Name).ToArray();
         }
 
         /// <summary>

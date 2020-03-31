@@ -2,7 +2,7 @@ using AutoMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Areas.Admin.Models;
+using Model = Pims.Api.Areas.Admin.Models.Role;
 using Pims.Api.Policies;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -63,7 +63,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var result = _pimsAdminService.Role.GetNoTracking(page, quantity);
+            var result = _pimsAdminService.Role.Get(page, quantity);
             var roles = _mapper.Map<Model.RoleModel[]>(result.Items);
             var paged = new Paged<Model.RoleModel>(roles, page, quantity, result.Total); // TODO: Better way to go from one Paged type to another.
             return new JsonResult(paged);
@@ -81,7 +81,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [SwaggerOperation(Tags = new[] { "admin-role" })]
         public IActionResult GetRole(Guid id)
         {
-            var entity = _pimsAdminService.Role.GetNoTracking(id);
+            var entity = _pimsAdminService.Role.Get(id);
 
             if (entity == null) return NoContent();
 
@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             _pimsAdminService.Role.Add(entity);
             var role = _mapper.Map<Model.RoleModel>(entity);
 
-            return new CreatedAtActionResult(nameof(GetRole), nameof(RoleController), new { id = role.Id }, role);
+            return CreatedAtAction(nameof(GetRole), new { id = role.Id }, role);
         }
 
         /// <summary>

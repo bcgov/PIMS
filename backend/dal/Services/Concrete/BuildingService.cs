@@ -38,7 +38,7 @@ namespace Pims.Dal.Services
         /// <param name="swLat"></param>
         /// <param name="swLong"></param>
         /// <returns></returns>
-        public IEnumerable<Building> GetNoTracking(double neLat, double neLong, double swLat, double swLong)
+        public IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -66,7 +66,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<Building> GetNoTracking(BuildingFilter filter)
+        public IEnumerable<Building> Get(BuildingFilter filter)
         {
             filter.ThrowIfNull(nameof(filter));
 
@@ -147,7 +147,7 @@ namespace Pims.Dal.Services
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Building GetNoTracking(int id)
+        public Building Get(int id)
         {
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -216,7 +216,7 @@ namespace Pims.Dal.Services
             entity.UpdatedById = this.User.GetUserId();
             entity.UpdatedOn = DateTime.UtcNow;
 
-            this.Context.Buildings.Update(entity);
+            this.Context.Buildings.Update(entity); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
             return entity;
         }

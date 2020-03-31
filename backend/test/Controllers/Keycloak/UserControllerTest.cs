@@ -1,18 +1,23 @@
-using Xunit;
-using System;
-using Pims.Api.Test.Helpers;
-using Pims.Api.Areas.Keycloak.Controllers;
-using Moq;
-using Model = Pims.Api.Areas.Keycloak.Models;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
 using AutoMapper;
+using Entity = Pims.Dal.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
+using Moq;
+using Pims.Api.Areas.Keycloak.Controllers;
+using Pims.Api.Test.Helpers;
 using Pims.Dal.Keycloak;
-using System.Threading.Tasks;
+using Pims.Dal.Security;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("area", "keycloak")]
+    [Trait("group", "user")]
     public class UserControllerTest
     {
         #region Variables
@@ -30,22 +35,22 @@ namespace PimsApi.Test.Keycloak.Controllers
         public async void SyncUserAsync_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
-            var euser = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
-            service.Setup(m => m.SyncUserAsync(It.IsAny<Guid>())).Returns(Task.FromResult(euser));
+            var user = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
+            service.Setup(m => m.SyncUserAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 
             // Act
-            var result = await controller.SyncUserAsync(euser.Id);
+            var result = await controller.SyncUserAsync(user.Id);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(euser), data);
+            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
             service.Verify(m => m.SyncUserAsync(It.IsAny<Guid>()), Times.Once());
         }
         #endregion
@@ -55,23 +60,23 @@ namespace PimsApi.Test.Keycloak.Controllers
         public async void GetUsersAsync_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
-            var euser = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
-            var eusers = new[] { euser };
-            service.Setup(m => m.GetUsersAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(Task.FromResult((IEnumerable<Entity.User>)eusers));
+            var user = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
+            var users = new[] { user };
+            service.Setup(m => m.GetUsersAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(Task.FromResult((IEnumerable<Entity.User>)users));
 
             // Act
             var result = await controller.GetUsersAsync(1, 10);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel[]>(eusers), data);
+            Assert.Equal(mapper.Map<Model.UserModel[]>(users), data);
             service.Verify(m => m.GetUsersAsync(1, 10, It.IsAny<string>()), Times.Once());
         }
         #endregion
@@ -81,22 +86,22 @@ namespace PimsApi.Test.Keycloak.Controllers
         public async void GetUserAsync_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
-            var euser = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
-            service.Setup(m => m.GetUserAsync(It.IsAny<Guid>())).Returns(Task.FromResult(euser));
+            var user = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
+            service.Setup(m => m.GetUserAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 
             // Act
-            var result = await controller.GetUserAsync(euser.Id);
+            var result = await controller.GetUserAsync(user.Id);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(euser), data);
+            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
             service.Verify(m => m.GetUserAsync(It.IsAny<Guid>()), Times.Once());
         }
         #endregion
@@ -106,30 +111,23 @@ namespace PimsApi.Test.Keycloak.Controllers
         public async void UpdateUserAsync_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
             var helper = new TestHelper();
-            var controller = helper.CreateController<UserController>(user);
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
-            var euser = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
-            service.Setup(m => m.UpdateUserAsync(It.IsAny<Entity.User>())).Returns(Task.FromResult(euser));
-            var model = new Model.Update.UserModel()
-            {
-                DisplayName = euser.DisplayName,
-                FirstName = euser.FirstName,
-                LastName = euser.LastName,
-                Email = euser.Email,
-                IsDisabled = euser.IsDisabled
-            };
+            var user = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
+            service.Setup(m => m.UpdateUserAsync(It.IsAny<Entity.User>())).Returns(Task.FromResult(user));
+            var model = mapper.Map<Model.Update.UserModel>(user);
 
             // Act
-            var result = await controller.UpdateUserAsync(euser.Id, model);
+            var result = await controller.UpdateUserAsync(user.Id, model);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(euser), data);
+            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
             service.Verify(m => m.UpdateUserAsync(It.IsAny<Entity.User>()), Times.Once());
         }
         #endregion

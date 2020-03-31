@@ -35,7 +35,7 @@ namespace Pims.Api.Models.Property
         #region Methods
         public override bool Equals(object obj)
         {
-            return Equals(obj as ParcelModel);
+            return Equals(obj as PropertyModel);
         }
 
         public bool Equals([AllowNull] PropertyModel other)
