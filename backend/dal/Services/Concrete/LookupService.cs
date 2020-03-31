@@ -26,7 +26,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all agencies sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<Agency> GetAgenciesNoTracking()
+        public IEnumerable<Agency> GetAgencies()
         {
             return this.Context.Agencies.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -34,7 +34,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all building construction types sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<BuildingConstructionType> GetBuildingConstructionTypesNoTracking()
+        public IEnumerable<BuildingConstructionType> GetBuildingConstructionTypes()
         {
             return this.Context.BuildingConstructionTypes.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -42,7 +42,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all predominate uses sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<BuildingPredominateUse> GetBuildingPredominateUsesNoTracking()
+        public IEnumerable<BuildingPredominateUse> GetBuildingPredominateUses()
         {
             return this.Context.BuildingPredominateUses.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -50,7 +50,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all cities sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<City> GetCitiesNoTracking()
+        public IEnumerable<City> GetCities()
         {
             return this.Context.Cities.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -58,7 +58,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all property classifications sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<PropertyClassification> GetPropertyClassificationsNoTracking()
+        public IEnumerable<PropertyClassification> GetPropertyClassifications()
         {
             return this.Context.PropertyClassifications.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -66,7 +66,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all property status sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<PropertyStatus> GetPropertyStatusNoTracking()
+        public IEnumerable<PropertyStatus> GetPropertyStatus()
         {
             return this.Context.PropertyStatus.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -74,7 +74,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all property types sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<PropertyType> GetPropertyTypesNoTracking()
+        public IEnumerable<PropertyType> GetPropertyTypes()
         {
             return this.Context.PropertyTypes.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
@@ -82,7 +82,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all provinces sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<Province> GetProvincesNoTracking()
+        public IEnumerable<Province> GetProvinces()
         {
             return this.Context.Provinces.AsNoTracking().OrderBy(a => a.Name).ToArray();
         }
@@ -90,7 +90,7 @@ namespace Pims.Dal.Services
         /// <summary>
         /// Get all roles sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<Role> GetRolesNoTracking()
+        public IEnumerable<Role> GetRoles()
         {
             return this.Context.Roles.AsNoTracking().OrderBy(a => a.Name).ToArray();
         }

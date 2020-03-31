@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IPropertyStatusService : IBaseService<PropertyStatus>
     {
-        IEnumerable<PropertyStatus> GetAllNoTracking();
         IEnumerable<PropertyStatus> GetAll();
     }
 }

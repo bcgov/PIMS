@@ -9,13 +9,12 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IUserService : IBaseService<User>
     {
-        Paged<User> GetNoTracking(int page = 1, int quantity = 10);
-        Paged<User> GetNoTracking(UserFilter filter);
-        User GetNoTracking(Guid id);
+        Paged<User> Get(int page = 1, int quantity = 10);
+        Paged<User> Get(UserFilter filter);
         User Get(Guid id);
 
         AccessRequest UpdateAccessRequest(AccessRequest entity);
-        AccessRequest GetAccessRequestNoTracking(Guid id);
-        Paged<AccessRequest> GetAccessRequestsNoTracking(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
+        AccessRequest GetAccessRequest(Guid id);
+        Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
     }
 }

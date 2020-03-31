@@ -1,12 +1,12 @@
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
+using Model = Pims.Api.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Api.Helpers.Extensions;
-using Pims.Api.Models;
 using Pims.Dal.Services;
 using Pims.Keycloak;
 using System.Linq;
@@ -84,9 +84,9 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpPost("access/request")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [SwaggerOperation(Tags = new[] { "user" })]
-        public IActionResult AddAccessRequest([FromBody] AccessRequestModel accessRequestModel)
+        public IActionResult AddAccessRequest([FromBody] Model.AccessRequestModel accessRequestModel)
         {
             if (accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
             {
@@ -102,7 +102,7 @@ namespace Pims.Api.Controllers
             }
             var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);
             _userService.AddAccessRequest(entity);
-            return new JsonResult(_mapper.Map<AccessRequestModel>(entity)); // TODO: Should return 201.
+            return new JsonResult(_mapper.Map<Model.AccessRequestModel>(entity)); // TODO: Should return 201.
         }
         #endregion
     }

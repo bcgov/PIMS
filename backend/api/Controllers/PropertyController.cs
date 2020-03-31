@@ -81,9 +81,9 @@ namespace Pims.Api.Controllers
 
             var properties = new List<PropertyModel>();
             if (filter.IncludeParcels)
-                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.GetNoTracking((ParcelFilter)filter)));
+                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.Get((ParcelFilter)filter)));
             if (filter.IncludeBuildings)
-                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.GetNoTracking((BuildingFilter)filter)));
+                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.Get((BuildingFilter)filter)));
             return new JsonResult(properties.ToArray());
         }
         #endregion

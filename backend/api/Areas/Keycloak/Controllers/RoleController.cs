@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Areas.Keycloak.Models;
+using Model = Pims.Api.Areas.Keycloak.Models.Role;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Keycloak;

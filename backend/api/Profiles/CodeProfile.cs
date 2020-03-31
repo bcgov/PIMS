@@ -1,21 +1,21 @@
 using AutoMapper;
-using Pims.Api.Models;
+using Model = Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
 
-namespace Pims.Api.Helpers.Profiles
+namespace Pims.Api.Profiles
 {
     public class CodeProfile : Profile
     {
         #region Constructors
         public CodeProfile()
         {
-            CreateMap<Entity.CodeEntity, CodeModel>()
+            CreateMap<Entity.CodeEntity, Model.CodeModel>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
-                .IncludeBase<Entity.BaseEntity, BaseModel>()
+                .IncludeBase<Entity.BaseEntity, Pims.Api.Models.BaseModel>()
                 .IncludeAllDerived();
 
-            CreateMap<CodeModel, Entity.CodeEntity>()
-                .IncludeBase<BaseModel, Entity.BaseEntity>()
+            CreateMap<Model.CodeModel, Entity.CodeEntity>()
+                .IncludeBase<Pims.Api.Models.BaseModel, Entity.BaseEntity>()
                 .IncludeAllDerived();
         }
         #endregion

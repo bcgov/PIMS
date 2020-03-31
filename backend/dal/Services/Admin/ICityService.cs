@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface ICityService : IBaseService<City>
     {
-        IEnumerable<City> GetNoTracking(string name);
         IEnumerable<City> GetAll();
     }
 }

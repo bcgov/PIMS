@@ -1,4 +1,5 @@
-﻿using System;
+using Pims.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,7 +69,7 @@ namespace Pims.Dal.Keycloak
             var kgroups = await _keycloakService.GetGroupsAsync((page - 1) * quantity, quantity, search);
 
             // TODO: Need better performing solution.
-            var eroles = kgroups.Select(g => _pimsAdminService.Role.Find(g.Id) ?? _mapper.Map<Entity.Role>(g));
+            var eroles = kgroups.Select(g => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Role.Get(g.Id)) ?? _mapper.Map<Entity.Role>(g));
 
             return eroles;
         }
@@ -82,7 +83,7 @@ namespace Pims.Dal.Keycloak
         public async Task<Entity.Role> GetRoleAsync(Guid id)
         {
             var kgroup = await _keycloakService.GetGroupAsync(id) ?? throw new KeyNotFoundException();
-            return _pimsAdminService.Role.GetNoTracking(kgroup.Id);
+            return _pimsAdminService.Role.Get(kgroup.Id);
         }
 
         /// <summary>

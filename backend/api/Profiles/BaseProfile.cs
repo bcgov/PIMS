@@ -3,13 +3,15 @@ using AutoMapper;
 using Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
 
-namespace Pims.Api.Helpers.Profiles
+namespace Pims.Api.Profiles
 {
     public class BaseProfile : Profile
     {
         #region Constructors
         public BaseProfile()
         {
+            CreateMap<Entity.BaseEntity, Entity.BaseEntity>();
+
             CreateMap<Entity.BaseEntity, BaseModel>()
                 .IncludeAllDerived()
                 .ForMember(dest => dest.RowVersion, opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));

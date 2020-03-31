@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
-using Pims.Dal.Helpers.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -36,7 +34,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public IEnumerable<Province> GetNoTracking()
+        public IEnumerable<Province> Get()
         {
             var query = this.Context.Provinces.AsNoTracking();
             return query.OrderBy(p => p.Name).ToArray();

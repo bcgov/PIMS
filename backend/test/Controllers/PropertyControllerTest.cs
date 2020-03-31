@@ -1,7 +1,7 @@
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models;
+using Model = Pims.Api.Models.Property;
 using Moq;
 using Pims.Api.Controllers;
 using Pims.Api.Helpers.Exceptions;
@@ -15,6 +15,9 @@ using Xunit;
 
 namespace Pims.Api.Test.Controllers
 {
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("group", "property")]
     public class PropertyControllerTest
     {
         #region Variables
@@ -46,19 +49,19 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
 
             // Act
             var result = controller.GetProperties(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels).Concat(mapper.Map<Model.Property.PropertyModel[]>(buildings));
+            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
             Assert.Equal(expectedProperties, actualProperties);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -79,19 +82,19 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
 
             // Act
             var result = controller.GetProperties(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels).Concat(mapper.Map<Model.Property.PropertyModel[]>(buildings));
+            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
             Assert.Equal(expectedProperties, actualProperties);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -111,18 +114,18 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
 
             // Act
             var result = controller.GetProperties(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels);
+            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels);
             Assert.Equal(expectedProperties, actualProperties);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
         }
 
         /// <summary>
@@ -142,18 +145,18 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
 
             // Act
             var result = controller.GetProperties(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(buildings);
+            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.PropertyModel[]>(buildings);
             Assert.Equal(expectedProperties, actualProperties);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -172,19 +175,19 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
 
             // Act
             var result = controller.GetProperties();
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.Property.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.Property.PropertyModel[]>(parcels);
+            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels);
             Assert.Equal(expectedProperties, actualProperties);
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -202,8 +205,8 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.GetProperties());
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
         }
 
         /// <summary>
@@ -221,8 +224,8 @@ namespace Pims.Api.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.GetProperties(null));
-            service.Verify(m => m.Parcel.GetNoTracking(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
-            service.Verify(m => m.Building.GetNoTracking(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
         }
         #endregion
         #endregion

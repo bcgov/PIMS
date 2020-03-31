@@ -8,7 +8,6 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IAgencyService : IBaseService<Agency>
     {
-        IEnumerable<Agency> GetAllNoTracking();
         IEnumerable<Agency> GetAll();
     }
 }

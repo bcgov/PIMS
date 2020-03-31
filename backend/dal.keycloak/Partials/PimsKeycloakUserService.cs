@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
+using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
@@ -90,7 +91,7 @@ namespace Pims.Dal.Keycloak
             var kusers = await _keycloakService.GetUsersAsync((page - 1) * quantity, quantity, search);
 
             // TODO: Need better performing solution.
-            var eusers = kusers.Select(u => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.User.GetNoTracking(u.Id)) ?? _mapper.Map<Entity.User>(u));
+            var eusers = kusers.Select(u => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.User.Get(u.Id)) ?? _mapper.Map<Entity.User>(u));
 
             return eusers;
         }
@@ -120,14 +121,13 @@ namespace Pims.Dal.Keycloak
 
             if (user.Username != kuser.Username) throw new InvalidOperationException($"Cannot change the username from '{kuser.Username}' to '{user.Username}'.");
 
-            var addRoles = user.Roles.Except(euser.Roles).ToArray();
-            var removeRoles = euser.Roles.Except(user.Roles).ToArray();
-            var addAgencies = user.Agencies.Except(euser.Agencies).ToArray();
-            var removeAgencies = euser.Agencies.Except(user.Agencies).ToArray();
+            var addRoles = user.Roles.Except(euser.Roles, new UserRoleRoleIdComparer()).ToArray();
+            var removeRoles = euser.Roles.Except(user.Roles, new UserRoleRoleIdComparer()).ToArray();
+            var addAgencies = user.Agencies.Except(euser.Agencies, new UserAgencyAgencyIdComparer()).ToArray();
+            var removeAgencies = euser.Agencies.Except(user.Agencies, new UserAgencyAgencyIdComparer()).ToArray();
 
             // Update PIMS
-            _pimsAdminService.User.SetCurrentValues(user, euser);
-            _pimsAdminService.User.UpdateOne(euser);
+            _mapper.Map(user, euser);
 
             // Update Roles.
             addRoles.ForEach(async r =>
@@ -153,7 +153,7 @@ namespace Pims.Dal.Keycloak
                 euser.Agencies.Remove(a);
             });
 
-            _pimsAdminService.CommitTransaction();
+            _pimsAdminService.User.Update(euser);
 
             // Now update keycloak
             var kmodel = _mapper.Map<KModel.UserModel>(user);
@@ -179,7 +179,7 @@ namespace Pims.Dal.Keycloak
             entity.ThrowIfNull(nameof(entity.UserId));
 
             this._user.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
-            var accessRequest = _pimsAdminService.User.GetAccessRequestNoTracking(entity.Id);
+            var accessRequest = _pimsAdminService.User.GetAccessRequest(entity.Id);
             if (!accessRequest.IsGranted != true && entity.IsGranted == true)
             {
                 Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId.Value);
