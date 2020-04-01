@@ -1,13 +1,13 @@
-using Xunit;
-using System;
-using Pims.Dal.Services;
-using Pims.Api.Test.Helpers;
-using Pims.Api.Controllers;
-using Moq;
-using Model = Pims.Api.Models.User;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
 using AutoMapper;
+using Entity = Pims.Dal.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Model = Pims.Api.Models.User;
+using Moq;
+using Pims.Api.Controllers;
+using Pims.Api.Test.Helpers;
+using Pims.Dal.Services;
+using Xunit;
+using Pims.Core.Comparers;
 
 namespace PimsApi.Test.Controllers
 {
@@ -16,46 +16,9 @@ namespace PimsApi.Test.Controllers
     [Trait("group", "user")]
     public class UserControllerTest
     {
-        #region Variables
-        private static readonly int AGENCY_ID = 2;
-        private static readonly Guid ROLE_ID = Guid.NewGuid();
-        private static readonly Guid USER_ID = Guid.NewGuid();
-        private static readonly Guid ACCCESS_REQUEST_ID = Guid.NewGuid();
-        private readonly Entity.AccessRequest _expectedAccessRequest = new Entity.AccessRequest()
-        {
-            Id = ACCCESS_REQUEST_ID,
-            UserId = USER_ID,
-            User = new Entity.User
-            {
-                Id = USER_ID,
-                DisplayName = "TEST",
-                Email = "test@test.ca"
-            },
-        };
-
-        #endregion
-
         #region Constructors
         public UserControllerTest()
         {
-            _expectedAccessRequest.Agencies.Add(new Entity.AccessRequestAgency()
-            {
-                AgencyId = AGENCY_ID,
-                Agency = new Entity.Agency()
-                {
-                    Id = AGENCY_ID
-                },
-                AccessRequestId = ACCCESS_REQUEST_ID
-            });
-            _expectedAccessRequest.Roles.Add(new Entity.AccessRequestRole()
-            {
-                RoleId = ROLE_ID,
-                Role = new Entity.Role()
-                {
-                    Id = ROLE_ID
-                },
-                AccessRequestId = ACCCESS_REQUEST_ID
-            });
         }
         #endregion
 
@@ -65,7 +28,7 @@ namespace PimsApi.Test.Controllers
         public void AddAccessRequest_Success()
         {
             // Arrange
-            var user = PrincipalHelper.CreateForRole("admin-users");
+            var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
@@ -73,13 +36,19 @@ namespace PimsApi.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
+            var accessRequest = EntityHelper.CreateAccessRequest();
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
             // Act
-            var result = controller.AddAccessRequest(mapper.Map<Model.AccessRequestModel>(_expectedAccessRequest));
+            var result = controller.AddAccessRequest(model);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualAccessRequest = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.AccessRequestModel>(_expectedAccessRequest), actualAccessRequest);
+            var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
+            Assert.Equal(model, actualResult, new ShallowPropertyCompare());
+            Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
+            Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
+            Assert.Equal(model.User.Id, actualResult.User.Id);
             service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
         }
         #endregion

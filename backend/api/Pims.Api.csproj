@@ -10,9 +10,13 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Models\Lookup\**" />
     <Compile Remove="Profiles\Extensions\**" />
+    <Content Remove="Models\Lookup\**" />
     <Content Remove="Profiles\Extensions\**" />
+    <EmbeddedResource Remove="Models\Lookup\**" />
     <EmbeddedResource Remove="Profiles\Extensions\**" />
+    <None Remove="Models\Lookup\**" />
     <None Remove="Profiles\Extensions\**" />
   </ItemGroup>
   <ItemGroup>
@@ -49,8 +53,5 @@
     <ProjectReference Include="..\dal.keycloak\Pims.Dal.Keycloak.csproj" />
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />
     <ProjectReference Include="..\keycloak\Pims.Keycloak.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Lookup\" />
   </ItemGroup>
 </Project>

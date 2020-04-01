@@ -12,6 +12,7 @@ using Pims.Dal.Security;
 using System;
 using System.Linq;
 using Xunit;
+using Pims.Core.Comparers;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -57,9 +58,9 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
-            Assert.Equal(expectedProperties, actualProperties);
+            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
@@ -90,9 +91,9 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
-            Assert.Equal(expectedProperties, actualProperties);
+            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
@@ -121,9 +122,9 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels);
-            Assert.Equal(expectedProperties, actualProperties);
+            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels);
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
         }
@@ -152,9 +153,9 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.PropertyModel[]>(buildings);
-            Assert.Equal(expectedProperties, actualProperties);
+            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.PropertyModel[]>(buildings);
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }
@@ -183,9 +184,9 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualProperties = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedProperties = mapper.Map<Model.PropertyModel[]>(parcels);
-            Assert.Equal(expectedProperties, actualProperties);
+            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels);
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
         }

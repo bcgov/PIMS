@@ -14,7 +14,7 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Role
         public BaseProfile()
         {
             CreateMap<Entity.BaseEntity, Model.Update.BaseModel>()
-                .ForMember(dest => dest.RowVersion, opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));
+                .ForMember(dest => dest.RowVersion, opt => opt.MapFrom(src => src.RowVersion.Length == 0 ? null : Convert.ToBase64String(src.RowVersion)));
 
             CreateMap<Model.Update.BaseModel, Entity.BaseEntity>()
                 .AfterMap((source, dest) =>

@@ -1,10 +1,7 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Pims.Api.Models.Property
 {
 
-    public class PropertyModel : IEquatable<PropertyModel>
+    public class PropertyModel
     {
         #region Properties
         public int Id { get; set; }
@@ -30,32 +27,6 @@ namespace Pims.Api.Models.Property
 
         #region Building Properties
         #endregion
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as PropertyModel);
-        }
-
-        public bool Equals([AllowNull] PropertyModel other)
-        {
-            return other != null &&
-                Id == other.Id &&
-                PropertyTypeId == other.PropertyTypeId &&
-                Latitude == other.Latitude &&
-                Longitude == other.Longitude &&
-                Description == other.Description &&
-                PID == other.PID &&
-                PIN == other.PIN &&
-                StatusId == other.StatusId &&
-                ClassificationId == other.ClassificationId;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, PID, PIN, StatusId, ClassificationId, Latitude, Longitude, Description);
-        }
         #endregion
     }
 }

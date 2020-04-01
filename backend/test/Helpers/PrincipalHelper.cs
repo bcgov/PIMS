@@ -15,12 +15,12 @@ namespace Pims.Api.Test.Helpers
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public static ClaimsPrincipal CreateForRole(string role)
+        public static ClaimsPrincipal CreateForRole(string role = null)
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new System.Security.Claims.Claim[]
             {
                 new System.Security.Claims.Claim (ClaimTypes.NameIdentifier, Guid.NewGuid ().ToString ()),
-                    new System.Security.Claims.Claim (ClaimTypes.Role, role)
+                    new System.Security.Claims.Claim (ClaimTypes.Role, role ?? "none")
             }, "mock"));
 
             return user;
