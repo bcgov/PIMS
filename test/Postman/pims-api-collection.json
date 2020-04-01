@@ -232,12 +232,12 @@
 										},
 										{
 											"key": "username",
-											"value": "administrator",
+											"value": "{{pims-test-username}}",
 											"type": "text"
 										},
 										{
 											"key": "password",
-											"value": "administrator",
+											"value": "{{pims-test-password}}",
 											"type": "text"
 										},
 										{
@@ -519,6 +519,38 @@
 					"_postman_isSubFolder": true
 				}
 			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd6b19f6-2761-4d5f-a358-fffaf1243158",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "74589fe1-5e20-4466-96fd-8e54c81e001e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
 			"protocolProfileBehavior": {}
 		},
 		{
@@ -619,7 +651,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"displayName\": \"Administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"middleName\": null,\r\n  \"lastName\": \"User\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"agencies\": [\r\n    {\r\n      \"id\": 1\r\n    },\r\n    {\r\n      \"id\": 3\r\n    }\r\n  ],\r\n  \"roles\": [\r\n    {\r\n      \"id\": \"bbf27108-a0dc-4782-8025-7af7af711335\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
+													"raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"username\": \"administrator\",\r\n  \"displayName\": \"User, Administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"middleName\": \"Test\",\r\n  \"lastName\": \"User\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"isDisabled\": false,\r\n  \"emailVerified\": false,\r\n  \"agencies\": [\r\n    {\r\n      \"id\": 1\r\n    },\r\n    {\r\n      \"id\": 3\r\n    }\r\n  ],\r\n  \"roles\": [\r\n    {\r\n      \"id\": \"bbf27108-a0dc-4782-8025-7af7af711335\",\r\n      \"name\": \"System Administrator\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -816,6 +848,19 @@
 										},
 										{
 											"name": "Get User",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "542d4f92-7b03-42aa-b6bd-f8cae8205758",
+														"exec": [
+															"var jsonData = JSON.parse(responseBody);",
+															"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
 											"request": {
 												"method": "GET",
 												"header": [],
@@ -887,7 +932,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n  \"id\": \"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52\",\r\n  \"displayName\": \"Tom\",\r\n  \"firstName\": \"Tom\",\r\n  \"middleName\": null,\r\n  \"lastName\": \"Brady\",\r\n  \"email\": \"tom.brady@email.com\",\r\n  \"createdOn\": \"2020-02-05T06:40:30.9266667\",\r\n  \"updatedOn\": null,\r\n  \"rowVersion\": \"AAAAAAAACEI=\"\r\n}",
+													"raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"username\": \"administrator\",\r\n  \"displayName\": \"User, Administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"middleName\": \"Test\",\r\n  \"lastName\": \"User\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"isDisabled\": false,\r\n  \"emailVerified\": false,\r\n  \"agencies\": [\r\n    {\r\n      \"id\": 1,\r\n      \"name\": \"Ministry of Advanced Education, Skills & Training\",\r\n      \"code\": \"AEST\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.2066667\",\r\n      \"rowVersion\": \"AAAAAAAADE0=\"\r\n    },\r\n    {\r\n      \"id\": 3,\r\n      \"name\": \"Ministry of Corporate Services for the Natural Resources Sector\",\r\n      \"code\": \"CSNR\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.2066667\",\r\n      \"rowVersion\": \"AAAAAAAADE8=\"\r\n    }\r\n  ],\r\n  \"roles\": [\r\n    {\r\n      \"description\": \"System Administrator of the PIMS solution.\",\r\n      \"id\": \"0\",\r\n      \"code\": \"System Administrator\",\r\n      \"name\": \"System Administrator\",\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"type\": \"Role\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.3033333\",\r\n      \"rowVersion\": \"AAAAAAAADcM=\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1142,6 +1187,19 @@
 										},
 										{
 											"name": "Get Parcel by Id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "648edcb6-fd4d-42e6-a1c4-01918aebb42b",
+														"exec": [
+															"var jsonData = JSON.parse(responseBody);",
+															"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
 											"request": {
 												"method": "GET",
 												"header": [],
@@ -1164,6 +1222,19 @@
 										},
 										{
 											"name": "Get Parcel by PID",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "ceb32295-c1ce-4b79-952a-82aee1661474",
+														"exec": [
+															"var jsonData = JSON.parse(responseBody);",
+															"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
 											"request": {
 												"method": "GET",
 												"header": [],
@@ -1187,6 +1258,19 @@
 										},
 										{
 											"name": "Get Parcel by PID",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "c48b82b1-9445-4a65-9805-2a1332ee887b",
+														"exec": [
+															"var jsonData = JSON.parse(responseBody);",
+															"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
 											"request": {
 												"method": "GET",
 												"header": [],
@@ -1222,7 +1306,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n\t\"PID\": \"000-000-092\",\n\t\"Description\": \"A parcel of land\",\n\t\"StatusId\": 1,\n\t\"ClassificationId\": 1,\n\t\"AgencyId\": 1,\n\t\"Address\": {\n\t\t\"Line1\": \"134 St\",\n\t\t\"CityId\": 1,\n\t\t\"ProvinceId\": \"BC\",\n\t\t\"Postal\": \"V9C0E4\"\n\t},\n\t\"FiscalYear\": 2020,\n\t\"AssessedValue\": 50000,\n\t\"Latitude\": 0,\n\t\"Longitude\": 0,\n\t\"LandArea\": 50000,\n\t\"LandLegalDescription\": \"Legal Description\"\n}",
+													"raw": "{\n\t\"PID\": \"000-000-096\",\n\t\"PIN\": null,\n\t\"Description\": \"A parcel of land\",\n\t\"StatusId\": 1,\n\t\"ClassificationId\": 1,\n\t\"AgencyId\": 1,\n\t\"Address\": {\n\t\t\"Line1\": \"134 St\",\n\t\t\"CityId\": 1,\n\t\t\"ProvinceId\": \"BC\",\n\t\t\"Postal\": \"V9C0E4\"\n\t},\n\t\"FiscalYear\": 2020,\n\t\"AssessedValue\": 50000,\n\t\"Latitude\": 0,\n\t\"Longitude\": 0,\n\t\"LandArea\": 50000,\n\t\"LandLegalDescription\": \"Legal Description\"\n}",
 													"options": {
 														"raw": {}
 													}
@@ -1295,7 +1379,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n  \"id\": 1,\r\n  \"pid\": \"000-000-092\",\r\n  \"statusId\": 1,\r\n  \"status\": null,\r\n  \"classificationId\": 1,\r\n  \"classification\": null,\r\n  \"agencyId\": 1,\r\n  \"subAgency\": null,\r\n  \"agency\": null,\r\n  \"address\": {\r\n    \"id\": 2,\r\n    \"line1\": \"134 St\",\r\n    \"line2\": null,\r\n    \"cityId\": 1,\r\n    \"city\": null,\r\n    \"provinceId\": \"BC\",\r\n    \"province\": null,\r\n    \"postal\": \"V9C0E4\",\r\n    \"createdOn\": \"2020-02-29T17:56:05.3\",\r\n    \"updatedOn\": null,\r\n    \"rowVersion\": \"AAAAAAAAE4o=\"\r\n  },\r\n  \"fiscalYear\": 2020,\r\n  \"estimatedValue\": 0,\r\n  \"assessedValue\": 50000,\r\n  \"netBookValue\": 0,\r\n  \"latitude\": 0,\r\n  \"longitude\": 0,\r\n  \"landArea\": 50000,\r\n  \"description\": \"A parcel of land 2\",\r\n  \"landLegalDescription\": \"Legal Description\",\r\n  \"buildings\": [],\r\n  \"createdOn\": \"2020-02-29T17:56:05.33\",\r\n  \"updatedOn\": null,\r\n  \"rowVersion\": \"AAAAAAAAE4s=\"\r\n}",
+													"raw": "{\r\n  \"id\": 1,\r\n  \"pid\": \"000-000-092\",\r\n  \"statusId\": 1,\r\n  \"status\": \"Active\",\r\n  \"classificationId\": 1,\r\n  \"classification\": \"Core Strategic\",\r\n  \"agencyId\": 1,\r\n  \"agency\": \"AEST\",\r\n  \"address\": {\r\n    \"id\": 1,\r\n    \"line1\": \"134 St\",\r\n    \"cityId\": 1,\r\n    \"city\": \"No City Yet\",\r\n    \"provinceId\": \"BC\",\r\n    \"province\": \"British Columbia\",\r\n    \"postal\": \"V9C0E4\",\r\n    \"createdOn\": \"2020-03-30T13:54:23.2467674\",\r\n    \"rowVersion\": \"AAAAAAAAH0E=\"\r\n  },\r\n  \"latitude\": 0,\r\n  \"longitude\": 0,\r\n  \"landArea\": 50000,\r\n  \"description\": \"A parcel of land\",\r\n  \"landLegalDescription\": \"Legal Description\",\r\n  \"isSensitive\": true,\r\n  \"evaluations\": [\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2017,\r\n      \"estimatedValue\": 131233.5,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276447\",\r\n      \"rowVersion\": \"AAAAAAAAH+M=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2019,\r\n      \"estimatedValue\": 9999.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.827664\",\r\n      \"rowVersion\": \"AAAAAAAAH+Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2020,\r\n      \"estimatedValue\": 1111.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T14:36:57.4483055\",\r\n      \"rowVersion\": \"AAAAAAAAH2Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2021,\r\n      \"estimatedValue\": 33333.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276663\",\r\n      \"rowVersion\": \"AAAAAAAAH+U=\"\r\n    }\r\n  ],\r\n  \"buildings\": [\r\n    {\r\n      \"id\": 5,\r\n      \"parcelId\": 1,\r\n      \"agencyId\": 1,\r\n      \"localId\": \"222\",\r\n      \"description\": \"test\",\r\n      \"address\": {\r\n        \"id\": 6,\r\n        \"line1\": \"1323 St\",\r\n        \"cityId\": 1,\r\n        \"city\": \"No City Yet\",\r\n        \"provinceId\": \"BC\",\r\n        \"province\": \"British Columbia\",\r\n        \"postal\": \"V9C0E4\",\r\n        \"createdOn\": \"0001-01-01T00:00:00\",\r\n        \"updatedOn\": \"2020-03-30T15:26:11.8276547\",\r\n        \"rowVersion\": \"AAAAAAAAH98=\"\r\n      },\r\n      \"latitude\": 3,\r\n      \"longitude\": 3,\r\n      \"buildingConstructionTypeId\": 3,\r\n      \"buildingConstructionType\": \"Steel\",\r\n      \"buildingFloorCount\": 1,\r\n      \"buildingPredominateUseId\": 1,\r\n      \"buildingPredominateUse\": \"Research & Development Facility\",\r\n      \"buildingTenancy\": \"test\",\r\n      \"rentableArea\": 0,\r\n      \"isSensitive\": false,\r\n      \"evaluations\": [],\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.82765\",\r\n      \"rowVersion\": \"AAAAAAAAH+I=\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1303,7 +1387,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/e5b2d8f5-67b2-42e0-84d9-e69849d6ec52",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/1",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1313,7 +1397,7 @@
 														"api",
 														"admin",
 														"parcels",
-														"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52"
+														"1"
 													]
 												}
 											},
