@@ -22,7 +22,9 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
             <ListGroup>
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
-                {parcelDetail?.assessedValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                {parcelDetail?.evaluations
+                  ?.find(() => true)
+                  ?.assessedValue?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
             </ListGroup>
             <ListGroup>
