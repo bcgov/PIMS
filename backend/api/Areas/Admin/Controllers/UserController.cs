@@ -116,9 +116,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult GetUser(Guid id)
         {
             var entity = _pimsAdminService.User.Get(id);
-
-            if (entity == null) return NoContent();
-
             var user = _mapper.Map<Model.UserModel>(entity);
             return new JsonResult(user);
         }

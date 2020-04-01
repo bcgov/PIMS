@@ -38,7 +38,6 @@ namespace Pims.Api.Test.Routes
             type.HasRoute("v{version:apiVersion}/properties");
         }
 
-        #region GetProperties
         [Fact]
         public void GetProperties_Route()
         {
@@ -64,7 +63,6 @@ namespace Pims.Api.Test.Routes
             endpoint.HasPost("filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
-        #endregion
         #endregion
     }
 }
