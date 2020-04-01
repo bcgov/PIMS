@@ -39,8 +39,11 @@ describe('fetchParcels action creator', () => {
       neLongitude: 2,
       swLatitude: 3,
       swLongitude: 4,
-      agencyId: null,
-      propertyClassificationId: null,
+      address: null,
+      agencies: null,
+      classificationId: null,
+      minLandArea: null,
+      maxLandArea: null,
     };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     const mockResponse = { data: { success: true } };
