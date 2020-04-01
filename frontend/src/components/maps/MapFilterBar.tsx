@@ -1,55 +1,115 @@
-import React from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import { ILookupCode } from 'actions/lookupActions';
-import LookupCodeDropdown from 'components/common/LookupCodeDropdown';
 import './MapFilterBar.scss';
+
+import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { Formik } from 'formik';
+import { ILookupCode } from 'actions/lookupActions';
+import { Form, Input, Select, SelectOption, Button, ButtonProps } from '../common/form';
+import { SearchIcon } from '../common/icons';
+
+const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
+  return (
+    <Button
+      variant="warning"
+      type="submit"
+      className="pl-0"
+      {...props}
+      iconBefore={<SearchIcon className="mr-2" />}
+    >
+      Search
+    </Button>
+  );
+};
+
+export type MapFilterChangeEvent = {
+  address: string;
+  /** comma-separated list of agencies to filter by */
+  agencies: string;
+  classificationId: string;
+  minLotSize: string;
+  maxLotSize: string;
+};
 
 type MapFilterProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
-  onSelectAgency: (agencyId: string | null) => void;
-  onSelectPropertyClassification: (propertyClassificationId: string | null) => void;
+  lotSizes: number[];
+  onFilterChange: (e: MapFilterChangeEvent) => void;
 };
 
 /**
  * filter overlay for the map, controls pin display.
- * @param props {@link MapFilterProps}
  */
-function MapFilterBar(props: MapFilterProps) {
-  const onSelectAgency = (codeId: string | null) => {
-    props.onSelectAgency(codeId);
-  };
-  const onSelectPropertyClassification = (codeId: string | null) => {
-    props.onSelectPropertyClassification(codeId);
-  };
+const MapFilterBar: React.FC<MapFilterProps> = ({
+  agencyLookupCodes,
+  propertyClassifications,
+  lotSizes,
+  onFilterChange,
+}) => {
+  const mapLookupCode = (code: ILookupCode): SelectOption => ({
+    label: code.name,
+    value: code.id.toString(),
+  });
+  const mapLotSize = (size: number): SelectOption => ({
+    label: size > 1 ? `${size.toLocaleString()} acres` : `${size} acre`,
+    value: `${size}`,
+  });
+
+  const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
+  const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const sizes = lotSizes.map(x => mapLotSize(x));
 
   return (
-    <Container fluid={true} className="map-filter-bar">
-      <Row>
-        <Col md={{ span: 8, offset: 2 }} xs={{ span: 8, offset: 2 }}>
+    <Formik<MapFilterChangeEvent>
+      initialValues={{
+        address: '',
+        agencies: '',
+        classificationId: '',
+        minLotSize: '',
+        maxLotSize: '',
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        onFilterChange?.(values);
+        setSubmitting(false);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Container fluid={true} className="map-filter-container">
           <Row>
-            <Col className="bar-item">
-              <Form.Control type="text" placeholder="Search Bar Not Implemented" />
-            </Col>
-            <Col className="bar-item">
-              <LookupCodeDropdown
-                lookupCodes={props.agencyLookupCodes || []}
-                defaultTitle={'View Properties in \u00A0'}
-                onSelectCode={onSelectAgency}
-              />
-            </Col>
-            <Col className="bar-item">
-              <LookupCodeDropdown
-                lookupCodes={props.propertyClassifications || []}
-                defaultTitle={'View by Classification \u00A0'}
-                onSelectCode={onSelectPropertyClassification}
-              />
+            <Col md={{ span: 8, offset: 2 }} xs={{ span: 8, offset: 2 }}>
+              <Form>
+                <Form.Row className="map-filter-bar">
+                  <Col className="bar-item">
+                    <Input field="address" placeholder="Enter an address or city" />
+                  </Col>
+                  <Col className="bar-item">
+                    <Select field="agencies" placeholder="View Properties In" options={agencies} />
+                  </Col>
+                  <Col className="bar-item">
+                    <Select
+                      field="classificationId"
+                      placeholder="View by Classification"
+                      options={classifications}
+                    />
+                  </Col>
+                  <Col className="bar-item">
+                    <Select field="minLotSize" placeholder="No Min Lot Size" options={[...sizes]} />
+                  </Col>
+                  <Col className="bar-item">
+                    <Select field="maxLotSize" placeholder="No Max Lot Size" options={[...sizes]} />
+                  </Col>
+                  <Col className="bar-item flex-grow-0">
+                    <SearchButton disabled={isSubmitting} />
+                  </Col>
+                </Form.Row>
+              </Form>
             </Col>
           </Row>
-        </Col>
-      </Row>
-    </Container>
+        </Container>
+      )}
+    </Formik>
   );
-}
+};
 
 export default MapFilterBar;
