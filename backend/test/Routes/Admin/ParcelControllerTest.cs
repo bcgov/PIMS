@@ -3,8 +3,8 @@ using Pims.Api.Areas.Admin.Controllers;
 using Pims.Api.Test.Helpers;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
-using System;
 using Xunit;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Test.Routes.Admin
 {
@@ -42,7 +42,71 @@ namespace Pims.Api.Test.Routes.Admin
             type.HasApiVersion("1.0");
         }
 
-        #region AddParcel
+        [Fact]
+        public void GetParcels_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(int), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet();
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetParcels_Filter_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(int), typeof(int), typeof(ParcelFilter));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("filter");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetParcel_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcel), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("{id:int}");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetParcelByPid_Int_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcelByPid), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("pid/{id:int}");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetParcelByPid_String_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcelByPid), typeof(string));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("pid/{pid:pid}");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
         [Fact]
         public void AddParcel_Route()
         {
@@ -55,9 +119,7 @@ namespace Pims.Api.Test.Routes.Admin
             endpoint.HasPost();
             endpoint.HasPermissions(Permissions.PropertyAdd);
         }
-        #endregion
 
-        #region UpdateParcel
         [Fact]
         public void UpdateParcel_Route()
         {
@@ -70,9 +132,7 @@ namespace Pims.Api.Test.Routes.Admin
             endpoint.HasPut("{id}");
             endpoint.HasPermissions(Permissions.PropertyEdit);
         }
-        #endregion
 
-        #region DeleteParcel
         [Fact]
         public void DeleteParcel_Route()
         {
@@ -85,7 +145,6 @@ namespace Pims.Api.Test.Routes.Admin
             endpoint.HasDelete("{id}");
             endpoint.HasPermissions(Permissions.PropertyAdd);
         }
-        #endregion
         #endregion
     }
 }
