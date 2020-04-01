@@ -25,6 +25,7 @@ namespace Pims.Api.Areas.Admin.Profiles.User
                 .ForMember(dest => dest.AccessRequestId, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
                 .ForMember(dest => dest.AgencyId, opt => opt.MapFrom(src => src.Id));
+
             CreateMap<Model.AccessRequestRoleModel, Entity.AccessRequestRole>()
                 .ForMember(dest => dest.AccessRequest, opt => opt.Ignore())
                 .ForMember(dest => dest.AccessRequestId, opt => opt.Ignore())

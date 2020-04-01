@@ -1,12 +1,9 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Pims.Api.Models
 {
     /// <summary>
     /// CodeModel class, provides a model that represents a code lookup item.
     /// </summary>
-    public class CodeModel : BaseModel, IEquatable<CodeModel>
+    public class CodeModel : BaseModel
     {
         #region Properties
         /// <summary>
@@ -44,27 +41,6 @@ namespace Pims.Api.Models
         /// </summary>
         /// <value></value>
         public string Type { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as CodeModel);
-        }
-
-        public bool Equals([AllowNull] CodeModel other)
-        {
-            return other != null &&
-                Name == other.Name &&
-                Id == other.Id &&
-                IsDisabled == other.IsDisabled &&
-                Type == other.Type;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id, IsDisabled);
-        }
         #endregion
     }
 }

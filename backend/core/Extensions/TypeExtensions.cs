@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System;
+using System.Collections;
 
 namespace Pims.Core.Extensions
 {
@@ -80,15 +81,25 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static bool IsEnumerable(this Type type)
         {
+            return typeof(IEnumerable).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Determine if the specified type is an IEnumerable.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsIEnumerable(this Type type)
+        {
             return type.GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
         }
 
         /// <summary>
-        /// Determine if the specified type is a collection.
+        /// Determine if the specified type is a ICollection.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsCollection(this Type type)
+        public static bool IsICollection(this Type type)
         {
             return type.GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ICollection<>));
         }
@@ -106,6 +117,18 @@ namespace Pims.Core.Extensions
             if (!type.IsValueType) return true;
             if (Nullable.GetUnderlyingType(type) != null) return true;
             return false;
+        }
+
+        /// <summary>
+        /// Determine if the type/object is a nullable type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns>True if the type/object is nullable.</returns>
+        public static bool IsNullableType<T>(this T obj)
+        {
+            var type = typeof(T);
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>

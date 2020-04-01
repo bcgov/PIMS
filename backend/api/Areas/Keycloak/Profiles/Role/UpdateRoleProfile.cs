@@ -14,9 +14,13 @@ namespace Pims.Api.Areas.Keycloak.Profiles.Role
         public UpdateRoleProfile()
         {
             CreateMap<Entity.Role, Model.Update.RoleModel>()
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .IncludeBase<Entity.BaseEntity, Model.Update.BaseModel>();
             
             CreateMap<Model.Update.RoleModel, Entity.Role>()
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .IncludeBase<Model.Update.BaseModel, Entity.BaseEntity>();
 
             CreateMap<Model.Update.RoleModel, KModel.RoleModel>();

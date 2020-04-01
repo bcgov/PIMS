@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Areas.Keycloak.Models.User
 {
     /// <summary>
     /// AccessRequestUserModel class, provides a model that represents a user attached to an access request.
     /// </summary>
-    public class AccessRequestUserModel : Pims.Api.Models.BaseModel, IEquatable<AccessRequestUserModel>
+    public class AccessRequestUserModel : Pims.Api.Models.BaseModel
     {
         #region Properties
         /// <summary>
@@ -44,29 +43,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User
         /// </summary>
         /// <value></value>
         public string Email { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as AccessRequestUserModel);
-        }
-
-        public bool Equals([AllowNull] AccessRequestUserModel other)
-        {
-            return other != null &&
-                   Id.Equals(other.Id) &&
-                   DisplayName == other.DisplayName &&
-                   FirstName == other.FirstName &&
-                   MiddleName == other.MiddleName &&
-                   LastName == other.LastName &&
-                   Email == other.Email;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, DisplayName, FirstName, MiddleName, LastName, Email);
-        }
         #endregion
     }
 }

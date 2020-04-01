@@ -12,6 +12,7 @@ using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using Pims.Core.Comparers;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -47,8 +48,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
@@ -71,8 +72,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
@@ -98,8 +99,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
@@ -125,8 +126,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualParcels);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
@@ -147,8 +148,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
-            Assert.Empty(actualParcels);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            Assert.Empty(actualResult);
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
@@ -176,9 +177,9 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcels = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
+            var actualResult = Assert.IsType<Model.PartialParcelModel[]>(actionResult.Value);
             var expectedParcels = mapper.Map<Model.PartialParcelModel[]>(parcels);
-            Assert.Equal(expectedParcels, actualParcels);
+            Assert.Equal(expectedParcels, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
         }
 
@@ -257,8 +258,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcelDetail = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.ParcelModel>(expectedTestParcel), actualParcelDetail);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ParcelModel>(expectedTestParcel), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(expectedParcelId), Times.Once());
         }
         #endregion
@@ -308,7 +309,7 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
@@ -333,8 +334,8 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualParcel);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
