@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using Pims.Api.Helpers.Exceptions;
 
 namespace Pims.Api.Controllers
 {
@@ -62,19 +63,11 @@ namespace Pims.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(KModel.UserInfoModel), 200)]
         [SwaggerOperation(Tags = new[] { "user" })]
-        public async Task<IActionResult> UserInfo()
+        public async Task<IActionResult> UserInfoAsync()
         {
             _optionsKeycloak.Validate(); // TODO: Validate configuration automatically.
             _optionsKeycloak.OpenIdConnect.Validate();
             var response = await _requestClient.ProxyGetAsync(Request, $"{_optionsKeycloak.Authority}{_optionsKeycloak.OpenIdConnect.UserInfo}");
-
-            using var responseStream = await response.Content.ReadAsStreamAsync();
-
-            var readStream = new System.IO.StreamReader(responseStream, Encoding.UTF8);
-            var json = readStream.ReadToEnd();
-            _logger.LogInformation(json);
-            responseStream.Position = 0;
-
             return await response.HandleResponseAsync<KModel.UserInfoModel>();
         }
 
@@ -90,15 +83,15 @@ namespace Pims.Api.Controllers
         {
             if (accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
             {
-                return BadRequest("Invalid access request specified");
+                throw new BadRequestException("Invalid access request specified");
             }
             if (accessRequestModel.Agencies.Count() != 1)
             {
-                return BadRequest("Each access request can only contain one agency.");
+                throw new BadRequestException("Each access request can only contain one agency.");
             }
             if (accessRequestModel.Roles.Count() != 1)
             {
-                return BadRequest("Each access request can only contain one role.");
+                throw new BadRequestException("Each access request can only contain one role.");
             }
             var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);
             _userService.AddAccessRequest(entity);
