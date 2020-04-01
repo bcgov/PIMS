@@ -14,6 +14,9 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http.Extensions;
+using Pims.Dal.Entities.Models;
+using Pims.Api.Helpers.Extensions;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -51,28 +54,44 @@ namespace Pims.Api.Areas.Admin.Controllers
 
         #region Endpoints
         /// <summary>
-        /// GET - Returns a paged array of parcels from the datasource.
+        /// Get all the parcels that satisfy the filter parameters.
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
-        /// <param name="sort"></param>
-        /// <returns>Paged object with an array of parcels.</returns>
+        /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Entity.Models.Paged<Model.PartialParcelModel>), 200)]
+        [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
-        public IActionResult GetParcels(int page = 1, int quantity = 10, string sort = null) // TODO: sort and filter.
+        public IActionResult GetParcels(int page, int quantity)
         {
-            if (page < 1) page = 1;
-            if (quantity < 1) quantity = 1;
-            if (quantity > 50) quantity = 50;
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetParcels(page, quantity, new ParcelFilter(query));
+        }
 
-            var result = _pimsAdminService.Parcel.Get(page, quantity, sort);
-            var entities = _mapper.Map<Model.PartialParcelModel[]>(result.Items);
-            var paged = new Entity.Models.Paged<Model.PartialParcelModel>(entities, page, quantity, result.Total);
+        /// <summary>
+        /// Get all the parcels that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        public IActionResult GetParcels(int page, int quantity, [FromBody]ParcelFilter filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
-            return new JsonResult(paged);
+            var paged = _pimsAdminService.Parcel.Get(page, quantity, filter);
+            var parcels = _mapper.Map<Model.ParcelModel[]>(paged.Items);
+            var result = new Paged<Model.ParcelModel>(parcels, page, quantity, paged.Total);
+            return new JsonResult(result);
         }
 
         /// <summary>
