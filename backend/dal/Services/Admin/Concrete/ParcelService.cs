@@ -29,19 +29,85 @@ namespace Pims.Dal.Services.Admin
 
         #region Methods
         /// <summary>
-        /// Get a page of parcels.
+        /// Get an array of parcels within the specified filter.
+        /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
-        /// <param name="sort"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        public Paged<Parcel> Get(int page, int quantity, string sort)
+        public Paged<Parcel> Get(int page, int quantity, ParcelFilter filter = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            filter.ThrowIfNull(nameof(filter));
+            if (page < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(page));
+            if (quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(quantity));
 
-            var entities = this.Context.Parcels.AsNoTracking();
-            var pagedEntities = entities.Skip((page - 1) * quantity).Take(quantity);
-            return new Paged<Parcel>(pagedEntities, page, quantity, entities.Count());
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
+
+            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
+            var query = this.Context.Parcels.AsNoTracking();
+
+            if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
+                query = query.Where(p =>
+                    p.Latitude != 0 &&
+                    p.Longitude != 0 &&
+                    p.Latitude <= filter.NELatitude &&
+                    p.Latitude >= filter.SWLatitude &&
+                    p.Longitude <= filter.NELongitude &&
+                    p.Longitude >= filter.SWLongitude);
+
+            if (filter.Agencies?.Any() == true)
+                query = query.Where(p => filter.Agencies.Contains(p.AgencyId));
+            if (filter.ClassificationId.HasValue)
+                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
+            if (filter.StatusId.HasValue)
+                query = query.Where(p => p.StatusId == filter.StatusId);
+
+            // TODO: Parse the address information by City, Postal, etc.
+            if (!String.IsNullOrWhiteSpace(filter.Address))
+                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
+
+            if (filter.MinLandArea.HasValue)
+                query = query.Where(p => p.LandArea >= filter.MinLandArea);
+            if (filter.MaxLandArea.HasValue)
+                query = query.Where(p => p.LandArea <= filter.MaxLandArea);
+
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinEstimatedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MinEstimatedValue <= p.Evaluations
+                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
+                    .Where(pe => pe.ParcelId == p.Id)
+                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+            if (filter.MaxEstimatedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MaxEstimatedValue >= p.Evaluations
+                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
+                    .Where(pe => pe.ParcelId == p.Id)
+                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinAssessedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MinAssessedValue <= p.Evaluations
+                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
+                    .Where(pe => pe.ParcelId == p.Id)
+                    .Max(pe => pe.FiscalYear)).AssessedValue);
+            if (filter.MaxAssessedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MaxAssessedValue >= p.Evaluations
+                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
+                    .Where(pe => pe.ParcelId == p.Id)
+                    .Max(pe => pe.FiscalYear)).AssessedValue);
+
+            if (filter.Sort?.Any() == true)
+                query = query.OrderByProperty(filter.Sort);
+
+            var pagedEntities = query.Skip((page - 1) * quantity).Take(quantity);
+            return new Paged<Parcel>(pagedEntities, page, quantity, query.Count());
         }
 
         /// <summary>
