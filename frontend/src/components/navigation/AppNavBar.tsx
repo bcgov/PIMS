@@ -15,16 +15,18 @@ function AppNavBar() {
 
   const ManagePropertyDropDown = () => (
     <NavDropdown title="Manage Property" id="manage-property-dropdown">
-      <NavDropdown.Item>Acquisition Project</NavDropdown.Item>
-      <NavDropdown.Item>Disposition Project</NavDropdown.Item>
-      <NavDropdown.Item>Request Exemption</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => history.push('/submitProperty')}>
+        Submit Property
+      </NavDropdown.Item>
+      <NavDropdown.Item>View Inventory</NavDropdown.Item>
     </NavDropdown>
   );
 
   const StartProjectDropdown = () => (
     <NavDropdown title="Start a Project" id="start-project-dropdown">
-      <NavDropdown.Item>Submit Property</NavDropdown.Item>
-      <NavDropdown.Item>View Inventory</NavDropdown.Item>
+      <NavDropdown.Item>Acquisition Project</NavDropdown.Item>
+      <NavDropdown.Item>Disposition Project</NavDropdown.Item>
+      <NavDropdown.Item>Request Exemption</NavDropdown.Item>
     </NavDropdown>
   );
 

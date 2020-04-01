@@ -1,24 +1,25 @@
+import './Login.scss';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import React from 'react';
-import './Login.scss';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { RootState } from 'reducers/rootReducer';
 import { NEW_PIMS_USER } from 'actionCreators/usersActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as actionTypes from 'constants/actionTypes';
 
 const Login = () => {
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
   const activated = useSelector<RootState, IGenericNetworkAction>(
-    state => state.activateUser as IGenericNetworkAction,
+    state => (state.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;
   }
   if (keycloak?.authenticated) {
-    if ((activated && activated.status === NEW_PIMS_USER) || !keyCloakWrapper?.roles?.length) {
+    if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
       return <Redirect to={{ pathname: '/guest' }} />;
     }
     return <Redirect to={{ pathname: '/mapview' }} />;

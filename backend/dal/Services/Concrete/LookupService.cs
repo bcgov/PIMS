@@ -48,6 +48,14 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
+        /// Get all occupant types sorted by SortOrder and Name
+        /// </summary>
+        public IEnumerable<BuildingOccupantType> GetBuildingOccupantTypes()
+        {
+            return this.Context.BuildingOccupantTypes.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
+        }
+
+        /// <summary>
         /// Get all cities sorted by SortOrder and Name
         /// </summary>
         public IEnumerable<City> GetCities()

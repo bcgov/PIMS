@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 import Administration from './Administration';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
+import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { render, fireEvent } from '@testing-library/react';
 
@@ -33,10 +34,13 @@ jest.mock('react-router-dom', () => ({
 
 // Empty response
 const store = mockStore({
-  [reducerTypes.GET_USERS]: {},
-  [reducerTypes.ACCESS_REQUEST]: {},
-  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {},
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_REQUEST_ACCESS]: { isFetching: false },
+    [actionTypes.ADD_REQUEST_ACCESS]: {},
+    [actionTypes.GET_USERS]: { isFetching: false },
+  },
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.USERS]: {},
 });
 
 it('renders Administration page correctly', () => {

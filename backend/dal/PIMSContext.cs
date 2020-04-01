@@ -23,6 +23,7 @@ namespace Pims.Dal
         public DbSet<BuildingEvaluation> BuildingEvaluations { get; set; }
         public DbSet<BuildingConstructionType> BuildingConstructionTypes { get; set; }
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
+        public DbSet<BuildingOccupantType> BuildingOccupantTypes { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
         public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }

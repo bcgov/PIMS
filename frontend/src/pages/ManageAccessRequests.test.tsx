@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
+import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { render } from '@testing-library/react';
@@ -34,8 +35,10 @@ jest.mock('react-router-dom', () => ({
 // Empty response
 const store = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {},
-  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
-    isFetching: true,
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_REQUEST_ACCESS]: {
+      isFetching: false,
+    },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
@@ -56,17 +59,23 @@ const successStore = mockStore({
       ],
     },
   },
-  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
-    isFetching: false,
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_REQUEST_ACCESS]: {
+      isFetching: false,
+    },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 const loadingStore = mockStore({
-  [reducerTypes.ACCESS_REQUEST]: {
-    isFetching: true,
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_REQUEST_ACCESS]: {
+      isFetching: true,
+    },
   },
-  [reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
-    isFetching: true,
+  [reducerTypes.NETWORK]: {
+    [actionTypes.UPDATE_REQUEST_ACCESS_ADMIN]: {
+      isFetching: true,
+    },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
@@ -93,7 +102,7 @@ describe('component functionality', () => {
       </Provider>,
     );
 
-  it('renders no users by default', () => {
+  it('renders no access requests by default', () => {
     const { getByText } = componentRender(store);
     expect(getByText(/no access requests/i));
   });

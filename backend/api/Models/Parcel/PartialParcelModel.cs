@@ -18,6 +18,10 @@ namespace Pims.Api.Models.Parcel
         public double Longitude { get; set; }
 
         public string Description { get; set; }
+
+        public string Zoning { get; set; }
+
+        public string ZoningPotential { get; set; }
         #endregion
     }
 }
