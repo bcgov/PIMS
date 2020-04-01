@@ -13,6 +13,7 @@ namespace Pims.Core.Comparers
     /// </summary>
     public class DeepPropertyCompare : IEqualityComparer<object>
     {
+        #region Methods
         /// <summary>
         /// Determines if the objects public properties are equal.
         /// </summary>
@@ -110,5 +111,6 @@ namespace Pims.Core.Comparers
 
             return hash.ToHashCode();
         }
+        #endregion
     }
 }
