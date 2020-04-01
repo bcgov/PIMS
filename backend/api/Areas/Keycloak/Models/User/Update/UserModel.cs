@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Areas.Keycloak.Models.User.Update
 {
     /// <summary>
     /// UserModel class, provides a model that represents a user.
     /// </summary>
-    public class UserModel : BaseModel, IEquatable<UserModel>
+    public class UserModel : BaseModel
     {
         #region Properties
         /// <summary>
@@ -87,31 +86,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User.Update
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UserRoleModel> Roles { get; set; } = new List<UserRoleModel>();
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as UserModel);
-        }
-
-        public bool Equals([AllowNull] UserModel other)
-        {
-            return other != null &&
-                   Username == other.Username &&
-                   Position == other.Position &&
-                   DisplayName == other.DisplayName &&
-                   FirstName == other.FirstName &&
-                   MiddleName == other.MiddleName &&
-                   LastName == other.LastName &&
-                   Note == other.Note &&
-                   Email == other.Email;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Username, Position, DisplayName, FirstName, MiddleName, LastName, Email, Note);
-        }
         #endregion
     }
 }

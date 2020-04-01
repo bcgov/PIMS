@@ -1,9 +1,6 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Pims.Api.Models.Parcel
 {
-    public class PartialParcelModel : BaseModel, IEquatable<PartialParcelModel>
+    public class PartialParcelModel : BaseModel
     {
         #region Properties
         public int Id { get; set; }
@@ -21,31 +18,6 @@ namespace Pims.Api.Models.Parcel
         public double Longitude { get; set; }
 
         public string Description { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as PartialParcelModel);
-        }
-
-        public bool Equals([AllowNull] PartialParcelModel other)
-        {
-            return other != null &&
-                Id == other.Id &&
-                PID == other.PID &&
-                PIN == other.PIN &&
-                StatusId == other.StatusId &&
-                ClassificationId == other.ClassificationId &&
-                Latitude == other.Latitude &&
-                Longitude == other.Longitude &&
-                Description == other.Description;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, PID, PIN, StatusId, ClassificationId, Latitude, Longitude, Description);
-        }
         #endregion
     }
 }

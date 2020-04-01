@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Pims.Api.Areas.Tools.Models.Import
 {
-    public class ParcelBuildingModel : Pims.Api.Models.BaseModel, IEquatable<ParcelBuildingModel>
+    public class ParcelBuildingModel : Pims.Api.Models.BaseModel
     {
         #region Properties
         public int Id { get; set; }
@@ -41,56 +38,6 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ParcelBuildingModel);
-        }
-
-        public bool Equals([AllowNull] ParcelBuildingModel other)
-        {
-            return other != null &&
-                Id == other.Id &&
-                LocalId == other.LocalId &&
-                ParcelId == other.ParcelId &&
-                AgencyId == other.AgencyId &&
-                Description == other.Description &&
-                EqualityComparer<AddressModel>.Default.Equals(Address, other.Address) &&
-                Latitude == other.Latitude &&
-                Longitude == other.Longitude &&
-                BuildingConstructionTypeId == other.BuildingConstructionTypeId &&
-                BuildingConstructionType == other.BuildingConstructionType &&
-                BuildingFloorCount == other.BuildingFloorCount &&
-                BuildingPredominateUseId == other.BuildingPredominateUseId &&
-                BuildingPredominateUse == other.BuildingPredominateUse &&
-                BuildingTenancy == other.BuildingTenancy &&
-                RentableArea == other.RentableArea &&
-                Enumerable.SequenceEqual(Evaluations, other.Evaluations);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(LocalId);
-            hash.Add(ParcelId);
-            hash.Add(AgencyId);
-            hash.Add(Description);
-            hash.Add(Address);
-            hash.Add(Latitude);
-            hash.Add(Longitude);
-            hash.Add(BuildingConstructionTypeId);
-            hash.Add(BuildingConstructionType);
-            hash.Add(BuildingFloorCount);
-            hash.Add(BuildingPredominateUseId);
-            hash.Add(BuildingPredominateUse);
-            hash.Add(BuildingTenancy);
-            hash.Add(RentableArea);
-            hash.Add(Evaluations);
-            return hash.ToHashCode();
-        }
         #endregion
     }
 }

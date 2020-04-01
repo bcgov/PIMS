@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using AutoMapper;
 using Pims.Api.Test.Helpers;
+using Pims.Core.Comparers;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -49,9 +50,9 @@ namespace Pims.Api.Test.Controllers
             var result = controller.GetAgencies();
 
             // Assert
-            JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(agency) }, resultValue);
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(agency) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetAgencies(), Times.Once());
         }
 
@@ -75,9 +76,9 @@ namespace Pims.Api.Test.Controllers
             var result = controller.GetPropertyClassifications();
 
             // Assert
-            JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(propertyClassification) }, resultValue);
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(propertyClassification) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetPropertyClassifications(), Times.Once());
         }
 
@@ -103,9 +104,9 @@ namespace Pims.Api.Test.Controllers
             var result = controller.GetRoles();
 
             // Assert
-            JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            Model.CodeModel[] resultValue = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(role) }, resultValue);
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(role) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetRoles(), Times.Once());
         }
 
@@ -148,10 +149,10 @@ namespace Pims.Api.Test.Controllers
             var result = controller.GetAll();
 
             // Assert
-            JsonResult actionResult = Assert.IsType<JsonResult>(result); // TODO: Should not be testing all four functions.
-            JsonResult agencyAction = Assert.IsType<JsonResult>(agencyResult);
-            JsonResult roleAction = Assert.IsType<JsonResult>(roleResult);
-            JsonResult classificationAction = Assert.IsType<JsonResult>(classificationResult);
+            var actionResult = Assert.IsType<JsonResult>(result); // TODO: Should not be testing all four functions.
+            var agencyAction = Assert.IsType<JsonResult>(agencyResult);
+            var roleAction = Assert.IsType<JsonResult>(roleResult);
+            var classificationAction = Assert.IsType<JsonResult>(classificationResult);
 
             string allResult = JsonConvert.SerializeObject(actionResult.Value);
             string agenciesResult = JsonConvert.SerializeObject(agencyAction.Value);

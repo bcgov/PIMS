@@ -14,7 +14,7 @@ namespace Pims.Api.Profiles
 
             CreateMap<Entity.BaseEntity, BaseModel>()
                 .IncludeAllDerived()
-                .ForMember(dest => dest.RowVersion, opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));
+                .ForMember(dest => dest.RowVersion, opt => opt.MapFrom(src => src.RowVersion.Length == 0 ? null : Convert.ToBase64String(src.RowVersion)));
 
             CreateMap<BaseModel, Entity.BaseEntity>()
                 .IncludeAllDerived()
