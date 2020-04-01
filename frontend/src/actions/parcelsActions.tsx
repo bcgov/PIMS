@@ -41,6 +41,13 @@ export interface IBuilding {
   buildingNetBookValue: number;
 }
 
+export interface IEvaluation {
+  fiscalYear: number;
+  estimatedValue: number;
+  assessedValue: number;
+  netBookValue: number;
+}
+
 export interface IParcelDetail {
   id: number;
   pid: string;
@@ -49,7 +56,7 @@ export interface IParcelDetail {
   propertyStatus: string;
   classification: string;
   description: string;
-  assessedValue: number;
+  evaluations: IEvaluation[];
   address: IAddress;
   landArea: string;
   landLegalDescription: string;

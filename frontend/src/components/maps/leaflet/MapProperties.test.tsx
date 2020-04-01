@@ -22,7 +22,14 @@ const mockDetails: IParcelDetail = {
   propertyStatus: 'active',
   classification: 'Core Operational',
   description: 'test',
-  assessedValue: 1000000,
+  evaluations: [
+    {
+      assessedValue: 1000000,
+      estimatedValue: 0,
+      fiscalYear: 2019,
+      netBookValue: 0,
+    },
+  ],
   address: {
     line1: '1234 mock Street',
     line2: 'N/A',
