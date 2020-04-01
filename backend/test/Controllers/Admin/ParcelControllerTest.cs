@@ -9,12 +9,13 @@ using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using System.Linq;
 using Xunit;
+using Pims.Core.Comparers;
 
 namespace Pims.Api.Test.Controllers.Admin
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
-    [Trait("area", "admine")]
+    [Trait("area", "admin")]
     [Trait("group", "parcel")]
     public class ParcelControllerTest
     {
@@ -45,8 +46,8 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualParcel);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
@@ -97,8 +98,8 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualParcel = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(model, actualParcel);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(model, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
         }
 

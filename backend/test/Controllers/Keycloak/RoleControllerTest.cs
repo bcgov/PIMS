@@ -10,6 +10,7 @@ using AutoMapper;
 using Pims.Dal.Keycloak;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Pims.Core.Comparers;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
@@ -50,7 +51,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsType<Model.RoleModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.RoleModel[]>(eroles), data);
+            Assert.Equal(mapper.Map<Model.RoleModel[]>(eroles), data, new DeepPropertyCompare());
             service.Verify(m => m.SyncRolesAsync(), Times.Once());
         }
         #endregion
@@ -76,7 +77,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsType<Model.RoleModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.RoleModel[]>(eroles), data);
+            Assert.Equal(mapper.Map<Model.RoleModel[]>(eroles), data, new DeepPropertyCompare());
             service.Verify(m => m.GetRolesAsync(1, 10, It.IsAny<string>()), Times.Once());
         }
         #endregion
@@ -100,8 +101,8 @@ namespace PimsApi.Test.Keycloak.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var data = Assert.IsType<Model.RoleModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.RoleModel>(erole), data);
+            var actualResult = Assert.IsType<Model.RoleModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.RoleModel>(erole), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.GetRoleAsync(It.IsAny<Guid>()), Times.Once());
         }
         #endregion
@@ -117,21 +118,20 @@ namespace PimsApi.Test.Keycloak.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
-            var erole = new Entity.Role(Guid.NewGuid(), "test");
+            var erole = new Entity.Role(Guid.NewGuid(), "test") { Description = "description" };
             service.Setup(m => m.UpdateRoleAsync(It.IsAny<Entity.Role>())).Returns(Task.FromResult(erole));
-            var model = new Model.Update.RoleModel()
-            {
-                Name = erole.Name,
-                Description = erole.Description
-            };
+            var model = mapper.Map<Model.Update.RoleModel>(erole);
 
             // Act
             var result = await controller.UpdateRoleAsync(erole.Id, model);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var data = Assert.IsType<Model.RoleModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.RoleModel>(erole), data);
+            var actualResult = Assert.IsType<Model.RoleModel>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.RoleModel>(erole);
+            Assert.Equal(expectedResult.Id, actualResult.Id);
+            Assert.Equal(expectedResult.Name, actualResult.Name);
+            Assert.Equal(expectedResult.Description, actualResult.Description);
             service.Verify(m => m.UpdateRoleAsync(It.IsAny<Entity.Role>()), Times.Once());
         }
         #endregion

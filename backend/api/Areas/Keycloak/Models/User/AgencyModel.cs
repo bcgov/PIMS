@@ -1,12 +1,9 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Pims.Api.Areas.Keycloak.Models.User
 {
     /// <summary>
     /// AgencyModel class, provides a model to represent the agency.
     /// </summary>
-    public class AgencyModel : Pims.Api.Models.BaseModel, IEquatable<AgencyModel>
+    public class AgencyModel : Pims.Api.Models.BaseModel
     {
         #region Properties
         /// <summary>
@@ -38,28 +35,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User
         /// </summary>
         /// <value></value>
         public int? ParentId { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as AgencyModel);
-        }
-
-        public bool Equals([AllowNull] AgencyModel other)
-        {
-            return other != null &&
-                   Id.Equals(other.Id) &&
-                   Name == other.Name &&
-                   Description == other.Description &&
-                   Code == other.Code &&
-                   ParentId == other.ParentId;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Name, Description, Code, ParentId);
-        }
         #endregion
     }
 }

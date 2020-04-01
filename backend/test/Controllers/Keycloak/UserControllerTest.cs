@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Pims.Core.Comparers;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
@@ -50,7 +51,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
+            Assert.Equal(mapper.Map<Model.UserModel>(user), data, new DeepPropertyCompare());
             service.Verify(m => m.SyncUserAsync(It.IsAny<Guid>()), Times.Once());
         }
         #endregion
@@ -76,7 +77,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel[]>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel[]>(users), data);
+            Assert.Equal(mapper.Map<Model.UserModel[]>(users), data, new DeepPropertyCompare());
             service.Verify(m => m.GetUsersAsync(1, 10, It.IsAny<string>()), Times.Once());
         }
         #endregion
@@ -101,7 +102,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
+            Assert.Equal(mapper.Map<Model.UserModel>(user), data, new DeepPropertyCompare());
             service.Verify(m => m.GetUserAsync(It.IsAny<Guid>()), Times.Once());
         }
         #endregion
@@ -126,8 +127,21 @@ namespace PimsApi.Test.Keycloak.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var data = Assert.IsType<Model.UserModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel>(user), data);
+            var actualResult = Assert.IsType<Model.UserModel>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.UserModel>(user);
+            Assert.Equal(expectedResult.Id, actualResult.Id);
+            Assert.Equal(expectedResult.DisplayName, actualResult.DisplayName);
+            Assert.Equal(expectedResult.FirstName, actualResult.FirstName);
+            Assert.Equal(expectedResult.MiddleName, actualResult.MiddleName);
+            Assert.Equal(expectedResult.LastName, actualResult.LastName);
+            Assert.Equal(expectedResult.Username, actualResult.Username);
+            Assert.Equal(expectedResult.Email, actualResult.Email);
+            Assert.Equal(expectedResult.IsDisabled, actualResult.IsDisabled);
+            Assert.Equal(expectedResult.EmailVerified, actualResult.EmailVerified);
+            Assert.Equal(expectedResult.Position, actualResult.Position);
+            Assert.Equal(expectedResult.Note, actualResult.Note);
+            Assert.Equal(expectedResult.Agencies, actualResult.Agencies, new DeepPropertyCompare());
+            Assert.Equal(expectedResult.Roles, actualResult.Roles, new DeepPropertyCompare());
             service.Verify(m => m.UpdateUserAsync(It.IsAny<Entity.User>()), Times.Once());
         }
         #endregion

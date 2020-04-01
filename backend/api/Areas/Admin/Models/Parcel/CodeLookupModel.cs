@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Models;
 
 namespace Pims.Api.Areas.Admin.Models.Parcel
@@ -7,7 +5,7 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
     /// <summary>
     /// LookupCodeModel class, provides a model that represents look up objects.
     /// </summary>
-    public class LookupCodeModel : BaseModel, IEquatable<LookupCodeModel>
+    public class LookupCodeModel : BaseModel
     {
         #region Properties
         /// <summary>
@@ -27,26 +25,6 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as LookupCodeModel);
-        }
-
-        public bool Equals([AllowNull] LookupCodeModel other)
-        {
-            return other != null &&
-                   Name == other.Name &&
-                   Code == other.Code &&
-                   Description == other.Description;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Code, Description);
-        }
         #endregion
     }
 }

@@ -100,5 +100,73 @@ namespace Pims.Api.Test.Helpers
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }
+
+        /// <summary>
+        /// Create a new instance of an AccessRequest for a default user.
+        /// </summary>
+        /// <returns></returns>
+        public static Entity.AccessRequest CreateAccessRequest()
+        {
+            return CreateAccessRequest(Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Create a new instance of an AccessRequest for a default user.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Entity.AccessRequest CreateAccessRequest(Guid id)
+        {
+            var user = new Entity.User
+            {
+                Id = Guid.NewGuid(),
+                Username = "test",
+                FirstName = "first",
+                LastName = "last",
+                DisplayName = "TEST",
+                Email = "test@test.ca"
+            };
+
+            return CreateAccessRequest(id, user);
+        }
+
+        /// <summary>
+        /// Create a new instance of an AccessRequest for the specified user.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static Entity.AccessRequest CreateAccessRequest(Guid id, Entity.User user)
+        {
+            var accessRequest = new Entity.AccessRequest()
+            {
+                Id = id,
+                UserId = user.Id,
+                User = user
+            };
+
+            accessRequest.Agencies.Add(new Entity.AccessRequestAgency()
+            {
+                AgencyId = 1,
+                Agency = new Entity.Agency()
+                {
+                    Id = 1
+                },
+                AccessRequestId = id
+            });
+
+            var roleId = Guid.NewGuid();
+            accessRequest.Roles.Add(new Entity.AccessRequestRole()
+            {
+                RoleId = roleId,
+                Role = new Entity.Role()
+                {
+                    Id = roleId
+                },
+                AccessRequestId = id
+            });
+
+            return accessRequest;
+        }
     }
 }

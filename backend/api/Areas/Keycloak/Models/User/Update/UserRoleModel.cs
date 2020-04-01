@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Areas.Keycloak.Models.User.Update
 {
     /// <summary>
     /// UserRoleModel class, provides a model that represents a user role model.
     /// </summary>
-    public class UserRoleModel : IEquatable<UserRoleModel>
+    public class UserRoleModel
     {
         #region Properties
         /// <summary>
@@ -20,25 +19,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User.Update
         /// </summary>
         /// <value></value>
         public string Name { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as UserRoleModel);
-        }
-
-        public bool Equals([AllowNull] UserRoleModel other)
-        {
-            return other != null &&
-                   Id.Equals(other.Id) &&
-                   Name == other.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Name);
-        }
         #endregion
     }
 }

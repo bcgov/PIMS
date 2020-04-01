@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Pims.Api.Policies;
+using Pims.Core.Comparers;
 using Pims.Dal.Security;
 using Xunit;
 
@@ -176,6 +177,28 @@ namespace Pims.Api.Test.Helpers
             var attribute = endpoint?.GetCustomAttribute<HasPermissionAttribute>();
             Assert.NotNull(attribute);
             attribute?.HasPermissions(permissions);
+        }
+
+        /// <summary>
+        /// Does a deep compare of the two objects public properties.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        public static void DeepPropertyEqual<T>(T expected, T actual)
+        {
+            Assert.Equal(expected, actual, new DeepPropertyCompare<T>());
+        }
+
+        /// <summary>
+        /// Does a shallow compare of the two objects public properties.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        public static void ShallowPropertyEqual<T>(T expected, T actual)
+        {
+            Assert.Equal(expected, actual, new ShallowPropertyCompare<T>());
         }
     }
 }

@@ -1,6 +1,6 @@
 using AutoMapper;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models.User;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
 using System.Linq;
 using System;
 
@@ -27,7 +27,8 @@ namespace Pims.Api.Areas.Keycloak.Profiles.User
                 .ForMember(dest => dest.AccessRequest, opt => opt.Ignore())
                 .ForMember(dest => dest.AccessRequestId, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())
-                .ForMember(dest => dest.AgencyId, opt => opt.MapFrom(src => Int32.Parse(src.Id)));
+                .ForMember(dest => dest.AgencyId, opt => opt.MapFrom(src => src.Id));
+
             CreateMap<Model.AccessRequestRoleModel, Entity.AccessRequestRole>()
                 .ForMember(dest => dest.AccessRequest, opt => opt.Ignore())
                 .ForMember(dest => dest.AccessRequestId, opt => opt.Ignore())

@@ -9,6 +9,7 @@ using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using System;
 using Xunit;
+using Pims.Core.Comparers;
 
 namespace PimsApi.Test.Admin.Controllers
 {
@@ -101,8 +102,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
+            var actualResult = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
         }
 
@@ -124,8 +125,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
+            var actualResult = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.User.GetAccessRequests(1, 1, null, null), Times.Once());
         }
 
@@ -147,8 +148,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualAccessRequest.Items);
+            var actualResult = Assert.IsType<Entity.Models.Paged<Model.AccessRequestModel>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.AccessRequestModel[]>(expectedAccessRequests), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.User.GetAccessRequests(2, 20, null, null), Times.Once());
         }
         #endregion
@@ -174,7 +175,7 @@ namespace PimsApi.Test.Admin.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualAccessRequest = Assert.IsType<Entity.Models.Paged<Model.UserModel>>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.UserModel[]>(expectedUsers), actualAccessRequest.Items);
+            Assert.Equal(mapper.Map<Model.UserModel[]>(expectedUsers), actualAccessRequest.Items, new DeepPropertyCompare());
             service.Verify(m => m.User.Get(It.IsAny<Entity.Models.UserFilter>()), Times.Once());
         }
         #endregion

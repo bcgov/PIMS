@@ -9,13 +9,38 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Api.Test", "test\Pims.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal", "dal\Pims.Dal.csproj", "{6DFFF5E1-1B87-403B-99D0-A9E03D8A8EB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Dal.Entities", "entities\Pims.Dal.Entities.csproj", "{1C724CD5-CD24-46CD-835A-A83F673F97B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal.Entities", "entities\Pims.Dal.Entities.csproj", "{1C724CD5-CD24-46CD-835A-A83F673F97B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Keycloak", "keycloak\Pims.Keycloak.csproj", "{970903E9-BC53-436F-BA77-C62349546425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Keycloak", "keycloak\Pims.Keycloak.csproj", "{970903E9-BC53-436F-BA77-C62349546425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Core", "core\Pims.Core.csproj", "{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Core", "core\Pims.Core.csproj", "{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pims.Dal.Keycloak", "dal.keycloak\Pims.Dal.Keycloak.csproj", "{5697DD19-62CC-4377-ABA8-1E192376F4F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Dal.Keycloak", "dal.keycloak\Pims.Dal.Keycloak.csproj", "{5697DD19-62CC-4377-ABA8-1E192376F4F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{8D3E4CB2-41D6-4AA6-B9E4-CFCAB0E2F5BC}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Dockerfile = Dockerfile
+		Dockerfile.bak = Dockerfile.bak
+		entrypoint.sh = entrypoint.sh
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libraries", "libraries", "{5237F8A4-67F5-4751-B8B2-B93A06791480}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A0343C94-486E-4A06-9A64-0584D20A4728}"
+	ProjectSection(SolutionItems) = preProject
+		docs\API.md = docs\API.md
+		docs\DAL.md = docs\DAL.md
+		docs\DATABASE.md = docs\DATABASE.md
+		docs\SETUP.md = docs\SETUP.md
+		docs\TOOLS.md = docs\TOOLS.md
+		docs\VERSIONING.md = docs\VERSIONING.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F256F2A5-0DBF-4137-A7D6-21F08111BD4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +139,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19A6829C-20D8-4F66-9889-55C553ACE2B2} = {F256F2A5-0DBF-4137-A7D6-21F08111BD4A}
+		{6DFFF5E1-1B87-403B-99D0-A9E03D8A8EB3} = {5237F8A4-67F5-4751-B8B2-B93A06791480}
+		{1C724CD5-CD24-46CD-835A-A83F673F97B5} = {5237F8A4-67F5-4751-B8B2-B93A06791480}
+		{970903E9-BC53-436F-BA77-C62349546425} = {5237F8A4-67F5-4751-B8B2-B93A06791480}
+		{768D5D0A-A3B7-4599-B5CF-E32FC407AD9A} = {5237F8A4-67F5-4751-B8B2-B93A06791480}
+		{5697DD19-62CC-4377-ABA8-1E192376F4F6} = {5237F8A4-67F5-4751-B8B2-B93A06791480}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3433C5DD-DC49-4A96-A1AE-90C1A1EBA87C}

@@ -1,30 +1,9 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Pims.Api.Models.Update
 {
-    public abstract class BaseModel : IEquatable<BaseModel>
+    public abstract class BaseModel
     {
         #region Properties
         public string RowVersion { get; set; }
-        #endregion
-
-        #region Methods
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as BaseModel);
-        }
-
-        public bool Equals([AllowNull] BaseModel other)
-        {
-            return other != null &&
-                   RowVersion == other.RowVersion;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(RowVersion);
-        }
         #endregion
     }
 }
