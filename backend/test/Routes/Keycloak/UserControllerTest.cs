@@ -67,6 +67,18 @@ namespace Pims.Api.Test.Routes.Keycloak
         }
 
         [Fact]
+        public void GetUserAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetUserAsync), typeof(Guid));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("{id}");
+        }
+
+        [Fact]
         public void UpdateUserAsync_Route()
         {
             // Arrange

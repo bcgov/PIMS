@@ -5,13 +5,13 @@ using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Moq;
 using Pims.Api.Areas.Keycloak.Controllers;
 using Pims.Api.Test.Helpers;
+using Pims.Core.Comparers;
 using Pims.Dal.Keycloak;
 using Pims.Dal.Security;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 using Xunit;
-using Pims.Core.Comparers;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
@@ -143,6 +143,33 @@ namespace PimsApi.Test.Keycloak.Controllers
             Assert.Equal(expectedResult.Agencies, actualResult.Agencies, new DeepPropertyCompare());
             Assert.Equal(expectedResult.Roles, actualResult.Roles, new DeepPropertyCompare());
             service.Verify(m => m.UpdateUserAsync(It.IsAny<Entity.User>()), Times.Once());
+        }
+        #endregion
+
+        #region UpdateUserAsync
+        [Fact]
+        public async void UpdateAccessRequestAsync_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(Permissions.AdminUsers);
+
+            var mapper = helper.GetService<IMapper>();
+            var service = helper.GetService<Mock<IPimsKeycloakService>>();
+            var accessRequest = EntityHelper.CreateAccessRequest();
+            service.Setup(m => m.UpdateAccessRequestAsync(It.IsAny<Entity.AccessRequest>())).Returns(Task.FromResult(accessRequest));
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            var result = await controller.UpdateAccessRequestAsync(model);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
+            var expectedResult = mapper.Map<Model.AccessRequestModel>(accessRequest);
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.UpdateAccessRequestAsync(It.IsAny<Entity.AccessRequest>()), Times.Once());
         }
         #endregion
         #endregion
