@@ -9,6 +9,7 @@ using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -112,6 +113,21 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Add the building to the datasource.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public override Building Add(Building entity)
+        {
+            entity.ThrowIfNull(nameof(entity));
+
+            this.Context.Addresses.Add(entity.Address);
+            this.Context.BuildingEvaluations.AddRange(entity.Evaluations);
+
+            return base.Add(entity);
+        }
+
+        /// <summary>
         /// Add the collection of buildings to the datasource.
         /// </summary>
         /// <param name="entities"></param>
@@ -119,16 +135,17 @@ namespace Pims.Dal.Services.Admin
         public IEnumerable<Building> Add(IEnumerable<Building> entities)
         {
             entities.ThrowIfNull(nameof(entities));
-            this.User.ThrowIfNotAuthorized("system-administrator");
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
+            var buildings = entities.Where(e => e != null);
             var userId = this.User.GetUserId();
-            entities.ForEach((entity) =>
+            buildings.ForEach((building) =>
             {
-                if (entity == null) throw new ArgumentNullException();
-                entity.CreatedById = userId;
+                this.Context.Addresses.Add(building.Address);
+                this.Context.BuildingEvaluations.AddRange(building.Evaluations);
             });
 
-            this.Context.Buildings.AddRange(entities);
+            this.Context.Buildings.AddRange(buildings);
             this.Context.CommitTransaction();
             return entities;
         }

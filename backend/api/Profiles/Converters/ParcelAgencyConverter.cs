@@ -8,7 +8,7 @@ namespace Pims.Api.Profiles.Converters
         public string Convert(Entity.Agency sourceMember, ResolutionContext context)
         {
             if (sourceMember?.ParentId == null) return sourceMember?.Code;
-            return sourceMember.Parent.Code;
+            return sourceMember.Parent?.Code;
         }
     }
 }
