@@ -26,7 +26,10 @@ namespace Pims.Api.Helpers.Extensions
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
                 var data = await JsonSerializer.DeserializeAsync<T>(responseStream);
-                return new JsonResult(data);
+                return new JsonResult(data)
+                {
+                    StatusCode = (int) response.StatusCode
+                };
             }
             else
             {
@@ -48,7 +51,7 @@ namespace Pims.Api.Helpers.Extensions
                 }
                 else
                 {
-                    var result = new JsonResult(new { Error = error })
+                    var result = new JsonResult(new Models.ErrorResponseModel(error, null))
                     {
                     StatusCode = (int) response.StatusCode
                     };

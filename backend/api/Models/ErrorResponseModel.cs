@@ -49,7 +49,7 @@ namespace Pims.Api.Models
         /// <param name="ex"></param>
         /// <param name="message"></param>
         /// <param name="details"></param>
-        public ErrorResponseModel(IWebHostEnvironment environment, Exception ex, string message, string details)
+        public ErrorResponseModel(IWebHostEnvironment environment, Exception ex, string message = null, string details = null)
         {
             var showError = !environment.IsProduction();
             this.Error = showError ? ex.Message : message;

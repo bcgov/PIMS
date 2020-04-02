@@ -51,21 +51,21 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
+        /// <param name="name"></param>
         /// <returns>Paged object with an array of roles.</returns>
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Paged<Model.RoleModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-role" })]
-        public IActionResult GetRoles(int page = 1, int quantity = 10) // TODO: sort and filter.
+        public IActionResult GetRoles(int page = 1, int quantity = 10, string name = null)
         {
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var result = _pimsAdminService.Role.Get(page, quantity);
-            var roles = _mapper.Map<Model.RoleModel[]>(result.Items);
-            var paged = new Paged<Model.RoleModel>(roles, page, quantity, result.Total); // TODO: Better way to go from one Paged type to another.
+            var result = _pimsAdminService.Role.Get(page, quantity, name);
+            var paged = result.To(_mapper.Map<Model.RoleModel[]>);
             return new JsonResult(paged);
         }
 
@@ -82,9 +82,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult GetRole(Guid id)
         {
             var entity = _pimsAdminService.Role.Get(id);
-
-            if (entity == null) return NoContent();
-
             var role = _mapper.Map<Model.RoleModel>(entity);
             return new JsonResult(role);
         }

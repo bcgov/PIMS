@@ -9,7 +9,7 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public interface IUserService : IBaseService<User>
     {
-        Paged<User> Get(int page = 1, int quantity = 10);
+        Paged<User> Get(int page, int quantity);
         Paged<User> Get(UserFilter filter);
         User Get(Guid id);
 

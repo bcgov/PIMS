@@ -62,5 +62,20 @@ namespace Pims.Dal.Entities.Models
             this.Total = total;
         }
         #endregion
+
+        #region Methods
+        /// <summary>
+        /// Convert the items in the page to another type via the specified 'converter'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="converter"></param>
+        /// <returns></returns>
+        public Paged<T> To<T>(Func<IEnumerable<TModel>, IEnumerable<T>> converter)
+        {
+            if (converter == null) throw new ArgumentNullException(nameof(converter));
+
+            return new Paged<T>(converter(this.Items), this.Page, this.Quantity, this.Total);
+        }
+        #endregion
     }
 }
