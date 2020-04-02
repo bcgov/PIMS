@@ -4,7 +4,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;
-using Pims.Api.Areas.Tools.Models;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 using Pims.Api.Policies;
 using Pims.Dal.Security;

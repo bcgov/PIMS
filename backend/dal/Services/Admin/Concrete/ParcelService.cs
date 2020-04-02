@@ -176,33 +176,29 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
-            var userId = this.User.GetUserId();
             entity.Buildings.ForEach(b =>
             {
-                b.CreatedById = userId;
                 this.Context.Buildings.Add(b);
 
                 b.Evaluations.ForEach(e =>
                 {
-                    e.CreatedById = userId;
                     this.Context.BuildingEvaluations.Add(e);
                 });
 
                 if (b.Address != null)
                 {
-                    b.Address.CreatedById = userId;
+                    this.Context.Addresses.Add(b.Address);
                 }
             });
 
             entity.Evaluations.ForEach(e =>
             {
-                e.CreatedById = userId;
                 this.Context.ParcelEvaluations.Add(e);
             });
 
             if (entity.Address != null)
             {
-                entity.Address.CreatedById = userId;
+                this.Context.Addresses.Add(entity.Address);
             }
 
             return base.Add(entity);
@@ -218,38 +214,33 @@ namespace Pims.Dal.Services.Admin
             entities.ThrowIfNull(nameof(entities));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            var userId = this.User.GetUserId();
             entities.ForEach((entity) =>
             {
                 if (entity == null) throw new ArgumentNullException();
-                entity.CreatedById = userId;
 
                 entity.Buildings.ForEach(b =>
                 {
-                    b.CreatedById = userId;
                     this.Context.Buildings.Add(b);
 
                     b.Evaluations.ForEach(e =>
                     {
-                        e.CreatedById = userId;
                         this.Context.BuildingEvaluations.Add(e);
                     });
 
                     if (b.Address != null)
                     {
-                        b.Address.CreatedById = userId;
+                        this.Context.Addresses.Add(b.Address);
                     }
                 });
 
                 entity.Evaluations.ForEach(e =>
                 {
-                    e.CreatedById = userId;
                     this.Context.ParcelEvaluations.Add(e);
                 });
 
                 if (entity.Address != null)
                 {
-                    entity.Address.CreatedById = userId;
+                    this.Context.Addresses.Add(entity.Address);
                 }
             });
 
