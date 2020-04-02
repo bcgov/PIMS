@@ -105,12 +105,23 @@ namespace Pims.Api.Test.Helpers
             var cargs = ci.GetParameters();
             foreach (var carg in cargs)
             {
-                var gmake = gmock.MakeGenericType(carg.ParameterType);
-                var mockObjectProp = gmock.GetCachedProperties().FirstOrDefault(p => p.Name == nameof(Mock.Object) && !p.PropertyType.IsGenericParameter) ?? throw new InvalidOperationException($"The mocked type '{type.Name}' was unable to determine the correct 'Object' property.");
+                if (helper.Services.Any(s => s.ServiceType == carg.ParameterType)) continue;
 
                 // If an 'args' type matches, use it for the mock.
                 var arg = args.FirstOrDefault(a => a.GetType() == carg.ParameterType);
-                var mock = arg != null ? Activator.CreateInstance(gmake, arg) : Activator.CreateInstance(gmake);
+                if (arg == null) arg = args.FirstOrDefault(a => carg.ParameterType.IsAssignableFrom(a.GetType()));
+                if (arg != null)
+                {
+                    // Add the supplied argument to services.
+                    helper.AddSingleton(carg.ParameterType, arg);
+                    continue;
+                }
+
+                var gmake = gmock.MakeGenericType(carg.ParameterType);
+                var mockObjectProp = gmock.GetCachedProperties().FirstOrDefault(p => p.Name == nameof(Mock.Object) && !p.PropertyType.IsGenericParameter) ?? throw new InvalidOperationException($"The mocked type '{type.Name}' was unable to determine the correct 'Object' property.");
+
+                // Create a Mock and add it and the Object to services.
+                var mock = Activator.CreateInstance(gmake);
                 helper.AddSingleton(gmake, mock);
                 helper.AddSingleton(carg.ParameterType, mockObjectProp.GetValue(mock));
             }

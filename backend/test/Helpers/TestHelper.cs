@@ -51,11 +51,12 @@ namespace Pims.Api.Test.Helpers
         /// </summary>
         public TestHelper()
         {
-            var config = new Mock<IConfiguration>();
-            this.AddSingleton(config);
-            this.AddSingleton(config.Object);
-            var keycloakOptions = new Mock<IOptionsMonitor<Keycloak.Configuration.KeycloakOptions>>();
-            this.AddSingleton(keycloakOptions.Object);
+            //var config = new Mock<IConfiguration>();
+            //this.AddSingleton(config);
+            //this.AddSingleton(config.Object);
+            //var keycloakOptions = new Mock<IOptionsMonitor<Keycloak.Configuration.KeycloakOptions>>();
+            //this.AddSingleton(keycloakOptions);
+            //this.AddSingleton(keycloakOptions.Object);
 
             var mapper = TestHelper.CreateMapper();
             this.AddSingleton(mapper);
