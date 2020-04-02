@@ -84,7 +84,12 @@ namespace Pims.Dal.Services
                     p.Longitude >= filter.SWLongitude);
 
             if (filter.Agencies?.Any() == true)
-                query = query.Where(p => filter.Agencies.Contains(p.AgencyId));
+            {
+                // Get list of sub-agencies for any agency selected in the filter.
+                var agencies = filter.Agencies.Concat(this.Context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
+                query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (filter.StatusId.HasValue)
