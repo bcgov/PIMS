@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import Map, { MapViewportChangeEvent } from '../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
-import { fetchParcels, fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
+import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
 import { IParcelListParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IParcel, IParcelDetail, storeParcelDetail } from 'actions/parcelsActions';
-import { IParcelState } from 'reducers/parcelsReducer';
+import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import * as API from 'constants/API';
@@ -36,11 +35,9 @@ interface MapViewProps {
 }
 
 const MapView = (props: MapViewProps) => {
-  const parcels = useSelector<RootState, IParcel[]>(
-    state => (state.parcel as IParcelState).parcels,
-  );
-  const parcelDetail = useSelector<RootState, IParcelDetail | null>(
-    state => (state.parcel as IParcelState).parcelDetail,
+  const parcels = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
+  const parcelDetail = useSelector<RootState, IPropertyDetail | null>(
+    state => state.parcel.parcelDetail,
   );
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -87,12 +84,12 @@ const MapView = (props: MapViewProps) => {
       lng={-123.37}
       zoom={14}
       parcels={parcels}
-      activeParcel={parcelDetail}
+      selectedProperty={parcelDetail}
       agencies={agencies}
       propertyClassifications={propertyClassifications}
       lotSizes={lotSizes}
-      onParcelClick={p => dispatch(fetchParcelDetail({ id: p.id }))}
-      onPopupClose={() => dispatch(storeParcelDetail(null))}
+      onMarkerClick={p => dispatch(fetchPropertyDetail(p.id, p.propertyTypeId))}
+      onMarkerPopupClose={() => dispatch(storeParcelDetail(null))}
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
         const apiParams = getApiParams(mapFilterModel);
         const action = fetchParcels(apiParams);

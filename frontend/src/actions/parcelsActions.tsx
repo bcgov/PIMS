@@ -2,18 +2,19 @@ import * as ActionTypes from 'constants/actionTypes';
 
 //Parcel List API action
 
-export interface IParcel {
+export interface IProperty {
   id: number;
+  propertyTypeId: 0 | 1; // 0 = Parcel, 1 = Building
   latitude: number;
   longitude: number;
 }
 
 export interface IStoreParcelsAction {
   type: typeof ActionTypes.STORE_PARCEL_RESULTS;
-  parcelList: IParcel[];
+  parcelList: IProperty[];
 }
 
-export const storeParcelsAction = (parcelList: IParcel[]) => ({
+export const storeParcelsAction = (parcelList: IProperty[]): IStoreParcelsAction => ({
   type: ActionTypes.STORE_PARCEL_RESULTS,
   parcelList: parcelList,
 });
@@ -28,6 +29,7 @@ export interface IAddress {
 }
 
 export interface IBuilding {
+  id: number;
   description: string;
   address: IAddress;
   latitude: number;
@@ -38,7 +40,7 @@ export interface IBuilding {
   buildingFloorCount: number;
   buildingPredominateUse: string;
   buildingTenancy: string;
-  buildingNetBookValue: number;
+  evaluations: IEvaluation[];
 }
 
 export interface IEvaluation {
@@ -48,7 +50,7 @@ export interface IEvaluation {
   netBookValue: number;
 }
 
-export interface IParcelDetail {
+export interface IParcel {
   id: number;
   pid: string;
   latitude: number;
@@ -64,12 +66,40 @@ export interface IParcelDetail {
   agency: string;
 }
 
+export interface IParcelDetail {
+  propertyTypeId: 0;
+  parcelDetail: IParcel | null;
+}
+
+export interface IBuildingDetail {
+  propertyTypeId: 1;
+  parcelDetail: IBuilding | null;
+}
+
+export type IPropertyDetail = IParcelDetail | IBuildingDetail;
+
 export interface IStoreParcelDetail {
   type: typeof ActionTypes.STORE_PARCEL_DETAIL;
   parcelDetail: IParcelDetail;
 }
 
-export const storeParcelDetail = (parcelDetail: IParcelDetail | null) => ({
+export const storeParcelDetail = (parcel: IParcel | null): IStoreParcelDetail => ({
   type: ActionTypes.STORE_PARCEL_DETAIL,
-  parcelDetail: parcelDetail,
+  parcelDetail: {
+    propertyTypeId: 0,
+    parcelDetail: parcel,
+  },
+});
+
+export interface IStoreBuildingDetail {
+  type: typeof ActionTypes.STORE_BUILDING_DETAIL;
+  parcelDetail: IBuildingDetail;
+}
+
+export const storeBuildingDetail = (building: IBuilding | null): IStoreBuildingDetail => ({
+  type: ActionTypes.STORE_BUILDING_DETAIL,
+  parcelDetail: {
+    propertyTypeId: 1,
+    parcelDetail: building,
+  },
 });
