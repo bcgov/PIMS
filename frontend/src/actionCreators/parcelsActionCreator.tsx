@@ -26,13 +26,11 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
     .finally(() => dispatch(hideLoading()));
 };
 
-export const fetchParcelDetail = (parcelBounds: API.IParcelDetailParams) => (
-  dispatch: Function,
-) => {
+export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch: Function) => {
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(parcelBounds), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params), createRequestHeader())
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data));
@@ -42,6 +40,28 @@ export const fetchParcelDetail = (parcelBounds: API.IParcelDetailParams) => (
       dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
     )
     .finally(() => dispatch(hideLoading()));
+};
+
+export const fetchBuildingDetail = (params: API.IBuildingDetailParams) => (dispatch: Function) => {
+  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params), createRequestHeader())
+    .then((response: AxiosResponse) => {
+      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+      dispatch(parcelsActions.storeBuildingDetail(response.data));
+      dispatch(hideLoading());
+    })
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
+    )
+    .finally(() => dispatch(hideLoading()));
+};
+
+export const fetchPropertyDetail = (id: number, propertyTypeId: 0 | 1) => (dispatch: Function) => {
+  return propertyTypeId === 0
+    ? dispatch(fetchParcelDetail({ id }))
+    : dispatch(fetchBuildingDetail({ id }));
 };
 
 export const createParcel = (parcel: API.IParcel) => (dispatch: Function) => {

@@ -2,8 +2,8 @@ import parcelsReducer, { IParcelState } from 'reducers/parcelsReducer';
 import {
   IStoreParcelsAction,
   IStoreParcelDetail,
+  IProperty,
   IParcel,
-  IParcelDetail,
 } from 'actions/parcelsActions';
 import * as ActionTypes from 'constants/actionTypes';
 import { cloneDeep } from 'lodash';
@@ -16,13 +16,14 @@ const baseExpectedValue: IParcelState = {
 
 // Creates deep copy of javascript object instead of setting a reference
 const getBaseExpectedValue = () => cloneDeep(baseExpectedValue);
-const defaultParcel: IParcel = {
+const defaultParcel: IProperty = {
   id: 1,
+  propertyTypeId: 0,
   latitude: 2,
   longitude: 3,
 };
 
-const defaultParcelDetail: IParcelDetail = {
+const defaultParcelDetail: IParcel = {
   longitude: 1,
   latitude: 2,
   id: 3,
@@ -33,8 +34,8 @@ const defaultParcelDetail: IParcelDetail = {
     postal: '7',
     province: '8',
   },
-  assessedValue: 9,
   buildings: [],
+  evaluations: [],
   description: '10',
   landArea: '11',
   landLegalDescription: '12',
