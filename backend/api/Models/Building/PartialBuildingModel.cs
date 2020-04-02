@@ -1,4 +1,4 @@
-namespace Pims.Api.Models.Parts
+namespace Pims.Api.Models.Building
 {
     public class PartialBuildingModel : BaseModel
     {

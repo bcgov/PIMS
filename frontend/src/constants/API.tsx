@@ -29,11 +29,16 @@ export interface IParcelListParams {
   maxLandArea: number | null;
 }
 export const PARCELS = (params: IParcelListParams | null) =>
-  params ? `/parcels?${queryString.stringify(params)}` : '/parcels'; // get filtered properties or all if not specified.
+  params ? `/properties?${queryString.stringify(params)}` : '/properties'; // get filtered properties or all if not specified.
 export interface IParcelDetailParams {
   id: number;
 }
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
+
+export interface IBuildingDetailParams {
+  id: number;
+}
+export const BUILDING_DETAIL = (params: IBuildingDetailParams) => `/buildings/${params.id}`;
 
 // Lookup Codes
 export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`; // get filtered properties or all if not specified.
