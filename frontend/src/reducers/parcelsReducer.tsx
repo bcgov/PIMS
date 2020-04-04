@@ -3,14 +3,13 @@ import {
   IStoreParcelsAction,
   IStoreParcelDetail,
   IPropertyDetail,
-  IBuildingDetail,
   IStoreBuildingDetail,
 } from 'actions/parcelsActions';
 import { IProperty } from 'actions/parcelsActions';
 
 export interface IParcelState {
   parcels: IProperty[];
-  parcelDetail: IPropertyDetail | IBuildingDetail | null;
+  parcelDetail: IPropertyDetail | null;
   pid: number;
 }
 
