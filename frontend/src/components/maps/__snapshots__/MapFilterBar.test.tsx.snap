@@ -139,6 +139,21 @@ exports[`MapFilterBar renders correctly 1`] = `
                 >
                   No Min Lot Size
                 </option>
+                <option
+                  value="1"
+                >
+                  1 acre
+                </option>
+                <option
+                  value="2"
+                >
+                  2 acres
+                </option>
+                <option
+                  value="3"
+                >
+                  3 acres
+                </option>
               </select>
             </div>
           </div>
@@ -159,6 +174,21 @@ exports[`MapFilterBar renders correctly 1`] = `
                   value=""
                 >
                   No Max Lot Size
+                </option>
+                <option
+                  value="1"
+                >
+                  1 acre
+                </option>
+                <option
+                  value="2"
+                >
+                  2 acres
+                </option>
+                <option
+                  value="3"
+                >
+                  3 acres
                 </option>
               </select>
             </div>

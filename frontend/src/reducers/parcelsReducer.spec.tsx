@@ -3,7 +3,7 @@ import {
   IStoreParcelsAction,
   IStoreParcelDetail,
   IProperty,
-  IParcel,
+  IParcelDetail,
 } from 'actions/parcelsActions';
 import * as ActionTypes from 'constants/actionTypes';
 import { cloneDeep } from 'lodash';
@@ -23,26 +23,29 @@ const defaultParcel: IProperty = {
   longitude: 3,
 };
 
-const defaultParcelDetail: IParcel = {
-  longitude: 1,
-  latitude: 2,
-  id: 3,
-  address: {
-    city: '4',
-    line1: '5',
-    line2: '6',
-    postal: '7',
-    province: '8',
+const defaultParcelDetail: IParcelDetail = {
+  propertyTypeId: 0,
+  parcelDetail: {
+    longitude: 1,
+    latitude: 2,
+    id: 3,
+    address: {
+      city: '4',
+      line1: '5',
+      line2: '6',
+      postal: '7',
+      province: '8',
+    },
+    buildings: [],
+    evaluations: [],
+    description: '10',
+    landArea: '11',
+    landLegalDescription: '12',
+    pid: '13',
+    classification: '14',
+    propertyStatus: '15',
+    agency: '16',
   },
-  buildings: [],
-  evaluations: [],
-  description: '10',
-  landArea: '11',
-  landLegalDescription: '12',
-  pid: '13',
-  classification: '14',
-  propertyStatus: '15',
-  agency: '16',
 };
 
 describe('parcelReducer', () => {
