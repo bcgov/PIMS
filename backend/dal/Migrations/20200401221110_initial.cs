@@ -9,7 +9,7 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreDeploy(migrationBuilder);
-
+            
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -151,6 +151,37 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingConstructionTypes_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BuildingOccupantTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BuildingOccupantTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BuildingOccupantTypes_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BuildingOccupantTypes_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -679,6 +710,8 @@ namespace Pims.Dal.Migrations
                     Longitude = table.Column<double>(nullable: false),
                     LandArea = table.Column<float>(nullable: false),
                     LandLegalDescription = table.Column<string>(maxLength: 500, nullable: true),
+                    Zoning = table.Column<string>(maxLength: 500, nullable: true),
+                    ZoningPotential = table.Column<bool>(maxLength: 500, nullable: false),
                     IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -745,6 +778,10 @@ namespace Pims.Dal.Migrations
                     BuildingTenancy = table.Column<string>(maxLength: 100, nullable: false),
                     RentableArea = table.Column<float>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
+                    BuildingOccupantTypeId = table.Column<int>(nullable: false),
+                    LeaseExpiry = table.Column<DateTime>(nullable: true),
+                    OccupantName = table.Column<string>(maxLength: 100, nullable: true),
+                    TransferLeaseOnSale = table.Column<bool>(nullable: false),
                     IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -766,6 +803,12 @@ namespace Pims.Dal.Migrations
                         name: "FK_Buildings_BuildingConstructionTypes_BuildingConstructionTypeId",
                         column: x => x.BuildingConstructionTypeId,
                         principalTable: "BuildingConstructionTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Buildings_BuildingOccupantTypes_BuildingOccupantTypeId",
+                        column: x => x.BuildingOccupantTypeId,
+                        principalTable: "BuildingOccupantTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1016,6 +1059,27 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "AssessedValue", "EstimatedValue", "NetBookValue" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BuildingOccupantTypes_CreatedById",
+                table: "BuildingOccupantTypes",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingOccupantTypes_Name",
+                table: "BuildingOccupantTypes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingOccupantTypes_UpdatedById",
+                table: "BuildingOccupantTypes",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingOccupantTypes_IsDisabled_Name_SortOrder",
+                table: "BuildingOccupantTypes",
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BuildingPredominateUses_CreatedById",
                 table: "BuildingPredominateUses",
                 column: "CreatedById");
@@ -1052,6 +1116,11 @@ namespace Pims.Dal.Migrations
                 column: "BuildingConstructionTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Buildings_BuildingOccupantTypeId",
+                table: "Buildings",
+                column: "BuildingOccupantTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Buildings_BuildingPredominateUseId",
                 table: "Buildings",
                 column: "BuildingPredominateUseId");
@@ -1072,9 +1141,9 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_BuildingConstructionTypeId_BuildingPredominateUseId_BuildingFloorC~",
+                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_BuildingConstructionTypeId_BuildingPredominateUseId_BuildingOccupa~",
                 table: "Buildings",
-                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingFloorCount", "BuildingTenancy" });
+                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",
@@ -1351,7 +1420,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Users_IsDisabled_LastName_FirstName",
                 table: "Users",
                 columns: new[] { "IsDisabled", "LastName", "FirstName" });
-
+        
             PostDeploy(migrationBuilder);
         }
 
@@ -1395,6 +1464,9 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "BuildingConstructionTypes");
+
+            migrationBuilder.DropTable(
+                name: "BuildingOccupantTypes");
 
             migrationBuilder.DropTable(
                 name: "BuildingPredominateUses");

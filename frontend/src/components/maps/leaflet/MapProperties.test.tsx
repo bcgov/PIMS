@@ -68,6 +68,7 @@ it('Renders the marker in correct position', () => {
         agencies={[]}
         propertyClassifications={[]}
         onParcelClick={jest.fn()}
+        lotSizes={[]}
       />
     </Router>,
   );
@@ -88,6 +89,7 @@ it('Should render 0 markers when there are no parcels', () => {
         agencies={[]}
         propertyClassifications={[]}
         onParcelClick={jest.fn()}
+        lotSizes={[]}
       />
     </Router>,
   );
@@ -107,6 +109,7 @@ it('Marker for each parcel is created', () => {
         activeParcel={mockDetails}
         agencies={[]}
         propertyClassifications={[]}
+        lotSizes={[]}
         onParcelClick={jest.fn()}
       />
     </Router>,
@@ -127,6 +130,7 @@ it('Loads parcel details on click', () => {
       activeParcel={mockDetails}
       agencies={[]}
       propertyClassifications={[]}
+      lotSizes={[]}
       onParcelClick={onParcelClick}
     />,
   );

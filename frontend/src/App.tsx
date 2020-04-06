@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MapView from './pages/MapView';
 import GuestAccessPage from './pages/GuestAccessPage';
 import PrivateRoute from './PrivateRoute';
@@ -19,6 +19,9 @@ import Administration from 'pages/Administration';
 import { SYSTEM_ADMINISTRATOR } from 'constants/strings';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import SubmitProperty from 'pages/SubmitProperty';
+import LoadingBar from 'react-redux-loading-bar';
+import _ from 'lodash';
 
 export const store = configureStore();
 
@@ -44,9 +47,9 @@ const App = () => {
 
   return isInitialized() ? (
     <Router>
+      <LoadingBar style={{ zIndex: 9999, backgroundColor: '#fcba19', height: '3px' }} />
       <Container className="App" fluid={true}>
         <Header />
-
         <Row className="App-content">
           {keycloak?.authenticated ? <AppNavBar /> : null}
           <Col style={{ padding: 0 }}>
@@ -58,7 +61,9 @@ const App = () => {
               role={SYSTEM_ADMINISTRATOR}
             ></PrivateRoute>
             <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
-            <PrivateRoute path="/mapview" component={MapView} />
+            <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
+            <PrivateRoute path="/mapView" component={MapView} />
+            <PrivateRoute path="/submitProperty" component={SubmitProperty} />
           </Col>
         </Row>
         <Footer />

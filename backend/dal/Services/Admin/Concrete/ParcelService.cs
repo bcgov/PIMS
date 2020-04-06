@@ -135,6 +135,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
                 .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
@@ -163,6 +164,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
                 .AsNoTracking().SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
         }
 

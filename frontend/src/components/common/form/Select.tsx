@@ -34,7 +34,7 @@ export type SelectProps = FormControlProps & OptionalAttributes & RequiredAttrib
 
 export type SelectOption = {
   label: string;
-  value: string;
+  value: string | number;
 };
 
 export type SelectOptions = SelectOption[];
@@ -64,7 +64,7 @@ export const Select: React.FC<SelectProps> = ({
     const selected = e.target.selectedOptions;
     setFieldValue(
       field,
-      [].slice.call(selected).map((option: HTMLOptionElement) => option.value),
+      [].slice.call(selected).map((option: HTMLOptionElement & number) => option.value),
     );
   };
 

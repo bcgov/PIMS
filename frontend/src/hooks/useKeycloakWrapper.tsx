@@ -12,6 +12,7 @@ function useKeycloakWrapper() {
   interface UserInfo {
     Groups: any[];
     given_name: string;
+    agencies: string[];
   }
   const roles = () => {
     return (keycloak?.userInfo as UserInfo)?.Groups
@@ -28,6 +29,7 @@ function useKeycloakWrapper() {
     hasClaim: hasClaim,
     obj: keycloak,
     roles: roles(),
+    agency: (keycloak?.userInfo as UserInfo)?.agencies?.find(x => x),
   };
 }
 

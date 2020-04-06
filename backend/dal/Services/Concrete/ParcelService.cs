@@ -169,6 +169,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
                 .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&

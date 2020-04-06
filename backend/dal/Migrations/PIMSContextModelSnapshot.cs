@@ -292,6 +292,9 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("BuildingFloorCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("BuildingOccupantTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("BuildingPredominateUseId")
                         .HasColumnType("int");
 
@@ -320,12 +323,19 @@ namespace Pims.Dal.Migrations
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
+                    b.Property<DateTime>("LeaseExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LocalId")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
+
+                    b.Property<bool>("OccupantName")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
@@ -337,6 +347,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<bool>("TransferLeaseOnSale")
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -352,6 +365,8 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("BuildingConstructionTypeId");
 
+                    b.HasIndex("BuildingOccupantTypeId");
+
                     b.HasIndex("BuildingPredominateUseId");
 
                     b.HasIndex("CreatedById");
@@ -360,7 +375,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -468,6 +483,59 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("AssessedValue", "EstimatedValue", "NetBookValue");
 
                     b.ToTable("BuildingEvaluations");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.BuildingOccupantType", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsDisabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name", "SortOrder");
+
+                    b.ToTable("BuildingOccupantTypes");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingPredominateUse", b =>
@@ -698,6 +766,14 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<string>("Zoning")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("ZoningPotential")
+                        .HasColumnType("bit")
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -1344,6 +1420,11 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("BuildingConstructionTypeId")
                         .IsRequired();
 
+                    b.HasOne("Pims.Dal.Entities.BuildingOccupantType", "BuildingOccupantType")
+                        .WithMany()
+                        .HasForeignKey("BuildingOccupantTypeId")
+                        .IsRequired();
+
                     b.HasOne("Pims.Dal.Entities.BuildingPredominateUse", "BuildingPredominateUse")
                         .WithMany()
                         .HasForeignKey("BuildingPredominateUseId")
@@ -1382,6 +1463,17 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.BuildingOccupantType", b =>
+                {
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedById");

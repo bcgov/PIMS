@@ -3,23 +3,25 @@ import { request, success, error } from 'actions/genericActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import * as adminActions from 'actions/adminActions';
-import * as ActionTypes from 'constants/actionTypes';
+import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import { createRequestHeader } from 'utils/RequestHeaders';
 import { IAccessRequest } from 'actions/adminActions';
 
 export const getActivateUserAction = () => (dispatch: Function) => {
-  dispatch(request(reducerTypes.ADD_ACTIVATE_USER));
+  dispatch(request(actionTypes.ADD_ACTIVATE_USER));
   dispatch(showLoading());
   return CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.ACTIVATE_USER(), null, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.ADD_ACTIVATE_USER, response.status));
+      dispatch(success(actionTypes.ADD_ACTIVATE_USER, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.ADD_ACTIVATE_USER)))
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.ADD_ACTIVATE_USER, axiosError?.response?.status, axiosError)),
+    )
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -36,65 +38,75 @@ export const toAccessRequest = (values: any): adminActions.IAccessRequest => {
 export const getSubmitAccessRequestAction = (accessRequest: IAccessRequest) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.ADD_REQUEST_ACCESS));
+  dispatch(request(actionTypes.ADD_REQUEST_ACCESS));
   dispatch(showLoading());
   return CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS(), accessRequest, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.ADD_REQUEST_ACCESS, response.status));
+      dispatch(success(actionTypes.ADD_REQUEST_ACCESS, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.ADD_REQUEST_ACCESS)))
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.ADD_REQUEST_ACCESS, axiosError?.response?.status, axiosError)),
+    )
     .finally(() => dispatch(hideLoading()));
 };
 
 export const getSubmitAdminAccessRequestAction = (accessRequest: IAccessRequest) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN));
+  dispatch(request(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN));
   dispatch(showLoading());
   return CustomAxios()
     .put(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status));
+      dispatch(success(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.UPDATE_REQUEST_ACCESS_ADMIN)))
+    .catch((axiosError: AxiosError) =>
+      dispatch(
+        error(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, axiosError?.response?.status, axiosError),
+      ),
+    )
     .finally(() => dispatch(hideLoading()));
 };
 
 export const getAccessRequestsAction = (params: API.IPaginateAccessRequests) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.GET_REQUEST_ACCESS));
+  dispatch(request(actionTypes.GET_REQUEST_ACCESS));
   dispatch(showLoading());
   return CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_LIST(params), createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.GET_REQUEST_ACCESS, response.status));
+      dispatch(success(actionTypes.GET_REQUEST_ACCESS, response.status));
       const clearAction: adminActions.IStoreAccessRequestsAction = {
-        type: ActionTypes.STORE_ACCESS_REQUESTS,
+        type: actionTypes.STORE_ACCESS_REQUESTS,
         pagedAccessRequests: { page: 0, quantity: 0, total: 0, items: [] },
       };
       dispatch(clearAction); //TODO: this should not be necessary.
       dispatch(adminActions.storeAccessRequests(response.data));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.GET_REQUEST_ACCESS)))
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_REQUEST_ACCESS, axiosError?.response?.status, axiosError)),
+    )
     .finally(() => dispatch(hideLoading()));
 };
 
 export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Function) => {
-  dispatch(request(reducerTypes.GET_USERS));
+  dispatch(request(actionTypes.GET_USERS));
   dispatch(showLoading());
   return CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params, createRequestHeader())
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.GET_USERS, response.status));
+      dispatch(success(actionTypes.GET_USERS, response.status));
       dispatch(adminActions.storeUsers(response.data));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.GET_USERS)))
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError)),
+    )
     .finally(() => dispatch(hideLoading()));
 };
 

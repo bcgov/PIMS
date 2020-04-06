@@ -16,6 +16,7 @@ namespace Pims.Dal.Services
         IEnumerable<PropertyType> GetPropertyTypes();
         IEnumerable<BuildingConstructionType> GetBuildingConstructionTypes();
         IEnumerable<BuildingPredominateUse> GetBuildingPredominateUses();
+        IEnumerable<BuildingOccupantType> GetBuildingOccupantTypes();
         IEnumerable<Role> GetRoles();
     }
 }

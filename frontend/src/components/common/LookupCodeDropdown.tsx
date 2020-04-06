@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import _ from 'lodash';
 import { ILookupCode } from 'actions/lookupActions';
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import './LookupCodeDropdown.scss';
 
 type LookupCodeDropdownProps = {
@@ -78,7 +78,9 @@ export const FormikLookupCodeDropdown = <T extends unknown>(
     props.setFieldValue(nameVal, codeId);
   };
   const isError = () => {
-    return _.has(props.errors, props.name) && _.has(props.touched, props.name);
+    const error = getIn(props.errors, props.name);
+    const touch = getIn(props.touched, props.name);
+    return touch && error ? error : null;
   };
   return (
     <LookupCodeDropdown

@@ -1,10 +1,11 @@
 import * as ActionTypes from 'constants/actionTypes';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export interface IGenericNetworkAction {
   isFetching: boolean;
   name: string;
   type: string;
-  errorMessage?: string;
+  error?: AxiosError;
   status?: number;
   data?: any;
 }
@@ -13,6 +14,7 @@ export const success = (reducer: string, status?: number, data?: any): IGenericN
   isFetching: false,
   name: reducer,
   type: ActionTypes.SUCCESS,
+  error: undefined,
   status,
   data,
 });
@@ -21,18 +23,25 @@ export const request = (reducer: string): IGenericNetworkAction => ({
   isFetching: true,
   name: reducer,
   type: ActionTypes.REQUEST,
+  error: undefined,
+  status: undefined,
+  data: undefined,
 });
 
 export const error = (reducer: string, status?: number, err?: any): IGenericNetworkAction => ({
   isFetching: false,
   name: reducer,
   type: ActionTypes.ERROR,
-  errorMessage: err,
+  error: err,
   status,
+  data: undefined,
 });
 
 export const clear = (reducer: string): IGenericNetworkAction => ({
   isFetching: false,
   name: reducer,
   type: ActionTypes.CLEAR,
+  error: undefined,
+  status: undefined,
+  data: undefined,
 });

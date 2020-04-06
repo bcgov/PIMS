@@ -30,8 +30,8 @@ namespace Pims.Api.Profiles.Parcel
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.Id))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.IsSensitive, opt => opt.MapFrom(src => src.IsSensitive))
-                .ForMember(dest => dest.Buildings, opt => opt.Ignore())
-                .ForMember(dest => dest.Evaluations, opt => opt.Ignore())
+                .ForMember(dest => dest.Buildings, opt => opt.MapFrom(src => src.Buildings))
+                .ForMember(dest => dest.Evaluations, opt => opt.MapFrom(src => src.Evaluations))
                 .IncludeBase<Pims.Api.Models.BaseModel, Entity.BaseEntity>();
         }
         #endregion

@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import GuestAccessPage from './GuestAccessPage';
 import { ILookupCode } from 'actions/lookupActions';
 import { IGenericNetworkAction } from 'actions/genericActions';
+import { NETWORK } from 'constants/reducerTypes';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -34,10 +35,20 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
 // Simulating a succesful submit
-const successStore = mockStore({ lookupCode: lCodes, addRequestAccess: requestAccess });
+const successStore = mockStore({
+  lookupCode: lCodes,
+  [NETWORK]: {
+    addRequestAccess: requestAccess,
+  },
+});
 
 // Store without status of 200
-const store = mockStore({ lookupCode: lCodes, addRequestAccess: noSuccess });
+const store = mockStore({
+  lookupCode: lCodes,
+  [NETWORK]: {
+    addRequestAccess: requestAccess,
+  },
+});
 
 it('renders GuestAccessPage correctly', () => {
   const tree = renderer
