@@ -357,6 +357,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.RentableArea = rentableArea;
                 b_e.BuildingFloorCount = floorCount;
                 b_e.BuildingTenancy = property.BuildingTenancy;
+                b_e.TransferLeaseOnSale = false;
 
                 // Find foreign key.
                 var build_type = _buildingConstructionTypes.FirstOrDefault(bct => String.Compare(bct.Name, property.BuildingConstructionType, true) == 0);
