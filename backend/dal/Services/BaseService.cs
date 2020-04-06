@@ -6,7 +6,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// BaseService abstract class, provides a generic service layer to perform CRUD operations on the datasource.
     /// </summary>
-    public abstract class BaseService
+    public abstract class BaseService : IService
     {
         #region Variables
         #endregion

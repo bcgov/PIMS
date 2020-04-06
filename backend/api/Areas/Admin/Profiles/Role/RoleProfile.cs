@@ -1,5 +1,4 @@
 using AutoMapper;
-using Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models.Role;
 
@@ -14,13 +13,17 @@ namespace Pims.Api.Areas.Admin.Profiles.Role
         public RoleProfile()
         {
             CreateMap<Entity.Role, Model.RoleModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .IncludeBase<Entity.LookupEntity, CodeModel>();
+                .IncludeBase<Entity.LookupEntity, Pims.Api.Models.CodeModel>();
+
+            CreateMap<Model.RoleModel, Entity.Role>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .IncludeBase<Pims.Api.Models.CodeModel, Entity.LookupEntity>();
 
             CreateMap<Entity.UserRole, Model.RoleModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RoleId));
-
-            CreateMap<Model.RoleModel, Entity.Role>();
 
             CreateMap<Model.RoleModel, Entity.UserRole>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())

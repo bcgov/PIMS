@@ -36,12 +36,17 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public Paged<Role> Get(int page = 1, int quantity = 10)
+        public Paged<Role> Get(int page, int quantity, string name = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
             var query = this.Context.Roles.AsNoTracking();
+
+            if (!String.IsNullOrWhiteSpace(name))
+                query = query.Where(r => EF.Functions.Like(r.Name, $"%{name}%"));
+
             var roles = query.Skip((page - 1) * quantity).Take(quantity);
             return new Paged<Role>(roles.ToArray(), page, quantity, query.Count());
         }

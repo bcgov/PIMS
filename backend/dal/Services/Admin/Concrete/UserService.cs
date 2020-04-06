@@ -39,7 +39,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public Paged<User> Get(int page = 1, int quantity = 10)
+        public Paged<User> Get(int page, int quantity)
         {
             return Get(new UserFilter(page, quantity));
         }
