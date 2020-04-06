@@ -1,7 +1,7 @@
 namespace Pims.Dal.Entities
 {
     /// <summary>
-    /// BuildingPredominateUse class, provides an entity for the datamodel to manage a list of building occupant types.
+    /// BuildingOccupantType class, provides an entity for the datamodel to manage a list of building occupant types.
     /// </summary>
     public class BuildingOccupantType : LookupEntity
     {
