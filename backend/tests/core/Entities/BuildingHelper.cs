@@ -28,6 +28,7 @@ namespace Pims.Core.Test
             var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = EntityHelper.CreateBuildingPredominateUse("use");
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
+            var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
 
             return new Entity.Building(lat, lng)
             {
@@ -43,6 +44,8 @@ namespace Pims.Core.Test
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
                 BuildingConstructionTypeId = constructionType.Id,
+                BuildingOccupantType = occupantType,
+                BuildingOccupantTypeId = occupantType.Id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
@@ -87,6 +90,7 @@ namespace Pims.Core.Test
             var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault() ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
+            var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
 
             return new Entity.Building(lat, lng)
             {
@@ -102,6 +106,8 @@ namespace Pims.Core.Test
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
                 BuildingConstructionTypeId = constructionType.Id,
+                BuildingOccupantType = occupantType,
+                BuildingOccupantTypeId = occupantType.Id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
