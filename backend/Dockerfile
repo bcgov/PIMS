@@ -9,7 +9,9 @@ WORKDIR /src
 COPY *.sln .
 COPY api/*.csproj api/
 COPY entities/*.csproj entities/
-COPY test/*.csproj test/
+COPY tests/core/*.csproj tests/core/
+COPY tests/unit/api/*.csproj tests/unit/api/
+COPY tests/unit/dal/*.csproj tests/unit/dal/
 COPY dal/*.csproj dal/
 COPY dal.keycloak/*.csproj dal.keycloak/
 COPY keycloak/*.csproj keycloak/
