@@ -124,7 +124,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - Whether the lease on this building would be transferred if the building is sold.
         /// </summary>
-        public bool TransferLeaseOnSale { get; set; }
+        public bool TransferLeaseOnSale { get; set; } = false;
 
         /// <summary>
         /// get/set - Whether this building is considered sensitive and should only be visible to users who are part of the owning agency.
