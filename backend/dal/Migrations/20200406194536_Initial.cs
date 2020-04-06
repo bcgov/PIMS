@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -9,7 +9,7 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreDeploy(migrationBuilder);
-            
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -775,13 +775,13 @@ namespace Pims.Dal.Migrations
                     BuildingConstructionTypeId = table.Column<int>(nullable: false),
                     BuildingFloorCount = table.Column<int>(nullable: false),
                     BuildingPredominateUseId = table.Column<int>(nullable: false),
-                    BuildingTenancy = table.Column<string>(maxLength: 100, nullable: false),
+                    BuildingTenancy = table.Column<string>(nullable: false),
                     RentableArea = table.Column<float>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
                     BuildingOccupantTypeId = table.Column<int>(nullable: false),
-                    LeaseExpiry = table.Column<DateTime>(nullable: true),
+                    LeaseExpiry = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     OccupantName = table.Column<string>(maxLength: 100, nullable: true),
-                    TransferLeaseOnSale = table.Column<bool>(nullable: false),
+                    TransferLeaseOnSale = table.Column<bool>(nullable: false, defaultValue: false),
                     IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -1420,7 +1420,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Users_IsDisabled_LastName_FirstName",
                 table: "Users",
                 columns: new[] { "IsDisabled", "LastName", "FirstName" });
-        
+
             PostDeploy(migrationBuilder);
         }
 
