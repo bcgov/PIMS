@@ -15,6 +15,7 @@ import { Formik, ErrorMessage, Form } from 'formik';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 import { AccessRequestSchema } from 'utils/YupSchema';
 import * as API from 'constants/API';
+import * as actionTypes from 'constants/actionTypes';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
@@ -24,13 +25,14 @@ const ManageAccessRequests = () => {
   const dispatch = useDispatch();
   const MAX_ACCESS_RESULTS_PER_PAGE = 5;
   const pagedAccessRequests = useSelector<RootState, IPaginate>(
-    state => (state.accessRequest as IAccessRequestState).pagedAccessRequests,
+    state => (state.accessRequest as IAccessRequestState)?.pagedAccessRequests,
   );
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
-    state => state.accessRequest as IGenericNetworkAction,
+    state => (state.network as any)[actionTypes.GET_REQUEST_ACCESS] as IGenericNetworkAction,
   );
   const updateRequestAccessAdmin = useSelector<RootState, IGenericNetworkAction>(
-    state => state.updateRequestAccessAdmin as IGenericNetworkAction,
+    state =>
+      (state.network as any)[actionTypes.UPDATE_REQUEST_ACCESS_ADMIN] as IGenericNetworkAction,
   );
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -42,7 +44,7 @@ const ManageAccessRequests = () => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME;
   });
   useEffect(() => {
-    if (!updateRequestAccessAdmin.isFetching) {
+    if (!updateRequestAccessAdmin?.isFetching) {
       const paginateParams: API.IPaginateParams & {
         isGranted?: boolean | null;
       } = toApiPaginateParams(0, MAX_ACCESS_RESULTS_PER_PAGE);
@@ -51,7 +53,7 @@ const ManageAccessRequests = () => {
     }
   }, [updateRequestAccessAdmin]);
 
-  return !requestAccess.isFetching ? (
+  return requestAccess && !requestAccess.isFetching ? (
     <Container fluid={true}>
       <Row>
         <Col>

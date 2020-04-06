@@ -1,0 +1,68 @@
+.parcelDetailForm {
+  text-align: left;
+  font-size: 0.75rem;
+  font-family: "BCSans" Fallback, sans-serif;
+  padding: 1rem 3rem 2rem 4rem;
+  background-color: #f2f2f2;
+  .form-check{
+    height: calc(2.38rem);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  form .row {
+    background-color: #fff;
+    .addressForm,
+    .landForm,
+    .evaluationForm,
+    .buildingForm,
+    .buildingTenancy,
+    .pidPinForm {
+      width:100%;
+      &.form-row {
+        flex-direction: row;
+        padding-left: 2rem;
+      }
+      .form-group {
+        flex-direction: column;
+        display: flex;
+        align-items: baseline;
+        width: 83.333333%;
+        max-height: 2.5rem;
+        height: 3rem;
+        padding: 0;
+      }
+    }
+    .noPadding {
+      .addressForm {
+        padding-left: 0 !important;
+      }
+    }
+    h2 {
+      color: #494949;
+      font-size: 20px;
+    }
+    h3 {
+      background-color: #38598a;
+      color: #fff;
+      font-size: 1rem;
+      line-height: 3rem;
+      padding-left: .75rem;
+    }
+    h4 {
+      color: #003366;
+      font-size: 14px;
+    }
+    h5 {
+      padding-left: 1rem;
+      display: inline;
+    }
+    .form-label {
+      padding: 0 1rem .5rem 0;
+    }
+  }
+  .btn.btn-primary {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}

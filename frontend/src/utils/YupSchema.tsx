@@ -31,22 +31,18 @@ export const UserSchema = Yup.object().shape({
 export const Address = Yup.object().shape({
   address1: Yup.string().max(150, 'Address must be less then 150 characters'),
   address2: Yup.string().max(150, 'Address must be less then 150 characters'),
-  city: Yup.number()
-    .min(1, 'Invalid City')
-    .required('Required'),
-  province: Yup.number()
-    .min(1, 'Invalid Province')
-    .required('Required'),
-  postal: Yup.string().matches(
-    /[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]/,
-    'Invalid Postal Code',
-  ),
+  cityId: Yup.string()
+    .matches(/\d*/, 'Invalid City')
+    .required('Required')
+    .nullable(),
+  provinceId: Yup.string().required('Required'),
+  postal: Yup.string().matches(/[a-zA-z][0-9][a-zA-z][0-9][a-zA-z][0-9]/, 'Invalid Postal Code'),
 });
 
 export const Evaluation = Yup.object().shape({
   fiscalYear: Yup.number()
     .min(1900, 'Invalid Fiscal Year')
-    .min(2100, 'Invalid Fiscal Year')
+    .max(2100, 'Invalid Fiscal Year')
     .required('Required'),
   estimatedValue: Yup.number()
     .min(1, 'Estimated Value must be a positive number')
@@ -67,13 +63,7 @@ export const Building = Yup.object().shape({
   description: Yup.string()
     .max(2000, 'Description must be less than 2000 characters')
     .nullable(),
-  address: Yup.mixed().oneOf([
-    Yup.number()
-      .min(1, 'The associated Address is invalid')
-      .required('Required'),
-    Address,
-    //support a reference to an existing address (by id) or just the address schema itself.
-  ]),
+  address: Address.nullable(),
   latitude: Yup.number()
     .min(-90, 'Invalid Latitude')
     .max(90, 'Invalid Latitude')
@@ -82,87 +72,82 @@ export const Building = Yup.object().shape({
     .min(-180, 'Invalid Longitude')
     .max(180, 'Invalid Longitude')
     .required('Required'),
-  constructionType: Yup.number()
-    .min(1, 'Invalid Building Construction Type')
-    .required('Required'),
-  predominateUse: Yup.number()
-    .min(1, 'Invalid Building Predominate Use')
-    .required('Required'),
-  floorCount: Yup.number()
+  buildingConstructionTypeId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Construction Type')
+    .required('Required')
+    .nullable(),
+  buildingPredominateUseId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Predominate Use')
+    .required('Required')
+    .nullable(),
+  buildingOccupantTypeId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Occupant Type')
+    .required('Required')
+    .nullable(),
+  buildingFloorCount: Yup.number()
     .min(1, 'Floor Count must be a positive number')
     .required('Required'),
-  tenancy: Yup.string()
+  buildingTenancy: Yup.string()
     .max(100, 'Tenancy must be less then 100 characters')
     .required('Required'),
   rentableArea: Yup.number()
     .min(1, 'Rentable Area must be a positive number')
     .required('Required'),
-  agency: Yup.number()
-    .min(1, 'Invalid Agency')
-    .required('Required'),
+  agencyId: Yup.number().required('Required'),
   isSensitive: Yup.boolean(),
-  evaluations: Yup.array().of(
-    Yup.mixed().oneOf([
-      Yup.number()
-        .min(1, 'The associated Evaluation is invalid')
-        .required('Required'),
-      Evaluation,
-    ]),
-  ),
+  transferLeaseOnSale: Yup.boolean(),
+  leaseExpiry: Yup.string().nullable(),
+  evaluations: Yup.array().of(Evaluation),
 });
 
-export const ParcelSchema = Yup.object().shape({
-  pid: Yup.string()
-    .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
-    .required('Required'),
-  pin: Yup.number().nullable(),
-  statusId: Yup.number()
-    .min(1, 'Invalid Status')
-    .required('Required'),
-  classificationId: Yup.number()
-    .min(1, 'Invalid Classification')
-    .required('Required'),
-  agency: Yup.number()
-    .min(1, 'Invalid Agency')
-    .required('Required'),
-  address: Yup.mixed().oneOf([
-    Yup.number()
-      .min(1, 'The associated Address is invalid')
+export const ParcelSchema = Yup.object().shape(
+  {
+    pid: Yup.string().when('pin', {
+      is: val => val && val.length > 0,
+      then: Yup.string().nullable(),
+      otherwise: Yup.string()
+        .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
+        .required('pid or pin Required'),
+    }),
+    pin: Yup.string().when('pid', {
+      is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
+      then: Yup.string().nullable(),
+      otherwise: Yup.string()
+        .min(1)
+        .required('pid or pin Required'),
+    }),
+    statusId: Yup.boolean().required('Required'),
+    classificationId: Yup.string()
+      .required('Required')
+      .matches(/\d*/, 'Invalid Classification')
+      .nullable(),
+    address: Address.required(),
+    description: Yup.string()
+      .max(2000, 'Description must be less than 2000 characters')
+      .nullable(),
+    zoning: Yup.string()
+      .max(500, 'Description must be less than 500 characters')
+      .nullable(),
+    zoningPotential: Yup.string()
+      .max(500, 'Description must be less than 500 characters')
+      .nullable(),
+    landLegalDescription: Yup.string()
+      .max(500, 'Land Legal Description must be less than 500 characters')
+      .nullable(),
+    latitude: Yup.number()
+      .min(-90, 'Invalid Latitude')
+      .max(90, 'Invalid Latitude')
       .required('Required'),
-    Address,
-  ]),
-  description: Yup.string()
-    .max(2000, 'Description must be less than 2000 characters')
-    .nullable(),
-  landLegalDescription: Yup.string()
-    .max(500, 'Land Legal Description must be less than 500 characters')
-    .nullable(),
-  latitude: Yup.number()
-    .min(-90, 'Invalid Latitude')
-    .max(90, 'Invalid Latitude')
-    .required('Required'),
-  longitude: Yup.number()
-    .min(-180, 'Invalid Longitude')
-    .max(180, 'Invalid Longitude')
-    .required('Required'),
-  landArea: Yup.number()
-    .min(1, 'Land Area must be a positive number')
-    .required('Required'),
-  isSensitive: Yup.boolean(),
-  buildings: Yup.array().of(
-    Yup.mixed().oneOf([
-      Yup.number()
-        .min(1, 'The associated Building is invalid')
-        .required('Required'),
-      Building,
-    ]),
-  ),
-  evaluations: Yup.array().of(
-    Yup.mixed().oneOf([
-      Yup.number()
-        .min(1, 'The associated Evaluation is invalid')
-        .required('Required'),
-      Evaluation,
-    ]),
-  ),
-});
+    longitude: Yup.number()
+      .min(-180, 'Invalid Longitude')
+      .max(180, 'Invalid Longitude')
+      .required('Required'),
+    landArea: Yup.number()
+      .min(1, 'Land Area must be a positive number')
+      .required('Required'),
+    isSensitive: Yup.boolean(),
+    buildings: Yup.array().of(Building),
+    evaluations: Yup.array().of(Evaluation),
+  },
+  [['pin', 'pid']],
+);

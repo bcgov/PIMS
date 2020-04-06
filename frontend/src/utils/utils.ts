@@ -1,3 +1,7 @@
+import { ILookupCode } from 'actions/lookupActions';
+
+import { SelectOption } from 'components/common/form';
+
 export const classSet = (input?: any): string => {
   let classes = '';
   if (input) {
@@ -22,6 +26,15 @@ export const decimalOrNull = (input: string): number | null => {
   return input !== '' ? parseInt(input, 10) : null;
 };
 
+export const decimalOrEmpty = (input: string): number | string => {
+  return input !== '' ? parseInt(input, 10) : '';
+};
+
 export const floatOrNull = (input: string): number | null => {
   return input !== '' ? parseFloat(input) : null;
 };
+
+export const mapLookupCode = (code: ILookupCode): SelectOption => ({
+  label: code.name,
+  value: code.id.toString(),
+});

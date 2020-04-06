@@ -16,6 +16,13 @@ namespace Pims.Api.Profiles.Lookup
                 .IncludeBase<Entity.BaseEntity, Pims.Api.Models.BaseModel>()
                 .IncludeAllDerived();
 
+            CreateMap<Entity.Province, Model.CodeModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.GetType().Name))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Name))
+                .IncludeBase<Entity.BaseEntity, Pims.Api.Models.BaseModel>()
+                .IncludeAllDerived();
+
             CreateMap<Model.CodeModel, Entity.LookupEntity>()
                 .IncludeBase<Pims.Api.Models.BaseModel, Entity.BaseEntity>()
                 .IncludeAllDerived();

@@ -21,6 +21,8 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Description).HasMaxLength(2000);
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
+            builder.Property(m => m.Zoning).HasMaxLength(500);
+            builder.Property(m => m.ZoningPotential).HasMaxLength(500);
             builder.Property(m => m.LandLegalDescription).HasMaxLength(500);
             builder.Property(m => m.IsSensitive).HasDefaultValue(false);
 

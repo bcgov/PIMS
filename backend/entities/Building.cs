@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -99,6 +100,31 @@ namespace Pims.Dal.Entities
         /// get/set - The agency this building belongs to.
         /// </summary>
         public Agency Agency { get; set; }
+
+        /// <summary>
+        /// get/set - The foreign key to the building occupant type.
+        /// </summary>
+        public int BuildingOccupantTypeId { get; set; }
+
+        /// <summary>
+        /// get/set - The type of occupant for this building.
+        /// </summary>
+        public BuildingOccupantType BuildingOccupantType { get; set; }
+
+        /// <summary>
+        /// get/set - The expiry date of the currently active lease
+        /// </summary>
+        public DateTime? LeaseExpiry { get; set; }
+
+        /// <summary>
+        /// get/set - The name of the occupant/organization
+        /// </summary>
+        public string OccupantName { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the lease on this building would be transferred if the building is sold.
+        /// </summary>
+        public bool TransferLeaseOnSale { get; set; }
 
         /// <summary>
         /// get/set - Whether this building is considered sensitive and should only be visible to users who are part of the owning agency.

@@ -25,6 +25,8 @@ namespace Pims.Api.Areas.Admin.Profiles.Parcel
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
                 .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Zoning, opt => opt.MapFrom(src => src.Zoning))
+                .ForMember(dest => dest.ZoningPotential, opt => opt.MapFrom(src => src.ZoningPotential))
                 .ForMember(dest => dest.PID, opt => opt.ConvertUsing(new ParcelIdConverter(), src => src.PID))
                 .IncludeBase<BModel.BaseModel, Entity.BaseEntity>();
 

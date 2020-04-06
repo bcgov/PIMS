@@ -97,8 +97,22 @@ namespace Pims.Api.Controllers
             var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgencies());
             var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassifications());
             var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRoles());
+            var provinceCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetProvinces());
+            var cityCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetCities());
+            var constructionTypeCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingConstructionTypes());
+            var predominateUseCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingPredominateUses());
+            var occupantTypeCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
 
-            return new JsonResult(agencyCodes.Concat(propertyClassificationCodes).Concat(roleCodes).ToArray());
+
+            return new JsonResult(agencyCodes
+                .Concat(propertyClassificationCodes)
+                .Concat(roleCodes)
+                .Concat(provinceCodes)
+                .Concat(cityCodes)
+                .Concat(constructionTypeCodes)
+                .Concat(predominateUseCodes)
+                .Concat(occupantTypeCodes)
+                .ToArray());
         }
         #endregion
     }
