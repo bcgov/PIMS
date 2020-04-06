@@ -93,8 +93,10 @@ namespace Pims.Dal.Entities
         {
             this.Address1 = address1;
             this.Address2 = address2;
+            this.City = city;
             this.CityId = city?.Id ??
                 throw new ArgumentNullException(nameof(city));
+            this.Province = province;
             this.ProvinceId = province?.Id ??
                 throw new ArgumentNullException(nameof(province));
             this.Postal = postal;

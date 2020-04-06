@@ -6,7 +6,8 @@ namespace Pims.Dal.Services.Admin
     /// IBaseService interface, provides a service layer for basic CRUD actions with the datasource.
     ///</summary>
     /// <typeparam name="ET"></typeparam>
-    public interface IBaseService<ET> where ET : BaseEntity
+    public interface IBaseService<ET> : IService
+        where ET : BaseEntity
     {
         #region Methods
         /// <summary>

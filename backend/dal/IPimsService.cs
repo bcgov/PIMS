@@ -6,7 +6,7 @@ namespace Pims.Dal
     /// <summary>
     /// IPimsService interface, provides a way to interface with the backend datasource.
     /// </summary>
-    public interface IPimsService
+    public interface IPimsService : IService
     {
         #region Properties
         IBuildingService Building { get; }

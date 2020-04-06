@@ -8,7 +8,8 @@ namespace Pims.Dal.Services
     /// BaseService abstract class, provides a generic service layer to perform CRUD operations on the datasource.
     /// </summary>
     /// <typeparam name="ET"></typeparam>
-    public abstract class BaseService<ET> : BaseService where ET : BaseEntity
+    public abstract class BaseService<ET> : BaseService
+        where ET : BaseEntity
     {
         #region Variables
         #endregion
