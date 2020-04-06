@@ -6,7 +6,7 @@ namespace Pims.Dal.Services.Admin
     /// <summary>
     /// IPimsAdminService interface, provides a way to interface with the backend datasource.
     /// </summary>
-    public interface IPimsAdminService
+    public interface IPimsAdminService : IService
     {
         #region Properties
         ClaimsPrincipal Principal { get; }

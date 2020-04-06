@@ -40,6 +40,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Parcel> Get(double neLat, double neLong, double swLat, double swLong)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
@@ -65,6 +66,7 @@ namespace Pims.Dal.Services
         public IEnumerable<Parcel> Get(ParcelFilter filter)
         {
             filter.ThrowIfNull(nameof(filter));
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
 
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -147,6 +149,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Get(int id)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);

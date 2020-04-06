@@ -18,7 +18,7 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static ICollection<T> RemoveAll<T>(this ICollection<T> items, Func<T, bool> find)
         {
-            var remove = items.Where(find);
+            var remove = items.Where(find).ToArray();
 
             foreach (var item in remove)
             {
