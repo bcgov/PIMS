@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200401221110_Initial")]
+    [Migration("20200406194536_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -302,8 +302,7 @@ namespace Pims.Dal.Migrations
 
                     b.Property<string>("BuildingTenancy")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -325,8 +324,8 @@ namespace Pims.Dal.Migrations
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("LeaseExpiry")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LeaseExpiry")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<string>("LocalId")
                         .HasColumnType("nvarchar(50)")
@@ -335,8 +334,9 @@ namespace Pims.Dal.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<bool>("OccupantName")
-                        .HasColumnType("bit");
+                    b.Property<string>("OccupantName")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
@@ -350,7 +350,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("rowversion");
 
                     b.Property<bool>("TransferLeaseOnSale")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
