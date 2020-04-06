@@ -1,0 +1,19 @@
+.submitProperty {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  .leaflet-container {
+    /* Subtract the header, nav-bar and footer sizes */
+    padding-top: 0;
+    min-height: calc(100vh - 70px - 45px - 42px);
+  }
+  .sideMap {
+    display: relative;
+    padding: 0;
+  }
+  .form {
+    max-height: calc(100vh - 70px - 45px - 42px);
+    overflow-y: scroll;
+    padding: 0;
+  }
+}

@@ -60,6 +60,7 @@ namespace Pims.Dal.Services.Admin
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)
@@ -81,6 +82,7 @@ namespace Pims.Dal.Services.Admin
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)
@@ -103,6 +105,7 @@ namespace Pims.Dal.Services.Admin
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)

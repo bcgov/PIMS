@@ -1,4 +1,4 @@
-import { REQUEST, SUCCESS, ERROR } from '../constants/actionTypes';
+import { REQUEST, SUCCESS, ERROR, CLEAR } from '../constants/actionTypes';
 import { IGenericNetworkAction } from 'actions/genericActions';
 
 /**
@@ -7,38 +7,53 @@ import { IGenericNetworkAction } from 'actions/genericActions';
  * request status.
  */
 
-const initialState = {
-  isFetching: false,
-  isSuccessful: false,
-  error: null,
-  requestType: null,
-};
+const initialState = {};
 
 const networkReducer = (state = initialState, action: IGenericNetworkAction) => {
   switch (action.type) {
     case REQUEST:
       return {
         ...state,
-        isFetching: true,
-        status: undefined,
-        error: undefined,
-        requestType: action.type,
+        [action.name]: {
+          name: action.name,
+          isFetching: true,
+          status: undefined,
+          error: undefined,
+          type: action.type,
+        },
       };
     case SUCCESS:
       return {
         ...state,
-        isFetching: false,
-        status: action.status,
-        error: undefined,
-        requestType: action.type,
+        [action.name]: {
+          name: action.name,
+          isFetching: false,
+          status: action.status,
+          error: undefined,
+          type: action.type,
+        },
       };
     case ERROR:
       return {
         ...state,
-        isFetching: false,
-        status: action.status,
-        error: action.errorMessage,
-        requestType: action.type,
+        [action.name]: {
+          name: action.name,
+          isFetching: false,
+          status: action.status,
+          error: action.error,
+          type: action.type,
+        },
+      };
+    case CLEAR:
+      return {
+        ...state,
+        [action.name]: {
+          name: action.name,
+          isFetching: false,
+          status: undefined,
+          error: undefined,
+          type: undefined,
+        },
       };
     default:
       return state;

@@ -2,7 +2,7 @@
 
 exports[`MapFilterBar renders correctly 1`] = `
 <div
-  className="map-filter-bar container-fluid"
+  className="map-filter-container container-fluid"
 >
   <div
     className="row"
@@ -10,59 +10,176 @@ exports[`MapFilterBar renders correctly 1`] = `
     <div
       className="col-md-8 col-8 offset-md-2 offset-2"
     >
-      <div
-        className="row"
+      <form
+        className=""
+        noValidate={true}
+        onSubmit={[Function]}
       >
         <div
-          className="bar-item col"
-        >
-          <input
-            className="form-control"
-            placeholder="Search Bar Not Implemented"
-            type="text"
-          />
-        </div>
-        <div
-          className="bar-item col"
+          className="map-filter-bar form-row"
         >
           <div
-            className="dropdown"
-            onKeyDown={[Function]}
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
+              <input
+                className="form-control"
+                id="input-address"
+                name="address"
+                onChange={[Function]}
+                placeholder="Enter an address or city"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
+              <select
+                className="form-control"
+                id="input-agencies"
+                name="agencies"
+                onChange={[Function]}
+                value=""
+              >
+                <option
+                  value=""
+                >
+                  View Properties In
+                </option>
+                <option
+                  value="1"
+                >
+                  AEST
+                </option>
+                <option
+                  value="2"
+                >
+                  HTLH
+                </option>
+                <option
+                  value="3"
+                >
+                  MOTI
+                </option>
+                <option
+                  value="4"
+                >
+                  FLNR
+                </option>
+                <option
+                  value="5"
+                >
+                  MAH
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
+              <select
+                className="form-control"
+                id="input-classificationId"
+                name="classificationId"
+                onChange={[Function]}
+                value=""
+              >
+                <option
+                  value=""
+                >
+                  View by Classification
+                </option>
+                <option
+                  value="0"
+                >
+                  Core Operational
+                </option>
+                <option
+                  value="1"
+                >
+                  Core Strategic
+                </option>
+                <option
+                  value="2"
+                >
+                  Surplus Active
+                </option>
+                <option
+                  value="3"
+                >
+                  Surplus Encumbered
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
+              <select
+                className="form-control"
+                id="input-minLotSize"
+                name="minLotSize"
+                onChange={[Function]}
+                value=""
+              >
+                <option
+                  value=""
+                >
+                  No Min Lot Size
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
+              <select
+                className="form-control"
+                id="input-maxLotSize"
+                name="maxLotSize"
+                onChange={[Function]}
+                value=""
+              >
+                <option
+                  value=""
+                >
+                  No Max Lot Size
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            className="bar-item flex-grow-0 col"
           >
             <button
-              aria-expanded={false}
-              aria-haspopup={true}
-              className="dropdown-toggle map-filter-dropdown map-filter-dropdown-primary"
+              className="pl-0 btn btn-warning"
               disabled={false}
-              id="dropdown-basic-button"
-              onClick={[Function]}
-              type="button"
+              type="submit"
             >
-              View Properties in  
+              <img
+                className="mr-2"
+                src="icon-search.svg"
+              />
+              Search
             </button>
           </div>
         </div>
-        <div
-          className="bar-item col"
-        >
-          <div
-            className="dropdown"
-            onKeyDown={[Function]}
-          >
-            <button
-              aria-expanded={false}
-              aria-haspopup={true}
-              className="dropdown-toggle map-filter-dropdown map-filter-dropdown-primary"
-              disabled={false}
-              id="dropdown-basic-button"
-              onClick={[Function]}
-              type="button"
-            >
-              View by Classification  
-            </button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

@@ -1,6 +1,9 @@
 .btn {
-  width: 130px;
   height: 44px;
+}
+
+.btn.btn-warning {
+  width: 130px;
 }
 
 .btn:hover {
@@ -14,6 +17,7 @@
   color: #ffffff;
   font-size: 16px;
   border-color: transparent;
+  border-radius: 0;
 }
 
 .btn.btn-primary:hover {
@@ -32,6 +36,20 @@
 .btn.btn-secondary:hover {
   background-color: #ffffff;
   color: #494949;
+}
+
+.btn.btn-light {
+  background-color: #606060;
+  font-family: "BCSans" Fallback, sans-serif;
+  text-decoration: none solid rgb(255, 255, 255);
+  color: #fff;
+  font-size: 16px;
+  border-radius: 0;
+}
+
+.btn.btn-light:hover {
+  background-color: #606060;
+  color: #fff;
 }
 
 .btn:focus,

@@ -162,6 +162,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Parcel)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingOccupantType)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)

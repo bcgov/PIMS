@@ -11,11 +11,13 @@ namespace Pims.Api.Profiles.Building
         {
             CreateMap<Entity.Building, Model.BuildingModel>()
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.MapFrom(src => src.BuildingConstructionType.Name))
-                .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name));
+                .ForMember(dest => dest.BuildingPredominateUse, opt => opt.MapFrom(src => src.BuildingPredominateUse.Name))
+                .ForMember(dest => dest.BuildingOccupantType, opt => opt.MapFrom(src => src.BuildingOccupantType.Name));
 
             CreateMap<Model.BuildingModel, Entity.Building>() // TODO: Map evaluation
                 .ForMember(dest => dest.BuildingConstructionType, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingPredominateUse, opt => opt.Ignore())
+                .ForMember(dest => dest.BuildingOccupantType, opt => opt.Ignore())
                 .ForMember(dest => dest.Parcel, opt => opt.Ignore())
                 .ForMember(dest => dest.AgencyId, opt => opt.Ignore())
                 .ForMember(dest => dest.Agency, opt => opt.Ignore())

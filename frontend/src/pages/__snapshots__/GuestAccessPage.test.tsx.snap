@@ -65,6 +65,9 @@ exports[`renders GuestAccessPage correctly 1`] = `
             Submit
           </button>
         </div>
+        <p>
+          Your request has been submitted
+        </p>
       </form>
     </div>
   </div>

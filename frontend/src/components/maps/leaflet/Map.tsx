@@ -36,6 +36,7 @@ type MapProps = {
   onParcelClick?: (obj: IParcel) => void;
   onPopupClose?: (obj: IParcel) => void;
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
+  disableMapFilterBar?: boolean;
 };
 
 const Map: React.FC<MapProps> = props => {
@@ -102,12 +103,14 @@ const Map: React.FC<MapProps> = props => {
   return (
     <Container fluid={true}>
       <Row>
-        <MapFilterBar
-          agencyLookupCodes={props.agencies}
-          propertyClassifications={props.propertyClassifications}
-          lotSizes={props.lotSizes}
-          onFilterChange={handleMapFilterChange}
-        />
+        {!props.disableMapFilterBar ? (
+          <MapFilterBar
+            agencyLookupCodes={props.agencies}
+            propertyClassifications={props.propertyClassifications}
+            lotSizes={props.lotSizes}
+            onFilterChange={handleMapFilterChange}
+          />
+        ) : null}
         {baseLayers?.length > 0 && (
           <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
         )}

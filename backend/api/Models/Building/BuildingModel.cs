@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Models.Building
@@ -28,6 +29,16 @@ namespace Pims.Api.Models.Building
         public int BuildingPredominateUseId { get; set; }
 
         public string BuildingPredominateUse { get; set; }
+
+        public int BuildingOccupantTypeId { get; set; }
+
+        public string BuildingOccupantType { get; set; }
+
+        public DateTime? LeaseExpiry { get; set; }
+
+        public string OccupantName { get; set; }
+
+        public bool TransferLeaseOnSale { get; set; }
 
         public string BuildingTenancy { get; set; }
 

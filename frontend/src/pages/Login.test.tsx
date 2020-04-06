@@ -11,11 +11,16 @@ import * as reducerTypes from 'constants/reducerTypes';
 import {} from 'reducers/networkReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { Provider } from 'react-redux';
+import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
 
 jest.mock('@react-keycloak/web');
 const mockStore = configureMockStore([thunk]);
 
-const store = mockStore({});
+const store = mockStore({
+  [reducerTypes.NETWORK]: {
+    [ADD_ACTIVATE_USER]: {},
+  },
+});
 
 //boilerplate function used by most tests to wrap the Login component with a router.
 const renderLogin = () => {
@@ -71,7 +76,11 @@ test('new users are sent to the guest page', () => {
     type: 'POST',
     status: 201,
   };
-  const store = mockStore({ activateUser: activatedAction });
+  const store = mockStore({
+    [reducerTypes.NETWORK]: {
+      activateUser: activatedAction,
+    },
+  });
 
   render(
     <Provider store={store}>

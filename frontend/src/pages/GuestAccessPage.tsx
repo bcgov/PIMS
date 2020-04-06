@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
+import * as actionTypes from 'constants/actionTypes';
 import _ from 'lodash';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { AccessRequestSchema } from 'utils/YupSchema';
@@ -23,7 +24,7 @@ const GuestAccessPage = () => {
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
   const requestAccess = useSelector<RootState, IGenericNetworkAction>(
-    state => state.addRequestAccess as IGenericNetworkAction,
+    state => (state.network as any)[actionTypes.ADD_REQUEST_ACCESS] as IGenericNetworkAction,
   );
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
@@ -72,7 +73,7 @@ const GuestAccessPage = () => {
                 <div>
                   <button type="submit">Submit</button>
                 </div>
-                {requestAccess.status === 200 && !requestAccess.isFetching ? (
+                {requestAccess?.status === 200 && !requestAccess?.isFetching ? (
                   <p>Your request has been submitted</p>
                 ) : null}
               </Form>

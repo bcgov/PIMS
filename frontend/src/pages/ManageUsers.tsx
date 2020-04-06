@@ -6,23 +6,24 @@ import { RootState } from 'reducers/rootReducer';
 import { IStoreUsersAction, IPagedItems } from 'actions/adminActions';
 import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
-import _ from 'lodash';
+import * as actionTypes from 'constants/actionTypes';
 import WrappedPaginate from 'components/common/WrappedPaginate';
+import _ from 'lodash';
 
 const ManageUsers = () => {
   const dispatch = useDispatch();
   const MAX_USERS_PER_PAGE = 10;
   const pagedUsers = useSelector<RootState, IPagedItems>(
-    state => (state.getUsers as IStoreUsersAction).pagedUsers,
+    state => (state.users as IStoreUsersAction).pagedUsers,
   );
   const users = useSelector<RootState, IGenericNetworkAction>(
-    state => state.getUsers as IGenericNetworkAction,
+    state => (state.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
   useEffect(() => {
     dispatch(getUsersAction(toApiPaginateParams(0, MAX_USERS_PER_PAGE)));
   }, []);
 
-  return !users.isFetching ? (
+  return users && !users.isFetching ? (
     <Container fluid={true}>
       <Row>
         <Col>
