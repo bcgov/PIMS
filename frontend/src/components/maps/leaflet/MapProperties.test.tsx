@@ -3,44 +3,48 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
-import { IParcelDetail, IParcel } from 'actions/parcelsActions';
+import { IParcel, IProperty, IParcelDetail } from 'actions/parcelsActions';
 import Map from './Map';
 import { Marker } from 'react-leaflet';
 import { mount, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import { render } from '@testing-library/react';
+import { PopupView } from '../PopupView';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 // This will spoof the active parcel (the one that will populate the popup details)
 const mockDetails: IParcelDetail = {
-  id: 1,
-  pid: '000-000-000',
-  latitude: 48,
-  longitude: 123,
-  propertyStatus: 'active',
-  classification: 'Core Operational',
-  description: 'test',
-  evaluations: [
-    {
-      assessedValue: 1000000,
-      estimatedValue: 0,
-      fiscalYear: 2019,
-      netBookValue: 0,
+  propertyTypeId: 0,
+  parcelDetail: {
+    id: 1,
+    pid: '000-000-000',
+    latitude: 48,
+    longitude: 123,
+    propertyStatus: 'active',
+    classification: 'Core Operational',
+    description: 'test',
+    evaluations: [
+      {
+        assessedValue: 1000000,
+        estimatedValue: 0,
+        fiscalYear: 2019,
+        netBookValue: 0,
+      },
+    ],
+    address: {
+      line1: '1234 mock Street',
+      line2: 'N/A',
+      city: 'Victoria',
+      province: 'BC',
+      postal: 'V1V1V1',
     },
-  ],
-  address: {
-    line1: '1234 mock Street',
-    line2: 'N/A',
-    city: 'Victoria',
-    province: 'BC',
-    postal: 'V1V1V1',
+    landArea: 'unknown',
+    landLegalDescription: 'test',
+    buildings: [],
+    agency: 'FIN',
   },
-  landArea: 'unknown',
-  landLegalDescription: 'test',
-  buildings: [],
-  agency: 'FIN',
 };
 
 // To check for alert message
@@ -50,8 +54,8 @@ const emptyDetails = null;
 const mockParcels = [
   { id: 1, latitude: 48, longitude: 123 },
   { id: 2, latitude: 50, longitude: 133 },
-] as IParcel[];
-const noParcels = [] as IParcel[];
+] as IProperty[];
+const noParcels = [] as IProperty[];
 
 const history = createMemoryHistory();
 
@@ -64,10 +68,11 @@ it('Renders the marker in correct position', () => {
         lng={-123.37}
         zoom={14}
         parcels={mockParcels}
-        activeParcel={mockDetails}
+        selectedProperty={mockDetails}
         agencies={[]}
         propertyClassifications={[]}
-        onParcelClick={jest.fn()}
+        lotSizes={[]}
+        onMarkerClick={jest.fn()}
         lotSizes={[]}
       />
     </Router>,
@@ -85,10 +90,11 @@ it('Should render 0 markers when there are no parcels', () => {
         lng={-123.37}
         zoom={14}
         parcels={noParcels}
-        activeParcel={emptyDetails}
+        selectedProperty={emptyDetails}
         agencies={[]}
         propertyClassifications={[]}
-        onParcelClick={jest.fn()}
+        lotSizes={[]}
+        onMarkerClick={jest.fn()}
         lotSizes={[]}
       />
     </Router>,
@@ -106,11 +112,11 @@ it('Marker for each parcel is created', () => {
         lng={-123.37}
         zoom={14}
         parcels={mockParcels}
-        activeParcel={mockDetails}
+        selectedProperty={mockDetails}
         agencies={[]}
         propertyClassifications={[]}
         lotSizes={[]}
-        onParcelClick={jest.fn()}
+        onMarkerClick={jest.fn()}
       />
     </Router>,
   );
@@ -127,11 +133,11 @@ it('Loads parcel details on click', () => {
       lng={-123.37}
       zoom={14}
       parcels={mockParcels}
-      activeParcel={mockDetails}
+      selectedProperty={mockDetails}
       agencies={[]}
       propertyClassifications={[]}
       lotSizes={[]}
-      onParcelClick={onParcelClick}
+      onMarkerClick={onParcelClick}
     />,
   );
   const marker = component.find(Marker).first();
@@ -141,12 +147,19 @@ it('Loads parcel details on click', () => {
 
 // Check that error message is displayed on null details
 it('Displays proper message when no details loaded', () => {
-  const { getByText } = render(<ParcelPopupView parcelDetail={emptyDetails} />);
+  const { getByText } = render(<ParcelPopupView parcel={emptyDetails} />);
   const alert = getByText('Failed to load parcel details.');
   expect(alert).toBeTruthy();
 });
 
 it('ParcelPopupView renders correctly', () => {
-  const tree = renderer.create(<ParcelPopupView parcelDetail={mockDetails} />).toJSON();
+  const tree = renderer
+    .create(
+      <PopupView
+        propertyTypeId={mockDetails.propertyTypeId}
+        propertyDetail={mockDetails.parcelDetail}
+      />,
+    )
+    .toJSON();
   expect(tree).toMatchSnapshot();
 });

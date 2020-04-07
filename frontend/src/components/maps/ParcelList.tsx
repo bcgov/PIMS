@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { IParcel } from 'actions/parcelsActions';
+import { IProperty } from 'actions/parcelsActions';
 import { ListGroup, Container } from 'react-bootstrap';
 
 export interface IParcelListProps {
-  parcels: IParcel[];
+  parcels: IProperty[];
 }
 
 export const ParcelList = (props: IParcelListProps) => {

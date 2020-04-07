@@ -1,5 +1,5 @@
 import { ILookupCode } from '../actions/lookupActions';
-import { IParcelDetail, IParcel } from 'actions/parcelsActions';
+import { IParcel, IProperty } from 'actions/parcelsActions';
 import { MapViewportChangeEvent } from 'components/maps/leaflet/Map';
 
 export const SELECTEDCLASSIFICATION = {
@@ -87,7 +87,7 @@ export const AGENCIES = [
 export const PARCELS = [
   { id: 1, latitude: 48, longitude: 123 },
   { id: 2, latitude: 50, longitude: 133 },
-] as IParcel[];
+] as IProperty[];
 
 export const mockDetails = [
   {
@@ -139,7 +139,7 @@ export const mockDetails = [
     buildings: [],
     agency: 'HLTH',
   },
-] as IParcelDetail[];
+] as IParcel[];
 
 export const ACTIVE = {
   id: 1,
@@ -168,7 +168,7 @@ export const ACTIVE = {
   landLegalDescription: 'test',
   buildings: [],
   agency: 'FIN',
-} as IParcelDetail;
+} as IParcel;
 
 export const mockAgencyModel = {
   bounds: null,

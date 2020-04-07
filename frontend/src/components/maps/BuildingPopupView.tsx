@@ -1,29 +1,27 @@
-import './ParcelPopupView.scss';
+import './BuildingPopupView.scss';
 
 import * as React from 'react';
 import { ListGroup, Container } from 'react-bootstrap';
-import { IParcel } from 'actions/parcelsActions';
+import { IBuilding } from 'actions/parcelsActions';
 import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 
-export interface IParcelDetailProps {
-  parcel: IParcel | null;
+export interface IBuildingDetailProps {
+  building: IBuilding | null;
 }
 
-export const ParcelPopupView = (props: IParcelDetailProps | null) => {
-  const parcelDetail: IParcel | null | undefined = props?.parcel;
-
+export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) => {
   return (
-    <Container className="parcelPopup" fluid={true}>
-      {!parcelDetail ? (
-        <Alert variant="danger">Failed to load parcel details.</Alert>
+    <Container className="buildingPopup" fluid={true}>
+      {!building ? (
+        <Alert variant="danger">Failed to load building details.</Alert>
       ) : (
         <Row>
           <Col>
             <ListGroup>
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
-                {parcelDetail?.evaluations
+                {building?.evaluations
                   ?.find(() => true)
                   ?.assessedValue?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
@@ -32,25 +30,22 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               <ListGroup.Item>
                 <div>
                   <Label>Address: </Label>
-                  {parcelDetail?.address?.line1}
+                  {building?.address?.line1}
                 </div>
                 <div>
-                  {parcelDetail?.address?.city}, {parcelDetail?.address?.province}{' '}
-                  {parcelDetail?.address?.postal}
+                  {building?.address?.city}, {building?.address?.province}{' '}
+                  {building?.address?.postal}
                 </div>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Label>PID: </Label> {parcelDetail?.pid}
               </ListGroup.Item>
             </ListGroup>
             <ListGroup>
               <ListGroup.Item>
-                <Label>Agency: </Label>
-                {parcelDetail?.agency}
+                <Label>Floor Count: </Label>
+                {building?.buildingFloorCount}
               </ListGroup.Item>
               <ListGroup.Item>
-                <Label>Classification: </Label>
-                {parcelDetail?.classification}
+                <Label>Predominate Use: </Label>
+                {building?.buildingPredominateUse}
               </ListGroup.Item>
             </ListGroup>
           </Col>

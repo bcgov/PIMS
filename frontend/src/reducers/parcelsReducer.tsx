@@ -1,10 +1,15 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IStoreParcelsAction, IStoreParcelDetail } from 'actions/parcelsActions';
-import { IParcel, IParcelDetail } from 'actions/parcelsActions';
+import {
+  IStoreParcelsAction,
+  IStoreParcelDetail,
+  IPropertyDetail,
+  IStoreBuildingDetail,
+} from 'actions/parcelsActions';
+import { IProperty } from 'actions/parcelsActions';
 
 export interface IParcelState {
-  parcels: IParcel[];
-  parcelDetail: IParcelDetail | null;
+  parcels: IProperty[];
+  parcelDetail: IPropertyDetail | null;
   pid: number;
 }
 
@@ -14,7 +19,10 @@ const initialState: IParcelState = {
   pid: 0,
 };
 
-const parcelsReducer = (state = initialState, action: IStoreParcelsAction | IStoreParcelDetail) => {
+const parcelsReducer = (
+  state = initialState,
+  action: IStoreParcelsAction | IStoreParcelDetail | IStoreBuildingDetail,
+) => {
   switch (action.type) {
     case actionTypes.STORE_PARCEL_RESULTS:
       return {
@@ -22,6 +30,11 @@ const parcelsReducer = (state = initialState, action: IStoreParcelsAction | ISto
         parcels: [...action.parcelList],
       };
     case actionTypes.STORE_PARCEL_DETAIL:
+      return {
+        ...state,
+        parcelDetail: action.parcelDetail,
+      };
+    case actionTypes.STORE_BUILDING_DETAIL:
       return {
         ...state,
         parcelDetail: action.parcelDetail,
