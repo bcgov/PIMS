@@ -12,15 +12,36 @@ export interface IStoreUsersAction {
   pagedUsers: IPagedItems;
 }
 
+export interface IGetUserAction {
+  type: typeof ActionTypes.GET_USER;
+  pagedUsers: IUser;
+}
+
 export const storeAccessRequests = (pagedAccessRequests: IStoreAccessRequestsAction) => ({
   type: ActionTypes.STORE_ACCESS_REQUESTS,
   pagedAccessRequests: pagedAccessRequests,
+});
+
+export interface IStoreUserDetail {
+  type: typeof ActionTypes.STORE_USER_DETAILS;
+  userDetail: IUserDetails;
+}
+
+export const storeUserDetail = (userDetail: IUserDetails) => ({
+  type: ActionTypes.STORE_USER_DETAILS,
+  // Payload below
+  userDetail: userDetail,
 });
 
 export const storeUsers = (pagedUsers: IStoreUsersAction) => ({
   type: ActionTypes.STORE_USERS,
   pagedUsers: pagedUsers,
 });
+
+export interface IAddNewRoleAndAgency {
+  agency: IAgency;
+  role: IRole;
+}
 
 export interface IAgency {
   id?: string;
@@ -39,6 +60,21 @@ export interface IAccessRequest {
 export interface IUser {
   id: string;
   displayName?: string;
+}
+
+export interface IUserDetails {
+  id?: string;
+  username: string;
+  firstName?: string;
+  displayName?: string;
+  lastName?: string;
+  email?: string;
+  isDisabled?: boolean;
+  agencies: any[];
+  roles: any[];
+  createdOn?: string;
+  rowVersion?: string;
+  note?: string;
 }
 
 export interface IPagedItems {

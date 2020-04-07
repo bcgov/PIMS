@@ -86,7 +86,7 @@ describe('component functionality when requestAccess status is 200 and fetching 
   });
 
   it('displays a success message', () => {
-    expect(componentRender.find('Your request has been submitted')).toBeTruthy();
+    expect(componentRender.find('Your request has been submitted')).toHaveLength(1);
   });
 });
 
