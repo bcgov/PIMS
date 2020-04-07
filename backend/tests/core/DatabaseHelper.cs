@@ -98,6 +98,7 @@ namespace Pims.Core.Test
             context.AddData(EntityHelper.CreateRoles());
             context.AddData(EntityHelper.CreateBuildingPredominateUses());
             context.AddData(EntityHelper.CreateBuildingConstructionTypes());
+            context.AddData(EntityHelper.CreateBuildingOccupantTypes());
             context.AddData(EntityHelper.CreateAgencies());
             return context;
         }

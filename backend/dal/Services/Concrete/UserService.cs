@@ -92,7 +92,7 @@ namespace Pims.Dal.Services
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
             request.CreatedById = this.User.GetUserId();
             request.User = this.Context.Users.Find(this.User.GetUserId()) ??
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException("Your account has not been activated.");
 
             request.Agencies.ForEach((accessRequestAgency) =>
             {
