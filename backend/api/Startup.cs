@@ -18,6 +18,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 using Pims.Api.Helpers.Routes.Constraints;
@@ -236,15 +237,15 @@ namespace Pims.Api
 
             app.UseSwagger(options =>
             {
-                options.RouteTemplate = "/swagger/{documentname}/swagger.json";
+                options.RouteTemplate = this.Configuration.GetValue<string>("Swagger:RouteTemplate");
             });
             app.UseSwaggerUI(options =>
             {
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+                    options.SwaggerEndpoint(String.Format(this.Configuration.GetValue<string>("Swagger:EndpointPath"), description.GroupName), description.GroupName);
                 }
-                options.RoutePrefix = "swagger";
+                options.RoutePrefix = this.Configuration.GetValue<string>("Swagger:RoutePrefix");
             });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
@@ -260,12 +261,12 @@ namespace Pims.Api
             app.UseAuthorization();
 
             var healthPort = this.Configuration.GetValue<int>("HealthChecks:Port");
-            app.UseHealthChecks("/health/live", healthPort, new HealthCheckOptions
+            app.UseHealthChecks(this.Configuration.GetValue<string>("HealthChecks:LivePath"), healthPort, new HealthCheckOptions
             {
                 Predicate = r => r.Name.Contains("liveliness"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            app.UseHealthChecks("/health/ready", healthPort, new HealthCheckOptions
+            app.UseHealthChecks(this.Configuration.GetValue<string>("HealthChecks:ReadyPath"), healthPort, new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -277,13 +278,13 @@ namespace Pims.Api
                 config.MapHealthChecksUI(
                     setup =>
                     {
-                        setup.UIPath = "/healthchecks-ui"; // this is ui path in your browser
-                        // setup.ApiPath = "/api";
-                        setup.ResourcesPath = "/ui/resources";
-                        setup.WebhookPath = "/hooks";
-                        setup.UseRelativeResourcesPath = false;
-                        setup.UseRelativeApiPath = false;
-                        setup.UseRelativeWebhookPath = false;
+                        setup.UIPath = this.Configuration.GetValue<string>("HealthChecksUI:UIPath"); // this is ui path in your browser
+                        setup.ApiPath = this.Configuration.GetValue<string>("HealthChecksUI:ApiPath");
+                        setup.ResourcesPath = this.Configuration.GetValue<string>("HealthChecksUI:ResourcesPath");
+                        setup.WebhookPath = this.Configuration.GetValue<string>("HealthChecksUI:WebhookPath");
+                        setup.UseRelativeResourcesPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeResourcesPath");
+                        setup.UseRelativeApiPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeApiPath");
+                        setup.UseRelativeWebhookPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeWebhookPath");
                     }
                 );
             });
