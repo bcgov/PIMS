@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import MapView from './pages/MapView';
 import GuestAccessPage from './pages/GuestAccessPage';
+import EditUserPage from './pages/EditUserPage';
 import PrivateRoute from './PrivateRoute';
 import Login from './pages/Login';
 import Header from './components/navigation/Header';
@@ -64,6 +65,7 @@ const App = () => {
             <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
             <PrivateRoute path="/mapView" component={MapView} />
             <PrivateRoute path="/submitProperty" component={SubmitProperty} />
+            <PrivateRoute path="/edituser" component={EditUserPage} />
           </Col>
         </Row>
         <Footer />

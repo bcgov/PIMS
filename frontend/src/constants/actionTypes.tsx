@@ -28,3 +28,5 @@ export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
 export const STORE_USERS = 'STORE_USERS';
 export const ADD_ACTIVATE_USER = 'activateUser';
 export const GET_USERS = 'getUsers';
+export const STORE_USER_DETAILS = 'STORE_USER_DETAILS';
+export const GET_USER = 'GET_USER';
