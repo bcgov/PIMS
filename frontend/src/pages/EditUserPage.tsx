@@ -79,17 +79,19 @@ const EditUserPage = (props: IUserDetailParams) => {
   let checkAgencies: {} | null | undefined;
   let checkRoles: {} | null | undefined;
 
-  user.agencies.length > 0
-    ? (checkAgencies = (
-        <Select field="agency" placeholder={user.agencies[0].name} options={selectAgencies} />
-      ))
-    : (checkAgencies = (
-        <Select field="agency" placeholder="Please Select" options={selectAgencies} />
-      ));
+  checkAgencies =
+    user.agencies.length > 0 ? (
+      <Select field="agency" placeholder={user.agencies[0].name} options={selectAgencies} />
+    ) : (
+      <Select field="agency" placeholder="Please Select" options={selectAgencies} />
+    );
 
-  user.roles.length > 0
-    ? (checkRoles = <Select field="role" placeholder={user.roles[0].name} options={selectRoles} />)
-    : (checkRoles = <Select field="role" placeholder="Please Select" options={selectRoles} />);
+  checkRoles =
+    user.roles.length > 0 ? (
+      <Select field="role" placeholder={user.roles.find(x => x).name} options={[]} />
+    ) : (
+      <Select field="role" placeholder="Please Select" options={[]} />
+    );
 
   const initialValues = {
     username: user.username,
@@ -205,13 +207,14 @@ const EditUserPage = (props: IUserDetailParams) => {
                 </InputGroup>
 
                 <Label>Status</Label>
-                <FormControl as="select">
-                  <option selected disabled>
-                    Please select
-                  </option>
-                  <option>Approved</option>
-                  <option>Denied</option>
-                </FormControl>
+                <Select
+                  field="status"
+                  placeholder="Please Select"
+                  options={[
+                    { value: 0, label: 'Approved' },
+                    { value: 1, label: 'Denied' },
+                  ]}
+                />
 
                 <Row className="justify-content-md-center">
                   <ButtonToolbar className="cancelSave">
