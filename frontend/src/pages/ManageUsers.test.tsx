@@ -9,6 +9,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Administration from './Administration';
 import { ILookupCode } from 'actions/lookupActions';
+import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { render, fireEvent, queryByText } from '@testing-library/react';
@@ -34,9 +35,13 @@ jest.mock('react-router-dom', () => ({
 }));
 
 // Empty response
-const store = mockStore({ [reducerTypes.GET_USERS]: {}, [reducerTypes.LOOKUP_CODE]: lCodes });
+const store = mockStore({
+  [reducerTypes.USERS]: { pagedUsers: [] },
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: {} },
+});
 const successStore = mockStore({
-  [reducerTypes.GET_USERS]: {
+  [reducerTypes.USERS]: {
     pagedUsers: {
       page: 1,
       total: 2,
@@ -52,12 +57,12 @@ const successStore = mockStore({
     },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: {} },
 });
 const loadingStore = mockStore({
-  [reducerTypes.GET_USERS]: {
-    isFetching: true,
-  },
+  [reducerTypes.USERS]: {},
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: { isFetching: true } },
 });
 
 it('renders Manage Users page correctly', () => {

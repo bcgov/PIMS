@@ -88,9 +88,9 @@ const EditUserPage = (props: IUserDetailParams) => {
 
   checkRoles =
     user.roles.length > 0 ? (
-      <Select field="role" placeholder={user.roles.find(x => x).name} options={[]} />
+      <Select field="role" placeholder={user.roles[0].name} options={[]} />
     ) : (
-      <Select field="role" placeholder="Please Select" options={[]} />
+      <Select field="role" placeholder="Please Select" options={selectRoles} />
     );
 
   const initialValues = {

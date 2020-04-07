@@ -5,6 +5,7 @@ import { Col } from 'react-bootstrap';
 
 interface PidPinProps {
   nameSpace?: string;
+  disabled?: boolean;
 }
 export const defaultPidPinFormValues = {
   pid: '',
@@ -22,14 +23,14 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           <Form.Label column md={2}>
             PID
           </Form.Label>
-          <Input className="col-md-10" field={withNameSpace('pid')} />
+          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('pid')} />
         </Form.Row>
         <p style={{ textAlign: 'center' }}>OR</p>
         <Form.Row>
           <Form.Label column md={2}>
             PIN
           </Form.Label>
-          <Input className="col-md-10" field={withNameSpace('pin')} />
+          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('pin')} />
         </Form.Row>
       </Col>
     </Fragment>

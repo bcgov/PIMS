@@ -22,7 +22,9 @@ import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import SubmitProperty from 'pages/SubmitProperty';
 import LoadingBar from 'react-redux-loading-bar';
+import ErrorBoundary from 'react-error-boundary';
 import _ from 'lodash';
+import ErrorModal from 'components/common/ErrorModal';
 
 export const store = configureStore();
 
@@ -51,23 +53,25 @@ const App = () => {
       <LoadingBar style={{ zIndex: 9999, backgroundColor: '#fcba19', height: '3px' }} />
       <Container className="App" fluid={true}>
         <Header />
-        <Row className="App-content">
-          {keycloak?.authenticated ? <AppNavBar /> : null}
-          <Col style={{ padding: 0 }}>
-            <Route path="/login" component={Login}></Route>
-            <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
-            <PrivateRoute
-              path="/admin"
-              component={Administration}
-              role={SYSTEM_ADMINISTRATOR}
-            ></PrivateRoute>
-            <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
-            <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
-            <PrivateRoute path="/mapView" component={MapView} />
-            <PrivateRoute path="/submitProperty" component={SubmitProperty} />
-            <PrivateRoute path="/edituser" component={EditUserPage} />
-          </Col>
-        </Row>
+        <ErrorBoundary FallbackComponent={ErrorModal}>
+          <Row className="App-content">
+            {keycloak?.authenticated ? <AppNavBar /> : null}
+            <Col style={{ padding: 0 }}>
+              <Route path="/login" component={Login}></Route>
+              <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
+              <PrivateRoute
+                path="/admin"
+                component={Administration}
+                role={SYSTEM_ADMINISTRATOR}
+              ></PrivateRoute>
+              <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
+              <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
+              <PrivateRoute path="/mapView" component={MapView} />
+              <PrivateRoute path="/submitProperty/:id?" component={SubmitProperty} />
+              <PrivateRoute path="/edituser" component={EditUserPage} />
+            </Col>
+          </Row>
+        </ErrorBoundary>
         <Footer />
       </Container>
     </Router>

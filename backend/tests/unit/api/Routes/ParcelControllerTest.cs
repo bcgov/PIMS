@@ -95,12 +95,12 @@ namespace Pims.Api.Test.Routes
         public void UpdateParcel_Route()
         {
             // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.UpdateParcel), typeof(int), typeof(Model.ParcelModel));
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.UpdateParcel), typeof(Model.ParcelModel));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPut("{id}");
+            endpoint.HasPut();
             endpoint.HasPermissions(Permissions.PropertyEdit);
         }
 

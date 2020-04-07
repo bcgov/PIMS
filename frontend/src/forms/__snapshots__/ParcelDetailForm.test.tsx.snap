@@ -1,0 +1,485 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ParcelDetailForm renders correctly 1`] = `
+<div
+  className="parcelDetailForm container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <h2>
+        Submit a Property
+      </h2>
+    </div>
+    <div
+      className="col"
+      style={
+        Object {
+          "textAlign": "right",
+        }
+      }
+    >
+      <button
+        className="btn btn-light"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Back to Previous
+      </button>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <form
+        className=""
+        noValidate={true}
+        onSubmit={[Function]}
+      >
+        <div
+          className="row no-gutters"
+        >
+          <div
+            className="col"
+          >
+            <h3>
+              Address
+            </h3>
+            <div
+              className="pidPinForm form-row"
+            >
+              <div
+                className="pidPinForm col-md-6"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    PID
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-pid"
+                      name="pid"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <p
+                  style={
+                    Object {
+                      "textAlign": "center",
+                    }
+                  }
+                >
+                  OR
+                </p>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    PIN
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-pin"
+                      name="pin"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="addressForm col-md-6"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Street Address
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-address.line1"
+                      name="address.line1"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    City
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="col-md-10 form-control"
+                      id="input-address.cityId"
+                      name="address.cityId"
+                      onChange={[Function]}
+                      value=""
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                      <option
+                        value="1"
+                      >
+                        test city
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Province
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="col-md-10 form-control"
+                      id="input-address.provinceId"
+                      name="address.provinceId"
+                      onChange={[Function]}
+                      value=""
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                      <option
+                        value="2222"
+                      >
+                        test province
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Postal
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-address.postal"
+                      name="address.postal"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row no-gutters"
+        >
+          <div
+            className="col"
+          >
+            <h3>
+              Land
+            </h3>
+            <div
+              className="landForm form-row"
+            >
+              <div
+                className="col-md-6"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Zoning
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-zoning"
+                      name="zoning"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Zoning Potential
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-zoningPotential"
+                      name="zoningPotential"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Latitude
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-latitude"
+                      name="latitude"
+                      onChange={[Function]}
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Longitude
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-longitude"
+                      name="longitude"
+                      onChange={[Function]}
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col-md-6"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Active
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <div
+                      className="col-md-10 form-check"
+                    >
+                      <input
+                        className="form-check-input position-static"
+                        defaultChecked={1}
+                        disabled={false}
+                        id="input-statusId"
+                        name="statusId"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value={1}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Classification
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="col-md-10 form-control"
+                      id="input-classificationId"
+                      name="classificationId"
+                      onChange={[Function]}
+                      value=""
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                      <option
+                        value="1"
+                      >
+                        classification test
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Lot Size
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-landArea"
+                      name="landArea"
+                      onChange={[Function]}
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Sensitive Land
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <div
+                      className="form-check"
+                    >
+                      <input
+                        className="form-check-input position-static"
+                        defaultChecked={false}
+                        disabled={false}
+                        id="input-isSensitive"
+                        name="isSensitive"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value={false}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4>
+              Valuation Information
+            </h4>
+            <div>
+              <button
+                className="addEval btn btn-primary"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                Add Land Valuation
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row no-gutters"
+        >
+          <div
+            className="col"
+          >
+            <h3>
+              Buildings
+            </h3>
+            <div>
+              <button
+                className="addBuilding btn btn-primary"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                Add Building
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="btn btn-primary"
+            disabled={false}
+            onClick={[Function]}
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

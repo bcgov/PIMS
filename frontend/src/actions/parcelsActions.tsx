@@ -22,48 +22,74 @@ export const storeParcelsAction = (parcelList: IProperty[]): IStoreParcelsAction
 //Parcel Detail API action
 export interface IAddress {
   line1: string;
-  line2: string;
-  city: string;
-  province: string;
+  line2?: string;
+  city?: string;
+  cityId: number | any;
+  province?: string;
+  provinceId: string;
   postal: string;
 }
 
 export interface IBuilding {
   id: number;
+  localId: string;
   description: string;
   address: IAddress;
-  latitude: number;
-  longitude: number;
-  localId: string;
-  constructionType: string;
-  postal: string;
-  buildingFloorCount: number;
-  buildingPredominateUse: string;
+  latitude: number | any;
+  longitude: number | any;
+  buildingFloorCount: number | any;
+  buildingConstructionType: string | undefined;
+  buildingConstructionTypeId: number | any;
+  buildingPredominateUse: string | undefined;
+  buildingPredominateUseId: string | any;
+  buildingOccupantType: string | undefined;
+  buildingOccupantTypeId: number | any;
+  leaseExpiry?: string;
+  occupantName: string;
+  transferLeaseOnSale: boolean;
   buildingTenancy: string;
+  buildingNetBookValue: number;
+  rentableArea: number | any;
+  agencyId: number | any;
   evaluations: IEvaluation[];
 }
 
 export interface IEvaluation {
-  fiscalYear: number;
-  estimatedValue: number;
-  assessedValue: number;
-  netBookValue: number;
+  fiscalYear: number | any;
+  estimatedValue: number | any;
+  assessedValue: number | any;
+  netBookValue: number | any;
+  appraisedValue: number | any;
 }
 
 export interface IParcel {
-  id: number;
+  id: number | any;
   pid: string;
-  latitude: number;
-  longitude: number;
-  propertyStatus: string;
-  classification: string;
+  pin: string;
+  latitude: number | any;
+  longitude: number | any;
+  statusId: number | any;
+  propertyStatus: string | undefined;
+  classification: string | undefined;
+  classificationId: number | any;
   description: string;
-  evaluations: IEvaluation[];
-  address: IAddress;
-  landArea: string;
+  address: IAddress | any;
+  landArea: number | any;
   landLegalDescription: string;
+  zoning: string;
+  zoningPotential: string;
+  agency: string | undefined;
+  agencyId: number | any;
+  isSensitive: boolean;
   buildings: IBuilding[];
-  agency: string;
+  evaluations: IEvaluation[];
+}
+
+export interface IAddress {
+  line1: string;
+  cityId: number | any;
+  provinceId: string;
+  postal: string;
 }
 
 export interface IParcelDetail {

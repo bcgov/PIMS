@@ -2,13 +2,19 @@ import React, { useEffect } from 'react';
 import Map, { MapViewportChangeEvent } from '../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
-import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
+import {
+  fetchParcels,
+  fetchPropertyDetail,
+  fetchParcelDetail,
+} from 'actionCreators/parcelsActionCreator';
 import { IParcelListParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
+import { IProperty, storeParcelDetail, IPropertyDetail, IParcel } from 'actions/parcelsActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
+import { LeafletMouseEvent } from 'leaflet';
+import { saveClickLatLng as saveLeafletMouseEvent } from 'reducers/LeafletMouseSlice';
 import * as API from 'constants/API';
 import _ from 'lodash';
 
@@ -32,11 +38,14 @@ const fetchLotSizes = () => {
 
 interface MapViewProps {
   disableMapFilterBar?: boolean;
+  disabled?: boolean;
+  onMarkerClick?: (obj: IProperty) => void;
+  onMarkerPopupClosed?: (obj: IPropertyDetail) => void;
 }
 
 const MapView = (props: MapViewProps) => {
-  const parcels = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
-  const parcelDetail = useSelector<RootState, IPropertyDetail | null>(
+  const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
+  const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
     state => state.parcel.parcelDetail,
   );
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -48,6 +57,7 @@ const MapView = (props: MapViewProps) => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
+
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
 
@@ -72,24 +82,34 @@ const MapView = (props: MapViewProps) => {
     };
     return apiParams;
   };
+  const saveLatLng = (e: LeafletMouseEvent) => {
+    //TODO: this prevents click events on markers from being recorded, would like a better way.
+    if (!(e?.originalEvent?.target as any)?.className.indexOf('leaflet-marker')) {
+      return;
+    }
+    if (!props.disabled) {
+      dispatch(saveLeafletMouseEvent(e));
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchParcels(parcelBounds));
     dispatch(getFetchLookupCodeAction());
   }, [dispatch]);
-
   return (
     <Map
-      lat={48.43}
-      lng={-123.37}
+      lat={propertyDetail?.parcelDetail?.latitude ?? 48.43}
+      lng={propertyDetail?.parcelDetail?.longitude ?? -123.37}
       zoom={14}
-      parcels={parcels}
-      selectedProperty={parcelDetail}
+      properties={properties}
+      selectedProperty={propertyDetail}
       agencies={agencies}
       propertyClassifications={propertyClassifications}
       lotSizes={lotSizes}
-      onMarkerClick={p => dispatch(fetchPropertyDetail(p.id, p.propertyTypeId))}
-      onMarkerPopupClose={() => dispatch(storeParcelDetail(null))}
+      onMarkerClick={
+        props.onMarkerClick ?? (p => p.id && dispatch(fetchParcelDetail({ id: p.id })))
+      }
+      onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
         const apiParams = getApiParams(mapFilterModel);
         const action = fetchParcels(apiParams);
@@ -97,7 +117,9 @@ const MapView = (props: MapViewProps) => {
           dispatch(action);
         }, 250)();
       }}
+      onMapClick={saveLatLng}
       disableMapFilterBar={props.disableMapFilterBar}
+      disabled={props.disabled}
     />
   );
 };

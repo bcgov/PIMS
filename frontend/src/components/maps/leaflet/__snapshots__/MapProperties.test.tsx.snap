@@ -102,6 +102,22 @@ exports[`ParcelPopupView renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <div
+      className="col"
+    >
+      <a
+        href="/submitProperty/1?disabled=true"
+        onClick={[Function]}
+      >
+        View
+      </a>
+      <a
+        href="/submitProperty/1"
+        onClick={[Function]}
+      >
+        Update
+      </a>
+    </div>
   </div>
 </div>
 `;

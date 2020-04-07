@@ -1,7 +1,7 @@
 import React, { FunctionComponent, Fragment, useState, useEffect } from 'react';
 import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Formik, FieldArray } from 'formik';
+import { Formik, FieldArray, FormikBag } from 'formik';
 import _ from 'lodash';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
@@ -11,34 +11,39 @@ import LandForm, { defaultLandValues } from './subforms/LandForm';
 import EvaluationForm, { defaultEvaluationValues } from './subforms/EvaluationForm';
 import './ParcelDetailForm.scss';
 import { useHistory } from 'react-router-dom';
-import * as API from 'constants/API';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { createParcel } from 'actionCreators/parcelsActionCreator';
+import { createParcel, fetchParcelDetail, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { Form } from 'components/common/form';
 import { FaTimes } from 'react-icons/fa';
-import { decimalOrNull, decimalOrEmpty } from 'utils';
+import { decimalOrEmpty } from 'utils';
 import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction, error } from 'actions/genericActions';
-import * as actionTypes from 'constants/actionTypes';
-import * as ReducerTypes from 'constants/reducerTypes';
 
-const ParcelDetailForm = () => {
+import { IParcelDetail, storeParcelDetail, IParcel, IPropertyDetail } from 'actions/parcelsActions';
+
+interface ParcelPropertyProps {
+  parcelId: number;
+  agencyId: number | undefined;
+  disabled?: boolean;
+  updateLatLng: Function;
+}
+const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const keycloak = useKeycloakWrapper();
-  if (!keycloak.agency) {
+  if (!props.agencyId) {
     //TODO: implement an error boundary and throw an exception here.
     history.push('/mapView');
   }
-  const initialValues: API.IParcel = {
+  let initialValues: IParcel = {
     ...defaultLandValues,
     ...defaultPidPinFormValues,
-    agencyId: parseInt(keycloak.agency ?? '0'),
+    agencyId: props.agencyId,
     address: defaultAddressValues,
     buildings: [],
     evaluations: [],
   };
-  const valuesToApiFormat = (values: API.IParcel) => {
+  const activeParcelDetail = useSelector<RootState, IPropertyDetail>(
+    state => state.parcel.parcelDetail as IPropertyDetail,
+  );
+  const valuesToApiFormat = (values: IParcel) => {
     values.statusId = values.statusId ? 1 : 0;
     values.classificationId = decimalOrEmpty(values.classificationId as string);
     values.address.cityId = decimalOrEmpty(values.address.cityId as string);
@@ -62,14 +67,13 @@ const ParcelDetailForm = () => {
       );
     });
   };
-  const addParcelRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.ADD_PARCEL] as IGenericNetworkAction,
-  );
-  useEffect(() => {
-    if (addParcelRequest?.status === 201) {
-      history.push('/mapview');
-    }
-  }, [addParcelRequest]);
+
+  if (activeParcelDetail?.parcelDetail?.id) {
+    initialValues = { ...(activeParcelDetail.parcelDetail as IParcel) };
+  } else if (props.parcelId) {
+    //we were passed a detail id but we have no data cached - just reload.
+    dispatch(fetchParcelDetail({ id: props.parcelId }));
+  }
 
   return (
     <Container fluid={true} className="parcelDetailForm">
@@ -88,44 +92,62 @@ const ParcelDetailForm = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={ParcelSchema}
+            enableReinitialize
             onSubmit={(values, { setSubmitting }) => {
-              dispatch(createParcel(values));
+              if (!values.id) {
+                dispatch(createParcel(values));
+              } else {
+                dispatch(updateParcel(values));
+              }
+
               setSubmitting(false);
             }}
           >
-            {props => (
+            {formikProps => (
               <Form>
+                {props.updateLatLng(formikProps.values)}
                 <Row noGutters>
                   <Col>
                     <h3>Address</h3>
                     <Form.Row className="pidPinForm">
-                      <PidPinForm />
-                      <AddressForm {...props} nameSpace="address" />
+                      <PidPinForm disabled={props.disabled} />
+                      <AddressForm {...formikProps} disabled={props.disabled} nameSpace="address" />
                     </Form.Row>
                   </Col>
                 </Row>
                 <Row noGutters>
                   <Col>
                     <h3>Land</h3>
-                    <LandForm {...props}></LandForm>
+                    <LandForm {...formikProps} disabled={props.disabled}></LandForm>
                     <h4>Valuation Information</h4>
                     <FieldArray
                       name="evaluations"
                       render={arrayHelpers => (
                         <div>
-                          <Button onClick={() => arrayHelpers.push(defaultEvaluationValues)}>
-                            Add Land Valuation
-                          </Button>
+                          {!props.disabled && (
+                            <Button
+                              className="addEval"
+                              onClick={() => arrayHelpers.push(defaultEvaluationValues)}
+                            >
+                              Add Land Valuation
+                            </Button>
+                          )}
 
-                          {props.values.evaluations.map((evaluation, index) => {
+                          {formikProps.values.evaluations.map((evaluation, index) => {
                             return (
                               <div key={index}>
-                                <Button variant="danger" onClick={() => arrayHelpers.remove(index)}>
-                                  <FaTimes size={14} />
-                                </Button>
+                                {!props.disabled && (
+                                  <Button
+                                    variant="danger"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                  >
+                                    <FaTimes size={14} />
+                                  </Button>
+                                )}
                                 <h5>Evaluation</h5>
                                 <EvaluationForm
-                                  {...props}
+                                  {...formikProps}
+                                  disabled={props.disabled}
                                   nameSpace="evaluations"
                                   key={index}
                                   evaluation={evaluation}
@@ -146,18 +168,30 @@ const ParcelDetailForm = () => {
                       name="buildings"
                       render={arrayHelpers => (
                         <div>
-                          <Button onClick={() => arrayHelpers.push(defaultBuildingValues)}>
-                            Add Building
-                          </Button>
-                          {props.values.buildings.map((building, index) => {
+                          {!props.disabled && (
+                            <Button
+                              className="addBuilding"
+                              disabled={props.disabled}
+                              onClick={() => arrayHelpers.push(defaultBuildingValues)}
+                            >
+                              Add Building
+                            </Button>
+                          )}
+                          {formikProps.values.buildings.map((building, index) => {
                             return (
                               <div key={index}>
-                                <Button variant="danger" onClick={() => arrayHelpers.remove(index)}>
-                                  <FaTimes size={14} />
-                                </Button>
+                                {props.disabled && (
+                                  <Button
+                                    variant="danger"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                  >
+                                    <FaTimes size={14} />
+                                  </Button>
+                                )}
                                 <h5>Building</h5>
                                 <BuildingForm
-                                  {...props}
+                                  {...formikProps}
+                                  disabled={props.disabled}
                                   nameSpace="buildings"
                                   building={building}
                                   index={index}
@@ -171,15 +205,18 @@ const ParcelDetailForm = () => {
                   </Col>
                 </Row>
                 <div style={{ textAlign: 'right' }}>
-                  <Button
-                    type="submit"
-                    onClick={() => {
-                      valuesToApiFormat(props.values);
-                      props.setSubmitting(false);
-                    }}
-                  >
-                    Submit
-                  </Button>
+                  {!props.disabled && (
+                    <Button
+                      disabled={props.disabled}
+                      type="submit"
+                      onClick={() => {
+                        valuesToApiFormat(formikProps.values);
+                        formikProps.setSubmitting(false);
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  )}
                 </div>
               </Form>
             )}

@@ -226,8 +226,6 @@ namespace Pims.Dal.Services
             // Do not allow switching agencies through this method.
             if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
-            this.Context.Parcels.ThrowIfNotUnique(parcel);
-
             this.Context.Update(parcel);
             this.Context.CommitTransaction();
             return parcel;

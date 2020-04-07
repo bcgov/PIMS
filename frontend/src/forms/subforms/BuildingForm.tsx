@@ -1,11 +1,9 @@
-import { FunctionComponent, Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { Label } from 'components/common/Label';
-import { Field, ErrorMessage, FieldArray, FormikProps } from 'formik';
+import { FieldArray, FormikProps } from 'formik';
 import React from 'react';
 import AddressForm, { defaultAddressValues } from './AddressForm';
 import EvaluationForm, { defaultEvaluationValues } from './EvaluationForm';
-import * as API from 'constants/API';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
@@ -16,18 +14,25 @@ import { Input, Form, Select } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode } from 'utils';
 import { FaTimes } from 'react-icons/fa';
+import { IBuilding } from 'actions/parcelsActions';
+import * as API from 'constants/API';
 
-export const defaultBuildingValues: API.IBuilding = {
+export const defaultBuildingValues: IBuilding = {
+  id: 0,
+  buildingNetBookValue: 0,
   localId: '',
   description: '',
   address: defaultAddressValues,
   latitude: 0,
   longitude: 0,
   agencyId: 0,
-  buildingConstructionTypeId: '',
   rentableArea: '',
   buildingFloorCount: '',
+  buildingConstructionType: undefined,
+  buildingConstructionTypeId: '',
+  buildingPredominateUse: undefined,
   buildingPredominateUseId: '',
+  buildingOccupantType: undefined,
   buildingOccupantTypeId: '',
   transferLeaseOnSale: false,
   occupantName: '',
@@ -39,6 +44,7 @@ interface BuildingProps {
   nameSpace?: string;
   building?: any;
   index?: number;
+  disabled?: boolean;
 }
 const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -67,6 +73,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               Type of Construction
             </Form.Label>
             <Select
+              disabled={props.disabled}
               placeholder="Must Select One"
               className="col-md-10"
               field={withNameSpace('buildingConstructionTypeId')}
@@ -77,13 +84,19 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Rentable Area
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('rentableArea')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('rentableArea')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Number of Floors
             </Form.Label>
             <Input
+              disabled={props.disabled}
               type="number"
               className="col-md-10"
               field={withNameSpace('buildingFloorCount')}
@@ -94,6 +107,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               Predominate Use
             </Form.Label>
             <Select
+              disabled={props.disabled}
               placeholder="Must Select One"
               className="col-md-10"
               field={withNameSpace('buildingPredominateUseId')}
@@ -110,6 +124,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               Type of Current Occupant
             </Form.Label>
             <Select
+              disabled={props.disabled}
               placeholder="Must Select One"
               className="col-md-10"
               field={withNameSpace('buildingOccupantTypeId')}
@@ -120,13 +135,17 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Lease to be transferred with land
             </Form.Label>
-            <Check className="col-md-10" field={withNameSpace('transferLeaseOnSale')} />
+            <Check
+              disabled={props.disabled}
+              className="col-md-10"
+              field={withNameSpace('transferLeaseOnSale')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Date Lease Expires
             </Form.Label>
-            <FormikDatePicker name={withNameSpace('leaseExpiry')} />
+            <FormikDatePicker disabled={props.disabled} name={withNameSpace('leaseExpiry')} />
           </Form.Row>
         </Col>
         <Col md={6}>
@@ -134,23 +153,35 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Tenancy
             </Form.Label>
-            <Input className="col-md-10" field={withNameSpace('buildingTenancy')} />
+            <Input
+              disabled={props.disabled}
+              className="col-md-10"
+              field={withNameSpace('buildingTenancy')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Occupant Name
             </Form.Label>
-            <Input className="col-md-10" field={withNameSpace('occupantName')} />
+            <Input
+              disabled={props.disabled}
+              className="col-md-10"
+              field={withNameSpace('occupantName')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Sensitive Building
             </Form.Label>
-            <Check className="col-md-10" field={withNameSpace('sensitiveBuilding')} />
+            <Check
+              disabled={props.disabled}
+              className="col-md-10"
+              field={withNameSpace('sensitiveBuilding')}
+            />
           </Form.Row>
         </Col>
       </Form.Row>
-      <Row>
+      <Row noGutters>
         <Col>
           <h4>Building Valuation Information</h4>
 
@@ -158,17 +189,25 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             name={withNameSpace('evaluations')}
             render={arrayHelpers => (
               <div>
-                <Button onClick={() => arrayHelpers.push(defaultEvaluationValues)}>
-                  Add Land Valuation
-                </Button>
+                {!props.disabled && (
+                  <Button onClick={() => arrayHelpers.push(defaultEvaluationValues)}>
+                    Add Land Valuation
+                  </Button>
+                )}
                 {props.building.evaluations.map((evaluation: any, evaluationIndex: number) => {
                   return (
                     <div key={evaluationIndex}>
-                      <Button variant="danger" onClick={() => arrayHelpers.remove(evaluationIndex)}>
-                        <FaTimes size={14} />
-                      </Button>
+                      {props.disabled && (
+                        <Button
+                          variant="danger"
+                          onClick={() => arrayHelpers.remove(evaluationIndex)}
+                        >
+                          <FaTimes size={14} />
+                        </Button>
+                      )}
                       <h5>Building Evaluation</h5>
                       <EvaluationForm
+                        disabled={props.disabled}
                         {...props}
                         nameSpace={withNameSpace('evaluations')}
                         evaluation={evaluation}

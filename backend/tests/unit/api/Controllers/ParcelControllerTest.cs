@@ -227,7 +227,7 @@ namespace Pims.Api.Test.Controllers
             var model = mapper.Map<Model.ParcelModel>(parcel);
 
             // Act
-            var result = controller.UpdateParcel(parcel.Id, model);
+            var result = controller.UpdateParcel(model);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);

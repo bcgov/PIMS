@@ -44,10 +44,10 @@ export interface IAddNewRoleAndAgency {
 }
 
 export interface IAgency {
-  id?: string;
+  id?: number;
 }
 export interface IRole {
-  id?: string;
+  id?: number;
 }
 export interface IAccessRequest {
   agencies: IAgency[];
