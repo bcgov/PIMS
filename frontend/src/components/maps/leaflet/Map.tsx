@@ -4,13 +4,13 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
-import { IParcel, IParcelDetail } from 'actions/parcelsActions';
-import { ParcelPopupView } from '../ParcelPopupView';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { decimalOrNull, floatOrNull } from 'utils';
+import { PopupView } from '../PopupView';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -28,20 +28,20 @@ type MapProps = {
   lat: number;
   lng: number;
   zoom: number;
-  parcels: IParcel[];
+  parcels: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
-  activeParcel?: IParcelDetail | null;
-  onParcelClick?: (obj: IParcel) => void;
-  onPopupClose?: (obj: IParcel) => void;
+  selectedProperty?: IPropertyDetail | null;
+  onMarkerClick?: (obj: IProperty) => void;
+  onMarkerPopupClose?: (obj: IPropertyDetail) => void;
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
   disableMapFilterBar?: boolean;
 };
 
 const Map: React.FC<MapProps> = props => {
   // props
-  const { parcels, activeParcel, onParcelClick, onPopupClose, onViewportChanged } = props;
+  const { parcels, selectedProperty, onMarkerClick, onMarkerPopupClose, onViewportChanged } = props;
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
@@ -100,6 +100,34 @@ const Map: React.FC<MapProps> = props => {
     });
   }, []);
 
+  // we need to namespace the keys as IDs are not enough here.
+  // the same ID could be found on both the parcel collection and building collection
+  const generateKey = (p: IProperty) => `${p.propertyTypeId === 0 ? 'parcel' : 'building'}-${p.id}`;
+
+  const renderMarker = (p: IProperty) => (
+    <Marker
+      key={generateKey(p)}
+      position={[p.latitude, p.longitude]}
+      onClick={() => onMarkerClick?.(p)}
+    />
+  );
+
+  const renderPopup = (item: IPropertyDetail) => {
+    const { propertyTypeId, parcelDetail } = item;
+    if (!parcelDetail) {
+      return null;
+    }
+    return (
+      <Popup
+        position={[parcelDetail.latitude, parcelDetail.longitude]}
+        offset={[0, -25]}
+        onClose={() => onMarkerPopupClose?.(item)}
+      >
+        <PopupView propertyTypeId={propertyTypeId} propertyDetail={parcelDetail} />
+      </Popup>
+    );
+  };
+
   return (
     <Container fluid={true}>
       <Row>
@@ -124,27 +152,8 @@ const Map: React.FC<MapProps> = props => {
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} />
           )}
-
-          {parcels &&
-            parcels.map(parcel => {
-              return (
-                <Marker
-                  key={parcel.id}
-                  position={[parcel.latitude, parcel.longitude]}
-                  onClick={() => onParcelClick?.(parcel)}
-                />
-              );
-            })}
-
-          {activeParcel && (
-            <Popup
-              position={[activeParcel.latitude, activeParcel.longitude]}
-              offset={[0, -25]}
-              onClose={() => onPopupClose?.(activeParcel)}
-            >
-              <ParcelPopupView parcelDetail={activeParcel} />
-            </Popup>
-          )}
+          {parcels && parcels.map(renderMarker)}
+          {selectedProperty && renderPopup(selectedProperty)}
         </LeafletMap>
       </Row>
     </Container>

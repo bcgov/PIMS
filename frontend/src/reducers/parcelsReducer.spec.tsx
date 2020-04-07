@@ -2,7 +2,7 @@ import parcelsReducer, { IParcelState } from 'reducers/parcelsReducer';
 import {
   IStoreParcelsAction,
   IStoreParcelDetail,
-  IParcel,
+  IProperty,
   IParcelDetail,
 } from 'actions/parcelsActions';
 import * as ActionTypes from 'constants/actionTypes';
@@ -16,32 +16,36 @@ const baseExpectedValue: IParcelState = {
 
 // Creates deep copy of javascript object instead of setting a reference
 const getBaseExpectedValue = () => cloneDeep(baseExpectedValue);
-const defaultParcel: IParcel = {
+const defaultParcel: IProperty = {
   id: 1,
+  propertyTypeId: 0,
   latitude: 2,
   longitude: 3,
 };
 
 const defaultParcelDetail: IParcelDetail = {
-  longitude: 1,
-  latitude: 2,
-  id: 3,
-  address: {
-    city: '4',
-    line1: '5',
-    line2: '6',
-    postal: '7',
-    province: '8',
+  propertyTypeId: 0,
+  parcelDetail: {
+    longitude: 1,
+    latitude: 2,
+    id: 3,
+    address: {
+      city: '4',
+      line1: '5',
+      line2: '6',
+      postal: '7',
+      province: '8',
+    },
+    buildings: [],
+    evaluations: [],
+    description: '10',
+    landArea: '11',
+    landLegalDescription: '12',
+    pid: '13',
+    classification: '14',
+    propertyStatus: '15',
+    agency: '16',
   },
-  assessedValue: 9,
-  buildings: [],
-  description: '10',
-  landArea: '11',
-  landLegalDescription: '12',
-  pid: '13',
-  classification: '14',
-  propertyStatus: '15',
-  agency: '16',
 };
 
 describe('parcelReducer', () => {
