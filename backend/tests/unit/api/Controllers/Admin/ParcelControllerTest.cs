@@ -307,7 +307,15 @@ namespace Pims.Api.Test.Controllers.Admin
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
-            var parcel = EntityHelper.CreateParcel(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.PIN = 3;
+            parcel.Description = "Municipality";
+            parcel.LandArea = 3434.34f;
+            parcel.LandLegalDescription = "LandLegalDescription";
+            parcel.Municipality = "Municipality";
+            parcel.Zoning = "Zoning";
+            parcel.ZoningPotential = "ZoningPotential";
+            parcel.IsSensitive = false;
             service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Throws(new KeyNotFoundException());
 
             // Act
@@ -317,6 +325,45 @@ namespace Pims.Api.Test.Controllers.Admin
             var actionResult = Assert.IsType<NoContentResult>(result);
             Assert.Equal(204, actionResult.StatusCode);
             service.Verify(m => m.Parcel.GetByPid(parcel.Id), Times.Once());
+        }
+
+        [Fact]
+        public void GetParcel_Model()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(parcel);
+
+            // Act
+            var result = controller.GetParcel(parcel.Id);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(parcel.Id, actualResult.Id);
+            Assert.Equal(parcel.ParcelIdentity, actualResult.PID);
+            Assert.Equal(parcel.PIN == null ? null : parcel.PIN.ToString(), actualResult.PIN);
+            Assert.Equal(parcel.StatusId, actualResult.StatusId);
+            Assert.Equal(parcel.ClassificationId, actualResult.ClassificationId);
+            Assert.Equal(parcel.AgencyId, actualResult.AgencyId);
+            Assert.Equal(parcel.Description, actualResult.Description);
+            Assert.Equal(parcel.AddressId, actualResult.Address.Id);
+            Assert.Equal(parcel.Latitude, actualResult.Latitude);
+            Assert.Equal(parcel.Longitude, actualResult.Longitude);
+            Assert.Equal(parcel.LandArea, actualResult.LandArea);
+            Assert.Equal(parcel.LandLegalDescription, actualResult.LandLegalDescription);
+            Assert.Equal(parcel.Municipality, actualResult.Municipality);
+            Assert.Equal(parcel.Zoning, actualResult.Zoning);
+            Assert.Equal(parcel.ZoningPotential, actualResult.ZoningPotential);
+            Assert.Equal(parcel.IsSensitive, actualResult.IsSensitive);
+            Assert.Equal(parcel.Buildings.Count(), actualResult.Buildings.Count());
+            Assert.Equal(parcel.Evaluations.Count(), actualResult.Evaluations.Count());
         }
         #endregion
 
