@@ -7,6 +7,7 @@ import accessRequestReducer from 'reducers/accessRequestReducer';
 import usersReducer from './usersReducer';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import { NETWORK_ACTIONS } from 'constants/actionTypes';
+import leafletMouseSlice from './LeafletMouseSlice';
 import userDetailReducer from './userDetailReducer';
 
 const filteredReducer: any = (reducer: any, name: string) => (
@@ -23,10 +24,11 @@ export const reducerObject = {
   loadingBar: loadingBarReducer,
   [reducerTypes.PARCEL]: parcelsReducer,
   [reducerTypes.ACCESS_REQUEST]: accessRequestReducer,
-  [reducerTypes.GET_USERS]: usersReducer,
+  [reducerTypes.USERS]: usersReducer,
   [reducerTypes.GET_USER_DETAIL]: userDetailReducer,
   [reducerTypes.LOOKUP_CODE]: lookupCodeReducer,
   [reducerTypes.NETWORK]: networkReducer,
+  [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

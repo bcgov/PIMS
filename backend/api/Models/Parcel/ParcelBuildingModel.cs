@@ -40,7 +40,7 @@ namespace Pims.Api.Models.Parcel
 
         public string OccupantName { get; set; }
 
-        public bool? TransferLeaseOnSale { get; set; }
+        public bool TransferLeaseOnSale { get; set; }
 
         public string BuildingTenancy { get; set; }
 

@@ -14,6 +14,7 @@ import GuestAccessPage from './GuestAccessPage';
 import { ILookupCode } from 'actions/lookupActions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { NETWORK } from 'constants/reducerTypes';
+import * as actionTypes from 'constants/actionTypes';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -38,7 +39,7 @@ const history = createMemoryHistory();
 const successStore = mockStore({
   lookupCode: lCodes,
   [NETWORK]: {
-    addRequestAccess: requestAccess,
+    [actionTypes.ADD_REQUEST_ACCESS]: requestAccess,
   },
 });
 
@@ -86,7 +87,7 @@ describe('component functionality when requestAccess status is 200 and fetching 
   });
 
   it('displays a success message', () => {
-    expect(componentRender.find('Your request has been submitted')).toHaveLength(1);
+    expect(componentRender.find('p').text()).toBe('Your request has been submitted');
   });
 });
 
@@ -98,5 +99,5 @@ it('does not show success message by default', () => {
       </Router>
     </Provider>,
   );
-  expect(component.find('Your request has been submitted')).toHaveLength(0);
+  expect(component.find('p').text()).toBe('Your request has been submitted');
 });

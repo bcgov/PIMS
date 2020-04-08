@@ -3,12 +3,13 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import { Form, Input } from 'components/common/form';
-import { IEvaluation } from 'constants/API';
+import { IEvaluation } from 'actions/parcelsActions';
 
 interface EvaluationProps {
   nameSpace?: string;
   evaluation?: any;
   index?: number;
+  disabled?: boolean;
 }
 export const defaultEvaluationValues: IEvaluation = {
   fiscalYear: '',
@@ -29,19 +30,34 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
             <Form.Label column md={2}>
               Fiscal Year
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('fiscalYear')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('fiscalYear')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Assessed Value
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('assessedValue')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('assessedValue')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Estimated Value
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('estimatedValue')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('estimatedValue')}
+            />
           </Form.Row>
         </Col>
         <Col md={6}>
@@ -49,13 +65,23 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
             <Form.Label column md={2}>
               Appraised Value
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('appraisedValue')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('appraisedValue')}
+            />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Net Book Value
             </Form.Label>
-            <Input type="number" className="col-md-10" field={withNameSpace('netBookValue')} />
+            <Input
+              disabled={props.disabled}
+              type="number"
+              className="col-md-10"
+              field={withNameSpace('netBookValue')}
+            />
           </Form.Row>
         </Col>
       </Form.Row>

@@ -73,13 +73,14 @@ const store = mockStore({
       status: 201,
     },
   },
+  [reducerTypes.PARCEL]: { parcelDetail: {} },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
 const component = mount(
   <Provider store={store}>
     <Router history={history}>
-      <ParcelDetailForm />
+      <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} />
     </Router>
   </Provider>,
 );
@@ -90,7 +91,7 @@ it('ParcelDetailForm renders correctly', () => {
     .create(
       <Provider store={store}>
         <Router history={history}>
-          <ParcelDetailForm />
+          <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} />
         </Router>
       </Provider>,
     )
@@ -106,7 +107,7 @@ it('loads appropriate cities/provinces in dropwdown for address form', () => {
 
 // Currently leaves an ugly warning but passes test
 it('provides appropriate specifications to add a new building', () => {
-  const addBuilding = component.find('[className="buildingButton btn btn-primary"]');
+  const addBuilding = component.find('[className="addBuilding btn btn-primary"]');
   addBuilding.simulate('click');
   const buildingForm = component.find(BuildingForm);
   expect(buildingForm).toHaveLength(1);

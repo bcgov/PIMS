@@ -7,7 +7,13 @@
 }
 
 .btn:hover {
-  text-decoration: underline !important;
+  text-decoration: underline;
+}
+
+.btn:hover {
+  text-decoration: underline;
+}:disabled {
+  text-decoration: none;
 }
 
 .btn.btn-primary {
@@ -20,9 +26,12 @@
   border-radius: 0;
 }
 
-.btn.btn-primary:hover {
+.btn:hover {
   opacity: 0.8;
-  background-color: #003366;
+}
+.btn:disabled,.btn:hover:disabled {
+  opacity: .65;
+  cursor: unset;
 }
 
 .btn.btn-secondary {

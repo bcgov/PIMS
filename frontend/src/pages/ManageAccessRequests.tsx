@@ -48,7 +48,7 @@ const ManageAccessRequests = () => {
       const paginateParams: API.IPaginateParams & {
         isGranted?: boolean | null;
       } = toApiPaginateParams(0, MAX_ACCESS_RESULTS_PER_PAGE);
-      paginateParams.isGranted = null;
+      paginateParams.isGranted = true;
       dispatch(getAccessRequestsAction(paginateParams));
     }
   }, [updateRequestAccessAdmin]);
@@ -102,7 +102,7 @@ const ManageAccessRequests = () => {
                               {...props}
                               lookupCodes={agencies}
                               defaultTitle="No Agency Requested"
-                              defaultValue={accessRequest?.agencies[0]?.id}
+                              defaultValue={accessRequest?.agencies[0]?.id?.toString()}
                             />
                             <ErrorMessage component="span" name="agency" className="error" />
                           </Col>
@@ -112,7 +112,7 @@ const ManageAccessRequests = () => {
                               {...props}
                               lookupCodes={roles}
                               defaultTitle="No Role Requested"
-                              defaultValue={accessRequest?.roles[0]?.id}
+                              defaultValue={accessRequest?.roles[0]?.id?.toString()}
                             />
                             <ErrorMessage component="span" name="role" className="error" />
                           </Col>

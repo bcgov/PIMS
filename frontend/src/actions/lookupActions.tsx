@@ -3,6 +3,7 @@ import * as ActionTypes from 'constants/actionTypes';
 //Parcel List API action
 
 export interface ILookupCode {
+  code: string;
   name: string;
   id: string;
   isDisabled: boolean;

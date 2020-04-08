@@ -93,6 +93,13 @@ export const mockDetails = [
   {
     id: 1,
     pid: '000-000-000',
+    pin: '',
+    statusId: undefined,
+    zoning: '',
+    zoningPotential: '',
+    classificationId: undefined,
+    agencyId: undefined,
+    isSensitive: false,
     latitude: 48,
     longitude: 123,
     propertyStatus: 'active',
@@ -121,12 +128,18 @@ export const mockDetails = [
   {
     id: 2,
     pid: '000-000-000',
+    pin: '',
+    statusId: undefined,
+    zoning: '',
+    zoningPotential: '',
+    classificationId: undefined,
+    agencyId: undefined,
+    isSensitive: false,
     latitude: 50,
     longitude: 133,
     propertyStatus: 'active',
     classification: 'Core Operational',
     description: 'test',
-    assessedValue: 1000000,
     address: {
       line1: '1234 mock Street',
       line2: 'N/A',
@@ -137,6 +150,15 @@ export const mockDetails = [
     landArea: 'unknown',
     landLegalDescription: 'test',
     buildings: [],
+    evaluations: [
+      {
+        fiscalYear: 2020,
+        estimatedValue: 0,
+        appraisedValue: 0,
+        netBookValue: 0,
+        assessedValue: 1000000,
+      },
+    ],
     agency: 'HLTH',
   },
 ] as IParcel[];
@@ -144,6 +166,13 @@ export const mockDetails = [
 export const ACTIVE = {
   id: 1,
   pid: '000-000-000',
+  pin: '',
+  statusId: undefined,
+  zoning: '',
+  zoningPotential: '',
+  classificationId: undefined,
+  agencyId: undefined,
+  isSensitive: false,
   latitude: 48,
   longitude: 123,
   propertyStatus: 'active',
@@ -151,10 +180,11 @@ export const ACTIVE = {
   description: 'test',
   evaluations: [
     {
-      assessedValue: 1000000,
+      fiscalYear: 2020,
       estimatedValue: 0,
+      appraisedValue: 0,
       netBookValue: 0,
-      fiscalYear: 2019,
+      assessedValue: 1000000,
     },
   ],
   address: {

@@ -54,16 +54,16 @@ export const Evaluation = Yup.object().shape({
     .max(2100, 'Invalid Fiscal Year')
     .required('Required'),
   estimatedValue: Yup.number()
-    .min(1, 'Estimated Value must be a positive number')
+    .min(0, 'Estimated Value must be a positive number')
     .required('Required'),
   appraisedValue: Yup.number()
-    .min(1, 'Appraised Value must be a positive number')
+    .min(0, 'Appraised Value must be a positive number')
     .required('Required'),
   assessedValue: Yup.number()
-    .min(1, 'Assessed Value must be a positive number')
+    .min(0, 'Assessed Value must be a positive number')
     .required('Required'),
   netBookValue: Yup.number()
-    .min(1, 'Net Book Value must be a positive number')
+    .min(0, 'Net Book Value must be a positive number')
     .required('Required'),
 });
 

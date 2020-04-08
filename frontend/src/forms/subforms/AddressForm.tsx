@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import React from 'react';
-import { FormikProps, Field } from 'formik';
+import { FormikProps } from 'formik';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
@@ -9,16 +9,20 @@ import _ from 'lodash';
 import * as API from 'constants/API';
 import { Form, Input, Select } from 'components/common/form';
 import { mapLookupCode } from 'utils';
-import { IAddress } from 'constants/API';
 import { Col } from 'react-bootstrap';
+import { IAddress } from 'actions/parcelsActions';
 
 interface AddressProps {
   nameSpace?: string;
+  disabled?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
   line1: '',
+  line2: undefined,
+  city: undefined,
   cityId: '',
+  province: undefined,
   provinceId: '',
   postal: '',
 };
@@ -43,7 +47,7 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           <Form.Label column md={2}>
             Street Address
           </Form.Label>
-          <Input className="col-md-10" field={withNameSpace('line1')} />
+          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('line1')} />
         </Form.Row>
         <Form.Row>
           <Form.Label column md={2}>
@@ -51,6 +55,7 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           </Form.Label>
           <Select
             className="col-md-10"
+            disabled={props.disabled}
             placeholder="Must Select One"
             field={withNameSpace('cityId')}
             options={cities}
@@ -61,6 +66,7 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
             Province
           </Form.Label>
           <Select
+            disabled={props.disabled}
             className="col-md-10"
             placeholder="Must Select One"
             field={withNameSpace('provinceId')}
@@ -71,7 +77,7 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           <Form.Label column md={2}>
             Postal
           </Form.Label>
-          <Input className="col-md-10" field={withNameSpace('postal')} />
+          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('postal')} />
         </Form.Row>
       </Col>
     </Fragment>
