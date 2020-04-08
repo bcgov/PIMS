@@ -19,7 +19,6 @@ import * as API from 'constants/API';
 
 export const defaultBuildingValues: IBuilding = {
   id: 0,
-  buildingNetBookValue: 0,
   localId: '',
   description: '',
   address: defaultAddressValues,

@@ -12,19 +12,24 @@ import { createRequestHeader } from 'utils/RequestHeaders';
 export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
   dispatch: Function,
 ) => {
-  dispatch(request(actionTypes.GET_PARCELS));
-  dispatch(showLoading());
-  return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCELS(parcelBounds), createRequestHeader())
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.GET_PARCELS));
-      dispatch(parcelsActions.storeParcelsAction(response.data));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError)),
-    )
-    .finally(() => dispatch(hideLoading()));
+  if (
+    parcelBounds?.neLatitude != parcelBounds?.swLatitude &&
+    parcelBounds.neLongitude != parcelBounds.swLongitude
+  ) {
+    dispatch(request(actionTypes.GET_PARCELS));
+    dispatch(showLoading());
+    return CustomAxios()
+      .get(ENVIRONMENT.apiUrl + API.PARCELS(parcelBounds), createRequestHeader())
+      .then((response: AxiosResponse) => {
+        dispatch(success(actionTypes.GET_PARCELS));
+        dispatch(parcelsActions.storeParcelsAction(response.data));
+        dispatch(hideLoading());
+      })
+      .catch((axiosError: AxiosError) =>
+        dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError)),
+      )
+      .finally(() => dispatch(hideLoading()));
+  }
 };
 
 export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch: Function) => {
@@ -85,7 +90,7 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.ADD_PARCEL, parcel, createRequestHeader())
+    .put(ENVIRONMENT.apiUrl + API.ADD_PARCEL + `/${parcel.id}`, parcel, createRequestHeader())
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.UPDATE_PARCEL, response.status));
       dispatch(fetchParcelDetail(response.data));

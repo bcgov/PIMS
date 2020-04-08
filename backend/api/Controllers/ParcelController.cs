@@ -129,12 +129,12 @@ namespace Pims.Api.Controllers
         /// <param name="id"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut()]
+        [HttpPut("{id}")]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult UpdateParcel([FromBody] Model.ParcelModel model)
+        public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 

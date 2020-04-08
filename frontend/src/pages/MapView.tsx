@@ -95,7 +95,7 @@ const MapView = (props: MapViewProps) => {
   useEffect(() => {
     dispatch(fetchParcels(parcelBounds));
     dispatch(getFetchLookupCodeAction());
-  }, [dispatch]);
+  }, [dispatch, parcelBounds]);
   return (
     <Map
       lat={propertyDetail?.parcelDetail?.latitude ?? 48.43}
