@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Pims.Dal.Entities.Models
@@ -7,7 +8,7 @@ namespace Pims.Dal.Entities.Models
     /// Paged generic class, provides a structure to hold a single page of items.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public class Paged<TModel>
+    public class Paged<TModel> : ICollection<TModel>
     {
         #region Properties
         /// <summary>
@@ -34,6 +35,16 @@ namespace Pims.Dal.Entities.Models
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public List<TModel> Items { get; set; } = new List<TModel>();
+
+        /// <summary>
+        /// get/set - Number of items in the collection on the page.
+        /// </summary>
+        public int Count => this.Items.Count;
+
+        /// <summary>
+        /// get/set - Whether the collection is read-only.
+        /// </summary>
+        public bool IsReadOnly => false;
         #endregion
 
         #region Constructors
@@ -75,6 +86,71 @@ namespace Pims.Dal.Entities.Models
             if (converter == null) throw new ArgumentNullException(nameof(converter));
 
             return new Paged<T>(converter(this.Items), this.Page, this.Quantity, this.Total);
+        }
+
+        /// <summary>
+        /// Get the enumerator for the items.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<TModel> GetEnumerator()
+        {
+            return ((IEnumerable<TModel>)Items).GetEnumerator();
+        }
+
+        /// <summary>
+        /// Get the enumerator for the items.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<TModel>)Items).GetEnumerator();
+        }
+
+        /// <summary>
+        /// Add the item to the page.
+        /// </summary>
+        /// <param name="item"></param>
+        public void Add(TModel item)
+        {
+            this.Items.Add(item);
+        }
+
+        /// <summary>
+        /// Clear the items from the page.
+        /// </summary>
+        public void Clear()
+        {
+            this.Items.Clear();
+        }
+
+        /// <summary>
+        /// Check if the page contains the specified 'item'.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Contains(TModel item)
+        {
+            return this.Items.Contains(item);
+        }
+
+        /// <summary>
+        /// Copy items to the specified array.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        public void CopyTo(TModel[] array, int arrayIndex)
+        {
+            this.Items.CopyTo(array, arrayIndex);
+        }
+
+        /// <summary>
+        /// Remove the specified 'item' from the page.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Remove(TModel item)
+        {
+            return this.Items.Remove(item);
         }
         #endregion
     }

@@ -5,17 +5,18 @@ using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
-using Pims.Dal.Services;
+using Pims.Dal.Services.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 
-namespace Pims.Dal.Test.Services
+namespace Pims.Dal.Test.Services.Admin
 {
     [Trait("category", "unit")]
     [Trait("category", "dal")]
+    [Trait("area", "admin")]
     [Trait("group", "parcel")]
     public class ParcelServiceTest
     {
@@ -82,7 +83,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 7);
@@ -106,7 +107,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
-            Assert.Equal(expectedCount, result.Count());
+            Assert.Equal(expectedCount, result.Items.Count());
         }
         #endregion
 
@@ -133,28 +134,6 @@ namespace Pims.Dal.Test.Services
         }
 
         /// <summary>
-        /// User does not have 'sensitive-view' claim.
-        /// </summary>
-        [Fact]
-        public void Get_Sensitive_KeyNotFound()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).AddOne(parcel);
-
-            var service = helper.CreateService<ParcelService>(user);
-            var context = helper.GetService<PimsContext>();
-
-            // Act
-            // Assert
-            Assert.Throws<KeyNotFoundException>(() =>
-                service.Get(1));
-        }
-
-        /// <summary>
         /// Parcel does not exist.
         /// </summary>
         [Fact]
@@ -162,30 +141,8 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
-            helper.CreatePimsContext(user, true).AddOne(parcel);
-
-            var service = helper.CreateService<ParcelService>(user);
-            var context = helper.GetService<PimsContext>();
-
-            // Act
-            // Assert
-            Assert.Throws<KeyNotFoundException>(() =>
-                service.Get(1));
-        }
-
-        /// <summary>
-        /// User is attempting to view sensitive parcel from another agency.
-        /// </summary>
-        [Fact]
-        public void Get_Sensitive_WrongAgency()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddOne(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
@@ -205,7 +162,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddOne(parcel);
 
@@ -219,49 +176,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
-            Assert.NotNull(parcel.Address);
-            Assert.NotNull(parcel.Address.City);
-            Assert.NotNull(parcel.Address.Province);
-            Assert.NotNull(parcel.Status);
-            Assert.NotNull(parcel.Classification);
-            Assert.NotNull(parcel.Agency);
-            Assert.NotNull(parcel.Address);
-            Assert.NotNull(parcel.Address);
-            // TODO: Add asserts for Buildings
-            // TODO: Add asserts for Evaluations
-        }
-
-        /// <summary>
-        /// Parcel found, but user does not have 'sensitive-view' claim.
-        /// Remove sensitive buildings.
-        /// </summary>
-        [Fact]
-        public void Get_RemoveSensitiveBuildings()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-
-            using var init = helper.InitializeDatabase(user);
-            var parcel = init.CreateParcel(1, 1, 1);
-            init.CreateBuilding(parcel, 1);
-            var sensitive = init.CreateBuilding(parcel, 2);
-            sensitive.IsSensitive = true;
-            init.SaveChanges();
-
-            var service = helper.CreateService<ParcelService>(user);
-            var context = helper.GetService<PimsContext>();
-
-            // Act
-            var result = service.Get(1);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(EntityState.Detached, context.Entry(result).State);
-            Assert.Equal(parcel, result, new ShallowPropertyCompare());
-            Assert.Single(result.Buildings);
-            Assert.False(result.IsSensitive);
-            Assert.False(result.Buildings.First().IsSensitive);
         }
 
         /// <summary>
@@ -272,7 +186,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.SensitiveView).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddOne(parcel);
@@ -288,42 +202,6 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.True(result.IsSensitive);
-        }
-
-        /// <summary>
-        /// Sensitive parcel found, sensitive buildings belonging to another agency are removed.
-        /// </summary>
-        [Fact]
-        public void Get_WithAgency_RemoveSensitiveBuildings()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
-
-            using var init = helper.InitializeDatabase(user);
-            var agency = init.Agencies.Find(1);
-            var parcel = init.CreateParcel(1, agency);
-            parcel.IsSensitive = true;
-            init.CreateBuilding(parcel, 1);
-            var building1 = init.CreateBuilding(parcel, 2);
-            building1.IsSensitive = true;
-            var building2 = init.CreateBuilding(parcel, 3, "l3", 1, 1, init.Agencies.Find(2));
-            building2.IsSensitive = true;
-            init.SaveChanges();
-
-            var service = helper.CreateService<ParcelService>(user);
-            var context = helper.GetService<PimsContext>();
-
-            // Act
-            var result = service.Get(1);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(EntityState.Detached, context.Entry(result).State);
-            Assert.Equal(parcel, result, new ShallowPropertyCompare());
-            Assert.Equal(2, result.Buildings.Count());
-            Assert.True(result.IsSensitive);
-            Assert.Equal(1, result.Buildings.Count(b => b.IsSensitive));
         }
         #endregion
         #endregion

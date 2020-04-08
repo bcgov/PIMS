@@ -104,6 +104,17 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
+        /// Save the changes that are in memory context to the datasource.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static PimsContext SaveChanges(this PimsContext context)
+        {
+            context.SaveChanges();
+            return context;
+        }
+
+        /// <summary>
         /// Add to the PimsContext 'context' with the specified data in 'entities'.
         /// </summary>
         /// <typeparam name="T"></typeparam>

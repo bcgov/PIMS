@@ -92,6 +92,18 @@ namespace Pims.Dal.Services
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
 
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"{filter.Description}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"{filter.Description}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"{filter.Description}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"{filter.Description}%"));
+
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (filter.StatusId.HasValue)

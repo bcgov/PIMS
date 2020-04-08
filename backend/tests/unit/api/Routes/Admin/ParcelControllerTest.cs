@@ -46,7 +46,7 @@ namespace Pims.Api.Test.Routes.Admin
         public void GetParcels_Route()
         {
             // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(int), typeof(int));
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels));
 
             // Act
             // Assert
@@ -59,7 +59,7 @@ namespace Pims.Api.Test.Routes.Admin
         public void GetParcels_Filter_Route()
         {
             // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(int), typeof(int), typeof(ParcelFilter));
+            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(ParcelFilter));
 
             // Act
             // Assert

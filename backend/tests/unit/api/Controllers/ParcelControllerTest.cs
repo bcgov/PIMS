@@ -29,7 +29,11 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new ParcelFilter(50, 25, 50, 20) },
                 new object[] { new ParcelFilter(50, 25, 50, 25) },
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } } },
-                new object[] { new ParcelFilter() { ClassificationId = 2 } }
+                new object[] { new ParcelFilter() { ClassificationId = 2 } },
+                new object[] { new ParcelFilter() { Description = "test" } },
+                new object[] { new ParcelFilter() { Municipality = "test" } },
+                new object[] { new ParcelFilter() { Zoning = "test" } },
+                new object[] { new ParcelFilter() { ZoningPotential = "test" } }
             };
 
         public static IEnumerable<object[]> ParcelQueryData =>
