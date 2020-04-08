@@ -2,9 +2,10 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds } from 'leaflet';
+import { LatLngBounds, LeafletMouseEvent } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
-import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { IParcel, IParcelDetail, IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { ParcelPopupView } from '../ParcelPopupView';
 import { Container, Row } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
@@ -28,7 +29,7 @@ type MapProps = {
   lat: number;
   lng: number;
   zoom: number;
-  parcels: IProperty[];
+  properties: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
@@ -36,12 +37,20 @@ type MapProps = {
   onMarkerClick?: (obj: IProperty) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
+  onMapClick?: (e: LeafletMouseEvent) => void;
   disableMapFilterBar?: boolean;
+  disabled?: boolean;
 };
 
 const Map: React.FC<MapProps> = props => {
   // props
-  const { parcels, selectedProperty, onMarkerClick, onMarkerPopupClose, onViewportChanged } = props;
+  const {
+    properties,
+    selectedProperty,
+    onMarkerClick,
+    onMarkerPopupClose,
+    onViewportChanged,
+  } = props;
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
@@ -53,6 +62,18 @@ const Map: React.FC<MapProps> = props => {
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
 
+  if (props.disabled) {
+    const map = mapRef.current?.leafletElement;
+    if (map) {
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+      if (map.tap) map.tap.disable();
+    }
+  }
   // --- Internal functions and event handlers
   const getBounds = () => {
     if (!mapRef.current) {
@@ -94,7 +115,7 @@ const Map: React.FC<MapProps> = props => {
 
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
-    axios.get('basemaps.json').then(result => {
+    axios.get('/basemaps.json').then(result => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
@@ -108,7 +129,7 @@ const Map: React.FC<MapProps> = props => {
     <Marker
       key={generateKey(p)}
       position={[p.latitude, p.longitude]}
-      onClick={() => onMarkerClick?.(p)}
+      onClick={(e: any) => onMarkerClick?.(p)}
     />
   );
 
@@ -121,9 +142,14 @@ const Map: React.FC<MapProps> = props => {
       <Popup
         position={[parcelDetail.latitude, parcelDetail.longitude]}
         offset={[0, -25]}
-        onClose={() => onMarkerPopupClose?.(item)}
+        onClose={() => !props?.disabled && onMarkerPopupClose?.(item)}
+        closeButton={!props.disabled}
       >
-        <PopupView propertyTypeId={propertyTypeId} propertyDetail={parcelDetail} />
+        <PopupView
+          propertyTypeId={propertyTypeId}
+          propertyDetail={parcelDetail}
+          disabled={props.disabled}
+        />
       </Popup>
     );
   };
@@ -148,11 +174,13 @@ const Map: React.FC<MapProps> = props => {
           zoom={props.zoom}
           whenReady={handleViewportChange}
           onViewportChanged={handleViewportChange}
+          onpreclick={props.onMapClick}
+          closePopupOnClick={!props.disabled}
         >
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} />
           )}
-          {parcels && parcels.map(renderMarker)}
+          {properties && properties.map(renderMarker)}
           {selectedProperty && renderPopup(selectedProperty)}
         </LeafletMap>
       </Row>

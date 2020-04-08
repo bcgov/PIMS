@@ -9,10 +9,19 @@ import { Marker } from 'react-leaflet';
 import { mount, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
+import * as reducerTypes from 'constants/reducerTypes';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { render } from '@testing-library/react';
 import { PopupView } from '../PopupView';
+import { Provider } from 'react-redux';
 
 Enzyme.configure({ adapter: new Adapter() });
+const mockStore = configureMockStore([thunk]);
+
+const store = mockStore({
+  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+});
 
 // This will spoof the active parcel (the one that will populate the popup details)
 const mockDetails: IParcelDetail = {
@@ -20,17 +29,25 @@ const mockDetails: IParcelDetail = {
   parcelDetail: {
     id: 1,
     pid: '000-000-000',
+    pin: '',
+    statusId: 0,
+    classificationId: 0,
+    zoning: '',
+    zoningPotential: '',
+    agencyId: 0,
     latitude: 48,
     longitude: 123,
     propertyStatus: 'active',
     classification: 'Core Operational',
     description: 'test',
+    isSensitive: false,
     evaluations: [
       {
         assessedValue: 1000000,
         estimatedValue: 0,
         fiscalYear: 2019,
         netBookValue: 0,
+        appraisedValue: 0,
       },
     ],
     address: {
@@ -62,20 +79,21 @@ const history = createMemoryHistory();
 // Check that the markers have correct position given the mock parcel 1 above
 it('Renders the marker in correct position', () => {
   const component = mount(
-    <Router history={history}>
-      <Map
-        lat={48.43}
-        lng={-123.37}
-        zoom={14}
-        parcels={mockParcels}
-        selectedProperty={mockDetails}
-        agencies={[]}
-        propertyClassifications={[]}
-        lotSizes={[]}
-        onMarkerClick={jest.fn()}
-        lotSizes={[]}
-      />
-    </Router>,
+    <Provider store={store}>
+      <Router history={history}>
+        <Map
+          lat={48.43}
+          lng={-123.37}
+          zoom={14}
+          properties={mockParcels}
+          selectedProperty={mockDetails}
+          agencies={[]}
+          propertyClassifications={[]}
+          lotSizes={[]}
+          onMarkerClick={jest.fn()}
+        />
+      </Router>
+    </Provider>,
   );
   const marker = component.find(Marker).first();
   expect(marker.prop('position')).toStrictEqual([48, 123]);
@@ -89,13 +107,12 @@ it('Should render 0 markers when there are no parcels', () => {
         lat={48.43}
         lng={-123.37}
         zoom={14}
-        parcels={noParcels}
+        properties={noParcels}
         selectedProperty={emptyDetails}
         agencies={[]}
         propertyClassifications={[]}
         lotSizes={[]}
         onMarkerClick={jest.fn()}
-        lotSizes={[]}
       />
     </Router>,
   );
@@ -106,19 +123,21 @@ it('Should render 0 markers when there are no parcels', () => {
 // 2 parcels in mock data, check to see 2 markers are created
 it('Marker for each parcel is created', () => {
   const component = mount(
-    <Router history={history}>
-      <Map
-        lat={48.43}
-        lng={-123.37}
-        zoom={14}
-        parcels={mockParcels}
-        selectedProperty={mockDetails}
-        agencies={[]}
-        propertyClassifications={[]}
-        lotSizes={[]}
-        onMarkerClick={jest.fn()}
-      />
-    </Router>,
+    <Provider store={store}>
+      <Router history={history}>
+        <Map
+          lat={48.43}
+          lng={-123.37}
+          zoom={14}
+          properties={mockParcels}
+          selectedProperty={mockDetails}
+          agencies={[]}
+          propertyClassifications={[]}
+          lotSizes={[]}
+          onMarkerClick={jest.fn()}
+        />
+      </Router>
+    </Provider>,
   );
   const marker = component.find(Marker);
   expect(marker.length).toBe(2);
@@ -132,7 +151,7 @@ it('Loads parcel details on click', () => {
       lat={48.43}
       lng={-123.37}
       zoom={14}
-      parcels={mockParcels}
+      properties={mockParcels}
       selectedProperty={mockDetails}
       agencies={[]}
       propertyClassifications={[]}
@@ -147,7 +166,13 @@ it('Loads parcel details on click', () => {
 
 // Check that error message is displayed on null details
 it('Displays proper message when no details loaded', () => {
-  const { getByText } = render(<ParcelPopupView parcel={emptyDetails} />);
+  const { getByText } = render(
+    <Provider store={store}>
+      <Router history={history}>
+        <ParcelPopupView parcel={emptyDetails} />
+      </Router>
+    </Provider>,
+  );
   const alert = getByText('Failed to load parcel details.');
   expect(alert).toBeTruthy();
 });
@@ -155,10 +180,14 @@ it('Displays proper message when no details loaded', () => {
 it('ParcelPopupView renders correctly', () => {
   const tree = renderer
     .create(
-      <PopupView
-        propertyTypeId={mockDetails.propertyTypeId}
-        propertyDetail={mockDetails.parcelDetail}
-      />,
+      <Provider store={store}>
+        <Router history={history}>
+          <PopupView
+            propertyTypeId={mockDetails.propertyTypeId}
+            propertyDetail={mockDetails.parcelDetail}
+          />
+        </Router>
+      </Provider>,
     )
     .toJSON();
   expect(tree).toMatchSnapshot();

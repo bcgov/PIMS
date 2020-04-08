@@ -29,7 +29,7 @@ export const toAccessRequest = (values: any): adminActions.IAccessRequest => {
   return {
     id: values.id,
     user: { id: values.userId },
-    agencies: [{ id: values.agency }],
+    agencies: [{ id: parseInt(values.agency) }],
     roles: [{ id: values.role }],
     isGranted: values.isGranted,
   };
@@ -118,7 +118,6 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Functio
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.GET_USER_DETAIL));
       dispatch(adminActions.storeUserDetail(response.data));
-      console.log(response.data);
       dispatch(hideLoading());
     })
     .catch(() => dispatch(error(reducerTypes.GET_USER_DETAIL)))

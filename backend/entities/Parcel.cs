@@ -24,7 +24,7 @@ namespace Pims.Dal.Entities
         /// get - The friendly formated Parcel Id.
         /// </summary>
         [NotMapped]
-        public string ParcelIdentity { get { return $"{this.PID:000-000-000}"; } }
+        public string ParcelIdentity { get { return this.PID > 0 ? $"{this.PID:000-000-000}" : null; } }
 
         /// <summary>
         /// get/set - The parcel identification number of Crown Lands Registry that are not Titled.
