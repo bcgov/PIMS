@@ -748,6 +748,10 @@ namespace Pims.Dal.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
+                    b.Property<string>("Municipality")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
+
                     b.Property<int>("PID")
                         .HasColumnType("int");
 
@@ -769,12 +773,12 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2");
 
                     b.Property<string>("Zoning")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
 
-                    b.Property<bool>("ZoningPotential")
-                        .HasColumnType("bit")
-                        .HasMaxLength(500);
+                    b.Property<string>("ZoningPotential")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
 
                     b.HasKey("Id");
 

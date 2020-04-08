@@ -710,8 +710,9 @@ namespace Pims.Dal.Migrations
                     Longitude = table.Column<double>(nullable: false),
                     LandArea = table.Column<float>(nullable: false),
                     LandLegalDescription = table.Column<string>(maxLength: 500, nullable: true),
-                    Zoning = table.Column<string>(maxLength: 500, nullable: true),
-                    ZoningPotential = table.Column<bool>(maxLength: 500, nullable: false),
+                    Municipality = table.Column<string>(maxLength: 250, nullable: true),
+                    Zoning = table.Column<string>(maxLength: 250, nullable: true),
+                    ZoningPotential = table.Column<string>(maxLength: 250, nullable: true),
                     IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
