@@ -98,6 +98,11 @@ namespace Pims.Dal.Entities
         public string LandLegalDescription { get; set; }
 
         /// <summary>
+        /// get/set - The municipality the parcel belongs to.
+        /// </summary>
+        public string Municipality { get; set; }
+
+        /// <summary>
         /// get/set - Current Parcel zoning information
         /// </summary>
         public string Zoning { get; set; }
@@ -105,7 +110,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - Potential future Parcel zoning information
         /// </summary>
-        public bool ZoningPotential { get; set; }
+        public string ZoningPotential { get; set; }
 
         /// <summary>
         /// get/set - Whether this parcel is considered sensitive and should only be visible to users who are part of the owning agency.

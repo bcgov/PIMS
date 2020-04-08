@@ -15,6 +15,8 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public string Status { get; set; }
 
+        public string Description { get; set; }
+
         public int ClassificationId { get; set; }
 
         public string Classification { get; set; }
@@ -33,13 +35,18 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public float LandArea { get; set; }
 
-        public string Description { get; set; }
-
         public string LandLegalDescription { get; set; }
+
+        public string Municipality { get; set; }
+
+        public string Zoning { get; set; }
+
+        public string ZoningPotential { get; set; }
 
         public bool IsSensitive { get; set; }
 
         public IEnumerable<ParcelEvaluationModel> Evaluations { get; set; } = new List<ParcelEvaluationModel>();
+
         public IEnumerable<ParcelBuildingModel> Buildings { get; set; } = new List<ParcelBuildingModel>();
         #endregion
     }
