@@ -30,11 +30,9 @@ namespace Pims.Core.Test
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
 
-            return new Entity.Building(lat, lng)
+            return new Entity.Building(parcel, lat, lng)
             {
                 Id = id,
-                Parcel = parcel,
-                ParcelId = parcel.Id,
                 LocalId = localId,
                 AgencyId = agency.Id,
                 Agency = agency,
@@ -92,11 +90,9 @@ namespace Pims.Core.Test
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
 
-            var building = new Entity.Building(lat, lng)
+            var building = new Entity.Building(parcel, lat, lng)
             {
                 Id = id,
-                Parcel = parcel,
-                ParcelId = parcel.Id,
                 LocalId = localId,
                 AgencyId = agency.Id,
                 Agency = agency,

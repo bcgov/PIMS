@@ -56,7 +56,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<Model.PropertyModel> properties)
+        public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<Model.ImportPropertyModel> properties)
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
@@ -109,7 +109,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        private Entity.Agency GetOrCreateAgency(Model.PropertyModel property)
+        private Entity.Agency GetOrCreateAgency(Model.ImportPropertyModel property)
         {
             // Find the agency or create a new one.
             var agency = _agencies.FirstOrDefault(a => a.Code == property.Agency.Trim());
@@ -230,7 +230,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        private Entity.Parcel AddUpdateParcel(Model.PropertyModel property, int pid, Entity.Agency agency)
+        private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
             var fiscal = int.Parse(property.FiscalYear);
@@ -319,7 +319,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        private Entity.Parcel AddUpdateBuilding(Model.PropertyModel property, int pid, Entity.Agency agency)
+        private Entity.Parcel AddUpdateBuilding(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var lid = property.LocalId;
             var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
@@ -358,6 +358,17 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.BuildingFloorCount = floorCount;
                 b_e.BuildingTenancy = property.BuildingTenancy;
                 b_e.TransferLeaseOnSale = false;
+
+                // Find foreign key.
+                var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
+                    throw new InvalidOperationException($"Property Classification '{property.Classification}' does not exist.");
+                var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
+                    throw new InvalidOperationException($"Property Status '{property.Status}' does not exist.");
+
+                b_e.ClassificationId = propClassification.Id;
+                b_e.Classification = propClassification;
+                b_e.StatusId = propStatus.Id;
+                b_e.Status = propStatus;
 
                 // Find foreign key.
                 var build_type = _buildingConstructionTypes.FirstOrDefault(bct => String.Compare(bct.Name, property.BuildingConstructionType, true) == 0);

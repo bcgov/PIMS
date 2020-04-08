@@ -29,18 +29,27 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new ParcelFilter(50, 25, 50, 20) },
                 new object[] { new ParcelFilter(50, 25, 50, 25) },
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } } },
+                new object[] { new ParcelFilter() { StatusId = 1 } },
                 new object[] { new ParcelFilter() { ClassificationId = 2 } },
                 new object[] { new ParcelFilter() { Description = "test" } },
                 new object[] { new ParcelFilter() { Municipality = "test" } },
                 new object[] { new ParcelFilter() { Zoning = "test" } },
-                new object[] { new ParcelFilter() { ZoningPotential = "test" } }
+                new object[] { new ParcelFilter() { ZoningPotential = "test" } },
+                new object[] { new ParcelFilter() { ProjectNumber = "test" } }
             };
 
         public static IEnumerable<object[]> ParcelQueryData =>
             new List<object[]>
             {
                 new object[] { new Uri("http://host/api/parcels?Agencies=1,2") },
-                new object[] { new Uri("http://host/api/parcels?Address=test") }
+                new object[] { new Uri("http://host/api/parcels?Address=test") },
+                new object[] { new Uri("http://host/api/parcels?ProjectNumber=test") },
+                new object[] { new Uri("http://host/api/parcels?Description=test") },
+                new object[] { new Uri("http://host/api/parcels?Municipality=test") },
+                new object[] { new Uri("http://host/api/parcels?Zoning=test") },
+                new object[] { new Uri("http://host/api/parcels?ZoningPotential=test") },
+                new object[] { new Uri("http://host/api/parcels?ClassificationId=1") },
+                new object[] { new Uri("http://host/api/parcels?StatusId=1") }
             };
         #endregion
 
@@ -109,8 +118,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<ParcelController>(Permissions.PropertyView, uri);
 
-            var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
-            var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
+            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
+            var parcel2 = new Entity.Parcel(1, 51, 26) { Id = 2 };
             var parcels = new[] { parcel1, parcel2 };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -176,7 +185,7 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            var expectedTestParcel = new Entity.Parcel(45, 45);
+            var expectedTestParcel = new Entity.Parcel(1, 45, 45);
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(expectedTestParcel);
             int expectedParcelId = 1;
 

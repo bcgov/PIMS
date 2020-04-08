@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,28 +9,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Areas\Admin\Profiles\**" />
-    <Compile Remove="Areas\Keycloak\Profiles\**" />
-    <Compile Remove="Areas\Tools\Profiles\**" />
-    <Compile Remove="Models\Lookup\**" />
-    <Compile Remove="Profiles\**" />
-    <Content Remove="Areas\Admin\Profiles\**" />
-    <Content Remove="Areas\Keycloak\Profiles\**" />
-    <Content Remove="Areas\Tools\Profiles\**" />
-    <Content Remove="Models\Lookup\**" />
-    <Content Remove="Profiles\**" />
-    <EmbeddedResource Remove="Areas\Admin\Profiles\**" />
-    <EmbeddedResource Remove="Areas\Keycloak\Profiles\**" />
-    <EmbeddedResource Remove="Areas\Tools\Profiles\**" />
-    <EmbeddedResource Remove="Models\Lookup\**" />
-    <EmbeddedResource Remove="Profiles\**" />
-    <None Remove="Areas\Admin\Profiles\**" />
-    <None Remove="Areas\Keycloak\Profiles\**" />
-    <None Remove="Areas\Tools\Profiles\**" />
-    <None Remove="Models\Lookup\**" />
-    <None Remove="Profiles\**" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
     <None Remove="healthchecksdb" />

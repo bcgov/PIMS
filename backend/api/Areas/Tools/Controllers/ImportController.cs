@@ -57,7 +57,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-import" })]
-        public IActionResult ImportProperties([FromBody] Model.PropertyModel[] models)
+        public IActionResult ImportProperties([FromBody] Model.ImportPropertyModel[] models)
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
 

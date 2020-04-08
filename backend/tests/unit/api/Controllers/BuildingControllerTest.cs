@@ -222,8 +222,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<BuildingController>(Permissions.PropertyView, new Uri("http://host/api/buildings?Agencies=1,2"));
 
-            var building1 = new Entity.Building(51, 25) { Id = 1 };
-            var building2 = new Entity.Building(51, 26) { Id = 2 };
+            var building1 = new Entity.Building() { Id = 1 };
+            var building2 = new Entity.Building() { Id = 2 };
             var buildings = new[] { building1, building2 };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -289,7 +289,7 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            var expectedTestBuilding = new Entity.Building(45, 45);
+            var expectedTestBuilding = new Entity.Building();
             service.Setup(m => m.Building.Get(It.IsAny<int>())).Returns(expectedTestBuilding);
             int expectedBuildingId = 1;
 

@@ -36,7 +36,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var properties = new[]
             {
-                new Model.PropertyModel()
+                new Model.ImportPropertyModel()
                 {
                 ParcelId = "123-123-123",
                 LocalId = "test",
