@@ -1,13 +1,14 @@
-import './ParcelPopupView.scss';
-
 import * as React from 'react';
 import { ListGroup, Container } from 'react-bootstrap';
 import { IParcel } from 'actions/parcelsActions';
 import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
+import './ParcelPopupView.scss';
+import { Link } from 'react-router-dom';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
+  disabled?: boolean;
 }
 
 export const ParcelPopupView = (props: IParcelDetailProps | null) => {
@@ -53,6 +54,16 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                 {parcelDetail?.classification}
               </ListGroup.Item>
             </ListGroup>
+          </Col>
+          <Col>
+            {parcelDetail?.id && !props?.disabled && (
+              <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
+            )}
+            {parcelDetail?.id && !props?.disabled && (
+              <Link style={{ marginLeft: '8px' }} to={`/submitProperty/${parcelDetail?.id}`}>
+                Update
+              </Link>
+            )}
           </Col>
         </Row>
       )}

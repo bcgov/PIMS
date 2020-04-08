@@ -33,55 +33,7 @@ export const PARCELS = (params: IParcelListParams | null) =>
 export interface IParcelDetailParams {
   id: number;
 }
-export interface IEvaluation {
-  fiscalYear: number | unknown;
-  estimatedValue: number | unknown;
-  assessedValue: number | unknown;
-  netBookValue: number | unknown;
-  appraisedValue: number | unknown;
-}
-export interface IAddress {
-  line1: string;
-  cityId: number | unknown;
-  provinceId: string;
-  postal: string;
-}
-export interface IBuilding {
-  localId: string;
-  description: string;
-  address: IAddress;
-  latitude: number | unknown;
-  longitude: number | unknown;
-  buildingConstructionTypeId: number | unknown;
-  buildingFloorCount: number | unknown;
-  buildingPredominateUseId: number | unknown;
-  buildingOccupantTypeId: number | unknown;
-  leaseExpiry?: string;
-  occupantName: string;
-  transferLeaseOnSale: boolean;
-  buildingTenancy: string;
-  rentableArea: number | unknown;
-  agencyId: number | unknown;
-  evaluations: IEvaluation[];
-}
-export interface IParcel {
-  pid: string;
-  pin: string;
-  statusId: number | unknown;
-  classificationId: number | unknown;
-  agencyId: number | unknown;
-  address: IAddress | any;
-  latitude: number | unknown;
-  longitude: number | unknown;
-  landArea: number | unknown;
-  description: string;
-  landLegalDescription: string;
-  zoning: string;
-  zoningPotential: string;
-  evaluations: IEvaluation[];
-  buildings: IBuilding[];
-  isSensitive: boolean;
-}
+
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
 export const ADD_PARCEL = `/parcels`;
 
@@ -112,7 +64,7 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 
 // User Service
 export const REQUEST_ACCESS = () => `/users/access/request`; //request access url.
-export const REQUEST_ACCESS_ADMIN = () => `/admin/users/access/request`; //request access admin url.
+export const REQUEST_ACCESS_ADMIN = () => `/keycloak/users/access/request`; //request access admin url.
 export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
   `/admin/users/access/requests/?${queryString.stringify(params)}`; // get paged access requests
 export const POST_USERS = () => `/admin/users/my/agency`; // get paged list of users

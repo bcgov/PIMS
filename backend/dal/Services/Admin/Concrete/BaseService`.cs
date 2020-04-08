@@ -35,7 +35,10 @@ namespace Pims.Dal.Services.Admin
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var result = this.Context.Set<ET>().Find(keyValues);
-            this.Context.Entry(result).State = Microsoft.EntityFrameworkCore.EntityState.Detached; // Force detach so that outside the DAL the DB cannot be manipulated.
+            if (result != null)
+            {
+                this.Context.Entry(result).State = Microsoft.EntityFrameworkCore.EntityState.Detached; // Force detach so that outside the DAL the DB cannot be manipulated.
+            }
             return result;
         }
 
