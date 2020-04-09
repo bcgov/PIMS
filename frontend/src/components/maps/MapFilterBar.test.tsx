@@ -1,60 +1,98 @@
 import React from 'react';
-import * as MOCK from 'mocks/filterDataMock';
-import { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import MapFilterBar from './MapFilterBar';
-import LookupCodeDropdown from 'components/common/LookupCodeDropdown';
 import renderer from 'react-test-renderer';
+import { render, wait, fireEvent } from '@testing-library/react';
+import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
+import * as MOCK from 'mocks/filterDataMock';
 
-Enzyme.configure({ adapter: new Adapter() });
+const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
 
-const onFilterChange = jest.fn();
+describe('MapFilterBar', () => {
+  it('renders correctly', () => {
+    // Capture any changes
+    const tree = renderer
+      .create(
+        <MapFilterBar
+          agencyLookupCodes={MOCK.AGENCIES}
+          propertyClassifications={MOCK.CLASSIFICATIONS}
+          lotSizes={[1, 2, 3]}
+          onFilterChange={onFilterChange}
+        />,
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
-const filterBar = shallow(
-  <MapFilterBar
-    agencyLookupCodes={MOCK.AGENCIES}
-    propertyClassifications={MOCK.CLASSIFICATIONS}
-    lotSizes={[1, 2, 5, 10, 50]}
-    onFilterChange={onFilterChange}
-  />,
-);
-
-// ----
-// TODO: Fix unit tests below as the <MapFilterBar> internals have changed drastically
-// ----
-
-// Could change as project progresses
-xit('Currently has 2 drop downs, one for agency one for classifications', () => {
-  const numberOfDropdowns = filterBar.find(LookupCodeDropdown).length;
-  expect(numberOfDropdowns).toBe(2);
-});
-
-// Check function is called when agency is changed
-xit('Handles the agency change when code selected from the drop down', () => {
-  const agencyDropdown = filterBar.find({ defaultTitle: 'View Properties in \u00A0' });
-  agencyDropdown.prop('onSelectCode')();
-  expect(onFilterChange).toBeCalledTimes(1);
-});
-
-// Check function is called when classification selected
-xit('Handles the classification change when code selected from the drop down', () => {
-  const classificationDropdown = filterBar.find({ defaultTitle: 'View by Classification \u00A0' });
-  classificationDropdown.prop('onSelectCode')();
-  expect(onFilterChange).toHaveBeenCalledTimes(1);
-});
-
-// Capture any changes
-it('MapFilterBar renders correctly', () => {
-  const tree = renderer
-    .create(
+  it('submits correct values', async () => {
+    // Arrange
+    const uiElement = (
       <MapFilterBar
         agencyLookupCodes={MOCK.AGENCIES}
         propertyClassifications={MOCK.CLASSIFICATIONS}
         lotSizes={[1, 2, 3]}
         onFilterChange={onFilterChange}
-      />,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+      />
+    );
+    const { container } = render(uiElement);
+    const address = container.querySelector('input[name="address"]');
+    const agencies = container.querySelector('select[name="agencies"]');
+    const classificationId = container.querySelector('select[name="classificationId"]');
+    const minLotSize = container.querySelector('select[name="minLotSize"]');
+    const maxLotSize = container.querySelector('select[name="maxLotSize"]');
+    const submit = container.querySelector('button[type="submit"]');
+
+    // Act
+    // Enter values on the form fields, then click the Search button
+    await wait(() => {
+      fireEvent.change(address!, {
+        target: {
+          value: 'mockaddress',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.change(agencies!, {
+        target: {
+          value: '1',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.change(classificationId!, {
+        target: {
+          value: '0',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.change(minLotSize!, {
+        target: {
+          value: '1',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.change(maxLotSize!, {
+        target: {
+          value: '3',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.click(submit!);
+    });
+
+    // Assert
+    expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
+      address: 'mockaddress',
+      agencies: '1',
+      classificationId: '0',
+      minLotSize: '1',
+      maxLotSize: '3',
+    });
+  });
 });
