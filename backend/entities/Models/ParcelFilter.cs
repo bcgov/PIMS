@@ -12,6 +12,16 @@ namespace Pims.Dal.Entities.Models
     {
         #region Properties
         /// <summary>
+        /// get/set - The page number.
+        /// </summary>
+        public int Page { get; set; } = 1;
+
+        /// <summary>
+        /// get/set - The quantity of parcels to return in a single request.
+        /// </summary>
+        public int Quantity { get; set; } = 10;
+
+        /// <summary>
         /// get/set - North East Latitude.
         /// </summary>
         /// <value></value>
@@ -46,6 +56,26 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public int? StatusId { get; set; }
+
+        /// <summary>
+        /// get/set - The parcel description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// get/set - The parcel municipality.
+        /// </summary>
+        public string Municipality { get; set; }
+
+        /// <summary>
+        /// get/set - The parcel zoning.
+        /// </summary>
+        public string Zoning { get; set; }
+
+        /// <summary>
+        /// get/set - The parcel potential zoning.
+        /// </summary>
+        public string ZoningPotential { get; set; }
 
         /// <summary>
         /// get/set - The property address.
@@ -163,6 +193,9 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+            this.Page = filter.GetIntValue(nameof(this.Page), 1);
+            this.Quantity = filter.GetIntValue(nameof(this.Quantity), 10);
+
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
             this.NELongitude = filter.GetDoubleNullValue(nameof(this.NELongitude));
             this.SWLatitude = filter.GetDoubleNullValue(nameof(this.SWLatitude));
@@ -171,6 +204,10 @@ namespace Pims.Dal.Entities.Models
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
+            this.Description = filter.GetStringValue(nameof(this.Description));
+            this.Municipality = filter.GetStringValue(nameof(this.Municipality));
+            this.Zoning = filter.GetStringValue(nameof(this.Zoning));
+            this.ZoningPotential = filter.GetStringValue(nameof(this.ZoningPotential));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea));
             this.MinEstimatedValue = filter.GetFloatNullValue(nameof(this.MinEstimatedValue));
@@ -195,6 +232,10 @@ namespace Pims.Dal.Entities.Models
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
                 || !String.IsNullOrWhiteSpace(this.Address)
+                || !String.IsNullOrWhiteSpace(this.Description)
+                || !String.IsNullOrWhiteSpace(this.Municipality)
+                || !String.IsNullOrWhiteSpace(this.Zoning)
+                || !String.IsNullOrWhiteSpace(this.ZoningPotential)
                 || this.MaxAssessedValue.HasValue
                 || this.MinAssessedValue.HasValue
                 || this.MinEstimatedValue.HasValue

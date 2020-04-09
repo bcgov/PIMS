@@ -56,19 +56,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// Get all the parcels that satisfy the filter parameters.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
         /// <returns></returns>
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
-        public IActionResult GetParcels(int page, int quantity)
+        public IActionResult GetParcels()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetParcels(page, quantity, new ParcelFilter(query));
+            return GetParcels(new ParcelFilter(query));
         }
 
         /// <summary>
@@ -83,14 +81,14 @@ namespace Pims.Api.Areas.Admin.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
-        public IActionResult GetParcels(int page, int quantity, [FromBody]ParcelFilter filter)
+        public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
-            var paged = _pimsAdminService.Parcel.Get(page, quantity, filter);
+            var paged = _pimsAdminService.Parcel.Get(filter);
             var parcels = _mapper.Map<Model.ParcelModel[]>(paged.Items);
-            var result = new Paged<Model.ParcelModel>(parcels, page, quantity, paged.Total);
+            var result = new Paged<Model.ParcelModel>(parcels, filter.Page, filter.Quantity, paged.Total);
             return new JsonResult(result);
         }
 
