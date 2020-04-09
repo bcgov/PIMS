@@ -107,7 +107,7 @@ const MapView = (props: MapViewProps) => {
       propertyClassifications={propertyClassifications}
       lotSizes={lotSizes}
       onMarkerClick={
-        props.onMarkerClick ?? (p => p.id && dispatch(fetchParcelDetail({ id: p.id })))
+        props.onMarkerClick ?? (p => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId)))
       }
       onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
