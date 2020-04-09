@@ -798,7 +798,7 @@ namespace Pims.Dal.Migrations
                         .IsUnique()
                         .HasFilter("[PIN] IS NOT NULL");
 
-                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea");
+                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
 
                     b.ToTable("Parcels");
                 });

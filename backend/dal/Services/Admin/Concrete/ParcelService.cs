@@ -32,16 +32,15 @@ namespace Pims.Dal.Services.Admin
         /// Get an array of parcels within the specified filter.
         /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Paged<Parcel> Get(int page, int quantity, ParcelFilter filter = null)
+        public Paged<Parcel> Get(ParcelFilter filter)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
             filter.ThrowIfNull(nameof(filter));
-            if (page < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(page));
-            if (quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(quantity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            if (filter.Page < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(filter.Page));
+            if (filter.Quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(filter.Quantity));
 
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
@@ -69,6 +68,18 @@ namespace Pims.Dal.Services.Admin
             // TODO: Parse the address information by City, Postal, etc.
             if (!String.IsNullOrWhiteSpace(filter.Address))
                 query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);
@@ -106,8 +117,8 @@ namespace Pims.Dal.Services.Admin
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
 
-            var pagedEntities = query.Skip((page - 1) * quantity).Take(quantity);
-            return new Paged<Parcel>(pagedEntities, page, quantity, query.Count());
+            var pagedEntities = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+            return new Paged<Parcel>(pagedEntities, filter.Page, filter.Quantity, query.Count());
         }
 
         /// <summary>
