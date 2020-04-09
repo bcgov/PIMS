@@ -93,16 +93,16 @@ namespace Pims.Dal.Services
             }
 
             if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"{filter.Description}%"));
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"{filter.Description}%"));
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Zoning, $"{filter.Description}%"));
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"{filter.Description}%"));
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);

@@ -70,16 +70,16 @@ namespace Pims.Dal.Services.Admin
                 query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"{filter.Description}%"));
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"{filter.Municipality}%"));
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Zoning, $"{filter.Zoning}%"));
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"{filter.ZoningPotential}%"));
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);
