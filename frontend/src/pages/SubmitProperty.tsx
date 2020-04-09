@@ -32,16 +32,12 @@ const SubmitProperty = (props: any) => {
     state => state.parcel.parcelDetail as IParcelDetail,
   );
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
-  const addParcelRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.ADD_PARCEL] as IGenericNetworkAction,
-  );
-  const updateParcelRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.UPDATE_PARCEL] as IGenericNetworkAction,
-  );
   const dispatch = useDispatch();
   if (!keycloak.agencyId) {
     //TODO: throw an error here, error boundary should catch.
     throw Error('You must belong to an agency to submit properties');
+  } else if (!keycloak.obj?.subject) {
+    throw Error('Keycloak subject missing');
   }
   if (!props?.match?.params?.id && activeParcelDetail?.parcelDetail) {
     dispatch(storeParcelDetail(null));
@@ -70,14 +66,6 @@ const SubmitProperty = (props: any) => {
       }
     }
   }, [leafletMouseEvent]);
-
-  React.useEffect(() => {
-    if (addParcelRequest?.status === 201 || updateParcelRequest?.status === 200) {
-      dispatch(clear(actionTypes.ADD_PARCEL));
-      dispatch(clear(actionTypes.UPDATE_PARCEL));
-      history.push('/mapview');
-    }
-  }, [addParcelRequest, updateParcelRequest]);
   return (
     <Row className="submitProperty">
       <Col md={7} className="form">
@@ -86,6 +74,7 @@ const SubmitProperty = (props: any) => {
           updateLatLng={updateLatLng}
           parcelId={props?.match?.params?.id}
           disabled={!!parsed?.disabled}
+          secret={keycloak.obj.subject}
         />
       </Col>
       <Col md={5} className="sideMap" title="click on map to add a pin">
