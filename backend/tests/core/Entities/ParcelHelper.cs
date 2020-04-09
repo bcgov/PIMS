@@ -71,7 +71,7 @@ namespace Pims.Core.Test
             var parcels = new List<Entity.Parcel>(count);
             for (var i = startId; i < (startId + count); i++)
             {
-                parcels.Add(CreateParcel(startId, 0, 0, 1));
+                parcels.Add(CreateParcel(i, 0, 0, 1));
             }
             return parcels;
         }
@@ -79,6 +79,7 @@ namespace Pims.Core.Test
         /// <summary>
         /// Create a new instance of a Parcel.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
@@ -90,6 +91,7 @@ namespace Pims.Core.Test
         /// <summary>
         /// Create a new instance of a Parcel.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="pid"></param>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
@@ -102,7 +104,7 @@ namespace Pims.Core.Test
             var classification = context.PropertyClassifications.FirstOrDefault() ?? EntityHelper.CreatePropertyClassification("classification");
             var status = context.PropertyStatus.FirstOrDefault() ?? EntityHelper.CreatePropertyStatus("status");
 
-            return new Entity.Parcel(lat, lng)
+            var parcel = new Entity.Parcel(lat, lng)
             {
                 Id = pid,
                 PID = pid,
@@ -120,6 +122,27 @@ namespace Pims.Core.Test
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
+            context.Parcels.Add(parcel);
+            return parcel;
+        }
+
+        /// <summary>
+        /// Create a new List with new instances of Parcels.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="startId"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<Entity.Parcel> CreateParcels(this PimsContext context, int startId, int count)
+        {
+            var agency = context.Agencies.FirstOrDefault() ?? EntityHelper.CreateAgency(startId);
+
+            var parcels = new List<Entity.Parcel>(count);
+            for (var i = startId; i < (startId + count); i++)
+            {
+                parcels.Add(context.CreateParcel(i, 0, 0, agency));
+            }
+            return parcels;
         }
     }
 }

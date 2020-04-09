@@ -1246,9 +1246,9 @@ namespace Pims.Dal.Migrations
                 filter: "[PIN] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_LandArea",
+                name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_LandArea_Municipality_Zoning_ZoningPotential_Descr~",
                 table: "Parcels",
-                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea" });
+                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_CreatedById",

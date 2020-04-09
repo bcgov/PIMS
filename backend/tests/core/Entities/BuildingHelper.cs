@@ -66,7 +66,7 @@ namespace Pims.Core.Test
         {
             for (var i = startId; i < (startId + count); i++)
             {
-                var building = CreateBuilding(parcel, startId);
+                var building = CreateBuilding(parcel, i);
                 parcel.Buildings.Add(building);
             }
             return parcel.Buildings.ToList();
@@ -92,7 +92,7 @@ namespace Pims.Core.Test
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
 
-            return new Entity.Building(lat, lng)
+            var building = new Entity.Building(lat, lng)
             {
                 Id = id,
                 Parcel = parcel,
@@ -114,6 +114,28 @@ namespace Pims.Core.Test
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
+            parcel.Buildings.Add(building);
+            context.Buildings.Add(building);
+            return building;
+        }
+
+        /// <summary>
+        /// Create a new List with new instances of Buildings.
+        /// Adds the buildings to the specified 'parcel'.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parcel"></param>
+        /// <param name="startId"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<Entity.Building> CreateBuildings(this PimsContext context, Entity.Parcel parcel, int startId, int count)
+        {
+            for (var i = startId; i < (startId + count); i++)
+            {
+                var building = context.CreateBuilding(parcel, i);
+                parcel.Buildings.Add(building);
+            }
+            return parcel.Buildings.ToList();
         }
     }
 }

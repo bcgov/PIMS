@@ -23,6 +23,28 @@ namespace Pims.Api.Test.Controllers.Admin
     [Trait("group", "parcel")]
     public class ParcelControllerTest
     {
+        #region Data
+        public static IEnumerable<object[]> ParcelFilterData =>
+            new List<object[]>
+            {
+                new object[] { new ParcelFilter(50, 25, 50, 20) },
+                new object[] { new ParcelFilter(50, 25, 50, 25) },
+                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } } },
+                new object[] { new ParcelFilter() { ClassificationId = 2 } },
+                new object[] { new ParcelFilter() { Description = "test" } },
+                new object[] { new ParcelFilter() { Municipality = "test" } },
+                new object[] { new ParcelFilter() { Zoning = "test" } },
+                new object[] { new ParcelFilter() { ZoningPotential = "test" } }
+            };
+
+        public static IEnumerable<object[]> ParcelQueryData =>
+            new List<object[]>
+            {
+                new object[] { new Uri("http://host/api/parcels?Agencies=1,2") },
+                new object[] { new Uri("http://host/api/parcels?Address=test") }
+            };
+        #endregion
+
         #region Constructors
         public ParcelControllerTest()
         {
@@ -31,9 +53,9 @@ namespace Pims.Api.Test.Controllers.Admin
 
         #region Tests
         #region GetParcels
-
-        [Fact]
-        public void GetParcels_FilterLongitude_Success()
+        [Theory]
+        [MemberData(nameof(ParcelFilterData))]
+        public void GetParcels_Success(ParcelFilter filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -43,11 +65,10 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
             var paged = new Paged<Entity.Parcel>(parcels, 1, 2, 2);
-            var filter = new ParcelFilter(50, 25, 50, 25);
-            service.Setup(m => m.Parcel.Get(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ParcelFilter>())).Returns(paged);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(paged);
 
             // Act
-            var result = controller.GetParcels(1, 1, filter);
+            var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
@@ -55,65 +76,7 @@ namespace Pims.Api.Test.Controllers.Admin
             var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
             var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(parcels), 1, 1, 2);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(1, 1, filter), Times.Once());
-        }
-
-        [Fact]
-        public void GetParcels_FilterAgency_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
-
-            var service = helper.GetService<Mock<IPimsAdminService>>();
-            var mapper = helper.GetService<IMapper>();
-            var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
-            var paged = new Paged<Entity.Parcel>(parcels, 1, 2, 2);
-            var filter = new ParcelFilter()
-            {
-                Agencies = new int[] { 3 }
-            };
-            service.Setup(m => m.Parcel.Get(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ParcelFilter>())).Returns(paged);
-
-            // Act
-            var result = controller.GetParcels(1, 1, filter);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
-            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(parcels), 1, 1, 2);
-            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(1, 1, filter), Times.Once());
-        }
-
-        [Fact]
-        public void GetParcels_FilterClassification_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
-
-            var service = helper.GetService<Mock<IPimsAdminService>>();
-            var mapper = helper.GetService<IMapper>();
-            var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
-            var paged = new Paged<Entity.Parcel>(parcels, 1, 2, 2);
-            var filter = new ParcelFilter()
-            {
-                ClassificationId = 2
-            };
-            service.Setup(m => m.Parcel.Get(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ParcelFilter>())).Returns(paged);
-
-            // Act
-            var result = controller.GetParcels(1, 1, filter);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
-            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(parcels), 1, 1, 2);
-            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(1, 1, filter), Times.Once());
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         [Fact]
@@ -126,28 +89,29 @@ namespace Pims.Api.Test.Controllers.Admin
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var paged = new Paged<Entity.Parcel>(new Entity.Parcel[0], 1, 2, 0);
             var filter = new ParcelFilter(0, 25, 10, 20);
-            service.Setup(m => m.Parcel.Get(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<ParcelFilter>())).Returns(paged);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(paged);
 
             // Act
-            var result = controller.GetParcels(1, 1, filter);
+            var result = controller.GetParcels(filter);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
             Assert.Empty(actualResult.Items);
-            service.Verify(m => m.Parcel.Get(1, 1, filter), Times.Once());
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
 
         /// <summary>
         /// Make a successful request that passes the filter in the query string.
         /// </summary>
-        [Fact]
-        public void GetParcels_Query_Success()
+        [Theory]
+        [MemberData(nameof(ParcelQueryData))]
+        public void GetParcels_Query_Success(Uri uri)
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView, new Uri("http://host/api/parcels?Agencies=1,2"));
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView, uri);
 
             var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
@@ -156,10 +120,10 @@ namespace Pims.Api.Test.Controllers.Admin
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Entity.Models.ParcelFilter>())).Returns(paged);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(paged);
 
             // Act
-            var result = controller.GetParcels(1, 1);
+            var result = controller.GetParcels();
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
@@ -167,7 +131,7 @@ namespace Pims.Api.Test.Controllers.Admin
             var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
             var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(parcels), 1, 1, 2);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(1, 1, It.IsAny<ParcelFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<ParcelFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -184,8 +148,8 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.GetParcels(1, 1));
-            service.Verify(m => m.Parcel.Get(1, 1, null), Times.Never());
+            Assert.Throws<BadRequestException>(() => controller.GetParcels());
+            service.Verify(m => m.Parcel.Get(null), Times.Never());
         }
 
         /// <summary>
@@ -202,8 +166,8 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.GetParcels(1, 1, null));
-            service.Verify(m => m.Parcel.Get(1, 1, null), Times.Never());
+            Assert.Throws<BadRequestException>(() => controller.GetParcels(null));
+            service.Verify(m => m.Parcel.Get(null), Times.Never());
         }
         #endregion
 

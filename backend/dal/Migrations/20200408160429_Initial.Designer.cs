@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200408145728_Initial")]
+    [Migration("20200408160429_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -800,7 +800,7 @@ namespace Pims.Dal.Migrations
                         .IsUnique()
                         .HasFilter("[PIN] IS NOT NULL");
 
-                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea");
+                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
 
                     b.ToTable("Parcels");
                 });
