@@ -3,9 +3,8 @@ import './Map.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
-import { IParcel, IParcelDetail, IProperty, IPropertyDetail } from 'actions/parcelsActions';
-import { ParcelPopupView } from '../ParcelPopupView';
+import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
@@ -180,6 +179,12 @@ const Map: React.FC<MapProps> = props => {
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} />
           )}
+          <WMSTileLayer
+            url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+            layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+            transparent={true}
+            format="image/png"
+          />
           {properties && properties.map(renderMarker)}
           {selectedProperty && renderPopup(selectedProperty)}
         </LeafletMap>
