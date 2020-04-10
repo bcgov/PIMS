@@ -31,11 +31,25 @@ MSSQL_SA_PASSWORD={password}
 MSSQL_PID=Developer
 ```
 
-| Key               | Value            | Description                                                                                                                             |
-| ----------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| ACCEPT_EULA       | [Y\|N]           | Whether you accept the license agreement.                                                                                               |
-| MSSQL_SA_PASSWORD | {password}       | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft. |
-| MSSQL_PID         | [Developer\|...] | The version of the database to install.                                                                                                 |
+| Key               | Value            | Description                                                  |
+| ----------------- | ---------------- | ------------------------------------------------------------ |
+| ACCEPT_EULA       | [Y\|N]           | Whether you accept the license agreement.                    |
+| MSSQL_SA_PASSWORD | {password}       | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft (see below). |
+| MSSQL_PID         | [Developer\|...] | The version of the database to install.                      |
+
+## Password Complexity
+
+As per Microsoft documentation, the `MSSQL_SA_PASSWORD` value must meet the following guidelines:
+
+- The password does not contain the account name of the user.
+- The password is at least **eight characters** long.
+- The password contains characters from **three** of the following four categories:
+  - Uppercase letters (A through Z)
+  - Lowercase letters (a through z)
+  - Base 10 digits (0 through 9)
+  - Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%).
+
+Passwords can be up to 128 characters long. Use passwords that are as long and complex as possible.
 
 ## Connection
 
