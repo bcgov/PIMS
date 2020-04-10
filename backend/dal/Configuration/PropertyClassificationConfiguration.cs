@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// PropertyClassificationConfiguration class, provides a way to configure property classifications in the database.
     ///</summary>
-    public class PropertyClassificationConfiguration : LookupEntityConfiguration<PropertyClassification>
+    public class PropertyClassificationConfiguration : LookupEntityConfiguration<PropertyClassification, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<PropertyClassification> builder)

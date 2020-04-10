@@ -9,7 +9,7 @@ namespace Pims.Api.Models.Parcel
 
         public string PID { get; set; }
 
-        public string PIN { get; set; }
+        public int? PIN { get; set; }
 
         public int StatusId { get; set; }
 

@@ -74,7 +74,6 @@ namespace Pims.Core.Test
         public static T CreateController<T>(this TestHelper helper, ClaimsPrincipal user, Uri uri, params object[] args) where T : ControllerBase
         {
             helper.MockConstructorArguments<T>(args);
-            helper.AddSingleton(TestHelper.CreateMapper());
             var context = helper.CreateControllerContext(user, uri);
 
             helper.BuildServiceProvider();

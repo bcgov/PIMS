@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;

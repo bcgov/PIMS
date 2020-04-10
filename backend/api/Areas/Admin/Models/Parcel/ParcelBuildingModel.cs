@@ -13,6 +13,10 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public int AgencyId { get; set; }
 
+        public string Agency { get; set; }
+
+        public string SubAgency { get; set; }
+
         public string LocalId { get; set; }
 
         public string Description { get; set; }

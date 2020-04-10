@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System;
 using Pims.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
+using MapsterMapper;
+using Mapster;
+using System.Reflection;
 
 namespace Pims.Core.Test
 {
@@ -13,7 +15,6 @@ namespace Pims.Core.Test
     public class TestHelper
     {
         #region Variables
-        private readonly static IEnumerable<Type> _profiles;
         private IServiceProvider _provider;
         private readonly IServiceCollection _services = new ServiceCollection();
         #endregion
@@ -34,22 +35,16 @@ namespace Pims.Core.Test
 
         #region Constructors
         /// <summary>
-        /// Initialize static variables used TestHelper.
-        /// </summary>
-        static TestHelper()
-        {
-            // Find all map profiles in assembly.
-            var ptype = typeof(Profile);
-            _profiles = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Pims")).SelectMany(a => a.GetTypes().Where(at => ptype.IsAssignableFrom(at)));
-        }
-
-        /// <summary>
         /// Creates a new instance of a TestHelper class.
         /// </summary>
         public TestHelper()
         {
-            var mapper = TestHelper.CreateMapper();
-            this.AddSingleton(mapper);
+            var config = new TypeAdapterConfig();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Pims"));
+            assemblies.ForEach(a => config.Scan(a));
+
+            _services.AddSingleton(config);
+            _services.AddScoped<IMapper, ServiceMapper>();
         }
         #endregion
 
@@ -112,19 +107,12 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
-        /// Create a AutoMapper object and configure it with all the profiles created in the Pims assemblies.
+        /// Get the mapper from the service collection.
         /// </summary>
         /// <returns></returns>
-        public static IMapper CreateMapper()
+        public IMapper GetMapper()
         {
-            var mapperConfig = new MapperConfiguration(cfg =>
-            {
-                _profiles.ForEach(p => cfg.AddProfile(p));
-            });
-            // mapperConfig.AssertConfigurationIsValid(); // TODO: Fix this.
-            var mapper = mapperConfig.CreateMapper();
-
-            return mapper;
+            return this.BuildServiceProvider().GetService<IMapper>();
         }
 
         /// <summary>

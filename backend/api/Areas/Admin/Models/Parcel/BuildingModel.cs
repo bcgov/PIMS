@@ -13,6 +13,12 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public string LocalId { get; set; }
 
+        public int AgencyId { get; set; }
+
+        public string SubAgency { get; set; }
+
+        public string Agency { get; set; }
+
         public string Description { get; set; }
 
         public AddressModel Address { get; set; }
@@ -44,6 +50,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
         public string BuildingTenancy { get; set; }
 
         public float RentableArea { get; set; }
+
+        public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
         #endregion

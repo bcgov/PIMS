@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using AutoMapper;
+using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Services.Admin;
 using Pims.Keycloak;

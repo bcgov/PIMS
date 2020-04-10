@@ -3,7 +3,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
     public class ParcelEvaluationModel : Pims.Api.Models.BaseModel
     {
         #region Properties
-        public int PropertyId { get; set; }
+        public int ParcelId { get; set; }
 
         public int FiscalYear { get; set; }
 

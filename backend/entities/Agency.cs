@@ -5,7 +5,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// Agency class, provides an entity for the datamodel to manage property agencies.
     /// </summary>
-    public class Agency : CodeEntity
+    public class Agency : CodeEntity<int>
     {
         #region Properties
 

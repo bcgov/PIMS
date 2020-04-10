@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Model = Pims.Api.Areas.Admin.Models.Parcel;
@@ -66,6 +66,32 @@ namespace Pims.Api.Test.Controllers.Admin
             var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
             var paged = new Paged<Entity.Parcel>(parcels, 1, 2, 2);
             service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(paged);
+
+            // Act
+            var result = controller.GetParcels(filter);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
+            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(parcels), 1, 1, 2);
+            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.Get(filter), Times.Once());
+        }
+
+        [Fact]
+        public void GetParcels_NoFilter_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
+            var paged = new Paged<Entity.Parcel>(parcels, 1, 2, 2);
+            service.Setup(m => m.Parcel.Get(It.IsAny<ParcelFilter>())).Returns(paged);
+            var filter = new ParcelFilter();
 
             // Act
             var result = controller.GetParcels(filter);
@@ -148,7 +174,7 @@ namespace Pims.Api.Test.Controllers.Admin
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.GetParcels());
+            Assert.Throws<BadRequestException>(() => controller.GetParcels(null));
             service.Verify(m => m.Parcel.Get(null), Times.Never());
         }
 
@@ -312,7 +338,7 @@ namespace Pims.Api.Test.Controllers.Admin
             var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
             Assert.Equal(parcel.Id, actualResult.Id);
             Assert.Equal(parcel.ParcelIdentity, actualResult.PID);
-            Assert.Equal(parcel.PIN == null ? null : parcel.PIN.ToString(), actualResult.PIN);
+            Assert.Equal(parcel.PIN, actualResult.PIN);
             Assert.Equal(parcel.StatusId, actualResult.StatusId);
             Assert.Equal(parcel.ClassificationId, actualResult.ClassificationId);
             Assert.Equal(parcel.AgencyId, actualResult.AgencyId);
