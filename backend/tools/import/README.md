@@ -39,27 +39,48 @@ Some of these settings have default values contained in the `appsettings.json` c
 | Import\_\_RetryAttempts     |          | How many retries after a failure should be sent.                                                  |
 | Import\_\_AbortAfterFailure |          | After how many failures should the import be aborted.                                             |
 
-If you prefer, you can add your JSON files to the `/Data` folder and they will be ignored by **git**.
+If you prefer, you can add your JSON files to the `/backend/tools/import/Data` folder and they will be ignored by **git**.
 
 ## Run
 
-To run the application ensure the configuration files are present and the JSON package is in the correct location.
+To run the application ensure the configuration files are present and the JSON data file is in the correct location (i.e. the `/Data` folder).
 
-Please note that the account with which you connect with, must be **activated** before running the import.  
-As the *DAL* will attempt to associate all records that are imported with this account.
+Please note that the account with which you connect with, must be **activated** before running the import as the *DAL* will attempt to associate all records that are imported with this account.
+
 Additionally the account must have the appropriate Keycloak roles (i.e. `system-administrator`) to request the API endpoint.
-When using `Keycloak:ClientId=pims-service-account` you will need to do the following (use Postman);
 
-- Get a valid JWT token for the service account
-- Make a request to the `/api/auth/activate` endpoint using that token
+When using `Keycloak:ClientId=pims-service-account` you will need to do the following (use Postman or `curl`);
 
-Go to the `/backend/tools/import` folder and execute the following;
+* Open Keycloak management console (running at http://keycloack:8080) and copy the client secret for `pims-service-account`;
+
+![keycloak console](keycloak-service-account.png)
+
+- Get a valid JWT token for the service account - make sure to provide the **client_secret**;
+
+```bash
+curl -L -X POST 'http://keycloak:8080/auth/realms/pims/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id=pims-service-account' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode 'audience=pims-service-account' \
+--data-urlencode 'client_secret=xxxxxxxxxx'
+```
+
+- Make a request to the `/api/auth/activate` endpoint using that JWT token;
+
+```bash
+curl -v -L -X POST 'http://localhost:5000/api/auth/activate' \
+--header 'Content-Length: 0' \
+--header 'Authorization: Bearer xxxxxxxxxx'
+```
+
+* Go to the `/backend/tools/import` folder and execute the following;
 
 ```bash
 dotnet run
 ```
 
-Or you can execute the compiled build directly if you have your environment variables setup.
+Alternatively, you can execute the compiled build directly if you have your environment variables setup.
 
 ```bash
 ./Pims.Tools.Import.exe
