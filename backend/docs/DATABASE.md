@@ -51,7 +51,7 @@ You may create a `connectionstrings.json` configuration file within the `/backen
 ```
 
 The default `port` for MS-SQL is 1433, but set it to the same value used in the `docker-compose.yaml` configuration file.
-The `database name` should be the same value using the in the database `.env` file.
+The `database name` should be the same value used in the database `.env` file.
 
 ### Entity Framework CLI Information
 
