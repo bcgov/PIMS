@@ -177,13 +177,14 @@ const Map: React.FC<MapProps> = props => {
           closePopupOnClick={!props.disabled}
         >
           {activeBasemap && (
-            <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} />
+            <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} zIndex={0} />
           )}
           <WMSTileLayer
             url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
             layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
             transparent={true}
             format="image/png"
+            zIndex={10}
           />
           {properties && properties.map(renderMarker)}
           {selectedProperty && renderPopup(selectedProperty)}
