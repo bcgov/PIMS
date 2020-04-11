@@ -25,5 +25,15 @@ namespace Pims.Core.Extensions
             }
             return result.ToString();
         }
+
+        /// <summary>
+        /// Checks if the current hosting environment name is Production.
+        /// </summary>
+        /// <param name="env">The environment name.</param>
+        /// <returns>True if the environment name is Production, otherwise false.</returns>
+        public static bool IsProduction(this string env)
+        {
+            return env != null && env.Equals("Production", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

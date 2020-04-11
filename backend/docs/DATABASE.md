@@ -20,27 +20,42 @@ Refer to the CLI documentation [here](https://docs.microsoft.com/en-us/ef/core/m
 The database is setup and configured through Entity Framework Code-First processes. To use the Entity Framework CLI you will need to:
 
 - Install the **.NET SDK version** (download links below), 
+
 - Install **dotnet-ef tool** and,
-- Add a `connectionstrings.json` configuration file in the `/backend/dal` folder 
-  - *Alternatively, the connection string can also be included in a `.env` file in the same folder.*
 
-**NOTE** - All `dotnet ef ` commands must be run from the `/backend/dal` directory.
+- Optionally, add a `connectionstrings.json` configuration file in the `/backend/dal` folder 
 
-**NOTE** - Please do not commit the `connectionstrings.json` file to source code. It is likely to contain secret information that should not be shared. By default `.gitignore` will exclude it.
+- Optionally, the connection string can be provided in a `.env` file in the same folder with the format:
 
-Install the .NET SDK
+  ```
+  ConnectionStrings__PIMS=Server=<localhost or host.docker.internal>,<port>;User ID=sa;Database=<database name>
+  ```
+
+**NOTES** 
+
+* All `dotnet ef ` commands must be run from the `/backend/dal` directory.
+* Please do not commit the `connectionstrings.json` file to source code. It is likely to contain secret information that should not be shared. By default `.gitignore` will exclude it.
+* To help `dotnet ef` find the correct database connection, you will need to select one of the following configuration options, but no single one is required:
+  1. *connectionstrings.json*
+  2. *connectionstrings.*`Environment`*.json*. For example,  *connectionstrings*.***Development***.*json*
+  3. *.env* file
+  4. Environment variables
+
+### Install the .NET SDK
 
 > [download .NET Core SDK - 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0)
-
+>
 > [download .NET Core SDK - 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 
-Install the `dotnet-ef` CLI
+### Install the `dotnet-ef` CLI
 
 ```bash
 dotnet tool install --global dotnet-ef
 ```
 
-You may create a `connectionstrings.json` configuration file within the `/backend/dal` project, or a `.env` file to contain this information. You can also create one for each environment by creating a file with the naming convention `connectionstrings.[Environment].json`. Enter the following information into the file;
+You may create a *connectionstrings.json* configuration file within the `/backend/dal` project, or a `.env` file to contain this information. You can also create one for each environment by creating a file with the naming convention *connectionstrings.*`Environment`*.json*. 
+
+Enter the following information into the file;
 
 ```json
 {

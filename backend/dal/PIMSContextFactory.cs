@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 
 namespace Pims.Dal
 {
@@ -59,7 +60,7 @@ namespace Pims.Dal
                 .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"connectionstrings.{environment}.json", optional: true, reloadOnChange: true);
 
-            if (!this.isProduction(environment))
+            if (!environment.IsProduction())
             {
                 builder.AddUserSecrets<PimsContext>();
             }
@@ -77,11 +78,6 @@ namespace Pims.Dal
             var optionsBuilder = new DbContextOptionsBuilder<PimsContext>();
             optionsBuilder.UseSqlServer(sqlBuilder.ConnectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
             return new PimsContext(optionsBuilder.Options);
-        }
-
-        private bool isProduction(string env)
-        {
-            return env.Equals("Production", StringComparison.OrdinalIgnoreCase);
         }
         #endregion
     }
