@@ -62,19 +62,20 @@ services:
     depends_on:
       - database
       - keycloak
-    # volumes:
-    #   - $(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     networks:
       - pims
 
   ####################### Frontend #######################
   frontend:
+    stdin_open: true
+    tty: true
     restart: on-failure
     container_name: frontend-app
     build:
       context: frontend
     volumes:
-      - ./frontend/src/:/usr/app/src/
+      - ./frontend/src:/usr/app/src
+      - ./frontend/public:/usr/app/public
       - frontend-node-cache:/usr/app/node_modules
     ports:
       - "3000:3000"
@@ -83,18 +84,6 @@ services:
     env_file: ./frontend/.env
     networks:
       - pims
-
-  ####################### Local SMTP Server #######################
-  # mailhog:
-  #   container_name: mailhog
-  #   restart: always
-  #   image: mailhog/mailhog:latest
-  #   ports:
-  #     - 25:1025
-  #     - 1025:1025
-  #     - 8025:8025 # visit localhost:8025 to see the list of captured emails
-  #   networks:
-  #     - starter_kit
 
 ####################### Networks Definition #######################
 networks:
