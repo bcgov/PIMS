@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
 
 namespace Pims.Dal
 {
@@ -45,25 +46,37 @@ namespace Pims.Dal
         public PimsContext CreateDbContext(string[] args)
         {
             DotNetEnv.Env.Load();
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 
-            var config = new ConfigurationBuilder()
+            // As per Microsoft documentation, a typical sequence of configuration providers is:
+            //   1. appsettings.json
+            //   2. appsettings.{Environment}.json
+            //   3. Secret Manager (if in development)
+            //   4. Environment variables using the Environment Variables configuration provider.
+            //   5. Command - line arguments using the Command-line configuration provider.
+            // source: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1#configuration-providers
+            var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddEnvironmentVariables()
-                .AddJsonFile("connectionstrings.json", optional : true, reloadOnChange : true)
-                .AddJsonFile($"connectionstrings.{environment}.json", optional : true, reloadOnChange : true)
-                .AddUserSecrets<PimsContext>()
-                .Build();
+                .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"connectionstrings.{environment}.json", optional: true, reloadOnChange: true);
+
+            if (!environment.IsProduction())
+            {
+                builder.AddUserSecrets<PimsContext>();
+            }
+
+            builder.AddEnvironmentVariables();
+
+            var config = builder.Build();
 
             var cs = config.GetConnectionString("PIMS");
-            var builder = new SqlConnectionStringBuilder(cs)
+            var sqlBuilder = new SqlConnectionStringBuilder(cs)
             {
                 Password = config["DB_PASSWORD"]
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<PimsContext>();
-            // optionsBuilder.UseNpgsql (cs, opts => opts.CommandTimeout ((int) TimeSpan.FromMinutes (10).TotalSeconds));
-            optionsBuilder.UseSqlServer(builder.ConnectionString, opts => opts.CommandTimeout((int) TimeSpan.FromMinutes(10).TotalSeconds));
+            optionsBuilder.UseSqlServer(sqlBuilder.ConnectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
             return new PimsContext(optionsBuilder.Options);
         }
         #endregion
