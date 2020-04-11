@@ -1,7 +1,13 @@
 FROM node:10-slim as node
 
-# Install build toolchain, install node deps and compile native add-ons
-RUN apt-get -yq update && apt-get -yq install make gcc g++ python --no-install-recommends
+# install build toolchain (for node-gyp)
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y dumb-init python build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# set entrypoint to `dumb-init` as it handles being pid 1 and forwarding signals
+# so that you dont need to bake that logic into your node app
+ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /usr/app
 
@@ -10,7 +16,8 @@ RUN npm install -g npm@6.9.0
 
 COPY package*.json ./
 
-RUN npm ci --quiet
+RUN npm set progress=false \
+    && npm ci
 
 COPY . .
 
