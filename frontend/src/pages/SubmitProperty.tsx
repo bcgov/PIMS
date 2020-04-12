@@ -92,6 +92,7 @@ const SubmitProperty = (props: any) => {
         <MapView
           disableMapFilterBar={true}
           disabled={!!props?.match?.params?.id}
+          showParcelBoundaries={false}
           onMarkerClick={() => {}}
           onMarkerPopupClosed={() => {}}
         />

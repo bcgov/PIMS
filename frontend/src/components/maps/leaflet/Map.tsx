@@ -38,18 +38,27 @@ type MapProps = {
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
   onMapClick?: (e: LeafletMouseEvent) => void;
   disableMapFilterBar?: boolean;
-  disabled?: boolean;
+  interactive?: boolean;
+  showParcelBoundaries?: boolean;
 };
 
-const Map: React.FC<MapProps> = props => {
-  // props
-  const {
-    properties,
-    selectedProperty,
-    onMarkerClick,
-    onMarkerPopupClose,
-    onViewportChanged,
-  } = props;
+const Map: React.FC<MapProps> = ({
+  lat,
+  lng,
+  zoom,
+  properties,
+  agencies,
+  propertyClassifications,
+  lotSizes,
+  selectedProperty,
+  onMarkerClick,
+  onMarkerPopupClose,
+  onViewportChanged,
+  onMapClick,
+  disableMapFilterBar,
+  interactive = true,
+  showParcelBoundaries = true,
+}) => {
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
@@ -61,7 +70,7 @@ const Map: React.FC<MapProps> = props => {
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
 
-  if (props.disabled) {
+  if (!interactive) {
     const map = mapRef.current?.leafletElement;
     if (map) {
       map.dragging.disable();
@@ -70,7 +79,9 @@ const Map: React.FC<MapProps> = props => {
       map.scrollWheelZoom.disable();
       map.boxZoom.disable();
       map.keyboard.disable();
-      if (map.tap) map.tap.disable();
+      if (map.tap) {
+        map.tap.disable();
+      }
     }
   }
   // --- Internal functions and event handlers
@@ -141,13 +152,13 @@ const Map: React.FC<MapProps> = props => {
       <Popup
         position={[parcelDetail.latitude, parcelDetail.longitude]}
         offset={[0, -25]}
-        onClose={() => !props?.disabled && onMarkerPopupClose?.(item)}
-        closeButton={!props.disabled}
+        onClose={() => !interactive && onMarkerPopupClose?.(item)}
+        closeButton={interactive}
       >
         <PopupView
           propertyTypeId={propertyTypeId}
           propertyDetail={parcelDetail}
-          disabled={props.disabled}
+          disabled={!interactive}
         />
       </Popup>
     );
@@ -156,11 +167,11 @@ const Map: React.FC<MapProps> = props => {
   return (
     <Container fluid={true}>
       <Row>
-        {!props.disableMapFilterBar ? (
+        {!disableMapFilterBar ? (
           <MapFilterBar
-            agencyLookupCodes={props.agencies}
-            propertyClassifications={props.propertyClassifications}
-            lotSizes={props.lotSizes}
+            agencyLookupCodes={agencies}
+            propertyClassifications={propertyClassifications}
+            lotSizes={lotSizes}
             onFilterChange={handleMapFilterChange}
           />
         ) : null}
@@ -169,23 +180,25 @@ const Map: React.FC<MapProps> = props => {
         )}
         <LeafletMap
           ref={mapRef}
-          center={[props.lat, props.lng]}
-          zoom={props.zoom}
+          center={[lat, lng]}
+          zoom={zoom}
           whenReady={handleViewportChange}
           onViewportChanged={handleViewportChange}
-          onpreclick={props.onMapClick}
-          closePopupOnClick={!props.disabled}
+          onpreclick={onMapClick}
+          closePopupOnClick={!interactive}
         >
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} zIndex={0} />
           )}
-          <WMSTileLayer
-            url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
-            layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-            transparent={true}
-            format="image/png"
-            zIndex={10}
-          />
+          {showParcelBoundaries && (
+            <WMSTileLayer
+              url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+              layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+              transparent={true}
+              format="image/png"
+              zIndex={10}
+            />
+          )}
           {properties && properties.map(renderMarker)}
           {selectedProperty && renderPopup(selectedProperty)}
         </LeafletMap>
