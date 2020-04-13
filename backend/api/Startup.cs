@@ -167,7 +167,7 @@ namespace Pims.Api
                 .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
 
             //TODO: Add a health check for keycloak connectivity.
-            services.AddHealthChecksUI();
+            // services.AddHealthChecksUI();
 
             services.AddMvcCore()
                 .AddJsonOptions(options =>
@@ -275,18 +275,18 @@ namespace Pims.Api
             app.UseEndpoints(config =>
             {
                 config.MapControllers();
-                config.MapHealthChecksUI(
-                    setup =>
-                    {
-                        setup.UIPath = this.Configuration.GetValue<string>("HealthChecksUI:UIPath"); // this is ui path in your browser
-                        setup.ApiPath = this.Configuration.GetValue<string>("HealthChecksUI:ApiPath");
-                        setup.ResourcesPath = this.Configuration.GetValue<string>("HealthChecksUI:ResourcesPath");
-                        setup.WebhookPath = this.Configuration.GetValue<string>("HealthChecksUI:WebhookPath");
-                        setup.UseRelativeResourcesPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeResourcesPath");
-                        setup.UseRelativeApiPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeApiPath");
-                        setup.UseRelativeWebhookPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeWebhookPath");
-                    }
-                );
+                // config.MapHealthChecksUI(
+                //     setup =>
+                //     {
+                //         setup.UIPath = this.Configuration.GetValue<string>("HealthChecksUI:UIPath"); // this is ui path in your browser
+                //         setup.ApiPath = this.Configuration.GetValue<string>("HealthChecksUI:ApiPath");
+                //         setup.ResourcesPath = this.Configuration.GetValue<string>("HealthChecksUI:ResourcesPath");
+                //         setup.WebhookPath = this.Configuration.GetValue<string>("HealthChecksUI:WebhookPath");
+                //         setup.UseRelativeResourcesPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeResourcesPath");
+                //         setup.UseRelativeApiPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeApiPath");
+                //         setup.UseRelativeWebhookPath = this.Configuration.GetValue<bool>("HealthChecksUI:UseRelativeWebhookPath");
+                //     }
+                // );
             });
         }
         #endregion
