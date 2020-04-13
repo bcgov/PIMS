@@ -2,11 +2,7 @@ import React, { useEffect } from 'react';
 import Map, { MapViewportChangeEvent } from '../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
-import {
-  fetchParcels,
-  fetchPropertyDetail,
-  fetchParcelDetail,
-} from 'actionCreators/parcelsActionCreator';
+import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
 import { IParcelListParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -39,11 +35,12 @@ const fetchLotSizes = () => {
 interface MapViewProps {
   disableMapFilterBar?: boolean;
   disabled?: boolean;
+  showParcelBoundaries?: boolean;
   onMarkerClick?: (obj: IProperty) => void;
   onMarkerPopupClosed?: (obj: IPropertyDetail) => void;
 }
 
-const MapView = (props: MapViewProps) => {
+const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
     state => state.parcel.parcelDetail,
@@ -119,7 +116,8 @@ const MapView = (props: MapViewProps) => {
       }}
       onMapClick={saveLatLng}
       disableMapFilterBar={props.disableMapFilterBar}
-      disabled={props.disabled}
+      interactive={!props.disabled}
+      showParcelBoundaries={props.showParcelBoundaries ?? true}
     />
   );
 };
