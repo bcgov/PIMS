@@ -54,6 +54,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
         public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
+
+        public IEnumerable<BuildingFiscalModel> Fiscals { get; set; } = new List<BuildingFiscalModel>();
         #endregion
     }
 }

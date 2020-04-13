@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Pims.Dal.Entities
 {
@@ -92,9 +91,10 @@ namespace Pims.Dal.Entities
         public ICollection<BuildingEvaluation> Evaluations { get; } = new List<BuildingEvaluation> ();
 
         /// <summary>
-        /// get - The most recent evaluation.
+        /// get - A collection of fiscal values for this building.
         /// </summary>
-        public BuildingEvaluation Evaluation { get { return this.Evaluations.OrderByDescending (e => e.FiscalYear).FirstOrDefault (); } }
+        /// <typeparam name="BuildingFiscals"></typeparam>
+        public ICollection<BuildingFiscal> Fiscals { get; } = new List<BuildingFiscal>();
         #endregion
 
         #region Constructors

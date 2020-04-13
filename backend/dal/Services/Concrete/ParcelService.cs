@@ -91,26 +91,20 @@ namespace Pims.Dal.Services
                 var agencies = filter.Agencies.Concat(this.Context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
-
-            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
-
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (filter.StatusId.HasValue)
                 query = query.Where(p => p.StatusId == filter.StatusId);
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             // TODO: Parse the address information by City, Postal, etc.
             if (!String.IsNullOrWhiteSpace(filter.Address))
@@ -124,30 +118,34 @@ namespace Pims.Dal.Services
             // TODO: Review performance of the evaluation query component.
             if (filter.MinEstimatedValue.HasValue)
                 query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MinEstimatedValue <= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
             if (filter.MaxEstimatedValue.HasValue)
                 query = query.Where(p =>
-                    filter.MaxEstimatedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MaxEstimatedValue >= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
 
             // TODO: Review performance of the evaluation query component.
             if (filter.MinAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MinAssessedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
             if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MaxAssessedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
 
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);

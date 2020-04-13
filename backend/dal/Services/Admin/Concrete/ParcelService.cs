@@ -64,25 +64,20 @@ namespace Pims.Dal.Services.Admin
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (filter.StatusId.HasValue)
                 query = query.Where(p => p.StatusId == filter.StatusId);
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             // TODO: Parse the address information by City, Postal, etc.
             if (!String.IsNullOrWhiteSpace(filter.Address))
                 query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
-
-            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
 
             if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);
@@ -92,30 +87,34 @@ namespace Pims.Dal.Services.Admin
             // TODO: Review performance of the evaluation query component.
             if (filter.MinEstimatedValue.HasValue)
                 query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MinEstimatedValue <= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && e.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
             if (filter.MaxEstimatedValue.HasValue)
                 query = query.Where(p =>
-                    filter.MaxEstimatedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MaxEstimatedValue >= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && e.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
 
             // TODO: Review performance of the evaluation query component.
             if (filter.MinAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MinAssessedValue <= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && e.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
             if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(p =>
                     filter.MaxAssessedValue >= p.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == p.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && e.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
 
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
@@ -143,6 +142,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
                 .Include(p => p.Buildings)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
@@ -172,6 +172,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
                 .Include(p => p.Buildings)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
@@ -192,13 +193,35 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
+            if (entity.Agency != null)
+                this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
+            if (entity.Status != null)
+                this.Context.Entry(entity.Status).State = EntityState.Unchanged;
+            if (entity.Classification != null)
+                this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
+
             entity.Buildings.ForEach(b =>
             {
                 this.Context.Buildings.Add(b);
+                if (b.Status != null)
+                    this.Context.Entry(b.Status).State = EntityState.Unchanged;
+                if (b.Classification != null)
+                    this.Context.Entry(b.Classification).State = EntityState.Unchanged;
+                if (b.BuildingConstructionType != null)
+                    this.Context.Entry(b.BuildingConstructionType).State = EntityState.Unchanged;
+                if (b.BuildingPredominateUse != null)
+                    this.Context.Entry(b.BuildingPredominateUse).State = EntityState.Unchanged;
+                if (b.BuildingOccupantType != null)
+                    this.Context.Entry(b.BuildingOccupantType).State = EntityState.Unchanged;
 
                 b.Evaluations.ForEach(e =>
                 {
                     this.Context.BuildingEvaluations.Add(e);
+                });
+
+                b.Fiscals.ForEach(f =>
+                {
+                    this.Context.BuildingFiscals.Add(f);
                 });
 
                 if (b.Address != null)
@@ -210,6 +233,11 @@ namespace Pims.Dal.Services.Admin
             entity.Evaluations.ForEach(e =>
             {
                 this.Context.ParcelEvaluations.Add(e);
+            });
+
+            entity.Fiscals.ForEach(f =>
+            {
+                this.Context.ParcelFiscals.Add(f);
             });
 
             if (entity.Address != null)
@@ -234,13 +262,34 @@ namespace Pims.Dal.Services.Admin
             {
                 if (entity == null) throw new ArgumentNullException();
 
+                if (entity.AgencyId != 0)
+                    this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
+                if (entity.Status != null)
+                    this.Context.Entry(entity.Status).State = EntityState.Unchanged;
+                if (entity.Classification != null)
+                    this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
+
                 entity.Buildings.ForEach(b =>
                 {
                     this.Context.Buildings.Add(b);
+                    if (b.Status != null)
+                        this.Context.Entry(b.Status).State = EntityState.Unchanged;
+                    if (b.Classification != null)
+                        this.Context.Entry(b.Classification).State = EntityState.Unchanged;
+                    if (b.BuildingConstructionType != null)
+                        this.Context.Entry(b.BuildingConstructionType).State = EntityState.Unchanged;
+                    if (b.BuildingPredominateUse != null)
+                        this.Context.Entry(b.BuildingPredominateUse).State = EntityState.Unchanged;
+                    if (b.BuildingOccupantType != null)
+                        this.Context.Entry(b.BuildingOccupantType).State = EntityState.Unchanged;
 
                     b.Evaluations.ForEach(e =>
                     {
                         this.Context.BuildingEvaluations.Add(e);
+                    });
+                    b.Fiscals.ForEach(f =>
+                    {
+                        this.Context.BuildingFiscals.Add(f);
                     });
 
                     if (b.Address != null)
@@ -252,6 +301,10 @@ namespace Pims.Dal.Services.Admin
                 entity.Evaluations.ForEach(e =>
                 {
                     this.Context.ParcelEvaluations.Add(e);
+                });
+                entity.Fiscals.ForEach(f =>
+                {
+                    this.Context.ParcelFiscals.Add(f);
                 });
 
                 if (entity.Address != null)

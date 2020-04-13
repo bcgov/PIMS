@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200408225755_Initial")]
+    [Migration("20200413173252_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -260,6 +260,9 @@ namespace Pims.Dal.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ParentId");
@@ -452,17 +455,14 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingEvaluation", b =>
                 {
-                    b.Property<int>("FiscalYear")
-                        .HasColumnType("int");
-
                     b.Property<int>("BuildingId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("AppraisedValue")
-                        .HasColumnType("MONEY");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("DATE");
 
-                    b.Property<decimal>("AssessedValue")
-                        .HasColumnType("MONEY");
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -472,11 +472,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<decimal>("EstimatedValue")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal>("NetBookValue")
-                        .HasColumnType("MONEY");
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -489,17 +487,66 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.HasKey("FiscalYear", "BuildingId");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("MONEY");
 
-                    b.HasIndex("BuildingId");
+                    b.HasKey("BuildingId", "Date", "Key");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("AssessedValue", "EstimatedValue", "NetBookValue");
+                    b.HasIndex("BuildingId", "Date", "Key", "Value");
 
                     b.ToTable("BuildingEvaluations");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.BuildingFiscal", b =>
+                {
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FiscalYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("MONEY");
+
+                    b.HasKey("BuildingId", "FiscalYear", "Key");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("BuildingId", "FiscalYear", "Key", "Value");
+
+                    b.ToTable("BuildingFiscals");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingOccupantType", b =>
@@ -825,17 +872,14 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.ParcelEvaluation", b =>
                 {
-                    b.Property<int>("FiscalYear")
-                        .HasColumnType("int");
-
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("AppraisedValue")
-                        .HasColumnType("MONEY");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("DATE");
 
-                    b.Property<decimal>("AssessedValue")
-                        .HasColumnType("MONEY");
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -845,11 +889,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<decimal>("EstimatedValue")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal>("NetBookValue")
-                        .HasColumnType("MONEY");
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -862,17 +904,66 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.HasKey("FiscalYear", "ParcelId");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("MONEY");
+
+                    b.HasKey("ParcelId", "Date", "Key");
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ParcelId");
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("ParcelId", "Date", "Key", "Value");
+
+                    b.ToTable("ParcelEvaluations");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ParcelFiscal", b =>
+                {
+                    b.Property<int>("ParcelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FiscalYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("MONEY");
+
+                    b.HasKey("ParcelId", "FiscalYear", "Key");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("AssessedValue", "EstimatedValue", "NetBookValue");
+                    b.HasIndex("ParcelId", "FiscalYear", "Key", "Value");
 
-                    b.ToTable("ParcelEvaluations");
+                    b.ToTable("ParcelFiscals");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyClassification", b =>
@@ -1507,6 +1598,23 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("UpdatedById");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.BuildingFiscal", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.Building", "Building")
+                        .WithMany("Fiscals")
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.BuildingOccupantType", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.User", null)
@@ -1590,6 +1698,23 @@ namespace Pims.Dal.Migrations
 
                     b.HasOne("Pims.Dal.Entities.Parcel", "Parcel")
                         .WithMany("Evaluations")
+                        .HasForeignKey("ParcelId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ParcelFiscal", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Parcel", "Parcel")
+                        .WithMany("Fiscals")
                         .HasForeignKey("ParcelId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();

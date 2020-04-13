@@ -5,6 +5,7 @@ import { ListGroup, Container } from 'react-bootstrap';
 import { IBuilding } from 'actions/parcelsActions';
 import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
+import { EvaluationKeys } from '../../constants/evaluationKeys';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
@@ -22,8 +23,8 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {building?.evaluations
-                  ?.find(() => true)
-                  ?.assessedValue?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  ?.find(e => e.key == EvaluationKeys.Assessed)
+                  ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
             </ListGroup>
             <ListGroup>
