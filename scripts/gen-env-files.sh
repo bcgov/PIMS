@@ -66,7 +66,7 @@ echo \
 ASPNETCORE_URLS=http://*:8080
 DB_PASSWORD=$passvar
 Keycloak__Secret=
-Keycloak__ServiceAccount__Secret=" >> ./backend/.env
+Keycloak__ServiceAccount__Secret=" >> ./backend/api/.env
 fi
 
 if test -f "./frontend/.env"; then
