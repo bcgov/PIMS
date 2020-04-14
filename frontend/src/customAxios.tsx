@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { store } from 'App';
 
@@ -7,16 +7,7 @@ const MAINTENANCE = 503;
 
 const defaultEnvelope = (x: any) => ({ data: { records: x } });
 
-const sleepRequest = (instance: AxiosInstance, milliseconds: number, originalRequest: any) => {
-  return new Promise(resolve => {
-    setTimeout(() => resolve(instance(originalRequest)), milliseconds);
-  });
-};
-
-const errorCount: any = {};
-
 const CustomAxios = ({
-  errorToastMessage,
   selector,
   envelope = defaultEnvelope,
 }: { errorToastMessage?: string; selector?: Function; envelope?: typeof defaultEnvelope } = {}) => {

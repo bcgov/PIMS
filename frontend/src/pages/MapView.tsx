@@ -6,7 +6,7 @@ import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionC
 import { IParcelListParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IProperty, storeParcelDetail, IPropertyDetail, IParcel } from 'actions/parcelsActions';
+import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';

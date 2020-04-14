@@ -15,15 +15,10 @@ import queryString from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { LeafletMouseEvent } from 'leaflet';
-import { useHistory } from 'react-router-dom';
-import { IGenericNetworkAction, clear } from 'actions/genericActions';
-import * as actionTypes from 'constants/actionTypes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 
 const SubmitProperty = (props: any) => {
   const parsed = queryString.parse(props?.location?.search);
-  const history = useHistory();
   const keycloak = useKeycloakWrapper();
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
     state => state.leafletClickEvent.mapClickEvent,
