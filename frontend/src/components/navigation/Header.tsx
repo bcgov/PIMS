@@ -4,11 +4,10 @@ import './Header.scss';
 import logoUrl from './logo-banner.svg';
 import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction, clear } from 'actions/genericActions';
-import { RootState, reducerObject } from 'reducers/rootReducer';
+import { RootState } from 'reducers/rootReducer';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaBomb } from 'react-icons/fa';
 import _ from 'lodash';
-import { Label } from 'components/common/Label';
 
 const Header = () => {
   const history = useHistory();

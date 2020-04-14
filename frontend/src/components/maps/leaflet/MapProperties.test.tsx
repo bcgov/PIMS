@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
-import { IParcel, IProperty, IParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IParcelDetail } from 'actions/parcelsActions';
 import Map from './Map';
 import { Marker } from 'react-leaflet';
 import { mount, shallow } from 'enzyme';

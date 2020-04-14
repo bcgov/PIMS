@@ -19,7 +19,7 @@ import BuildingForm from './subforms/BuildingForm';
 import EvaluationForm from './subforms/EvaluationForm';
 import LandForm from './subforms/LandForm';
 import PidPinForm from './subforms/PidPinForm';
-import { render, getByText, fireEvent, act, wait } from '@testing-library/react';
+import { render, fireEvent, wait } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));

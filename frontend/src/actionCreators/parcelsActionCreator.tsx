@@ -14,8 +14,8 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
 ) => {
   if (
     !parcelBounds ||
-    (parcelBounds?.neLatitude != parcelBounds?.swLatitude &&
-      parcelBounds.neLongitude != parcelBounds.swLongitude)
+    (parcelBounds?.neLatitude !== parcelBounds?.swLatitude &&
+      parcelBounds.neLongitude !== parcelBounds.swLongitude)
   ) {
     dispatch(request(actionTypes.GET_PARCELS));
     dispatch(showLoading());

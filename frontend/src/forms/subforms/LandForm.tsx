@@ -42,7 +42,6 @@ export const defaultLandValues: IParcel = {
   buildings: [],
 };
 const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
-  const nameSpacedPropValues = props.values[props.nameSpace!];
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );

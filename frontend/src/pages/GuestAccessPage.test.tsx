@@ -27,11 +27,6 @@ const requestAccess = {
   isFetching: false,
 } as IGenericNetworkAction;
 
-const noSuccess = {
-  status: -1,
-  isFetching: false,
-};
-
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
