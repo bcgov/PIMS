@@ -44,7 +44,7 @@ const App = () => {
   }, []);
 
   const isInitialized = () => {
-    return !keycloak?.authenticated || keycloak?.userInfo || keycloakUserLoaded;
+    return keycloak && keycloakUserLoaded;
   };
 
   return isInitialized() ? (

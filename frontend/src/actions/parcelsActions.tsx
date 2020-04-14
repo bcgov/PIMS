@@ -77,6 +77,7 @@ export interface IParcel {
   landLegalDescription: string;
   zoning: string;
   zoningPotential: string;
+  municipality: string;
   agency?: string;
   agencyId: number | any;
   isSensitive: boolean;

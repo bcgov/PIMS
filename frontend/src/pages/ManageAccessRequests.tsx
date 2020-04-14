@@ -51,7 +51,7 @@ const ManageAccessRequests = () => {
       paginateParams.isGranted = true;
       dispatch(getAccessRequestsAction(paginateParams));
     }
-  }, [updateRequestAccessAdmin]);
+  }, [updateRequestAccessAdmin, dispatch]);
 
   return requestAccess && !requestAccess.isFetching ? (
     <Container fluid={true}>

@@ -30,6 +30,7 @@ export const defaultLandValues: IParcel = {
   pin: '',
   zoning: '',
   zoningPotential: '',
+  municipality: '',
   landArea: '',
   statusId: 1,
   propertyStatus: undefined,
@@ -56,6 +57,16 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
     <Fragment>
       <Form.Row className="landForm">
         <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Municipality
+            </Form.Label>
+            <Input
+              disabled={props.disabled}
+              className="col-md-10"
+              field={withNameSpace('municipality')}
+            />
+          </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Zoning

@@ -52,6 +52,7 @@ const defaultParcelDetail: IParcelDetail = {
     zoning: '20',
     zoningPotential: '21',
     agencyId: '22',
+    municipality: '23',
   },
 };
 
