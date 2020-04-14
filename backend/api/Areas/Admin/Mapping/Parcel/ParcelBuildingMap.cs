@@ -34,6 +34,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
+                .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
 
@@ -57,6 +58,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
+                .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }
     }

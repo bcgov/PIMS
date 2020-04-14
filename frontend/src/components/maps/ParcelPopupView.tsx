@@ -5,6 +5,7 @@ import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 import './ParcelPopupView.scss';
 import { Link } from 'react-router-dom';
+import { EvaluationKeys } from '../../constants/evaluationKeys';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -25,8 +26,8 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {parcelDetail?.evaluations
-                  ?.find(() => true)
-                  ?.assessedValue?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  ?.find(e => e.key == EvaluationKeys.Assessed)
+                  ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
             </ListGroup>
             <ListGroup>

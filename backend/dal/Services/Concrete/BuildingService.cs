@@ -93,7 +93,14 @@ namespace Pims.Dal.Services
                 var agencies = filter.Agencies.Concat(this.Context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
-
+            if (filter.ClassificationId.HasValue)
+                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
+            if (filter.StatusId.HasValue)
+                query = query.Where(p => p.StatusId == filter.StatusId);
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (filter.ConstructionTypeId.HasValue)
                 query = query.Where(b => b.BuildingConstructionTypeId == filter.ConstructionTypeId);
             if (filter.PredominateUseId.HasValue)
@@ -114,30 +121,34 @@ namespace Pims.Dal.Services
             // TODO: Review performance of the evaluation query component.
             if (filter.MinEstimatedValue.HasValue)
                 query = query.Where(b =>
-                    filter.MinEstimatedValue <= b.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == b.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MinEstimatedValue <= b.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
             if (filter.MaxEstimatedValue.HasValue)
                 query = query.Where(b =>
-                    filter.MaxEstimatedValue >= b.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == b.Id)
-                    .Max(pe => pe.FiscalYear)).EstimatedValue);
+                    filter.MaxEstimatedValue >= b.Fiscals
+                        .FirstOrDefault(e =>e.FiscalYear == this.Context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
 
             // TODO: Review performance of the evaluation query component.
             if (filter.MinAssessedValue.HasValue)
                 query = query.Where(b =>
                     filter.MinAssessedValue <= b.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == b.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
             if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(b =>
                     filter.MaxAssessedValue >= b.Evaluations
-                    .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelEvaluations
-                    .Where(pe => pe.ParcelId == b.Id)
-                    .Max(pe => pe.FiscalYear)).AssessedValue);
+                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
 
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
@@ -169,6 +180,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
                 .AsNoTracking()
                 .FirstOrDefault(b => b.Id == id &&
                     (!b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();

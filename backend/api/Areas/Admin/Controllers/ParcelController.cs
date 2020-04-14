@@ -216,15 +216,31 @@ namespace Pims.Api.Areas.Admin.Controllers
 
             foreach (var evaluation in model.Evaluations)
             {
+                var key = (Entity.EvaluationKeys)Enum.Parse(typeof(Entity.EvaluationKeys), evaluation.Key);
                 // Update evaluation.
-                var p_eval = entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
+                var p_eval = entity.Evaluations.FirstOrDefault(e => e.Key == key && e.Date == evaluation.Date);
                 if (p_eval == null)
                 {
-                    entity.Evaluations.Add(new Entity.ParcelEvaluation(evaluation.FiscalYear, entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
+                    entity.Evaluations.Add(new Entity.ParcelEvaluation(entity, evaluation.Date, key, evaluation.Value));
                 }
                 else
                 {
                     _mapper.Map(evaluation, p_eval);
+                }
+            }
+
+            foreach (var fiscal in model.Fiscals)
+            {
+                var key = (Entity.FiscalKeys)Enum.Parse(typeof(Entity.FiscalKeys), fiscal.Key);
+                // Update fiscal.
+                var p_fiscal = entity.Fiscals.FirstOrDefault(e => e.Key == key && e.FiscalYear == fiscal.FiscalYear);
+                if (p_fiscal == null)
+                {
+                    entity.Fiscals.Add(new Entity.ParcelFiscal(entity, fiscal.FiscalYear, key, fiscal.Value));
+                }
+                else
+                {
+                    _mapper.Map(fiscal, p_fiscal);
                 }
             }
 
@@ -238,7 +254,13 @@ namespace Pims.Api.Areas.Admin.Controllers
                     b_entity = _mapper.Map<Entity.Building>(building);
                     foreach (var evaluation in building.Evaluations)
                     {
-                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
+                        var key = (Entity.EvaluationKeys)Enum.Parse(typeof(Entity.EvaluationKeys), evaluation.Key);
+                        b_entity.Evaluations.Add(new Entity.BuildingEvaluation(b_entity, evaluation.Date, key, evaluation.Value));
+                    }
+                    foreach (var fiscal in building.Fiscals)
+                    {
+                        var key = (Entity.FiscalKeys)Enum.Parse(typeof(Entity.FiscalKeys), fiscal.Key);
+                        b_entity.Fiscals.Add(new Entity.BuildingFiscal(b_entity, fiscal.FiscalYear, key, fiscal.Value));
                     }
 
                     entity.Buildings.Add(b_entity);
@@ -251,14 +273,30 @@ namespace Pims.Api.Areas.Admin.Controllers
                     foreach (var evaluation in building.Evaluations)
                     {
                         // Update evaluation.
-                        var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.FiscalYear == evaluation.FiscalYear);
+                        var key = (Entity.EvaluationKeys)Enum.Parse(typeof(Entity.EvaluationKeys), evaluation.Key);
+                        var b_eval = b_entity.Evaluations.FirstOrDefault(e => e.Key == key && e.Date == evaluation.Date);
                         if (b_eval == null)
                         {
-                            b_entity.Evaluations.Add(new Entity.BuildingEvaluation(evaluation.FiscalYear, b_entity, evaluation.EstimatedValue, evaluation.AppraisedValue, evaluation.AssessedValue, evaluation.NetBookValue));
+                            b_entity.Evaluations.Add(new Entity.BuildingEvaluation(b_entity, evaluation.Date, key, evaluation.Value));
                         }
                         else
                         {
                             _mapper.Map(evaluation, b_eval);
+                        }
+                    }
+
+                    foreach (var fiscal in building.Fiscals)
+                    {
+                        // Update fiscal.
+                        var key = (Entity.FiscalKeys)Enum.Parse(typeof(Entity.FiscalKeys), fiscal.Key);
+                        var b_fiscal = b_entity.Fiscals.FirstOrDefault(e => e.Key == key && e.FiscalYear == fiscal.FiscalYear);
+                        if (b_fiscal == null)
+                        {
+                            b_entity.Fiscals.Add(new Entity.BuildingFiscal(b_entity, fiscal.FiscalYear, key, fiscal.Value));
+                        }
+                        else
+                        {
+                            _mapper.Map(fiscal, b_fiscal);
                         }
                     }
                 }

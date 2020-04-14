@@ -40,6 +40,7 @@ export const defaultLandValues: IParcel = {
   longitude: '',
   evaluations: [],
   buildings: [],
+  fiscals: [],
 };
 const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +45,7 @@ namespace Pims.Api.Helpers.Middleware
         /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
-            _logger.LogInformation($"Received HTTP Request {context.Request.Method} user:{context.User.GetDisplayName()} {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}?{context.Request.QueryString}");
+            _logger.LogInformation($"Received HTTP Request {context.Request.Method} user:{context.User.GetDisplayName()} {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}");
 
             await _next(context);
         }

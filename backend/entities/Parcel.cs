@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Pims.Dal.Entities
 {
@@ -65,9 +64,10 @@ namespace Pims.Dal.Entities
         public ICollection<ParcelEvaluation> Evaluations { get; } = new List<ParcelEvaluation>();
 
         /// <summary>
-        /// get - The most recent evaluation.
+        /// get - A collection of fiscal values for this parcel.
         /// </summary>
-        public ParcelEvaluation Evaluation { get { return this.Evaluations.OrderByDescending(e => e.FiscalYear).FirstOrDefault(); } }
+        /// <typeparam name="ParcelFiscals"></typeparam>
+        public ICollection<ParcelFiscal> Fiscals { get; } = new List<ParcelFiscal>();
         #endregion
 
         #region Constructors

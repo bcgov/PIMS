@@ -858,21 +858,20 @@ namespace Pims.Dal.Migrations
                 name: "ParcelEvaluations",
                 columns: table => new
                 {
-                    FiscalYear = table.Column<int>(nullable: false),
                     ParcelId = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(type: "DATE", nullable: false),
+                    Key = table.Column<int>(nullable: false),
                     CreatedById = table.Column<Guid>(nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    EstimatedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    AppraisedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    AssessedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    NetBookValue = table.Column<decimal>(type: "MONEY", nullable: false)
+                    Value = table.Column<decimal>(type: "MONEY", nullable: false),
+                    Note = table.Column<string>(maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ParcelEvaluations", x => new { x.FiscalYear, x.ParcelId });
+                    table.PrimaryKey("PK_ParcelEvaluations", x => new { x.ParcelId, x.Date, x.Key });
                     table.ForeignKey(
                         name: "FK_ParcelEvaluations_Users_CreatedById",
                         column: x => x.CreatedById,
@@ -894,24 +893,61 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BuildingEvaluations",
+                name: "ParcelFiscals",
                 columns: table => new
                 {
+                    ParcelId = table.Column<int>(nullable: false),
                     FiscalYear = table.Column<int>(nullable: false),
-                    BuildingId = table.Column<int>(nullable: false),
+                    Key = table.Column<int>(nullable: false),
                     CreatedById = table.Column<Guid>(nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    EstimatedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    AppraisedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    AssessedValue = table.Column<decimal>(type: "MONEY", nullable: false),
-                    NetBookValue = table.Column<decimal>(type: "MONEY", nullable: false)
+                    Value = table.Column<decimal>(type: "MONEY", nullable: false),
+                    Note = table.Column<string>(maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BuildingEvaluations", x => new { x.FiscalYear, x.BuildingId });
+                    table.PrimaryKey("PK_ParcelFiscals", x => new { x.ParcelId, x.FiscalYear, x.Key });
+                    table.ForeignKey(
+                        name: "FK_ParcelFiscals_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ParcelFiscals_Parcels_ParcelId",
+                        column: x => x.ParcelId,
+                        principalTable: "Parcels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ParcelFiscals_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BuildingEvaluations",
+                columns: table => new
+                {
+                    BuildingId = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(type: "DATE", nullable: false),
+                    Key = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Value = table.Column<decimal>(type: "MONEY", nullable: false),
+                    Note = table.Column<string>(maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BuildingEvaluations", x => new { x.BuildingId, x.Date, x.Key });
                     table.ForeignKey(
                         name: "FK_BuildingEvaluations_Buildings_BuildingId",
                         column: x => x.BuildingId,
@@ -926,6 +962,44 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingEvaluations_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BuildingFiscals",
+                columns: table => new
+                {
+                    BuildingId = table.Column<int>(nullable: false),
+                    FiscalYear = table.Column<int>(nullable: false),
+                    Key = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Value = table.Column<decimal>(type: "MONEY", nullable: false),
+                    Note = table.Column<string>(maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BuildingFiscals", x => new { x.BuildingId, x.FiscalYear, x.Key });
+                    table.ForeignKey(
+                        name: "FK_BuildingFiscals_Buildings_BuildingId",
+                        column: x => x.BuildingId,
+                        principalTable: "Buildings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BuildingFiscals_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BuildingFiscals_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -1008,6 +1082,12 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Postal", "Address1" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Agencies_Code",
+                table: "Agencies",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Agencies_CreatedById",
                 table: "Agencies",
                 column: "CreatedById");
@@ -1056,11 +1136,6 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BuildingEvaluations_BuildingId",
-                table: "BuildingEvaluations",
-                column: "BuildingId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BuildingEvaluations_CreatedById",
                 table: "BuildingEvaluations",
                 column: "CreatedById");
@@ -1071,9 +1146,24 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BuildingEvaluations_AssessedValue_EstimatedValue_NetBookValue",
+                name: "IX_BuildingEvaluations_BuildingId_Date_Key_Value",
                 table: "BuildingEvaluations",
-                columns: new[] { "AssessedValue", "EstimatedValue", "NetBookValue" });
+                columns: new[] { "BuildingId", "Date", "Key", "Value" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingFiscals_CreatedById",
+                table: "BuildingFiscals",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingFiscals_UpdatedById",
+                table: "BuildingFiscals",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuildingFiscals_BuildingId_FiscalYear_Key_Value",
+                table: "BuildingFiscals",
+                columns: new[] { "BuildingId", "FiscalYear", "Key", "Value" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingOccupantTypes_CreatedById",
@@ -1220,19 +1310,29 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ParcelEvaluations_ParcelId",
-                table: "ParcelEvaluations",
-                column: "ParcelId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ParcelEvaluations_UpdatedById",
                 table: "ParcelEvaluations",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ParcelEvaluations_AssessedValue_EstimatedValue_NetBookValue",
+                name: "IX_ParcelEvaluations_ParcelId_Date_Key_Value",
                 table: "ParcelEvaluations",
-                columns: new[] { "AssessedValue", "EstimatedValue", "NetBookValue" });
+                columns: new[] { "ParcelId", "Date", "Key", "Value" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParcelFiscals_CreatedById",
+                table: "ParcelFiscals",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParcelFiscals_UpdatedById",
+                table: "ParcelFiscals",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParcelFiscals_ParcelId_FiscalYear_Key_Value",
+                table: "ParcelFiscals",
+                columns: new[] { "ParcelId", "FiscalYear", "Key", "Value" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_AddressId",
@@ -1463,7 +1563,13 @@ namespace Pims.Dal.Migrations
                 name: "BuildingEvaluations");
 
             migrationBuilder.DropTable(
+                name: "BuildingFiscals");
+
+            migrationBuilder.DropTable(
                 name: "ParcelEvaluations");
+
+            migrationBuilder.DropTable(
+                name: "ParcelFiscals");
 
             migrationBuilder.DropTable(
                 name: "PropertyTypes");

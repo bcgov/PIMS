@@ -1,3 +1,5 @@
+using System;
+
 namespace Pims.Api.Models.Parcel
 {
     public class ParcelEvaluationModel : BaseModel
@@ -5,15 +7,13 @@ namespace Pims.Api.Models.Parcel
         #region Properties
         public int ParcelId { get; set; }
 
-        public int FiscalYear { get; set; }
+        public DateTime Date { get; set; }
 
-        public float EstimatedValue { get; set; }
+        public string Key { get; set; }
 
-        public float AppraisedValue { get; set; }
+        public float Value { get; set; }
 
-        public float AssessedValue { get; set; }
-
-        public float NetBookValue { get; set; }
+        public string Note { get; set; }
         #endregion
     }
 }
