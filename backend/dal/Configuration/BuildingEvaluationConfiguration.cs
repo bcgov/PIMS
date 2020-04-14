@@ -14,21 +14,21 @@ namespace Pims.Dal.Configuration
         {
             builder.ToTable("BuildingEvaluations");
 
-            builder.HasKey(m => new { m.FiscalYear, m.BuildingId });
-            builder.Property(m => m.FiscalYear).IsRequired();
-            builder.Property(m => m.FiscalYear).ValueGeneratedNever();
+            builder.HasKey(m => new { m.BuildingId, m.Date, m.Key });
 
             builder.Property(m => m.BuildingId).IsRequired();
             builder.Property(m => m.BuildingId).ValueGeneratedNever();
 
-            builder.Property(m => m.EstimatedValue).HasColumnType("MONEY");
-            builder.Property(m => m.AppraisedValue).HasColumnType("MONEY");
-            builder.Property(m => m.AssessedValue).HasColumnType("MONEY");
-            builder.Property(m => m.NetBookValue).HasColumnType("MONEY");
+            builder.Property(m => m.Date).HasColumnType("DATE").IsRequired();
+
+            builder.Property(m => m.Key).IsRequired();
+
+            builder.Property(m => m.Value).HasColumnType("MONEY");
+            builder.Property(m => m.Note).HasMaxLength(500);
 
             builder.HasOne(m => m.Building).WithMany(m => m.Evaluations).HasForeignKey(m => m.BuildingId).OnDelete(DeleteBehavior.ClientCascade);
 
-            builder.HasIndex(m => new { m.AssessedValue, m.EstimatedValue, m.NetBookValue });
+            builder.HasIndex(m => new { m.BuildingId, m.Date, m.Key, m.Value });
 
             base.Configure(builder);
         }

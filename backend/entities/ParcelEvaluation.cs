@@ -3,16 +3,11 @@ using System;
 namespace Pims.Dal.Entities
 {
     /// <summary>
-    /// ParcelEvaluation class, provides an entity to map parcel evaluation values to a fiscal year.
+    /// ParcelEvaluation class, provides an entity to map parcel evaluation values to a date.
     /// </summary>
     public class ParcelEvaluation : BaseEntity
     {
         #region Properties
-        /// <summary>
-        /// get/set - The primary key and the fiscal year the evaluation is for.
-        /// </summary>
-        /// <value></value>
-        public int FiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The primary key and the foreign key to the parcel.
@@ -27,28 +22,28 @@ namespace Pims.Dal.Entities
         public Parcel Parcel { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value of the parcel.
+        /// get/set - The primary key and the date the evaluation is for.
         /// </summary>
         /// <value></value>
-        public float EstimatedValue { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// get/set - The appraised value of the parcel.
+        /// get/set - The key for this fiscal value.
         /// </summary>
         /// <value></value>
-        public float AppraisedValue { get; set; }
+        public EvaluationKeys Key { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value of the parcel.
+        /// get/set - The value of the fiscal key for this parcel.
         /// </summary>
         /// <value></value>
-        public float AssessedValue { get; set; }
+        public float Value { get; set; }
 
         /// <summary>
-        /// get/set - The net-book value for this parcel.
+        /// get/set - A note related to this fiscal value.
         /// </summary>
         /// <value></value>
-        public float NetBookValue { get; set; }
+        public string Note { get; set; }
         #endregion
 
         #region Constructors
@@ -60,35 +55,18 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Creates a new instance of a ParcelEvaluation class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="fiscalYear"></param>
         /// <param name="parcel"></param>
-        public ParcelEvaluation(int fiscalYear, Parcel parcel)
+        /// <param name="date"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public ParcelEvaluation(Parcel parcel, DateTime date, EvaluationKeys key, float value)
         {
-            this.FiscalYear = fiscalYear;
             this.ParcelId = parcel?.Id ??
                 throw new ArgumentNullException(nameof(parcel));
             this.Parcel = parcel;
-        }
-
-        /// <summary>
-        /// Creates a new instance of a ParcelEvaluation class, initializes it with the specified arguments.
-        /// </summary>
-        /// <param name="fiscalYear"></param>
-        /// <param name="parcel"></param>
-        /// <param name="estimatedValue"></param>
-        /// <param name="appraisedValue"></param>
-        /// <param name="assessedValue"></param>
-        /// <param name="netBookValue"></param>
-        public ParcelEvaluation(int fiscalYear, Parcel parcel, float estimatedValue, float appraisedValue, float assessedValue, float netBookValue)
-        {
-            this.FiscalYear = fiscalYear;
-            this.ParcelId = parcel?.Id ??
-                throw new ArgumentNullException(nameof(parcel));
-            this.Parcel = parcel;
-            this.EstimatedValue = estimatedValue;
-            this.AppraisedValue = appraisedValue;
-            this.AssessedValue = assessedValue;
-            this.NetBookValue = netBookValue;
+            this.Date = date;
+            this.Key = key;
+            this.Value = value;
         }
         #endregion
     }

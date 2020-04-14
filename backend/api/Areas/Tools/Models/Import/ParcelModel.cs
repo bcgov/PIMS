@@ -21,6 +21,8 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public IEnumerable<ParcelEvaluationModel> Evaluations { get; set; } = new List<ParcelEvaluationModel>();
 
+        public IEnumerable<ParcelFiscalModel> Fiscals { get; set; } = new List<ParcelFiscalModel>();
+
         public IEnumerable<ParcelBuildingModel> Buildings { get; set; } = new List<ParcelBuildingModel>();
         #endregion
     }

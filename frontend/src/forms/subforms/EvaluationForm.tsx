@@ -12,11 +12,9 @@ interface EvaluationProps {
   disabled?: boolean;
 }
 export const defaultEvaluationValues: IEvaluation = {
-  fiscalYear: '',
-  assessedValue: '',
-  estimatedValue: '',
-  appraisedValue: '',
-  netBookValue: '',
+  date: '',
+  key: '',
+  value: '',
 };
 const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
   const withNameSpace: Function = (name?: string) => {
@@ -34,7 +32,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
               disabled={props.disabled}
               type="number"
               className="col-md-10"
-              field={withNameSpace('fiscalYear')}
+              field={withNameSpace('date')}
             />
           </Form.Row>
           <Form.Row>
@@ -45,7 +43,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
               disabled={props.disabled}
               type="number"
               className="col-md-10"
-              field={withNameSpace('assessedValue')}
+              field={withNameSpace('value')}
             />
           </Form.Row>
           <Form.Row>

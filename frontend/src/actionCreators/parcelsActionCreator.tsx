@@ -15,7 +15,7 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
   if (
     !parcelBounds ||
     (parcelBounds?.neLatitude !== parcelBounds?.swLatitude &&
-      parcelBounds.neLongitude !== parcelBounds.swLongitude)
+      parcelBounds?.neLongitude !== parcelBounds?.swLongitude)
   ) {
     dispatch(request(actionTypes.GET_PARCELS));
     dispatch(showLoading());
@@ -31,6 +31,8 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
       )
       .finally(() => dispatch(hideLoading()));
   }
+
+  return Promise.resolve();
 };
 
 export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch: Function) => {

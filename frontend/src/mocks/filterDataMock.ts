@@ -112,10 +112,16 @@ export const mockDetails = [
     description: 'test',
     evaluations: [
       {
-        assessedValue: 1000000,
-        estimatedValue: 0,
-        netBookValue: 0,
-        fiscalYear: 2019,
+        date: new Date(),
+        key: 'Assessed',
+        value: 10000,
+      },
+    ],
+    fiscals: [
+      {
+        fiscalYear: 2020,
+        key: 'NetBook',
+        value: 10000,
       },
     ],
     address: {
@@ -157,11 +163,16 @@ export const mockDetails = [
     buildings: [],
     evaluations: [
       {
+        date: new Date(),
+        key: 'Assessed',
+        value: 10000,
+      },
+    ],
+    fiscals: [
+      {
         fiscalYear: 2020,
-        estimatedValue: 0,
-        appraisedValue: 0,
-        netBookValue: 0,
-        assessedValue: 1000000,
+        key: 'NetBook',
+        value: 10000,
       },
     ],
     agency: 'HLTH',
@@ -185,11 +196,16 @@ export const ACTIVE = {
   description: 'test',
   evaluations: [
     {
+      date: new Date(),
+      key: 'Assessed',
+      value: 10000,
+    },
+  ],
+  fiscals: [
+    {
       fiscalYear: 2020,
-      estimatedValue: 0,
-      appraisedValue: 0,
-      netBookValue: 0,
-      assessedValue: 1000000,
+      key: 'NetBook',
+      value: 10000,
     },
   ],
   address: {

@@ -34,6 +34,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
+                .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
 
@@ -58,6 +59,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
+                .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Models.BaseModel, Entity.BaseEntity>();
         }
     }
