@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using BModel = Pims.Api.Models;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -72,8 +72,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// Get all the parcels that satisfy the filter parameters.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("filter")]
@@ -84,7 +82,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
             var paged = _pimsAdminService.Parcel.Get(filter);
             var parcels = _mapper.Map<Model.ParcelModel[]>(paged.Items);
@@ -213,7 +210,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
-            var entity = _pimsAdminService.Parcel.Get(model.Id);
+            var entity = _pimsAdminService.Parcel.Get(id);
             var userId = this.User.GetUserId();
             _mapper.Map(model, entity);
 
@@ -285,6 +282,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/delete/{id})")]
         public IActionResult DeleteParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var parcel = _mapper.Map<Entity.Parcel>(model);

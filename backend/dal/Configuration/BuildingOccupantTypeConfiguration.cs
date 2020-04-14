@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BuildingOccupantTypeConfiguration class, provides a way to configure building occupant type in the database.
     ///</summary>
-    public class BuildingOccupantTypeConfiguration : LookupEntityConfiguration<BuildingOccupantType>
+    public class BuildingOccupantTypeConfiguration : LookupEntityConfiguration<BuildingOccupantType, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<BuildingOccupantType> builder)

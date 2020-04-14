@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BuildingConstructionTypeConfiguration class, provides a way to configure building construction types in the database.
     ///</summary>
-    public class BuildingConstructionTypeConfiguration : LookupEntityConfiguration<BuildingConstructionType>
+    public class BuildingConstructionTypeConfiguration : LookupEntityConfiguration<BuildingConstructionType, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<BuildingConstructionType> builder)

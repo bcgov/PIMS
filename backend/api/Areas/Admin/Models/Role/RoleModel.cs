@@ -1,9 +1,11 @@
+using System;
+
 namespace Pims.Api.Areas.Admin.Models.Role
 {
     /// <summary>
     /// RoleModel class, provides a model that represents a role.
     /// </summary>
-    public class RoleModel : Pims.Api.Models.CodeModel
+    public class RoleModel : Api.Models.LookupModel<Guid>
     {
         #region Properties
         /// <summary>

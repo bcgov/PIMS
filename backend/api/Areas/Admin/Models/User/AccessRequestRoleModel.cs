@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Admin.Models.User
@@ -5,7 +6,7 @@ namespace Pims.Api.Areas.Admin.Models.User
     /// <summary>
     /// AccessRequestRoleModel class, provides a model that represents a role attached to an access request.
     /// </summary>
-    public class AccessRequestRoleModel : Pims.Api.Models.CodeModel
+    public class AccessRequestRoleModel : Api.Models.LookupModel<Guid>
     {
         #region Properties
         public string Description { get; set; }

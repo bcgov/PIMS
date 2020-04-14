@@ -6,7 +6,7 @@ using Moq;
 using Model = Pims.Api.Areas.Keycloak.Models.Role;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
-using AutoMapper;
+using MapsterMapper;
 using Pims.Dal.Keycloak;
 using System.Threading.Tasks;
 using System.Collections.Generic;

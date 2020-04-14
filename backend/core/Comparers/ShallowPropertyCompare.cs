@@ -2,6 +2,7 @@ using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Pims.Core.Comparers
@@ -12,6 +13,7 @@ namespace Pims.Core.Comparers
     /// </summary>
     public class ShallowPropertyCompare : IEqualityComparer<object>
     {
+        #region Methods
         /// <summary>
         /// Determines if the objects public properties are equal.
         /// </summary>
@@ -49,5 +51,6 @@ namespace Pims.Core.Comparers
 
             return hash.ToHashCode();
         }
+        #endregion
     }
 }

@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// PropertyStatusStatus class, provides an entity for the datamodel to manage a list of property status.
     /// </summary>
-    public class PropertyStatus : LookupEntity
+    public class PropertyStatus : LookupEntity<int>
     {
         #region Properties
         #endregion

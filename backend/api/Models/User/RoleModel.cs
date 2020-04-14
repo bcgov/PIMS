@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Models.User
 {
-    public class RoleModel : CodeModel
+    public class RoleModel : LookupModel<Guid>
     {
         #region Properties
         public string Description { get; set; }

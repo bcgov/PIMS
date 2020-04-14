@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models.Building;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,6 @@ using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
 using System;
-using System.Collections.Generic;
 using Xunit;
 using Pims.Core.Comparers;
 

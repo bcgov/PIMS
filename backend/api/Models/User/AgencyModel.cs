@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Pims.Api.Models.User
 {
-    public class AgencyModel : CodeModel
+    public class AgencyModel : CodeModel<int>
     {
         #region Properties
         public string Description { get; set; }
