@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import MapView from './pages/MapView';
 import GuestAccessPage from './pages/GuestAccessPage';
 import EditUserPage from './pages/EditUserPage';
@@ -23,7 +23,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import SubmitProperty from 'pages/SubmitProperty';
 import LoadingBar from 'react-redux-loading-bar';
 import ErrorBoundary from 'react-error-boundary';
-import _ from 'lodash';
 import ErrorModal from 'components/common/ErrorModal';
 
 export const store = configureStore();
@@ -45,7 +44,7 @@ const App = () => {
   }, []);
 
   const isInitialized = () => {
-    return !keycloak?.authenticated || keycloak?.userInfo;
+    return !keycloak?.authenticated || keycloak?.userInfo || keycloakUserLoaded;
   };
 
   return isInitialized() ? (

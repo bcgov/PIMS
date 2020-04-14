@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IUserDetails } from 'actions/adminActions';
 import _ from 'lodash';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { UserUpdateSchema } from 'utils/YupSchema';
 import { IUserDetailParams } from 'constants/API';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
@@ -43,26 +43,6 @@ const EditUserPage = (props: IUserDetailParams) => {
   });
 
   const user = useSelector<RootState, IUserDetails>(state => state.GET_USER_DETAIL as IUserDetails);
-
-  const getAgencyIdToPut = (name: any) => {
-    let idToSend = '';
-    agencies.map(val => {
-      if (name === val.name) {
-        idToSend = val.id;
-      }
-    });
-    return idToSend;
-  };
-
-  const getRoleIdToPut = (name: any) => {
-    let idToSend = '';
-    roles.map(val => {
-      if (name === val.name) {
-        idToSend = val.id;
-      }
-    });
-    return idToSend;
-  };
 
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,

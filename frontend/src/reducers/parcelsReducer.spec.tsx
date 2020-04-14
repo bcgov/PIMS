@@ -42,9 +42,16 @@ const defaultParcelDetail: IParcelDetail = {
     landArea: '11',
     landLegalDescription: '12',
     pid: '13',
+    isSensitive: false,
     classification: '14',
     propertyStatus: '15',
     agency: '16',
+    pin: '17',
+    classificationId: '18',
+    statusId: '19',
+    zoning: '20',
+    zoningPotential: '21',
+    agencyId: '22',
   },
 };
 

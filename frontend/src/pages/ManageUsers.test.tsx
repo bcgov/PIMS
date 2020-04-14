@@ -3,18 +3,16 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import Administration from './Administration';
 import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import { render, fireEvent, queryByText } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import ManageUsers from './ManageUsers';
-import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 
 Enzyme.configure({ adapter: new Adapter() });
 

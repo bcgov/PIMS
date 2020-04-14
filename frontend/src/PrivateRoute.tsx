@@ -24,7 +24,7 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
             );
           }
         } else {
-          if (props.location.pathname != '/login') {
+          if (props.location.pathname !== '/login') {
             return <Redirect to={{ pathname: '/login', state: { referer: props.location } }} />;
           }
         }

@@ -6,20 +6,9 @@ import networkReducer from './networkReducer';
 import accessRequestReducer from 'reducers/accessRequestReducer';
 import usersReducer from './usersReducer';
 import { loadingBarReducer } from 'react-redux-loading-bar';
-import { NETWORK_ACTIONS } from 'constants/actionTypes';
 import leafletMouseSlice from './LeafletMouseSlice';
 import userDetailReducer from './userDetailReducer';
 import jwtSlice from './JwtSlice';
-
-const filteredReducer: any = (reducer: any, name: string) => (
-  state: typeof rootReducer,
-  action: any,
-) => {
-  if (name !== action.name && state !== undefined) {
-    return state;
-  }
-  return reducer(state, action);
-};
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,

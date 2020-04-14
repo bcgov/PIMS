@@ -1,6 +1,5 @@
 import * as actionTypes from 'constants/actionTypes';
 import { IPagedItems, IStoreAccessRequestsAction } from 'actions/adminActions';
-import { IPaginate } from 'utils/CommonFunctions';
 
 export interface IAccessRequestState {
   pagedAccessRequests: IPagedItems;
