@@ -13,8 +13,9 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
   dispatch: Function,
 ) => {
   if (
-    parcelBounds?.neLatitude != parcelBounds?.swLatitude &&
-    parcelBounds.neLongitude != parcelBounds.swLongitude
+    !parcelBounds ||
+    (parcelBounds?.neLatitude != parcelBounds?.swLatitude &&
+      parcelBounds.neLongitude != parcelBounds.swLongitude)
   ) {
     dispatch(request(actionTypes.GET_PARCELS));
     dispatch(showLoading());
@@ -80,9 +81,10 @@ export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
       dispatch(fetchParcelDetail(response.data));
       dispatch(hideLoading());
     })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.ADD_PARCEL, axiosError?.response?.status, axiosError)),
-    )
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.ADD_PARCEL, axiosError?.response?.status, axiosError));
+      throw axiosError;
+    })
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -96,8 +98,9 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
       dispatch(fetchParcelDetail(response.data));
       dispatch(hideLoading());
     })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError)),
-    )
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError));
+      throw axiosError;
+    })
     .finally(() => dispatch(hideLoading()));
 };

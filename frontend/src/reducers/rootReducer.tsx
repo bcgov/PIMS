@@ -9,6 +9,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import { NETWORK_ACTIONS } from 'constants/actionTypes';
 import leafletMouseSlice from './LeafletMouseSlice';
 import userDetailReducer from './userDetailReducer';
+import jwtSlice from './JwtSlice';
 
 const filteredReducer: any = (reducer: any, name: string) => (
   state: typeof rootReducer,
@@ -29,6 +30,7 @@ export const reducerObject = {
   [reducerTypes.LOOKUP_CODE]: lookupCodeReducer,
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
+  [reducerTypes.JWT]: jwtSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

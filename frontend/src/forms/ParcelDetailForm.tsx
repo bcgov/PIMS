@@ -1,7 +1,7 @@
-import React, { FunctionComponent, Fragment, useState, useEffect } from 'react';
+import React from 'react';
 import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Formik, FieldArray, FormikBag } from 'formik';
+import { Formik, FieldArray, FormikErrors } from 'formik';
 import _ from 'lodash';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
@@ -16,22 +16,22 @@ import { Form } from 'components/common/form';
 import { FaTimes } from 'react-icons/fa';
 import { decimalOrEmpty } from 'utils';
 import { RootState } from 'reducers/rootReducer';
+import { Persist } from 'components/common/FormikPersist';
 
-import { IParcelDetail, storeParcelDetail, IParcel, IPropertyDetail } from 'actions/parcelsActions';
+import { IParcel, IPropertyDetail } from 'actions/parcelsActions';
+import { clear } from 'actions/genericActions';
+import * as actionTypes from 'constants/actionTypes';
 
 interface ParcelPropertyProps {
   parcelId: number;
-  agencyId: number | undefined;
+  secret: string;
+  agencyId?: number;
   disabled?: boolean;
   updateLatLng: Function;
 }
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  if (!props.agencyId) {
-    //TODO: implement an error boundary and throw an exception here.
-    history.push('/mapView');
-  }
   let initialValues: IParcel = {
     ...defaultLandValues,
     ...defaultPidPinFormValues,
@@ -68,6 +68,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     });
   };
 
+  //Load all data if we are updating a parcel.
   if (activeParcelDetail?.parcelDetail?.id) {
     initialValues = { ...(activeParcelDetail.parcelDetail as IParcel) };
   } else if (props.parcelId) {
@@ -93,18 +94,36 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
             initialValues={initialValues}
             validationSchema={ParcelSchema}
             enableReinitialize
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={(values, { setSubmitting, resetForm, setStatus, setErrors }) => {
+              let response: any;
               if (!values.id) {
-                dispatch(createParcel(values));
+                response = dispatch(createParcel(values));
               } else {
-                dispatch(updateParcel(values));
+                response = dispatch(updateParcel(values));
               }
+              response
+                .then(() => {
+                  dispatch(clear(actionTypes.ADD_PARCEL));
+                  dispatch(clear(actionTypes.UPDATE_PARCEL));
+                  resetForm();
+                  history.goBack();
+                })
+                .error((error: FormikErrors<IParcel>) => {
+                  //swallow, allow global error handling.
+                  //TODO: display errors on specific fields based on the error.
+                });
 
               setSubmitting(false);
             }}
           >
             {formikProps => (
               <Form>
+                <Persist
+                  writeOnly={!!props.parcelId}
+                  initialValues={initialValues}
+                  secret={props.secret}
+                  name="parcelDetailForm"
+                />
                 {props.updateLatLng(formikProps.values)}
                 <Row noGutters>
                   <Col>
