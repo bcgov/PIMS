@@ -7,7 +7,8 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BaseEntityConfiguration class, provides a way to configure base entity in the database.
     ///</summary>
-    public abstract class LookupEntityConfiguration<TBase> : BaseEntityConfiguration<TBase> where TBase : LookupEntity
+    public abstract class LookupEntityConfiguration<TBase, TKey> : BaseEntityConfiguration<TBase>
+        where TBase : LookupEntity<TKey>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<TBase> builder)

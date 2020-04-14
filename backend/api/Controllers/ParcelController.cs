@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -134,6 +134,7 @@ namespace Pims.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
         public IActionResult UpdateParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
@@ -155,6 +156,7 @@ namespace Pims.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/delete/{id})")]
         public IActionResult DeleteParcel(int id, [FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);

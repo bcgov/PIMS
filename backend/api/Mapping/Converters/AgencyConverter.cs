@@ -1,0 +1,22 @@
+using Entity = Pims.Dal.Entities;
+
+
+namespace Pims.Api.Mapping.Converters
+{
+    /// <summary>
+    /// AgencyConverter static class, provides converters for agency.
+    /// </summary>
+    public static class AgencyConverter
+    {
+        public static string ConvertAgency(Entity.Agency source)
+        {
+            if (source?.ParentId == null) return source?.Code;
+            return source.Parent?.Code;
+        }
+
+        public static string ConvertSubAgency(Entity.Agency source)
+        {
+            return source?.ParentId == null ? null : source.Code;
+        }
+    }
+}

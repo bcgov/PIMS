@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;

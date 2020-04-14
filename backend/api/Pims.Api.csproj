@@ -10,14 +10,26 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Areas\Admin\Profiles\**" />
+    <Compile Remove="Areas\Keycloak\Profiles\**" />
+    <Compile Remove="Areas\Tools\Profiles\**" />
     <Compile Remove="Models\Lookup\**" />
-    <Compile Remove="Profiles\Extensions\**" />
+    <Compile Remove="Profiles\**" />
+    <Content Remove="Areas\Admin\Profiles\**" />
+    <Content Remove="Areas\Keycloak\Profiles\**" />
+    <Content Remove="Areas\Tools\Profiles\**" />
     <Content Remove="Models\Lookup\**" />
-    <Content Remove="Profiles\Extensions\**" />
+    <Content Remove="Profiles\**" />
+    <EmbeddedResource Remove="Areas\Admin\Profiles\**" />
+    <EmbeddedResource Remove="Areas\Keycloak\Profiles\**" />
+    <EmbeddedResource Remove="Areas\Tools\Profiles\**" />
     <EmbeddedResource Remove="Models\Lookup\**" />
-    <EmbeddedResource Remove="Profiles\Extensions\**" />
+    <EmbeddedResource Remove="Profiles\**" />
+    <None Remove="Areas\Admin\Profiles\**" />
+    <None Remove="Areas\Keycloak\Profiles\**" />
+    <None Remove="Areas\Tools\Profiles\**" />
     <None Remove="Models\Lookup\**" />
-    <None Remove="Profiles\Extensions\**" />
+    <None Remove="Profiles\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
@@ -29,11 +41,12 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
     <PackageReference Include="DotNetEnv" Version="1.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Mapster.EFCore" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />

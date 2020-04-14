@@ -1,8 +1,6 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
@@ -12,7 +10,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Test.Helpers
@@ -47,7 +44,8 @@ namespace Pims.Api.Test.Helpers
         public async Task HandleResponseAsync_Success(HttpStatusCode code)
         {
             // Arrange
-            var mapper = TestHelper.CreateMapper();
+            var helper = new TestHelper();
+            var mapper = helper.GetMapper();
             var model = mapper.Map<Model.ParcelModel>(EntityHelper.CreateParcel(1));
             var json = System.Text.Json.JsonSerializer.Serialize(model);
             var response = new HttpResponseMessage

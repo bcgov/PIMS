@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// PropertyStatusConfiguration class, provides a way to configure property status in the database.
     ///</summary>
-    public class PropertyStatusConfiguration : LookupEntityConfiguration<PropertyStatus>
+    public class PropertyStatusConfiguration : LookupEntityConfiguration<PropertyStatus, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<PropertyStatus> builder)

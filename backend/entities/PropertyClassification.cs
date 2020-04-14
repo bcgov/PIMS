@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// PropertyClassificationClassification class, provides an entity for the datamodel to manage a list of property classifications.
     /// </summary>
-    public class PropertyClassification : LookupEntity
+    public class PropertyClassification : LookupEntity<int>
     {
         #region Properties
         #endregion

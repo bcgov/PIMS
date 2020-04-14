@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
 using Model = Pims.Api.Models.User;
@@ -10,7 +10,6 @@ using Pims.Api.Helpers.Extensions;
 using Pims.Dal.Services;
 using Pims.Keycloak;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using Pims.Api.Helpers.Exceptions;

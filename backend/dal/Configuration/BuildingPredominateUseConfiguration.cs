@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// BuildingPredominateUseConfiguration class, provides a way to configure building predominate uses in the database.
     ///</summary>
-    public class BuildingPredominateUseConfiguration : LookupEntityConfiguration<BuildingPredominateUse>
+    public class BuildingPredominateUseConfiguration : LookupEntityConfiguration<BuildingPredominateUse, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<BuildingPredominateUse> builder)

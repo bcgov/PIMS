@@ -7,7 +7,7 @@ using Pims.Api.Policies;
 using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
-using AutoMapper;
+using MapsterMapper;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Keycloak.Controllers

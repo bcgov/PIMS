@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Pims.Dal.Entities
 {
     /// <summary>
     /// CodeEntity class, provides an entity for the datamodel to manage entities that represent codified values.
     /// </summary>
-    public abstract class CodeEntity : LookupEntity
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class CodeEntity<TKey> : LookupEntity<TKey>
     {
         #region Properties
         /// <summary>
@@ -28,7 +27,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        public CodeEntity(int id, string code, string name) : base(id, name)
+        public CodeEntity(TKey id, string code, string name) : base(id, name)
         {
             if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException($"Argument '{nameof(code)}' must have a valid value.", nameof(code));
 

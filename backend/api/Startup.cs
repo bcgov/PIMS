@@ -1,5 +1,3 @@
-using AutoMapper;
-using dal.Helpers.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,12 +16,12 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Pims.Api.Helpers.Authorization;
 using Pims.Api.Helpers.Middleware;
 using Pims.Api.Helpers.Routes.Constraints;
 using Pims.Dal;
 using Pims.Dal.Keycloak;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Keycloak;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -36,6 +34,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Mapster;
+using Pims.Api.Helpers.Mapping;
 
 namespace Pims.Api
 {
@@ -78,6 +78,10 @@ namespace Pims.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMapster(options =>
+            {
+                TypeAdapterConfig.GlobalSettings.Default.IgnoreNonMapped(true);
+            });
             services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
 
@@ -159,8 +163,6 @@ namespace Pims.Api
             services.AddHttpContextAccessor();
             services.AddTransient<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);
             services.AddScoped<IKeycloakRequestClient, KeycloakRequestClient>();
-
-            services.AddAutoMapper(typeof(Startup));
 
             services.AddHealthChecks()
                 .AddCheck("liveliness", () => HealthCheckResult.Healthy())

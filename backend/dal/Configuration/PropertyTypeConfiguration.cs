@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// PropertyTypeConfiguration class, provides a way to configure property types in the database.
     ///</summary>
-    public class PropertyTypeConfiguration : LookupEntityConfiguration<PropertyType>
+    public class PropertyTypeConfiguration : LookupEntityConfiguration<PropertyType, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<PropertyType> builder)

@@ -7,7 +7,7 @@ namespace Pims.Dal.Configuration
     /// <summary>
     /// AgencyConfiguration class, provides a way to configure addresses in the database.
     ///</summary>
-    public class AgencyConfiguration : LookupEntityConfiguration<Agency>
+    public class AgencyConfiguration : CodeEntityConfiguration<Agency, int>
     {
         #region Methods
         public override void Configure(EntityTypeBuilder<Agency> builder)

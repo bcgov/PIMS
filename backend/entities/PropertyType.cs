@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// PropertyType class, provides an entity for the datamodel to manage a list of property types.
     /// </summary>
-    public class PropertyType : LookupEntity
+    public class PropertyType : LookupEntity<int>
     {
         #region Properties
         #endregion

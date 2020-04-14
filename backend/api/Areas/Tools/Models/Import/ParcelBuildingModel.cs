@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Tools.Models.Import
@@ -31,9 +32,17 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public string BuildingPredominateUse { get; set; }
 
+        public int BuildingOccupantTypeId { get; set; }
+
+        public string BuildingOccupantType { get; set; }
+
         public string BuildingTenancy { get; set; }
 
         public float RentableArea { get; set; }
+
+        public string OccupantName { get; set; }
+
+        public DateTime? LeaseExpiry { get; set; }
 
         public bool IsSensitive { get; set; }
 

@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,6 +7,7 @@ using Pims.Dal;
 using System.Linq;
 using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 
 namespace Pims.Api.Controllers
 {
@@ -48,11 +49,11 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("agencies")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel<int>>), 200)]
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetAgencies()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgencies());
+            var agencyCodes = _mapper.Map<Model.CodeModel<int>[]>(_pimsService.Lookup.GetAgencies());
             return new JsonResult(agencyCodes.ToArray());
         }
 
@@ -62,11 +63,11 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("roles")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.LookupModel<Guid>>), 200)]
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetRoles()
         {
-            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRoles());
+            var roleCodes = _mapper.Map<Model.LookupModel<Guid>[]>(_pimsService.Lookup.GetRoles());
             return new JsonResult(roleCodes.ToArray());
         }
 
@@ -76,11 +77,11 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("property/classifications")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.LookupModel<int>>), 200)]
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetPropertyClassifications()
         {
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassifications());
+            var propertyClassificationCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyClassifications());
             return new JsonResult(propertyClassificationCodes.ToArray());
         }
 
@@ -90,29 +91,31 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [HttpGet("all")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.CodeModel<object>>), 200)]
         [SwaggerOperation(Tags = new[] { "lookup" })]
         public IActionResult GetAll()
         {
-            var agencyCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetAgencies());
-            var propertyClassificationCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetPropertyClassifications());
-            var roleCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetRoles());
-            var provinceCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetProvinces());
-            var cityCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetCities());
-            var constructionTypeCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingConstructionTypes());
-            var predominateUseCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingPredominateUses());
-            var occupantTypeCodes = _mapper.Map<Model.CodeModel[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
+            var agencyCodes = _mapper.Map<Model.CodeModel<int>[]>(_pimsService.Lookup.GetAgencies());
+            var propertyStatusCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyStatus());
+            var propertyClassificationCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyClassifications());
+            var roleCodes = _mapper.Map<Model.LookupModel<Guid>[]>(_pimsService.Lookup.GetRoles());
+            var provinceCodes = _mapper.Map<Model.LookupModel<string>[]>(_pimsService.Lookup.GetProvinces());
+            var cityCodes = _mapper.Map<Model.CodeModel<int>[]>(_pimsService.Lookup.GetCities());
+            var constructionTypeCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingConstructionTypes());
+            var predominateUseCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingPredominateUses());
+            var occupantTypeCodes = _mapper.Map<Model.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
 
-
-            return new JsonResult(agencyCodes
-                .Concat(propertyClassificationCodes)
-                .Concat(roleCodes)
-                .Concat(provinceCodes)
-                .Concat(cityCodes)
-                .Concat(constructionTypeCodes)
-                .Concat(predominateUseCodes)
-                .Concat(occupantTypeCodes)
-                .ToArray());
+            var codes = new List<object>();
+            codes.AddRange(roleCodes);
+            codes.AddRange(agencyCodes);
+            codes.AddRange(propertyStatusCodes);
+            codes.AddRange(propertyClassificationCodes);
+            codes.AddRange(provinceCodes);
+            codes.AddRange(cityCodes);
+            codes.AddRange(constructionTypeCodes);
+            codes.AddRange(predominateUseCodes);
+            codes.AddRange(occupantTypeCodes);
+            return new JsonResult(codes);
         }
         #endregion
     }
