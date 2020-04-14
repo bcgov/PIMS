@@ -19,8 +19,10 @@ import BuildingForm from './subforms/BuildingForm';
 import EvaluationForm from './subforms/EvaluationForm';
 import LandForm from './subforms/LandForm';
 import PidPinForm from './subforms/PidPinForm';
+import { render, getByText, fireEvent, act, wait } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
+jest.mock('lodash/debounce', () => jest.fn(fn => fn));
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -77,12 +79,12 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-const component = mount(
+const parcelDetailForm = (
   <Provider store={store}>
     <Router history={history}>
-      <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} />
+      <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} secret="test" />
     </Router>
-  </Provider>,
+  </Provider>
 );
 
 it('ParcelDetailForm renders correctly', () => {
@@ -91,7 +93,7 @@ it('ParcelDetailForm renders correctly', () => {
     .create(
       <Provider store={store}>
         <Router history={history}>
-          <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} />
+          <ParcelDetailForm secret="test" updateLatLng={() => {}} agencyId={1} parcelId={0} />
         </Router>
       </Provider>,
     )
@@ -100,13 +102,14 @@ it('ParcelDetailForm renders correctly', () => {
 });
 
 it('loads appropriate cities/provinces in dropwdown for address form', () => {
-  const addrForm = component.find(AddressForm);
+  const addrForm = mount(parcelDetailForm).find(AddressForm);
   expect(addrForm.text()).toContain('test city');
   expect(addrForm.text()).toContain('test province');
 });
 
 // Currently leaves an ugly warning but passes test
 it('provides appropriate specifications to add a new building', () => {
+  const component = mount(parcelDetailForm);
   const addBuilding = component.find('[className="addBuilding btn btn-primary"]');
   addBuilding.simulate('click');
   const buildingForm = component.find(BuildingForm);
@@ -117,6 +120,7 @@ it('provides appropriate specifications to add a new building', () => {
 });
 
 it('add evaluation button will display appropriate form', () => {
+  const component = mount(parcelDetailForm);
   const addEval = component.find('[className="addEval btn btn-primary"]');
   addEval.simulate('click');
   const evalForm = component.find(EvaluationForm);
@@ -124,11 +128,61 @@ it('add evaluation button will display appropriate form', () => {
 });
 
 it('contains appropriate classifcations to add to land', () => {
-  const landForm = component.find(LandForm);
+  const landForm = mount(parcelDetailForm).find(LandForm);
   expect(landForm).toHaveLength(1);
   expect(landForm.text()).toContain('classification test');
 });
 
 it('pidpin form renders', () => {
-  expect(component.find(PidPinForm)).toHaveLength(1);
+  expect(mount(parcelDetailForm).find(PidPinForm)).toHaveLength(1);
+});
+describe('autosave functionality', () => {
+  const persistFormData = async () => {
+    const { container } = render(parcelDetailForm);
+    const address = container.querySelector('input[name="address.line1"]');
+
+    await wait(() => {
+      fireEvent.change(address!, {
+        target: {
+          value: 'mockaddress',
+        },
+      });
+    });
+  };
+  it('form details are autosaved', async () => {
+    await persistFormData();
+    const { container: updatedContainer } = render(parcelDetailForm);
+    const address = updatedContainer.querySelector('input[name="address.line1"]');
+    expect(address).toHaveValue('mockaddress');
+  });
+
+  it('a mismatched encryption key causes no form details to load.', async () => {
+    await persistFormData();
+    const differentKey = (
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} secret="invalid" />
+        </Router>
+      </Provider>
+    );
+
+    const { container: updatedContainer } = render(differentKey);
+    const address = updatedContainer.querySelector('input[name="address.line1"]');
+    expect(address).not.toHaveValue('mockaddress');
+  });
+
+  it('no data is loaded if this is an update or view', async () => {
+    await persistFormData();
+    const updateForm = (
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={1} secret="invalid" />
+        </Router>
+      </Provider>
+    );
+
+    const { container: updatedContainer } = render(updateForm);
+    const address = updatedContainer.querySelector('input[name="address.line1"]');
+    expect(address).not.toHaveValue('mockaddress');
+  });
 });

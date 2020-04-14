@@ -114,6 +114,11 @@ exports[`ParcelPopupView renders correctly 1`] = `
       <a
         href="/submitProperty/1"
         onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": "8px",
+          }
+        }
       >
         Update
       </a>

@@ -21,6 +21,7 @@ export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
 export const GET_REQUEST_ACCESS = 'getRequestAccess';
 export const GET_USERS = 'getUsers';
 
+export const JWT = 'jwt';
 export const LEAFLET_CLICK_EVENT = 'leafletClickEvent';
 export const GET_USER_DETAIL = 'GET_USER_DETAIL';
 export const PUT_USER_DETAIL = 'PUT_USER_DETAIL';
