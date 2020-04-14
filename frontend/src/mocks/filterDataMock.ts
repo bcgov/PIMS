@@ -53,30 +53,35 @@ export const CLASSIFICATIONS = [
 
 export const AGENCIES = [
   {
+    code: 'AEST',
     name: 'AEST',
     id: '1',
     isDisabled: false,
     type: 'Agency',
   },
   {
+    code: 'HTLH',
     name: 'HTLH',
     id: '2',
     isDisabled: false,
     type: 'Agency',
   },
   {
+    code: 'MOTI',
     name: 'MOTI',
     id: '3',
     isDisabled: false,
     type: 'Agency',
   },
   {
+    code: 'FLNR',
     name: 'FLNR',
     id: '4',
     isDisabled: false,
     type: 'Agency',
   },
   {
+    code: 'MAH',
     name: 'MAH',
     id: '5',
     isDisabled: false,

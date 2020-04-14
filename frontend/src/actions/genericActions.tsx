@@ -1,5 +1,5 @@
 import * as ActionTypes from 'constants/actionTypes';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 export interface IGenericNetworkAction {
   isFetching: boolean;

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Form, Col } from 'react-bootstrap';
-import { Input } from '.';
 
 interface InlineFieldProps {
   field: string;

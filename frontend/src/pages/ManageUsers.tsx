@@ -8,7 +8,6 @@ import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
 import WrappedPaginate from 'components/common/WrappedPaginate';
-import _ from 'lodash';
 
 const ManageUsers = () => {
   const dispatch = useDispatch();

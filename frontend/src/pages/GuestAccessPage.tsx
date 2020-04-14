@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FormikLookupCodeDropdown } from 'components/common/LookupCodeDropdown';
 import { ILookupCode } from 'actions/lookupActions';
-import { IPagedItems } from 'actions/adminActions';
 import { getSubmitAccessRequestAction, toAccessRequest } from 'actionCreators/usersActionCreator';
 import { Formik, Form, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
