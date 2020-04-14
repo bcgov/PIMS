@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Pims.Core.Helpers;
 using Pims.Dal;
 using Pims.Dal.Security;
 
@@ -16,13 +18,14 @@ namespace Pims.Core.Test
         /// Uses an InMemoryDatabase instead of relational.
         /// </summary>
         /// <param name="helper"></param>
+        /// <param name="dbName"></param>
         /// <param name="permission"></param>
         /// <param name="ensureDeleted"></param>
         /// <returns></returns>
-        public static PimsContext CreatePimsContext(this TestHelper helper, Permissions permission, bool ensureDeleted = false)
+        public static PimsContext CreatePimsContext(this TestHelper helper, string dbName, Permissions permission, bool ensureDeleted = false)
         {
             var user = PrincipalHelper.CreateForPermission(permission);
-            return helper.CreatePimsContext(user, ensureDeleted);
+            return helper.CreatePimsContext(dbName, user, ensureDeleted);
         }
 
         /// <summary>
@@ -30,40 +33,15 @@ namespace Pims.Core.Test
         /// Uses an InMemoryDatabase instead of relational.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="permission"></param>
         /// <param name="dbName"></param>
-        /// <param name="ensureDeleted"></param>
-        /// <returns></returns>
-        public static PimsContext CreatePimsContext(this TestHelper helper, Permissions permission, string dbName = "pims-test", bool ensureDeleted = false)
-        {
-            var user = PrincipalHelper.CreateForPermission(permission);
-            return helper.CreatePimsContext(user, dbName, ensureDeleted);
-        }
-
-        /// <summary>
-        /// Creates an instance of a PimsContext and initializes it with the specified 'user'.
-        /// Uses an InMemoryDatabase instead of relational.
-        /// </summary>
-        /// <param name="helper"></param>
         /// <param name="user"></param>
         /// <param name="ensureDeleted"></param>
         /// <returns></returns>
-        public static PimsContext CreatePimsContext(this TestHelper helper, ClaimsPrincipal user, bool ensureDeleted = false)
+        public static PimsContext CreatePimsContext(this TestHelper helper, string dbName, ClaimsPrincipal user, bool ensureDeleted = false)
         {
-            return helper.CreatePimsContext(user, "pims-test", ensureDeleted);
-        }
+            // Generate a randome database name.
+            if (String.IsNullOrWhiteSpace(dbName)) dbName = StringHelper.Generate(10);
 
-        /// <summary>
-        /// Creates an instance of a PimsContext and initializes it with the specified 'user'.
-        /// Uses an InMemoryDatabase instead of relational.
-        /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="user"></param>
-        /// <param name="dbName"></param>
-        /// <param name="ensureDeleted"></param>
-        /// <returns></returns>
-        public static PimsContext CreatePimsContext(this TestHelper helper, ClaimsPrincipal user, string dbName = "pims-test", bool ensureDeleted = false)
-        {
             helper.AddSingleton(user);
             var options = new DbContextOptionsBuilder<PimsContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
@@ -85,12 +63,12 @@ namespace Pims.Core.Test
         /// Initializes the database with default data to support other tables.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="user"></param>
         /// <param name="dbName"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public static PimsContext InitializeDatabase(this TestHelper helper, ClaimsPrincipal user, string dbName = "pims-test")
+        public static PimsContext InitializeDatabase(this TestHelper helper, string dbName, ClaimsPrincipal user)
         {
-            var context = helper.CreatePimsContext(user, dbName, true);
+            var context = helper.CreatePimsContext(dbName, user, true);
             context.AddData(EntityHelper.CreatePropertyClassifications());
             context.AddData(EntityHelper.CreatePropertyStatuses());
             context.AddData(EntityHelper.CreateProvinces());

@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// BuildingOccupantType class, provides an entity for the datamodel to manage a list of building occupant types.
     /// </summary>
-    public class BuildingOccupantType : LookupEntity
+    public class BuildingOccupantType : LookupEntity<int>
     {
         #region Properties
         #endregion

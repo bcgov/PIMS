@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Keycloak.Models.Role;

@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// BuildingPredominateUse class, provides an entity for the datamodel to manage a list of building predominate uses.
     /// </summary>
-    public class BuildingPredominateUse : LookupEntity
+    public class BuildingPredominateUse : LookupEntity<int>
     {
         #region Properties
         #endregion

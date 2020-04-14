@@ -3,7 +3,7 @@ namespace Pims.Api.Models.Parcel
     public class ParcelEvaluationModel : BaseModel
     {
         #region Properties
-        public int PropertyId { get; set; }
+        public int ParcelId { get; set; }
 
         public int FiscalYear { get; set; }
 

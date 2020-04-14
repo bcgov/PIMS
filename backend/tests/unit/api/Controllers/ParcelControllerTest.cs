@@ -1,4 +1,4 @@
-using AutoMapper;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Model = Pims.Api.Models.Parcel;
@@ -221,7 +221,7 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
             Assert.Equal(parcel.Id, actualResult.Id);
             Assert.Equal(parcel.ParcelIdentity, actualResult.PID);
-            Assert.Equal(parcel.PIN == null ? null : parcel.PIN.ToString(), actualResult.PIN);
+            Assert.Equal(parcel.PIN, actualResult.PIN);
             Assert.Equal(parcel.StatusId, actualResult.StatusId);
             Assert.Equal(parcel.ClassificationId, actualResult.ClassificationId);
             Assert.Equal(parcel.AgencyId, actualResult.AgencyId);

@@ -7,9 +7,12 @@ using Moq;
 using Model = Pims.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
-using AutoMapper;
+using MapsterMapper;
 using Pims.Core.Test;
 using Pims.Core.Comparers;
+using System.Collections.Generic;
+using System.Linq;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -51,8 +54,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(agency) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Model.CodeModel<int>[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.CodeModel<int>>(agency) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetAgencies(), Times.Once());
         }
 
@@ -77,8 +80,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(propertyClassification) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Model.LookupModel<int>[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.LookupModel<int>>(propertyClassification) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetPropertyClassifications(), Times.Once());
         }
 
@@ -105,8 +108,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.CodeModel[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel>(role) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Model.LookupModel<Guid>[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.LookupModel<Guid>>(role) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetRoles(), Times.Once());
         }
 
@@ -120,52 +123,48 @@ namespace Pims.Api.Test.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var pimsService = helper.GetService<Mock<IPimsService>>();
-            var role = new Entity.Role
-            {
-                Id = Guid.NewGuid(),
-                Name = "Ministry of Health",
-                Description = "The Ministry of Health"
-            };
+            var role = EntityHelper.CreateRole("admin");
             pimsService.Setup(m => m.Lookup.GetRoles()).Returns(new[] { role });
 
-            var propertyClassification = new Entity.PropertyClassification
-            {
-                Name = "Surplus Active",
-            };
-            pimsService.Setup(m => m.Lookup.GetPropertyClassifications()).Returns(new[] { propertyClassification });
-
-            var agency = new Entity.Agency
-            {
-                Code = "MOH",
-                Name = "Ministry of Health",
-                Description = "The Ministry of Health"
-            };
+            var agency = EntityHelper.CreateAgency();
             pimsService.Setup(m => m.Lookup.GetAgencies()).Returns(new[] { agency });
 
+            var propertyStatus = EntityHelper.CreatePropertyStatus("status");
+            pimsService.Setup(m => m.Lookup.GetPropertyStatus()).Returns(new[] { propertyStatus });
+
+            var propertyClassification = EntityHelper.CreatePropertyClassification("class");
+            pimsService.Setup(m => m.Lookup.GetPropertyClassifications()).Returns(new[] { propertyClassification });
+
+            var province = EntityHelper.CreateProvince("BC", "British Columbia");
+            pimsService.Setup(m => m.Lookup.GetProvinces()).Returns(new[] { province });
+
+            var city = EntityHelper.CreateCity("VIC", "Victoria");
+            pimsService.Setup(m => m.Lookup.GetCities()).Returns(new[] { city });
+
+            var buildingConstructionType = EntityHelper.CreateBuildingConstructionType("type");
+            pimsService.Setup(m => m.Lookup.GetBuildingConstructionTypes()).Returns(new[] { buildingConstructionType });
+
+            var buildingPredominateUse = EntityHelper.CreateBuildingPredominateUse("use");
+            pimsService.Setup(m => m.Lookup.GetBuildingPredominateUses()).Returns(new[] { buildingPredominateUse });
+
+            var buildingOccupantType = EntityHelper.CreateBuildingOccupantType("occupant");
+            pimsService.Setup(m => m.Lookup.GetBuildingOccupantTypes()).Returns(new[] { buildingOccupantType });
+
             // Act
-            var agencyResult = controller.GetAgencies();
-            var classificationResult = controller.GetPropertyClassifications();
-            var roleResult = controller.GetRoles();
             var result = controller.GetAll();
 
             // Assert
-            var actionResult = Assert.IsType<JsonResult>(result); // TODO: Should not be testing all four functions.
-            var agencyAction = Assert.IsType<JsonResult>(agencyResult);
-            var roleAction = Assert.IsType<JsonResult>(roleResult);
-            var classificationAction = Assert.IsType<JsonResult>(classificationResult);
-
-            string allResult = JsonConvert.SerializeObject(actionResult.Value);
-            string agenciesResult = JsonConvert.SerializeObject(agencyAction.Value);
-            string rolesResult = JsonConvert.SerializeObject(roleAction.Value);
-            string classificationsResult = JsonConvert.SerializeObject(classificationAction.Value);
-
-            // Removing corresponding []'s as GetAll returns [{one,combined,list}]
-            Assert.StartsWith(agenciesResult.Remove(agenciesResult.Length - 1, 1), allResult);
-            Assert.Contains(classificationsResult[1..^1], allResult);
-            Assert.EndsWith(rolesResult.Substring(1), allResult);
-            pimsService.Verify(m => m.Lookup.GetAgencies(), Times.Exactly(2));
-            pimsService.Verify(m => m.Lookup.GetPropertyClassifications(), Times.Exactly(2));
-            pimsService.Verify(m => m.Lookup.GetRoles(), Times.Exactly(2));
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsAssignableFrom<IEnumerable<object>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.LookupModel<Guid>>(role), actualResult.First(), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.CodeModel<int>>(agency), actualResult.Next(1), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<int>>(propertyStatus), actualResult.Next(2), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<int>>(propertyClassification), actualResult.Next(3), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<string>>(province), actualResult.Next(4), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.CodeModel<int>>(city), actualResult.Next(5), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingConstructionType), actualResult.Next(6), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingPredominateUse), actualResult.Next(7), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingOccupantType), actualResult.Next(8), new ShallowPropertyCompare());
         }
         #endregion
     }

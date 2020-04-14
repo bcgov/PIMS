@@ -1,4 +1,6 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace Pims.Core.Comparers
 {
@@ -9,6 +11,7 @@ namespace Pims.Core.Comparers
     /// <typeparam name="T"></typeparam>
     public class ShallowPropertyCompare<T> : ShallowPropertyCompare
     {
+        #region Methods
         /// <summary>
         /// Determines if the objects public properties are equal.
         /// </summary>
@@ -31,5 +34,6 @@ namespace Pims.Core.Comparers
         {
             return base.GetHashCode(obj);
         }
+        #endregion
     }
 }

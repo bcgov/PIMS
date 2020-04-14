@@ -5,21 +5,9 @@ namespace Pims.Api.Areas.Keycloak.Models.Role
     /// <summary>
     /// RoleModel class, provides a model that represents a role.
     /// </summary>
-    public class RoleModel : Pims.Api.Models.BaseModel
+    public class RoleModel : Api.Models.LookupModel<Guid>
     {
         #region Properties
-        /// <summary>
-        /// get/set - A unique identify for the role.
-        /// </summary>
-        /// <value></value>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// get/set - A unique name to identify the role.
-        /// </summary>
-        /// <value></value>
-        public string Name { get; set; }
-
         /// <summary>
         /// get/set - The role description.
         /// </summary>

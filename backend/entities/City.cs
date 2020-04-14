@@ -3,7 +3,7 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// City class, provides an entity for the datamodel to manage a list of cities.
     /// </summary>
-    public class City : CodeEntity
+    public class City : CodeEntity<int>
     {
         #region Properties
         #endregion

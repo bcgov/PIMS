@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Pims.Dal;
 
-namespace dal.Helpers.Extensions
+namespace Pims.Dal.Helpers.Extensions
 {
     /// <summary>
     /// ApplicationBuilderExtensions static class, provides extension methods for ApplicationBuilder objects.

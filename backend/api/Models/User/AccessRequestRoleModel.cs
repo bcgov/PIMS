@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Models.User
@@ -5,7 +6,7 @@ namespace Pims.Api.Models.User
     /// <summary>
     /// AccessRequestRoleModel class, provides a model that represents a role attached to an access request.
     /// </summary>
-    public class AccessRequestRoleModel : CodeModel
+    public class AccessRequestRoleModel : CodeModel<Guid> // TODO: Why does this inherit from CodeModel?
     {
         #region Properties
         public string Description { get; set; }
