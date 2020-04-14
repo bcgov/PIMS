@@ -42,9 +42,9 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
-            var parcel = new Entity.Parcel(51, 25);
+            var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
-            var building = new Entity.Building(51, 25);
+            var building = new Entity.Building(parcel, 51, 25);
             var buildings = new[] { building };
             var filter = new PropertyFilterModel(50, 25, 50, 20);
 
@@ -75,9 +75,9 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
-            var parcel = new Entity.Parcel(51, 25);
+            var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
-            var building = new Entity.Building(51, 25);
+            var building = new Entity.Building(parcel, 51, 25);
             var buildings = new[] { building };
             var filter = new PropertyFilterModel(50, 25, 50, 25);
 
@@ -108,8 +108,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
-            var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
-            var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
+            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
+            var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
             var parcels = new[] { parcel1, parcel2 };
             var filter = new PropertyFilterModel(100, 100, 0, 0) { StatusId = 1 };
 
@@ -139,8 +139,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
 
-            var building1 = new Entity.Building(51, 25) { Id = 1 };
-            var building2 = new Entity.Building(51, 26) { Id = 2 };
+            var building1 = new Entity.Building() { Id = 1 };
+            var building2 = new Entity.Building() { Id = 2 };
             var buildings = new[] { building1, building2 };
             var filter = new PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 };
 
@@ -170,8 +170,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, new Uri("http://host/api/properties?Agencies=1,2"));
 
-            var parcel1 = new Entity.Parcel(51, 25) { Id = 1 };
-            var parcel2 = new Entity.Parcel(51, 26) { Id = 2 };
+            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
+            var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
             var parcels = new[] { parcel1, parcel2 };
 
             var service = helper.GetService<Mock<IPimsService>>();

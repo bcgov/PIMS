@@ -1,6 +1,8 @@
-namespace Pims.Api.Areas.Tools.Models.Import
+using Model = Pims.Api.Models;
+
+namespace Pims.Api.Areas.Admin.Models.Parcel
 {
-    public class PropertyModel : Pims.Api.Models.BaseModel
+    public class PropertyModel : Model.BaseModel
     {
         #region Properties
         public int Id { get; set; }

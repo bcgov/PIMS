@@ -302,6 +302,9 @@ namespace Pims.Dal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("ClassificationId")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -339,6 +342,10 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("ParcelId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProjectNumber")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<float>("RentableArea")
                         .HasColumnType("real");
 
@@ -346,6 +353,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TransferLeaseOnSale")
                         .ValueGeneratedOnAdd()
@@ -370,13 +380,17 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("BuildingPredominateUseId");
 
+                    b.HasIndex("ClassificationId");
+
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ParcelId");
 
+                    b.HasIndex("StatusId");
+
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -757,6 +771,10 @@ namespace Pims.Dal.Migrations
 
                     b.Property<int?>("PIN")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProjectNumber")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -1435,6 +1453,11 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("BuildingPredominateUseId")
                         .IsRequired();
 
+                    b.HasOne("Pims.Dal.Entities.PropertyClassification", "Classification")
+                        .WithMany()
+                        .HasForeignKey("ClassificationId")
+                        .IsRequired();
+
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -1442,6 +1465,11 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.Parcel", "Parcel")
                         .WithMany("Buildings")
                         .HasForeignKey("ParcelId")
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.PropertyStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", null)

@@ -87,7 +87,7 @@ namespace Pims.Dal.Test.Services
 
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
-            var parcels = init.CreateParcels(1, 7);
+            var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Latitude = 50;
             parcels.Next(0).Longitude = 25;
             parcels.Next(1).Agency = init.Agencies.Find(3);

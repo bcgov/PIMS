@@ -69,6 +69,9 @@ namespace Pims.Dal.Services.Admin
             if (!String.IsNullOrWhiteSpace(filter.Address))
                 query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
 
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
 
