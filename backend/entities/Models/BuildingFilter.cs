@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
@@ -8,39 +7,9 @@ namespace Pims.Dal.Entities.Models
     /// <summary>
     /// BuildingFilter class, provides a model for filtering building queries.
     /// </summary>
-    public class BuildingFilter
+    public class BuildingFilter : PropertyFilter
     {
         #region Properties
-        /// <summary>
-        /// get/set - North East Latitude.
-        /// </summary>
-        /// <value></value>
-        public double? NELatitude { get; set; }
-
-        /// <summary>
-        /// get/set - North East Longitude.
-        /// </summary>
-        /// <value></value>
-        public double? NELongitude { get; set; }
-
-        /// <summary>
-        /// get/set - South West Latitude.
-        /// </summary>
-        /// <value></value>
-        public double? SWLatitude { get; set; }
-
-        /// <summary>
-        /// get/set - South West Longitude.
-        /// </summary>
-        /// <value></value>
-        public double? SWLongitude { get; set; }
-
-        /// <summary>
-        /// get/set - The property address.
-        /// </summary>
-        /// <value></value>
-        public string Address { get; set; }
-
         /// <summary>
         /// get/set - Building construction type Id.
         /// </summary>
@@ -76,42 +45,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public float? MaxRentableArea { get; set; }
-
-        /// <summary>
-        /// get/set - Building minimum estimated value.
-        /// </summary>
-        /// <value></value>
-        public float? MinEstimatedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Building maximum estimated value.
-        /// </summary>
-        /// <value></value>
-        public float? MaxEstimatedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Building minimum assessed value.
-        /// </summary>
-        /// <value></value>
-        public float? MinAssessedValue { get; set; }
-
-        /// <summary>
-        /// get/set - Building maximum assessed value.
-        /// </summary>
-        /// <value></value>
-        public float? MaxAssessedValue { get; set; }
-
-        /// <summary>
-        /// get/set - An array of agencies.
-        /// </summary>
-        /// <value></value>
-        public int[] Agencies { get; set; }
-
-        /// <summary>
-        /// get/set - An array of sorting building conditions (i.e. AgencyId desc, ClassificationId asc)
-        /// </summary>
-        /// <value></value>
-        public string[] Sort { get; set; }
         #endregion
 
         #region Constructors
@@ -127,12 +60,8 @@ namespace Pims.Dal.Entities.Models
         /// <param name="neLong"></param>
         /// <param name="swLat"></param>
         /// <param name="swLong"></param>
-        public BuildingFilter(double neLat, double neLong, double swLat, double swLong)
+        public BuildingFilter(double neLat, double neLong, double swLat, double swLong) : base(neLat, neLong, swLat, swLong)
         {
-            this.NELatitude = neLat;
-            this.NELongitude = neLong;
-            this.SWLatitude = swLat;
-            this.SWLongitude = swLong;
         }
 
         /// <summary>
@@ -175,29 +104,16 @@ namespace Pims.Dal.Entities.Models
         /// Extracts the properties from the query string to generate the filter.
         /// </summary>
         /// <param name="query"></param>
-        public BuildingFilter(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query)
+        public BuildingFilter(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query) : base(query)
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
-            this.NELongitude = filter.GetDoubleNullValue(nameof(this.NELongitude));
-            this.SWLatitude = filter.GetDoubleNullValue(nameof(this.SWLatitude));
-            this.SWLongitude = filter.GetDoubleNullValue(nameof(this.SWLongitude));
-
-            this.Address = filter.GetStringValue(nameof(this.Address));
             this.ConstructionTypeId = filter.GetIntNullValue(nameof(this.ConstructionTypeId));
             this.PredominateUseId = filter.GetIntNullValue(nameof(this.PredominateUseId));
             this.FloorCount = filter.GetIntNullValue(nameof(this.FloorCount));
             this.Tenancy = filter.GetStringValue(nameof(this.Tenancy));
             this.MinRentableArea = filter.GetFloatNullValue(nameof(this.MinRentableArea));
             this.MaxRentableArea = filter.GetFloatNullValue(nameof(this.MaxRentableArea));
-            this.MinEstimatedValue = filter.GetFloatNullValue(nameof(this.MinEstimatedValue));
-            this.MaxEstimatedValue = filter.GetFloatNullValue(nameof(this.MaxEstimatedValue));
-            this.MinAssessedValue = filter.GetFloatNullValue(nameof(this.MinAssessedValue));
-            this.MaxAssessedValue = filter.GetFloatNullValue(nameof(this.MaxAssessedValue));
-
-            this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
-            this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
         }
         #endregion
 
@@ -208,18 +124,9 @@ namespace Pims.Dal.Entities.Models
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public bool ValidFilter()
+        public override bool ValidFilter()
         {
-            return this.NELatitude.HasValue
-                || this.NELongitude.HasValue
-                || this.SWLatitude.HasValue
-                || this.SWLongitude.HasValue
-                || !String.IsNullOrWhiteSpace(this.Address)
-                || this.MaxAssessedValue.HasValue
-                || this.MinAssessedValue.HasValue
-                || this.MinEstimatedValue.HasValue
-                || this.MaxEstimatedValue.HasValue
-                || this.Agencies?.Any() == true
+            return base.ValidFilter()
                 || this.ConstructionTypeId.HasValue
                 || this.PredominateUseId.HasValue
                 || this.FloorCount.HasValue

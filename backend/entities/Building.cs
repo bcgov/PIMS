@@ -7,14 +7,9 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// Building class, provides an entity for the datamodel to manage buildings.
     /// </summary>
-    public class Building : BaseEntity
+    public class Building : Property
     {
         #region Properties
-        /// <summary>
-        /// get/set - The primary key IDENTITY SEED.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// get/set - The foreign key to the parcel.  This is not the PID value.
         /// </summary>
@@ -29,32 +24,6 @@ namespace Pims.Dal.Entities
         /// get/set - The local identification number.
         /// </summary>
         public string LocalId { get; set; }
-
-        /// <summary>
-        /// get/set - The property description.
-        /// </summary>
-        /// <value></value>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the property address.
-        /// </summary>
-        public int AddressId { get; set; }
-
-        /// <summary>
-        /// get/set - The address for this property.
-        /// </summary>
-        public Address Address { get; set; }
-
-        /// <summary>
-        /// get/set - The Latitude co-ordinate.
-        /// </summary>
-        public double Latitude { get; set; }
-
-        /// <summary>
-        /// get/set - The longitude co-ordinate.
-        /// </summary>
-        public double Longitude { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property building construction type.
@@ -92,16 +61,6 @@ namespace Pims.Dal.Entities
         public float RentableArea { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the agency that owns this building.
-        /// </summary>
-        public int AgencyId { get; set; }
-
-        /// <summary>
-        /// get/set - The agency this building belongs to.
-        /// </summary>
-        public Agency Agency { get; set; }
-
-        /// <summary>
         /// get/set - The foreign key to the building occupant type.
         /// </summary>
         public int BuildingOccupantTypeId { get; set; }
@@ -127,11 +86,6 @@ namespace Pims.Dal.Entities
         public bool TransferLeaseOnSale { get; set; } = false;
 
         /// <summary>
-        /// get/set - Whether this building is considered sensitive and should only be visible to users who are part of the owning agency.
-        /// </summary>
-        public bool IsSensitive { get; set; }
-
-        /// <summary>
         /// get - A collection of evaluations for this building.
         /// </summary>
         /// <typeparam name="BuildingEvaluation"></typeparam>
@@ -152,12 +106,13 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lng"></param>
-        public Building (double lat, double lng)
+        /// <param name="parcel"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        public Building (Parcel parcel, double latitude, double longitude) : base(latitude, longitude)
         {
-            this.Latitude = lat;
-            this.Longitude = lng;
+            this.Parcel = parcel ?? throw new ArgumentNullException(nameof(parcel));
+            this.ParcelId = parcel.Id;
         }
         #endregion
     }

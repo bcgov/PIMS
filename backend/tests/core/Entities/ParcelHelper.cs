@@ -40,10 +40,9 @@ namespace Pims.Core.Test
             var classification = EntityHelper.CreatePropertyClassification("classification");
             var status = EntityHelper.CreatePropertyStatus("status");
 
-            return new Entity.Parcel(lat, lng)
+            return new Entity.Parcel(pid, lat, lng)
             {
                 Id = pid,
-                PID = pid,
                 Agency = agency,
                 AgencyId = agency.Id,
                 Address = address,
@@ -104,10 +103,9 @@ namespace Pims.Core.Test
             var classification = context.PropertyClassifications.FirstOrDefault() ?? EntityHelper.CreatePropertyClassification("classification");
             var status = context.PropertyStatus.FirstOrDefault() ?? EntityHelper.CreatePropertyStatus("status");
 
-            var parcel = new Entity.Parcel(lat, lng)
+            var parcel = new Entity.Parcel(pid, lat, lng)
             {
                 Id = pid,
-                PID = pid,
                 Agency = agency,
                 AgencyId = agency.Id,
                 Address = address,
