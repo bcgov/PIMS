@@ -1,6 +1,6 @@
-namespace Pims.Api.Areas.Tools.Models.Import
+namespace Pims.Api.Models.Parcel
 {
-    public class PropertyModel : Pims.Api.Models.BaseModel
+    public class PropertyModel : BaseModel
     {
         #region Properties
         public int Id { get; set; }
@@ -28,7 +28,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
-
+        
         public bool IsSensitive { get; set; }
         #endregion
     }

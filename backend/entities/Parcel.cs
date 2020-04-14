@@ -7,16 +7,11 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// Parcel class, provides an entity for the datamodel to manage parcels.
     /// </summary>
-    public class Parcel : BaseEntity
+    public class Parcel : Property
     {
         #region Properties
         /// <summary>
-        /// get/set - The primary key IDENTITY SEED.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// get/set - The parcel identification number for Titled land.
+        /// get/set - The property identification number for Titled land.
         /// </summary>
         public int PID { get; set; }
 
@@ -27,65 +22,10 @@ namespace Pims.Dal.Entities
         public string ParcelIdentity { get { return this.PID > 0 ? $"{this.PID:000-000-000}" : null; } }
 
         /// <summary>
-        /// get/set - The parcel identification number of Crown Lands Registry that are not Titled.
+        /// get/set - The property identification number of Crown Lands Registry that are not Titled.
         /// </summary>
         /// <value></value>
         public int? PIN { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the property status.
-        /// </summary>
-        public int StatusId { get; set; }
-
-        /// <summary>
-        /// get/set - The status for this property.
-        /// </summary>
-        public PropertyStatus Status { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the property classification.
-        /// </summary>
-        public int ClassificationId { get; set; }
-
-        /// <summary>
-        /// get/set - The classification for this property.
-        /// </summary>
-        public PropertyClassification Classification { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the agency that owns this parcel.
-        /// </summary>
-        public int AgencyId { get; set; }
-
-        /// <summary>
-        /// get/set - The agency this parcel belongs to.
-        /// /summary>
-        public Agency Agency { get; set; }
-
-        /// <summary>
-        /// get/set - The property description.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the property address.
-        /// </summary>
-        public int AddressId { get; set; }
-
-        /// <summary>
-        /// get/set - The address for this property.
-        /// </summary>
-        public Address Address { get; set; }
-
-        /// <summary>
-        /// get/set - The Latitude co-ordinate.
-        /// </summary>
-        public double Latitude { get; set; }
-
-        /// <summary>
-        /// get/set - The longitude co-ordinate.
-        /// </summary>
-        public double Longitude { get; set; }
 
         /// <summary>
         /// get/set - The land area.
@@ -111,11 +51,6 @@ namespace Pims.Dal.Entities
         /// get/set - Potential future Parcel zoning information
         /// </summary>
         public string ZoningPotential { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this parcel is considered sensitive and should only be visible to users who are part of the owning agency.
-        /// </summary>
-        public bool IsSensitive { get; set; }
 
         /// <summary>
         /// get/set - A collection of buildings on this parcel.
@@ -144,12 +79,12 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a Parcel class.
         /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lng"></param>
-        public Parcel(double lat, double lng)
+        /// <param name="pid"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        public Parcel(int pid, double latitude, double longitude) : base(latitude, longitude)
         {
-            this.Latitude = lat;
-            this.Longitude = lng;
+            this.PID = pid;
         }
         #endregion
     }

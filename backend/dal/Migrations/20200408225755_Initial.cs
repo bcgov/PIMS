@@ -699,8 +699,7 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    PID = table.Column<int>(nullable: false),
-                    PIN = table.Column<int>(nullable: true),
+                    ProjectNumber = table.Column<string>(maxLength: 50, nullable: true),
                     StatusId = table.Column<int>(nullable: false),
                     ClassificationId = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
@@ -708,12 +707,14 @@ namespace Pims.Dal.Migrations
                     AddressId = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
+                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false),
+                    PID = table.Column<int>(nullable: false),
+                    PIN = table.Column<int>(nullable: true),
                     LandArea = table.Column<float>(nullable: false),
                     LandLegalDescription = table.Column<string>(maxLength: 500, nullable: true),
                     Municipality = table.Column<string>(maxLength: 250, nullable: true),
                     Zoning = table.Column<string>(maxLength: 250, nullable: true),
-                    ZoningPotential = table.Column<string>(maxLength: 250, nullable: true),
-                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
+                    ZoningPotential = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -767,23 +768,26 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    ParcelId = table.Column<int>(nullable: false),
-                    LocalId = table.Column<string>(maxLength: 50, nullable: true),
+                    ProjectNumber = table.Column<string>(maxLength: 50, nullable: true),
+                    StatusId = table.Column<int>(nullable: false),
+                    ClassificationId = table.Column<int>(nullable: false),
+                    AgencyId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     AddressId = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
+                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false),
+                    ParcelId = table.Column<int>(nullable: false),
+                    LocalId = table.Column<string>(maxLength: 50, nullable: true),
                     BuildingConstructionTypeId = table.Column<int>(nullable: false),
                     BuildingFloorCount = table.Column<int>(nullable: false),
                     BuildingPredominateUseId = table.Column<int>(nullable: false),
                     BuildingTenancy = table.Column<string>(nullable: false),
                     RentableArea = table.Column<float>(nullable: false),
-                    AgencyId = table.Column<int>(nullable: false),
                     BuildingOccupantTypeId = table.Column<int>(nullable: false),
                     LeaseExpiry = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     OccupantName = table.Column<string>(maxLength: 100, nullable: true),
-                    TransferLeaseOnSale = table.Column<bool>(nullable: false, defaultValue: false),
-                    IsSensitive = table.Column<bool>(nullable: false, defaultValue: false)
+                    TransferLeaseOnSale = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -819,6 +823,12 @@ namespace Pims.Dal.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Buildings_PropertyClassifications_ClassificationId",
+                        column: x => x.ClassificationId,
+                        principalTable: "PropertyClassifications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Buildings_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
@@ -828,6 +838,12 @@ namespace Pims.Dal.Migrations
                         name: "FK_Buildings_Parcels_ParcelId",
                         column: x => x.ParcelId,
                         principalTable: "Parcels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Buildings_PropertyStatus_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "PropertyStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1127,6 +1143,11 @@ namespace Pims.Dal.Migrations
                 column: "BuildingPredominateUseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Buildings_ClassificationId",
+                table: "Buildings",
+                column: "ClassificationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Buildings_CreatedById",
                 table: "Buildings",
                 column: "CreatedById");
@@ -1137,14 +1158,19 @@ namespace Pims.Dal.Migrations
                 column: "ParcelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Buildings_StatusId",
+                table: "Buildings",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Buildings_UpdatedById",
                 table: "Buildings",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_BuildingConstructionTypeId_BuildingPredominateUseId_BuildingOccupa~",
+                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_StatusId_ClassificationId_BuildingConstructionTypeId_BuildingPredo~",
                 table: "Buildings",
-                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
+                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",
