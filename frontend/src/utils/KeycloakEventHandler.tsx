@@ -1,14 +1,16 @@
 import { KeycloakEventHandler } from '@react-keycloak/web';
 import { KeycloakInstance } from 'keycloak-js';
+import { store } from 'App';
+import { saveJwt, clearJwt } from 'reducers/JwtSlice';
 
 const getKeycloakEventHandler = (keycloak: KeycloakInstance) => {
   const keycloakEventHandler: KeycloakEventHandler = (event, error) => {
     if (event === 'onAuthSuccess') {
-      localStorage.setItem('jwt', keycloak.token!!);
+      store.dispatch(saveJwt(keycloak.token!));
     } else if (event === 'onAuthRefreshSuccess') {
-      localStorage.setItem('jwt', keycloak.token!!);
+      store.dispatch(saveJwt(keycloak.token!));
     } else if (event === 'onAuthLogout') {
-      localStorage.removeItem('jwt');
+      store.dispatch(clearJwt());
     } else {
       //TODO: log error properly
       console.debug(`keycloak event: ${event} error ${error}`);
