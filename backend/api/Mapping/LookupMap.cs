@@ -9,7 +9,6 @@ namespace Pims.Api.Mapping
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.LookupEntity<int>, Models.LookupModel<int>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -18,7 +17,6 @@ namespace Pims.Api.Mapping
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
             config.NewConfig<Models.LookupModel<int>, Entity.LookupEntity<int>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -27,7 +25,6 @@ namespace Pims.Api.Mapping
 
 
             config.NewConfig<Entity.LookupEntity<string>, Models.LookupModel<string>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -36,7 +33,6 @@ namespace Pims.Api.Mapping
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
             config.NewConfig<Models.LookupModel<string>, Entity.LookupEntity<string>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -45,7 +41,6 @@ namespace Pims.Api.Mapping
 
 
             config.NewConfig<Entity.LookupEntity<Guid>, Models.LookupModel<Guid>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -54,7 +49,6 @@ namespace Pims.Api.Mapping
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
             config.NewConfig<Models.LookupModel<Guid>, Entity.LookupEntity<Guid>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
@@ -63,7 +57,6 @@ namespace Pims.Api.Mapping
 
 
             config.NewConfig<Entity.LookupEntity<object>, Models.LookupModel<object>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id.ToString())
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)

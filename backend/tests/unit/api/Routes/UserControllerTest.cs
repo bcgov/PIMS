@@ -51,6 +51,30 @@ namespace Pims.Api.Test.Routes
         }
 
         [Fact]
+        public void GetAccessRequest_Current_Route()
+        {
+            // Arrange
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetAccessRequest));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("access/requests");
+        }
+
+        [Fact]
+        public void GetAccessRequest_Route()
+        {
+            // Arrange
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetAccessRequest), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("access/requests/{id}");
+        }
+
+        [Fact]
         public void AddAccessRequest_Route()
         {
             // Arrange
@@ -59,7 +83,19 @@ namespace Pims.Api.Test.Routes
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPost("access/request");
+            endpoint.HasPost("access/requests");
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_Route()
+        {
+            // Arrange
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.UpdateAccessRequest), typeof(int), typeof(Model.AccessRequestModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("access/requests/{id}");
         }
         #endregion
     }

@@ -15,6 +15,12 @@ namespace Pims.Api.Models.User
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - The user's unique username.
+        /// </summary>
+        /// <value></value>
+        public string Username { get; set; }
+
+        /// <summary>
         /// get/set - The user's display name.
         /// </summary>
         /// <value></value>
@@ -43,6 +49,12 @@ namespace Pims.Api.Models.User
         /// </summary>
         /// <value></value>
         public string Email { get; set; }
+
+        /// <summary>
+        /// get/set - The user's position title.
+        /// </summary>
+        /// <value></value>
+        public string Position { get; set; }
         #endregion
     }
 }

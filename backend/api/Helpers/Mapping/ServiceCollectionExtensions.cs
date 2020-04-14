@@ -10,7 +10,7 @@ namespace Pims.Api.Helpers.Mapping
     {
         public static IServiceCollection AddMapster(this IServiceCollection services, Action<TypeAdapterConfig> options = null)
         {
-            var config = new TypeAdapterConfig();
+            var config = TypeAdapterConfig.GlobalSettings;
             config.Scan(Assembly.GetAssembly(typeof(Startup)));
 
             options?.Invoke(config);

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Keycloak.Models.User
 {
-    public class AccessRequestModel : Pims.Api.Models.BaseModel
+    public class AccessRequestModel : Api.Models.BaseModel
     {
         #region Properties
-        public Guid Id { get; set; }
-        public AccessRequestUserModel User { get; set; }
-        public IEnumerable<AgencyModel> Agencies { get; set; }
+        public int Id { get; set; }
         public bool? IsGranted { get; set; }
-        public IEnumerable<AccessRequestRoleModel> Roles { get; set; }
         public bool IsDisabled { get; set; }
+        public string Note { get; set; }
+        public AccessRequestUserModel User { get; set; }
+        public IEnumerable<AccessRequestAgencyModel> Agencies { get; set; }
+        public IEnumerable<AccessRequestRoleModel> Roles { get; set; }
         #endregion
     }
 }

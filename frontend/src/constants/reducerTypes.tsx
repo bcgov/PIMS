@@ -16,10 +16,13 @@ export const NETWORK = 'network';
 
 export const APP_ERRORS = 'appErrors';
 export const ADD_ACTIVATE_USER = 'activateUser';
-export const ADD_REQUEST_ACCESS = 'addRequestAccess';
-export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
-export const GET_REQUEST_ACCESS = 'getRequestAccess';
 export const GET_USERS = 'getUsers';
+
+// Access Requests
+export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
+
+export const GET_REQUEST_ACCESS = 'getRequestAccess';
+export const ADD_REQUEST_ACCESS = 'addRequestAccess';
 
 export const JWT = 'jwt';
 export const KEYCLOAK_READY = 'keycloakReady';

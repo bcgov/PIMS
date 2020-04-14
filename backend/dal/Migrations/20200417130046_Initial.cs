@@ -52,7 +52,8 @@ namespace Pims.Dal.Migrations
                 name: "AccessRequests",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedById = table.Column<Guid>(nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedById = table.Column<Guid>(nullable: true),
@@ -60,7 +61,8 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false),
                     IsGranted = table.Column<bool>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: true)
+                    UserId = table.Column<Guid>(nullable: false),
+                    Note = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -441,7 +443,7 @@ namespace Pims.Dal.Migrations
                 name: "AccessRequestAgencies",
                 columns: table => new
                 {
-                    AccessRequestId = table.Column<Guid>(nullable: false),
+                    AccessRequestId = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
                     CreatedById = table.Column<Guid>(nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
@@ -569,7 +571,7 @@ namespace Pims.Dal.Migrations
                 name: "AccessRequestRoles",
                 columns: table => new
                 {
-                    AccessRequestId = table.Column<Guid>(nullable: false),
+                    AccessRequestId = table.Column<int>(nullable: false),
                     RoleId = table.Column<Guid>(nullable: false),
                     CreatedById = table.Column<Guid>(nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),

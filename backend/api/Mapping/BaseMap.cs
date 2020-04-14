@@ -9,13 +9,11 @@ namespace Pims.Api.Mapping
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.BaseEntity, Models.BaseModel>()
-                .IgnoreNullValues(true)
                 .Map(dest => dest.CreatedOn, src => src.CreatedOn)
                 .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
                 .Map(dest => dest.RowVersion, src => src.RowVersion == null ? null : Convert.ToBase64String(src.RowVersion));
 
             config.NewConfig<Models.BaseModel, Entity.BaseEntity>()
-                .IgnoreNullValues(true)
                 .Map(dest => dest.CreatedOn, src => src.CreatedOn)
                 .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
                 .Map(dest => dest.RowVersion, src => src.RowVersion == null ? null : Convert.FromBase64String(src.RowVersion));

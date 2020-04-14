@@ -114,13 +114,25 @@ Array [
             Agency
           </p>
           <div
-            className="form-group"
+            className="required form-group"
           >
+            <label
+              className="form-label"
+              htmlFor="input-agency"
+            >
+              Agency
+            </label>
+            <span
+              className="required"
+            >
+              *
+            </span>
             <select
               className="form-control"
               id="input-agency"
               name="agency"
               onChange={[Function]}
+              required={true}
               value=""
             >
               <option
@@ -158,13 +170,25 @@ Array [
             Role
           </p>
           <div
-            className="form-group"
+            className="required form-group"
           >
+            <label
+              className="form-label"
+              htmlFor="input-role"
+            >
+              Role
+            </label>
+            <span
+              className="required"
+            >
+              *
+            </span>
             <select
               className="form-control"
               id="input-role"
               name="role"
               onChange={[Function]}
+              required={true}
               value=""
             >
               <option

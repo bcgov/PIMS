@@ -14,7 +14,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.AccessRequest CreateAccessRequest()
         {
-            return CreateAccessRequest(Guid.NewGuid());
+            return CreateAccessRequest(1);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Entity.AccessRequest CreateAccessRequest(Guid id)
+        public static Entity.AccessRequest CreateAccessRequest(int id)
         {
             var user = EntityHelper.CreateUser("test");
             return CreateAccessRequest(id, user);
@@ -34,7 +34,7 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static Entity.AccessRequest CreateAccessRequest(Guid id, Entity.User user)
+        public static Entity.AccessRequest CreateAccessRequest(int id, Entity.User user)
         {
             var accessRequest = new Entity.AccessRequest()
             {

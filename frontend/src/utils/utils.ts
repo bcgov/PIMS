@@ -34,7 +34,11 @@ export const floatOrNull = (input: string): number | null => {
   return input !== '' ? parseFloat(input) : null;
 };
 
-export const mapLookupCode = (code: ILookupCode): SelectOption => ({
+export const mapLookupCode = (
+  code: ILookupCode,
+  defaultId: number | string | null,
+): SelectOption => ({
   label: code.name,
   value: code.id.toString(),
+  selected: code.id === defaultId,
 });
