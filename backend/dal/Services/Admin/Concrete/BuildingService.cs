@@ -124,6 +124,19 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
+            if (entity.Agency != null)
+                this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
+            if (entity.Status != null)
+                this.Context.Entry(entity.Status).State = EntityState.Unchanged;
+            if (entity.Classification != null)
+                this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
+            if (entity.BuildingConstructionType != null)
+                this.Context.Entry(entity.BuildingConstructionType).State = EntityState.Unchanged;
+            if (entity.BuildingPredominateUse != null)
+                this.Context.Entry(entity.BuildingPredominateUse).State = EntityState.Unchanged;
+            if (entity.BuildingOccupantType != null)
+                this.Context.Entry(entity.BuildingOccupantType).State = EntityState.Unchanged;
+
             this.Context.Addresses.Add(entity.Address);
             this.Context.BuildingEvaluations.AddRange(entity.Evaluations);
 
@@ -144,6 +157,19 @@ namespace Pims.Dal.Services.Admin
             var userId = this.User.GetUserId();
             buildings.ForEach((building) =>
             {
+                if (building.Agency != null)
+                    this.Context.Entry(building.Agency).State = EntityState.Unchanged;
+                if (building.Status != null)
+                    this.Context.Entry(building.Status).State = EntityState.Unchanged;
+                if (building.Classification != null)
+                    this.Context.Entry(building.Classification).State = EntityState.Unchanged;
+                if (building.BuildingConstructionType != null)
+                    this.Context.Entry(building.BuildingConstructionType).State = EntityState.Unchanged;
+                if (building.BuildingPredominateUse != null)
+                    this.Context.Entry(building.BuildingPredominateUse).State = EntityState.Unchanged;
+                if (building.BuildingOccupantType != null)
+                    this.Context.Entry(building.BuildingOccupantType).State = EntityState.Unchanged;
+
                 this.Context.Addresses.Add(building.Address);
                 this.Context.BuildingEvaluations.AddRange(building.Evaluations);
             });

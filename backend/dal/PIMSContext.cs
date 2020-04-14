@@ -21,12 +21,14 @@ namespace Pims.Dal
         public DbSet<Agency> Agencies { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<BuildingEvaluation> BuildingEvaluations { get; set; }
+        public DbSet<BuildingFiscal> BuildingFiscals { get; set; }
         public DbSet<BuildingConstructionType> BuildingConstructionTypes { get; set; }
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
         public DbSet<BuildingOccupantType> BuildingOccupantTypes { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
         public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }
+        public DbSet<ParcelFiscal> ParcelFiscals { get; set; }
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
         public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }

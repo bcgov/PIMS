@@ -35,12 +35,29 @@ namespace Pims.Api.Models.Property
         /// </summary>
         /// <value></value>
         public double? SWLongitude { get; set; }
+        /// <summary>
+        /// get/set - Parcel classification Id.
+        /// </summary>
+        /// <value></value>
+        public int? ClassificationId { get; set; }
+
+        /// <summary>
+        /// get/set - Parcel status Id.
+        /// </summary>
+        /// <value></value>
+        public int? StatusId { get; set; }
 
         /// <summary>
         /// get/set - The property address.
         /// </summary>
         /// <value></value>
         public string Address { get; set; }
+
+        /// <summary>
+        /// get/set - The SPP/RAEG project number.
+        /// </summary>
+        /// <value></value>
+        public string ProjectNumber { get; set; }
 
         /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
@@ -91,17 +108,6 @@ namespace Pims.Api.Models.Property
         public string[] Sort { get; set; }
 
         #region Parcel Filters
-        /// <summary>
-        /// get/set - Parcel classification Id.
-        /// </summary>
-        /// <value></value>
-        public int? ClassificationId { get; set; }
-
-        /// <summary>
-        /// get/set - Parcel status Id.
-        /// </summary>
-        /// <value></value>
-        public int? StatusId { get; set; }
 
         /// <summary>
         /// get/set - Parcel minimum land area.
@@ -163,14 +169,13 @@ namespace Pims.Api.Models.Property
         {
             get
             {
-                return !this.ConstructionTypeId.HasValue
-                    && !this.PredominateUseId.HasValue
-                    && !this.FloorCount.HasValue
-                    && !this.MinLotArea.HasValue
-                    && !this.MaxLotArea.HasValue
-                    && String.IsNullOrWhiteSpace(this.Tenancy)
-                    && !this.MinRentableArea.HasValue
-                    && !this.MaxRentableArea.HasValue;
+                return this.StatusId.HasValue
+                    || this.ClassificationId.HasValue
+                    || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || this.MinLotArea.HasValue
+                    || this.MaxLotArea.HasValue
+                    || this.MinLandArea.HasValue
+                    || this.MaxLandArea.HasValue;
             }
         }
 
@@ -182,12 +187,15 @@ namespace Pims.Api.Models.Property
         {
             get
             {
-                return !this.StatusId.HasValue
-                    && !this.ClassificationId.HasValue
-                    && !this.MinLotArea.HasValue
-                    && !this.MaxLotArea.HasValue
-                    && !this.MinLandArea.HasValue
-                    && !this.MaxLandArea.HasValue;
+                return this.StatusId.HasValue
+                    || this.ClassificationId.HasValue
+                    || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || this.ConstructionTypeId.HasValue
+                    || this.PredominateUseId.HasValue
+                    || this.FloorCount.HasValue
+                    || !String.IsNullOrWhiteSpace(this.Tenancy)
+                    || this.MinRentableArea.HasValue
+                    || this.MaxRentableArea.HasValue;
             }
         }
         #endregion
@@ -227,6 +235,11 @@ namespace Pims.Api.Models.Property
             this.SWLatitude = filter.GetDoubleNullValue(nameof(this.SWLatitude));
             this.SWLongitude = filter.GetDoubleNullValue(nameof(this.SWLongitude));
             this.Address = filter.GetStringValue(nameof(this.Address));
+
+            this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
+            this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
+            this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
+
             this.MinEstimatedValue = filter.GetFloatNullValue(nameof(this.MinEstimatedValue));
             this.MaxEstimatedValue = filter.GetFloatNullValue(nameof(this.MaxEstimatedValue));
             this.MinAssessedValue = filter.GetFloatNullValue(nameof(this.MinAssessedValue));
@@ -236,8 +249,6 @@ namespace Pims.Api.Models.Property
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
 
             // Parcel filters.
-            this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
-            this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
 
@@ -265,9 +276,10 @@ namespace Pims.Api.Models.Property
                 SWLatitude = model.SWLatitude,
                 SWLongitude = model.SWLongitude,
 
-                Address = model.Address,
+                ProjectNumber = model.ProjectNumber,
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
+                Address = model.Address,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
                 MinEstimatedValue = model.MinEstimatedValue,
@@ -295,6 +307,9 @@ namespace Pims.Api.Models.Property
                 SWLatitude = model.SWLatitude,
                 SWLongitude = model.SWLongitude,
 
+                ProjectNumber = model.ProjectNumber,
+                StatusId = model.StatusId,
+                ClassificationId = model.ClassificationId,
                 Address = model.Address,
                 ConstructionTypeId = model.ConstructionTypeId,
                 PredominateUseId = model.PredominateUseId,
@@ -324,6 +339,7 @@ namespace Pims.Api.Models.Property
                 || this.NELongitude.HasValue
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
+                || !String.IsNullOrWhiteSpace(this.ProjectNumber)
                 || !String.IsNullOrWhiteSpace(this.Address)
                 || this.MaxAssessedValue.HasValue
                 || this.MinAssessedValue.HasValue

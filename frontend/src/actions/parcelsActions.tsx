@@ -51,14 +51,19 @@ export interface IBuilding {
   rentableArea: number | any;
   agencyId: number | any;
   evaluations: IEvaluation[];
+  fiscals: IFiscal[];
+}
+
+export interface IFiscal {
+  fiscalYear: number | any;
+  key: string | any;
+  value: number | any;
 }
 
 export interface IEvaluation {
-  fiscalYear: number | any;
-  estimatedValue: number | any;
-  assessedValue: number | any;
-  netBookValue: number | any;
-  appraisedValue: number | any;
+  date: Date | any;
+  key: string | any;
+  value: number | any;
 }
 
 export interface IParcel {
@@ -82,6 +87,7 @@ export interface IParcel {
   isSensitive: boolean;
   buildings: IBuilding[];
   evaluations: IEvaluation[];
+  fiscals: IFiscal[];
 }
 
 export interface IAddress {

@@ -26,10 +26,10 @@ describe('fetchParcels action creator', () => {
     const url = ENVIRONMENT.apiUrl + API.PARCELS(null);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
-    return fetchParcels(null)(dispatch)!.then(() => {
-      expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(successSpy).toHaveBeenCalledTimes(1);
-      expect(dispatch).toHaveBeenCalledTimes(6);
+    return fetchParcels(null)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(0);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(dispatch).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -56,9 +56,20 @@ describe('fetchParcels action creator', () => {
   });
 
   it('Request failure, dispatches `error` with correct response', () => {
-    const url = ENVIRONMENT.apiUrl + API.PARCELS(null);
+    const params: IParcelListParams = {
+      neLatitude: 1,
+      neLongitude: 2,
+      swLatitude: 3,
+      swLongitude: 4,
+      address: null,
+      agencies: null,
+      classificationId: null,
+      minLandArea: null,
+      maxLandArea: null,
+    };
+    const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return fetchParcels(null)(dispatch)!.then(() => {
+    return fetchParcels(params)(dispatch).then(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);

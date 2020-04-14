@@ -53,6 +53,8 @@ namespace Pims.Api.Models.Building
         public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
+
+        public IEnumerable<BuildingFiscalModel> Fiscals { get; set; } = new List<BuildingFiscalModel>();
         #endregion
     }
 }

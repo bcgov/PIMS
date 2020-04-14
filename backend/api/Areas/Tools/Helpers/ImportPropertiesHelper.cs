@@ -233,13 +233,18 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
-            var fiscal = int.Parse(property.FiscalYear);
+            var fiscalYear = int.Parse(property.FiscalYear);
+            var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Copy properties over to entity.
             p_e.PID = pid;
 
-            // Only want to update the properties with the latest evaluation information.
-            if (p_e.Id == 0 || p_e.Evaluation?.FiscalYear > fiscal)
+            // Determine if the last evaluation or fiscal values are older than the one currently being imported.
+            var fiscalNetBook = p_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > fiscalYear);
+            var evaluationAssessed = p_e.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == Entity.EvaluationKeys.Assessed && e.Date > evaluationDate);
+
+            // Only want to update the properties with the latest information.
+            if (p_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
             {
                 double.TryParse(property.Latitude, out double latitude);
                 double.TryParse(property.Longitude, out double longitude);
@@ -283,17 +288,18 @@ namespace Pims.Api.Areas.Tools.Helpers
                 }
             }
 
-            // Add a new evaluation for each year.
-            if (!p_e.Evaluations.Any(e => e.FiscalYear == fiscal))
+            // Add a new fiscal values for each year.
+            if (!p_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
             {
-                float.TryParse(property.AssessedValue, out float assessedValue);
-                float.TryParse(property.NetBookValue, out float netBookValue);
+                if (float.TryParse(property.NetBookValue, out float netBookValue))
+                    p_e.Fiscals.Add(new Entity.ParcelFiscal(p_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
+            }
 
-                var evaluation = new Entity.ParcelEvaluation(fiscal, p_e)
-                {
-                    AssessedValue = assessedValue,
-                    NetBookValue = netBookValue
-                };
+            // Add a new evaluation if new.
+            if (!p_e.Evaluations.Any(e => e.Date == evaluationDate))
+            {
+                if (float.TryParse(property.AssessedValue, out float assessedValue))
+                    p_e.Evaluations.Add(new Entity.ParcelEvaluation(p_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
             }
 
             // A new parcel.
@@ -323,10 +329,15 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var lid = property.LocalId;
             var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
-            var fiscal = int.Parse(property.FiscalYear);
+            var fiscalYear = int.Parse(property.FiscalYear);
+            var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel
             var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
+
+            // Determine if the last evaluation or fiscal values are older than the one currently being imported.
+            var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > fiscalYear);
+            var evaluationAssessed = b_e.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == Entity.EvaluationKeys.Assessed && e.Date > evaluationDate);
 
             // If the parcel doesn't exist yet we'll need to create a temporary one.
             if (parcel == null)
@@ -336,8 +347,8 @@ namespace Pims.Api.Areas.Tools.Helpers
                 _logger.LogWarning($"Parcel '{property.ParcelId}' was generated for a building that had no parcel.");
             }
 
-            // Only want to update the properties with the latest evaluation information.
-            if (b_e.Id == 0 || b_e.Evaluation?.FiscalYear > fiscal)
+            // Only want to update the properties with the latest information.
+            if (b_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
             {
                 double.TryParse(property.Latitude, out double latitude);
                 double.TryParse(property.Longitude, out double longitude);
@@ -415,17 +426,19 @@ namespace Pims.Api.Areas.Tools.Helpers
                 }
             }
 
-            // Add a new evaluation for each year.
-            if (!b_e.Evaluations.Any(e => e.FiscalYear == fiscal))
-            {
-                float.TryParse(property.AssessedValue, out float assessedValue);
-                float.TryParse(property.NetBookValue, out float netBookValue);
 
-                var evaluation = new Entity.BuildingEvaluation(fiscal, b_e)
-                {
-                    AssessedValue = assessedValue,
-                    NetBookValue = netBookValue
-                };
+            // Add a new fiscal values for each year.
+            if (!b_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
+            {
+                if (float.TryParse(property.NetBookValue, out float netBookValue))
+                    b_e.Fiscals.Add(new Entity.BuildingFiscal(b_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
+            }
+
+            // Add a new evaluation if new.
+            if (!b_e.Evaluations.Any(e => e.Date == evaluationDate))
+            {
+                if (float.TryParse(property.AssessedValue, out float assessedValue))
+                    b_e.Evaluations.Add(new Entity.BuildingEvaluation(b_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
             }
 
             // A new building.

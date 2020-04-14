@@ -80,9 +80,10 @@ namespace Pims.Api.Controllers
             if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
 
             var properties = new List<PropertyModel>();
-            if (filter.IncludeParcels)
+            var includeBoth = !filter.IncludeParcels && !filter.IncludeBuildings;
+            if (includeBoth || filter.IncludeParcels)
                 properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.Get((ParcelFilter)filter)));
-            if (filter.IncludeBuildings)
+            if (includeBoth || filter.IncludeBuildings)
                 properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.Get((BuildingFilter)filter)));
             return new JsonResult(properties.ToArray());
         }

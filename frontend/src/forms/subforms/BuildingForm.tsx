@@ -38,6 +38,7 @@ export const defaultBuildingValues: IBuilding = {
   leaseExpiry: '',
   buildingTenancy: '',
   evaluations: [],
+  fiscals: [],
 };
 interface BuildingProps {
   nameSpace?: string;

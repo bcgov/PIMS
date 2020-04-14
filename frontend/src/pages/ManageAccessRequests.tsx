@@ -93,7 +93,7 @@ const ManageAccessRequests = () => {
                     }}
                   >
                     {props => (
-                      <Form>
+                      <Form key={accessRequest?.id}>
                         <Row key={accessRequest?.id}>
                           <Col>{accessRequest?.user?.displayName}</Col>
                           <Col>
