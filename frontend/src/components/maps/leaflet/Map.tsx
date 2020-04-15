@@ -16,6 +16,7 @@ export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
   filter?: {
     address: string;
+    municipality: string;
     /** comma-separated list of agencies to filter by */
     agencies: string | null;
     classificationId: number | null;
@@ -62,6 +63,7 @@ const Map: React.FC<MapProps> = ({
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
+    municipality: '',
     agencies: '',
     classificationId: '',
     minLotSize: '',
@@ -94,11 +96,12 @@ const Map: React.FC<MapProps> = ({
 
   const handleViewportChange = () => {
     const bounds = getBounds();
-    const { address, agencies, classificationId, minLotSize, maxLotSize } = mapFilter;
+    const { address, municipality, agencies, classificationId, minLotSize, maxLotSize } = mapFilter;
     const e: MapViewportChangeEvent = {
       bounds,
       filter: {
         address,
+        municipality,
         agencies: agencies,
         classificationId: decimalOrNull(classificationId),
         minLotSize: floatOrNull(minLotSize),
