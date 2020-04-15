@@ -23,7 +23,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {building?.evaluations
-                  ?.find(e => e.key == EvaluationKeys.Assessed)
+                  ?.find(e => e.key === EvaluationKeys.Assessed)
                   ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
             </ListGroup>
@@ -48,6 +48,12 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
                 <Label>Predominate Use: </Label>
                 {building?.buildingPredominateUse}
               </ListGroup.Item>
+              {building.projectNumber && (
+                <ListGroup.Item>
+                  <Label>RAEG or SPP: </Label>
+                  {building?.projectNumber}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Col>
         </Row>

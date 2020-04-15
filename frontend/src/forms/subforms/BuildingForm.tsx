@@ -19,6 +19,7 @@ import * as API from 'constants/API';
 export const defaultBuildingValues: IBuilding = {
   id: 0,
   localId: '',
+  projectNumber: '',
   description: '',
   address: defaultAddressValues,
   latitude: 0,

@@ -1,8 +1,8 @@
 import { Fragment, useState } from 'react';
 import React from 'react';
-import { Col, Row, Table, InputGroup } from 'react-bootstrap';
+import { Col, Row, Table } from 'react-bootstrap';
 import { FormikProps, setIn, getIn } from 'formik';
-import { Form, Input } from 'components/common/form';
+import { Form } from 'components/common/form';
 import { IEvaluation } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
@@ -51,8 +51,8 @@ const pagedEvaluations: IPaginate = {
 /**
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
-export const defaultEvaluations: IFormEvaluation[] = yearsArray
-  .map(year => {
+export const defaultEvaluations: IFormEvaluation[] = _.flatten(
+  yearsArray.map(year => {
     return Object.values(keyTypes).map(type => {
       return {
         date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').toDate() : '',
@@ -61,8 +61,8 @@ export const defaultEvaluations: IFormEvaluation[] = yearsArray
         value: '',
       };
     });
-  })
-  .flat();
+  }),
+);
 /**
  * Merge the passed list of evaluations with this components defaultEvaluations.
  * @param existingEvaluations

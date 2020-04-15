@@ -16,7 +16,6 @@ import { useKeycloak } from '@react-keycloak/web';
 import * as reducerTypes from 'constants/reducerTypes';
 import AddressForm from './subforms/AddressForm';
 import BuildingForm from './subforms/BuildingForm';
-import EvaluationForm from './subforms/EvaluationForm';
 import PidPinForm from './subforms/PidPinForm';
 import { render, fireEvent, wait } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
@@ -24,6 +23,7 @@ import axios from 'axios';
 import { mockDetails } from 'mocks/filterDataMock';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
+import { fillInput } from 'utils/testUtils';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
@@ -93,6 +93,7 @@ const parcelDetailForm = (
 describe('ParcelDetailForm', () => {
   describe('field validation', () => {
     const exampleData = {
+      projectNumber: '',
       agencyId: 1,
       address: {
         line1: 'addressval',
@@ -128,29 +129,6 @@ describe('ParcelDetailForm', () => {
       ],
       buildings: [],
       fiscals: [],
-    };
-    const fillInput = async (
-      container: HTMLElement,
-      name: string,
-      value: any,
-      type: string = 'input',
-    ) => {
-      const input = container.querySelector(`${type}[name="${name}"]`);
-      await wait(() => {
-        if (type === 'input') {
-          fireEvent.change(input!, {
-            target: {
-              value: value,
-            },
-          });
-        } else {
-          fireEvent.change(input!, {
-            target: {
-              value: value,
-            },
-          });
-        }
-      });
     };
     it('validates all required fields correctly', async () => {
       const form = render(parcelDetailForm);
@@ -208,7 +186,7 @@ describe('ParcelDetailForm', () => {
       .create(
         <Provider store={store}>
           <Router history={history}>
-            <ParcelDetailForm secret="test" agencyId={1} parcelDetail={null} />
+            <ParcelDetailForm secret="test" agencyId={1} parcelDetail={mockDetails[0]} />
           </Router>
         </Provider>,
       )
@@ -222,7 +200,12 @@ describe('ParcelDetailForm', () => {
       .create(
         <Provider store={store}>
           <Router history={history}>
-            <ParcelDetailForm disabled={true} secret="test" agencyId={1} parcelDetail={null} />
+            <ParcelDetailForm
+              disabled={true}
+              secret="test"
+              agencyId={1}
+              parcelDetail={mockDetails[0]}
+            />
           </Router>
         </Provider>,
       )

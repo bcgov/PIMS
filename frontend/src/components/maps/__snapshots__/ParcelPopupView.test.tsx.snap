@@ -64,6 +64,20 @@ exports[`renders correctly 1`] = `
            
           1
         </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            RAEG or SPP:
+          </p>
+           
+          Test-Project-Number
+        </div>
       </div>
       <div
         className="list-group"

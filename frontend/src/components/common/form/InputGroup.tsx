@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, FormControlProps, InputGroup } from 'react-bootstrap';
-import { useFormikContext, getIn, useField } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
