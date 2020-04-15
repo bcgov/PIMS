@@ -108,55 +108,60 @@ export const Building = Yup.object().shape({
   leaseExpiry: Yup.string().nullable(),
   evaluations: Yup.array().of(Evaluation),
 });
-
-export const ParcelSchema = Yup.object().shape(
-  {
-    pid: Yup.string().when('pin', {
-      is: val => val && val.length > 0,
-      then: Yup.string().nullable(),
-      otherwise: Yup.string()
-        .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
-        .required('pid or pin Required'),
-    }),
-    pin: Yup.string().when('pid', {
-      is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
-      then: Yup.string().nullable(),
-      otherwise: Yup.string()
-        .min(1)
-        .required('pid or pin Required'),
-    }),
-    statusId: Yup.boolean().required('Required'),
-    classificationId: Yup.string()
-      .required('Required')
-      .matches(/\d*/, 'Invalid Classification')
-      .nullable(),
-    address: Address.required(),
-    description: Yup.string()
-      .max(2000, 'Description must be less than 2000 characters')
-      .nullable(),
-    zoning: Yup.string()
-      .max(500, 'Description must be less than 500 characters')
-      .nullable(),
-    zoningPotential: Yup.string()
-      .max(500, 'Description must be less than 500 characters')
-      .nullable(),
-    landLegalDescription: Yup.string()
-      .max(500, 'Land Legal Description must be less than 500 characters')
-      .nullable(),
-    latitude: Yup.number()
-      .min(-90, 'Invalid Latitude')
-      .max(90, 'Invalid Latitude')
-      .required('Required'),
-    longitude: Yup.number()
-      .min(-180, 'Invalid Longitude')
-      .max(180, 'Invalid Longitude')
-      .required('Required'),
-    landArea: Yup.number()
-      .min(1, 'Land Area must be a positive number')
-      .required('Required'),
-    isSensitive: Yup.boolean(),
-    buildings: Yup.array().of(Building),
-    evaluations: Yup.array().of(Evaluation),
-  },
-  [['pin', 'pid']],
-);
+export const LandSchema = Yup.object().shape({
+  statusId: Yup.boolean().required('Required'),
+  classificationId: Yup.string()
+    .required('Required')
+    .matches(/\d*/, 'Invalid Classification')
+    .nullable(),
+  address: Address.required(),
+  description: Yup.string()
+    .max(2000, 'Description must be less than 2000 characters')
+    .nullable(),
+  municipality: Yup.string()
+    .max(250, 'Municipality must be less than 250 characters')
+    .nullable(),
+  zoning: Yup.string()
+    .max(250, 'Zoning must be less than 250 characters')
+    .nullable(),
+  zoningPotential: Yup.string()
+    .max(250, 'Zoning Potential must be less than 250 characters')
+    .nullable(),
+  landLegalDescription: Yup.string()
+    .max(500, 'Land Legal Description must be less than 500 characters')
+    .nullable(),
+  latitude: Yup.number()
+    .min(-90, 'Invalid Latitude')
+    .max(90, 'Invalid Latitude')
+    .required('Required'),
+  longitude: Yup.number()
+    .min(-180, 'Invalid Longitude')
+    .max(180, 'Invalid Longitude')
+    .required('Required'),
+  landArea: Yup.number()
+    .min(1, 'Land Area must be a positive number')
+    .required('Required'),
+});
+export const ParcelSchema = Yup.object()
+  .shape(
+    {
+      pid: Yup.string().when('pin', {
+        is: val => val && val.length > 0,
+        then: Yup.string().nullable(),
+        otherwise: Yup.string()
+          .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
+          .required('pid or pin Required'),
+      }),
+      pin: Yup.string().when('pid', {
+        is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
+        then: Yup.string().nullable(),
+        otherwise: Yup.string()
+          .min(1)
+          .required('pid or pin Required'),
+      }),
+      buildings: Yup.array().of(Building),
+      evaluations: Yup.array().of(Evaluation),
+    },
+    [['pin', 'pid']],
+  )
+  .concat(LandSchema);

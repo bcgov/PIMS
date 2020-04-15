@@ -198,7 +198,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                           {formikProps.values.buildings.map((building, index) => {
                             return (
                               <div key={index}>
-                                {props.disabled && (
+                                {!props.disabled && (
                                   <Button
                                     variant="danger"
                                     onClick={() => arrayHelpers.remove(index)}

@@ -32,6 +32,7 @@ const mockDetails: IParcelDetail = {
     pin: '',
     statusId: 0,
     classificationId: 0,
+    municipality: '',
     zoning: '',
     zoningPotential: '',
     agencyId: 0,

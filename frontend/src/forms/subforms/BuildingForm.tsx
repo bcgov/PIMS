@@ -197,7 +197,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
                 {props.building.evaluations.map((evaluation: any, evaluationIndex: number) => {
                   return (
                     <div key={evaluationIndex}>
-                      {props.disabled && (
+                      {!props.disabled && (
                         <Button
                           variant="danger"
                           onClick={() => arrayHelpers.remove(evaluationIndex)}

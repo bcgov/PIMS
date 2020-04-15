@@ -25,11 +25,10 @@ import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
 
 const EditUserPage = (props: IUserDetailParams) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserDetail({ id: props.id }));
-  }, []);
-
-  const dispatch = useDispatch();
+  }, [dispatch, props.id]);
 
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
