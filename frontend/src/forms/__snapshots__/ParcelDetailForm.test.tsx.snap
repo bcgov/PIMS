@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ParcelDetailForm renders correctly 1`] = `
+exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
 <div
   className="parcelDetailForm container-fluid"
 >
@@ -232,6 +232,26 @@ exports[`ParcelDetailForm renders correctly 1`] = `
               <div
                 className="col-md-6"
               >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Municipality
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      id="input-municipality"
+                      name="municipality"
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
                 <div
                   className="form-row"
                 >
