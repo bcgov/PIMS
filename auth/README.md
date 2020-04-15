@@ -45,7 +45,7 @@ There is still a current way to override this, which allows us to setup the envi
 PROXY_ADDRESS_FORWARDING=true
 KEYCLOAK_USER=keycloak
 KEYCLOAK_PASSWORD=password
-KEYCLOAK_IMPORT=/tmp/realm-export.json  -Dkeycloak.profile.feature.upload_scripts=enabled
+KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN
 
