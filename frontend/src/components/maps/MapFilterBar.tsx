@@ -23,6 +23,7 @@ const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
 
 export type MapFilterChangeEvent = {
   address: string;
+  municipality: string;
   /** comma-separated list of agencies to filter by */
   agencies: string;
   classificationId: string;
@@ -63,6 +64,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
     <Formik<MapFilterChangeEvent>
       initialValues={{
         address: '',
+        municipality: '',
         agencies: '',
         classificationId: '',
         minLotSize: '',
@@ -82,6 +84,9 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                 <Form.Row className="map-filter-bar">
                   <Col className="bar-item">
                     <Input field="address" placeholder="Enter an address or city" />
+                  </Col>
+                  <Col className="bar-item">
+                    <Input field="municipality" placeholder="Enter a municipality" />
                   </Col>
                   <Col className="bar-item">
                     <Select field="agencies" placeholder="View Properties In" options={agencies} />
