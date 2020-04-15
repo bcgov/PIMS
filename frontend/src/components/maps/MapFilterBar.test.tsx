@@ -34,6 +34,7 @@ describe('MapFilterBar', () => {
     );
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
+    const municipality = container.querySelector('input[name="municipality"]');
     const agencies = container.querySelector('select[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('select[name="minLotSize"]');
@@ -46,6 +47,14 @@ describe('MapFilterBar', () => {
       fireEvent.change(address!, {
         target: {
           value: 'mockaddress',
+        },
+      });
+    });
+
+    await wait(() => {
+      fireEvent.change(municipality!, {
+        target: {
+          value: 'mockmunicipality',
         },
       });
     });
@@ -89,6 +98,7 @@ describe('MapFilterBar', () => {
     // Assert
     expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
       address: 'mockaddress',
+      municipality: 'mockmunicipality',
       agencies: '1',
       classificationId: '0',
       minLotSize: '1',
