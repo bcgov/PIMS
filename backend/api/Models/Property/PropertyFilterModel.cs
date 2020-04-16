@@ -35,6 +35,7 @@ namespace Pims.Api.Models.Property
         /// </summary>
         /// <value></value>
         public double? SWLongitude { get; set; }
+
         /// <summary>
         /// get/set - Parcel classification Id.
         /// </summary>
@@ -108,6 +109,11 @@ namespace Pims.Api.Models.Property
         public string[] Sort { get; set; }
 
         #region Parcel Filters
+        /// <summary>
+        /// get/set - The property municipality.
+        /// </summary>
+        /// <value></value>
+        public string Municipality { get; set; }
 
         /// <summary>
         /// get/set - Parcel minimum land area.
@@ -172,6 +178,7 @@ namespace Pims.Api.Models.Property
                 return this.StatusId.HasValue
                     || this.ClassificationId.HasValue
                     || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || !String.IsNullOrWhiteSpace(this.Municipality)
                     || this.MinLotArea.HasValue
                     || this.MaxLotArea.HasValue
                     || this.MinLandArea.HasValue
@@ -249,6 +256,7 @@ namespace Pims.Api.Models.Property
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
 
             // Parcel filters.
+            this.Municipality = filter.GetStringValue(nameof(this.Municipality));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
 
@@ -280,6 +288,7 @@ namespace Pims.Api.Models.Property
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+                Municipality = model.Municipality,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
                 MinEstimatedValue = model.MinEstimatedValue,
@@ -355,6 +364,7 @@ namespace Pims.Api.Models.Property
                 || this.FloorCount.HasValue
                 || this.MinRentableArea.HasValue
                 || this.MaxRentableArea.HasValue
+                || !String.IsNullOrWhiteSpace(this.Municipality)
                 || !String.IsNullOrWhiteSpace(this.Tenancy);
         }
         #endregion
