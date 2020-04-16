@@ -43,11 +43,7 @@ const App = () => {
   return (
     <AuthStateContext.Consumer>
       {(context: IAuthState) => {
-        if (
-          !context.ready ||
-          (context.ready &&
-            !(!context.authenticated || (context.authenticated && context.userInfo)))
-        ) {
+        if (!context.ready) {
           return <Spinner animation="border"></Spinner>;
         }
 

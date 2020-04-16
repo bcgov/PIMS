@@ -5,13 +5,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 
 export interface IAuthState {
-  authenticated?: boolean;
-  userInfo?: any;
   ready?: boolean;
 }
 
 export const AuthStateContext = React.createContext<IAuthState>({
-  authenticated: false,
   ready: false,
 });
 
@@ -32,9 +29,10 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
   return (
     <AuthStateContext.Provider
       value={{
-        authenticated: keycloak.obj?.authenticated,
-        ready: keyCloakReady,
-        userInfo,
+        // if user info is not available when authenticated, then the auth state is not ready
+        ready:
+          keyCloakReady &&
+          (!keycloak.obj?.authenticated || (keycloak.obj?.authenticated && !!userInfo)),
       }}
     >
       {props.children}
