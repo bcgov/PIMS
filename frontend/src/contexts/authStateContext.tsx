@@ -15,7 +15,7 @@ export const AuthStateContext = React.createContext<IAuthState>({
 export const AuthStateContextProvider = (props: { children?: any }) => {
   const keycloak = useKeycloakWrapper();
   const [userInfo, setUserInfo] = React.useState<any>(null);
-  const keyCloakReady: boolean = useSelector<RootState, boolean>(state => state.keyCloakReady);
+  const keycloakReady: boolean = useSelector<RootState, boolean>(state => state.keycloakReady);
 
   React.useEffect(() => {
     const loadUserInfo = async () => {
@@ -31,7 +31,7 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
       value={{
         // if user info is not available when authenticated, then the auth state is not ready
         ready:
-          keyCloakReady &&
+          keycloakReady &&
           (!keycloak.obj?.authenticated || (keycloak.obj?.authenticated && !!userInfo)),
       }}
     >
