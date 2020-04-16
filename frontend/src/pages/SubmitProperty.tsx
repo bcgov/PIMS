@@ -18,7 +18,8 @@ import { LeafletMouseEvent } from 'leaflet';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 const SubmitProperty = (props: any) => {
-  const parsed = queryString.parse(props?.location?.search);
+  const query = props?.location?.search ?? {};
+  const parsed = queryString.parse(query);
   const keycloak = useKeycloakWrapper();
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
     state => state.leafletClickEvent.mapClickEvent,
@@ -33,6 +34,9 @@ const SubmitProperty = (props: any) => {
     throw Error('You must belong to an agency to submit properties');
   } else if (!keycloak.obj?.subject) {
     throw Error('Keycloak subject missing');
+  }
+  if (activeParcelDetail && !keycloak.hasAgency(activeParcelDetail?.parcelDetail?.agencyId)) {
+    parsed.disabled = 'true'; //if the user doesn't belong to this properties agency, display a read only view.
   }
   if (!props?.match?.params?.id && activeParcelDetail?.parcelDetail) {
     dispatch(storeParcelDetail(null));
