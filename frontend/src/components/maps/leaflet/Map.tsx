@@ -72,6 +72,11 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
 
+  //do not jump to map coordinates if we have an existing map but no parcel details.
+  if (mapRef.current && !selectedProperty?.parcelDetail) {
+    lat = (mapRef.current.props.center as Array<number>)[0];
+    lng = (mapRef.current.props.center as Array<number>)[1];
+  }
   if (!interactive) {
     const map = mapRef.current?.leafletElement;
     if (map) {
@@ -155,7 +160,7 @@ const Map: React.FC<MapProps> = ({
       <Popup
         position={[parcelDetail.latitude, parcelDetail.longitude]}
         offset={[0, -25]}
-        onClose={() => !interactive && onMarkerPopupClose?.(item)}
+        onClose={() => onMarkerPopupClose?.(item)}
         closeButton={interactive}
       >
         <PopupView
@@ -185,10 +190,14 @@ const Map: React.FC<MapProps> = ({
           ref={mapRef}
           center={[lat, lng]}
           zoom={zoom}
-          whenReady={handleViewportChange}
-          onViewportChanged={handleViewportChange}
+          whenReady={() => {
+            handleViewportChange();
+          }}
+          onViewportChanged={() => {
+            handleViewportChange();
+          }}
           onpreclick={onMapClick}
-          closePopupOnClick={!interactive}
+          closePopupOnClick={interactive}
         >
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} zIndex={0} />
