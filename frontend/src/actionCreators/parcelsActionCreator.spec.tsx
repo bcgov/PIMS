@@ -27,9 +27,9 @@ describe('fetchParcels action creator', () => {
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
     return fetchParcels(null)(dispatch).then(() => {
-      expect(requestSpy).toHaveBeenCalledTimes(0);
-      expect(successSpy).toHaveBeenCalledTimes(0);
-      expect(dispatch).toHaveBeenCalledTimes(0);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
     });
   });
 

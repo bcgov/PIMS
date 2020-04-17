@@ -197,6 +197,26 @@ describe('ParcelDetailForm', () => {
     expect(tree).toMatchSnapshot();
   });
 
+it('ParcelDetailForm renders view-only correctly', () => {
+  const history = createMemoryHistory();
+  const tree = renderer
+    .create(
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelDetailForm
+            disabled={true}
+            secret="test"
+            updateLatLng={() => {}}
+            agencyId={1}
+            parcelId={0}
+          />
+        </Router>
+      </Provider>,
+    )
+    .toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
   it('loads appropriate cities/provinces in dropwdown for address form', () => {
     const addrForm = mount(parcelDetailForm).find(AddressForm);
     expect(addrForm.text()).toContain('test city');

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ParcelPopupView renders correctly 1`] = `
+exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
 <div
   className="parcelPopup container-fluid"
 >
@@ -105,19 +105,8 @@ exports[`ParcelPopupView renders correctly 1`] = `
       className="col"
     >
       <a
-        href="/submitProperty/1?disabled=true"
-        onClick={[Function]}
-      >
-        View
-      </a>
-      <a
         href="/submitProperty/1"
         onClick={[Function]}
-        style={
-          Object {
-            "marginLeft": "8px",
-          }
-        }
       >
         Update
       </a>
