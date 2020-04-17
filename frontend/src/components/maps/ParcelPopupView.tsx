@@ -6,6 +6,7 @@ import { Label } from 'components/common/Label';
 import './ParcelPopupView.scss';
 import { Link } from 'react-router-dom';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -14,6 +15,7 @@ export interface IParcelDetailProps {
 
 export const ParcelPopupView = (props: IParcelDetailProps | null) => {
   const parcelDetail: IParcel | null | undefined = props?.parcel;
+  const keycloak = useKeycloakWrapper();
 
   return (
     <Container className="parcelPopup" fluid={true}>
@@ -57,14 +59,13 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
             </ListGroup>
           </Col>
           <Col>
-            {parcelDetail?.id && !props?.disabled && (
-              <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
-            )}
-            {parcelDetail?.id && !props?.disabled && (
-              <Link style={{ marginLeft: '8px' }} to={`/submitProperty/${parcelDetail?.id}`}>
-                Update
-              </Link>
-            )}
+            {parcelDetail?.id &&
+              !props?.disabled &&
+              (!keycloak.hasAgency(parcelDetail?.agencyId) ? (
+                <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
+              ) : (
+                <Link to={`/submitProperty/${parcelDetail?.id}`}>Update</Link>
+              ))}
           </Col>
         </Row>
       )}

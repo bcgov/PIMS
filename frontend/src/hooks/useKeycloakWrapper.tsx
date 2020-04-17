@@ -32,7 +32,7 @@ function useKeycloakWrapper() {
     roles: roles(),
     agencyId: (keycloak?.userInfo as UserInfo)?.agencies?.find(x => x),
     hasAgency: (agency: number | undefined) =>
-      agency ? (keycloak?.userInfo as UserInfo)?.agencies?.includes(agency) : false,
+      agency !== undefined ? (keycloak?.userInfo as UserInfo)?.agencies?.includes(agency) : false,
   };
 }
 
