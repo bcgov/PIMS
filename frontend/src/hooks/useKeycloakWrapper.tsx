@@ -1,6 +1,12 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { SYSTEM_ADMINISTRATOR, AGENCY_ADMINISTRATOR } from 'constants/strings';
 
+export interface UserInfo {
+  Groups: any[];
+  given_name: string;
+  agencies: number[];
+}
+
 function useKeycloakWrapper() {
   const { keycloak } = useKeycloak();
   const hasClaim = (claim?: string) => {
@@ -9,11 +15,6 @@ function useKeycloakWrapper() {
   const hasRole = (role?: string) => {
     return !role || (keycloak?.userInfo as any)?.Groups?.includes(role);
   };
-  interface UserInfo {
-    Groups: any[];
-    given_name: string;
-    agencies: number[];
-  }
   const roles = () => {
     return (keycloak?.userInfo as UserInfo)?.Groups
       ? [...(keycloak?.userInfo as UserInfo)?.Groups]

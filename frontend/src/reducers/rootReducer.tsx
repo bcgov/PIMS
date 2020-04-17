@@ -9,6 +9,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import leafletMouseSlice from './LeafletMouseSlice';
 import userDetailReducer from './userDetailReducer';
 import jwtSlice from './JwtSlice';
+import keycloakReadySlice from './keycloakReadySlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -20,6 +21,7 @@ export const reducerObject = {
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
+  [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

@@ -10,6 +10,7 @@ import { KeycloakProvider } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
 import { Provider } from 'react-redux';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
+import { AuthStateContextProvider } from 'contexts/authStateContext';
 
 //@ts-ignore
 const keycloak: KeycloakInstance = new Keycloak('/keycloak.json');
@@ -21,7 +22,9 @@ const Index = () => {
       onEvent={getKeycloakEventHandler(keycloak)}
     >
       <Provider store={store}>
-        <App />
+        <AuthStateContextProvider>
+          <App />
+        </AuthStateContextProvider>
       </Provider>
     </KeycloakProvider>
   );
