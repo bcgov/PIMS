@@ -10,6 +10,7 @@ import leafletMouseSlice from './LeafletMouseSlice';
 import userDetailReducer from './userDetailReducer';
 import jwtSlice from './JwtSlice';
 import keycloakReadySlice from './keycloakReadySlice';
+import mapViewZoomSlice from './mapViewZoomSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -22,6 +23,7 @@ export const reducerObject = {
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,
+  [reducerTypes.MAP_VIEW_ZOOM]: mapViewZoomSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

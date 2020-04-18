@@ -2,7 +2,7 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent } from 'leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row } from 'react-bootstrap';
@@ -11,6 +11,9 @@ import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { decimalOrNull, floatOrNull } from 'utils';
 import { PopupView } from '../PopupView';
+import { useDispatch, useSelector } from 'react-redux';
+import { setMapViewZoom, resetMapViewZoom } from 'reducers/mapViewZoomSlice';
+import { RootState } from 'reducers/rootReducer';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -28,7 +31,6 @@ export type MapViewportChangeEvent = {
 type MapProps = {
   lat: number;
   lng: number;
-  zoom: number;
   properties: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
@@ -46,7 +48,6 @@ type MapProps = {
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
-  zoom,
   properties,
   agencies,
   propertyClassifications,
@@ -60,6 +61,7 @@ const Map: React.FC<MapProps> = ({
   interactive = true,
   showParcelBoundaries = true,
 }) => {
+  const dispatch = useDispatch();
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
@@ -77,6 +79,11 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
+  const zoom = useSelector<RootState, number>(state => state.mapViewZoom);
+  useEffect(() => {
+    dispatch(resetMapViewZoom());
+  }, []);
+
   if (!interactive) {
     const map = mapRef.current?.leafletElement;
     if (map) {
@@ -115,6 +122,8 @@ const Map: React.FC<MapProps> = ({
     };
     onViewportChanged?.(e);
   };
+
+  const onZoomEnd = (event: LeafletEvent) => dispatch(setMapViewZoom(event.target._zoom));
 
   const handleMapFilterChange = (e: MapFilterChangeEvent) => {
     setMapFilter(e);
@@ -198,6 +207,7 @@ const Map: React.FC<MapProps> = ({
           }}
           onpreclick={onMapClick}
           closePopupOnClick={interactive}
+          onzoomend={onZoomEnd}
         >
           {activeBasemap && (
             <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} zIndex={0} />
