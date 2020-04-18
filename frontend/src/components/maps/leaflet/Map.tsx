@@ -5,7 +5,7 @@ import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
@@ -195,48 +195,58 @@ const Map: React.FC<MapProps> = ({
   };
 
   return (
-    <Container fluid={true}>
-      <Row>
-        {!disableMapFilterBar ? (
-          <MapFilterBar
-            agencyLookupCodes={agencies}
-            propertyClassifications={propertyClassifications}
-            lotSizes={lotSizes}
-            onFilterChange={handleMapFilterChange}
-          />
-        ) : null}
-        {baseLayers?.length > 0 && (
-          <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
-        )}
-        <LeafletMap
-          ref={mapRef}
-          center={[lat, lng]}
-          zoom={lastZoom}
-          whenReady={() => {
-            handleViewportChange();
-          }}
-          onViewportChanged={() => {
-            handleViewportChange();
-          }}
-          onpreclick={onMapClick}
-          closePopupOnClick={interactive}
-          onzoomend={onZoomEnd}
-        >
-          {activeBasemap && (
-            <TileLayer attribution={activeBasemap.attribution} url={activeBasemap.url} zIndex={0} />
-          )}
-          {showParcelBoundaries && (
-            <WMSTileLayer
-              url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
-              layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-              transparent={true}
-              format="image/png"
-              zIndex={10}
+    <Container fluid className="px-0">
+      {!disableMapFilterBar ? (
+        <Row noGutters>
+          <Col>
+            <MapFilterBar
+              agencyLookupCodes={agencies}
+              propertyClassifications={propertyClassifications}
+              lotSizes={lotSizes}
+              onFilterChange={handleMapFilterChange}
             />
+          </Col>
+        </Row>
+      ) : null}
+      <Row noGutters>
+        <Col>
+          {baseLayers?.length > 0 && (
+            <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
           )}
-          {properties && properties.map(renderMarker)}
-          {selectedProperty && renderPopup(selectedProperty)}
-        </LeafletMap>
+          <LeafletMap
+            ref={mapRef}
+            center={[lat, lng]}
+            zoom={lastZoom}
+            whenReady={() => {
+              handleViewportChange();
+            }}
+            onViewportChanged={() => {
+              handleViewportChange();
+            }}
+            onpreclick={onMapClick}
+            closePopupOnClick={interactive}
+            onzoomend={onZoomEnd}
+          >
+            {activeBasemap && (
+              <TileLayer
+                attribution={activeBasemap.attribution}
+                url={activeBasemap.url}
+                zIndex={0}
+              />
+            )}
+            {showParcelBoundaries && (
+              <WMSTileLayer
+                url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+                layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+                transparent={true}
+                format="image/png"
+                zIndex={10}
+              />
+            )}
+            {properties && properties.map(renderMarker)}
+            {selectedProperty && renderPopup(selectedProperty)}
+          </LeafletMap>
+        </Col>
       </Row>
     </Container>
   );

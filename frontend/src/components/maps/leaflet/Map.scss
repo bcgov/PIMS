@@ -1,8 +1,8 @@
 .leaflet-container {
   /* Subtract the header, nav-bar and footer sizes */
-  min-height: calc(100vh - 70px - 45px - 42px);
-  margin-top: 10px;
-  padding-top: 20px;
+  height: calc(100vh - 70px - 45px - 42px - 76px);
+  // margin-top: 10px;
+  // padding-top: 20px;
   width: 100%;
   margin: auto;
 

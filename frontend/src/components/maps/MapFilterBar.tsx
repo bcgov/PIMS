@@ -79,9 +79,9 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       }}
     >
       {({ isSubmitting }) => (
-        <Container fluid={true} className="map-filter-container">
+        <Container fluid className="px-0 map-filter-container">
           <Row>
-            <Col md={{ span: 8, offset: 2 }} xs={{ span: 8, offset: 2 }}>
+            <Col>
               <Form>
                 <Form.Row className="map-filter-bar">
                   <Col className="bar-item">

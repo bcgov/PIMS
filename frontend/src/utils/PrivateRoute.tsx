@@ -3,8 +3,7 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 interface IPrivateRouteProps extends RouteProps {
-  // tslint:disable-next-line:no-any
-  component: any;
+  component: React.ComponentType<any>;
   role?: string | Array<string>;
   claim?: string | Array<string>;
 }
