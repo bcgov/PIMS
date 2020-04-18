@@ -23,6 +23,7 @@ export const GET_USERS = 'getUsers';
 
 export const JWT = 'jwt';
 export const KEYCLOAK_READY = 'keycloakReady';
+export const MAP_VIEW_ZOOM = 'mapViewZoom';
 export const LEAFLET_CLICK_EVENT = 'leafletClickEvent';
 export const GET_USER_DETAIL = 'GET_USER_DETAIL';
 export const PUT_USER_DETAIL = 'PUT_USER_DETAIL';

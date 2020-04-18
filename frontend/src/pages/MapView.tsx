@@ -100,7 +100,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     <Map
       lat={propertyDetail?.parcelDetail?.latitude ?? 48.43}
       lng={propertyDetail?.parcelDetail?.longitude ?? -123.37}
-      zoom={14}
       properties={properties}
       selectedProperty={propertyDetail}
       agencies={agencies}
