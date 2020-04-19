@@ -80,7 +80,8 @@ namespace Pims.Api
         {
             services.AddMapster(options =>
             {
-                TypeAdapterConfig.GlobalSettings.Default.IgnoreNonMapped(true);
+                options.Default.IgnoreNonMapped(true);
+                options.Default.IgnoreNullValues(true);
             });
             services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));

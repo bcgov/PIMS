@@ -89,7 +89,7 @@ test('new users are sent to the guest page', () => {
       </Router>
     </Provider>,
   );
-  expect(history.location.pathname).toBe('/guest');
+  expect(history.location.pathname).toBe('/access/request');
 });
 
 test('unAuthenticated users are shown the login screen', () => {

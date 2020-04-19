@@ -178,7 +178,7 @@ namespace Pims.Dal.Services.Admin
         /// Get the access request with matching id
         /// </summary>
         /// <param name="id"></param>
-        public AccessRequest GetAccessRequest(Guid id)
+        public AccessRequest GetAccessRequest(int id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 

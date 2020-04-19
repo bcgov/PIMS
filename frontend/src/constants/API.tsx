@@ -23,6 +23,7 @@ export interface IParcelListParams {
   swLongitude: number;
   address: string | null;
   municipality: string | null;
+  projectNumber: string | null;
   /** comma-separated list of agencies to filter by */
   agencies: string | null;
   classificationId: number | null;
@@ -64,7 +65,7 @@ export const OCCUPANT_TYPE_CODE_SET_NAME = 'BuildingOccupantType';
 export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties or all if not specified.
 
 // User Service
-export const REQUEST_ACCESS = () => `/users/access/request`; //request access url.
+export const REQUEST_ACCESS = (id?: number) => `/users/access/requests${id ? '/' + id : ''}`; //request access url.
 export const REQUEST_ACCESS_ADMIN = () => `/keycloak/users/access/request`; //request access admin url.
 export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
   `/admin/users/access/requests/?${queryString.stringify(params)}`; // get paged access requests

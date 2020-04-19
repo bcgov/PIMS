@@ -6,11 +6,9 @@ namespace Pims.Api.Areas.Admin.Mapping.User
 {
     public class AccessRequestUserMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.User, Model.AccessRequestUserModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.DisplayName, src => src.DisplayName)
                 .Map(dest => dest.FirstName, src => src.FirstName)
@@ -19,9 +17,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.Email, src => src.Email)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
-
             config.NewConfig<Model.AccessRequestUserModel, Entity.User>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.DisplayName, src => src.DisplayName)
                 .Map(dest => dest.FirstName, src => src.FirstName)

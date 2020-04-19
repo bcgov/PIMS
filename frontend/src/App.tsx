@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import MapView from './pages/MapView';
-import GuestAccessPage from './pages/GuestAccessPage';
+import AccessRequestPage from './pages/AccessRequestPage';
 import EditUserPage from './pages/EditUserPage';
 import PrivateRoute from './PrivateRoute';
 import Login from './pages/Login';
@@ -63,7 +63,10 @@ const App = () => {
                       component={Administration}
                       role={SYSTEM_ADMINISTRATOR}
                     ></PrivateRoute>
-                    <PrivateRoute path="/guest" component={GuestAccessPage}></PrivateRoute>
+                    <PrivateRoute
+                      path="/access/request"
+                      component={AccessRequestPage}
+                    ></PrivateRoute>
                     <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
                     <PrivateRoute path="/mapView" component={MapView} />
                     <PrivateRoute path="/submitProperty/:id?" component={SubmitProperty} />

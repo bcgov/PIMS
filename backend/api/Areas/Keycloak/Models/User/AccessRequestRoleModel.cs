@@ -10,7 +10,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User
     {
         #region Properties
         public string Description { get; set; }
-        public ICollection<UserModel> Users { get; } = new List<UserModel>();
         #endregion
     }
 }

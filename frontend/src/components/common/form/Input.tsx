@@ -50,6 +50,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
       {!!label && <Form.Label>{label}</Form.Label>}
+      {!!required && <span className="required">*</span>}
       <Form.Control
         as={asElement}
         name={field}
