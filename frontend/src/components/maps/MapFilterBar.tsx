@@ -24,6 +24,7 @@ const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
 export type MapFilterChangeEvent = {
   address: string;
   municipality: string;
+  projectNumber: string;
   /** comma-separated list of agencies to filter by */
   agencies: string;
   classificationId: string;
@@ -65,6 +66,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       initialValues={{
         address: '',
         municipality: '',
+        projectNumber: '',
         agencies: '',
         classificationId: '',
         minLotSize: '',
@@ -87,6 +89,9 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                   </Col>
                   <Col className="bar-item">
                     <Input field="municipality" placeholder="Enter a municipality" />
+                  </Col>
+                  <Col className="bar-item">
+                    <Input field="projectNumber" placeholder="Enter an SPP/RAEG number" />
                   </Col>
                   <Col className="bar-item">
                     <Select field="agencies" placeholder="View Properties In" options={agencies} />

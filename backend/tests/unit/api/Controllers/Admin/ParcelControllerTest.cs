@@ -314,6 +314,7 @@ namespace Pims.Api.Test.Controllers.Admin
             existingParcel.Municipality = "Municipality";
             existingParcel.Zoning = "Zoning";
             existingParcel.ZoningPotential = "ZoningPotential";
+            existingParcel.ProjectNumber = "ProjectNumber";
             existingParcel.IsSensitive = false;
             service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Throws(new KeyNotFoundException());
 
@@ -345,6 +346,7 @@ namespace Pims.Api.Test.Controllers.Admin
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(existingParcel.ProjectNumber, actualResult.ProjectNumber);
             Assert.Equal(existingParcel.Id, actualResult.Id);
             Assert.Equal(existingParcel.ParcelIdentity, actualResult.PID);
             Assert.Equal(existingParcel.PIN, actualResult.PIN);
