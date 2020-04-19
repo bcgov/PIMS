@@ -56,6 +56,22 @@ exports[`MapFilterBar renders correctly 1`] = `
             <div
               className="form-group"
             >
+              <input
+                className="form-control"
+                id="input-projectNumber"
+                name="projectNumber"
+                onChange={[Function]}
+                placeholder="Enter an SPP/RAEG number"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
               <select
                 className="form-control"
                 id="input-agencies"

@@ -21,6 +21,7 @@ const parcelBounds: IParcelListParams = {
   swLongitude: -123.37,
   address: null,
   municipality: null,
+  projectNumber: null,
   agencies: null,
   classificationId: null,
   minLandArea: null,
@@ -63,8 +64,15 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     if (!e || !e.bounds) {
       return null;
     }
-    const { address, municipality, agencies, classificationId, minLotSize, maxLotSize } =
-      e.filter ?? {};
+    const {
+      address,
+      municipality,
+      projectNumber,
+      agencies,
+      classificationId,
+      minLotSize,
+      maxLotSize,
+    } = e.filter ?? {};
 
     const ne = e.bounds.getNorthEast();
     const sw = e.bounds.getSouthWest();
@@ -75,6 +83,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       swLongitude: sw.lng,
       address: address ?? null,
       municipality: municipality ?? null,
+      projectNumber: projectNumber ?? null,
       agencies: agencies ?? null,
       classificationId: classificationId ?? null,
       minLandArea: minLotSize ?? null,
