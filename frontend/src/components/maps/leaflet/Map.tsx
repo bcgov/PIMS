@@ -20,6 +20,7 @@ export type MapViewportChangeEvent = {
   filter?: {
     address: string;
     municipality: string;
+    projectNumber: string;
     /** comma-separated list of agencies to filter by */
     agencies: string | null;
     classificationId: number | null;
@@ -66,6 +67,7 @@ const Map: React.FC<MapProps> = ({
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     address: '',
     municipality: '',
+    projectNumber: '',
     agencies: '',
     classificationId: '',
     minLotSize: '',
@@ -108,12 +110,21 @@ const Map: React.FC<MapProps> = ({
 
   const handleViewportChange = () => {
     const bounds = getBounds();
-    const { address, municipality, agencies, classificationId, minLotSize, maxLotSize } = mapFilter;
+    const {
+      address,
+      municipality,
+      projectNumber,
+      agencies,
+      classificationId,
+      minLotSize,
+      maxLotSize,
+    } = mapFilter;
     const e: MapViewportChangeEvent = {
       bounds,
       filter: {
         address,
         municipality,
+        projectNumber,
         agencies: agencies,
         classificationId: decimalOrNull(classificationId),
         minLotSize: floatOrNull(minLotSize),
