@@ -4,7 +4,7 @@ import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import './AppNavBar.scss';
 import profileUrl from './profile.svg';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Roles } from 'constants/strings';
+import { Claims } from 'constants/claims';
 
 /**
  * Nav bar with with user-related functionality.
@@ -30,47 +30,48 @@ function AppNavBar() {
     </NavDropdown>
   );
 
-  const getRoleBasedLinks = () => {
-    if (
-      keycloak.hasRole(Roles.ASSISTANT_DEPUTY_MINISTER) ||
-      keycloak.hasRole(Roles.ASSISTANT_DEPUTY_MINISTER_ASSISTANT) ||
-      keycloak.hasRole(Roles.EXECUTIVE_DIRECTOR)
-    ) {
-      return (
-        <Navbar.Collapse className="links">
-          <ManagePropertyDropDown />
-          <StartProjectDropdown />
-          <Nav.Link>View Projects</Nav.Link>
-          <Nav.Link>Approval Requests</Nav.Link>
-        </Navbar.Collapse>
-      );
-    } else if (keycloak.hasRole(Roles.REAL_ESTATE_MANAGER)) {
-      return (
-        <Navbar.Collapse className="links">
-          <ManagePropertyDropDown />
-          <StartProjectDropdown />
-          <Nav.Link>View Projects</Nav.Link>
-        </Navbar.Collapse>
-      );
-    } else if (keycloak.isAdmin) {
-      return (
-        <Navbar.Collapse className="links">
-          <Nav.Link onClick={() => history.push('/admin/requests')}>Access Requests</Nav.Link>
-          <Nav.Link onClick={() => history.push('/admin/users')}>User Management</Nav.Link>
-        </Navbar.Collapse>
-      );
-    }
-  };
+  const canAdmin = keycloak.isAdmin ? (
+    <NavDropdown title="Administration" id="administration">
+      <NavDropdown.Item onClick={() => history.push('/admin/users')}>Users</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => history.push('/admin/access/requests')}>
+        Access Requests
+      </NavDropdown.Item>
+    </NavDropdown>
+  ) : null;
+
+  const canPropertyView = keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
+    <Nav.Link>View Projects</Nav.Link>
+  ) : null;
+
+  const canEditProperties = keycloak.hasClaim(Claims.PROPERTY_EDIT) ? (
+    <ManagePropertyDropDown />
+  ) : null;
+
+  const canDisposeRequest = keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
+    <StartProjectDropdown />
+  ) : null;
+
+  const canDisposeApprove = keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
+    <Nav.Link>Approval Requests</Nav.Link>
+  ) : null;
+
+  const displayName = keycloak.displayName || keycloak.firstName || 'default';
 
   return (
     <Navbar className="map-nav" expand="lg">
       <Navbar.Toggle aria-controls="collapse" className="navbar-dark" />
       <Nav>
-        {getRoleBasedLinks()}
+        <Navbar.Collapse className="links">
+          {canAdmin}
+          {canEditProperties}
+          {canPropertyView}
+          {canDisposeRequest}
+          {canDisposeApprove}
+        </Navbar.Collapse>
         <Nav.Item className="profile">
           <Image src={profileUrl} rounded />
         </Nav.Item>
-        <NavDropdown title={keycloak.firstName || 'default'} id="user-dropdown">
+        <NavDropdown title={displayName} id="user-dropdown">
           {history ? (
             <NavDropdown.Item
               onClick={() => {
