@@ -22,9 +22,9 @@ exports[`header renders correctly 1`] = `
           <div
             className="brand col-lg-1 col-md-4 col-sm-6 col-8"
           >
-            <a
+            <span
               className="navbar-brand"
-              href="https://gov.bc.ca"
+              onClick={[Function]}
             >
               <img
                 alt="Go to the Government of British Columbia website"
@@ -33,7 +33,7 @@ exports[`header renders correctly 1`] = `
                 src="logo-banner.svg"
                 width="156"
               />
-            </a>
+            </span>
           </div>
           <div
             className="title col-lg-7 col-md-2 col-sm-4 col-3"

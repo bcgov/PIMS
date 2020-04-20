@@ -5,9 +5,14 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 interface IPrivateRouteProps extends RouteProps {
   // tslint:disable-next-line:no-any
   component: any;
-  role?: string;
+  role?: string | Array<string>;
+  claim?: string | Array<string>;
 }
 
+/**
+ * A PrivateRoute only allows a user who is authenticated and has the appropriate role(s) or claim(s).
+ * @param props - Properties to pass { component, role, claim }
+ */
 const PrivateRoute = (props: IPrivateRouteProps) => {
   const keycloak = useKeycloakWrapper();
   let { component: Component, ...rest } = props;
@@ -16,7 +21,7 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
       {...rest}
       render={props => {
         if (!!keycloak.obj?.authenticated) {
-          if (keycloak.hasRole(rest.role)) {
+          if (keycloak.hasRole(rest.role) || keycloak.hasClaim(rest.claim)) {
             return <Component {...props} />;
           } else {
             return (

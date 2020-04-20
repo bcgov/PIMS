@@ -16,8 +16,9 @@ import { getActivateUserAction } from 'actionCreators/usersActionCreator';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import AppNavBar from 'components/navigation/AppNavBar';
 import AccessDenied from 'pages/AccessDenied';
-import Administration from 'pages/Administration';
-import { SYSTEM_ADMINISTRATOR } from 'constants/strings';
+import ManageUsers from 'pages/ManageUsers';
+import ManageAccessRequests from 'pages/ManageAccessRequests';
+import { Claims } from 'constants/claims';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import SubmitProperty from 'pages/SubmitProperty';
@@ -59,9 +60,14 @@ const App = () => {
                     <Route path="/login" component={Login}></Route>
                     <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
                     <PrivateRoute
-                      path="/admin"
-                      component={Administration}
-                      role={SYSTEM_ADMINISTRATOR}
+                      path="/admin/users"
+                      component={ManageUsers}
+                      claim={Claims.ADMIN_USERS}
+                    ></PrivateRoute>
+                    <PrivateRoute
+                      path="/admin/access/requests"
+                      component={ManageAccessRequests}
+                      claim={Claims.ADMIN_USERS}
                     ></PrivateRoute>
                     <PrivateRoute
                       path="/access/request"
