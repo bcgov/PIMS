@@ -20,7 +20,7 @@ const Login = () => {
   }
   if (keycloak?.authenticated) {
     if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
-      return <Redirect to={{ pathname: '/guest' }} />;
+      return <Redirect to={{ pathname: '/access/request' }} />;
     }
     return <Redirect to={{ pathname: '/mapview' }} />;
   }

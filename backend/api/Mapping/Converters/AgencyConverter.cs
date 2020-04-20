@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 
 
@@ -17,6 +19,17 @@ namespace Pims.Api.Mapping.Converters
         public static string ConvertSubAgency(Entity.Agency source)
         {
             return source?.ParentId == null ? null : source.Code;
+        }
+
+        public static ICollection<Entity.AccessRequestAgency> ConvertAgency(this IMapper mapper, Entity.AccessRequest destination, Models.User.AccessRequestModel source, IEnumerable<Models.User.AgencyModel> sourceMember)
+        {
+            foreach (var agency in sourceMember)
+            {
+                var accessRequestAgency = mapper.Map<Entity.AccessRequestAgency>(agency);
+                accessRequestAgency.AccessRequestId = source.Id;
+                destination.Agencies.Add(accessRequestAgency);
+            }
+            return destination.Agencies;
         }
     }
 }

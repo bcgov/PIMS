@@ -25,7 +25,7 @@ DB_USER=$varKeycloakDb
 DB_PASSWORD=$passvar
 KEYCLOAK_USER=$varKeycloak
 KEYCLOAK_PASSWORD=$passvar
-KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled 
+KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN" >> ./auth/keycloak/.env
 fi

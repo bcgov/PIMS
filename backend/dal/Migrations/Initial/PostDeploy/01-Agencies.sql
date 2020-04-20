@@ -72,7 +72,7 @@ INSERT INTO dbo.[Agencies] (
     11
     , 7
     , 'ADM'
-    , 'Actiing Deputy Minister'
+    , 'Acting Deputy Minister'
     , 0
 ), (
     12

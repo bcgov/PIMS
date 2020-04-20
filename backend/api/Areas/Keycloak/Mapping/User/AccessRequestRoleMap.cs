@@ -1,17 +1,14 @@
 using Mapster;
 using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Entity = Pims.Dal.Entities;
-using System;
 
 namespace Pims.Api.Areas.Keycloak.Mapping.User
 {
     public class AccessRequestRoleMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.AccessRequestRole, Model.AccessRequestRoleModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.RoleId)
                 .Map(dest => dest.Description, src => src.Role == null ? null : src.Role.Description)
                 .Map(dest => dest.Name, src => src.Role == null ? null : src.Role.Name)
@@ -19,10 +16,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
                 .Map(dest => dest.SortOrder, src => src.Role == null ? 0 : src.Role.SortOrder)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
-
             config.NewConfig<Model.AccessRequestRoleModel, Entity.AccessRequestRole>()
-                .IgnoreNonMapped(true)
-                .Map(dest => dest.AccessRequestId, src => Guid.NewGuid()) // TODO: Set this value if required.
                 .Map(dest => dest.RoleId, src => src.Id)
                 .Map(dest => dest.Role, src => new Entity.Role(src.Id, src.Name)
                 {

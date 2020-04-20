@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Admin.Models.User
 {
@@ -10,7 +9,6 @@ namespace Pims.Api.Areas.Admin.Models.User
     {
         #region Properties
         public string Description { get; set; }
-        public ICollection<UserModel> Users { get; } = new List<UserModel>();
         #endregion
     }
 }

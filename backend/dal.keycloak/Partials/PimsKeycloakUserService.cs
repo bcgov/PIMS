@@ -182,7 +182,7 @@ namespace Pims.Dal.Keycloak
             var accessRequest = _pimsAdminService.User.GetAccessRequest(entity.Id);
             if (!accessRequest.IsGranted != true && entity.IsGranted == true)
             {
-                Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId.Value);
+                Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId);
                 entity.Agencies.ForEach((accessRequestAgency) =>
                 {
                     if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))

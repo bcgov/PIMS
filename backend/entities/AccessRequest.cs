@@ -13,7 +13,7 @@ namespace Pims.Dal.Entities
         /// get/set - The primary key IDENTITY.
         /// </summary>
         /// <value></value>
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// get/set - Whether the request is disabled.
@@ -28,17 +28,23 @@ namespace Pims.Dal.Entities
         public bool? IsGranted { get; set; }
 
         /// <summary>
-        /// Foreign key to User
+        /// get/set - Foreign key to User
         /// </summary>
         /// <returns></returns>
-        public Guid? UserId { get; set; }
+        public Guid UserId { get; set; } // TODO: This shouldn't be nullable.
 
         /// <summary>
-        /// get - the user originating this request
+        /// get/set - the user originating this request
         /// </summary>
         /// <typeparam name="User"></typeparam>
         /// <returns></returns>
         public User User { get; set; }
+
+        /// <summary>
+        /// get/set - A note related to the access request.
+        /// </summary>
+        /// <value></value>
+        public string Note { get; set; }
 
         /// <summary>
         /// get - the list of agencies that the user is requesting to be added to.
@@ -63,11 +69,9 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a User class.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="displayName"></param>
-        public AccessRequest(Guid id, User requestUser)
+        /// <param name="requestUser"></param>
+        public AccessRequest(User requestUser)
         {
-            this.Id = id;
             this.User = requestUser;
         }
         #endregion

@@ -1,0 +1,60 @@
+.userInfo {
+  width: 40%;
+  vertical-align: middle;
+  text-align: left;
+  display: table;
+
+}
+
+.success {
+  display: flex;
+  background-color: lightgreen;
+  margin: auto;
+  padding: 5px;
+}
+
+.success p {
+  text-align: center;
+  vertical-align: middle;
+  margin: auto;
+}
+
+.info {
+  display: flex;
+  background-color: lightskyblue;
+  margin: auto;
+  padding: 5px;
+}
+
+.info p {
+  text-align: center;
+  vertical-align: middle;
+  margin: auto;
+}
+
+.notes {
+  padding-bottom: 30px;
+}
+
+.isDisabled {
+  padding-bottom: 10px;
+}
+
+.cancelSave {
+  padding-top: 15px;
+  padding-bottom: 10px;
+}
+
+.navBar {
+  font-weight: 700;
+  text-align: left;
+}
+
+div.required {
+  color: black;
+  font-weight: normal;
+}
+
+.required {
+  color: red;
+}
