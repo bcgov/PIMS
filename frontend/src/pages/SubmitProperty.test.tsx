@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { IProperty, IParcelDetail } from 'actions/parcelsActions';
+import { IParcelDetail } from 'actions/parcelsActions';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
@@ -34,6 +34,7 @@ const mockDetails: IParcelDetail = {
     pin: '',
     statusId: 0,
     classificationId: 0,
+    municipality: '',
     zoning: '',
     zoningPotential: '',
     agencyId: 0,
@@ -68,10 +69,22 @@ const history = createMemoryHistory();
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.PARCEL]: { parcelDetail: mockDetails },
-  [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+  [reducerTypes.LEAFLET_CLICK_EVENT]: { parcelDetail: mockDetails },
+  [reducerTypes.MAP_VIEW_ZOOM]: 1,
 });
 
 it('SubmitProperty renders a disabled form if agency does not match current user.', () => {
+  // jest.mock('react-redux', () => ({
+  //   useDispatch: () => {},
+  //   useSelector: (state: RootState, action: IPropertyDetail) => ({
+  //     propertyDetail: {
+  //       parcelDetail: {
+  //         latitude: 48.43,
+  //         longitude: -123.37,
+  //       },
+  //     },
+  //   }),
+  // }));
   const tree = mount(
     <Provider store={store}>
       <Router history={history}>

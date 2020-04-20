@@ -24,8 +24,8 @@ docker exec -it {ContainerID} bash
 ### Export the Configuration
 
 ```bash
-cd keycloak
-bin/standalone.sh \
+$ docker exec -it keycloak bash
+$ /opt/jboss/keycloak/bin/standalone.sh \
   -Dkeycloak.migration.action=export \
   -Dkeycloak.migration.provider=singleFile \
   -Dkeycloak.migration.file=/tmp/realm-export-new.json \
@@ -39,7 +39,7 @@ bin/standalone.sh \
 Or (this doens't appear to work on Windows)
 
 ```bash
-docker exec -it {ContainerId} bash /opt/jboss/keycloak/bin/standalone.sh \
+$ docker exec -it keycloak bash /opt/jboss/keycloak/bin/standalone.sh \
   -Djboss.socket.binding.port-offset=100 \
   -Dkeycloak.migration.action=export \
   -Dkeycloak.migration.provider=singleFile \
@@ -49,21 +49,26 @@ docker exec -it {ContainerId} bash /opt/jboss/keycloak/bin/standalone.sh \
   -Dkeycloak.migration.file=/tmp/realm-export-new.json
 ```
 
-
 ## Import Realm
+> Note that some attempts to import the exported JSON during initialization results in failure with the latest exported JSON.
+However if you start the keycloak server without importing and then manually do the import below, it works.
 
 To import a previously exported realm configuration execute the following command;
 
 ```bash
-docker exec -it keycloak bash /opt/jboss/keycloak/bin/standalone.sh \
+$ docker exec -it keycloak bash
+$ /opt/jboss/keycloak/bin/standalone.sh \
   -Djboss.socket.binding.port-offset=100 \
   -Dkeycloak.migration.action=import \
+  -Dkeycloak.profile.feature.scripts=enabled
   -Dkeycloak.profile.feature.upload_scripts=enabled \
   -Dkeycloak.migration.provider=singleFile \
   -Dkeycloak.migration.file=/tmp/realm-export.json
 ```
 
+or
+
 ```bash
-docker run -e KEYCLOAK_USER=<USERNAME> -e KEYCLOAK_PASSWORD=<PASSWORD> \
+$ docker run -e KEYCLOAK_USER=<USERNAME> -e KEYCLOAK_PASSWORD=<PASSWORD> \
     -e KEYCLOAK_IMPORT=/tmp/example-realm.json -v /tmp/example-realm.json:/tmp/example-realm.json jboss/keycloak
 ```

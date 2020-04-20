@@ -18,7 +18,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
         >
           <ParcelDetailForm
             agencyId="1"
-            disabled={true}
+            disabled={false}
             secret="test"
             updateLatLng={[Function]}
           >
@@ -120,6 +120,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                               "landLegalDescription": "test",
                               "latitude": 48,
                               "longitude": 123,
+                              "municipality": "",
                               "pid": "000-000-000",
                               "pin": "",
                               "propertyStatus": "active",
@@ -146,19 +147,19 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                               "_nodes": Array [
                                 "evaluations",
                                 "buildings",
-                                "isSensitive",
+                                "pin",
+                                "pid",
                                 "landArea",
                                 "longitude",
                                 "latitude",
                                 "landLegalDescription",
                                 "zoningPotential",
                                 "zoning",
+                                "municipality",
                                 "description",
                                 "address",
                                 "classificationId",
                                 "statusId",
-                                "pin",
-                                "pid",
                               ],
                               "_options": Object {
                                 "abortEarly": true,
@@ -1489,30 +1490,6 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                     [Function],
                                   ],
                                 },
-                                "isSensitive": BooleanSchema {
-                                  "_blacklist": RefSet {
-                                    "list": Set {},
-                                    "refs": Map {},
-                                  },
-                                  "_conditions": Array [],
-                                  "_deps": Array [],
-                                  "_exclusive": Object {},
-                                  "_mutate": undefined,
-                                  "_options": Object {
-                                    "abortEarly": true,
-                                    "recursive": true,
-                                  },
-                                  "_type": "boolean",
-                                  "_typeError": [Function],
-                                  "_whitelist": RefSet {
-                                    "list": Set {},
-                                    "refs": Map {},
-                                  },
-                                  "tests": Array [],
-                                  "transforms": Array [
-                                    [Function],
-                                  ],
-                                },
                                 "landArea": NumberSchema {
                                   "_blacklist": RefSet {
                                     "list": Set {},
@@ -1630,6 +1607,35 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "tests": Array [
                                     [Function],
                                     [Function],
+                                    [Function],
+                                  ],
+                                  "transforms": Array [
+                                    [Function],
+                                  ],
+                                },
+                                "municipality": StringSchema {
+                                  "_blacklist": RefSet {
+                                    "list": Set {},
+                                    "refs": Map {},
+                                  },
+                                  "_conditions": Array [],
+                                  "_deps": Array [],
+                                  "_exclusive": Object {
+                                    "max": true,
+                                  },
+                                  "_mutate": undefined,
+                                  "_nullable": true,
+                                  "_options": Object {
+                                    "abortEarly": true,
+                                    "recursive": true,
+                                  },
+                                  "_type": "string",
+                                  "_typeError": [Function],
+                                  "_whitelist": RefSet {
+                                    "list": Set {},
+                                    "refs": Map {},
+                                  },
+                                  "tests": Array [
                                     [Function],
                                   ],
                                   "transforms": Array [
@@ -1808,6 +1814,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                               "tests": Array [],
                               "transforms": Array [
                                 [Function],
+                                [Function],
                               ],
                             }
                           }
@@ -1853,6 +1860,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       "landLegalDescription": "test",
                                       "latitude": 48,
                                       "longitude": 123,
+                                      "municipality": "",
                                       "pid": "000-000-000",
                                       "pin": "",
                                       "propertyStatus": "active",
@@ -1909,6 +1917,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           "landLegalDescription": "test",
                                           "latitude": 48,
                                           "longitude": 123,
+                                          "municipality": "",
                                           "pid": "000-000-000",
                                           "pin": "",
                                           "propertyStatus": "active",
@@ -1968,6 +1977,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           "landLegalDescription": "test",
                                           "latitude": 48,
                                           "longitude": 123,
+                                          "municipality": "",
                                           "pid": "000-000-000",
                                           "pin": "",
                                           "propertyStatus": "active",
@@ -2006,6 +2016,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         "landLegalDescription": "test",
                                         "latitude": 48,
                                         "longitude": 123,
+                                        "municipality": "",
                                         "pid": "000-000-000",
                                         "pin": "",
                                         "propertyStatus": "active",
@@ -2039,7 +2050,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             className="pidPinForm form-row"
                                           >
                                             <PidPinForm
-                                              disabled={true}
+                                              disabled={false}
                                             >
                                               <Col
                                                 className="pidPinForm"
@@ -2071,7 +2082,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="pid"
                                                       >
                                                         <FormGroup
@@ -2083,7 +2094,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="pid"
                                                               onChange={[Function]}
@@ -2091,7 +2102,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-pid"
                                                                 name="pid"
                                                                 onChange={[Function]}
@@ -2138,7 +2149,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="pin"
                                                       >
                                                         <FormGroup
@@ -2150,7 +2161,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="pin"
                                                               onChange={[Function]}
@@ -2158,7 +2169,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-pin"
                                                                 name="pin"
                                                                 onChange={[Function]}
@@ -2178,7 +2189,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             </PidPinForm>
                                             <AddressForm
                                               dirty={false}
-                                              disabled={true}
+                                              disabled={false}
                                               errors={Object {}}
                                               getFieldHelpers={[Function]}
                                               getFieldMeta={[Function]}
@@ -2218,6 +2229,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -2279,6 +2291,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -2318,7 +2331,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="address.line1"
                                                       >
                                                         <FormGroup
@@ -2330,7 +2343,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="address.line1"
                                                               onChange={[Function]}
@@ -2338,7 +2351,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-address.line1"
                                                                 name="address.line1"
                                                                 onChange={[Function]}
@@ -2376,7 +2389,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Select
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="address.cityId"
                                                         options={Array []}
                                                         placeholder="Must Select One"
@@ -2390,14 +2403,14 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="select"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="address.cityId"
                                                               onChange={[Function]}
                                                             >
                                                               <select
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-address.cityId"
                                                                 name="address.cityId"
                                                                 onChange={[Function]}
@@ -2440,7 +2453,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Select
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="address.provinceId"
                                                         options={Array []}
                                                         placeholder="Must Select One"
@@ -2454,14 +2467,14 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="select"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="address.provinceId"
                                                               onChange={[Function]}
                                                             >
                                                               <select
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-address.provinceId"
                                                                 name="address.provinceId"
                                                                 onChange={[Function]}
@@ -2504,7 +2517,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="address.postal"
                                                       >
                                                         <FormGroup
@@ -2516,7 +2529,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="address.postal"
                                                               onChange={[Function]}
@@ -2524,7 +2537,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-address.postal"
                                                                 name="address.postal"
                                                                 onChange={[Function]}
@@ -2563,7 +2576,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         </h3>
                                         <LandForm
                                           dirty={false}
-                                          disabled={true}
+                                          disabled={false}
                                           errors={Object {}}
                                           getFieldHelpers={[Function]}
                                           getFieldMeta={[Function]}
@@ -2603,6 +2616,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               "landLegalDescription": "test",
                                               "latitude": 48,
                                               "longitude": 123,
+                                              "municipality": "",
                                               "pid": "000-000-000",
                                               "pin": "",
                                               "propertyStatus": "active",
@@ -2663,6 +2677,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               "landLegalDescription": "test",
                                               "latitude": 48,
                                               "longitude": 123,
+                                              "municipality": "",
                                               "pid": "000-000-000",
                                               "pin": "",
                                               "propertyStatus": "active",
@@ -2701,13 +2716,71 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           <label
                                                             className="form-label col-form-label col-md-2"
                                                           >
+                                                            Municipality
+                                                          </label>
+                                                        </Col>
+                                                      </FormLabel>
+                                                      <Input
+                                                        className="col-md-10"
+                                                        disabled={false}
+                                                        field="municipality"
+                                                      >
+                                                        <FormGroup
+                                                          controlId="input-municipality"
+                                                        >
+                                                          <div
+                                                            className="form-group"
+                                                          >
+                                                            <FormControl
+                                                              as="input"
+                                                              className="col-md-10"
+                                                              disabled={false}
+                                                              isInvalid={false}
+                                                              name="municipality"
+                                                              onChange={[Function]}
+                                                              value=""
+                                                            >
+                                                              <input
+                                                                className="col-md-10 form-control"
+                                                                disabled={false}
+                                                                id="input-municipality"
+                                                                name="municipality"
+                                                                onChange={[Function]}
+                                                                value=""
+                                                              />
+                                                            </FormControl>
+                                                            <DisplayError
+                                                              field="municipality"
+                                                            />
+                                                          </div>
+                                                        </FormGroup>
+                                                      </Input>
+                                                    </div>
+                                                  </FormRow>
+                                                  <FormRow>
+                                                    <div
+                                                      className="form-row"
+                                                    >
+                                                      <FormLabel
+                                                        column={true}
+                                                        md={2}
+                                                        srOnly={false}
+                                                      >
+                                                        <Col
+                                                          as="label"
+                                                          className="form-label col-form-label"
+                                                          md={2}
+                                                        >
+                                                          <label
+                                                            className="form-label col-form-label col-md-2"
+                                                          >
                                                             Zoning
                                                           </label>
                                                         </Col>
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="zoning"
                                                       >
                                                         <FormGroup
@@ -2719,7 +2792,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="zoning"
                                                               onChange={[Function]}
@@ -2727,7 +2800,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-zoning"
                                                                 name="zoning"
                                                                 onChange={[Function]}
@@ -2765,7 +2838,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="zoningPotential"
                                                       >
                                                         <FormGroup
@@ -2777,7 +2850,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="zoningPotential"
                                                               onChange={[Function]}
@@ -2785,7 +2858,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-zoningPotential"
                                                                 name="zoningPotential"
                                                                 onChange={[Function]}
@@ -2823,7 +2896,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="latitude"
                                                         type="number"
                                                       >
@@ -2836,7 +2909,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="latitude"
                                                               onChange={[Function]}
@@ -2845,7 +2918,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-latitude"
                                                                 name="latitude"
                                                                 onChange={[Function]}
@@ -2884,7 +2957,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="longitude"
                                                         type="number"
                                                       >
@@ -2897,7 +2970,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="longitude"
                                                               onChange={[Function]}
@@ -2906,7 +2979,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-longitude"
                                                                 name="longitude"
                                                                 onChange={[Function]}
@@ -2953,7 +3026,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Check
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="statusId"
                                                       >
                                                         <FormGroup
@@ -2966,7 +3039,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               as="input"
                                                               className="col-md-10"
                                                               defaultChecked={0}
-                                                              disabled={true}
+                                                              disabled={false}
                                                               inline={false}
                                                               isInvalid={false}
                                                               isValid={false}
@@ -2982,7 +3055,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                 <FormCheckInput
                                                                   as="input"
                                                                   defaultChecked={0}
-                                                                  disabled={true}
+                                                                  disabled={false}
                                                                   isInvalid={false}
                                                                   isStatic={true}
                                                                   isValid={false}
@@ -2994,7 +3067,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                   <input
                                                                     className="form-check-input position-static"
                                                                     defaultChecked={0}
-                                                                    disabled={true}
+                                                                    disabled={false}
                                                                     id="input-statusId"
                                                                     name="statusId"
                                                                     onChange={[Function]}
@@ -3035,7 +3108,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Select
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="classificationId"
                                                         options={Array []}
                                                         placeholder="Must Select One"
@@ -3049,7 +3122,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="select"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="classificationId"
                                                               onChange={[Function]}
@@ -3057,7 +3130,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <select
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-classificationId"
                                                                 name="classificationId"
                                                                 onChange={[Function]}
@@ -3101,7 +3174,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="landArea"
                                                         type="number"
                                                       >
@@ -3114,7 +3187,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
-                                                              disabled={true}
+                                                              disabled={false}
                                                               isInvalid={false}
                                                               name="landArea"
                                                               onChange={[Function]}
@@ -3123,7 +3196,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             >
                                                               <input
                                                                 className="col-md-10 form-control"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 id="input-landArea"
                                                                 name="landArea"
                                                                 onChange={[Function]}
@@ -3161,7 +3234,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         </Col>
                                                       </FormLabel>
                                                       <Check
-                                                        disabled={true}
+                                                        disabled={false}
                                                         field="isSensitive"
                                                       >
                                                         <FormGroup
@@ -3173,7 +3246,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormCheck
                                                               as="input"
                                                               defaultChecked={false}
-                                                              disabled={true}
+                                                              disabled={false}
                                                               inline={false}
                                                               isInvalid={false}
                                                               isValid={false}
@@ -3189,7 +3262,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                 <FormCheckInput
                                                                   as="input"
                                                                   defaultChecked={false}
-                                                                  disabled={true}
+                                                                  disabled={false}
                                                                   isInvalid={false}
                                                                   isStatic={true}
                                                                   isValid={false}
@@ -3201,7 +3274,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                   <input
                                                                     className="form-check-input position-static"
                                                                     defaultChecked={false}
-                                                                    disabled={true}
+                                                                    disabled={false}
                                                                     id="input-isSensitive"
                                                                     name="isSensitive"
                                                                     onChange={[Function]}
@@ -3274,6 +3347,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -3333,6 +3407,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -3347,15 +3422,80 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             validateOnChange={true}
                                           >
                                             <div>
+                                              <Button
+                                                active={false}
+                                                className="addEval"
+                                                disabled={false}
+                                                onClick={[Function]}
+                                                type="button"
+                                                variant="primary"
+                                              >
+                                                <button
+                                                  className="addEval btn btn-primary"
+                                                  disabled={false}
+                                                  onClick={[Function]}
+                                                  type="button"
+                                                >
+                                                  Add Land Valuation
+                                                </button>
+                                              </Button>
                                               <div
                                                 key="0"
                                               >
+                                                <Button
+                                                  active={false}
+                                                  disabled={false}
+                                                  onClick={[Function]}
+                                                  type="button"
+                                                  variant="danger"
+                                                >
+                                                  <button
+                                                    className="btn btn-danger"
+                                                    disabled={false}
+                                                    onClick={[Function]}
+                                                    type="button"
+                                                  >
+                                                    <FaTimes
+                                                      size={14}
+                                                    >
+                                                      <IconBase
+                                                        attr={
+                                                          Object {
+                                                            "viewBox": "0 0 352 512",
+                                                          }
+                                                        }
+                                                        size={14}
+                                                      >
+                                                        <svg
+                                                          fill="currentColor"
+                                                          height={14}
+                                                          size={14}
+                                                          stroke="currentColor"
+                                                          strokeWidth="0"
+                                                          style={
+                                                            Object {
+                                                              "color": undefined,
+                                                            }
+                                                          }
+                                                          viewBox="0 0 352 512"
+                                                          width={14}
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+                                                            key="0"
+                                                          />
+                                                        </svg>
+                                                      </IconBase>
+                                                    </FaTimes>
+                                                  </button>
+                                                </Button>
                                                 <h5>
                                                   Evaluation
                                                 </h5>
                                                 <EvaluationForm
                                                   dirty={false}
-                                                  disabled={true}
+                                                  disabled={false}
                                                   errors={Object {}}
                                                   evaluation={
                                                     Object {
@@ -3403,6 +3543,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       "landLegalDescription": "test",
                                                       "latitude": 48,
                                                       "longitude": 123,
+                                                      "municipality": "",
                                                       "pid": "000-000-000",
                                                       "pin": "",
                                                       "propertyStatus": "active",
@@ -3465,6 +3606,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       "landLegalDescription": "test",
                                                       "latitude": 48,
                                                       "longitude": 123,
+                                                      "municipality": "",
                                                       "pid": "000-000-000",
                                                       "pin": "",
                                                       "propertyStatus": "active",
@@ -3509,7 +3651,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               </FormLabel>
                                                               <Input
                                                                 className="col-md-10"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 field="evaluations.0.date"
                                                                 type="number"
                                                               >
@@ -3522,7 +3664,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     <FormControl
                                                                       as="input"
                                                                       className="col-md-10"
-                                                                      disabled={true}
+                                                                      disabled={false}
                                                                       isInvalid={false}
                                                                       name="evaluations.0.date"
                                                                       onChange={[Function]}
@@ -3531,7 +3673,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     >
                                                                       <input
                                                                         className="col-md-10 form-control"
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         id="input-evaluations.0.date"
                                                                         name="evaluations.0.date"
                                                                         onChange={[Function]}
@@ -3570,7 +3712,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               </FormLabel>
                                                               <Input
                                                                 className="col-md-10"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 field="evaluations.0.value"
                                                                 type="number"
                                                               >
@@ -3583,7 +3725,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     <FormControl
                                                                       as="input"
                                                                       className="col-md-10"
-                                                                      disabled={true}
+                                                                      disabled={false}
                                                                       isInvalid={false}
                                                                       name="evaluations.0.value"
                                                                       onChange={[Function]}
@@ -3592,7 +3734,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     >
                                                                       <input
                                                                         className="col-md-10 form-control"
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         id="input-evaluations.0.value"
                                                                         name="evaluations.0.value"
                                                                         onChange={[Function]}
@@ -3631,7 +3773,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               </FormLabel>
                                                               <Input
                                                                 className="col-md-10"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 field="evaluations.0.estimatedValue"
                                                                 type="number"
                                                               >
@@ -3644,7 +3786,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     <FormControl
                                                                       as="input"
                                                                       className="col-md-10"
-                                                                      disabled={true}
+                                                                      disabled={false}
                                                                       isInvalid={false}
                                                                       name="evaluations.0.estimatedValue"
                                                                       onChange={[Function]}
@@ -3652,7 +3794,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     >
                                                                       <input
                                                                         className="col-md-10 form-control"
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         id="input-evaluations.0.estimatedValue"
                                                                         name="evaluations.0.estimatedValue"
                                                                         onChange={[Function]}
@@ -3698,7 +3840,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               </FormLabel>
                                                               <Input
                                                                 className="col-md-10"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 field="evaluations.0.appraisedValue"
                                                                 type="number"
                                                               >
@@ -3711,7 +3853,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     <FormControl
                                                                       as="input"
                                                                       className="col-md-10"
-                                                                      disabled={true}
+                                                                      disabled={false}
                                                                       isInvalid={false}
                                                                       name="evaluations.0.appraisedValue"
                                                                       onChange={[Function]}
@@ -3719,7 +3861,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     >
                                                                       <input
                                                                         className="col-md-10 form-control"
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         id="input-evaluations.0.appraisedValue"
                                                                         name="evaluations.0.appraisedValue"
                                                                         onChange={[Function]}
@@ -3757,7 +3899,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               </FormLabel>
                                                               <Input
                                                                 className="col-md-10"
-                                                                disabled={true}
+                                                                disabled={false}
                                                                 field="evaluations.0.netBookValue"
                                                                 type="number"
                                                               >
@@ -3770,7 +3912,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     <FormControl
                                                                       as="input"
                                                                       className="col-md-10"
-                                                                      disabled={true}
+                                                                      disabled={false}
                                                                       isInvalid={false}
                                                                       name="evaluations.0.netBookValue"
                                                                       onChange={[Function]}
@@ -3778,7 +3920,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                     >
                                                                       <input
                                                                         className="col-md-10 form-control"
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         id="input-evaluations.0.netBookValue"
                                                                         name="evaluations.0.netBookValue"
                                                                         onChange={[Function]}
@@ -3866,6 +4008,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -3925,6 +4068,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   "landLegalDescription": "test",
                                                   "latitude": 48,
                                                   "longitude": 123,
+                                                  "municipality": "",
                                                   "pid": "000-000-000",
                                                   "pin": "",
                                                   "propertyStatus": "active",
@@ -3938,7 +4082,25 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             render={[Function]}
                                             validateOnChange={true}
                                           >
-                                            <div />
+                                            <div>
+                                              <Button
+                                                active={false}
+                                                className="addBuilding"
+                                                disabled={false}
+                                                onClick={[Function]}
+                                                type="button"
+                                                variant="primary"
+                                              >
+                                                <button
+                                                  className="addBuilding btn btn-primary"
+                                                  disabled={false}
+                                                  onClick={[Function]}
+                                                  type="button"
+                                                >
+                                                  Add Building
+                                                </button>
+                                              </Button>
+                                            </div>
                                           </FieldArrayInner>
                                         </FormikConnect(FieldArrayInner)>
                                       </div>
@@ -3951,7 +4113,24 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       "textAlign": "right",
                                     }
                                   }
-                                />
+                                >
+                                  <Button
+                                    active={false}
+                                    disabled={false}
+                                    onClick={[Function]}
+                                    type="submit"
+                                    variant="primary"
+                                  >
+                                    <button
+                                      className="btn btn-primary"
+                                      disabled={false}
+                                      onClick={[Function]}
+                                      type="submit"
+                                    >
+                                      Submit
+                                    </button>
+                                  </Button>
+                                </div>
                               </form>
                             </Form>
                           </Form>
@@ -4038,6 +4217,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                     "landLegalDescription": "test",
                     "latitude": 48,
                     "longitude": 123,
+                    "municipality": "",
                     "pid": "000-000-000",
                     "pin": "",
                     "propertyStatus": "active",
@@ -4049,7 +4229,6 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                 }
               }
               showParcelBoundaries={false}
-              zoom={14}
             >
               <Container
                 fluid={true}
@@ -4070,11 +4249,12 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                             123,
                           ]
                         }
-                        closePopupOnClick={false}
+                        closePopupOnClick={true}
                         onViewportChanged={[Function]}
                         onpreclick={[Function]}
+                        onzoomend={[Function]}
                         whenReady={[Function]}
-                        zoom={14}
+                        zoom={1}
                       >
                         <div>
                           <ForwardRef(Leaflet(Popup))
@@ -4222,9 +4402,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -4515,6 +4695,429 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           "ctx": undefined,
                                           "fn": [Function],
                                         },
+                                        Object {
+                                          "ctx": NewClass {
+                                            "_closeButton": <a
+                                              class="leaflet-popup-close-button"
+                                              href="#close"
+                                            >
+                                              ×
+                                            </a>,
+                                            "_container": <div
+                                              class="leaflet-popup  leaflet-zoom-animated"
+                                              style="bottom: -5px; left: 5px;"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content-wrapper"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-content"
+                                                  style="width: 51px;"
+                                                >
+                                                  <div
+                                                    class="parcelPopup container-fluid"
+                                                  >
+                                                    <div
+                                                      class="row"
+                                                    >
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Assessed Value: 
+                                                            </p>
+                                                            $
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <div>
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Address: 
+                                                              </p>
+                                                              1234 mock Street
+                                                            </div>
+                                                            <div>
+                                                              Victoria
+                                                              , 
+                                                              BC
+                                                               
+                                                              V1V1V1
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              PID: 
+                                                            </p>
+                                                             
+                                                            000-000-000
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Agency: 
+                                                            </p>
+                                                            FIN
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Classification: 
+                                                            </p>
+                                                            Core Operational
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <a
+                                                          href="/submitProperty/1"
+                                                        >
+                                                          Update
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="leaflet-popup-tip-container"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-tip"
+                                                />
+                                              </div>
+                                              <a
+                                                class="leaflet-popup-close-button"
+                                                href="#close"
+                                              >
+                                                ×
+                                              </a>
+                                            </div>,
+                                            "_containerBottom": -5,
+                                            "_containerLeft": 5,
+                                            "_containerWidth": 0,
+                                            "_contentNode": <div
+                                              class="leaflet-popup-content"
+                                              style="width: 51px;"
+                                            >
+                                              <div
+                                                class="parcelPopup container-fluid"
+                                              >
+                                                <div
+                                                  class="row"
+                                                >
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Assessed Value: 
+                                                        </p>
+                                                        $
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <div>
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Address: 
+                                                          </p>
+                                                          1234 mock Street
+                                                        </div>
+                                                        <div>
+                                                          Victoria
+                                                          , 
+                                                          BC
+                                                           
+                                                          V1V1V1
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          PID: 
+                                                        </p>
+                                                         
+                                                        000-000-000
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Agency: 
+                                                        </p>
+                                                        FIN
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Classification: 
+                                                        </p>
+                                                        Core Operational
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <a
+                                                      href="/submitProperty/1"
+                                                    >
+                                                      Update
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_events": Object {
+                                              "remove": Array [
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                              ],
+                                            },
+                                            "_initHooksCalled": true,
+                                            "_latlng": Object {
+                                              "lat": 48,
+                                              "lng": 123,
+                                            },
+                                            "_leaflet_id": 23,
+                                            "_map": [Circular],
+                                            "_mapToAdd": [Circular],
+                                            "_source": undefined,
+                                            "_tip": <div
+                                              class="leaflet-popup-tip"
+                                            />,
+                                            "_tipContainer": <div
+                                              class="leaflet-popup-tip-container"
+                                            >
+                                              <div
+                                                class="leaflet-popup-tip"
+                                              />
+                                            </div>,
+                                            "_wrapper": <div
+                                              class="leaflet-popup-content-wrapper"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content"
+                                                style="width: 51px;"
+                                              >
+                                                <div
+                                                  class="parcelPopup container-fluid"
+                                                >
+                                                  <div
+                                                    class="row"
+                                                  >
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Assessed Value: 
+                                                          </p>
+                                                          $
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <div>
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Address: 
+                                                            </p>
+                                                            1234 mock Street
+                                                          </div>
+                                                          <div>
+                                                            Victoria
+                                                            , 
+                                                            BC
+                                                             
+                                                            V1V1V1
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            PID: 
+                                                          </p>
+                                                           
+                                                          000-000-000
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Agency: 
+                                                          </p>
+                                                          FIN
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Classification: 
+                                                          </p>
+                                                          Core Operational
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <a
+                                                        href="/submitProperty/1"
+                                                      >
+                                                        Update
+                                                      </a>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_zoomAnimated": false,
+                                            "options": Object {
+                                              "autoPan": true,
+                                              "children": <PopupView
+                                                disabled={false}
+                                                propertyDetail={
+                                                  Object {
+                                                    "address": Object {
+                                                      "city": "Victoria",
+                                                      "line1": "1234 mock Street",
+                                                      "line2": "N/A",
+                                                      "postal": "V1V1V1",
+                                                      "province": "BC",
+                                                    },
+                                                    "agency": "FIN",
+                                                    "agencyId": 0,
+                                                    "buildings": Array [],
+                                                    "classification": "Core Operational",
+                                                    "classificationId": 0,
+                                                    "description": "test",
+                                                    "evaluations": Array [
+                                                      Object {
+                                                        "date": "2019",
+                                                        "key": "",
+                                                        "value": 100000,
+                                                      },
+                                                    ],
+                                                    "fiscals": Array [],
+                                                    "id": 1,
+                                                    "isSensitive": false,
+                                                    "landArea": "unknown",
+                                                    "landLegalDescription": "test",
+                                                    "latitude": 48,
+                                                    "longitude": 123,
+                                                    "municipality": "",
+                                                    "pid": "000-000-000",
+                                                    "pin": "",
+                                                    "propertyStatus": "active",
+                                                    "statusId": 0,
+                                                    "zoning": "",
+                                                    "zoningPotential": "",
+                                                  }
+                                                }
+                                                propertyTypeId={0}
+                                              />,
+                                              "closeButton": true,
+                                              "leaflet": [Circular],
+                                              "offset": Array [
+                                                0,
+                                                -25,
+                                              ],
+                                              "onClose": [Function],
+                                              "pane": "popupPane",
+                                              "position": Array [
+                                                48,
+                                                123,
+                                              ],
+                                            },
+                                          },
+                                          "fn": [Function],
+                                        },
                                       ],
                                       "unload": Array [
                                         Object {
@@ -4711,9 +5314,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               class="col"
                                                             >
                                                               <a
-                                                                href="/submitProperty/1?disabled=true"
+                                                                href="/submitProperty/1"
                                                               >
-                                                                View
+                                                                Update
                                                               </a>
                                                             </div>
                                                           </div>
@@ -4911,9 +5514,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -5027,9 +5630,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -5159,9 +5762,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -5202,6 +5805,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     "landLegalDescription": "test",
                                                     "latitude": 48,
                                                     "longitude": 123,
+                                                    "municipality": "",
                                                     "pid": "000-000-000",
                                                     "pin": "",
                                                     "propertyStatus": "active",
@@ -5335,9 +5939,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -5451,9 +6055,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -5583,9 +6187,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -5626,6 +6230,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     "landLegalDescription": "test",
                                                     "latitude": 48,
                                                     "longitude": 123,
+                                                    "municipality": "",
                                                     "pid": "000-000-000",
                                                     "pin": "",
                                                     "propertyStatus": "active",
@@ -5701,6 +6306,10 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             </a>,
                                             "options": Object {},
                                           },
+                                          "fn": [Function],
+                                        },
+                                        Object {
+                                          "ctx": undefined,
                                           "fn": [Function],
                                         },
                                       ],
@@ -5884,9 +6493,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -6100,9 +6709,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             class="col"
                                                           >
                                                             <a
-                                                              href="/submitProperty/1?disabled=true"
+                                                              href="/submitProperty/1"
                                                             >
-                                                              View
+                                                              Update
                                                             </a>
                                                           </div>
                                                         </div>
@@ -6295,9 +6904,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -6406,8 +7015,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                     ],
                                     "_initHooksCalled": true,
                                     "_lastCenter": Object {
-                                      "lat": 48.001722929447496,
-                                      "lng": 122.9995708465576,
+                                      "lat": 60.24728584176267,
+                                      "lng": 119.48437499999999,
                                     },
                                     "_layers": Object {
                                       "23": NewClass {
@@ -6514,9 +7123,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -6630,9 +7239,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 class="col"
                                               >
                                                 <a
-                                                  href="/submitProperty/1?disabled=true"
+                                                  href="/submitProperty/1"
                                                 >
-                                                  View
+                                                  Update
                                                 </a>
                                               </div>
                                             </div>
@@ -6762,9 +7371,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   class="col"
                                                 >
                                                   <a
-                                                    href="/submitProperty/1?disabled=true"
+                                                    href="/submitProperty/1"
                                                   >
-                                                    View
+                                                    Update
                                                   </a>
                                                 </div>
                                               </div>
@@ -6805,6 +7414,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 "landLegalDescription": "test",
                                                 "latitude": 48,
                                                 "longitude": 123,
+                                                "municipality": "",
                                                 "pid": "000-000-000",
                                                 "pin": "",
                                                 "propertyStatus": "active",
@@ -6951,9 +7561,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -7098,9 +7708,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -7229,9 +7839,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -7264,8 +7874,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       />,
                                     },
                                     "_pixelOrigin": Object {
-                                      "x": 3530201,
-                                      "y": 1457971,
+                                      "x": 426,
+                                      "y": 148,
                                     },
                                     "_popup": NewClass {
                                       "_closeButton": <a
@@ -7371,9 +7981,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   class="col"
                                                 >
                                                   <a
-                                                    href="/submitProperty/1?disabled=true"
+                                                    href="/submitProperty/1"
                                                   >
-                                                    View
+                                                    Update
                                                   </a>
                                                 </div>
                                               </div>
@@ -7487,9 +8097,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               class="col"
                                             >
                                               <a
-                                                href="/submitProperty/1?disabled=true"
+                                                href="/submitProperty/1"
                                               >
-                                                View
+                                                Update
                                               </a>
                                             </div>
                                           </div>
@@ -7619,9 +8229,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 class="col"
                                               >
                                                 <a
-                                                  href="/submitProperty/1?disabled=true"
+                                                  href="/submitProperty/1"
                                                 >
-                                                  View
+                                                  Update
                                                 </a>
                                               </div>
                                             </div>
@@ -7662,6 +8272,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               "landLegalDescription": "test",
                                               "latitude": 48,
                                               "longitude": 123,
+                                              "municipality": "",
                                               "pid": "000-000-000",
                                               "pin": "",
                                               "propertyStatus": "active",
@@ -7694,7 +8305,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                     "_targets": Object {
                                       "3": [Circular],
                                     },
-                                    "_zoom": 14,
+                                    "_zoom": 1,
                                     "_zoomAnimated": false,
                                     "_zoomBoundLayers": Object {},
                                     "attributionControl": NewClass {
@@ -7838,9 +8449,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -8054,9 +8665,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -8249,9 +8860,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -8351,10 +8962,11 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         48,
                                         123,
                                       ],
-                                      "closePopupOnClick": false,
+                                      "closePopupOnClick": true,
                                       "onViewportChanged": [Function],
                                       "onpreclick": [Function],
-                                      "zoom": 14,
+                                      "onzoomend": [Function],
+                                      "zoom": 1,
                                     },
                                     "scrollWheelZoom": NewClass {
                                       "_delta": 0,
@@ -8539,9 +9151,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -8832,6 +9444,429 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           "ctx": undefined,
                                           "fn": [Function],
                                         },
+                                        Object {
+                                          "ctx": NewClass {
+                                            "_closeButton": <a
+                                              class="leaflet-popup-close-button"
+                                              href="#close"
+                                            >
+                                              ×
+                                            </a>,
+                                            "_container": <div
+                                              class="leaflet-popup  leaflet-zoom-animated"
+                                              style="bottom: -5px; left: 5px;"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content-wrapper"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-content"
+                                                  style="width: 51px;"
+                                                >
+                                                  <div
+                                                    class="parcelPopup container-fluid"
+                                                  >
+                                                    <div
+                                                      class="row"
+                                                    >
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Assessed Value: 
+                                                            </p>
+                                                            $
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <div>
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Address: 
+                                                              </p>
+                                                              1234 mock Street
+                                                            </div>
+                                                            <div>
+                                                              Victoria
+                                                              , 
+                                                              BC
+                                                               
+                                                              V1V1V1
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              PID: 
+                                                            </p>
+                                                             
+                                                            000-000-000
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Agency: 
+                                                            </p>
+                                                            FIN
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Classification: 
+                                                            </p>
+                                                            Core Operational
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <a
+                                                          href="/submitProperty/1"
+                                                        >
+                                                          Update
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="leaflet-popup-tip-container"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-tip"
+                                                />
+                                              </div>
+                                              <a
+                                                class="leaflet-popup-close-button"
+                                                href="#close"
+                                              >
+                                                ×
+                                              </a>
+                                            </div>,
+                                            "_containerBottom": -5,
+                                            "_containerLeft": 5,
+                                            "_containerWidth": 0,
+                                            "_contentNode": <div
+                                              class="leaflet-popup-content"
+                                              style="width: 51px;"
+                                            >
+                                              <div
+                                                class="parcelPopup container-fluid"
+                                              >
+                                                <div
+                                                  class="row"
+                                                >
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Assessed Value: 
+                                                        </p>
+                                                        $
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <div>
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Address: 
+                                                          </p>
+                                                          1234 mock Street
+                                                        </div>
+                                                        <div>
+                                                          Victoria
+                                                          , 
+                                                          BC
+                                                           
+                                                          V1V1V1
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          PID: 
+                                                        </p>
+                                                         
+                                                        000-000-000
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Agency: 
+                                                        </p>
+                                                        FIN
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Classification: 
+                                                        </p>
+                                                        Core Operational
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <a
+                                                      href="/submitProperty/1"
+                                                    >
+                                                      Update
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_events": Object {
+                                              "remove": Array [
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                              ],
+                                            },
+                                            "_initHooksCalled": true,
+                                            "_latlng": Object {
+                                              "lat": 48,
+                                              "lng": 123,
+                                            },
+                                            "_leaflet_id": 23,
+                                            "_map": [Circular],
+                                            "_mapToAdd": [Circular],
+                                            "_source": undefined,
+                                            "_tip": <div
+                                              class="leaflet-popup-tip"
+                                            />,
+                                            "_tipContainer": <div
+                                              class="leaflet-popup-tip-container"
+                                            >
+                                              <div
+                                                class="leaflet-popup-tip"
+                                              />
+                                            </div>,
+                                            "_wrapper": <div
+                                              class="leaflet-popup-content-wrapper"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content"
+                                                style="width: 51px;"
+                                              >
+                                                <div
+                                                  class="parcelPopup container-fluid"
+                                                >
+                                                  <div
+                                                    class="row"
+                                                  >
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Assessed Value: 
+                                                          </p>
+                                                          $
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <div>
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Address: 
+                                                            </p>
+                                                            1234 mock Street
+                                                          </div>
+                                                          <div>
+                                                            Victoria
+                                                            , 
+                                                            BC
+                                                             
+                                                            V1V1V1
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            PID: 
+                                                          </p>
+                                                           
+                                                          000-000-000
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Agency: 
+                                                          </p>
+                                                          FIN
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Classification: 
+                                                          </p>
+                                                          Core Operational
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <a
+                                                        href="/submitProperty/1"
+                                                      >
+                                                        Update
+                                                      </a>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_zoomAnimated": false,
+                                            "options": Object {
+                                              "autoPan": true,
+                                              "children": <PopupView
+                                                disabled={false}
+                                                propertyDetail={
+                                                  Object {
+                                                    "address": Object {
+                                                      "city": "Victoria",
+                                                      "line1": "1234 mock Street",
+                                                      "line2": "N/A",
+                                                      "postal": "V1V1V1",
+                                                      "province": "BC",
+                                                    },
+                                                    "agency": "FIN",
+                                                    "agencyId": 0,
+                                                    "buildings": Array [],
+                                                    "classification": "Core Operational",
+                                                    "classificationId": 0,
+                                                    "description": "test",
+                                                    "evaluations": Array [
+                                                      Object {
+                                                        "date": "2019",
+                                                        "key": "",
+                                                        "value": 100000,
+                                                      },
+                                                    ],
+                                                    "fiscals": Array [],
+                                                    "id": 1,
+                                                    "isSensitive": false,
+                                                    "landArea": "unknown",
+                                                    "landLegalDescription": "test",
+                                                    "latitude": 48,
+                                                    "longitude": 123,
+                                                    "municipality": "",
+                                                    "pid": "000-000-000",
+                                                    "pin": "",
+                                                    "propertyStatus": "active",
+                                                    "statusId": 0,
+                                                    "zoning": "",
+                                                    "zoningPotential": "",
+                                                  }
+                                                }
+                                                propertyTypeId={0}
+                                              />,
+                                              "closeButton": true,
+                                              "leaflet": [Circular],
+                                              "offset": Array [
+                                                0,
+                                                -25,
+                                              ],
+                                              "onClose": [Function],
+                                              "pane": "popupPane",
+                                              "position": Array [
+                                                48,
+                                                123,
+                                              ],
+                                            },
+                                          },
+                                          "fn": [Function],
+                                        },
                                       ],
                                       "unload": Array [
                                         Object {
@@ -9028,9 +10063,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               class="col"
                                                             >
                                                               <a
-                                                                href="/submitProperty/1?disabled=true"
+                                                                href="/submitProperty/1"
                                                               >
-                                                                View
+                                                                Update
                                                               </a>
                                                             </div>
                                                           </div>
@@ -9228,9 +10263,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -9344,9 +10379,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -9476,9 +10511,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -9519,6 +10554,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     "landLegalDescription": "test",
                                                     "latitude": 48,
                                                     "longitude": 123,
+                                                    "municipality": "",
                                                     "pid": "000-000-000",
                                                     "pin": "",
                                                     "propertyStatus": "active",
@@ -9652,9 +10688,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -9768,9 +10804,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -9900,9 +10936,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -9943,6 +10979,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     "landLegalDescription": "test",
                                                     "latitude": 48,
                                                     "longitude": 123,
+                                                    "municipality": "",
                                                     "pid": "000-000-000",
                                                     "pin": "",
                                                     "propertyStatus": "active",
@@ -10018,6 +11055,10 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             </a>,
                                             "options": Object {},
                                           },
+                                          "fn": [Function],
+                                        },
+                                        Object {
+                                          "ctx": undefined,
                                           "fn": [Function],
                                         },
                                       ],
@@ -10201,9 +11242,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -10417,9 +11458,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             class="col"
                                                           >
                                                             <a
-                                                              href="/submitProperty/1?disabled=true"
+                                                              href="/submitProperty/1"
                                                             >
-                                                              View
+                                                              Update
                                                             </a>
                                                           </div>
                                                         </div>
@@ -10612,9 +11653,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -10723,8 +11764,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                     ],
                                     "_initHooksCalled": true,
                                     "_lastCenter": Object {
-                                      "lat": 48.001722929447496,
-                                      "lng": 122.9995708465576,
+                                      "lat": 60.24728584176267,
+                                      "lng": 119.48437499999999,
                                     },
                                     "_layers": Object {
                                       "23": NewClass {
@@ -10831,9 +11872,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -10947,9 +11988,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 class="col"
                                               >
                                                 <a
-                                                  href="/submitProperty/1?disabled=true"
+                                                  href="/submitProperty/1"
                                                 >
-                                                  View
+                                                  Update
                                                 </a>
                                               </div>
                                             </div>
@@ -11079,9 +12120,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   class="col"
                                                 >
                                                   <a
-                                                    href="/submitProperty/1?disabled=true"
+                                                    href="/submitProperty/1"
                                                   >
-                                                    View
+                                                    Update
                                                   </a>
                                                 </div>
                                               </div>
@@ -11122,6 +12163,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 "landLegalDescription": "test",
                                                 "latitude": 48,
                                                 "longitude": 123,
+                                                "municipality": "",
                                                 "pid": "000-000-000",
                                                 "pin": "",
                                                 "propertyStatus": "active",
@@ -11268,9 +12310,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -11415,9 +12457,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                       class="col"
                                                     >
                                                       <a
-                                                        href="/submitProperty/1?disabled=true"
+                                                        href="/submitProperty/1"
                                                       >
-                                                        View
+                                                        Update
                                                       </a>
                                                     </div>
                                                   </div>
@@ -11546,9 +12588,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </div>
                                                 </div>
@@ -11581,8 +12623,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       />,
                                     },
                                     "_pixelOrigin": Object {
-                                      "x": 3530201,
-                                      "y": 1457971,
+                                      "x": 426,
+                                      "y": 148,
                                     },
                                     "_popup": NewClass {
                                       "_closeButton": <a
@@ -11688,9 +12730,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   class="col"
                                                 >
                                                   <a
-                                                    href="/submitProperty/1?disabled=true"
+                                                    href="/submitProperty/1"
                                                   >
-                                                    View
+                                                    Update
                                                   </a>
                                                 </div>
                                               </div>
@@ -11804,9 +12846,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               class="col"
                                             >
                                               <a
-                                                href="/submitProperty/1?disabled=true"
+                                                href="/submitProperty/1"
                                               >
-                                                View
+                                                Update
                                               </a>
                                             </div>
                                           </div>
@@ -11936,9 +12978,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 class="col"
                                               >
                                                 <a
-                                                  href="/submitProperty/1?disabled=true"
+                                                  href="/submitProperty/1"
                                                 >
-                                                  View
+                                                  Update
                                                 </a>
                                               </div>
                                             </div>
@@ -11979,6 +13021,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               "landLegalDescription": "test",
                                               "latitude": 48,
                                               "longitude": 123,
+                                              "municipality": "",
                                               "pid": "000-000-000",
                                               "pin": "",
                                               "propertyStatus": "active",
@@ -12011,7 +13054,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                     "_targets": Object {
                                       "3": [Circular],
                                     },
-                                    "_zoom": 14,
+                                    "_zoom": 1,
                                     "_zoomAnimated": false,
                                     "_zoomBoundLayers": Object {},
                                     "attributionControl": NewClass {
@@ -12155,9 +13198,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -12371,9 +13414,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           class="col"
                                                         >
                                                           <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                            href="/submitProperty/1"
                                                           >
-                                                            View
+                                                            Update
                                                           </a>
                                                         </div>
                                                       </div>
@@ -12566,9 +13609,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                         class="col"
                                                       >
                                                         <a
-                                                          href="/submitProperty/1?disabled=true"
+                                                          href="/submitProperty/1"
                                                         >
-                                                          View
+                                                          Update
                                                         </a>
                                                       </div>
                                                     </div>
@@ -12668,10 +13711,11 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         48,
                                         123,
                                       ],
-                                      "closePopupOnClick": false,
+                                      "closePopupOnClick": true,
                                       "onViewportChanged": [Function],
                                       "onpreclick": [Function],
-                                      "zoom": 14,
+                                      "onzoomend": [Function],
+                                      "zoom": 1,
                                     },
                                     "scrollWheelZoom": NewClass {
                                       "_delta": 0,
@@ -12840,9 +13884,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           class="col"
                                         >
                                           <a
-                                            href="/submitProperty/1?disabled=true"
+                                            href="/submitProperty/1"
                                           >
-                                            View
+                                            Update
                                           </a>
                                         </div>
                                       </div>
@@ -12881,6 +13925,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       "landLegalDescription": "test",
                                       "latitude": 48,
                                       "longitude": 123,
+                                      "municipality": "",
                                       "pid": "000-000-000",
                                       "pin": "",
                                       "propertyStatus": "active",
@@ -12922,6 +13967,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         "landLegalDescription": "test",
                                         "latitude": 48,
                                         "longitude": 123,
+                                        "municipality": "",
                                         "pid": "000-000-000",
                                         "pin": "",
                                         "propertyStatus": "active",
@@ -13158,17 +14204,17 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 className="col"
                                               >
                                                 <Link
-                                                  to="/submitProperty/1?disabled=true"
+                                                  to="/submitProperty/1"
                                                 >
                                                   <LinkAnchor
-                                                    href="/submitProperty/1?disabled=true"
+                                                    href="/submitProperty/1"
                                                     navigate={[Function]}
                                                   >
                                                     <a
-                                                      href="/submitProperty/1?disabled=true"
+                                                      href="/submitProperty/1"
                                                       onClick={[Function]}
                                                     >
-                                                      View
+                                                      Update
                                                     </a>
                                                   </LinkAnchor>
                                                 </Link>

@@ -85,7 +85,7 @@ const Header = () => {
             <Row className="brand-box">
               <Col md={2} lg={2}></Col>
               <Col xs={8} sm={6} md={4} lg={1} className="brand">
-                <Navbar.Brand href="https://gov.bc.ca">
+                <Navbar.Brand onClick={() => history.push('/')}>
                   <img
                     className="bc-gov-icon"
                     src={logoUrl}
