@@ -64,7 +64,7 @@ namespace Pims.Dal.Services
             var entity = this.Context.Users.Find(id);
             if (entity != null) return entity;
 
-            var username = this.User.GetFirstName() ?? _options.ServiceAccount?.Username ??
+            var username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
                 throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
             var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
                 throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
