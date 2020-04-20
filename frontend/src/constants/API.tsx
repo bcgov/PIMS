@@ -23,6 +23,7 @@ export interface IParcelListParams {
   swLongitude: number;
   address: string | null;
   municipality: string | null;
+  projectNumber: string | null;
   /** comma-separated list of agencies to filter by */
   agencies: string | null;
   classificationId: number | null;
