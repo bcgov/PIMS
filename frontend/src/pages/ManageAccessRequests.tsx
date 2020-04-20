@@ -4,10 +4,10 @@ import {
   getAccessRequestsAction,
   getSubmitAdminAccessRequestAction,
   toAccessRequest,
-} from 'actionCreators/usersActionCreator';
+} from 'actionCreators/accessRequestActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IAccessRequest } from 'actions/adminActions';
+import { IAccessRequest } from 'interfaces';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';
 import { toApiPaginateParams, IPaginate } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';

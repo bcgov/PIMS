@@ -77,6 +77,85 @@ namespace PimsApi.Test.Controllers
         }
         #endregion
 
+        #region GetAccessRequest
+        [Fact]
+        public void GetAccessRequest_Current_Success()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+
+            var accessRequest = EntityHelper.CreateAccessRequest();
+            service.Setup(m => m.GetAccessRequest()).Returns(accessRequest);
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            var result = controller.GetAccessRequest();
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
+            Assert.Equal(model, actualResult, new ShallowPropertyCompare());
+            Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
+            Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
+            Assert.Equal(model.User.Id, actualResult.User.Id);
+            service.Verify(m => m.GetAccessRequest(), Times.Once());
+        }
+
+        [Fact]
+        public void GetAccessRequest_Current_NoContent()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+
+            service.Setup(m => m.GetAccessRequest());
+
+            // Act
+            var result = controller.GetAccessRequest();
+
+            // Assert
+            var actionResult = Assert.IsType<NoContentResult>(result);
+            service.Verify(m => m.GetAccessRequest(), Times.Once());
+        }
+
+        [Fact]
+        public void GetAccessRequest_Success()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+
+            var accessRequest = EntityHelper.CreateAccessRequest();
+            service.Setup(m => m.GetAccessRequest(It.IsAny<int>())).Returns(accessRequest);
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            var result = controller.GetAccessRequest(1);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
+            Assert.Equal(model, actualResult, new ShallowPropertyCompare());
+            Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
+            Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
+            Assert.Equal(model.User.Id, actualResult.User.Id);
+            service.Verify(m => m.GetAccessRequest(1), Times.Once());
+        }
+        #endregion
+
         #region AddAccessRequest
         [Fact]
         public void AddAccessRequest_Success()
@@ -97,7 +176,7 @@ namespace PimsApi.Test.Controllers
             var result = controller.AddAccessRequest(model);
 
             // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
+            var actionResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
             Assert.Equal(model, actualResult, new ShallowPropertyCompare());
             Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
@@ -163,7 +242,7 @@ namespace PimsApi.Test.Controllers
 
             var accessRequest = new Model.AccessRequestModel()
             {
-                Agencies = new List<Model.AgencyModel>(),
+                Agencies = new List<Model.AccessRequestAgencyModel>(),
                 Roles = null
             };
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
@@ -188,7 +267,7 @@ namespace PimsApi.Test.Controllers
 
             var accessRequest = new Model.AccessRequestModel()
             {
-                Agencies = new List<Model.AgencyModel>(new[] { new Model.AgencyModel() }),
+                Agencies = new List<Model.AccessRequestAgencyModel>(new[] { new Model.AccessRequestAgencyModel() }),
                 Roles = new List<Model.AccessRequestRoleModel>()
             };
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
@@ -213,7 +292,7 @@ namespace PimsApi.Test.Controllers
 
             var accessRequest = new Model.AccessRequestModel()
             {
-                Agencies = new List<Model.AgencyModel>(),
+                Agencies = new List<Model.AccessRequestAgencyModel>(),
                 Roles = new List<Model.AccessRequestRoleModel>(new[] { new Model.AccessRequestRoleModel() })
             };
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
@@ -222,6 +301,154 @@ namespace PimsApi.Test.Controllers
             // Assert
             Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(model));
             service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+        }
+        #endregion
+
+        #region UpdateAccessRequest
+        [Fact]
+        public void UpdateAccessRequest_Success()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            var accessRequest = EntityHelper.CreateAccessRequest();
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            var result = controller.UpdateAccessRequest(model.Id, model);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.AccessRequestModel>(actionResult.Value);
+            Assert.Equal(model, actualResult, new ShallowPropertyCompare());
+            Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
+            Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
+            Assert.Equal(model.User.Id, actualResult.User.Id);
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_Null_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(1, null));
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_NullAgencies_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            var accessRequest = new Model.AccessRequestModel()
+            {
+                Agencies = null,
+                Roles = new List<Model.AccessRequestRoleModel>()
+            };
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_NullRoles_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            var accessRequest = new Model.AccessRequestModel()
+            {
+                Agencies = new List<Model.AccessRequestAgencyModel>(),
+                Roles = null
+            };
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_InvalidRoles_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            var accessRequest = new Model.AccessRequestModel()
+            {
+                Agencies = new List<Model.AccessRequestAgencyModel>(new[] { new Model.AccessRequestAgencyModel() }),
+                Roles = new List<Model.AccessRequestRoleModel>()
+            };
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateAccessRequest_InvalidAgencies_BadRequest()
+        {
+            // Arrange
+            var user = PrincipalHelper.CreateForRole();
+            var helper = new TestHelper();
+            var controller = helper.CreateController<UserController>(user);
+
+            var service = helper.GetService<Mock<IUserService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+
+            var accessRequest = new Model.AccessRequestModel()
+            {
+                Agencies = new List<Model.AccessRequestAgencyModel>(),
+                Roles = new List<Model.AccessRequestRoleModel>(new[] { new Model.AccessRequestRoleModel() })
+            };
+            var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
+            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
         #endregion
         #endregion

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using Pims.Api.Helpers.Exceptions;
+using System;
 
 namespace Pims.Api.Controllers
 {
@@ -61,6 +62,7 @@ namespace Pims.Api.Controllers
         [HttpGet("info")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(KModel.UserInfoModel), 200)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "user" })]
         public async Task<IActionResult> UserInfoAsync()
         {
@@ -70,32 +72,96 @@ namespace Pims.Api.Controllers
             return await response.HandleResponseAsync<KModel.UserInfoModel>();
         }
 
+        #region Access Requests
         /// <summary>
-        /// Allows a user to submit an access request to the system, associating a role and agency to their user.
+        /// Get the most recent access request for the current user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("access/request")]
+        [HttpGet("access/requests")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
+        [ProducesResponseType(204)]
         [SwaggerOperation(Tags = new[] { "user" })]
-        public IActionResult AddAccessRequest([FromBody] Model.AccessRequestModel accessRequestModel)
+        public IActionResult GetAccessRequest()
         {
-            if (accessRequestModel == null || accessRequestModel.Agencies == null || accessRequestModel.Roles == null)
+            var accessRequest = _userService.GetAccessRequest();
+            if (accessRequest == null) return NoContent();
+            return new JsonResult(_mapper.Map<Model.AccessRequestModel>(accessRequest));
+        }
+
+        /// <summary>
+        /// Get the most recent access request for the current user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("access/requests/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 403)]
+        [SwaggerOperation(Tags = new[] { "user" })]
+        public IActionResult GetAccessRequest(int id)
+        {
+            var accessRequest = _userService.GetAccessRequest(id);
+            return new JsonResult(_mapper.Map<Model.AccessRequestModel>(accessRequest));
+        }
+
+        /// <summary>
+        /// Provides a way for a user to submit an access request to the system, associating a role and agency to their user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("access/requests")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 201)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "user" })]
+        public IActionResult AddAccessRequest([FromBody] Model.AccessRequestModel model)
+        {
+            if (model == null || model.Agencies == null || model.Roles == null)
             {
                 throw new BadRequestException("Invalid access request specified");
             }
-            if (accessRequestModel.Agencies.Count() != 1)
+            if (model.Agencies.Count() != 1)
             {
                 throw new BadRequestException("Each access request can only contain one agency.");
             }
-            if (accessRequestModel.Roles.Count() != 1)
+            if (model.Roles.Count() != 1)
             {
                 throw new BadRequestException("Each access request can only contain one role.");
             }
-            var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);
-            _userService.AddAccessRequest(entity);
-            return new JsonResult(_mapper.Map<Model.AccessRequestModel>(entity)); // TODO: Should return 201.
+            var accessRequest = _mapper.Map<Entity.AccessRequest>(model);
+            _userService.AddAccessRequest(accessRequest);
+            return CreatedAtAction(nameof(GetAccessRequest), new { id = accessRequest.Id }, _mapper.Map<Model.AccessRequestModel>(accessRequest));
         }
+
+        /// <summary>
+        /// Provides a way for a user to update their access request.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("access/requests/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 403)]
+        [SwaggerOperation(Tags = new[] { "user" })]
+        public IActionResult UpdateAccessRequest(int id, [FromBody] Model.AccessRequestModel model)
+        {
+            if (model == null || model.Agencies == null || model.Roles == null)
+            {
+                throw new BadRequestException("Invalid access request specified");
+            }
+            if (model.Agencies.Count() != 1)
+            {
+                throw new BadRequestException("Each access request can only contain one agency.");
+            }
+            if (model.Roles.Count() != 1)
+            {
+                throw new BadRequestException("Each access request can only contain one role.");
+            }
+            var accessRequest = _mapper.Map<Entity.AccessRequest>(model);
+            _userService.UpdateAccessRequest(accessRequest);
+            return new JsonResult(_mapper.Map<Model.AccessRequestModel>(accessRequest));
+        }
+        #endregion
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace Pims.Dal.Services.Admin
         User Get(Guid id);
 
         AccessRequest UpdateAccessRequest(AccessRequest entity);
-        AccessRequest GetAccessRequest(Guid id);
+        AccessRequest GetAccessRequest(int id);
         Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
     }
 }

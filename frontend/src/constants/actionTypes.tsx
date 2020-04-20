@@ -15,17 +15,20 @@ export const GET_PARCEL_DETAIL = 'GET_PARCEL_DETAIL';
 export const ADD_PARCEL = 'ADD_PARCEL';
 export const UPDATE_PARCEL = 'UPDATE_PARCEL';
 
-//Lookup codes
+// Lookup codes
 export const STORE_LOOKUP_CODE_RESULTS = 'STORE_LOOKUP_CODE_RESULTS';
 export const GET_LOOKUP_CODES = 'lookupCodes';
 
-//access requests
+// access requests
 export const STORE_ACCESS_REQUESTS = 'STORE_ACCESS_REQUESTS';
 export const ADD_REQUEST_ACCESS = 'addRequestAccess';
 export const GET_REQUEST_ACCESS = 'getRequestAccess';
 export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
 
-//users
+export const STORE_ACCESS_REQUEST = 'STORE_ACCESS_REQUEST';
+export const GET_ACCESS_REQUEST = 'getAccessRequest';
+
+// users
 export const STORE_USERS = 'STORE_USERS';
 export const ADD_ACTIVATE_USER = 'activateUser';
 export const GET_USERS = 'getUsers';

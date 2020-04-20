@@ -9,9 +9,12 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IUserService
     {
-        AccessRequest AddAccessRequest(AccessRequest request);
         bool UserExists(Guid id);
         User Activate();
         IEnumerable<int> GetAgencies(Guid userId);
+        AccessRequest GetAccessRequest();
+        AccessRequest GetAccessRequest(int id);
+        AccessRequest AddAccessRequest(AccessRequest request);
+        AccessRequest UpdateAccessRequest(AccessRequest request);
     }
 }

@@ -42,6 +42,7 @@ describe('fetchParcels action creator', () => {
       address: null,
       agencies: null,
       classificationId: null,
+      municipality: null,
       minLandArea: null,
       maxLandArea: null,
     };
@@ -64,6 +65,7 @@ describe('fetchParcels action creator', () => {
       address: null,
       agencies: null,
       classificationId: null,
+      municipality: null,
       minLandArea: null,
       maxLandArea: null,
     };

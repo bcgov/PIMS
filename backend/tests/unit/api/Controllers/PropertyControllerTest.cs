@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using Xunit;
 using Pims.Core.Comparers;
+using System.Collections.Generic;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -22,6 +23,46 @@ namespace Pims.Api.Test.Controllers
     public class PropertyControllerTest
     {
         #region Variables
+        public static IEnumerable<object[]> AllPropertiesFilters = new List<object[]>()
+        {
+            new [] { new PropertyFilterModel(100, 0, 0, 0) },
+            new [] { new PropertyFilterModel(0, 100, 0, 0) },
+            new [] { new PropertyFilterModel(0, 0, 10, 0) },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 } },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 } },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) { Address = "Address" } },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) { Agencies = new [] { 1 } } },
+            new [] { new PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" } }
+        };
+
+        public static IEnumerable<object[]> ParcelOnlyFilters = new List<object[]>()
+        {
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { Municipality = "Municipality" } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLotArea = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxLotArea = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLandArea = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxLandArea = 1 } }
+        };
+
+        public static IEnumerable<object[]> BuildingOnlyFilters = new List<object[]>()
+        {
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { PredominateUseId = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { FloorCount = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { Tenancy = "Tenancy" } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinRentableArea = 1 } },
+            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxRentableArea = 1 } }
+        };
+
+        public static IEnumerable<object[]> PropertyQueryFilters = new List<object[]>()
+        {
+            new [] { new Uri("http://host/api/properties?Agencies=1,2") },
+            new [] { new Uri("http://host/api/properties?StatusId=2") },
+            new [] { new Uri("http://host/api/properties?ClassificationId=1") },
+            new [] { new Uri("http://host/api/properties?Address=Address") },
+            new [] { new Uri("http://host/api/properties?ProjectNumber=ProjectNumber") }
+        };
         #endregion
 
         #region Constructors
@@ -35,8 +76,9 @@ namespace Pims.Api.Test.Controllers
         /// <summary>
         /// Make a successful request that includes the latitude.
         /// </summary>
-        [Fact]
-        public void GetProperties_FilterLatitude_Success()
+        [Theory]
+        [MemberData(nameof(AllPropertiesFilters))]
+        public void GetProperties_All_Success(PropertyFilterModel filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -46,40 +88,6 @@ namespace Pims.Api.Test.Controllers
             var parcels = new[] { parcel };
             var building = new Entity.Building(parcel, 51, 25);
             var buildings = new[] { building };
-            var filter = new PropertyFilterModel(50, 25, 50, 20);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
-
-            // Act
-            var result = controller.GetProperties(filter);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
-            Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
-        }
-
-        /// <summary>
-        /// Make a successful request that includes longitude.
-        /// </summary>
-        [Fact]
-        public void GetProperties_FilterLongitude_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
-
-            var parcel = new Entity.Parcel(1, 51, 25);
-            var parcels = new[] { parcel };
-            var building = new Entity.Building(parcel, 51, 25);
-            var buildings = new[] { building };
-            var filter = new PropertyFilterModel(50, 25, 50, 25);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -101,8 +109,9 @@ namespace Pims.Api.Test.Controllers
         /// <summary>
         /// Make a successful request that only returns parcels.
         /// </summary>
-        [Fact]
-        public void GetProperties_OnlyParcels_Success()
+        [Theory]
+        [MemberData(nameof(ParcelOnlyFilters))]
+        public void GetProperties_OnlyParcels_Success(PropertyFilterModel filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -111,7 +120,6 @@ namespace Pims.Api.Test.Controllers
             var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
             var parcels = new[] { parcel1, parcel2 };
-            var filter = new PropertyFilterModel(100, 100, 0, 0) { StatusId = 1 };
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -132,8 +140,9 @@ namespace Pims.Api.Test.Controllers
         /// <summary>
         /// Make a successful request that only returns buildings.
         /// </summary>
-        [Fact]
-        public void GetProperties_OnlyBuildings_Success()
+        [Theory]
+        [MemberData(nameof(BuildingOnlyFilters))]
+        public void GetProperties_OnlyBuildings_Success(PropertyFilterModel filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -142,7 +151,6 @@ namespace Pims.Api.Test.Controllers
             var building1 = new Entity.Building() { Id = 1 };
             var building2 = new Entity.Building() { Id = 2 };
             var buildings = new[] { building1, building2 };
-            var filter = new PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 };
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -163,12 +171,13 @@ namespace Pims.Api.Test.Controllers
         /// <summary>
         /// Make a successful request that passes the filter in the query string.
         /// </summary>
-        [Fact]
-        public void GetProperties_Query_Success()
+        [Theory]
+        [MemberData(nameof(PropertyQueryFilters))]
+        public void GetProperties_Query_Success(Uri uri)
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, new Uri("http://host/api/properties?Agencies=1,2"));
+            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, uri);
 
             var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };

@@ -12,7 +12,7 @@ namespace Pims.Dal.Entities
         /// get/set - The foreign key to the AccessRequest - PRIMARY KEY.
         /// </summary>
         /// <value></value>
-        public Guid AccessRequestId { get; set; }
+        public int AccessRequestId { get; set; }
 
         /// <summary>
         /// get/set - The access request that belongs to an Agency.
@@ -44,7 +44,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="accessRequestId"></param>
         /// <param name="agencyId"></param>
-        public AccessRequestAgency(Guid accessRequestId, int agencyId)
+        public AccessRequestAgency(int accessRequestId, int agencyId)
         {
             this.AccessRequestId = accessRequestId;
             this.AgencyId = agencyId;

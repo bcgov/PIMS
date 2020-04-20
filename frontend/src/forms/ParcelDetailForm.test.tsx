@@ -112,6 +112,7 @@ describe('ParcelDetailForm', () => {
       longitude: 0,
       evaluations: [],
       buildings: [],
+      fiscals: [],
     };
     const fillInput = async (
       container: HTMLElement,

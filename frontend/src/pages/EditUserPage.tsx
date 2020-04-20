@@ -13,7 +13,7 @@ import { Form, Input, Select, SelectOption } from '../components/common/form';
 import { fetchUserDetail, getUpdateUserAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IUserDetails } from 'actions/adminActions';
+import { IUserDetails } from 'interfaces';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import { UserUpdateSchema } from 'utils/YupSchema';
@@ -55,22 +55,25 @@ const EditUserPage = (props: IUserDetailParams) => {
   let agenciesToUpdate: any[];
   let rolesToUpdate: any[];
 
-  let checkAgencies: {} | null | undefined;
-  let checkRoles: {} | null | undefined;
+  const checkAgencies = (
+    <Select
+      label="Agency"
+      field="agency"
+      required={true}
+      options={selectAgencies}
+      placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
+    />
+  );
 
-  checkAgencies =
-    user.agencies.length > 0 ? (
-      <Select field="agency" placeholder={user.agencies[0].name} options={selectAgencies} />
-    ) : (
-      <Select field="agency" placeholder="Please Select" options={selectAgencies} />
-    );
-
-  checkRoles =
-    user.roles.length > 0 ? (
-      <Select field="role" placeholder={user.roles[0].name} options={[]} />
-    ) : (
-      <Select field="role" placeholder="Please Select" options={selectRoles} />
-    );
+  const checkRoles = (
+    <Select
+      label="Role"
+      field="role"
+      required={true}
+      options={selectRoles}
+      placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
+    />
+  );
 
   const initialValues = {
     username: user.username,
