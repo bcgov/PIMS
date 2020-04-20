@@ -10,9 +10,9 @@ exports[`renders Administration page correctly 1`] = `
     <div
       className="col"
     >
-      <h1>
+      <h3>
         Administrator Dashboard
-      </h1>
+      </h3>
     </div>
   </div>
   <div

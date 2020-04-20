@@ -24,7 +24,7 @@ exports[`header renders correctly 1`] = `
           >
             <a
               className="navbar-brand"
-              href="https://gov.bc.ca"
+              href="http://localhostnull"
             >
               <img
                 alt="Go to the Government of British Columbia website"

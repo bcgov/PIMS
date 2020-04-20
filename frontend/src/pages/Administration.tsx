@@ -16,7 +16,7 @@ const Administration = () => {
     <Container fluid={true}>
       <Row>
         <Col>
-          <h1>Administrator Dashboard</h1>
+          <h3>Administrator Dashboard</h3>
         </Col>
       </Row>
       <Row>
