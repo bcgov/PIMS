@@ -47,6 +47,17 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Get the user's username.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string GetUsername(this ClaimsPrincipal user)
+        {
+            var value = user?.FindFirstValue("username");
+            return value;
+        }
+
+        /// <summary>
         /// Get the user's display name.
         /// </summary>
         /// <param name="user"></param>
