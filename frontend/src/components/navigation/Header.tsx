@@ -23,7 +23,7 @@ const Header = () => {
     setShow(false);
   };
   const url = `${window.location.protocol}//${window.location.hostname}${
-    window.location.port ? ':' + window.location.port : null
+    window.location.port ? ':' + window.location.port : ''
   }`;
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
