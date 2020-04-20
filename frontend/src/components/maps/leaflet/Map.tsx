@@ -31,6 +31,7 @@ export type MapViewportChangeEvent = {
 type MapProps = {
   lat: number;
   lng: number;
+  zoom?: number;
   properties: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
@@ -48,6 +49,7 @@ type MapProps = {
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
+  zoom,
   properties,
   agencies,
   propertyClassifications,
@@ -79,7 +81,7 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  const zoom = useSelector<RootState, number>(state => state.mapViewZoom);
+  const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoom;
   useEffect(() => {
     dispatch(resetMapViewZoom());
   }, []);
@@ -198,7 +200,7 @@ const Map: React.FC<MapProps> = ({
         <LeafletMap
           ref={mapRef}
           center={[lat, lng]}
-          zoom={zoom}
+          zoom={lastZoom}
           whenReady={() => {
             handleViewportChange();
           }}

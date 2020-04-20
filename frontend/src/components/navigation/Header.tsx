@@ -22,9 +22,6 @@ const Header = () => {
     errors.forEach(error => dispatch(clear(error.name)));
     setShow(false);
   };
-  const url = `${window.location.protocol}//${window.location.hostname}${
-    window.location.port ? ':' + window.location.port : ''
-  }`;
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
     (x as IGenericNetworkAction).type === 'ERROR';
@@ -88,7 +85,7 @@ const Header = () => {
             <Row className="brand-box">
               <Col md={2} lg={2}></Col>
               <Col xs={8} sm={6} md={4} lg={1} className="brand">
-                <Navbar.Brand href={url}>
+                <Navbar.Brand onClick={() => history.push('/')}>
                   <img
                     className="bc-gov-icon"
                     src={logoUrl}

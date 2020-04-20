@@ -1,6 +1,6 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { Router, BrowserRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IProperty, IParcelDetail } from 'actions/parcelsActions';
@@ -20,10 +20,6 @@ import { useKeycloak } from '@react-keycloak/web';
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
-
-const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-});
 
 // This will spoof the active parcel (the one that will populate the popup details)
 const mockDetails: IParcelDetail = {
@@ -65,6 +61,12 @@ const mockDetails: IParcelDetail = {
     agency: 'FIN',
   },
 };
+
+const store = mockStore({
+  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+  [reducerTypes.PARCEL]: { parcelDetail: mockDetails },
+  [reducerTypes.LEAFLET_CLICK_EVENT]: { parcelDetail: mockDetails },
+});
 
 // To check for alert message
 const emptyDetails = null;
@@ -112,19 +114,21 @@ describe('MapProperties View', () => {
   // Ensure no markers are rendered when there are no parcels
   it('Should render 0 markers when there are no parcels', () => {
     const component = mount(
-      <Router history={history}>
-        <Map
-          lat={48.43}
-          lng={-123.37}
-          zoom={14}
-          properties={noParcels}
-          selectedProperty={emptyDetails}
-          agencies={[]}
-          propertyClassifications={[]}
-          lotSizes={[]}
-          onMarkerClick={jest.fn()}
-        />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <Map
+            lat={48.43}
+            lng={-123.37}
+            zoom={14}
+            properties={noParcels}
+            selectedProperty={emptyDetails}
+            agencies={[]}
+            propertyClassifications={[]}
+            lotSizes={[]}
+            onMarkerClick={jest.fn()}
+          />
+        </Router>
+      </Provider>,
     );
     const marker = component.find(Marker);
     expect(marker.length).toBe(0);
@@ -156,21 +160,25 @@ describe('MapProperties View', () => {
   // When marker is clicked function to load the details should be called
   it('Loads parcel details on click', () => {
     const onParcelClick = jest.fn();
-    const component = shallow(
-      <Map
-        lat={48.43}
-        lng={-123.37}
-        zoom={14}
-        properties={mockParcels}
-        selectedProperty={mockDetails}
-        agencies={[]}
-        propertyClassifications={[]}
-        lotSizes={[]}
-        onMarkerClick={onParcelClick}
-      />,
+    const component = mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Map
+            lat={48.43}
+            lng={-123.37}
+            zoom={14}
+            properties={mockParcels}
+            selectedProperty={mockDetails}
+            agencies={[]}
+            propertyClassifications={[]}
+            lotSizes={[]}
+            onMarkerClick={onParcelClick}
+          />
+        </BrowserRouter>
+      </Provider>,
     );
     const marker = component.find(Marker).first();
-    marker.simulate('click');
+    marker.simulate('click', { stopPropagation: () => undefined });
     expect(onParcelClick).toBeCalledTimes(1);
   });
 

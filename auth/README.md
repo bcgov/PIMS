@@ -40,12 +40,14 @@ There is still a current way to override this, which allows us to setup the envi
 
 ### Keycloak Environment Variables
 
+> Note that the import during initialization more often than not fails.  Just start the keycloak container and manually import - [details here](./keycloak/README.md#Import%20Realm).
+
 ```conf
 # Keycloak configuration
 PROXY_ADDRESS_FORWARDING=true
 KEYCLOAK_USER=keycloak
 KEYCLOAK_PASSWORD=password
-KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
+# KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN
 
