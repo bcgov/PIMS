@@ -1,5 +1,6 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IPagedItems, IStoreUsersAction } from 'actions/adminActions';
+import { IPagedItems } from 'interfaces';
+import { IStoreUsersAction } from 'actions/adminActions';
 
 export interface IUsersState {
   pagedUsers: IPagedItems;

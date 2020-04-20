@@ -36,8 +36,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
-            var accessRequest1 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
-            var accessRequest2 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
+            var accessRequest1 = EntityHelper.CreateAccessRequest(1);
+            var accessRequest2 = EntityHelper.CreateAccessRequest(2);
             var accessRequests = new[] { accessRequest1, accessRequest2 };
             var paged = new Entity.Models.Paged<Entity.AccessRequest>(accessRequests);
             service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(paged);
@@ -62,8 +62,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
-            var accessRequest1 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
-            var accessRequest2 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
+            var accessRequest1 = EntityHelper.CreateAccessRequest(1);
+            var accessRequest2 = EntityHelper.CreateAccessRequest(2);
             var accessRequests = new[] { accessRequest1, accessRequest2 };
             var paged = new Entity.Models.Paged<Entity.AccessRequest>(accessRequests);
             service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(paged);
@@ -88,8 +88,8 @@ namespace PimsApi.Test.Admin.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
-            var accessRequest1 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
-            var accessRequest2 = EntityHelper.CreateAccessRequest(Guid.NewGuid());
+            var accessRequest1 = EntityHelper.CreateAccessRequest(1);
+            var accessRequest2 = EntityHelper.CreateAccessRequest(2);
             var accessRequests = new[] { accessRequest1, accessRequest2 };
             var paged = new Entity.Models.Paged<Entity.AccessRequest>(accessRequests);
             service.Setup(m => m.User.GetAccessRequests(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool?>())).Returns(paged);

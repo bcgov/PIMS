@@ -12,7 +12,7 @@ namespace Pims.Dal.Entities
         /// get/set - The foreign key to the AccessRequest - PRIMARY KEY.
         /// </summary>
         /// <value></value>
-        public Guid AccessRequestId { get; set; }
+        public int AccessRequestId { get; set; }
 
         /// <summary>
         /// get/set - The access request that belongs to an Role.
@@ -44,7 +44,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="accessRequestId"></param>
         /// <param name="roleId"></param>
-        public AccessRequestRole(Guid accessRequestId, Guid roleId)
+        public AccessRequestRole(int accessRequestId, Guid roleId)
         {
             this.AccessRequestId = accessRequestId;
             this.RoleId = roleId;

@@ -32,7 +32,7 @@ export const DEFAULT_PAGE = '1';
 export const DEFAULT_PER_PAGE = '25';
 export const DEFAULT_DASHBOARD_PARAMS = '?page=1&per_page=25';
 
-//roles
+// roles
 export const SYSTEM_ADMINISTRATOR = 'System Administrator';
 export const AGENCY_ADMINISTRATOR = 'Agency Administrator';
 export const REAL_ESTATE_MANAGER = 'Real Estate Manager';
@@ -49,3 +49,7 @@ export const Roles = {
   ASSISTANT_DEPUTY_MINISTER_ASSISTANT,
   EXECUTIVE_DIRECTOR,
 };
+
+// Global
+export const DISCLAIMER_URL = 'https://www2.gov.bc.ca//gov/content/home/disclaimer';
+export const PRIVACY_POLICY_URL = 'http://www.gov.bc.ca/gov/content/home/privacy';

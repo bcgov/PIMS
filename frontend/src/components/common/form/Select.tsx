@@ -35,6 +35,7 @@ export type SelectProps = FormControlProps & OptionalAttributes & RequiredAttrib
 export type SelectOption = {
   label: string;
   value: string | number;
+  selected?: boolean;
 };
 
 export type SelectOptions = SelectOption[];
@@ -86,6 +87,7 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
       {!!label && <Form.Label>{label}</Form.Label>}
+      {!!required && <span className="required">*</span>}
       <Form.Control
         as={asElement}
         name={field}

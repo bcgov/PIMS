@@ -40,6 +40,22 @@ exports[`MapFilterBar renders correctly 1`] = `
             <div
               className="form-group"
             >
+              <input
+                className="form-control"
+                id="input-municipality"
+                name="municipality"
+                onChange={[Function]}
+                placeholder="Enter a municipality"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
+              className="form-group"
+            >
               <select
                 className="form-control"
                 id="input-agencies"

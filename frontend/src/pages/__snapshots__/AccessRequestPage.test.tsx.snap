@@ -1,0 +1,242 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders RequestAccessPage correctly 1`] = `
+<div>
+  <div>
+    <h3>
+      Access Request
+    </h3>
+  </div>
+  <hr />
+  <div
+    className="container-fluid"
+  >
+    <div
+      className="justify-content-md-center row"
+    >
+      <form
+        className="userInfo"
+        noValidate={true}
+        onSubmit={[Function]}
+      >
+        <div
+          className="fade alert alert-success show"
+          role="alert"
+        >
+          Your request has been submitted.
+        </div>
+        <div
+          className="form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-user.username"
+          >
+            IDIR/BCeID
+          </label>
+          <input
+            className="form-control"
+            id="input-user.username"
+            name="user.username"
+            onChange={[Function]}
+            readOnly={true}
+            type="text"
+          />
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="col"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-user.firstName"
+              >
+                First Name
+              </label>
+              <input
+                className="form-control"
+                id="input-user.firstName"
+                name="user.firstName"
+                onChange={[Function]}
+                readOnly={true}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="col"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-user.lastName"
+              >
+                Last Name
+              </label>
+              <input
+                className="form-control"
+                id="input-user.lastName"
+                name="user.lastName"
+                onChange={[Function]}
+                readOnly={true}
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-user.email"
+          >
+            Email
+          </label>
+          <input
+            className="form-control"
+            id="input-user.email"
+            name="user.email"
+            onChange={[Function]}
+            readOnly={true}
+            type="email"
+          />
+        </div>
+        <div
+          className="required form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-agency"
+          >
+            Agency
+          </label>
+          <span
+            className="required"
+          >
+            *
+          </span>
+          <select
+            className="form-control"
+            id="input-agency"
+            name="agency"
+            onChange={[Function]}
+            required={true}
+          >
+            <option
+              value=""
+            >
+              Please Select
+            </option>
+          </select>
+        </div>
+        <div
+          className="form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-user.position"
+          >
+            Position
+          </label>
+          <input
+            className="form-control"
+            id="input-user.position"
+            name="user.position"
+            onChange={[Function]}
+            placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          className="required form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-role"
+          >
+            Role
+          </label>
+          <span
+            className="required"
+          >
+            *
+          </span>
+          <select
+            className="form-control"
+            id="input-role"
+            name="role"
+            onChange={[Function]}
+            required={true}
+          >
+            <option
+              value=""
+            >
+              Please Select
+            </option>
+          </select>
+        </div>
+        <div
+          className="form-group"
+        >
+          <label
+            className="form-label"
+            htmlFor="input-note"
+          >
+            Notes
+          </label>
+          <textarea
+            className="form-control"
+            id="input-note"
+            name="note"
+            onChange={[Function]}
+            placeholder="Please specify why you need access to this site."
+            value=""
+          />
+        </div>
+        <p>
+          By clicking request, you agree to our
+           
+          <a
+            href="https://www2.gov.bc.ca//gov/content/home/disclaimer"
+          >
+            Terms and Conditions
+          </a>
+           and that you have read our
+           
+          <a
+            href="http://www.gov.bc.ca/gov/content/home/privacy"
+          >
+            Privacy Policy
+          </a>
+          .
+        </p>
+        <div
+          className="justify-content-md-center row"
+        >
+          <div
+            className="cancelSave btn-toolbar"
+            role="toolbar"
+          >
+            <button
+              className="mr-5 btn btn-primary"
+              disabled={false}
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
