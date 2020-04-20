@@ -52,7 +52,8 @@ function useKeycloakWrapper(): IKeycloak {
    */
   const hasClaim = (claim?: string | Array<string>): boolean => {
     return (
-      !claim ||
+      claim !== undefined &&
+      claim != null &&
       (typeof claim === 'string'
         ? userInfo?.roles?.includes(claim)
         : claim.some(c => userInfo?.roles?.includes(c)))
@@ -65,7 +66,8 @@ function useKeycloakWrapper(): IKeycloak {
    */
   const hasRole = (role?: string | Array<string>): boolean => {
     return (
-      !role ||
+      role !== undefined &&
+      role != null &&
       (typeof role === 'string'
         ? userInfo?.groups?.includes(role)
         : role.some(r => userInfo?.groups?.includes(r)))
@@ -77,7 +79,7 @@ function useKeycloakWrapper(): IKeycloak {
    * @param agency - The agency name
    */
   const hasAgency = (agency?: number): boolean => {
-    return !agency || userInfo?.agencies?.includes(agency);
+    return agency !== undefined && agency != null && userInfo?.agencies?.includes(agency);
   };
 
   /**
