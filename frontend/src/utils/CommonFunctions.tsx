@@ -5,14 +5,15 @@ export interface IPaginate {
   total: number;
   quantity: number;
   items: any;
+  maxPages?: number;
 }
 export const PAGINATION_MARGIN_PAGES = 3;
 export const PAGINATION_MAX_PAGES = 9;
 export const toReactPaginateProps = (props: IPaginate): ReactPaginateProps => {
   const pageNumbers = props.total > props.quantity ? props.total / props.quantity : 1;
   const initialPage = props.page < 1 ? 0 : props.page - 1;
-  const pageRangeDisplayed =
-    pageNumbers < PAGINATION_MAX_PAGES ? pageNumbers : PAGINATION_MAX_PAGES;
+  const actualMaxPages = props.maxPages ?? PAGINATION_MAX_PAGES;
+  const pageRangeDisplayed = pageNumbers < actualMaxPages ? pageNumbers : actualMaxPages;
   const reactPaginateProps: ReactPaginateProps = {
     pageCount: pageNumbers,
     marginPagesDisplayed: PAGINATION_MARGIN_PAGES,

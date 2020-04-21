@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import moment from 'moment';
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
     .min(1, 'Invalid Agency')
@@ -48,23 +49,12 @@ export const Address = Yup.object().shape({
   postal: Yup.string().matches(/[a-zA-z][0-9][a-zA-z][0-9][a-zA-z][0-9]/, 'Invalid Postal Code'),
 });
 
+const currentYear = moment().year();
 export const Evaluation = Yup.object().shape({
-  fiscalYear: Yup.number()
-    .min(1900, 'Invalid Fiscal Year')
-    .max(2100, 'Invalid Fiscal Year')
-    .required('Required'),
-  estimatedValue: Yup.number()
-    .min(0, 'Estimated Value must be a positive number')
-    .required('Required'),
-  appraisedValue: Yup.number()
-    .min(0, 'Appraised Value must be a positive number')
-    .required('Required'),
-  assessedValue: Yup.number()
-    .min(0, 'Assessed Value must be a positive number')
-    .required('Required'),
-  netBookValue: Yup.number()
-    .min(0, 'Net Book Value must be a positive number')
-    .required('Required'),
+  year: Yup.number(),
+  date: Yup.string().required('Required'),
+  key: Yup.string().nullable(),
+  value: Yup.number().required('Required'),
 });
 
 export const Building = Yup.object().shape({
@@ -106,7 +96,9 @@ export const Building = Yup.object().shape({
   isSensitive: Yup.boolean(),
   transferLeaseOnSale: Yup.boolean(),
   leaseExpiry: Yup.string().nullable(),
-  evaluations: Yup.array().of(Evaluation),
+  evaluations: Yup.array()
+    .compact((evaluation: any) => evaluation.year !== currentYear)
+    .of(Evaluation),
 });
 export const LandSchema = Yup.object().shape({
   statusId: Yup.boolean().required('Required'),
@@ -160,7 +152,9 @@ export const ParcelSchema = Yup.object()
           .required('pid or pin Required'),
       }),
       buildings: Yup.array().of(Building),
-      evaluations: Yup.array().of(Evaluation),
+      evaluations: Yup.array()
+        .compact((evaluation: any) => evaluation.year !== currentYear)
+        .of(Evaluation),
     },
     [['pin', 'pid']],
   )

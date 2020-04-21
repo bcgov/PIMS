@@ -1,8 +1,9 @@
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import './index.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
 import App, { store } from './App';
 import * as serviceWorker from './serviceWorker';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { IParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IParcelDetail } from 'actions/parcelsActions';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
@@ -34,7 +34,6 @@ const mockDetails: IParcelDetail = {
     pin: '',
     statusId: 0,
     classificationId: 0,
-    municipality: '',
     zoning: '',
     zoningPotential: '',
     agencyId: 0,
@@ -44,6 +43,7 @@ const mockDetails: IParcelDetail = {
     classification: 'Core Operational',
     description: 'test',
     isSensitive: false,
+    municipality: '',
     evaluations: [
       {
         date: '2019',
@@ -69,22 +69,15 @@ const history = createMemoryHistory();
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.PARCEL]: { parcelDetail: mockDetails },
-  [reducerTypes.LEAFLET_CLICK_EVENT]: { parcelDetail: mockDetails },
-  [reducerTypes.MAP_VIEW_ZOOM]: 1,
+  [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+  [reducerTypes.NETWORK]: {
+    parcel: {
+      status: 201,
+    },
+  },
 });
 
-it('SubmitProperty renders a disabled form if agency does not match current user.', () => {
-  // jest.mock('react-redux', () => ({
-  //   useDispatch: () => {},
-  //   useSelector: (state: RootState, action: IPropertyDetail) => ({
-  //     propertyDetail: {
-  //       parcelDetail: {
-  //         latitude: 48.43,
-  //         longitude: -123.37,
-  //       },
-  //     },
-  //   }),
-  // }));
+xit('SubmitProperty renders a disabled form if agency does not match current user.', () => {
   const tree = mount(
     <Provider store={store}>
       <Router history={history}>

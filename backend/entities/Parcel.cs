@@ -55,19 +55,19 @@ namespace Pims.Dal.Entities
         /// get/set - A collection of buildings on this parcel.
         /// </summary>
         /// <typeparam name="Building"></typeparam>
-        public ICollection<Building> Buildings { get; } = new List<Building>();
+        public ICollection<Building> Buildings { get; private set; } = new List<Building>();
 
         /// <summary>
         /// get - A collection of evaluations for this parcel.
         /// </summary>
         /// <typeparam name="ParcelEvaluation"></typeparam>
-        public ICollection<ParcelEvaluation> Evaluations { get; } = new List<ParcelEvaluation>();
+        public ICollection<ParcelEvaluation> Evaluations { get; private set; } = new List<ParcelEvaluation>();
 
         /// <summary>
         /// get - A collection of fiscal values for this parcel.
         /// </summary>
         /// <typeparam name="ParcelFiscals"></typeparam>
-        public ICollection<ParcelFiscal> Fiscals { get; } = new List<ParcelFiscal>();
+        public ICollection<ParcelFiscal> Fiscals { get; private set; } = new List<ParcelFiscal>();
         #endregion
 
         #region Constructors

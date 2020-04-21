@@ -1,80 +1,103 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik, FieldArray, FormikErrors } from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
 import BuildingForm, { defaultBuildingValues } from './subforms/BuildingForm';
 import AddressForm, { defaultAddressValues } from './subforms/AddressForm';
 import LandForm, { defaultLandValues } from './subforms/LandForm';
-import EvaluationForm, { defaultEvaluationValues } from './subforms/EvaluationForm';
+import EvaluationForm, {
+  defaultEvaluations,
+  getMergedEvaluations,
+} from './subforms/EvaluationForm';
 import './ParcelDetailForm.scss';
 import { useHistory } from 'react-router-dom';
-import { createParcel, fetchParcelDetail, updateParcel } from 'actionCreators/parcelsActionCreator';
+import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { Form } from 'components/common/form';
 import { FaTimes } from 'react-icons/fa';
 import { decimalOrEmpty } from 'utils';
-import { RootState } from 'reducers/rootReducer';
-import { Persist } from 'components/common/FormikPersist';
 
-import { IParcel, IPropertyDetail } from 'actions/parcelsActions';
+import { IParcel, IEvaluation } from 'actions/parcelsActions';
 import { clear } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
+import _ from 'lodash';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { Persist } from 'components/common/FormikPersist';
+import { LatLng } from 'leaflet';
 
 interface ParcelPropertyProps {
-  parcelId: number;
+  parcelDetail: IParcel | null;
   secret: string;
   agencyId?: number;
   disabled?: boolean;
-  updateLatLng: Function;
+  clickLatLng?: LatLng;
 }
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  let initialValues: IParcel = {
-    ...defaultLandValues,
-    ...defaultPidPinFormValues,
-    agencyId: props.agencyId,
-    address: defaultAddressValues,
-    buildings: [],
-    evaluations: [],
+  const getInitialValues = (): IParcel => {
+    return {
+      ...defaultLandValues,
+      ...defaultPidPinFormValues,
+      agencyId: props.agencyId,
+      address: defaultAddressValues,
+      buildings: [],
+      evaluations: defaultEvaluations,
+    };
   };
-  const activeParcelDetail = useSelector<RootState, IPropertyDetail>(
-    state => state.parcel.parcelDetail as IPropertyDetail,
-  );
-  const valuesToApiFormat = (values: IParcel) => {
-    values.statusId = values.statusId ? 1 : 0;
-    values.classificationId = decimalOrEmpty(values.classificationId as string);
-    values.address.cityId = decimalOrEmpty(values.address.cityId as string);
+  let initialValues = getInitialValues();
+  //Load all data if we are updating a parcel.
+  if (props?.parcelDetail?.id) {
+    props.parcelDetail.buildings.forEach(building => {
+      building.evaluations = getMergedEvaluations(building.evaluations);
+    });
+    initialValues = {
+      ...props.parcelDetail,
+      pid: props.parcelDetail.pid ?? '',
+      pin: props.parcelDetail.pin ?? '',
+      evaluations: getMergedEvaluations(props.parcelDetail.evaluations),
+    };
+  }
 
+  const filterEmptyEvaluations = (evaluations: IEvaluation[]) =>
+    _.filter(
+      evaluations,
+      evaluation =>
+        !!evaluation.value || (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date),
+    );
+  const setLatLng = (values: IParcel) => {
+    if (props.clickLatLng) {
+      values.latitude = props.clickLatLng.lat;
+      values.longitude = props.clickLatLng.lng;
+    }
+  };
+  const valuesToApiFormat = (values: IParcel): IParcel => {
+    values.pin = decimalOrEmpty(values.pin);
+    values.pid = values?.pid?.length ? values.pid : undefined;
+    values.statusId = values.statusId ? 1 : 0;
+    values.classificationId = decimalOrEmpty(values.classificationId);
+    values.address.cityId = decimalOrEmpty(values.address.cityId);
+    values.evaluations = filterEmptyEvaluations(values.evaluations);
     values.buildings.forEach(building => {
+      //default latitude, longitude, agency to the parcel value if none provided.
       building.latitude = building.latitude ? building.latitude : values.latitude;
       building.longitude = building.longitude ? building.latitude : values.longitude;
       building.agencyId = building.agencyId = values.agencyId;
+
       if (!building.leaseExpiry || !building.leaseExpiry.length) {
         building.leaseExpiry = undefined;
       }
       if (building.address) {
-        building.address.cityId = decimalOrEmpty(building.address.cityId as string);
+        building.address.cityId = decimalOrEmpty(building.address.cityId);
       }
-      building.buildingOccupantTypeId = decimalOrEmpty(building.buildingOccupantTypeId as string);
-      building.buildingPredominateUseId = decimalOrEmpty(
-        building.buildingPredominateUseId as string,
-      );
-      building.buildingConstructionTypeId = decimalOrEmpty(
-        building.buildingConstructionTypeId as string,
-      );
+      building.buildingOccupantTypeId = decimalOrEmpty(building.buildingOccupantTypeId);
+      building.buildingPredominateUseId = decimalOrEmpty(building.buildingPredominateUseId);
+      building.buildingConstructionTypeId = decimalOrEmpty(building.buildingConstructionTypeId);
+      building.evaluations = filterEmptyEvaluations(building.evaluations);
     });
+    return values;
   };
-
-  //Load all data if we are updating a parcel.
-  if (activeParcelDetail?.parcelDetail?.id) {
-    initialValues = { ...(activeParcelDetail.parcelDetail as IParcel) };
-  } else if (props.parcelId) {
-    //we were passed a detail id but we have no data cached - just reload.
-    dispatch(fetchParcelDetail({ id: props.parcelId }));
-  }
-
   return (
     <Container fluid={true} className="parcelDetailForm">
       <Row>
@@ -92,38 +115,40 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           <Formik
             initialValues={initialValues}
             validationSchema={ParcelSchema}
-            enableReinitialize
-            onSubmit={(values, { setSubmitting, resetForm, setStatus, setErrors }) => {
+            onSubmit={(values, { resetForm }) => {
               let response: any;
+              const apiValues = valuesToApiFormat(_.cloneDeep(values));
+
               if (!values.id) {
-                response = dispatch(createParcel(values));
+                response = dispatch(createParcel(apiValues));
               } else {
-                response = dispatch(updateParcel(values));
+                response = dispatch(updateParcel(apiValues));
               }
               response
                 .then(() => {
-                  dispatch(clear(actionTypes.ADD_PARCEL));
-                  dispatch(clear(actionTypes.UPDATE_PARCEL));
-                  resetForm();
                   history.goBack();
                 })
                 .error((error: FormikErrors<IParcel>) => {
                   //swallow, allow global error handling.
                   //TODO: display errors on specific fields based on the error.
+                })
+                .finally(() => {
+                  dispatch(clear(actionTypes.ADD_PARCEL));
+                  dispatch(clear(actionTypes.UPDATE_PARCEL));
                 });
-
-              setSubmitting(false);
             }}
           >
             {formikProps => (
               <Form>
-                <Persist
-                  writeOnly={!!props.parcelId}
-                  initialValues={initialValues}
-                  secret={props.secret}
-                  name="parcelDetailForm"
-                />
-                {props.updateLatLng(formikProps.values)}
+                {setLatLng(formikProps.values)}
+                {!props.disabled && (
+                  <Persist
+                    writeOnly={props.parcelDetail?.id}
+                    initialValues={initialValues}
+                    secret={props.secret}
+                    name="parcelDetailForm"
+                  />
+                )}
                 <Row noGutters>
                   <Col>
                     <h3>Address</h3>
@@ -138,44 +163,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                     <h3>Land</h3>
                     <LandForm {...formikProps} disabled={props.disabled}></LandForm>
                     <h4>Valuation Information</h4>
-                    <FieldArray
-                      name="evaluations"
-                      render={arrayHelpers => (
-                        <div>
-                          {!props.disabled && (
-                            <Button
-                              className="addEval"
-                              onClick={() => arrayHelpers.push(defaultEvaluationValues)}
-                            >
-                              Add Land Valuation
-                            </Button>
-                          )}
-
-                          {formikProps.values.evaluations.map((evaluation, index) => {
-                            return (
-                              <div key={index}>
-                                {!props.disabled && (
-                                  <Button
-                                    variant="danger"
-                                    onClick={() => arrayHelpers.remove(index)}
-                                  >
-                                    <FaTimes size={14} />
-                                  </Button>
-                                )}
-                                <h5>Evaluation</h5>
-                                <EvaluationForm
-                                  {...formikProps}
-                                  disabled={props.disabled}
-                                  nameSpace="evaluations"
-                                  key={index}
-                                  evaluation={evaluation}
-                                  index={index}
-                                />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
+                    <EvaluationForm
+                      {...formikProps}
+                      disabled={props.disabled}
+                      nameSpace="evaluations"
                     />
                   </Col>
                 </Row>
@@ -224,14 +215,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 </Row>
                 <div style={{ textAlign: 'right' }}>
                   {!props.disabled && (
-                    <Button
-                      disabled={props.disabled}
-                      type="submit"
-                      onClick={() => {
-                        valuesToApiFormat(formikProps.values);
-                        formikProps.setSubmitting(false);
-                      }}
-                    >
+                    <Button disabled={props.disabled} type="submit">
                       Submit
                     </Button>
                   )}
@@ -245,4 +229,4 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   );
 };
 
-export default ParcelDetailForm;
+export default React.memo(ParcelDetailForm, props => !!props.parcelDetail);

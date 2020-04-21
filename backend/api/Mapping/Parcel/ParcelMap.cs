@@ -12,6 +12,7 @@ namespace Pims.Api.Mapping.Parcel
         {
             config.NewConfig<Entity.Parcel, Model.ParcelModel>()
                 .IgnoreNonMapped(true)
+                .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
@@ -40,6 +41,7 @@ namespace Pims.Api.Mapping.Parcel
 
             config.NewConfig<Model.ParcelModel, Entity.Parcel>()
                 .IgnoreNonMapped(true)
+                .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
