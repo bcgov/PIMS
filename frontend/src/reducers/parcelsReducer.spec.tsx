@@ -53,6 +53,13 @@ const defaultParcelDetail: IParcelDetail = {
     zoningPotential: '21',
     agencyId: '22',
     municipality: '23',
+    fiscals: [
+      {
+        fiscalYear: 2020,
+        key: 'Key',
+        value: 'Value',
+      },
+    ],
   },
 };
 
