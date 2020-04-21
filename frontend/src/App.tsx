@@ -73,7 +73,11 @@ const App = () => {
                       path="/access/request"
                       component={AccessRequestPage}
                     ></PrivateRoute>
-                    <PrivateRoute path="/mapView" component={MapView} role={Claims.PROPERTY_VIEW} />
+                    <PrivateRoute
+                      path="/mapView"
+                      component={MapView}
+                      claim={Claims.PROPERTY_VIEW}
+                    />
                     <PrivateRoute
                       path="/submitProperty/:id?"
                       component={SubmitProperty}
