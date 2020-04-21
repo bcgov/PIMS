@@ -7,6 +7,7 @@ using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -228,7 +229,6 @@ namespace Pims.Dal.Services
                 .Include(p => p.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .AsNoTracking()
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
@@ -241,7 +241,87 @@ namespace Pims.Dal.Services
 
             this.Context.Parcels.ThrowIfPidPinUpdated(parcel);
 
-            this.Context.Update(parcel);
+            //Add/Update a parcel and all child collections
+            if (existingParcel == null)
+            {
+                this.Context.Add(parcel);
+            }
+            else
+            {
+                this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
+                this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
+                foreach (var building in parcel.Buildings)
+                {
+                    var existingBuilding = existingParcel.Buildings
+                        .FirstOrDefault(b => b.Id == building.Id);
+
+                    if (existingBuilding == null)
+                    {
+                        existingParcel.Buildings.Add(building);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+                        this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
+
+                        foreach (var buildingEvaluation in building.Evaluations)
+                        {
+                            var existingBuildingEvaluation = existingBuilding.Evaluations
+                                .FirstOrDefault(e => e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
+
+                            if (existingBuildingEvaluation == null)
+                            {
+                                existingBuilding.Evaluations.Add(buildingEvaluation);
+                            }
+                            else
+                            {
+                                this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                            }
+                        }
+                    }
+                }
+                foreach (var parcelEvaluation in parcel.Evaluations)
+                {
+                    var existingEvaluation = existingParcel.Evaluations
+                        .FirstOrDefault(e => e.ParcelId == parcelEvaluation.ParcelId && e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
+
+                    if (existingEvaluation == null)
+                    {
+                        existingParcel.Evaluations.Add(parcelEvaluation);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
+                    }
+                }
+            }
+
+            //Delete any missing records in child collections.
+            foreach (var building in existingParcel.Buildings)
+            {
+                var matchingBuilding = parcel.Buildings.FirstOrDefault(b => b.Id == building.Id);
+                if (matchingBuilding == null)
+                {
+                    this.Context.Buildings.Remove(building);
+                    continue;
+                }
+                foreach (var buildingEvaluation in building.Evaluations)
+                {
+                    if (!matchingBuilding.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                    {
+                        this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                    }
+                }
+            }
+            foreach (var parcelEvaluation in existingParcel.Evaluations)
+            {
+                if (!parcel.Evaluations.Any(e => (e.ParcelId == parcelEvaluation.ParcelId && e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key)))
+                {
+                    this.Context.ParcelEvaluations.Remove(parcelEvaluation);
+                }
+            }
+
+            this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return parcel;
         }

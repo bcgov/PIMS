@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
-import { FieldArray, FormikProps } from 'formik';
+import { Row, Col } from 'react-bootstrap';
+import { FormikProps } from 'formik';
 import React from 'react';
 import AddressForm, { defaultAddressValues } from './AddressForm';
-import EvaluationForm, { defaultEvaluationValues } from './EvaluationForm';
+import EvaluationForm, { defaultEvaluations } from './EvaluationForm';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
@@ -13,7 +13,6 @@ import { FormikDatePicker } from 'components/common/FormikDatePicker';
 import { Input, Form, Select } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode } from 'utils';
-import { FaTimes } from 'react-icons/fa';
 import { IBuilding } from 'actions/parcelsActions';
 import * as API from 'constants/API';
 
@@ -37,7 +36,7 @@ export const defaultBuildingValues: IBuilding = {
   occupantName: '',
   leaseExpiry: '',
   buildingTenancy: '',
-  evaluations: [],
+  evaluations: defaultEvaluations,
   fiscals: [],
 };
 interface BuildingProps {
@@ -184,40 +183,10 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
       <Row noGutters>
         <Col>
           <h4>Building Valuation Information</h4>
-
-          <FieldArray
-            name={withNameSpace('evaluations')}
-            render={arrayHelpers => (
-              <div>
-                {!props.disabled && (
-                  <Button onClick={() => arrayHelpers.push(defaultEvaluationValues)}>
-                    Add Land Valuation
-                  </Button>
-                )}
-                {props.building.evaluations.map((evaluation: any, evaluationIndex: number) => {
-                  return (
-                    <div key={evaluationIndex}>
-                      {!props.disabled && (
-                        <Button
-                          variant="danger"
-                          onClick={() => arrayHelpers.remove(evaluationIndex)}
-                        >
-                          <FaTimes size={14} />
-                        </Button>
-                      )}
-                      <h5>Building Evaluation</h5>
-                      <EvaluationForm
-                        disabled={props.disabled}
-                        {...props}
-                        nameSpace={withNameSpace('evaluations')}
-                        evaluation={evaluation}
-                        index={evaluationIndex}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+          <EvaluationForm
+            disabled={props.disabled}
+            {...props}
+            nameSpace={withNameSpace('evaluations')}
           />
         </Col>
       </Row>
@@ -225,4 +194,4 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   );
 };
 
-export default BuildingForm;
+export default React.memo(BuildingForm);

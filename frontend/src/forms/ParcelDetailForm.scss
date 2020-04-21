@@ -32,6 +32,40 @@
         height: 3rem;
         padding: 0;
       }
+      table {
+        td {
+          padding: 5px;
+        }
+        tbody td {
+          border-bottom: none;
+          border-top: none;
+        }
+        input {
+          padding: 3px;
+          font-size: .75rem;
+        }
+        input:disabled {
+          background-color: white;
+          border: none;
+        }
+        .form-group {
+          margin: 0;
+          padding: 0;
+          width:unset;
+          height: unset;
+          display:flex;
+          flex-direction: row;
+        }
+        .input-group-text {
+          padding: 0;
+          padding-right: 2px;
+          background-color: white;
+          border: none;
+        }
+        .input-group {
+          display: block;
+        }
+      }
     }
     .noPadding {
       .addressForm {
@@ -64,5 +98,8 @@
   .btn.btn-primary {
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+  .form-control.is-invalid {
+    height: unset ;
   }
 }

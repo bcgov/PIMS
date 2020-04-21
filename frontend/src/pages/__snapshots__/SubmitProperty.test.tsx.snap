@@ -155,11 +155,16 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                 "evaluations",
                                 "buildings",
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 "pin",
                                 "pid",
 =======
                                 "isSensitive",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "pin",
+                                "pid",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                 "landArea",
                                 "longitude",
                                 "latitude",
@@ -167,18 +172,25 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                 "zoningPotential",
                                 "zoning",
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 "municipality",
 =======
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "municipality",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                 "description",
                                 "address",
                                 "classificationId",
                                 "statusId",
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                 "pin",
                                 "pid",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                               ],
                               "_options": Object {
                                 "abortEarly": true,
@@ -1510,10 +1522,14 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   ],
                                 },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 "landArea": NumberSchema {
 =======
                                 "isSensitive": BooleanSchema {
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "landArea": NumberSchema {
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_blacklist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
@@ -1521,45 +1537,65 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "_conditions": Array [],
                                   "_deps": Array [],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_exclusive": Object {
                                     "min": true,
                                     "required": true,
                                   },
+<<<<<<< HEAD
 =======
                                   "_exclusive": Object {},
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_mutate": undefined,
                                   "_options": Object {
                                     "abortEarly": true,
                                     "recursive": true,
                                   },
+<<<<<<< HEAD
 <<<<<<< HEAD
                                   "_type": "number",
 =======
                                   "_type": "boolean",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                  "_type": "number",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_typeError": [Function],
                                   "_whitelist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
                                   },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "tests": Array [
                                     [Function],
                                     [Function],
                                   ],
+<<<<<<< HEAD
 =======
                                   "tests": Array [],
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "transforms": Array [
                                     [Function],
                                   ],
                                 },
+<<<<<<< HEAD
 <<<<<<< HEAD
                                 "landLegalDescription": StringSchema {
 =======
                                 "landArea": NumberSchema {
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "landLegalDescription": StringSchema {
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_blacklist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
@@ -1567,6 +1603,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "_conditions": Array [],
                                   "_deps": Array [],
                                   "_exclusive": Object {
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     "max": true,
                                   },
@@ -1578,15 +1615,25 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   },
                                   "_mutate": undefined,
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                    "max": true,
+                                  },
+                                  "_mutate": undefined,
+                                  "_nullable": true,
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_options": Object {
                                     "abortEarly": true,
                                     "recursive": true,
                                   },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                   "_type": "string",
 =======
                                   "_type": "number",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                  "_type": "string",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_typeError": [Function],
                                   "_whitelist": RefSet {
                                     "list": Set {},
@@ -1595,19 +1642,26 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "tests": Array [
                                     [Function],
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                     [Function],
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   ],
                                   "transforms": Array [
                                     [Function],
                                   ],
                                 },
+<<<<<<< HEAD
 <<<<<<< HEAD
                                 "latitude": NumberSchema {
 =======
                                 "landLegalDescription": StringSchema {
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "latitude": NumberSchema {
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_blacklist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
@@ -1616,6 +1670,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "_deps": Array [],
                                   "_exclusive": Object {
                                     "max": true,
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     "min": true,
                                     "required": true,
@@ -1626,15 +1681,25 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "_mutate": undefined,
                                   "_nullable": true,
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                    "min": true,
+                                    "required": true,
+                                  },
+                                  "_mutate": undefined,
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_options": Object {
                                     "abortEarly": true,
                                     "recursive": true,
                                   },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                   "_type": "number",
 =======
                                   "_type": "string",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                  "_type": "number",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_typeError": [Function],
                                   "_whitelist": RefSet {
                                     "list": Set {},
@@ -1643,20 +1708,29 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "tests": Array [
                                     [Function],
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     [Function],
                                     [Function],
 =======
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                    [Function],
+                                    [Function],
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   ],
                                   "transforms": Array [
                                     [Function],
                                   ],
                                 },
+<<<<<<< HEAD
 <<<<<<< HEAD
                                 "longitude": NumberSchema {
 =======
                                 "latitude": NumberSchema {
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "longitude": NumberSchema {
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_blacklist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
@@ -1689,10 +1763,14 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   ],
                                 },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 "municipality": StringSchema {
 =======
                                 "longitude": NumberSchema {
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                "municipality": StringSchema {
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_blacklist": RefSet {
                                     "list": Set {},
                                     "refs": Map {},
@@ -1701,6 +1779,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "_deps": Array [],
                                   "_exclusive": Object {
                                     "max": true,
+<<<<<<< HEAD
 <<<<<<< HEAD
                                   },
                                   "_mutate": undefined,
@@ -1711,15 +1790,24 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   },
                                   "_mutate": undefined,
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                  },
+                                  "_mutate": undefined,
+                                  "_nullable": true,
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_options": Object {
                                     "abortEarly": true,
                                     "recursive": true,
                                   },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                   "_type": "string",
 =======
                                   "_type": "number",
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                  "_type": "string",
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   "_typeError": [Function],
                                   "_whitelist": RefSet {
                                     "list": Set {},
@@ -1728,10 +1816,13 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                   "tests": Array [
                                     [Function],
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                     [Function],
                                     [Function],
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                   ],
                                   "transforms": Array [
                                     [Function],
@@ -1910,9 +2001,13 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                               "transforms": Array [
                                 [Function],
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 [Function],
 =======
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+                                [Function],
+>>>>>>> PIMS-1454 replace evaluations subform.
                               ],
                             }
                           }
@@ -2923,13 +3018,20 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             className="form-label col-form-label col-md-2"
                                                           >
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                             Municipality
                                                           </label>
                                                         </Col>
                                                       </FormLabel>
                                                       <Input
                                                         className="col-md-10"
+<<<<<<< HEAD
                                                         disabled={false}
+=======
+                                                        disabled={true}
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                         field="municipality"
                                                       >
                                                         <FormGroup
@@ -2941,6 +3043,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                             <FormControl
                                                               as="input"
                                                               className="col-md-10"
+<<<<<<< HEAD
                                                               disabled={false}
                                                               isInvalid={false}
                                                               name="municipality"
@@ -2954,6 +3057,19 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                                 name="municipality"
                                                                 onChange={[Function]}
                                                                 value=""
+=======
+                                                              disabled={true}
+                                                              isInvalid={false}
+                                                              name="municipality"
+                                                              onChange={[Function]}
+                                                            >
+                                                              <input
+                                                                className="col-md-10 form-control"
+                                                                disabled={true}
+                                                                id="input-municipality"
+                                                                name="municipality"
+                                                                onChange={[Function]}
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                               />
                                                             </FormControl>
                                                             <DisplayError
@@ -2981,8 +3097,11 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                           <label
                                                             className="form-label col-form-label col-md-2"
                                                           >
+<<<<<<< HEAD
 =======
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                             Zoning
                                                           </label>
                                                         </Col>
@@ -4666,6 +4785,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                           ]
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         closePopupOnClick={true}
                         onViewportChanged={[Function]}
                         onpreclick={[Function]}
@@ -4674,6 +4794,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                         zoom={1}
 =======
                         closePopupOnClick={false}
+=======
+                        closePopupOnClick={true}
+>>>>>>> PIMS-1454 replace evaluations subform.
                         onViewportChanged={[Function]}
                         onpreclick={[Function]}
                         whenReady={[Function]}
@@ -5126,6 +5249,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                           "fn": [Function],
                                         },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         Object {
                                           "ctx": NewClass {
                                             "_closeButton": <a
@@ -5182,295 +5306,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
 =======
                                       ],
                                       "unload": Array [
-                                        Object {
-                                          "ctx": NewClass {
-                                            "_container": <div
-                                              class="leaflet-control-zoom leaflet-bar leaflet-control"
-                                            >
-                                              <a
-                                                aria-label="Zoom in"
-                                                class="leaflet-control-zoom-in"
-                                                href="#"
-                                                role="button"
-                                                title="Zoom in"
-                                              >
-                                                +
-                                              </a>
-                                              <a
-                                                aria-label="Zoom out"
-                                                class="leaflet-control-zoom-out"
-                                                href="#"
-                                                role="button"
-                                                title="Zoom out"
-                                              >
-                                                −
-                                              </a>
-                                            </div>,
-                                            "_initHooksCalled": true,
-                                            "_leaflet_id": 10,
-                                            "_map": [Circular],
-                                            "_zoomInButton": <a
-                                              aria-label="Zoom in"
-                                              class="leaflet-control-zoom-in"
-                                              href="#"
-                                              role="button"
-                                              title="Zoom in"
-                                            >
-                                              +
-                                            </a>,
-                                            "_zoomOutButton": <a
-                                              aria-label="Zoom out"
-                                              class="leaflet-control-zoom-out"
-                                              href="#"
-                                              role="button"
-                                              title="Zoom out"
-                                            >
-                                              −
-                                            </a>,
-                                            "options": Object {},
-                                          },
-                                          "fn": [Function],
-                                        },
-                                        Object {
-                                          "ctx": NewClass {
-                                            "_attributions": Object {},
-                                            "_container": <div
-                                              class="leaflet-control-attribution leaflet-control"
-                                            >
-                                              <a
-                                                href="https://leafletjs.com"
-                                                title="A JS library for interactive maps"
-                                              >
-                                                Leaflet
-                                              </a>
-                                            </div>,
-                                            "_initHooksCalled": true,
-                                            "_map": [Circular],
-                                            "options": Object {},
-                                          },
-                                          "fn": [Function],
-                                        },
-                                        Object {
-                                          "ctx": NewClass {
-                                            "_container": <div
-                                              class="leaflet-container leaflet-grab leaflet-touch-drag"
-                                              style="position: relative;"
-                                              tabindex="0"
-                                            >
-                                              <div
-                                                class="leaflet-pane leaflet-map-pane"
-                                                style="left: 0px; top: 0px;"
-                                              >
-                                                <div
-                                                  class="leaflet-pane leaflet-tile-pane"
-                                                />
-                                                <div
-                                                  class="leaflet-pane leaflet-shadow-pane"
-                                                />
-                                                <div
-                                                  class="leaflet-pane leaflet-overlay-pane"
-                                                />
-                                                <div
-                                                  class="leaflet-pane leaflet-marker-pane"
-                                                />
-                                                <div
-                                                  class="leaflet-pane leaflet-tooltip-pane"
-                                                />
-                                                <div
-                                                  class="leaflet-pane leaflet-popup-pane"
-                                                >
-                                                  <div
-                                                    class="leaflet-popup  leaflet-zoom-animated"
-                                                    style="bottom: -5px; left: 5px;"
-                                                  >
-                                                    <div
-                                                      class="leaflet-popup-content-wrapper"
-                                                    >
-                                                      <div
-                                                        class="leaflet-popup-content"
-                                                        style="width: 51px;"
-                                                      >
-                                                        <div
-                                                          class="parcelPopup container-fluid"
-                                                        >
-                                                          <div
-                                                            class="row"
-                                                          >
-                                                            <div
-                                                              class="col"
-                                                            >
-                                                              <div
-                                                                class="list-group"
-                                                              >
-                                                                <div
-                                                                  class="list-group-item"
-                                                                >
-                                                                  <p
-                                                                    class="label"
-                                                                  >
-                                                                    Assessed Value: 
-                                                                  </p>
-                                                                  $
-                                                                </div>
-                                                              </div>
-                                                              <div
-                                                                class="list-group"
-                                                              >
-                                                                <div
-                                                                  class="list-group-item"
-                                                                >
-                                                                  <div>
-                                                                    <p
-                                                                      class="label"
-                                                                    >
-                                                                      Address: 
-                                                                    </p>
-                                                                    1234 mock Street
-                                                                  </div>
-                                                                  <div>
-                                                                    Victoria
-                                                                    , 
-                                                                    BC
-                                                                     
-                                                                    V1V1V1
-                                                                  </div>
-                                                                </div>
-                                                                <div
-                                                                  class="list-group-item"
-                                                                >
-                                                                  <p
-                                                                    class="label"
-                                                                  >
-                                                                    PID: 
-                                                                  </p>
-                                                                   
-                                                                  000-000-000
-                                                                </div>
-                                                              </div>
-                                                              <div
-                                                                class="list-group"
-                                                              >
-                                                                <div
-                                                                  class="list-group-item"
-                                                                >
-                                                                  <p
-                                                                    class="label"
-                                                                  >
-                                                                    Agency: 
-                                                                  </p>
-                                                                  FIN
-                                                                </div>
-                                                                <div
-                                                                  class="list-group-item"
-                                                                >
-                                                                  <p
-                                                                    class="label"
-                                                                  >
-                                                                    Classification: 
-                                                                  </p>
-                                                                  Core Operational
-                                                                </div>
-                                                              </div>
-                                                            </div>
-                                                            <div
-                                                              class="col"
-                                                            >
-                                                              <a
-                                                                href="/submitProperty/1?disabled=true"
-                                                              >
-                                                                View
-                                                              </a>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <div
-                                                      class="leaflet-popup-tip-container"
-                                                    >
-                                                      <div
-                                                        class="leaflet-popup-tip"
-                                                      />
-                                                    </div>
-                                                    <a
-                                                      class="leaflet-popup-close-button"
-                                                      href="#close"
-                                                    >
-                                                      ×
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div
-                                                class="leaflet-control-container"
-                                              >
-                                                <div
-                                                  class="leaflet-top leaflet-left"
-                                                >
-                                                  <div
-                                                    class="leaflet-control-zoom leaflet-bar leaflet-control"
-                                                  >
-                                                    <a
-                                                      aria-label="Zoom in"
-                                                      class="leaflet-control-zoom-in"
-                                                      href="#"
-                                                      role="button"
-                                                      title="Zoom in"
-                                                    >
-                                                      +
-                                                    </a>
-                                                    <a
-                                                      aria-label="Zoom out"
-                                                      class="leaflet-control-zoom-out"
-                                                      href="#"
-                                                      role="button"
-                                                      title="Zoom out"
-                                                    >
-                                                      −
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                                <div
-                                                  class="leaflet-top leaflet-right"
-                                                />
-                                                <div
-                                                  class="leaflet-bottom leaflet-left"
-                                                />
-                                                <div
-                                                  class="leaflet-bottom leaflet-right"
-                                                >
-                                                  <div
-                                                    class="leaflet-control-attribution leaflet-control"
-                                                  >
-                                                    <a
-                                                      href="https://leafletjs.com"
-                                                      title="A JS library for interactive maps"
-                                                    >
-                                                      Leaflet
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>,
-                                            "_enabled": true,
-                                            "_initHooksCalled": true,
-                                            "_leaflet_id": 14,
-                                            "_map": [Circular],
-                                            "_pane": <div
-                                              class="leaflet-pane leaflet-overlay-pane"
-                                            />,
-                                            "_resetStateTimeout": 0,
-                                          },
-                                          "fn": [Function],
-                                        },
-                                      ],
-                                      "viewportchanged": Array [
-                                        Object {
-                                          "ctx": undefined,
-                                          "fn": [Function],
-                                        },
-                                      ],
-                                      "viewreset": Array [
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                         Object {
                                           "ctx": NewClass {
                                             "_closeButton": <a
@@ -5918,6 +5755,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         },
                                       ],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                       "unload": Array [
                                         Object {
                                           "ctx": NewClass {
@@ -6113,9 +5953,15 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                               class="col"
                                                             >
                                                               <a
+<<<<<<< HEAD
                                                                 href="/submitProperty/1"
                                                               >
                                                                 Update
+=======
+                                                                href="/submitProperty/1?disabled=true"
+                                                              >
+                                                                View
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                               </a>
                                                             </div>
                                                           </div>
@@ -6135,8 +5981,84 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     >
                                                       ×
                                                     </a>
+<<<<<<< HEAD
 =======
                                       "zoom": Array [
+=======
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="leaflet-control-container"
+                                              >
+                                                <div
+                                                  class="leaflet-top leaflet-left"
+                                                >
+                                                  <div
+                                                    class="leaflet-control-zoom leaflet-bar leaflet-control"
+                                                  >
+                                                    <a
+                                                      aria-label="Zoom in"
+                                                      class="leaflet-control-zoom-in"
+                                                      href="#"
+                                                      role="button"
+                                                      title="Zoom in"
+                                                    >
+                                                      +
+                                                    </a>
+                                                    <a
+                                                      aria-label="Zoom out"
+                                                      class="leaflet-control-zoom-out"
+                                                      href="#"
+                                                      role="button"
+                                                      title="Zoom out"
+                                                    >
+                                                      −
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="leaflet-top leaflet-right"
+                                                />
+                                                <div
+                                                  class="leaflet-bottom leaflet-left"
+                                                />
+                                                <div
+                                                  class="leaflet-bottom leaflet-right"
+                                                >
+                                                  <div
+                                                    class="leaflet-control-attribution leaflet-control"
+                                                  >
+                                                    <a
+                                                      href="https://leafletjs.com"
+                                                      title="A JS library for interactive maps"
+                                                    >
+                                                      Leaflet
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_enabled": true,
+                                            "_initHooksCalled": true,
+                                            "_leaflet_id": 14,
+                                            "_map": [Circular],
+                                            "_pane": <div
+                                              class="leaflet-pane leaflet-overlay-pane"
+                                            />,
+                                            "_resetStateTimeout": 0,
+                                          },
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "viewportchanged": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "viewreset": Array [
+>>>>>>> PIMS-1454 replace evaluations subform.
                                         Object {
                                           "ctx": NewClass {
                                             "_closeButton": <a
@@ -6766,6 +6688,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         },
                                       ],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                       "zoom": Array [
                                         Object {
                                           "ctx": NewClass {
@@ -6778,6 +6703,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             "_container": <div
                                               class="leaflet-popup  leaflet-zoom-animated"
                                               style="bottom: -5px; left: 5px;"
+<<<<<<< HEAD
                                             >
                                               <div
                                                 class="leaflet-popup-content-wrapper"
@@ -7010,115 +6936,118 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                             />
                                             <div
                                               class="leaflet-pane leaflet-popup-pane"
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                             >
                                               <div
-                                                class="leaflet-popup  leaflet-zoom-animated"
-                                                style="bottom: -5px; left: 5px;"
+                                                class="leaflet-popup-content-wrapper"
                                               >
                                                 <div
-                                                  class="leaflet-popup-content-wrapper"
+                                                  class="leaflet-popup-content"
+                                                  style="width: 51px;"
                                                 >
                                                   <div
-                                                    class="leaflet-popup-content"
-                                                    style="width: 51px;"
+                                                    class="parcelPopup container-fluid"
                                                   >
                                                     <div
-                                                      class="parcelPopup container-fluid"
+                                                      class="row"
                                                     >
                                                       <div
-                                                        class="row"
+                                                        class="col"
                                                       >
                                                         <div
-                                                          class="col"
+                                                          class="list-group"
                                                         >
                                                           <div
-                                                            class="list-group"
+                                                            class="list-group-item"
                                                           >
-                                                            <div
-                                                              class="list-group-item"
+                                                            <p
+                                                              class="label"
                                                             >
-                                                              <p
-                                                                class="label"
-                                                              >
-                                                                Assessed Value: 
-                                                              </p>
-                                                              $
-                                                            </div>
-                                                          </div>
-                                                          <div
-                                                            class="list-group"
-                                                          >
-                                                            <div
-                                                              class="list-group-item"
-                                                            >
-                                                              <div>
-                                                                <p
-                                                                  class="label"
-                                                                >
-                                                                  Address: 
-                                                                </p>
-                                                                1234 mock Street
-                                                              </div>
-                                                              <div>
-                                                                Victoria
-                                                                , 
-                                                                BC
-                                                                 
-                                                                V1V1V1
-                                                              </div>
-                                                            </div>
-                                                            <div
-                                                              class="list-group-item"
-                                                            >
-                                                              <p
-                                                                class="label"
-                                                              >
-                                                                PID: 
-                                                              </p>
-                                                               
-                                                              000-000-000
-                                                            </div>
-                                                          </div>
-                                                          <div
-                                                            class="list-group"
-                                                          >
-                                                            <div
-                                                              class="list-group-item"
-                                                            >
-                                                              <p
-                                                                class="label"
-                                                              >
-                                                                Agency: 
-                                                              </p>
-                                                              FIN
-                                                            </div>
-                                                            <div
-                                                              class="list-group-item"
-                                                            >
-                                                              <p
-                                                                class="label"
-                                                              >
-                                                                Classification: 
-                                                              </p>
-                                                              Core Operational
-                                                            </div>
+                                                              Assessed Value: 
+                                                            </p>
+                                                            $
                                                           </div>
                                                         </div>
                                                         <div
-                                                          class="col"
+                                                          class="list-group"
                                                         >
-                                                          <a
-                                                            href="/submitProperty/1?disabled=true"
+                                                          <div
+                                                            class="list-group-item"
                                                           >
-                                                            View
-                                                          </a>
+                                                            <div>
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Address: 
+                                                              </p>
+                                                              1234 mock Street
+                                                            </div>
+                                                            <div>
+                                                              Victoria
+                                                              , 
+                                                              BC
+                                                               
+                                                              V1V1V1
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              PID: 
+                                                            </p>
+                                                             
+                                                            000-000-000
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Agency: 
+                                                            </p>
+                                                            FIN
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Classification: 
+                                                            </p>
+                                                            Core Operational
+                                                          </div>
                                                         </div>
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
                                                       </div>
+<<<<<<< HEAD
                                                     </div>
                                                   </div>
                                                 </div>
 <<<<<<< HEAD
+=======
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <a
+                                                          href="/submitProperty/1?disabled=true"
+                                                        >
+                                                          View
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+>>>>>>> PIMS-1454 replace evaluations subform.
                                               </div>
                                               <div
                                                 class="leaflet-popup-tip-container"
@@ -7146,6 +7075,46 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               >
                                                 <div
                                                   class="row"
+<<<<<<< HEAD
+                                                >
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Assessed Value: 
+                                                        </p>
+                                                        $
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <div>
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Address: 
+                                                          </p>
+                                                          1234 mock Street
+                                                        </div>
+                                                        <div>
+                                                          Victoria
+                                                          , 
+                                                          BC
+                                                           
+                                                          V1V1V1
+=======
                                                 >
                                                   <div
                                                     class="col"
@@ -7227,9 +7196,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     class="col"
                                                   >
                                                     <a
-                                                      href="/submitProperty/1"
+                                                      href="/submitProperty/1?disabled=true"
                                                     >
-                                                      Update
+                                                      View
                                                     </a>
                                                   </div>
                                                 </div>
@@ -7278,6 +7247,395 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                 >
                                                   <div
                                                     class="row"
+                                                  >
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Assessed Value: 
+                                                          </p>
+                                                          $
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <div>
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Address: 
+                                                            </p>
+                                                            1234 mock Street
+                                                          </div>
+                                                          <div>
+                                                            Victoria
+                                                            , 
+                                                            BC
+                                                             
+                                                            V1V1V1
+                                                          </div>
+>>>>>>> PIMS-1454 replace evaluations subform.
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            PID: 
+                                                          </p>
+                                                           
+                                                          000-000-000
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Agency: 
+                                                          </p>
+                                                          FIN
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Classification: 
+                                                          </p>
+                                                          Core Operational
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          PID: 
+                                                        </p>
+                                                         
+                                                        000-000-000
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Agency: 
+                                                        </p>
+                                                        FIN
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Classification: 
+                                                        </p>
+                                                        Core Operational
+                                                      </div>
+                                                    </div>
+<<<<<<< HEAD
+                                                  </div>
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <a
+                                                      href="/submitProperty/1"
+                                                    >
+                                                      Update
+                                                    </a>
+=======
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <a
+                                                        href="/submitProperty/1?disabled=true"
+                                                      >
+                                                        View
+                                                      </a>
+                                                    </div>
+>>>>>>> PIMS-1454 replace evaluations subform.
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+<<<<<<< HEAD
+                                            "_events": Object {
+                                              "remove": Array [
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                              ],
+                                            },
+                                            "_initHooksCalled": true,
+                                            "_latlng": Object {
+                                              "lat": 48,
+                                              "lng": 123,
+                                            },
+                                            "_leaflet_id": 23,
+                                            "_map": [Circular],
+                                            "_mapToAdd": [Circular],
+                                            "_source": undefined,
+                                            "_tip": <div
+                                              class="leaflet-popup-tip"
+                                            />,
+                                            "_tipContainer": <div
+                                              class="leaflet-popup-tip-container"
+                                            >
+                                              <div
+                                                class="leaflet-popup-tip"
+                                              />
+                                            </div>,
+                                            "_wrapper": <div
+                                              class="leaflet-popup-content-wrapper"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content"
+                                                style="width: 51px;"
+                                              >
+                                                <div
+                                                  class="parcelPopup container-fluid"
+                                                >
+                                                  <div
+                                                    class="row"
+=======
+                                            "_zoomAnimated": false,
+                                            "options": Object {
+                                              "autoPan": true,
+                                              "children": <PopupView
+                                                disabled={false}
+                                                propertyDetail={
+                                                  Object {
+                                                    "address": Object {
+                                                      "city": "Victoria",
+                                                      "line1": "1234 mock Street",
+                                                      "line2": "N/A",
+                                                      "postal": "V1V1V1",
+                                                      "province": "BC",
+                                                    },
+                                                    "agency": "FIN",
+                                                    "agencyId": 0,
+                                                    "buildings": Array [],
+                                                    "classification": "Core Operational",
+                                                    "classificationId": 0,
+                                                    "description": "test",
+                                                    "evaluations": Array [
+                                                      Object {
+                                                        "date": "2019",
+                                                        "key": "",
+                                                        "value": 100000,
+                                                      },
+                                                    ],
+                                                    "fiscals": Array [],
+                                                    "id": 1,
+                                                    "isSensitive": false,
+                                                    "landArea": "unknown",
+                                                    "landLegalDescription": "test",
+                                                    "latitude": 48,
+                                                    "longitude": 123,
+                                                    "pid": "000-000-000",
+                                                    "pin": "",
+                                                    "propertyStatus": "active",
+                                                    "statusId": 0,
+                                                    "zoning": "",
+                                                    "zoningPotential": "",
+                                                  }
+                                                }
+                                                propertyTypeId={0}
+                                              />,
+                                              "closeButton": true,
+                                              "leaflet": [Circular],
+                                              "offset": Array [
+                                                0,
+                                                -25,
+                                              ],
+                                              "onClose": [Function],
+                                              "pane": "popupPane",
+                                              "position": Array [
+                                                48,
+                                                123,
+                                              ],
+                                            },
+                                          },
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "zoomend": Array [
+                                        Object {
+                                          "ctx": NewClass {
+                                            "_container": <div
+                                              class="leaflet-control-zoom leaflet-bar leaflet-control"
+                                            >
+                                              <a
+                                                aria-label="Zoom in"
+                                                class="leaflet-control-zoom-in"
+                                                href="#"
+                                                role="button"
+                                                title="Zoom in"
+                                              >
+                                                +
+                                              </a>
+                                              <a
+                                                aria-label="Zoom out"
+                                                class="leaflet-control-zoom-out"
+                                                href="#"
+                                                role="button"
+                                                title="Zoom out"
+                                              >
+                                                −
+                                              </a>
+                                            </div>,
+                                            "_initHooksCalled": true,
+                                            "_leaflet_id": 10,
+                                            "_map": [Circular],
+                                            "_zoomInButton": <a
+                                              aria-label="Zoom in"
+                                              class="leaflet-control-zoom-in"
+                                              href="#"
+                                              role="button"
+                                              title="Zoom in"
+                                            >
+                                              +
+                                            </a>,
+                                            "_zoomOutButton": <a
+                                              aria-label="Zoom out"
+                                              class="leaflet-control-zoom-out"
+                                              href="#"
+                                              role="button"
+                                              title="Zoom out"
+                                            >
+                                              −
+                                            </a>,
+                                            "options": Object {},
+                                          },
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "zoomlevelschange": Array [
+                                        Object {
+                                          "ctx": NewClass {
+                                            "_container": <div
+                                              class="leaflet-control-zoom leaflet-bar leaflet-control"
+                                            >
+                                              <a
+                                                aria-label="Zoom in"
+                                                class="leaflet-control-zoom-in"
+                                                href="#"
+                                                role="button"
+                                                title="Zoom in"
+                                              >
+                                                +
+                                              </a>
+                                              <a
+                                                aria-label="Zoom out"
+                                                class="leaflet-control-zoom-out"
+                                                href="#"
+                                                role="button"
+                                                title="Zoom out"
+                                              >
+                                                −
+                                              </a>
+                                            </div>,
+                                            "_initHooksCalled": true,
+                                            "_leaflet_id": 10,
+                                            "_map": [Circular],
+                                            "_zoomInButton": <a
+                                              aria-label="Zoom in"
+                                              class="leaflet-control-zoom-in"
+                                              href="#"
+                                              role="button"
+                                              title="Zoom in"
+                                            >
+                                              +
+                                            </a>,
+                                            "_zoomOutButton": <a
+                                              aria-label="Zoom out"
+                                              class="leaflet-control-zoom-out"
+                                              href="#"
+                                              role="button"
+                                              title="Zoom out"
+                                            >
+                                              −
+                                            </a>,
+                                            "options": Object {},
+                                          },
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                    },
+                                    "_fadeAnimated": false,
+                                    "_firingCount": 0,
+                                    "_handlers": Array [
+                                      NewClass {
+                                        "_container": <div
+                                          class="leaflet-container leaflet-grab leaflet-touch-drag"
+                                          style="position: relative;"
+                                          tabindex="0"
+                                        >
+                                          <div
+                                            class="leaflet-pane leaflet-map-pane"
+                                            style="left: 0px; top: 0px;"
+                                          >
+                                            <div
+                                              class="leaflet-pane leaflet-tile-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-shadow-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-overlay-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-marker-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-tooltip-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-popup-pane"
+                                            >
+                                              <div
+                                                class="leaflet-popup  leaflet-zoom-animated"
+                                                style="bottom: -5px; left: 5px;"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-content-wrapper"
+                                                >
+                                                  <div
+                                                    class="leaflet-popup-content"
+                                                    style="width: 51px;"
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                   >
                                                     <div
                                                       class="col"
@@ -7367,6 +7725,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   </div>
                                                 </div>
                                               </div>
+<<<<<<< HEAD
                                             </div>,
                                             "_zoomAnimated": false,
                                             "options": Object {
@@ -7560,10 +7919,61 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   href="#close"
                                                 >
                                                   ×
+=======
+                                            </div>
+                                          </div>
+                                          <div
+                                            class="leaflet-control-container"
+                                          >
+                                            <div
+                                              class="leaflet-top leaflet-left"
+                                            >
+                                              <div
+                                                class="leaflet-control-zoom leaflet-bar leaflet-control"
+                                              >
+                                                <a
+                                                  aria-label="Zoom in"
+                                                  class="leaflet-control-zoom-in"
+                                                  href="#"
+                                                  role="button"
+                                                  title="Zoom in"
+                                                >
+                                                  +
+                                                </a>
+                                                <a
+                                                  aria-label="Zoom out"
+                                                  class="leaflet-control-zoom-out"
+                                                  href="#"
+                                                  role="button"
+                                                  title="Zoom out"
+                                                >
+                                                  −
+                                                </a>
+                                              </div>
+                                            </div>
+                                            <div
+                                              class="leaflet-top leaflet-right"
+                                            />
+                                            <div
+                                              class="leaflet-bottom leaflet-left"
+                                            />
+                                            <div
+                                              class="leaflet-bottom leaflet-right"
+                                            >
+                                              <div
+                                                class="leaflet-control-attribution leaflet-control"
+                                              >
+                                                <a
+                                                  href="https://leafletjs.com"
+                                                  title="A JS library for interactive maps"
+                                                >
+                                                  Leaflet
+>>>>>>> PIMS-1454 replace evaluations subform.
                                                 </a>
                                               </div>
                                             </div>
                                           </div>
+<<<<<<< HEAD
                                           <div
                                             class="leaflet-control-container"
                                           >
@@ -7826,15 +8236,917 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                     title="A JS library for interactive maps"
                                                   >
                                                     Leaflet
+=======
+                                        </div>,
+                                        "_enabled": true,
+                                        "_initHooksCalled": true,
+                                        "_leaflet_id": 14,
+                                        "_map": [Circular],
+                                        "_pane": <div
+                                          class="leaflet-pane leaflet-overlay-pane"
+                                        />,
+                                        "_resetStateTimeout": 0,
+                                      },
+                                      NewClass {
+                                        "_enabled": true,
+                                        "_initHooksCalled": true,
+                                        "_map": [Circular],
+                                      },
+                                      NewClass {
+                                        "_draggable": NewClass {
+                                          "_dragStartTarget": <div
+                                            class="leaflet-container leaflet-grab leaflet-touch-drag"
+                                            style="position: relative;"
+                                            tabindex="0"
+                                          >
+                                            <div
+                                              class="leaflet-pane leaflet-map-pane"
+                                              style="left: 0px; top: 0px;"
+                                            >
+                                              <div
+                                                class="leaflet-pane leaflet-tile-pane"
+                                              />
+                                              <div
+                                                class="leaflet-pane leaflet-shadow-pane"
+                                              />
+                                              <div
+                                                class="leaflet-pane leaflet-overlay-pane"
+                                              />
+                                              <div
+                                                class="leaflet-pane leaflet-marker-pane"
+                                              />
+                                              <div
+                                                class="leaflet-pane leaflet-tooltip-pane"
+                                              />
+                                              <div
+                                                class="leaflet-pane leaflet-popup-pane"
+                                              >
+                                                <div
+                                                  class="leaflet-popup  leaflet-zoom-animated"
+                                                  style="bottom: -5px; left: 5px;"
+                                                >
+                                                  <div
+                                                    class="leaflet-popup-content-wrapper"
+                                                  >
+                                                    <div
+                                                      class="leaflet-popup-content"
+                                                      style="width: 51px;"
+                                                    >
+                                                      <div
+                                                        class="parcelPopup container-fluid"
+                                                      >
+                                                        <div
+                                                          class="row"
+                                                        >
+                                                          <div
+                                                            class="col"
+                                                          >
+                                                            <div
+                                                              class="list-group"
+                                                            >
+                                                              <div
+                                                                class="list-group-item"
+                                                              >
+                                                                <p
+                                                                  class="label"
+                                                                >
+                                                                  Assessed Value: 
+                                                                </p>
+                                                                $
+                                                              </div>
+                                                            </div>
+                                                            <div
+                                                              class="list-group"
+                                                            >
+                                                              <div
+                                                                class="list-group-item"
+                                                              >
+                                                                <div>
+                                                                  <p
+                                                                    class="label"
+                                                                  >
+                                                                    Address: 
+                                                                  </p>
+                                                                  1234 mock Street
+                                                                </div>
+                                                                <div>
+                                                                  Victoria
+                                                                  , 
+                                                                  BC
+                                                                   
+                                                                  V1V1V1
+                                                                </div>
+                                                              </div>
+                                                              <div
+                                                                class="list-group-item"
+                                                              >
+                                                                <p
+                                                                  class="label"
+                                                                >
+                                                                  PID: 
+                                                                </p>
+                                                                 
+                                                                000-000-000
+                                                              </div>
+                                                            </div>
+                                                            <div
+                                                              class="list-group"
+                                                            >
+                                                              <div
+                                                                class="list-group-item"
+                                                              >
+                                                                <p
+                                                                  class="label"
+                                                                >
+                                                                  Agency: 
+                                                                </p>
+                                                                FIN
+                                                              </div>
+                                                              <div
+                                                                class="list-group-item"
+                                                              >
+                                                                <p
+                                                                  class="label"
+                                                                >
+                                                                  Classification: 
+                                                                </p>
+                                                                Core Operational
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="col"
+                                                          >
+                                                            <a
+                                                              href="/submitProperty/1?disabled=true"
+                                                            >
+                                                              View
+                                                            </a>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="leaflet-popup-tip-container"
+                                                  >
+                                                    <div
+                                                      class="leaflet-popup-tip"
+                                                    />
+                                                  </div>
+                                                  <a
+                                                    class="leaflet-popup-close-button"
+                                                    href="#close"
+                                                  >
+                                                    ×
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div
+                                              class="leaflet-control-container"
+                                            >
+                                              <div
+                                                class="leaflet-top leaflet-left"
+                                              >
+                                                <div
+                                                  class="leaflet-control-zoom leaflet-bar leaflet-control"
+                                                >
+                                                  <a
+                                                    aria-label="Zoom in"
+                                                    class="leaflet-control-zoom-in"
+                                                    href="#"
+                                                    role="button"
+                                                    title="Zoom in"
+                                                  >
+                                                    +
+                                                  </a>
+                                                  <a
+                                                    aria-label="Zoom out"
+                                                    class="leaflet-control-zoom-out"
+                                                    href="#"
+                                                    role="button"
+                                                    title="Zoom out"
+                                                  >
+                                                    −
+                                                  </a>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="leaflet-top leaflet-right"
+                                              />
+                                              <div
+                                                class="leaflet-bottom leaflet-left"
+                                              />
+                                              <div
+                                                class="leaflet-bottom leaflet-right"
+                                              >
+                                                <div
+                                                  class="leaflet-control-attribution leaflet-control"
+                                                >
+                                                  <a
+                                                    href="https://leafletjs.com"
+                                                    title="A JS library for interactive maps"
+                                                  >
+                                                    Leaflet
                                                   </a>
                                                 </div>
                                               </div>
                                             </div>
                                           </div>,
                                           "_element": <div
+                                            class="leaflet-pane leaflet-map-pane"
+                                            style="left: 0px; top: 0px;"
+                                          >
+                                            <div
+                                              class="leaflet-pane leaflet-tile-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-shadow-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-overlay-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-marker-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-tooltip-pane"
+                                            />
+                                            <div
+                                              class="leaflet-pane leaflet-popup-pane"
+                                            >
+                                              <div
+                                                class="leaflet-popup  leaflet-zoom-animated"
+                                                style="bottom: -5px; left: 5px;"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-content-wrapper"
+                                                >
+                                                  <div
+                                                    class="leaflet-popup-content"
+                                                    style="width: 51px;"
+                                                  >
+                                                    <div
+                                                      class="parcelPopup container-fluid"
+                                                    >
+                                                      <div
+                                                        class="row"
+                                                      >
+                                                        <div
+                                                          class="col"
+                                                        >
+                                                          <div
+                                                            class="list-group"
+                                                          >
+                                                            <div
+                                                              class="list-group-item"
+                                                            >
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Assessed Value: 
+                                                              </p>
+                                                              $
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group"
+                                                          >
+                                                            <div
+                                                              class="list-group-item"
+                                                            >
+                                                              <div>
+                                                                <p
+                                                                  class="label"
+                                                                >
+                                                                  Address: 
+                                                                </p>
+                                                                1234 mock Street
+                                                              </div>
+                                                              <div>
+                                                                Victoria
+                                                                , 
+                                                                BC
+                                                                 
+                                                                V1V1V1
+                                                              </div>
+                                                            </div>
+                                                            <div
+                                                              class="list-group-item"
+                                                            >
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                PID: 
+                                                              </p>
+                                                               
+                                                              000-000-000
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group"
+                                                          >
+                                                            <div
+                                                              class="list-group-item"
+                                                            >
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Agency: 
+                                                              </p>
+                                                              FIN
+                                                            </div>
+                                                            <div
+                                                              class="list-group-item"
+                                                            >
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Classification: 
+                                                              </p>
+                                                              Core Operational
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="col"
+                                                        >
+                                                          <a
+                                                            href="/submitProperty/1?disabled=true"
+                                                          >
+                                                            View
+                                                          </a>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="leaflet-popup-tip-container"
+                                                >
+                                                  <div
+                                                    class="leaflet-popup-tip"
+                                                  />
+                                                </div>
+                                                <a
+                                                  class="leaflet-popup-close-button"
+                                                  href="#close"
+                                                >
+                                                  ×
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </div>,
+                                          "_enabled": true,
+                                          "_events": Object {
+                                            "drag": Array [
+                                              Object {
+                                                "ctx": [Circular],
+                                                "fn": [Function],
+                                              },
+                                            ],
+                                            "dragend": Array [
+                                              Object {
+                                                "ctx": [Circular],
+                                                "fn": [Function],
+                                              },
+                                            ],
+                                            "dragstart": Array [
+                                              Object {
+                                                "ctx": [Circular],
+                                                "fn": [Function],
+                                              },
+                                            ],
+                                            "predrag": Array [
+                                              Object {
+                                                "ctx": [Circular],
+                                                "fn": [Function],
+                                              },
+                                            ],
+                                          },
+                                          "_initHooksCalled": true,
+                                          "_leaflet_id": 16,
+                                          "_preventOutline": undefined,
+                                          "options": Object {},
+                                        },
+                                        "_enabled": true,
+                                        "_initHooksCalled": true,
+                                        "_map": [Circular],
+                                        "_positions": Array [],
+                                        "_times": Array [],
+                                      },
+                                      NewClass {
+                                        "_enabled": true,
+                                        "_initHooksCalled": true,
+                                        "_leaflet_id": 18,
+                                        "_map": [Circular],
+                                        "_panKeys": Object {
+                                          "37": Array [
+                                            -80,
+                                            0,
+                                          ],
+                                          "38": Array [
+                                            0,
+                                            -80,
+                                          ],
+                                          "39": Array [
+                                            80,
+                                            0,
+                                          ],
+                                          "40": Array [
+                                            0,
+                                            80,
+                                          ],
+                                        },
+                                        "_zoomKeys": Object {
+                                          "107": 1,
+                                          "109": -1,
+                                          "171": 1,
+                                          "173": -1,
+                                          "187": 1,
+                                          "189": -1,
+                                          "54": -1,
+                                          "61": 1,
+                                        },
+                                      },
+                                      NewClass {
+                                        "_delta": 0,
+                                        "_enabled": true,
+                                        "_initHooksCalled": true,
+                                        "_leaflet_id": 22,
+                                        "_map": [Circular],
+                                      },
+                                      NewClass {
+                                        "_initHooksCalled": true,
+                                        "_map": [Circular],
+                                      },
+                                    ],
+                                    "_initHooksCalled": true,
+                                    "_lastCenter": Object {
+                                      "lat": 48.001722929447496,
+                                      "lng": 122.9995708465576,
+                                    },
+                                    "_layers": Object {
+                                      "23": NewClass {
+                                        "_closeButton": <a
+                                          class="leaflet-popup-close-button"
+                                          href="#close"
+                                        >
+                                          ×
+                                        </a>,
+                                        "_container": <div
+                                          class="leaflet-popup  leaflet-zoom-animated"
+                                          style="bottom: -5px; left: 5px;"
+                                        >
+                                          <div
+                                            class="leaflet-popup-content-wrapper"
+                                          >
+                                            <div
+                                              class="leaflet-popup-content"
+                                              style="width: 51px;"
+                                            >
+                                              <div
+                                                class="parcelPopup container-fluid"
+                                              >
+                                                <div
+                                                  class="row"
+                                                >
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Assessed Value: 
+                                                        </p>
+                                                        $
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <div>
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Address: 
+                                                          </p>
+                                                          1234 mock Street
+                                                        </div>
+                                                        <div>
+                                                          Victoria
+                                                          , 
+                                                          BC
+                                                           
+                                                          V1V1V1
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          PID: 
+                                                        </p>
+                                                         
+                                                        000-000-000
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Agency: 
+                                                        </p>
+                                                        FIN
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Classification: 
+                                                        </p>
+                                                        Core Operational
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <a
+                                                      href="/submitProperty/1?disabled=true"
+                                                    >
+                                                      View
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div
+                                            class="leaflet-popup-tip-container"
+                                          >
+                                            <div
+                                              class="leaflet-popup-tip"
+                                            />
+                                          </div>
+                                          <a
+                                            class="leaflet-popup-close-button"
+                                            href="#close"
+                                          >
+                                            ×
+                                          </a>
+                                        </div>,
+                                        "_containerBottom": -5,
+                                        "_containerLeft": 5,
+                                        "_containerWidth": 0,
+                                        "_contentNode": <div
+                                          class="leaflet-popup-content"
+                                          style="width: 51px;"
+                                        >
+                                          <div
+                                            class="parcelPopup container-fluid"
+                                          >
+                                            <div
+                                              class="row"
+                                            >
+                                              <div
+                                                class="col"
+                                              >
+                                                <div
+                                                  class="list-group"
+                                                >
+                                                  <div
+                                                    class="list-group-item"
+                                                  >
+                                                    <p
+                                                      class="label"
+                                                    >
+                                                      Assessed Value: 
+                                                    </p>
+                                                    $
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="list-group"
+                                                >
+                                                  <div
+                                                    class="list-group-item"
+                                                  >
+                                                    <div>
+                                                      <p
+                                                        class="label"
+                                                      >
+                                                        Address: 
+                                                      </p>
+                                                      1234 mock Street
+                                                    </div>
+                                                    <div>
+                                                      Victoria
+                                                      , 
+                                                      BC
+                                                       
+                                                      V1V1V1
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="list-group-item"
+                                                  >
+                                                    <p
+                                                      class="label"
+                                                    >
+                                                      PID: 
+                                                    </p>
+                                                     
+                                                    000-000-000
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="list-group"
+                                                >
+                                                  <div
+                                                    class="list-group-item"
+                                                  >
+                                                    <p
+                                                      class="label"
+                                                    >
+                                                      Agency: 
+                                                    </p>
+                                                    FIN
+                                                  </div>
+                                                  <div
+                                                    class="list-group-item"
+                                                  >
+                                                    <p
+                                                      class="label"
+                                                    >
+                                                      Classification: 
+                                                    </p>
+                                                    Core Operational
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="col"
+                                              >
+                                                <a
+                                                  href="/submitProperty/1?disabled=true"
+                                                >
+                                                  View
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>,
+                                        "_events": Object {
+                                          "remove": Array [
+                                            Object {
+                                              "ctx": undefined,
+                                              "fn": [Function],
+                                            },
+                                            Object {
+                                              "ctx": undefined,
+                                              "fn": [Function],
+                                            },
+                                          ],
+                                        },
+                                        "_initHooksCalled": true,
+                                        "_latlng": Object {
+                                          "lat": 48,
+                                          "lng": 123,
+                                        },
+                                        "_leaflet_id": 23,
+                                        "_map": [Circular],
+                                        "_mapToAdd": [Circular],
+                                        "_source": undefined,
+                                        "_tip": <div
+                                          class="leaflet-popup-tip"
+                                        />,
+                                        "_tipContainer": <div
+                                          class="leaflet-popup-tip-container"
+                                        >
+                                          <div
+                                            class="leaflet-popup-tip"
+                                          />
+                                        </div>,
+                                        "_wrapper": <div
+                                          class="leaflet-popup-content-wrapper"
+                                        >
+                                          <div
+                                            class="leaflet-popup-content"
+                                            style="width: 51px;"
+                                          >
+                                            <div
+                                              class="parcelPopup container-fluid"
+                                            >
+                                              <div
+                                                class="row"
+                                              >
+                                                <div
+                                                  class="col"
+                                                >
+                                                  <div
+                                                    class="list-group"
+                                                  >
+                                                    <div
+                                                      class="list-group-item"
+                                                    >
+                                                      <p
+                                                        class="label"
+                                                      >
+                                                        Assessed Value: 
+                                                      </p>
+                                                      $
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="list-group"
+                                                  >
+                                                    <div
+                                                      class="list-group-item"
+                                                    >
+                                                      <div>
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Address: 
+                                                        </p>
+                                                        1234 mock Street
+                                                      </div>
+                                                      <div>
+                                                        Victoria
+                                                        , 
+                                                        BC
+                                                         
+                                                        V1V1V1
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group-item"
+                                                    >
+                                                      <p
+                                                        class="label"
+                                                      >
+                                                        PID: 
+                                                      </p>
+                                                       
+                                                      000-000-000
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="list-group"
+                                                  >
+                                                    <div
+                                                      class="list-group-item"
+                                                    >
+                                                      <p
+                                                        class="label"
+                                                      >
+                                                        Agency: 
+                                                      </p>
+                                                      FIN
+                                                    </div>
+                                                    <div
+                                                      class="list-group-item"
+                                                    >
+                                                      <p
+                                                        class="label"
+                                                      >
+                                                        Classification: 
+                                                      </p>
+                                                      Core Operational
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="col"
+                                                >
+                                                  <a
+                                                    href="/submitProperty/1?disabled=true"
+                                                  >
+                                                    View
+>>>>>>> PIMS-1454 replace evaluations subform.
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            </div>
+<<<<<<< HEAD
+                                          </div>,
+                                          "_element": <div
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
                                             class="leaflet-pane leaflet-map-pane"
                                             style="left: 0px; top: 0px;"
+=======
+                                          </div>
+                                        </div>,
+                                        "_zoomAnimated": false,
+                                        "options": Object {
+                                          "autoPan": true,
+                                          "children": <PopupView
+                                            disabled={false}
+                                            propertyDetail={
+                                              Object {
+                                                "address": Object {
+                                                  "city": "Victoria",
+                                                  "line1": "1234 mock Street",
+                                                  "line2": "N/A",
+                                                  "postal": "V1V1V1",
+                                                  "province": "BC",
+                                                },
+                                                "agency": "FIN",
+                                                "agencyId": 0,
+                                                "buildings": Array [],
+                                                "classification": "Core Operational",
+                                                "classificationId": 0,
+                                                "description": "test",
+                                                "evaluations": Array [
+                                                  Object {
+                                                    "date": "2019",
+                                                    "key": "",
+                                                    "value": 100000,
+                                                  },
+                                                ],
+                                                "fiscals": Array [],
+                                                "id": 1,
+                                                "isSensitive": false,
+                                                "landArea": "unknown",
+                                                "landLegalDescription": "test",
+                                                "latitude": 48,
+                                                "longitude": 123,
+                                                "pid": "000-000-000",
+                                                "pin": "",
+                                                "propertyStatus": "active",
+                                                "statusId": 0,
+                                                "zoning": "",
+                                                "zoningPotential": "",
+                                              }
+                                            }
+                                            propertyTypeId={0}
+                                          />,
+                                          "closeButton": true,
+                                          "leaflet": [Circular],
+                                          "offset": Array [
+                                            0,
+                                            -25,
+                                          ],
+                                          "onClose": [Function],
+                                          "pane": "popupPane",
+                                          "position": Array [
+                                            48,
+                                            123,
+                                          ],
+                                        },
+                                      },
+                                    },
+                                    "_leaflet_id": 2,
+                                    "_loaded": true,
+                                    "_mapPane": <div
+                                      class="leaflet-pane leaflet-map-pane"
+                                      style="left: 0px; top: 0px;"
+                                    >
+                                      <div
+                                        class="leaflet-pane leaflet-tile-pane"
+                                      />
+                                      <div
+                                        class="leaflet-pane leaflet-shadow-pane"
+                                      />
+                                      <div
+                                        class="leaflet-pane leaflet-overlay-pane"
+                                      />
+                                      <div
+                                        class="leaflet-pane leaflet-marker-pane"
+                                      />
+                                      <div
+                                        class="leaflet-pane leaflet-tooltip-pane"
+                                      />
+                                      <div
+                                        class="leaflet-pane leaflet-popup-pane"
+                                      >
+                                        <div
+                                          class="leaflet-popup  leaflet-zoom-animated"
+                                          style="bottom: -5px; left: 5px;"
+                                        >
+                                          <div
+                                            class="leaflet-popup-content-wrapper"
+>>>>>>> PIMS-1454 replace evaluations subform.
                                           >
                                             <div
                                               class="leaflet-pane leaflet-tile-pane"
@@ -11684,6 +12996,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                                   </div>
                                                 </div>
                                               </div>
+<<<<<<< HEAD
                                             </div>,
                                             "_zoomAnimated": false,
                                             "options": Object {
@@ -11744,6 +13057,102 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               ],
 =======
                                       "closePopupOnClick": false,
+=======
+                                              <div
+                                                class="leaflet-popup-tip-container"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-tip"
+                                                />
+                                              </div>
+                                              <a
+                                                class="leaflet-popup-close-button"
+                                                href="#close"
+                                              >
+                                                ×
+                                              </a>
+                                            </div>
+                                          </div>
+                                        </div>,
+                                        "_enabled": true,
+                                        "_events": Object {
+                                          "drag": Array [
+                                            Object {
+                                              "ctx": [Circular],
+                                              "fn": [Function],
+                                            },
+                                          ],
+                                          "dragend": Array [
+                                            Object {
+                                              "ctx": [Circular],
+                                              "fn": [Function],
+                                            },
+                                          ],
+                                          "dragstart": Array [
+                                            Object {
+                                              "ctx": [Circular],
+                                              "fn": [Function],
+                                            },
+                                          ],
+                                          "predrag": Array [
+                                            Object {
+                                              "ctx": [Circular],
+                                              "fn": [Function],
+                                            },
+                                          ],
+                                        },
+                                        "_initHooksCalled": true,
+                                        "_leaflet_id": 16,
+                                        "_preventOutline": undefined,
+                                        "options": Object {},
+                                      },
+                                      "_enabled": true,
+                                      "_initHooksCalled": true,
+                                      "_map": [Circular],
+                                      "_positions": Array [],
+                                      "_times": Array [],
+                                    },
+                                    "keyboard": NewClass {
+                                      "_enabled": true,
+                                      "_initHooksCalled": true,
+                                      "_leaflet_id": 18,
+                                      "_map": [Circular],
+                                      "_panKeys": Object {
+                                        "37": Array [
+                                          -80,
+                                          0,
+                                        ],
+                                        "38": Array [
+                                          0,
+                                          -80,
+                                        ],
+                                        "39": Array [
+                                          80,
+                                          0,
+                                        ],
+                                        "40": Array [
+                                          0,
+                                          80,
+                                        ],
+                                      },
+                                      "_zoomKeys": Object {
+                                        "107": 1,
+                                        "109": -1,
+                                        "171": 1,
+                                        "173": -1,
+                                        "187": 1,
+                                        "189": -1,
+                                        "54": -1,
+                                        "61": 1,
+                                      },
+                                    },
+                                    "options": Object {
+                                      "center": Array [
+                                        48,
+                                        123,
+                                      ],
+                                      "closePopupOnClick": true,
+>>>>>>> PIMS-1454 replace evaluations subform.
                                       "onViewportChanged": [Function],
                                       "onpreclick": [Function],
                                       "zoom": 14,
@@ -12190,12 +13599,478 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                               "189": -1,
                                               "54": -1,
                                               "61": 1,
->>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
                                             },
                                           },
                                           "fn": [Function],
                                         },
                                       ],
+                                      "move": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "moveend": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "popupclose": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "popupopen": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                      ],
+                                      "preclick": Array [
+                                        Object {
+                                          "ctx": undefined,
+                                          "fn": [Function],
+                                        },
+                                        Object {
+                                          "ctx": NewClass {
+                                            "_closeButton": <a
+                                              class="leaflet-popup-close-button"
+                                              href="#close"
+                                            >
+                                              ×
+                                            </a>,
+                                            "_container": <div
+                                              class="leaflet-popup  leaflet-zoom-animated"
+                                              style="bottom: -5px; left: 5px;"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content-wrapper"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-content"
+                                                  style="width: 51px;"
+                                                >
+                                                  <div
+                                                    class="parcelPopup container-fluid"
+                                                  >
+                                                    <div
+                                                      class="row"
+                                                    >
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Assessed Value: 
+                                                            </p>
+                                                            $
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <div>
+                                                              <p
+                                                                class="label"
+                                                              >
+                                                                Address: 
+                                                              </p>
+                                                              1234 mock Street
+                                                            </div>
+                                                            <div>
+                                                              Victoria
+                                                              , 
+                                                              BC
+                                                               
+                                                              V1V1V1
+                                                            </div>
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              PID: 
+                                                            </p>
+                                                             
+                                                            000-000-000
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group"
+                                                        >
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Agency: 
+                                                            </p>
+                                                            FIN
+                                                          </div>
+                                                          <div
+                                                            class="list-group-item"
+                                                          >
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Classification: 
+                                                            </p>
+                                                            Core Operational
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="col"
+                                                      >
+                                                        <a
+                                                          href="/submitProperty/1?disabled=true"
+                                                        >
+                                                          View
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="leaflet-popup-tip-container"
+                                              >
+                                                <div
+                                                  class="leaflet-popup-tip"
+                                                />
+                                              </div>
+                                              <a
+                                                class="leaflet-popup-close-button"
+                                                href="#close"
+                                              >
+                                                ×
+                                              </a>
+                                            </div>,
+                                            "_containerBottom": -5,
+                                            "_containerLeft": 5,
+                                            "_containerWidth": 0,
+                                            "_contentNode": <div
+                                              class="leaflet-popup-content"
+                                              style="width: 51px;"
+                                            >
+                                              <div
+                                                class="parcelPopup container-fluid"
+                                              >
+                                                <div
+                                                  class="row"
+                                                >
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Assessed Value: 
+                                                        </p>
+                                                        $
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <div>
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Address: 
+                                                          </p>
+                                                          1234 mock Street
+                                                        </div>
+                                                        <div>
+                                                          Victoria
+                                                          , 
+                                                          BC
+                                                           
+                                                          V1V1V1
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          PID: 
+                                                        </p>
+                                                         
+                                                        000-000-000
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="list-group"
+                                                    >
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Agency: 
+                                                        </p>
+                                                        FIN
+                                                      </div>
+                                                      <div
+                                                        class="list-group-item"
+                                                      >
+                                                        <p
+                                                          class="label"
+                                                        >
+                                                          Classification: 
+                                                        </p>
+                                                        Core Operational
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    class="col"
+                                                  >
+                                                    <a
+                                                      href="/submitProperty/1?disabled=true"
+                                                    >
+                                                      View
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_events": Object {
+                                              "remove": Array [
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                                Object {
+                                                  "ctx": undefined,
+                                                  "fn": [Function],
+                                                },
+                                              ],
+                                            },
+                                            "_initHooksCalled": true,
+                                            "_latlng": Object {
+                                              "lat": 48,
+                                              "lng": 123,
+                                            },
+                                            "_leaflet_id": 23,
+                                            "_map": [Circular],
+                                            "_mapToAdd": [Circular],
+                                            "_source": undefined,
+                                            "_tip": <div
+                                              class="leaflet-popup-tip"
+                                            />,
+                                            "_tipContainer": <div
+                                              class="leaflet-popup-tip-container"
+                                            >
+                                              <div
+                                                class="leaflet-popup-tip"
+                                              />
+                                            </div>,
+                                            "_wrapper": <div
+                                              class="leaflet-popup-content-wrapper"
+                                            >
+                                              <div
+                                                class="leaflet-popup-content"
+                                                style="width: 51px;"
+                                              >
+                                                <div
+                                                  class="parcelPopup container-fluid"
+                                                >
+                                                  <div
+                                                    class="row"
+                                                  >
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Assessed Value: 
+                                                          </p>
+                                                          $
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <div>
+                                                            <p
+                                                              class="label"
+                                                            >
+                                                              Address: 
+                                                            </p>
+                                                            1234 mock Street
+                                                          </div>
+                                                          <div>
+                                                            Victoria
+                                                            , 
+                                                            BC
+                                                             
+                                                            V1V1V1
+                                                          </div>
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            PID: 
+                                                          </p>
+                                                           
+                                                          000-000-000
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        class="list-group"
+                                                      >
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Agency: 
+                                                          </p>
+                                                          FIN
+                                                        </div>
+                                                        <div
+                                                          class="list-group-item"
+                                                        >
+                                                          <p
+                                                            class="label"
+                                                          >
+                                                            Classification: 
+                                                          </p>
+                                                          Core Operational
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="col"
+                                                    >
+                                                      <a
+                                                        href="/submitProperty/1?disabled=true"
+                                                      >
+                                                        View
+                                                      </a>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>,
+                                            "_zoomAnimated": false,
+                                            "options": Object {
+                                              "autoPan": true,
+                                              "children": <PopupView
+                                                disabled={false}
+                                                propertyDetail={
+                                                  Object {
+                                                    "address": Object {
+                                                      "city": "Victoria",
+                                                      "line1": "1234 mock Street",
+                                                      "line2": "N/A",
+                                                      "postal": "V1V1V1",
+                                                      "province": "BC",
+                                                    },
+                                                    "agency": "FIN",
+                                                    "agencyId": 0,
+                                                    "buildings": Array [],
+                                                    "classification": "Core Operational",
+                                                    "classificationId": 0,
+                                                    "description": "test",
+                                                    "evaluations": Array [
+                                                      Object {
+                                                        "date": "2019",
+                                                        "key": "",
+                                                        "value": 100000,
+                                                      },
+                                                    ],
+                                                    "fiscals": Array [],
+                                                    "id": 1,
+                                                    "isSensitive": false,
+                                                    "landArea": "unknown",
+                                                    "landLegalDescription": "test",
+                                                    "latitude": 48,
+                                                    "longitude": 123,
+                                                    "pid": "000-000-000",
+                                                    "pin": "",
+                                                    "propertyStatus": "active",
+                                                    "statusId": 0,
+                                                    "zoning": "",
+                                                    "zoningPotential": "",
+                                                  }
+                                                }
+                                                propertyTypeId={0}
+                                              />,
+                                              "closeButton": true,
+                                              "leaflet": [Circular],
+                                              "offset": Array [
+                                                0,
+                                                -25,
+                                              ],
+                                              "onClose": [Function],
+                                              "pane": "popupPane",
+                                              "position": Array [
+                                                48,
+                                                123,
+                                              ],
+                                            },
+<<<<<<< HEAD
+                                            "_zoomKeys": Object {
+                                              "107": 1,
+                                              "109": -1,
+                                              "171": 1,
+                                              "173": -1,
+                                              "187": 1,
+                                              "189": -1,
+                                              "54": -1,
+                                              "61": 1,
+>>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+                                            },
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
+                                          },
+                                          "fn": [Function],
+                                        },
+                                      ],
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                                       "move": Array [
@@ -12229,6 +14104,8 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         },
                                       ],
 >>>>>>> PIMS-1343,PIMS-1344,PIMS-1383
+=======
+>>>>>>> PIMS-1454 replace evaluations subform.
                                       "unload": Array [
                                         Object {
                                           "ctx": NewClass {
@@ -16234,6 +18111,7 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                         123,
                                       ],
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       "closePopupOnClick": true,
                                       "onViewportChanged": [Function],
                                       "onpreclick": [Function],
@@ -16241,6 +18119,9 @@ exports[`SubmitProperty renders a disabled form if agency does not match current
                                       "zoom": 1,
 =======
                                       "closePopupOnClick": false,
+=======
+                                      "closePopupOnClick": true,
+>>>>>>> PIMS-1454 replace evaluations subform.
                                       "onViewportChanged": [Function],
                                       "onpreclick": [Function],
                                       "zoom": 14,

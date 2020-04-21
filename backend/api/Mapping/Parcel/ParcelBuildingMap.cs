@@ -12,8 +12,10 @@ namespace Pims.Api.Mapping.Parcel
         {
             config.NewConfig<Entity.Building, Model.ParcelBuildingModel>()
                 .IgnoreNonMapped(true)
+                .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.LocalId, src => src.LocalId)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
@@ -40,8 +42,10 @@ namespace Pims.Api.Mapping.Parcel
 
             config.NewConfig<Model.ParcelBuildingModel, Entity.Building>()
                 .IgnoreNonMapped(true)
+                .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.LocalId, src => src.LocalId)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Latitude, src => src.Latitude)

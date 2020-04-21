@@ -29,6 +29,7 @@ const defaultParcelDetail: IParcelDetail = {
     longitude: 1,
     latitude: 2,
     id: 3,
+    fiscals: [],
     address: {
       city: '4',
       line1: '5',

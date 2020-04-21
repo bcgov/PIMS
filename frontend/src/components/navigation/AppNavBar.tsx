@@ -43,9 +43,7 @@ function AppNavBar() {
     <Nav.Link>View Projects</Nav.Link>
   ) : null;
 
-  const canEditProperties = keycloak.hasClaim(Claims.PROPERTY_EDIT) ? (
-    <ManagePropertyDropDown />
-  ) : null;
+  const canEditProperties = true ? <ManagePropertyDropDown /> : null;
 
   const canDisposeRequest = keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
     <StartProjectDropdown />

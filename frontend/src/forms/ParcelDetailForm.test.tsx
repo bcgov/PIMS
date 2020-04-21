@@ -21,6 +21,9 @@ import PidPinForm from './subforms/PidPinForm';
 import { render, fireEvent, wait } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { mockDetails } from 'mocks/filterDataMock';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import moment from 'moment';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
@@ -83,14 +86,13 @@ const store = mockStore({
 const parcelDetailForm = (
   <Provider store={store}>
     <Router history={history}>
-      <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} secret="test" />
+      <ParcelDetailForm agencyId={1} parcelDetail={null} secret="test" />
     </Router>
   </Provider>
 );
 describe('ParcelDetailForm', () => {
   describe('field validation', () => {
     const exampleData = {
-      pid: '',
       agencyId: 1,
       address: {
         line1: 'addressval',
@@ -100,7 +102,7 @@ describe('ParcelDetailForm', () => {
       },
       description: '',
       landLegalDescription: '',
-      pin: '5',
+      pin: 5,
       zoning: 'zoningVal',
       zoningPotential: 'zoningPotentialVal',
       municipality: 'municipalityVal',
@@ -110,7 +112,20 @@ describe('ParcelDetailForm', () => {
       isSensitive: false,
       latitude: 0,
       longitude: 0,
-      evaluations: [],
+      evaluations: [
+        {
+          date: '2020-01-01T08:00:00.000Z',
+          year: 2020,
+          key: EvaluationKeys.Assessed,
+          value: 1,
+        },
+        {
+          date: moment().format('YYYY-MM-DD'),
+          year: 2020,
+          key: EvaluationKeys.Appraised,
+          value: 1,
+        },
+      ],
       buildings: [],
       fiscals: [],
     };
@@ -145,7 +160,7 @@ describe('ParcelDetailForm', () => {
       });
       const errors = form.getAllByText('Required');
       const idErrors = form.getAllByText('pid or pin Required');
-      expect(errors).toHaveLength(6);
+      expect(errors).toHaveLength(9);
       expect(idErrors).toHaveLength(2);
     });
 
@@ -169,6 +184,9 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'latitude', exampleData.latitude);
       await fillInput(container, 'longitude', exampleData.longitude);
       await fillInput(container, 'landArea', exampleData.landArea);
+      await fillInput(container, 'evaluations.0.value', exampleData.evaluations[0].value);
+      await fillInput(container, 'evaluations.1.date', exampleData.evaluations[1].date);
+      await fillInput(container, 'evaluations.1.value', exampleData.evaluations[1].value);
       const mockAxios = new MockAdapter(axios);
       const submit = form.getByText('Submit');
 
@@ -190,7 +208,7 @@ describe('ParcelDetailForm', () => {
       .create(
         <Provider store={store}>
           <Router history={history}>
-            <ParcelDetailForm secret="test" updateLatLng={() => {}} agencyId={1} parcelId={0} />
+            <ParcelDetailForm secret="test" agencyId={1} parcelDetail={null} />
           </Router>
         </Provider>,
       )
@@ -198,25 +216,19 @@ describe('ParcelDetailForm', () => {
     expect(tree).toMatchSnapshot();
   });
 
-it('ParcelDetailForm renders view-only correctly', () => {
-  const history = createMemoryHistory();
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <Router history={history}>
-          <ParcelDetailForm
-            disabled={true}
-            secret="test"
-            updateLatLng={() => {}}
-            agencyId={1}
-            parcelId={0}
-          />
-        </Router>
-      </Provider>,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-});
+  it('ParcelDetailForm renders view-only correctly', () => {
+    const history = createMemoryHistory();
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <Router history={history}>
+            <ParcelDetailForm disabled={true} secret="test" agencyId={1} parcelDetail={null} />
+          </Router>
+        </Provider>,
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
   it('loads appropriate cities/provinces in dropwdown for address form', () => {
     const addrForm = mount(parcelDetailForm).find(AddressForm);
@@ -237,17 +249,6 @@ it('ParcelDetailForm renders view-only correctly', () => {
     expect(buildingForm.text()).toContain('construction test type');
     expect(buildingForm.text()).toContain('predominate use test type');
     expect(buildingForm.text()).toContain('occupent type test');
-  });
-
-  it('add evaluation button will display appropriate form', () => {
-    const component = mount(parcelDetailForm);
-    const addEval = component.find('[className="addEval btn btn-primary"]');
-    act(() => {
-      addEval.simulate('click');
-    });
-
-    const evalForm = component.find(EvaluationForm);
-    expect(evalForm).toHaveLength(1);
   });
 
   it('pidpin form renders', () => {
@@ -278,7 +279,7 @@ it('ParcelDetailForm renders view-only correctly', () => {
       const differentKey = (
         <Provider store={store}>
           <Router history={history}>
-            <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={0} secret="invalid" />
+            <ParcelDetailForm agencyId={1} parcelDetail={null} secret="invalid" />
           </Router>
         </Provider>
       );
@@ -293,7 +294,7 @@ it('ParcelDetailForm renders view-only correctly', () => {
       const updateForm = (
         <Provider store={store}>
           <Router history={history}>
-            <ParcelDetailForm updateLatLng={() => {}} agencyId={1} parcelId={1} secret="invalid" />
+            <ParcelDetailForm agencyId={1} parcelDetail={mockDetails[0]} secret="invalid" />
           </Router>
         </Provider>
       );
