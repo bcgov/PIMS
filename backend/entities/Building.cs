@@ -88,13 +88,13 @@ namespace Pims.Dal.Entities
         /// get - A collection of evaluations for this building.
         /// </summary>
         /// <typeparam name="BuildingEvaluation"></typeparam>
-        public ICollection<BuildingEvaluation> Evaluations { get; } = new List<BuildingEvaluation> ();
+        public ICollection<BuildingEvaluation> Evaluations { get; private set; } = new List<BuildingEvaluation> ();
 
         /// <summary>
         /// get - A collection of fiscal values for this building.
         /// </summary>
         /// <typeparam name="BuildingFiscals"></typeparam>
-        public ICollection<BuildingFiscal> Fiscals { get; } = new List<BuildingFiscal>();
+        public ICollection<BuildingFiscal> Fiscals { get; private set; } = new List<BuildingFiscal>();
         #endregion
 
         #region Constructors
