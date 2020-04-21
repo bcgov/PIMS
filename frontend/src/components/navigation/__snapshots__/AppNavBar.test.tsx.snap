@@ -74,7 +74,13 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                   <div
                     aria-expanded={null}
                     className="links navbar-collapse collapse"
-                  />
+                  >
+                    <AdminDropdown />
+                    <PropertyDropdown />
+                    <ViewProjects />
+                    <DisposeRequest />
+                    <DisposeApprove />
+                  </div>
                 </Transition>
               </Collapse>
             </NavbarCollapse>
