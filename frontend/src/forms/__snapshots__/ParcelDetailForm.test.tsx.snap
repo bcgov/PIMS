@@ -103,7 +103,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-pin"
                       name="pin"
                       onChange={[Function]}
-                      value=""
+                      value="5"
                     />
                   </div>
                 </div>
@@ -127,7 +127,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.line1"
                       name="address.line1"
                       onChange={[Function]}
-                      value=""
+                      value="addressval"
                     />
                   </div>
                 </div>
@@ -147,7 +147,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.cityId"
                       name="address.cityId"
                       onChange={[Function]}
-                      value=""
+                      value="1"
                     >
                       <option
                         value=""
@@ -178,7 +178,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.provinceId"
                       name="address.provinceId"
                       onChange={[Function]}
-                      value=""
+                      value="2222"
                     >
                       <option
                         value=""
@@ -209,7 +209,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.postal"
                       name="address.postal"
                       onChange={[Function]}
-                      value=""
+                      value="V8X3L5"
                     />
                   </div>
                 </div>
@@ -248,7 +248,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-municipality"
                       name="municipality"
                       onChange={[Function]}
-                      value=""
+                      value="municipalityVal"
                     />
                   </div>
                 </div>
@@ -268,7 +268,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-zoning"
                       name="zoning"
                       onChange={[Function]}
-                      value=""
+                      value="zoningVal"
                     />
                   </div>
                 </div>
@@ -288,7 +288,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-zoningPotential"
                       name="zoningPotential"
                       onChange={[Function]}
-                      value=""
+                      value="zoningPotentialVal"
                     />
                   </div>
                 </div>
@@ -309,7 +309,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="latitude"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={0}
                     />
                   </div>
                 </div>
@@ -330,7 +330,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="longitude"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={0}
                     />
                   </div>
                 </div>
@@ -381,7 +381,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-classificationId"
                       name="classificationId"
                       onChange={[Function]}
-                      value=""
+                      value="1"
                     >
                       <option
                         value=""
@@ -413,7 +413,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="landArea"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={1234}
                     />
                   </div>
                 </div>
@@ -449,16 +449,423 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
             <h4>
               Valuation Information
             </h4>
-            <div>
-              <button
-                className="addEval btn btn-primary"
-                disabled={false}
-                onClick={[Function]}
-                type="button"
+            <div
+              className="evaluationForm form-row"
+            >
+              <div
+                className="row no-gutters"
               >
-                Add Land Valuation
-              </button>
+                <div
+                  className="col-md-3"
+                >
+                  <h6>
+                    Assessed
+                  </h6>
+                  <table
+                    className="table table-bordered"
+                  >
+                    <thead>
+                      <tr>
+                        <td>
+                          Year
+                        </td>
+                        <td>
+                          Value
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input
+                            className="form-control"
+                            disabled={true}
+                            readOnly={true}
+                            type="string"
+                            value="2020"
+                          />
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control is-invalid"
+                                id="input-evaluations.0.value"
+                                name="evaluations.0.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                              <div
+                                className="invalid-feedback"
+                              >
+                                Required
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            className="form-control"
+                            disabled={true}
+                            readOnly={true}
+                            type="string"
+                            value="2019"
+                          />
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control"
+                                id="input-evaluations.2.value"
+                                name="evaluations.2.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  className="col-md-3"
+                >
+                  <h6>
+                    Appraised
+                  </h6>
+                  <table
+                    className="table table-bordered"
+                  >
+                    <thead>
+                      <tr>
+                        <td>
+                          Date
+                        </td>
+                        <td>
+                          Value
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <span
+                              className="is-invalid"
+                            />
+                            <div
+                              className="react-datepicker-wrapper"
+                            >
+                              <div
+                                className="react-datepicker__input-container"
+                              >
+                                <input
+                                  className="form-control is-invalid"
+                                  disabled={false}
+                                  name="evaluations.1.date"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  readOnly={false}
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                            <div
+                              className="invalid-feedback"
+                            >
+                              Required
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control is-invalid"
+                                id="input-evaluations.1.value"
+                                name="evaluations.1.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                              <div
+                                className="invalid-feedback"
+                              >
+                                Required
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <span
+                              className=""
+                            />
+                            <div
+                              className="react-datepicker-wrapper"
+                            >
+                              <div
+                                className="react-datepicker__input-container"
+                              >
+                                <input
+                                  className="form-control "
+                                  disabled={false}
+                                  name="evaluations.3.date"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  readOnly={false}
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control"
+                                id="input-evaluations.3.value"
+                                name="evaluations.3.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+            <ul
+              className="pagination"
+            >
+              <li
+                className="page-item disabled"
+              >
+                <a
+                  aria-disabled="true"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  Previous
+                </a>
+              </li>
+              <li
+                className="page-item active"
+              >
+                <a
+                  aria-current="page"
+                  aria-label="Page 1 is your current page"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  1
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 2"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  2
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 3"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  3
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 4"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  4
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  ...
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 8"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  8
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 9"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  9
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 10"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  10
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-disabled="false"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div
@@ -492,7 +899,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
           <button
             className="btn btn-primary"
             disabled={false}
-            onClick={[Function]}
             type="submit"
           >
             Submit
@@ -609,7 +1015,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-pin"
                       name="pin"
                       onChange={[Function]}
-                      value=""
+                      value="5"
                     />
                   </div>
                 </div>
@@ -634,7 +1040,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.line1"
                       name="address.line1"
                       onChange={[Function]}
-                      value=""
+                      value="addressval"
                     />
                   </div>
                 </div>
@@ -655,7 +1061,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.cityId"
                       name="address.cityId"
                       onChange={[Function]}
-                      value=""
+                      value="1"
                     >
                       <option
                         value=""
@@ -687,7 +1093,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.provinceId"
                       name="address.provinceId"
                       onChange={[Function]}
-                      value=""
+                      value="2222"
                     >
                       <option
                         value=""
@@ -719,7 +1125,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.postal"
                       name="address.postal"
                       onChange={[Function]}
-                      value=""
+                      value="V8X3L5"
                     />
                   </div>
                 </div>
@@ -759,7 +1165,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-municipality"
                       name="municipality"
                       onChange={[Function]}
-                      value=""
+                      value="municipalityVal"
                     />
                   </div>
                 </div>
@@ -780,7 +1186,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-zoning"
                       name="zoning"
                       onChange={[Function]}
-                      value=""
+                      value="zoningVal"
                     />
                   </div>
                 </div>
@@ -801,7 +1207,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-zoningPotential"
                       name="zoningPotential"
                       onChange={[Function]}
-                      value=""
+                      value="zoningPotentialVal"
                     />
                   </div>
                 </div>
@@ -823,7 +1229,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="latitude"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={0}
                     />
                   </div>
                 </div>
@@ -845,7 +1251,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="longitude"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={0}
                     />
                   </div>
                 </div>
@@ -897,7 +1303,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-classificationId"
                       name="classificationId"
                       onChange={[Function]}
-                      value=""
+                      value="1"
                     >
                       <option
                         value=""
@@ -930,7 +1336,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="landArea"
                       onChange={[Function]}
                       type="number"
-                      value=""
+                      value={1234}
                     />
                   </div>
                 </div>
@@ -966,7 +1372,427 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
             <h4>
               Valuation Information
             </h4>
-            <div />
+            <div
+              className="evaluationForm form-row"
+            >
+              <div
+                className="row no-gutters"
+              >
+                <div
+                  className="col-md-3"
+                >
+                  <h6>
+                    Assessed
+                  </h6>
+                  <table
+                    className="table table-bordered"
+                  >
+                    <thead>
+                      <tr>
+                        <td>
+                          Year
+                        </td>
+                        <td>
+                          Value
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input
+                            className="form-control"
+                            disabled={true}
+                            readOnly={true}
+                            type="string"
+                            value="2020"
+                          />
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control is-invalid"
+                                disabled={true}
+                                id="input-evaluations.0.value"
+                                name="evaluations.0.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                              <div
+                                className="invalid-feedback"
+                              >
+                                Required
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            className="form-control"
+                            disabled={true}
+                            readOnly={true}
+                            type="string"
+                            value="2019"
+                          />
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control"
+                                disabled={true}
+                                id="input-evaluations.2.value"
+                                name="evaluations.2.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  className="col-md-3"
+                >
+                  <h6>
+                    Appraised
+                  </h6>
+                  <table
+                    className="table table-bordered"
+                  >
+                    <thead>
+                      <tr>
+                        <td>
+                          Date
+                        </td>
+                        <td>
+                          Value
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <span
+                              className="is-invalid"
+                            />
+                            <div
+                              className="react-datepicker-wrapper"
+                            >
+                              <div
+                                className="react-datepicker__input-container"
+                              >
+                                <input
+                                  className="form-control is-invalid"
+                                  disabled={true}
+                                  name="evaluations.1.date"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  readOnly={false}
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                            <div
+                              className="invalid-feedback"
+                            >
+                              Required
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control is-invalid"
+                                disabled={true}
+                                id="input-evaluations.1.value"
+                                name="evaluations.1.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                              <div
+                                className="invalid-feedback"
+                              >
+                                Required
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <span
+                              className=""
+                            />
+                            <div
+                              className="react-datepicker-wrapper"
+                            >
+                              <div
+                                className="react-datepicker__input-container"
+                              >
+                                <input
+                                  className="form-control "
+                                  disabled={true}
+                                  name="evaluations.3.date"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  readOnly={false}
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            className="form-group"
+                          >
+                            <div
+                              className="input-group-prepend"
+                            >
+                              <span
+                                className="input-group-text"
+                              >
+                                $
+                              </span>
+                            </div>
+                            <div
+                              className="input-group"
+                            >
+                              <input
+                                className="form-control"
+                                disabled={true}
+                                id="input-evaluations.3.value"
+                                name="evaluations.3.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <ul
+              className="pagination"
+            >
+              <li
+                className="page-item disabled"
+              >
+                <a
+                  aria-disabled="true"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  Previous
+                </a>
+              </li>
+              <li
+                className="page-item active"
+              >
+                <a
+                  aria-current="page"
+                  aria-label="Page 1 is your current page"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  1
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 2"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  2
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 3"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  3
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 4"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  4
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  ...
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 8"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  8
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 9"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  9
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 10"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  10
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-disabled="false"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div

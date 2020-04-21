@@ -68,8 +68,8 @@ export interface IEvaluation {
 
 export interface IParcel {
   id: number | any;
-  pid: string;
-  pin: string;
+  pid: string | undefined;
+  pin: number | any;
   latitude: number | any;
   longitude: number | any;
   statusId: number | any;

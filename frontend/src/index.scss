@@ -21,3 +21,10 @@ input::-webkit-inner-spin-button {
 .form-row .form-control.is-invalid {
   background-image: none;
 }
+
+.react-datepicker-wrapper, .react-datepicker__input-container {
+
+  input {
+    width: 100%;
+  }
+}

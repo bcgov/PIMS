@@ -35,23 +35,29 @@ class PersistImpl extends React.Component<PersistProps & { formik: FormikProps<a
   }, this.props.debounce);
 
   componentDidUpdate(prevProps: PersistProps & { formik: FormikProps<any> }) {
-    if (!isEqual(prevProps.formik, this.props.formik)) {
+    if (this.props.formik.isSubmitting) {
+      this.props.isSessionStorage
+        ? window.sessionStorage.removeItem(this.props.name)
+        : window.localStorage.removeItem(this.props.name);
+    } else if (!isEqual(prevProps.formik, this.props.formik)) {
       this.saveForm(this.props.formik);
     }
   }
 
   componentDidMount() {
-    const maybeState = this.props.isSessionStorage
-      ? window.sessionStorage.getItem(this.props.name)
-      : window.localStorage.getItem(this.props.name);
-    if (!this.props.writeOnly && maybeState && maybeState !== null) {
-      try {
-        const bytes = AES.decrypt(maybeState, this.props.secret);
-        const decryptedData = JSON.parse(bytes.toString(enc.Utf8));
-        this.props.formik.setFormikState(decryptedData);
-      } catch (e) {
-        console.debug(e);
-        console.debug(`failed to decrypt locally stored item ${this.props.name}`);
+    if (!this.props.writeOnly) {
+      const maybeState = this.props.isSessionStorage
+        ? window.sessionStorage.getItem(this.props.name)
+        : window.localStorage.getItem(this.props.name);
+      if (!this.props.writeOnly && maybeState && maybeState !== null) {
+        try {
+          const bytes = AES.decrypt(maybeState, this.props.secret);
+          const decryptedData = JSON.parse(bytes.toString(enc.Utf8));
+          this.props.formik.setFormikState(decryptedData);
+        } catch (e) {
+          console.debug(e);
+          console.debug(`failed to decrypt locally stored item ${this.props.name}`);
+        }
       }
     }
   }
