@@ -13,24 +13,20 @@ function AppNavBar() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
 
-  const ManagePropertyDropDown = () => (
+  const SubmitProperty = keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
+    <NavDropdown.Item onClick={() => history.push('/submitProperty')}>
+      Submit Property
+    </NavDropdown.Item>
+  ) : null;
+
+  const PropertyDropdown = keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
     <NavDropdown title="Manage Property" id="manage-property-dropdown">
-      <NavDropdown.Item onClick={() => history.push('/submitProperty')}>
-        Submit Property
-      </NavDropdown.Item>
+      {SubmitProperty}
       <NavDropdown.Item>View Inventory</NavDropdown.Item>
     </NavDropdown>
-  );
+  ) : null;
 
-  const StartProjectDropdown = () => (
-    <NavDropdown title="Start a Project" id="start-project-dropdown">
-      <NavDropdown.Item>Acquisition Project</NavDropdown.Item>
-      <NavDropdown.Item>Disposition Project</NavDropdown.Item>
-      <NavDropdown.Item>Request Exemption</NavDropdown.Item>
-    </NavDropdown>
-  );
-
-  const canAdmin = keycloak.isAdmin ? (
+  const AdminDropdown = keycloak.isAdmin ? (
     <NavDropdown title="Administration" id="administration">
       <NavDropdown.Item onClick={() => history.push('/admin/users')}>Users</NavDropdown.Item>
       <NavDropdown.Item onClick={() => history.push('/admin/access/requests')}>
@@ -39,19 +35,19 @@ function AppNavBar() {
     </NavDropdown>
   ) : null;
 
-  const canPropertyView = keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
+  const ViewProjects = keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
     <Nav.Link>View Projects</Nav.Link>
   ) : null;
 
-  const canEditProperties = keycloak.hasClaim(Claims.PROPERTY_EDIT) ? (
-    <ManagePropertyDropDown />
+  const DisposeRequest = keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
+    <NavDropdown title="Start a Project" id="start-project-dropdown">
+      <NavDropdown.Item>Acquisition Project</NavDropdown.Item>
+      <NavDropdown.Item>Disposition Project</NavDropdown.Item>
+      <NavDropdown.Item>Request Exemption</NavDropdown.Item>
+    </NavDropdown>
   ) : null;
 
-  const canDisposeRequest = keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
-    <StartProjectDropdown />
-  ) : null;
-
-  const canDisposeApprove = keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
+  const DisposeApprove = keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
     <Nav.Link>Approval Requests</Nav.Link>
   ) : null;
 
@@ -62,11 +58,11 @@ function AppNavBar() {
       <Navbar.Toggle aria-controls="collapse" className="navbar-dark" />
       <Nav>
         <Navbar.Collapse className="links">
-          {canAdmin}
-          {canEditProperties}
-          {canPropertyView}
-          {canDisposeRequest}
-          {canDisposeApprove}
+          {AdminDropdown}
+          {PropertyDropdown}
+          {ViewProjects}
+          {DisposeRequest}
+          {DisposeApprove}
         </Navbar.Collapse>
         <Nav.Item className="profile">
           <Image src={profileUrl} rounded />
