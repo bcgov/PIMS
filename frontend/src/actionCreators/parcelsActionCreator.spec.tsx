@@ -45,6 +45,7 @@ describe('fetchParcels action creator', () => {
       municipality: null,
       minLandArea: null,
       maxLandArea: null,
+      projectNumber: null,
     };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     const mockResponse = { data: { success: true } };
@@ -68,6 +69,7 @@ describe('fetchParcels action creator', () => {
       municipality: null,
       minLandArea: null,
       maxLandArea: null,
+      projectNumber: null,
     };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
