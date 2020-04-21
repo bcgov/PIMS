@@ -58,7 +58,7 @@ const App = () => {
                   {keycloak?.authenticated ? <AppNavBar /> : null}
                   <Col style={{ padding: 0 }}>
                     <Route path="/login" component={Login}></Route>
-                    <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
+                    <Route path="/forbidden" component={AccessDenied}></Route>
                     <PrivateRoute
                       path="/admin/users"
                       component={ManageUsers}
@@ -73,7 +73,6 @@ const App = () => {
                       path="/access/request"
                       component={AccessRequestPage}
                     ></PrivateRoute>
-                    <PrivateRoute path="/accessdenied" component={AccessDenied}></PrivateRoute>
                     <PrivateRoute path="/mapView" component={MapView} />
                     <PrivateRoute path="/submitProperty/:id?" component={SubmitProperty} />
                     <PrivateRoute path="/edituser" component={EditUserPage} />
