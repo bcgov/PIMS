@@ -21,7 +21,11 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
       {...rest}
       render={props => {
         if (!!keycloak.obj?.authenticated) {
-          if (keycloak.hasRole(rest.role) || keycloak.hasClaim(rest.claim)) {
+          if (
+            (!rest.role && !rest.claim) ||
+            keycloak.hasRole(rest.role) ||
+            keycloak.hasClaim(rest.claim)
+          ) {
             return <Component {...props} />;
           } else {
             return <Redirect to={{ pathname: '/forbidden', state: { referer: props.location } }} />;
