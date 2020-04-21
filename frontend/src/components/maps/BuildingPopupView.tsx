@@ -48,7 +48,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
                 <Label>Predominate Use: </Label>
                 {building?.buildingPredominateUse}
               </ListGroup.Item>
-              {building.projectNumber && (
+              {building?.projectNumber && (
                 <ListGroup.Item>
                   <Label>RAEG or SPP: </Label>
                   {building?.projectNumber}

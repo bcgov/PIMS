@@ -33,7 +33,7 @@ export interface IAddress {
 export interface IBuilding {
   id: number;
   localId: string;
-  projectNumber: string;
+  projectNumber: string | null;
   description: string;
   address: IAddress;
   latitude: number | any;

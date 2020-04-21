@@ -68,6 +68,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
            
           000-000-000
         </div>
+        
       </div>
       <div
         className="list-group"

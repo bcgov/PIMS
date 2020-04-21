@@ -169,7 +169,7 @@ describe('ParcelDetailForm', () => {
       const submit = form.getByText('Submit');
 
       mockAxios.onPost().reply(config => {
-        expect(config.data).toEqual(JSON.stringify(exampleData));
+        expect(JSON.parse(config.data)).toEqual(exampleData);
         done();
         return [200, Promise.resolve()];
       });
