@@ -15,6 +15,6 @@ namespace Pims.Dal.Services.Admin
 
         AccessRequest UpdateAccessRequest(AccessRequest entity);
         AccessRequest GetAccessRequest(int id);
-        Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null);
+        Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, AccessRequestStatus? status = null);
     }
 }

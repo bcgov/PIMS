@@ -109,27 +109,14 @@ namespace Pims.Api.Test.Routes.Admin
         public void DeleteUser_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.DeleteUser), typeof(Guid), typeof(Model.UserModel));
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.DeleteUser), typeof(Guid),
+                typeof(Model.UserModel));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{id}");
         }
-
-        #region AccessRequests
-        [Fact]
-        public void GetAccessRequests_Route()
-        {
-            // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetAccessRequests), typeof(int), typeof(int), typeof(string), typeof(bool?));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("access/requests");
-        }
-        #endregion
         #endregion
     }
 }

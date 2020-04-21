@@ -30,8 +30,8 @@ namespace Pims.Dal
                     .AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Pims.Api", LogLevel.Debug)
-                    .AddConsole()
-                    .AddEventLog();
+                    .AddConsole();
+                    // .AddEventLog();
             });
             _logger = loggerFactory.CreateLogger<PimsContextFactory>();
         }

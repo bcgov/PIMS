@@ -11,6 +11,8 @@
     "@types/react-datepicker": "2.11.0",
     "@types/react-paginate": "6.2.1",
     "@types/yup": "0.26.32",
+    "ag-grid-community": "^23.0.2",
+    "ag-grid-react": "^23.0.3",
     "axios": "0.19.0",
     "bootstrap": "4.4.1",
     "classnames": "^2.2.6",
@@ -77,7 +79,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom-fourteen --silent",
     "update-snapshots": "react-scripts test -- --updateSnapshot",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pims.Dal.Entities;
 
 namespace Pims.Api.Models.User
 {
@@ -10,9 +11,8 @@ namespace Pims.Api.Models.User
         public Guid UserId { get; set; }
         public AccessRequestUserModel User { get; set; }
         public IEnumerable<AccessRequestAgencyModel> Agencies { get; set; }
-        public bool? IsGranted { get; set; }
+        public AccessRequestStatus Status { get; set; }
         public IEnumerable<AccessRequestRoleModel> Roles { get; set; }
-        public bool IsDisabled { get; set; }
         public string Note { get; set; }
         #endregion
     }

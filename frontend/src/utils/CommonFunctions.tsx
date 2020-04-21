@@ -1,5 +1,6 @@
 import { ReactPaginateProps } from 'react-paginate';
 import { IPaginateParams } from 'constants/API';
+
 export interface IPaginate {
   page: number;
   total: number;

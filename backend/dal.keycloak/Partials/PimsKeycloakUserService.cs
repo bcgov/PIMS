@@ -180,7 +180,7 @@ namespace Pims.Dal.Keycloak
 
             this._user.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
             var accessRequest = _pimsAdminService.User.GetAccessRequest(entity.Id);
-            if (!accessRequest.IsGranted != true && entity.IsGranted == true)
+            if (accessRequest.Status != Entity.AccessRequestStatus.Approved && entity.Status == Entity.AccessRequestStatus.Approved)
             {
                 Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId);
                 entity.Agencies.ForEach((accessRequestAgency) =>
@@ -209,7 +209,6 @@ namespace Pims.Dal.Keycloak
             }
 
             return _pimsAdminService.User.UpdateAccessRequest(entity);
-
         }
     }
     #endregion

@@ -35,7 +35,7 @@ namespace Pims.Tools.Import
                 {
                     options.AddConfiguration(config.GetSection("Logging"));
                     options.AddConsole();
-                    options.AddEventLog();
+                    // options.AddEventLog();
                 })
                 .Configure<LoggerFilterOptions>(options =>
                 {
