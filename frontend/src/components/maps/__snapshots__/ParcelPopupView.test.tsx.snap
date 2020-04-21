@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="parcelPopup container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Assessed Value: 
+          </p>
+          $
+        </div>
+      </div>
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <div>
+            <p
+              className="label"
+            >
+              Address: 
+            </p>
+          </div>
+          <div>
+            , 
+             
+          </div>
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            PID: 
+          </p>
+           
+          1
+        </div>
+      </div>
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Agency: 
+          </p>
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Classification: 
+          </p>
+          Test Classification
+        </div>
+      </div>
+    </div>
+    <div
+      className="col"
+    >
+      <a
+        href="/submitProperty/1?disabled=true"
+        onClick={[Function]}
+      >
+        View
+      </a>
+    </div>
+  </div>
+</div>
+`;
