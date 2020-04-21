@@ -73,9 +73,21 @@ const App = () => {
                       path="/access/request"
                       component={AccessRequestPage}
                     ></PrivateRoute>
-                    <PrivateRoute path="/mapView" component={MapView} />
-                    <PrivateRoute path="/submitProperty/:id?" component={SubmitProperty} />
-                    <PrivateRoute path="/edituser" component={EditUserPage} />
+                    <PrivateRoute
+                      path="/mapView"
+                      component={MapView}
+                      claim={Claims.PROPERTY_VIEW}
+                    />
+                    <PrivateRoute
+                      path="/submitProperty/:id?"
+                      component={SubmitProperty}
+                      claim={Claims.PROPERTY_ADD}
+                    />
+                    <PrivateRoute
+                      path="/admin/user"
+                      component={EditUserPage}
+                      claim={Claims.ADMIN_USERS}
+                    />
                   </Col>
                 </Row>
               </ErrorBoundary>
