@@ -24,7 +24,7 @@ services:
     env_file:
       - auth/keycloak/.env
     volumes:
-      - ./auth/keycloak/config:/tmp
+      - ./auth/keycloak/config/realm-export.json:/tmp/realm-export.json
     ports:
       - 8080:8080
     depends_on:

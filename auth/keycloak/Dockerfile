@@ -5,4 +5,4 @@ FROM jboss/keycloak:9.0.0
 
 EXPOSE 8080
 
-ADD ./config /tmp
+COPY ./config/*.json /tmp/
