@@ -6,7 +6,7 @@ import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IProperty, IParcelDetail } from 'actions/parcelsActions';
 import Map from './Map';
 import { Marker } from 'react-leaflet';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -28,6 +28,7 @@ const mockDetails: IParcelDetail = {
     id: 1,
     pid: '000-000-000',
     pin: '',
+    projectNumber: '',
     statusId: 0,
     classificationId: 0,
     municipality: '',

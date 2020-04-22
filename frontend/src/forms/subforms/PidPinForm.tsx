@@ -32,6 +32,12 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           </Form.Label>
           <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('pin')} />
         </Form.Row>
+        <Form.Row>
+          <Form.Label column md={2}>
+            RAEG or SPP
+          </Form.Label>
+          <Input disabled={true} className="col-md-10" field={withNameSpace('projectNumber')} />
+        </Form.Row>
       </Col>
     </Fragment>
   );

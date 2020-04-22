@@ -22,6 +22,7 @@ interface LandProps {
 export const defaultLandValues: IParcel = {
   id: undefined,
   pid: '',
+  projectNumber: '',
   agency: undefined,
   agencyId: '',
   address: null,

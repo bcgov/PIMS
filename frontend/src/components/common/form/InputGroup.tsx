@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, FormControlProps, InputGroup } from 'react-bootstrap';
-import { useFormikContext, getIn, useField } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
@@ -52,7 +52,10 @@ export const FormikInputGroup: React.FC<InputProps> = ({
   const asElement: any = is || 'input';
 
   return (
-    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
+    <Form.Group
+      controlId={`input-${field}`}
+      className={`input-group ${!!required ? 'required' : ''}`}
+    >
       {!!label && <Form.Label>{label}</Form.Label>}
 
       {preText && (
@@ -60,7 +63,7 @@ export const FormikInputGroup: React.FC<InputProps> = ({
           <InputGroup.Text>{preText}</InputGroup.Text>
         </InputGroup.Prepend>
       )}
-      <div className="input-group">
+      <div className="input-group-content">
         <Form.Control
           as={asElement}
           name={field}
