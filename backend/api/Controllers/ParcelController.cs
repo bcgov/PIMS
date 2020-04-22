@@ -78,7 +78,7 @@ namespace Pims.Api.Controllers
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var parcels = _pimsService.Parcel.Get(filter);
             var result = _mapper.Map<Model.PartialParcelModel[]>(parcels);
@@ -165,6 +165,45 @@ namespace Pims.Api.Controllers
 
             return new JsonResult(model);
         }
+
+        #region Page Endpoints
+
+        /// <summary>
+        /// Get a page of parcels that satisfy the filter parameters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("page")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult GetParcelsPage()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetParcelsPage(new ParcelFilter(query));
+        }
+
+        /// <summary>
+        /// Get a page of parcels that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("page/filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult GetParcelsPage([FromBody]ParcelFilter filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+
+            var page = _pimsService.Parcel.GetPage(filter);
+            var result = _mapper.Map<Models.PageModel<Model.PartialParcelModel>>(page);
+            return new JsonResult(result);
+        }
+        #endregion
         #endregion
     }
 }

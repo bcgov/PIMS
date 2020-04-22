@@ -16,6 +16,7 @@ namespace Pims.Dal
     public class PimsContext : DbContext
     {
         #region Properties
+        #region Tables
         public DbSet<AccessRequest> AccessRequests { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Agency> Agencies { get; set; }
@@ -36,6 +37,11 @@ namespace Pims.Dal
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Pims.Dal.Entities.Claim> Claims { get; set; }
+        #endregion
+
+        #region Views
+        public DbSet<Entities.Views.Property> Properties { get; set; }
+        #endregion
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
@@ -83,8 +89,9 @@ namespace Pims.Dal
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyAllConfigurations(typeof(AddressConfiguration));
+            modelBuilder.ApplyAllConfigurations(typeof(AddressConfiguration), this);
 
+            // TODO: Find a way to move this somewhere else.
             // modelBuilder.Properties<DateTime> ()
             //     .Configure (m =>
             //     {
@@ -122,13 +129,12 @@ namespace Pims.Dal
             // get entries that are being Added or Updated
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId != null)
-            {
-                foreach (var entry in modifiedEntries)
-                {
-                    var entity = entry.Entity as BaseEntity;
 
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry.Entity is BaseEntity entity)
+                {
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedById = userId;

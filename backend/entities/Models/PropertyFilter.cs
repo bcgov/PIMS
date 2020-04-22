@@ -67,25 +67,25 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Building minimum estimated value.
         /// </summary>
         /// <value></value>
-        public float? MinEstimatedValue { get; set; }
+        public decimal? MinEstimatedValue { get; set; }
 
         /// <summary>
         /// get/set - Building maximum estimated value.
         /// </summary>
         /// <value></value>
-        public float? MaxEstimatedValue { get; set; }
+        public decimal? MaxEstimatedValue { get; set; }
 
         /// <summary>
         /// get/set - Property minimum assessed value.
         /// </summary>
         /// <value></value>
-        public float? MinAssessedValue { get; set; }
+        public decimal? MinAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - Property maximum assessed value.
         /// </summary>
         /// <value></value>
-        public float? MaxAssessedValue { get; set; }
+        public decimal? MaxAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - An array of agencies.
@@ -128,7 +128,7 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public PropertyFilter(string address, int? agencyId, int? statusId, int? classificationId, float? minEstimatedValue, float? maxEstimatedValue, float? minAssessedValue, float? maxAssessedValue, string[] sort)
+        public PropertyFilter(string address, int? agencyId, int? statusId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
             this.StatusId = statusId;
@@ -161,10 +161,10 @@ namespace Pims.Dal.Entities.Models
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
-            this.MinEstimatedValue = filter.GetFloatNullValue(nameof(this.MinEstimatedValue));
-            this.MaxEstimatedValue = filter.GetFloatNullValue(nameof(this.MaxEstimatedValue));
-            this.MinAssessedValue = filter.GetFloatNullValue(nameof(this.MinAssessedValue));
-            this.MaxAssessedValue = filter.GetFloatNullValue(nameof(this.MaxAssessedValue));
+            this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
+            this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
+            this.MinAssessedValue = filter.GetDecimalNullValue(nameof(this.MinAssessedValue));
+            this.MaxAssessedValue = filter.GetDecimalNullValue(nameof(this.MaxAssessedValue));
 
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
         }
@@ -175,9 +175,10 @@ namespace Pims.Dal.Entities.Models
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public override bool ValidFilter()
+        public override bool IsValid()
         {
-            return this.NELatitude.HasValue
+            return base.IsValid()
+                && (this.NELatitude.HasValue
                 || this.NELongitude.HasValue
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
@@ -190,7 +191,7 @@ namespace Pims.Dal.Entities.Models
                 || this.MaxEstimatedValue.HasValue
                 || this.Agencies?.Any() == true
                 || this.StatusId.HasValue
-                || this.ClassificationId.HasValue;
+                || this.ClassificationId.HasValue);
         }
         #endregion
     }

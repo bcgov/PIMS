@@ -36,7 +36,7 @@ namespace Pims.Dal.Entities
         /// get/set - The value of the fiscal key for this parcel.
         /// </summary>
         /// <value></value>
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         /// <summary>
         /// get/set - A note related to this fiscal value.
@@ -58,7 +58,7 @@ namespace Pims.Dal.Entities
         /// <param name="fiscalYear"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public ParcelFiscal(Parcel parcel, int fiscalYear, FiscalKeys key, float value)
+        public ParcelFiscal(Parcel parcel, int fiscalYear, FiscalKeys key, decimal value)
         {
             this.ParcelId = parcel?.Id ??
                 throw new ArgumentNullException(nameof(parcel));

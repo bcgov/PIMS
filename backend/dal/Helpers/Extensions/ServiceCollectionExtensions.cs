@@ -27,6 +27,7 @@ namespace Pims.Dal
         public static IServiceCollection AddPimsService(this IServiceCollection services)
         {
             services.AddScoped<IPimsService, PimsService>();
+            services.AddScoped<Services.IPropertyService, Services.PropertyService>();
             services.AddScoped<Services.ILookupService, Services.LookupService>();
             services.AddScoped<Services.IBuildingService, Services.BuildingService>();
             services.AddScoped<Services.IParcelService, Services.ParcelService>();

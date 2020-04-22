@@ -54,7 +54,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of users.</returns>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetUsers()
@@ -71,15 +71,14 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of users.</returns>
         [HttpPost("filter")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetUsers(EModel.UserFilter filter)
         {
-            var results = _pimsAdminService.User.Get(filter);
-            var users = _mapper.Map<Model.UserModel[]>(results.Items);
-            var paged = new EModel.Paged<Model.UserModel>(users, filter.Page, filter.Quantity, results.Total);
-            return new JsonResult(paged);
+            var page = _pimsAdminService.User.Get(filter);
+            var result = _mapper.Map<Api.Models.PageModel<Model.UserModel>>(page);
+            return new JsonResult(result);
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of users.</returns>
         [HttpPost("my/agency")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(EModel.Paged<Model.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetMyUsers(EModel.UserFilter filter)
@@ -151,6 +150,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
         public IActionResult UpdateUser(Guid id, [FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
@@ -171,6 +171,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
         public IActionResult DeleteUser(Guid id, [FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
@@ -190,7 +191,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet("access/requests")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(EModel.Paged<Model.AccessRequestModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AccessRequestModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
@@ -198,10 +199,10 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
             if (quantity > 20) quantity = 20;
-            EModel.Paged<Entity.AccessRequest> result = _pimsAdminService.User.GetAccessRequests(page, quantity, sort, isGranted);
-            var models = _mapper.Map<Model.AccessRequestModel[]>(result.Items);
-            var paged = new EModel.Paged<Model.AccessRequestModel>(models, page, quantity, result.Total);
-            return new JsonResult(paged);
+
+            var paged = _pimsAdminService.User.GetAccessRequests(page, quantity, sort, isGranted);
+            var result = _mapper.Map<Api.Models.PageModel<Model.AccessRequestModel>>(paged);
+            return new JsonResult(result);
         }
         #endregion
         #endregion

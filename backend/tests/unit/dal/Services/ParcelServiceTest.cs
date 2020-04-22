@@ -21,7 +21,7 @@ namespace Pims.Dal.Test.Services
     public class ParcelServiceTest
     {
         #region Data
-        public static IEnumerable<object[]> ParcelFilterData =>
+        public static IEnumerable<object[]> ParcelFilters =>
             new List<object[]>
             {
                 new object[] { new ParcelFilter(50, 25, 50, 20), 1 },
@@ -49,7 +49,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var service = helper.CreateService<ParcelService>(user);
 
             // Act
@@ -78,7 +78,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Theory]
-        [MemberData(nameof(ParcelFilterData))]
+        [MemberData(nameof(ParcelFilters))]
         public void Get_Parcels(ParcelFilter filter, int expectedCount)
         {
             // Arrange
@@ -100,10 +100,80 @@ namespace Pims.Dal.Test.Services
             init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(dbName, user);
-            var context = helper.GetService<PimsContext>();
 
             // Act
             var result = service.Get(filter);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(expectedCount, result.Count());
+        }
+        #endregion
+
+        #region Get Paged Parcels
+        /// <summary>
+        /// User does not have 'property-view' claim.
+        /// </summary>
+        [Fact]
+        public void Get_Page_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() =>
+                service.GetPage(null));
+        }
+
+        /// <summary>
+        /// User does not have 'property-view' claim.
+        /// </summary>
+        [Fact]
+        public void Get_Page_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission();
+            var filter = new ParcelFilter(50, 25, 50, 20);
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.GetPage(filter));
+        }
+
+        [Theory]
+        [MemberData(nameof(ParcelFilters))]
+        public void Get_Page(ParcelFilter filter, int expectedCount)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-Description-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            var result = service.GetPage(filter);
 
             // Assert
             Assert.NotNull(result);
@@ -127,7 +197,6 @@ namespace Pims.Dal.Test.Services
             helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
 
             var service = helper.CreateService<ParcelService>(dbName, user);
-            var context = helper.GetService<PimsContext>();
 
             // Act
             // Assert
@@ -150,7 +219,6 @@ namespace Pims.Dal.Test.Services
             helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
 
             var service = helper.CreateService<ParcelService>(dbName, user);
-            var context = helper.GetService<PimsContext>();
 
             // Act
             // Assert
@@ -172,7 +240,6 @@ namespace Pims.Dal.Test.Services
             helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
 
             var service = helper.CreateService<ParcelService>(dbName, user);
-            var context = helper.GetService<PimsContext>();
 
             // Act
             // Assert
@@ -195,7 +262,6 @@ namespace Pims.Dal.Test.Services
             helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
 
             var service = helper.CreateService<ParcelService>(dbName, user);
-            var context = helper.GetService<PimsContext>();
 
             // Act
             // Assert
@@ -252,8 +318,8 @@ namespace Pims.Dal.Test.Services
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
             var parcel = init.CreateParcel(1, 1, 1);
-            init.CreateBuilding(parcel, 1);
-            var sensitive = init.CreateBuilding(parcel, 2);
+            init.CreateBuilding(parcel, 2);
+            var sensitive = init.CreateBuilding(parcel, 3);
             sensitive.IsSensitive = true;
             init.SaveChanges();
 
@@ -314,10 +380,10 @@ namespace Pims.Dal.Test.Services
             var agency = init.Agencies.Find(1);
             var parcel = init.CreateParcel(1, agency);
             parcel.IsSensitive = true;
-            init.CreateBuilding(parcel, 1);
-            var building1 = init.CreateBuilding(parcel, 2);
+            init.CreateBuilding(parcel, 2);
+            var building1 = init.CreateBuilding(parcel, 3);
             building1.IsSensitive = true;
-            var building2 = init.CreateBuilding(parcel, 3, "13", "l4", 1, 1, init.Agencies.Find(2));
+            var building2 = init.CreateBuilding(parcel, 4, "13", "l4", 1, 1, init.Agencies.Find(2));
             building2.IsSensitive = true;
             init.SaveChanges();
 

@@ -1,6 +1,7 @@
 using Moq;
 using Pims.Core.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Pims.Core.Test
@@ -8,6 +9,7 @@ namespace Pims.Core.Test
     /// <summary>
     /// TestHelperExtensions static class, provides extension methods for TestHelper.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class TestHelperExtensions
     {
         #region Methods

@@ -50,8 +50,9 @@ $ docker exec -it keycloak bash /opt/jboss/keycloak/bin/standalone.sh \
 ```
 
 ## Import Realm
-> Note that some attempts to import the exported JSON during initialization results in failure with the latest exported JSON.
-However if you start the keycloak server without importing and then manually do the import below, it works.
+> Note that recent attempts to import the exported JSON during initialization results in failure.
+However if you start the keycloak server without importing, check if it is up and running with only the **master** realm and then manually do the import below, it works.
+Refer to the [Manual Steps](#manual-steps)
 
 To import a previously exported realm configuration execute the following command;
 
@@ -72,3 +73,21 @@ or
 $ docker run -e KEYCLOAK_USER=<USERNAME> -e KEYCLOAK_PASSWORD=<PASSWORD> \
     -e KEYCLOAK_IMPORT=/tmp/example-realm.json -v /tmp/example-realm.json:/tmp/example-realm.json jboss/keycloak
 ```
+
+### Manual Steps
+
+Note that the import script has hardcoded passwords, which will override whatever password you have in your `.env`.
+> user: keycloak, pwd: password
+
+1) Stop Keycloak `$ docker-compose stop keycloak keycloak-db`
+2) Remove containers `$ docker rm keycloak` and `$ docker rm keycloak-db`
+3) Remove volume `$ docker volume rm pims_keycloak-db-data`
+4) Build Keycloak `$ docker-compose build keycloak`
+5) Make sure your `.env` comments out this line `# KEYCLOAK_IMPORT=/tmp/realm-export.json`
+6) Start Keycloak `$ docker-compose up -d keycloak`
+7) Open Keycloak in your browser http://keycloak:8080, verify the `master` realm is there.  **It will take a minute to initialize.**
+8) Bash into the Keycloak docker container `$ docker exec -it keycloak bash`
+9) Run the import standalone.sh script **above**.  It will hang on this line - `18:30:37,822 WARN  [org.keycloak.common.Profile] (ServerService Thread Pool -- 68) Preview feature enabled: scripts`.  **Let it run for a minute.**
+10) Press `ctrl+c` and exit the `bash`
+11) Restart Keycloak `$ docker-compose restart keycloak`
+12) Open Keycloak in your browser http://keycloak:8080, verify the `pims` ream is there.  **It will take a minute to initialize.**

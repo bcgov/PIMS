@@ -75,6 +75,32 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an float.
+        /// </summary>
+        /// <param name="IDictionary<string"></param>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static decimal GetDecimalValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, decimal defaultValue = 0)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && decimal.TryParse(dValue, out decimal value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an float.
+        /// </summary>
+        /// <param name="IDictionary<string"></param>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static decimal? GetDecimalNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, decimal? defaultvalue = null)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && decimal.TryParse(dValue, out decimal value) ? value : defaultvalue;
+        }
+
+        /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an double.
         /// </summary>
         /// <param name="IDictionary<string"></param>

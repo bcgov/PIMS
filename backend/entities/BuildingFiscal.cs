@@ -36,7 +36,7 @@ namespace Pims.Dal.Entities
         /// get/set - The value of the fiscal key for this building.
         /// </summary>
         /// <value></value>
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         /// <summary>
         /// get/set - A note related to this fiscal value.
@@ -58,7 +58,7 @@ namespace Pims.Dal.Entities
         /// <param name="fiscalYear"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public BuildingFiscal(Building building, int fiscalYear, FiscalKeys key, float value)
+        public BuildingFiscal(Building building, int fiscalYear, FiscalKeys key, decimal value)
         {
             this.BuildingId = building?.Id ??
                 throw new ArgumentNullException(nameof(building));
