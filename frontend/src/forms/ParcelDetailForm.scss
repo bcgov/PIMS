@@ -53,8 +53,12 @@
           padding: 0;
           width:unset;
           height: unset;
-          display:flex;
-          flex-direction: row;
+        }
+        .input-group.form-group {
+          display: flex;
+        }
+        .input-group-content {
+          width: 80%;
         }
         .input-group-text {
           padding: 0;

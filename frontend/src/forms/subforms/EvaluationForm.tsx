@@ -185,4 +185,11 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   );
 };
 
-export default React.memo(EvaluationForm);
+export default React.memo(EvaluationForm, (currentProps, prevProps) => {
+  if (currentProps.nameSpace) {
+    const currentValue = getIn(currentProps.values, currentProps.nameSpace);
+    const prevValue = getIn(prevProps.values, prevProps.nameSpace);
+    return _.isEqual(currentValue, prevValue);
+  }
+  return false;
+});

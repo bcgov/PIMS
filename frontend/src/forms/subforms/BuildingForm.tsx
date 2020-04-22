@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import React from 'react';
 import AddressForm, { defaultAddressValues } from './AddressForm';
 import EvaluationForm, { defaultEvaluations } from './EvaluationForm';
@@ -195,4 +195,14 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   );
 };
 
-export default React.memo(BuildingForm);
+export default React.memo(BuildingForm, (currentProps, prevProps) => {
+  if (currentProps.nameSpace) {
+    const currentValue = getIn(
+      currentProps.values,
+      `${currentProps.nameSpace}.${currentProps.index}`,
+    );
+    const prevValue = getIn(prevProps.values, `${prevProps.nameSpace}.${prevProps.index}`);
+    return _.isEqual(currentValue, prevValue);
+  }
+  return false;
+});
