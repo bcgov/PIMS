@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useKeycloak } from '@react-keycloak/web';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';

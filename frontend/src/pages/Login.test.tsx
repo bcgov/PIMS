@@ -13,6 +13,7 @@ import { IGenericNetworkAction } from 'actions/genericActions';
 import { Provider } from 'react-redux';
 import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
 
+jest.mock('axios');
 jest.mock('@react-keycloak/web');
 const mockStore = configureMockStore([thunk]);
 

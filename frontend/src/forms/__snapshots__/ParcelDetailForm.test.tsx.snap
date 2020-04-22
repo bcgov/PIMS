@@ -74,7 +74,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-pid"
                       name="pid"
                       onChange={[Function]}
-                      value=""
+                      value="000-000-000"
                     />
                   </div>
                 </div>
@@ -103,7 +103,28 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-pin"
                       name="pin"
                       onChange={[Function]}
-                      value="5"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    RAEG or SPP
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      disabled={true}
+                      id="input-projectNumber"
+                      name="projectNumber"
+                      onChange={[Function]}
+                      value=""
                     />
                   </div>
                 </div>
@@ -127,7 +148,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.line1"
                       name="address.line1"
                       onChange={[Function]}
-                      value="addressval"
+                      value="1234 mock Street"
                     />
                   </div>
                 </div>
@@ -147,7 +168,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.cityId"
                       name="address.cityId"
                       onChange={[Function]}
-                      value="1"
                     >
                       <option
                         value=""
@@ -178,7 +198,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.provinceId"
                       name="address.provinceId"
                       onChange={[Function]}
-                      value="2222"
                     >
                       <option
                         value=""
@@ -209,7 +228,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-address.postal"
                       name="address.postal"
                       onChange={[Function]}
-                      value="V8X3L5"
+                      value="V1V1V1"
                     />
                   </div>
                 </div>
@@ -248,7 +267,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-municipality"
                       name="municipality"
                       onChange={[Function]}
-                      value="municipalityVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -268,7 +287,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-zoning"
                       name="zoning"
                       onChange={[Function]}
-                      value="zoningVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -288,7 +307,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-zoningPotential"
                       name="zoningPotential"
                       onChange={[Function]}
-                      value="zoningPotentialVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -309,7 +328,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="latitude"
                       onChange={[Function]}
                       type="number"
-                      value={0}
+                      value={48}
                     />
                   </div>
                 </div>
@@ -330,7 +349,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="longitude"
                       onChange={[Function]}
                       type="number"
-                      value={0}
+                      value={123}
                     />
                   </div>
                 </div>
@@ -354,13 +373,11 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                     >
                       <input
                         className="form-check-input position-static"
-                        defaultChecked={1}
                         disabled={false}
                         id="input-statusId"
                         name="statusId"
                         onChange={[Function]}
                         type="checkbox"
-                        value={1}
                       />
                     </div>
                   </div>
@@ -381,7 +398,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       id="input-classificationId"
                       name="classificationId"
                       onChange={[Function]}
-                      value="1"
                     >
                       <option
                         value=""
@@ -413,7 +429,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       name="landArea"
                       onChange={[Function]}
                       type="number"
-                      value={1234}
+                      value="unknown"
                     />
                   </div>
                 </div>
@@ -502,19 +518,14 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               className="input-group"
                             >
                               <input
-                                className="form-control is-invalid"
+                                className="form-control"
                                 id="input-evaluations.0.value"
                                 name="evaluations.0.value"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 type="number"
-                                value=""
+                                value={10000}
                               />
-                              <div
-                                className="invalid-feedback"
-                              >
-                                Required
-                              </div>
                             </div>
                           </div>
                         </td>
@@ -587,7 +598,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="form-group"
                           >
                             <span
-                              className="is-invalid"
+                              className=""
                             />
                             <div
                               className="react-datepicker-wrapper"
@@ -596,7 +607,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                                 className="react-datepicker__input-container"
                               >
                                 <input
-                                  className="form-control is-invalid"
+                                  className="form-control "
                                   disabled={false}
                                   name="evaluations.1.date"
                                   onBlur={[Function]}
@@ -609,11 +620,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                                   value=""
                                 />
                               </div>
-                            </div>
-                            <div
-                              className="invalid-feedback"
-                            >
-                              Required
                             </div>
                           </div>
                         </td>
@@ -634,7 +640,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               className="input-group"
                             >
                               <input
-                                className="form-control is-invalid"
+                                className="form-control"
                                 id="input-evaluations.1.value"
                                 name="evaluations.1.value"
                                 onBlur={[Function]}
@@ -642,11 +648,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                                 type="number"
                                 value=""
                               />
-                              <div
-                                className="invalid-feedback"
-                              >
-                                Required
-                              </div>
                             </div>
                           </div>
                         </td>
@@ -985,7 +986,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-pid"
                       name="pid"
                       onChange={[Function]}
-                      value=""
+                      value="000-000-000"
                     />
                   </div>
                 </div>
@@ -1015,7 +1016,28 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-pin"
                       name="pin"
                       onChange={[Function]}
-                      value="5"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    RAEG or SPP
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="col-md-10 form-control"
+                      disabled={true}
+                      id="input-projectNumber"
+                      name="projectNumber"
+                      onChange={[Function]}
+                      value=""
                     />
                   </div>
                 </div>
@@ -1040,7 +1062,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.line1"
                       name="address.line1"
                       onChange={[Function]}
-                      value="addressval"
+                      value="1234 mock Street"
                     />
                   </div>
                 </div>
@@ -1061,7 +1083,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.cityId"
                       name="address.cityId"
                       onChange={[Function]}
-                      value="1"
                     >
                       <option
                         value=""
@@ -1093,7 +1114,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.provinceId"
                       name="address.provinceId"
                       onChange={[Function]}
-                      value="2222"
                     >
                       <option
                         value=""
@@ -1125,7 +1145,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-address.postal"
                       name="address.postal"
                       onChange={[Function]}
-                      value="V8X3L5"
+                      value="V1V1V1"
                     />
                   </div>
                 </div>
@@ -1165,7 +1185,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-municipality"
                       name="municipality"
                       onChange={[Function]}
-                      value="municipalityVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -1186,7 +1206,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-zoning"
                       name="zoning"
                       onChange={[Function]}
-                      value="zoningVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -1207,7 +1227,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-zoningPotential"
                       name="zoningPotential"
                       onChange={[Function]}
-                      value="zoningPotentialVal"
+                      value=""
                     />
                   </div>
                 </div>
@@ -1229,7 +1249,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="latitude"
                       onChange={[Function]}
                       type="number"
-                      value={0}
+                      value={48}
                     />
                   </div>
                 </div>
@@ -1251,7 +1271,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="longitude"
                       onChange={[Function]}
                       type="number"
-                      value={0}
+                      value={123}
                     />
                   </div>
                 </div>
@@ -1275,13 +1295,11 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     >
                       <input
                         className="form-check-input position-static"
-                        defaultChecked={1}
                         disabled={true}
                         id="input-statusId"
                         name="statusId"
                         onChange={[Function]}
                         type="checkbox"
-                        value={1}
                       />
                     </div>
                   </div>
@@ -1303,7 +1321,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-classificationId"
                       name="classificationId"
                       onChange={[Function]}
-                      value="1"
                     >
                       <option
                         value=""
@@ -1336,7 +1353,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="landArea"
                       onChange={[Function]}
                       type="number"
-                      value={1234}
+                      value="unknown"
                     />
                   </div>
                 </div>
@@ -1425,20 +1442,15 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               className="input-group"
                             >
                               <input
-                                className="form-control is-invalid"
+                                className="form-control"
                                 disabled={true}
                                 id="input-evaluations.0.value"
                                 name="evaluations.0.value"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 type="number"
-                                value=""
+                                value={10000}
                               />
-                              <div
-                                className="invalid-feedback"
-                              >
-                                Required
-                              </div>
                             </div>
                           </div>
                         </td>
@@ -1512,7 +1524,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="form-group"
                           >
                             <span
-                              className="is-invalid"
+                              className=""
                             />
                             <div
                               className="react-datepicker-wrapper"
@@ -1521,7 +1533,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                                 className="react-datepicker__input-container"
                               >
                                 <input
-                                  className="form-control is-invalid"
+                                  className="form-control "
                                   disabled={true}
                                   name="evaluations.1.date"
                                   onBlur={[Function]}
@@ -1534,11 +1546,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                                   value=""
                                 />
                               </div>
-                            </div>
-                            <div
-                              className="invalid-feedback"
-                            >
-                              Required
                             </div>
                           </div>
                         </td>
@@ -1559,7 +1566,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               className="input-group"
                             >
                               <input
-                                className="form-control is-invalid"
+                                className="form-control"
                                 disabled={true}
                                 id="input-evaluations.1.value"
                                 name="evaluations.1.value"
@@ -1568,11 +1575,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                                 type="number"
                                 value=""
                               />
-                              <div
-                                className="invalid-feedback"
-                              >
-                                Required
-                              </div>
                             </div>
                           </div>
                         </td>

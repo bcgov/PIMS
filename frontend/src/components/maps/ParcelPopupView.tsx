@@ -28,7 +28,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {parcelDetail?.evaluations
-                  ?.find(e => e.key == EvaluationKeys.Assessed)
+                  ?.find(e => e.key === EvaluationKeys.Assessed)
                   ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
             </ListGroup>
@@ -46,6 +46,11 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               <ListGroup.Item>
                 <Label>PID: </Label> {parcelDetail?.pid}
               </ListGroup.Item>
+              {parcelDetail?.projectNumber && (
+                <ListGroup.Item>
+                  <Label>RAEG or SPP:</Label> {parcelDetail?.projectNumber}
+                </ListGroup.Item>
+              )}
             </ListGroup>
             <ListGroup>
               <ListGroup.Item>

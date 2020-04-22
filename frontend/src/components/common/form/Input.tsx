@@ -42,7 +42,7 @@ export const Input: React.FC<InputProps> = ({
   custom,
   ...rest
 }) => {
-  const { values, handleChange, errors, touched } = useFormikContext();
+  const { values, handleChange, handleBlur, errors, touched } = useFormikContext();
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const asElement: any = is || 'input';
@@ -62,6 +62,7 @@ export const Input: React.FC<InputProps> = ({
         {...rest}
         value={getIn(values, field)}
         placeholder={placeholder}
+        onBlur={handleBlur}
         onChange={handleChange}
       />
       <DisplayError field={field} />

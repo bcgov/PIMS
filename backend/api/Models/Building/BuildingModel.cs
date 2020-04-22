@@ -1,30 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Models.Building
 {
-    public class BuildingModel : BaseModel
+    public class BuildingModel : PropertyModel
     {
         #region Properties
-        public int Id { get; set; }
 
         public int ParcelId { get; set; }
 
         public string LocalId { get; set; }
-
-        public int AgencyId { get; set; }
-
-        public string SubAgency { get; set; }
-
-        public string Agency { get; set; }
-
-        public string Description { get; set; }
-
-        public AddressModel Address { get; set; }
-
-        public double Latitude { get; set; }
-
-        public double Longitude { get; set; }
 
         public int BuildingConstructionTypeId { get; set; }
 
@@ -49,8 +35,6 @@ namespace Pims.Api.Models.Building
         public string BuildingTenancy { get; set; }
 
         public float RentableArea { get; set; }
-
-        public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
 

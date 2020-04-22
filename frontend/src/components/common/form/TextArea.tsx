@@ -1,7 +1,5 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
 import { Input, InputProps } from './Input';
 
 // only "field" is required for <Input>, the rest are optional

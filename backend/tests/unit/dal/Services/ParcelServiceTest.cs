@@ -317,7 +317,7 @@ namespace Pims.Dal.Test.Services
             init.CreateBuilding(parcel, 1);
             var building1 = init.CreateBuilding(parcel, 2);
             building1.IsSensitive = true;
-            var building2 = init.CreateBuilding(parcel, 3, "l3", 1, 1, init.Agencies.Find(2));
+            var building2 = init.CreateBuilding(parcel, 3, "13", "l4", 1, 1, init.Agencies.Find(2));
             building2.IsSensitive = true;
             init.SaveChanges();
 
