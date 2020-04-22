@@ -115,6 +115,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           <Formik
             initialValues={initialValues}
             validationSchema={ParcelSchema}
+            validateOnChange={false}
             onSubmit={(values, { resetForm }) => {
               let response: any;
               const apiValues = valuesToApiFormat(_.cloneDeep(values));

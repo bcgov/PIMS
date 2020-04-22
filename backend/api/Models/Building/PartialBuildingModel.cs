@@ -1,17 +1,12 @@
+using Pims.Api.Models.Parcel;
+
 namespace Pims.Api.Models.Building
 {
-    public class PartialBuildingModel : BaseModel
+    public class PartialBuildingModel : PartialPropertyModel
     {
         #region Properties
-        public int Id { get; set; }
 
         public string LocalId { get; set; }
-
-        public string Description { get; set; }
-
-        public double Latitude { get; set; }
-
-        public double Longitude { get; set; }
         #endregion
     }
 }

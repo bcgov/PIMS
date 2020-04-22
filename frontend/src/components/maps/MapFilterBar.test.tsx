@@ -5,6 +5,8 @@ import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
 import * as MOCK from 'mocks/filterDataMock';
 
 const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
+//prevent web calls from being made during tests.
+jest.mock('axios');
 
 describe('MapFilterBar', () => {
   it('renders correctly', () => {

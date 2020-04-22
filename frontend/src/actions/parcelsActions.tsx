@@ -33,6 +33,7 @@ export interface IAddress {
 export interface IBuilding {
   id: number;
   localId: string;
+  projectNumber: string | null;
   description: string;
   address: IAddress;
   latitude: number | any;
@@ -70,6 +71,7 @@ export interface IParcel {
   id: number | any;
   pid: string | undefined;
   pin: number | any;
+  projectNumber: string;
   latitude: number | any;
   longitude: number | any;
   statusId: number | any;
