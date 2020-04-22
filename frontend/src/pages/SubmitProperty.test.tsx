@@ -77,7 +77,7 @@ const store = mockStore({
   },
 });
 
-xit('SubmitProperty renders a disabled form if agency does not match current user.', () => {
+it('SubmitProperty renders a disabled form if agency does not match current user.', () => {
   const tree = mount(
     <Provider store={store}>
       <Router history={history}>
