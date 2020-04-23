@@ -2,13 +2,13 @@
 
 exports[`MapFilterBar renders correctly 1`] = `
 <div
-  className="map-filter-container container-fluid"
+  className="px-0 map-filter-container container-fluid"
 >
   <div
     className="row"
   >
     <div
-      className="col-md-8 col-8 offset-md-2 offset-2"
+      className="col"
     >
       <form
         className=""
@@ -28,6 +28,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                 className="form-control"
                 id="input-address"
                 name="address"
+                onBlur={[Function]}
                 onChange={[Function]}
                 placeholder="Enter an address or city"
                 value=""
@@ -44,6 +45,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                 className="form-control"
                 id="input-municipality"
                 name="municipality"
+                onBlur={[Function]}
                 onChange={[Function]}
                 placeholder="Enter a municipality"
                 value=""
@@ -60,6 +62,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                 className="form-control"
                 id="input-projectNumber"
                 name="projectNumber"
+                onBlur={[Function]}
                 onChange={[Function]}
                 placeholder="Enter an SPP/RAEG number"
                 value=""

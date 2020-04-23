@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import './AppNavBar.scss';
-import profileUrl from './profile.svg';
+import profileUrl from 'assets/images/profile.svg';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 

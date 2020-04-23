@@ -73,6 +73,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-pid"
                       name="pid"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="000-000-000"
                     />
@@ -102,6 +103,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-pin"
                       name="pin"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -123,6 +125,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       disabled={true}
                       id="input-projectNumber"
                       name="projectNumber"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -147,6 +150,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-address.line1"
                       name="address.line1"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="1234 mock Street"
                     />
@@ -227,6 +231,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-address.postal"
                       name="address.postal"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="V1V1V1"
                     />
@@ -266,6 +271,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-municipality"
                       name="municipality"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -286,6 +292,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-zoning"
                       name="zoning"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -306,6 +313,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-zoningPotential"
                       name="zoningPotential"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -326,6 +334,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-latitude"
                       name="latitude"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value={48}
@@ -347,6 +356,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-longitude"
                       name="longitude"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value={123}
@@ -427,6 +437,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       className="col-md-10 form-control"
                       id="input-landArea"
                       name="landArea"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value="unknown"
@@ -503,7 +514,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -515,7 +526,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -542,7 +553,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -554,7 +565,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -625,7 +636,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -637,7 +648,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -685,7 +696,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -697,7 +708,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -985,6 +996,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-pid"
                       name="pid"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="000-000-000"
                     />
@@ -1015,6 +1027,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-pin"
                       name="pin"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -1036,6 +1049,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-projectNumber"
                       name="projectNumber"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -1061,6 +1075,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-address.line1"
                       name="address.line1"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="1234 mock Street"
                     />
@@ -1144,6 +1159,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-address.postal"
                       name="address.postal"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value="V1V1V1"
                     />
@@ -1184,6 +1200,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-municipality"
                       name="municipality"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -1205,6 +1222,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-zoning"
                       name="zoning"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -1226,6 +1244,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-zoningPotential"
                       name="zoningPotential"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       value=""
                     />
@@ -1247,6 +1266,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-latitude"
                       name="latitude"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value={48}
@@ -1269,6 +1289,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-longitude"
                       name="longitude"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value={123}
@@ -1351,6 +1372,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       disabled={true}
                       id="input-landArea"
                       name="landArea"
+                      onBlur={[Function]}
                       onChange={[Function]}
                       type="number"
                       value="unknown"
@@ -1427,7 +1449,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -1439,7 +1461,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -1467,7 +1489,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -1479,7 +1501,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -1551,7 +1573,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -1563,7 +1585,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
@@ -1612,7 +1634,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                         </td>
                         <td>
                           <div
-                            className="form-group"
+                            className="input-group  form-group"
                           >
                             <div
                               className="input-group-prepend"
@@ -1624,7 +1646,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               </span>
                             </div>
                             <div
-                              className="input-group"
+                              className="input-group-content"
                             >
                               <input
                                 className="form-control"
