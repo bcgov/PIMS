@@ -2,10 +2,6 @@
 
 .container-fluid {
   &.map-filter-container {
-    position: absolute;
-    top: 0;
-    margin: 0;
-    z-index: 500;
   }
 
   .map-filter-bar {

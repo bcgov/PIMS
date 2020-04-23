@@ -3,8 +3,8 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 interface IPrivateRouteProps extends RouteProps {
-  // tslint:disable-next-line:no-any
-  component: any;
+  component: React.ComponentType<any>;
+  layout: React.ComponentType<any>;
   role?: string | Array<string>;
   claim?: string | Array<string>;
 }
@@ -15,7 +15,7 @@ interface IPrivateRouteProps extends RouteProps {
  */
 const PrivateRoute = (props: IPrivateRouteProps) => {
   const keycloak = useKeycloakWrapper();
-  let { component: Component, ...rest } = props;
+  let { component: Component, layout: Layout, ...rest } = props;
   return (
     <Route
       {...rest}
@@ -26,7 +26,11 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
             keycloak.hasRole(rest.role) ||
             keycloak.hasClaim(rest.claim)
           ) {
-            return <Component {...props} />;
+            return (
+              <Layout>
+                <Component {...props} />
+              </Layout>
+            );
           } else {
             return <Redirect to={{ pathname: '/forbidden', state: { referer: props.location } }} />;
           }

@@ -36,6 +36,7 @@ Array [
               className="form-control"
               id="input-username"
               name="username"
+              onBlur={[Function]}
               onChange={[Function]}
               readOnly={true}
               type="text"
@@ -60,6 +61,7 @@ Array [
                   className="form-control"
                   id="input-firstName"
                   name="firstName"
+                  onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="Test"
                   type="text"
@@ -82,6 +84,7 @@ Array [
                   className="form-control"
                   id="input-lastName"
                   name="lastName"
+                  onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="User"
                   type="text"
@@ -102,6 +105,7 @@ Array [
               className="form-control"
               id="input-email"
               name="email"
+              onBlur={[Function]}
               onChange={[Function]}
               placeholder="test@user.com"
               type="email"
@@ -159,6 +163,7 @@ Array [
               className="form-control"
               id="input-position"
               name="position"
+              onBlur={[Function]}
               onChange={[Function]}
               placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
               type="text"
