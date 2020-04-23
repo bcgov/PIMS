@@ -19,9 +19,10 @@ const AppRoute: React.FC<IAppRouteProps> = ({
   ...rest
 }) => {
   const Layout = layout === undefined ? (props: any) => <>{props.children}</> : layout;
-
   if (!!usePrivateRoute) {
-    return <PrivateRoute {...rest} component={Component} role={role} claim={claim} />;
+    return (
+      <PrivateRoute {...rest} component={Component} layout={Layout} role={role} claim={claim} />
+    );
   }
 
   return (
