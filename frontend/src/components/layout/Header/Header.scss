@@ -1,0 +1,57 @@
+@import '../../../fonts.scss';
+
+.App-header.navbar {
+  padding: 0 10px;
+  min-height: 70px;
+  color: #ffffff;
+
+  .longAppName {
+    display: none;
+  }
+  .shortAppName {
+    display: block;
+  }
+
+  .brand-box {
+    padding-top: 15px;
+  }
+
+  .title h1 {
+    margin-top: 10px;
+    padding-left: 50px;
+    text-align: center;
+    font-size: 24px;
+    text-decoration: none solid rgb(255, 255, 255);
+    font-family: 'BCSans' Fallback, sans-serif;
+    font-weight: 700;
+    white-space: normal;
+  }
+
+  .other {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 0;
+    :hover {
+      color: red;
+      cursor: pointer;
+    }
+  }
+}
+.modal-content .label {
+  font-weight: 700;
+}
+
+// show long App Name when space allows
+@media (min-width: 992px) {
+  .App-header.navbar {
+    .longAppName {
+      display: block;
+      text-align: left;
+      padding-left: 40px;
+    }
+    .shortAppName {
+      display: none;
+    }
+  }
+}

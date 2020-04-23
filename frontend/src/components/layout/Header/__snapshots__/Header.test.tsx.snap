@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`header renders correctly 1`] = `
+<nav
+  className="App-header navbar navbar-expand navbar-light"
+>
+  <span
+    className="brand-box navbar-brand"
+    onClick={[Function]}
+  >
+    <img
+      alt="Go to the Government of British Columbia website"
+      className="bc-gov-icon"
+      height="43"
+      src="logo-banner.svg"
+      width="156"
+    />
+  </span>
+  <div
+    className="title mr-auto navbar-nav"
+    onKeyDown={[Function]}
+  >
+    <div
+      className="nav-item"
+    >
+      <h1
+        className="longAppName"
+      >
+        Property Inventory Management System
+      </h1>
+      <h1
+        className="shortAppName"
+      >
+        PIMS
+      </h1>
+    </div>
+  </div>
+  <div
+    className="other navbar-nav"
+    onKeyDown={[Function]}
+  />
+</nav>
+`;
