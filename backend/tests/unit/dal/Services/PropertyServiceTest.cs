@@ -24,48 +24,48 @@ namespace Pims.Dal.Test.Services
         public static IEnumerable<object[]> ParcelFilters =>
             new List<object[]>
             {
-                new object[] { new ParcelFilter(50, 25, 50, 20), 1 },
-                new object[] { new ParcelFilter(50, 24, 50, 26), 0 },
-                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1 },
-                new object[] { new ParcelFilter() { ClassificationId = 2 }, 1 },
-                new object[] { new ParcelFilter() { Description = "Description" }, 1 },
-                new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1 },
-                new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1 },
-                new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1 }
+                new object[] { new ParcelFilter(50, 25, 50, 20), 1, 1 },
+                new object[] { new ParcelFilter(50, 24, 50, 26), 0, 0 },
+                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1, 1 },
+                new object[] { new ParcelFilter() { ClassificationId = 2 }, 1, 1 },
+                new object[] { new ParcelFilter() { Description = "Description" }, 1, 1 },
+                new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1, 1 },
+                new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1, 1 },
+                new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1, 1 }
             };
 
         public static IEnumerable<object[]> BuildingFilters =>
             new List<object[]>
             {
-                new object[] { new BuildingFilter(50, 25, 50, 20), 1 },
-                new object[] { new BuildingFilter(50, 24, 50, 26), 0 },
-                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1 },
-                new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
-                new object[] { new BuildingFilter() { Description = "Description" }, 1 },
-                new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5 },
-                new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
-                new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1 },
-                new object[] { new BuildingFilter() { PredominateUseId = 2 }, 1 },
-                new object[] { new BuildingFilter() { MinRentableArea = 100 }, 1 },
-                new object[] { new BuildingFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1 }
+                new object[] { new BuildingFilter(50, 25, 50, 20), 1, 1 },
+                new object[] { new BuildingFilter(50, 24, 50, 26), 0, 0 },
+                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1, 1 },
+                new object[] { new BuildingFilter() { ClassificationId = 2 }, 1, 1 },
+                new object[] { new BuildingFilter() { Description = "Description" }, 1, 1 },
+                new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5, 5 },
+                new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
+                new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1, 1 },
+                new object[] { new BuildingFilter() { PredominateUseId = 2 }, 1, 1 },
+                new object[] { new BuildingFilter() { MinRentableArea = 100 }, 1, 1 },
+                new object[] { new BuildingFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1, 1 }
             };
 
         public static IEnumerable<object[]> AllPropertyFilters =>
             new List<object[]>
             {
-                new object[] { new AllPropertyFilter(50, 25, 50, 20), 2 },
-                new object[] { new AllPropertyFilter(50, 24, 50, 26), 0 },
-                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, 7 },
-                new object[] { new AllPropertyFilter() { ClassificationId = 2 }, 2 },
-                new object[] { new AllPropertyFilter() { Description = "Description" }, 20 },
-                new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, 11 },
-                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, 1 },
-                new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, 20 },
-                new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, 20 },
-                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, 1 },
-                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1 },
+                new object[] { new AllPropertyFilter(50, 25, 50, 20), 2, 2 },
+                new object[] { new AllPropertyFilter(50, 24, 50, 26), 0, 0 },
+                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, 7, 7 },
+                new object[] { new AllPropertyFilter() { ClassificationId = 2 }, 2, 2 },
+                new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "Description" }, 20, 10 },
+                new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, 11, 10 },
+                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
+                new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, 20, 10 },
+                new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, 20, 10 },
+                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1, 1 },
             };
         #endregion
 
@@ -79,7 +79,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Properties_ArgumentNullException()
+        public void GetPage_Properties_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -96,7 +96,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Parcels_ArgumentNullException()
+        public void GetPage_Parcels_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -113,7 +113,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Buildings_ArgumentNullException()
+        public void GetPage_Buildings_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -130,7 +130,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Properties_NotAuthorized()
+        public void GetPage_Properties_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -149,7 +149,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Parcels_NotAuthorized()
+        public void GetPage_Parcels_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -168,7 +168,7 @@ namespace Pims.Dal.Test.Services
         /// User does not have 'property-view' claim.
         /// </summary>
         [Fact]
-        public void Get_Buildings_NotAuthorized()
+        public void GetPage_Buildings_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -185,7 +185,7 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void Get_Parcels(ParcelFilter filter, int expectedCount)
+        public void GetPage_Parcels(ParcelFilter filter, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
@@ -213,12 +213,13 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Views.Property>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            Assert.Equal(expectedTotal, result.Total);
+            Assert.Equal(expectedCount, result.Count());
         }
 
         [Theory]
         [MemberData(nameof(BuildingFilters))]
-        public void Get_Buildings(BuildingFilter filter, int expectedCount)
+        public void GetPage_Buildings(BuildingFilter filter, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
@@ -252,12 +253,13 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Views.Property>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            Assert.Equal(expectedTotal, result.Total);
+            Assert.Equal(expectedCount, result.Count());
         }
 
         [Theory]
         [MemberData(nameof(AllPropertyFilters))]
-        public void Get_Properties(AllPropertyFilter filter, int expectedCount)
+        public void GetPage_Properties(AllPropertyFilter filter, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
@@ -304,7 +306,8 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Views.Property>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            Assert.Equal(expectedTotal, result.Total);
+            Assert.Equal(expectedCount, result.Count());
         }
         #endregion
         #endregion

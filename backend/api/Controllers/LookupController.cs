@@ -1,7 +1,6 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Models;
 using Pims.Dal;
 using System.Linq;
@@ -22,7 +21,6 @@ namespace Pims.Api.Controllers
     public class LookupController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<LookupController> _logger;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -31,12 +29,10 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Creates a new instance of a LookupController class.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public LookupController(ILogger<LookupController> logger, IPimsService pimsService, IMapper mapper)
+        public LookupController(IPimsService pimsService, IMapper mapper)
         {
-            _logger = logger;
             _pimsService = pimsService;
             _mapper = mapper;
         }

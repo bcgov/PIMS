@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Models;
-using Pims.Api.Models.Property;
+using Pims.Api.Areas.Property.Models.Search;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
@@ -14,17 +14,18 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 
-namespace Pims.Api.Controllers
+namespace Pims.Api.Areas.Property.Controllers
 {
     /// <summary>
-    /// PropertyController class, provides endpoints for searching properties.
+    /// SearchController class, provides endpoints for searching properties.
     /// </summary>
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/properties")]
-    [Route("properties")]
-    public class PropertyController : ControllerBase
+    [Area("properties")]
+    [Route("v{version:apiVersion}/[area]/search")]
+    [Route("[area]/search")]
+    public class SearchController : ControllerBase
     {
         #region Variables
         private readonly IPimsService _pimsService;
@@ -33,11 +34,11 @@ namespace Pims.Api.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a PropertyController class, initializes it with the specified arguments.
+        /// Creates a new instance of a SearchController class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public PropertyController(IPimsService pimsService, IMapper mapper)
+        public SearchController(IPimsService pimsService, IMapper mapper)
         {
             _pimsService = pimsService;
             _mapper = mapper;
@@ -87,7 +88,7 @@ namespace Pims.Api.Controllers
         }
         #endregion
 
-        #region Property List View Endpoints
+        #region Property Paging Endpoints
         /// <summary>
         /// Get all the properties that satisfy the filter parameters.
         /// </summary>
