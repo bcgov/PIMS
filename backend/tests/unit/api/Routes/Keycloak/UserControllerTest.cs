@@ -5,6 +5,7 @@ using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using Xunit;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Routes.Keycloak
 {
@@ -16,6 +17,7 @@ namespace Pims.Api.Test.Routes.Keycloak
     [Trait("area", "keycloak")]
     [Trait("group", "user")]
     [Trait("group", "route")]
+    [ExcludeFromCodeCoverage]
     public class UserControllerTest
     {
         #region Variables

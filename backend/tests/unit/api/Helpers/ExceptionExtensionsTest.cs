@@ -1,6 +1,7 @@
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 
@@ -9,6 +10,7 @@ namespace Pims.Api.Test.Helpers
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("category", "function")]
+    [ExcludeFromCodeCoverage]
     public class ExceptionExtensionsTest
     {
         #region Tests

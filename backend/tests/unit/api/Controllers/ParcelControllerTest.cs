@@ -14,12 +14,14 @@ using System.Collections.Generic;
 using System;
 using Xunit;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "parcel")]
+    [ExcludeFromCodeCoverage]
     public class ParcelControllerTest
     {
         #region Data

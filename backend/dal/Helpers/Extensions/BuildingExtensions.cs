@@ -80,6 +80,13 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.Tenancy))
                 query = query.Where(b => EF.Functions.Like(b.BuildingTenancy, $"%{filter.Tenancy}%"));
 
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Parcel.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Parcel.Zoning, $"%{filter.Zoning}%"));
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.Parcel.ZoningPotential, $"%{filter.ZoningPotential}%"));
+
             if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
                 query = query.Where(b => EF.Functions.Like(b.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(b.Address.City.Name, $"%{filter.Address}%"));
 

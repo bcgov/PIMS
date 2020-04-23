@@ -9,6 +9,7 @@ using Model = Pims.Api.Areas.Tools.Models.Import;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Security;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers.Tools
 {
@@ -16,6 +17,7 @@ namespace Pims.Api.Test.Controllers.Tools
     [Trait("category", "api")]
     [Trait("area", "tools")]
     [Trait("group", "import")]
+    [ExcludeFromCodeCoverage]
     public class ImportControllerTest
     {
         #region Variables

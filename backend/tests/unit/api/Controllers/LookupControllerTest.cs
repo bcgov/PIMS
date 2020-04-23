@@ -13,12 +13,14 @@ using Pims.Core.Comparers;
 using System.Collections.Generic;
 using System.Linq;
 using Pims.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "lookup")]
+    [ExcludeFromCodeCoverage]
     public class LookupControllerTest
     {
         #region Variables

@@ -10,6 +10,7 @@ using Pims.Dal.Services.Admin;
 using System;
 using Xunit;
 using Pims.Core.Comparers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PimsApi.Test.Admin.Controllers
 {
@@ -17,6 +18,7 @@ namespace PimsApi.Test.Admin.Controllers
     [Trait("category", "api")]
     [Trait("area", "admin")]
     [Trait("group", "user")]
+    [ExcludeFromCodeCoverage]
     public class UserControllerTest
     {
         #region Constructors
