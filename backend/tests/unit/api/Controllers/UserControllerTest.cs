@@ -18,12 +18,14 @@ using Microsoft.Extensions.Options;
 using System;
 using Pims.Api.Helpers.Exceptions;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PimsApi.Test.Controllers
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "user")]
+    [ExcludeFromCodeCoverage]
     public class UserControllerTest
     {
         #region Constructors

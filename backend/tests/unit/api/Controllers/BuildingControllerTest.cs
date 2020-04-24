@@ -13,12 +13,14 @@ using System;
 using Xunit;
 using Pims.Core.Comparers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "building")]
+    [ExcludeFromCodeCoverage]
     public class BuildingControllerTest
     {
         #region Variables

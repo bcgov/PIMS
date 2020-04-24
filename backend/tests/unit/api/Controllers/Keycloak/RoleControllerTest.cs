@@ -11,6 +11,7 @@ using Pims.Dal.Keycloak;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Pims.Core.Comparers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
@@ -18,6 +19,7 @@ namespace PimsApi.Test.Keycloak.Controllers
     [Trait("category", "api")]
     [Trait("area", "keycloak")]
     [Trait("group", "role")]
+    [ExcludeFromCodeCoverage]
     public class RoleControllerTest
     {
         #region Variables

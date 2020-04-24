@@ -9,6 +9,7 @@ using Pims.Dal.Security;
 using Pims.Dal.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
@@ -18,6 +19,7 @@ namespace Pims.Dal.Test.Services
     [Trait("category", "unit")]
     [Trait("category", "dal")]
     [Trait("group", "parcel")]
+    [ExcludeFromCodeCoverage]
     public class ParcelServiceTest
     {
         #region Data
@@ -178,7 +180,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
-            Assert.Equal(expectedCount, result.Count());
+            Assert.Equal(expectedCount, result.Total);
         }
         #endregion
 
