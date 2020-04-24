@@ -6,6 +6,7 @@ using Pims.Core.Comparers;
 using Pims.Core.Test;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Pims.Api.Test.Helpers
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("category", "function")]
+    [ExcludeFromCodeCoverage]
     public class HttpResponseMessageExtensionsTest
     {
         #region Data

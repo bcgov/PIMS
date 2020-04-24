@@ -7,7 +7,7 @@ namespace Pims.Dal.Entities.Models
     /// <summary>
     /// BuildingFilter class, provides a model for filtering building queries.
     /// </summary>
-    public class BuildingFilter : PropertyFilter
+    public class BuildingFilter : ParcelFilter
     {
         #region Properties
         /// <summary>

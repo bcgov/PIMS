@@ -78,7 +78,7 @@ namespace Pims.Api.Controllers
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var properties = new List<PropertyModel>();
-            var includeBoth = !filter.IncludeParcels && !filter.IncludeBuildings;
+            var includeBoth = !filter.IncludeParcels && !filter.IncludeBuildings; // When a base filter is provided we make a request to both parcels and buildings.
             if (includeBoth || filter.IncludeParcels)
                 properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.Get((ParcelFilter)filter)));
             if (includeBoth || filter.IncludeBuildings)
@@ -86,7 +86,6 @@ namespace Pims.Api.Controllers
             return new JsonResult(properties.ToArray());
         }
         #endregion
-
 
         #region Property List View Endpoints
         /// <summary>

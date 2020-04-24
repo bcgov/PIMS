@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System;
 using Pims.Dal.Entities.Models;
 using Pims.Api.Helpers.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers.Admin
 {
@@ -21,6 +22,7 @@ namespace Pims.Api.Test.Controllers.Admin
     [Trait("category", "api")]
     [Trait("area", "admin")]
     [Trait("group", "parcel")]
+    [ExcludeFromCodeCoverage]
     public class ParcelControllerTest
     {
         #region Data

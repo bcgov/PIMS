@@ -191,6 +191,7 @@ namespace Pims.Api.Models.Property
                 return this.StatusId.HasValue
                     || this.ClassificationId.HasValue
                     || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || !String.IsNullOrWhiteSpace(this.Municipality)
                     || this.ConstructionTypeId.HasValue
                     || this.PredominateUseId.HasValue
                     || this.FloorCount.HasValue
@@ -285,9 +286,11 @@ namespace Pims.Api.Models.Property
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+
                 Municipality = model.Municipality,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
+
                 MinEstimatedValue = model.MinEstimatedValue,
                 MaxEstimatedValue = model.MaxEstimatedValue,
                 MinAssessedValue = model.MinAssessedValue,
@@ -320,12 +323,18 @@ namespace Pims.Api.Models.Property
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+
+                Municipality = model.Municipality,
+                MinLandArea = model.MinLandArea ?? model.MinLotArea,
+                MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
+
                 ConstructionTypeId = model.ConstructionTypeId,
                 PredominateUseId = model.PredominateUseId,
                 FloorCount = model.FloorCount,
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
+
                 MinEstimatedValue = model.MinEstimatedValue,
                 MaxEstimatedValue = model.MaxEstimatedValue,
                 MinAssessedValue = model.MinAssessedValue,
@@ -369,6 +378,7 @@ namespace Pims.Api.Models.Property
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
+
                 MinEstimatedValue = model.MinEstimatedValue,
                 MaxEstimatedValue = model.MaxEstimatedValue,
                 MinAssessedValue = model.MinAssessedValue,

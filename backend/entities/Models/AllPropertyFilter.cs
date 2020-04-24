@@ -239,9 +239,11 @@ namespace Pims.Dal.Entities.Models
                 StatusId = filter.StatusId,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
+
                 Municipality = filter.Municipality,
                 MinLandArea = filter.MinLandArea,
                 MaxLandArea = filter.MaxLandArea,
+
                 MinEstimatedValue = filter.MinEstimatedValue,
                 MaxEstimatedValue = filter.MaxEstimatedValue,
                 MinAssessedValue = filter.MinAssessedValue,
@@ -274,12 +276,16 @@ namespace Pims.Dal.Entities.Models
                 StatusId = filter.StatusId,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
+
+                Municipality = filter.Municipality,
+
                 ConstructionTypeId = filter.ConstructionTypeId,
                 PredominateUseId = filter.PredominateUseId,
                 FloorCount = filter.FloorCount,
                 Tenancy = filter.Tenancy,
                 MinRentableArea = filter.MinRentableArea,
                 MaxRentableArea = filter.MaxRentableArea,
+
                 MinEstimatedValue = filter.MinEstimatedValue,
                 MaxEstimatedValue = filter.MaxEstimatedValue,
                 MinAssessedValue = filter.MinAssessedValue,
