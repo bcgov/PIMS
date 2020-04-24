@@ -88,7 +88,7 @@ namespace Pims.Core.Test
             localId ??= $"l{id}";
             projectNumber ??= $"p{id}";
             agency ??= parcel.Agency;
-            var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
+            var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault() ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
@@ -132,8 +132,7 @@ namespace Pims.Core.Test
         {
             for (var i = startId; i < (startId + count); i++)
             {
-                var building = context.CreateBuilding(parcel, i);
-                parcel.Buildings.Add(building);
+                context.CreateBuilding(parcel, i);
             }
             return parcel.Buildings.ToList();
         }

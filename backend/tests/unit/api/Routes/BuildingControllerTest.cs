@@ -65,7 +65,7 @@ namespace Pims.Api.Test.Routes
         }
 
         [Fact]
-        public void GetBuilding_Route()
+        public void GetBuildingL_Route()
         {
             // Arrange
             var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuilding), typeof(int));
@@ -74,6 +74,32 @@ namespace Pims.Api.Test.Routes
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("{id}");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetBuildingsPage_Query_Route()
+        {
+            // Arrange
+            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildingsPage));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("page");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetBuildingsPage_Filter_Route()
+        {
+            // Arrange
+            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildingsPage), typeof(Dal.Entities.Models.BuildingFilter));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("page/filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
         #endregion

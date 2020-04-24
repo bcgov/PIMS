@@ -1,5 +1,9 @@
+using System;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Pims.Core.Extensions;
+using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -36,6 +40,105 @@ namespace Pims.Dal.Helpers.Extensions
             var pidPinUpdated = parcels.Any(p => p.Id == parcel.Id && ((parcel.PID > 0 && p.PID != parcel.PID) || (parcel.PIN != null && p.PIN != parcel.PIN)));
 
             if (pidPinUpdated) throw new DbUpdateException("PID and PIN may not be updated.");
+        }
+
+        /// <summary>
+        /// Generate a query for the specified 'filter'.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="user"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public static IQueryable<Entity.Parcel> GenerateQuery(this PimsContext context, ClaimsPrincipal user, Entity.Models.ParcelFilter filter)
+        {
+            filter.ThrowIfNull(nameof(user));
+            filter.ThrowIfNull(nameof(filter));
+
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = user.GetAgencies();
+            var viewSensitive = user.HasPermission(Permissions.SensitiveView);
+
+            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
+            var query = context.Parcels.AsNoTracking().Where(p =>
+                !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
+
+            if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
+                query = query.Where(p =>
+                    p.Latitude != 0 &&
+                    p.Longitude != 0 &&
+                    p.Latitude <= filter.NELatitude &&
+                    p.Latitude >= filter.SWLatitude &&
+                    p.Longitude <= filter.NELongitude &&
+                    p.Longitude >= filter.SWLongitude);
+
+            if (filter.Agencies?.Any() == true)
+            {
+                // Get list of sub-agencies for any agency selected in the filter.
+                var agencies = filter.Agencies.Concat(context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
+                query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+            if (filter.ClassificationId.HasValue)
+                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
+            if (filter.StatusId.HasValue)
+                query = query.Where(p => p.StatusId == filter.StatusId);
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Municipality))
+                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
+
+            // TODO: Parse the address information by City, Postal, etc.
+            if (!String.IsNullOrWhiteSpace(filter.Address))
+                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
+
+            if (filter.MinLandArea.HasValue)
+                query = query.Where(p => p.LandArea >= filter.MinLandArea);
+            if (filter.MaxLandArea.HasValue)
+                query = query.Where(p => p.LandArea <= filter.MaxLandArea);
+
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinEstimatedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MinEstimatedValue <= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == Entity.FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
+            if (filter.MaxEstimatedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MaxEstimatedValue >= p.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == context.ParcelFiscals
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == Entity.FiscalKeys.Estimated)
+                            .Max(pe => pe.FiscalYear))
+                        .Value);
+
+            // TODO: Review performance of the evaluation query component.
+            if (filter.MinAssessedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MinAssessedValue <= p.Evaluations
+                        .FirstOrDefault(e => e.Date == context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == Entity.EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
+            if (filter.MaxAssessedValue.HasValue)
+                query = query.Where(p =>
+                    filter.MaxAssessedValue >= p.Evaluations
+                        .FirstOrDefault(e => e.Date == context.ParcelEvaluations
+                            .Where(pe => pe.ParcelId == p.Id && pe.Key == Entity.EvaluationKeys.Assessed)
+                            .Max(pe => pe.Date))
+                        .Value);
+
+            if (filter.Sort?.Any() == true)
+                query = query.OrderByProperty(filter.Sort);
+            else
+                query = query.OrderBy(p => p.Id);
+
+            return query;
         }
     }
 }

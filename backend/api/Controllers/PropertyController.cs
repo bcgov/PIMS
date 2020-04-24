@@ -2,9 +2,9 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
+using Pims.Api.Models;
 using Pims.Api.Models.Property;
 using Pims.Api.Policies;
 using Pims.Dal;
@@ -27,7 +27,6 @@ namespace Pims.Api.Controllers
     public class PropertyController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<PropertyController> _logger;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -36,18 +35,17 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Creates a new instance of a PropertyController class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public PropertyController(ILogger<PropertyController> logger, IPimsService pimsService, IMapper mapper)
+        public PropertyController(IPimsService pimsService, IMapper mapper)
         {
-            _logger = logger;
             _pimsService = pimsService;
             _mapper = mapper;
         }
         #endregion
 
         #region Endpoints
+        #region Landing Page Endpoints
         /// <summary>
         /// Get all the properties that satisfy the filter parameters.
         /// </summary>
@@ -77,7 +75,7 @@ namespace Pims.Api.Controllers
         public IActionResult GetProperties([FromBody]PropertyFilterModel filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var properties = new List<PropertyModel>();
             var includeBoth = !filter.IncludeParcels && !filter.IncludeBuildings;
@@ -87,6 +85,46 @@ namespace Pims.Api.Controllers
                 properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.Get((BuildingFilter)filter)));
             return new JsonResult(properties.ToArray());
         }
+        #endregion
+
+
+        #region Property List View Endpoints
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("page")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(PageModel<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
+        public IActionResult GetPropertiesPage()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetPropertiesPage(new PropertyFilterModel(query));
+        }
+
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("page/filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(PageModel<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
+        public IActionResult GetPropertiesPage([FromBody]PropertyFilterModel filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+
+            var page = _pimsService.Property.GetPage((AllPropertyFilter)filter);
+            var result = _mapper.Map<PageModel<PropertyModel>>(page);
+            return new JsonResult(result);
+        }
+        #endregion
         #endregion
     }
 }

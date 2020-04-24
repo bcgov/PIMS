@@ -70,7 +70,7 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public ParcelFilter(string address, int? agencyId, int? statusId, int? classificationId, float? minLandArea, float? maxLandArea, float? minEstimatedValue, float? maxEstimatedValue, float? minAssessedValue, float? maxAssessedValue, string[] sort)
+        public ParcelFilter(string address, int? agencyId, int? statusId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
             : base(address, agencyId, statusId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
         {
             this.MinLandArea = minLandArea;
@@ -99,9 +99,9 @@ namespace Pims.Dal.Entities.Models
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public override bool ValidFilter()
+        public override bool IsValid()
         {
-            return base.ValidFilter()
+            return base.IsValid()
                 || !String.IsNullOrWhiteSpace(this.Municipality)
                 || !String.IsNullOrWhiteSpace(this.Zoning)
                 || !String.IsNullOrWhiteSpace(this.ZoningPotential)

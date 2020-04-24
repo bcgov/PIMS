@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -9,6 +10,7 @@ namespace Pims.Core.Test
     /// <summary>
     /// Principal static class, provides helper functions for principal identities.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class PrincipalHelper
     {
         /// <summary>

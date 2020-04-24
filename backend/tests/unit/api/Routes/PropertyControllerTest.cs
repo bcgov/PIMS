@@ -63,6 +63,32 @@ namespace Pims.Api.Test.Routes
             endpoint.HasPost("filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
+
+        [Fact]
+        public void GetPropertiesPage_Query_Route()
+        {
+            // Arrange
+            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetPropertiesPage));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("page");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
+
+        [Fact]
+        public void GetPropertiesPage_Filter_Route()
+        {
+            // Arrange
+            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetPropertiesPage), typeof(PropertyFilterModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("page/filter");
+            endpoint.HasPermissions(Permissions.PropertyView);
+        }
         #endregion
     }
 }

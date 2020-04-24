@@ -1,10 +1,15 @@
 using Pims.Core.Helpers;
 using Pims.Dal;
 using Pims.Dal.Security;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Pims.Core.Test
 {
+    /// <summary>
+    /// ServiceHelper static class, provides helper functions for TestHelper when interacting with services.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ServiceHelper
     {
         #region Methods

@@ -1,9 +1,7 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Models.Building;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Policies;
@@ -28,7 +26,6 @@ namespace Pims.Api.Controllers
     public class BuildingController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<BuildingController> _logger;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -37,12 +34,10 @@ namespace Pims.Api.Controllers
         /// <summary>
         /// Creates a new instance of a BuildingController class.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public BuildingController(ILogger<BuildingController> logger, IPimsService pimsService, IMapper mapper)
+        public BuildingController(IPimsService pimsService, IMapper mapper)
         {
-            _logger = logger;
             _pimsService = pimsService;
             _mapper = mapper;
         }
@@ -78,7 +73,7 @@ namespace Pims.Api.Controllers
         public IActionResult GetBuildings([FromBody]BuildingFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.ValidFilter()) throw new BadRequestException("Property filter must contain valid values.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var buildings = _pimsService.Building.Get(filter);
             var result = _mapper.Map<Model.PartialBuildingModel[]>(buildings);
@@ -102,6 +97,44 @@ namespace Pims.Api.Controllers
 
             return new JsonResult(building);
         }
+
+        #region Paged Endpoints
+        /// <summary>
+        /// Get a page of buildings that satisfy the filter parameters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("page")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialBuildingModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "building" })]
+        public IActionResult GetBuildingsPage()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetBuildingsPage(new BuildingFilter(query));
+        }
+
+        /// <summary>
+        /// Get a page of buildings that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("page/filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialBuildingModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "building" })]
+        public IActionResult GetBuildingsPage([FromBody]BuildingFilter filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+
+            var page = _pimsService.Building.GetPage(filter);
+            var result = _mapper.Map<Models.PageModel<Model.PartialBuildingModel>>(page);
+            return new JsonResult(result);
+        }
+        #endregion
         #endregion
     }
 }

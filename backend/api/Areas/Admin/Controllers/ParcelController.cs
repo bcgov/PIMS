@@ -60,7 +60,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcels()
         {
@@ -77,15 +77,14 @@ namespace Pims.Api.Areas.Admin.Controllers
         [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Paged<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "admin-parcel" })]
         public IActionResult GetParcels([FromBody]ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
 
-            var paged = _pimsAdminService.Parcel.Get(filter);
-            var parcels = _mapper.Map<Model.ParcelModel[]>(paged.Items);
-            var result = new Paged<Model.ParcelModel>(parcels, filter.Page, filter.Quantity, paged.Total);
+            var page = _pimsAdminService.Parcel.Get(filter);
+            var result = _mapper.Map<Api.Models.PageModel<Model.ParcelModel>>(page);
             return new JsonResult(result);
         }
 
@@ -105,7 +104,6 @@ namespace Pims.Api.Areas.Admin.Controllers
             var entity = _pimsAdminService.Parcel.Get(id);
 
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
-
             return new JsonResult(parcel);
         }
 

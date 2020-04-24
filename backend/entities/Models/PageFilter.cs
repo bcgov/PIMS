@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
@@ -67,7 +66,7 @@ namespace Pims.Dal.Entities.Models
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public virtual bool ValidFilter()
+        public virtual bool IsValid()
         {
             return this.Page > 0
                 && this.Quantity > 0;

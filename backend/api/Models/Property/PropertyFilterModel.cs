@@ -9,7 +9,7 @@ namespace Pims.Api.Models.Property
     /// <summary>
     /// PropertyFilterModel class, provides a model to contain the parcel and building filters.
     /// </summary>
-    public class PropertyFilterModel
+    public class PropertyFilterModel : PageFilter
     {
         #region Properties
         /// <summary>
@@ -76,37 +76,31 @@ namespace Pims.Api.Models.Property
         /// get/set - Building minimum estimated value.
         /// </summary>
         /// <value></value>
-        public float? MinEstimatedValue { get; set; }
+        public decimal? MinEstimatedValue { get; set; }
 
         /// <summary>
         /// get/set - Building maximum estimated value.
         /// </summary>
         /// <value></value>
-        public float? MaxEstimatedValue { get; set; }
+        public decimal? MaxEstimatedValue { get; set; }
 
         /// <summary>
         /// get/set - Parcel minimum assessed value.
         /// </summary>
         /// <value></value>
-        public float? MinAssessedValue { get; set; }
+        public decimal? MinAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - Parcel maximum assessed value.
         /// </summary>
         /// <value></value>
-        public float? MaxAssessedValue { get; set; }
+        public decimal? MaxAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - An array of agencies.
         /// </summary>
         /// <value></value>
         public int[] Agencies { get; set; }
-
-        /// <summary>
-        /// get/set - An array of sorting parcel conditions (i.e. AgencyId desc, ClassificationId asc)
-        /// </summary>
-        /// <value></value>
-        public string[] Sort { get; set; }
 
         #region Parcel Filters
         /// <summary>
@@ -232,7 +226,7 @@ namespace Pims.Api.Models.Property
         /// Creates a new instance of a PropertyFilterModel class, initializes with the specified arguments.
         /// </summary>
         /// <param name="query"></param>
-        public PropertyFilterModel(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query)
+        public PropertyFilterModel(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query) : base(query)
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
@@ -247,10 +241,10 @@ namespace Pims.Api.Models.Property
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
 
-            this.MinEstimatedValue = filter.GetFloatNullValue(nameof(this.MinEstimatedValue));
-            this.MaxEstimatedValue = filter.GetFloatNullValue(nameof(this.MaxEstimatedValue));
-            this.MinAssessedValue = filter.GetFloatNullValue(nameof(this.MinAssessedValue));
-            this.MaxAssessedValue = filter.GetFloatNullValue(nameof(this.MaxAssessedValue));
+            this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
+            this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
+            this.MinAssessedValue = filter.GetDecimalNullValue(nameof(this.MinAssessedValue));
+            this.MaxAssessedValue = filter.GetDecimalNullValue(nameof(this.MaxAssessedValue));
 
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
@@ -277,8 +271,11 @@ namespace Pims.Api.Models.Property
         /// <param name="model"></param>
         public static explicit operator ParcelFilter(PropertyFilterModel model)
         {
-            var parcel = new ParcelFilter
+            var filter = new ParcelFilter
             {
+                Page = model.Page,
+                Quantity = model.Quantity,
+
                 NELatitude = model.NELatitude,
                 NELongitude = model.NELongitude,
                 SWLatitude = model.SWLatitude,
@@ -300,7 +297,7 @@ namespace Pims.Api.Models.Property
                 Sort = model.Sort
             };
 
-            return parcel;
+            return filter;
         }
 
         /// <summary>
@@ -309,8 +306,11 @@ namespace Pims.Api.Models.Property
         /// <param name="model"></param>
         public static explicit operator BuildingFilter(PropertyFilterModel model)
         {
-            var parcel = new BuildingFilter
+            var filter = new BuildingFilter
             {
+                Page = model.Page,
+                Quantity = model.Quantity,
+
                 NELatitude = model.NELatitude,
                 NELongitude = model.NELongitude,
                 SWLatitude = model.SWLatitude,
@@ -335,16 +335,60 @@ namespace Pims.Api.Models.Property
                 Sort = model.Sort
             };
 
-            return parcel;
+            return filter;
+        }
+
+        /// <summary>
+        /// Convert to a ParcelFilter.
+        /// </summary>
+        /// <param name="model"></param>
+        public static explicit operator AllPropertyFilter(PropertyFilterModel model)
+        {
+            var filter = new AllPropertyFilter
+            {
+                Page = model.Page,
+                Quantity = model.Quantity,
+
+                NELatitude = model.NELatitude,
+                NELongitude = model.NELongitude,
+                SWLatitude = model.SWLatitude,
+                SWLongitude = model.SWLongitude,
+
+                ProjectNumber = model.ProjectNumber,
+                StatusId = model.StatusId,
+                ClassificationId = model.ClassificationId,
+                Address = model.Address,
+
+                Municipality = model.Municipality,
+                MinLandArea = model.MinLandArea ?? model.MinLotArea,
+                MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
+
+                ConstructionTypeId = model.ConstructionTypeId,
+                PredominateUseId = model.PredominateUseId,
+                FloorCount = model.FloorCount,
+                Tenancy = model.Tenancy,
+                MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
+                MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
+                MinEstimatedValue = model.MinEstimatedValue,
+                MaxEstimatedValue = model.MaxEstimatedValue,
+                MinAssessedValue = model.MinAssessedValue,
+                MaxAssessedValue = model.MaxAssessedValue,
+
+                Agencies = model.Agencies,
+                Sort = model.Sort
+            };
+
+            return filter;
         }
 
         /// <summary>
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public bool ValidFilter()
+        public override bool IsValid()
         {
-            return this.NELatitude.HasValue
+            return base.IsValid()
+                && ( this.NELatitude.HasValue
                 || this.NELongitude.HasValue
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
@@ -365,7 +409,7 @@ namespace Pims.Api.Models.Property
                 || this.MinRentableArea.HasValue
                 || this.MaxRentableArea.HasValue
                 || !String.IsNullOrWhiteSpace(this.Municipality)
-                || !String.IsNullOrWhiteSpace(this.Tenancy);
+                || !String.IsNullOrWhiteSpace(this.Tenancy));
         }
         #endregion
     }
