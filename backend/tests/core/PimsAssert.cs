@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Pims.Api.Policies;
 using Pims.Core.Comparers;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
 using Xunit;
 
@@ -15,6 +18,7 @@ namespace Pims.Core.Test
     /// <summary>
     /// PimsAssert static class, provides extension methods for asserting.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class PimsAssert
     {
         /// <summary>
@@ -199,6 +203,36 @@ namespace Pims.Core.Test
         public static void ShallowPropertyEqual<T>(T expected, T actual)
         {
             Assert.Equal(expected, actual, new ShallowPropertyCompare<T>());
+        }
+
+        /// <summary>
+        /// Check if the specified 'obj' is of the specified Paged[T] type.
+        /// Use this method to verify anonymous types returned from endpoints.
+        /// The reason anonymous types are returned is because serialization will return an array if we simply return the paged object itself.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Paged<T> IsPaged<T>(object obj)
+        {
+            var type = obj.GetType();
+            var itemsProp = type.GetProperty("Items");
+            if (itemsProp == null) Assert.True(false, $"The object is not of the specified type '{typeof(Paged<T>).Name}'.");
+
+            var items = itemsProp.GetValue(obj) as IEnumerable<T>;
+            if (items == null) Assert.True(false, $"The object is not of the specified type '{typeof(Paged<T>).Name}'.");
+
+            var pageProp = type.GetProperty("Page");
+            var page = (int)pageProp.GetValue(obj);
+
+            var quantityProp = type.GetProperty("Quantity");
+            var quantity = (int)quantityProp.GetValue(obj);
+
+            var totalProp = type.GetProperty("Total");
+            var total = (int)totalProp.GetValue(obj);
+
+            return new Paged<T>(items, page, quantity, total);
+
         }
     }
 }

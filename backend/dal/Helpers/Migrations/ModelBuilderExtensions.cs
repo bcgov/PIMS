@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Pims.Dal.Helpers.Migrations
 {
@@ -33,11 +34,12 @@ namespace Pims.Dal.Helpers.Migrations
         /// </summary>
         /// <param name="modelBuilder"></param>
         /// <param name="type"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public static ModelBuilder ApplyAllConfigurations(this ModelBuilder modelBuilder, Type type)
+        public static ModelBuilder ApplyAllConfigurations(this ModelBuilder modelBuilder, Type type, PimsContext context = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
-            return modelBuilder.ApplyAllConfigurations(type.Assembly);
+            return modelBuilder.ApplyAllConfigurations(type.Assembly, context);
         }
 
         /// <summary>
@@ -45,8 +47,9 @@ namespace Pims.Dal.Helpers.Migrations
         /// </summary>
         /// <param name="modelBuilder"></param>
         /// <param name="assembly"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public static ModelBuilder ApplyAllConfigurations(this ModelBuilder modelBuilder, Assembly assembly)
+        public static ModelBuilder ApplyAllConfigurations(this ModelBuilder modelBuilder, Assembly assembly, PimsContext context = null)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
 
@@ -60,7 +63,8 @@ namespace Pims.Dal.Helpers.Migrations
             {
                 if (!config.ContainsGenericParameters)
                 {
-                    var entityConfig = Activator.CreateInstance(config);
+                    var includeContext = config.GetConstructors().Any(c => c.GetParameters().Any(p => p.ParameterType == typeof(PimsContext)));
+                    var entityConfig = includeContext ? Activator.CreateInstance(config, context) : Activator.CreateInstance(config);
                     var entityType = config.GetInterfaces().FirstOrDefault().GetGenericArguments()[0];
                     var applyConfigurationMethod = method.MakeGenericMethod(entityType);
                     applyConfigurationMethod.Invoke(modelBuilder, new[] { entityConfig });

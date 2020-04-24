@@ -1,7 +1,5 @@
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal;
@@ -24,26 +22,20 @@ namespace Pims.Api.Controllers
     public class AuthController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<AuthController> _logger;
         private readonly Keycloak.Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IPimsService _pimsService;
-        private readonly IMapper _mapper;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new instance of a AuthController class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="optionsKeycloak"></param>
         /// <param name="pimsService"></param>
-        /// <param name="mapper"></param>
-        public AuthController(ILogger<AuthController> logger, IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService, IMapper mapper)
+        public AuthController(IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService)
         {
-            _logger = logger;
             _optionsKeycloak = optionsKeycloak.CurrentValue;
             _pimsService = pimsService;
-            _mapper = mapper;
         }
         #endregion
 

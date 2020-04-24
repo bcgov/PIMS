@@ -11,6 +11,7 @@ namespace Pims.Dal.Services
     {
         IEnumerable<Parcel> Get(double neLat, double neLong, double swLat, double swLong);
         IEnumerable<Parcel> Get(ParcelFilter filter);
+        Paged<Parcel> GetPage(ParcelFilter filter);
         Parcel Get(int id);
         Parcel Add(Parcel parcel);
         Parcel Update(Parcel parcel);

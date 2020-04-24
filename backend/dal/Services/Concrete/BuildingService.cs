@@ -40,9 +40,10 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
 
             IQueryable<Building> query = null;
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -68,92 +69,25 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Building> Get(BuildingFilter filter)
         {
-            filter.ThrowIfNull(nameof(filter));
-
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
-
-            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = this.Context.Buildings.AsNoTracking().Where(b =>
-                !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)));
-
-            if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
-                query = query.Where(b =>
-                    b.Latitude != 0 &&
-                    b.Longitude != 0 &&
-                    b.Latitude <= filter.NELatitude &&
-                    b.Latitude >= filter.SWLatitude &&
-                    b.Longitude <= filter.NELongitude &&
-                    b.Longitude >= filter.SWLongitude);
-
-            if (filter.Agencies?.Any() == true)
-            {
-                // Get list of sub-agencies for any agency selected in the filter.
-                var agencies = filter.Agencies.Concat(this.Context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
-            }
-            if (filter.ClassificationId.HasValue)
-                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
-            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
-            if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
-            if (filter.ConstructionTypeId.HasValue)
-                query = query.Where(b => b.BuildingConstructionTypeId == filter.ConstructionTypeId);
-            if (filter.PredominateUseId.HasValue)
-                query = query.Where(b => b.BuildingPredominateUseId == filter.PredominateUseId);
-            if (filter.FloorCount.HasValue)
-                query = query.Where(b => b.BuildingFloorCount == filter.FloorCount);
-            if (!String.IsNullOrWhiteSpace(filter.Tenancy))
-                query = query.Where(b => b.BuildingTenancy == filter.Tenancy);
-
-            if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
-                query = query.Where(b => EF.Functions.Like(b.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(b.Address.City.Name, $"%{filter.Address}%"));
-
-            if (filter.MinRentableArea.HasValue)
-                query = query.Where(b => b.RentableArea >= filter.MinRentableArea);
-            if (filter.MaxRentableArea.HasValue)
-                query = query.Where(b => b.RentableArea <= filter.MaxRentableArea);
-
-            // TODO: Review performance of the evaluation query component.
-            if (filter.MinEstimatedValue.HasValue)
-                query = query.Where(b =>
-                    filter.MinEstimatedValue <= b.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == FiscalKeys.Estimated)
-                            .Max(pe => pe.FiscalYear))
-                        .Value);
-            if (filter.MaxEstimatedValue.HasValue)
-                query = query.Where(b =>
-                    filter.MaxEstimatedValue >= b.Fiscals
-                        .FirstOrDefault(e =>e.FiscalYear == this.Context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == FiscalKeys.Estimated)
-                            .Max(pe => pe.FiscalYear))
-                        .Value);
-
-            // TODO: Review performance of the evaluation query component.
-            if (filter.MinAssessedValue.HasValue)
-                query = query.Where(b =>
-                    filter.MinAssessedValue <= b.Evaluations
-                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == EvaluationKeys.Assessed)
-                            .Max(pe => pe.Date))
-                        .Value);
-            if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(b =>
-                    filter.MaxAssessedValue >= b.Evaluations
-                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == EvaluationKeys.Assessed)
-                            .Max(pe => pe.Date))
-                        .Value);
-
-            if (filter.Sort?.Any() == true)
-                query = query.OrderByProperty(filter.Sort);
-
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            var query = this.Context.GenerateQuery(this.User, filter);
             return query.ToArray();
+        }
+
+        /// <summary>
+        /// Get an array of buildings within the specified filter.
+        /// Will not return sensitive buildings unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Paged<Building> GetPage(BuildingFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var total = query.Count();
+            var items = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+
+            return new Paged<Building>(items, filter.Page, filter.Quantity, total);
         }
 
         /// <summary>
@@ -165,9 +99,10 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Building Get(int id)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
 
             var building = this.Context.Buildings
                 .Include(p => p.Parcel)

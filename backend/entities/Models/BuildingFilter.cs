@@ -81,7 +81,7 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, float? minEstimatedValue, float? maxEstimatedValue, float? minAssessedValue, float? maxAssessedValue, string[] sort)
+        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
             this.ConstructionTypeId = constructionTypeId;
@@ -124,9 +124,9 @@ namespace Pims.Dal.Entities.Models
         /// Determine if a valid filter was provided.
         /// </summary>
         /// <returns></returns>
-        public override bool ValidFilter()
+        public override bool IsValid()
         {
-            return base.ValidFilter()
+            return base.IsValid()
                 || this.ConstructionTypeId.HasValue
                 || this.PredominateUseId.HasValue
                 || this.FloorCount.HasValue

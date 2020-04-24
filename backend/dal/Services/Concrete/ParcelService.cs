@@ -7,7 +7,6 @@ using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -66,92 +65,27 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Parcel> Get(ParcelFilter filter)
         {
-            filter.ThrowIfNull(nameof(filter));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
-
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
-
-            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = this.Context.Parcels.AsNoTracking().Where(p =>
-                !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
-
-            if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
-                query = query.Where(p =>
-                    p.Latitude != 0 &&
-                    p.Longitude != 0 &&
-                    p.Latitude <= filter.NELatitude &&
-                    p.Latitude >= filter.SWLatitude &&
-                    p.Longitude <= filter.NELongitude &&
-                    p.Longitude >= filter.SWLongitude);
-
-            if (filter.Agencies?.Any() == true)
-            {
-                // Get list of sub-agencies for any agency selected in the filter.
-                var agencies = filter.Agencies.Concat(this.Context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
-            }
-            if (filter.ClassificationId.HasValue)
-                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
-            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
-            if (!String.IsNullOrWhiteSpace(filter.Description))
-                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
-            if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
-            if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
-            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
-
-            // TODO: Parse the address information by City, Postal, etc.
-            if (!String.IsNullOrWhiteSpace(filter.Address))
-                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
-
-            if (filter.MinLandArea.HasValue)
-                query = query.Where(p => p.LandArea >= filter.MinLandArea);
-            if (filter.MaxLandArea.HasValue)
-                query = query.Where(p => p.LandArea <= filter.MaxLandArea);
-
-            // TODO: Review performance of the evaluation query component.
-            if (filter.MinEstimatedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MinEstimatedValue <= p.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == p.Id && pe.Key == FiscalKeys.Estimated)
-                            .Max(pe => pe.FiscalYear))
-                        .Value);
-            if (filter.MaxEstimatedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MaxEstimatedValue >= p.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == this.Context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == p.Id && pe.Key == FiscalKeys.Estimated)
-                            .Max(pe => pe.FiscalYear))
-                        .Value);
-
-            // TODO: Review performance of the evaluation query component.
-            if (filter.MinAssessedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MinAssessedValue <= p.Evaluations
-                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
-                            .Where(pe => pe.ParcelId == p.Id && pe.Key == EvaluationKeys.Assessed)
-                            .Max(pe => pe.Date))
-                        .Value);
-            if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p =>
-                    filter.MaxAssessedValue >= p.Evaluations
-                        .FirstOrDefault(e => e.Date == this.Context.ParcelEvaluations
-                            .Where(pe => pe.ParcelId == p.Id && pe.Key == EvaluationKeys.Assessed)
-                            .Max(pe => pe.Date))
-                        .Value);
-
-            if (filter.Sort?.Any() == true)
-                query = query.OrderByProperty(filter.Sort);
+            var query = this.Context.GenerateQuery(this.User, filter);
 
             return query.ToArray();
+        }
+
+        /// <summary>
+        /// Get an array of parcels within the specified filter.
+        /// Will not return sensitive parcels unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Paged<Parcel> GetPage(ParcelFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var total = query.Count();
+            var items = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+
+            return new Paged<Parcel>(items, filter.Page, filter.Quantity, total);
         }
 
         /// <summary>
@@ -166,7 +100,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
 
             var parcel = this.Context.Parcels
                 .Include(p => p.Status)

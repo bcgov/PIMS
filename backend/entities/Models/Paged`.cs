@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Dal.Entities.Models
 {
@@ -15,13 +16,13 @@ namespace Pims.Dal.Entities.Models
         /// get/set - The page number.
         /// </summary>
         /// <value></value>
-        public int Page { get; set; }
+        public int Page { get; set; } = 1;
 
         /// <summary>
         /// get/set - The quantity that was requested in the query.  This is not the number of items in this page.
         /// </summary>
         /// <value></value>
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } = 10;
 
         /// <summary>
         /// get/set - The total number of items in the datasource that match the query.  This is not the number of items in this page.
@@ -59,8 +60,26 @@ namespace Pims.Dal.Entities.Models
         /// <param name="items"></param>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
+        public Paged(IEnumerable<TModel> items, int page = 1, int quantity = 10)
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+            if (page < 1) throw new ArgumentOutOfRangeException(nameof(page));
+            if (quantity < 1) throw new ArgumentOutOfRangeException(nameof(quantity));
+
+            this.Items.AddRange(items);
+            this.Page = page;
+            this.Quantity = quantity;
+            this.Total = items.Count();
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Paged class, and initializes it with the specified data.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
         /// <param name="total"></param>
-        public Paged(IEnumerable<TModel> items, int page = 1, int quantity = 10, int total = 0)
+        public Paged(IEnumerable<TModel> items, int page, int quantity, int total)
         {
             if (items == null) throw new ArgumentNullException(nameof(items));
             if (page < 1) throw new ArgumentOutOfRangeException(nameof(page));

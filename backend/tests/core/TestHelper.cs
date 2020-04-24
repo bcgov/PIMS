@@ -1,17 +1,17 @@
 using System.Linq;
-using System.Collections.Generic;
 using System;
 using Pims.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using MapsterMapper;
 using Mapster;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Core.Test
 {
     /// <summary>
     /// TestHelper class, provides a way to simplify the Arrange part of a test.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class TestHelper
     {
         #region Variables

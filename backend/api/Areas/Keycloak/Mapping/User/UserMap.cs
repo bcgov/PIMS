@@ -6,11 +6,9 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
 {
     public class UserMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.User, Model.UserModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
@@ -25,9 +23,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
                 .Map(dest => dest.Roles, src => src.Roles)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
-
             config.NewConfig<Model.UserModel, Entity.User>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)

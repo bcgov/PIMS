@@ -23,7 +23,7 @@ namespace Pims.Api.Test.Controllers
     public class ParcelControllerTest
     {
         #region Data
-        public static IEnumerable<object[]> ParcelFilterData =>
+        public static IEnumerable<object[]> ParcelFilters =>
             new List<object[]>
             {
                 new object[] { new ParcelFilter(50, 25, 50, 20) },
@@ -38,7 +38,7 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new ParcelFilter() { ProjectNumber = "test" } }
             };
 
-        public static IEnumerable<object[]> ParcelQueryData =>
+        public static IEnumerable<object[]> ParcelQueries =>
             new List<object[]>
             {
                 new object[] { new Uri("http://host/api/parcels?Agencies=1,2") },
@@ -62,7 +62,7 @@ namespace Pims.Api.Test.Controllers
         #region Tests
         #region GetParcels
         [Theory]
-        [MemberData(nameof(ParcelFilterData))]
+        [MemberData(nameof(ParcelFilters))]
         public void GetParcels_Success(ParcelFilter filter)
         {
             // Arrange
@@ -111,7 +111,7 @@ namespace Pims.Api.Test.Controllers
         /// Make a successful request that passes the filter in the query string.
         /// </summary>
         [Theory]
-        [MemberData(nameof(ParcelQueryData))]
+        [MemberData(nameof(ParcelQueries))]
         public void GetParcels_Query_Success(Uri uri)
         {
             // Arrange
@@ -160,7 +160,7 @@ namespace Pims.Api.Test.Controllers
         /// Make a failed request because the body doesn't contain a fitler object.
         /// </summary>
         [Fact]
-        public void GetProperties_NoFilter_BadRequest()
+        public void GetParcels_NoFilter_BadRequest()
         {
             // Arrange
             var helper = new TestHelper();
@@ -322,6 +322,123 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ParcelModel>(parcel), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+        #endregion
+
+        #region GetParcelsPage
+        [Theory]
+        [MemberData(nameof(ParcelFilters))]
+        public void GetParcelsPage_Success(ParcelFilter filter)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var parcels = EntityHelper.CreateParcels(1, 3).ToArray();
+            var page = new Paged<Entity.Parcel>(parcels);
+            service.Setup(m => m.Parcel.GetPage(It.IsAny<ParcelFilter>())).Returns(page);
+
+            // Act
+            var result = controller.GetParcelsPage(filter);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.PartialParcelModel>>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.PartialParcelModel[]>(parcels), actualResult.Items, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.GetPage(filter), Times.Once());
+        }
+
+        [Fact]
+        public void GetParcelsPage_Empty_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var filter = new ParcelFilter(0, 25, 10, 20);
+            service.Setup(m => m.Parcel.GetPage(It.IsAny<ParcelFilter>())).Returns(new Paged<Entity.Parcel>());
+
+            // Act
+            var result = controller.GetParcelsPage(filter);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.PartialParcelModel>>(actionResult.Value);
+            Assert.Empty(actualResult.Items);
+            service.Verify(m => m.Parcel.GetPage(filter), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a successful request that passes the filter in the query string.
+        /// </summary>
+        [Theory]
+        [MemberData(nameof(ParcelQueries))]
+        public void GetParcelsPage_Query_Success(Uri uri)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView, uri);
+
+            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
+            var parcel2 = new Entity.Parcel(1, 51, 26) { Id = 2 };
+            var parcels = new[] { parcel1, parcel2 };
+            var page = new Paged<Entity.Parcel>(parcels);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            service.Setup(m => m.Parcel.GetPage(It.IsAny<Entity.Models.ParcelFilter>())).Returns(page);
+
+            // Act
+            var result = controller.GetParcelsPage();
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.PartialParcelModel>>(actionResult.Value);
+            var expectedParcels = mapper.Map<Model.PartialParcelModel[]>(parcels);
+            Assert.Equal(expectedParcels, actualResult.Items, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.GetPage(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a failed request because the query doesn't contain filter values.
+        /// </summary>
+        [Fact]
+        public void GetParcelsPage_Query_NoFilter_BadRequest()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetParcelsPage());
+            service.Verify(m => m.Parcel.GetPage(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
+        }
+
+        /// <summary>
+        /// Make a failed request because the body doesn't contain a fitler object.
+        /// </summary>
+        [Fact]
+        public void GetParcelsPage_NoFilter_BadRequest()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetParcelsPage(null));
+            service.Verify(m => m.Parcel.GetPage(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
         }
         #endregion
         #endregion

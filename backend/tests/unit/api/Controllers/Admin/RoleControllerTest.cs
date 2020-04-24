@@ -46,7 +46,7 @@ namespace PimsApi.Test.Admin.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Entity.Models.Paged<Model.RoleModel>>(actionResult.Value);
+            var actualResult = Assert.IsType<Pims.Api.Models.PageModel<Model.RoleModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.RoleModel[]>(roles), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.Role.Get(1, 10, null), Times.Once());
         }
@@ -70,7 +70,7 @@ namespace PimsApi.Test.Admin.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Entity.Models.Paged<Model.RoleModel>>(actionResult.Value);
+            var actualResult = Assert.IsType< Pims.Api.Models.PageModel<Model.RoleModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.RoleModel[]>(roles), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.Role.Get(1, 10, "test"), Times.Once());
         }

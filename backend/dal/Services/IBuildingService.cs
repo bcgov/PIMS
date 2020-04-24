@@ -11,6 +11,7 @@ namespace Pims.Dal.Services
     {
         IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong);
         IEnumerable<Building> Get(BuildingFilter filter);
+        Paged<Building> GetPage(BuildingFilter filter);
         Building Get(int id);
         Building Add(Building parcel);
         Building Update(Building parcel);

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +8,10 @@ using Moq;
 
 namespace Pims.Core.Test
 {
+    /// <summary>
+    /// HttpContextHelper static class, provides helper functions for the TestHelper when interacting with HttpContext.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class HttpContextHelper
     {
         /// <summary>
