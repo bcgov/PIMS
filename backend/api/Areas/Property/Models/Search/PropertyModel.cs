@@ -1,6 +1,5 @@
-namespace Pims.Api.Models.Property
+namespace Pims.Api.Areas.Property.Models.Search
 {
-
     public class PropertyModel
     {
         #region Properties

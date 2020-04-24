@@ -16,7 +16,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The property type [0=Parcel, 1=Building].
         /// </summary>
-        public int PropertyTypeId { get; set; }
+        public PropertyTypes PropertyTypeId { get; set; }
 
         /// <summary>
         /// get/set - The RAEG/SPP project number.
@@ -291,7 +291,7 @@ namespace Pims.Dal.Entities.Views
         /// <param name="parcel"></param>
         public Property(Parcel parcel) : this((Entities.Property)parcel)
         {
-            this.PropertyTypeId = 0;
+            this.PropertyTypeId = PropertyTypes.Land;
             this.PID = parcel.PID;
             this.PIN = parcel.PIN;
             this.LandArea = parcel.LandArea;
@@ -307,7 +307,7 @@ namespace Pims.Dal.Entities.Views
         /// <param name="building"></param>
         public Property(Building building) : this((Entities.Property)building)
         {
-            this.PropertyTypeId = 1;
+            this.PropertyTypeId = PropertyTypes.Building;
             this.PID = building.Parcel?.PID ?? 0;
             this.PIN = building.Parcel?.PIN;
             this.LocalId = building.LocalId;

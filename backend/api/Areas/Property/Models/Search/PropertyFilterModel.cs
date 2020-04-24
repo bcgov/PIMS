@@ -4,7 +4,7 @@ using System.Linq;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities.Models;
 
-namespace Pims.Api.Models.Property
+namespace Pims.Api.Areas.Property.Models.Search
 {
     /// <summary>
     /// PropertyFilterModel class, provides a model to contain the parcel and building filters.
