@@ -4,6 +4,7 @@ using Pims.Core.Test;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Routes
 {
@@ -14,6 +15,7 @@ namespace Pims.Api.Test.Routes
     [Trait("category", "api")]
     [Trait("group", "property")]
     [Trait("group", "route")]
+    [ExcludeFromCodeCoverage]
     public class PropertyControllerTest
     {
         #region Variables

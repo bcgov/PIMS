@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pims.Dal.Entities;
 using System.Linq;
 
-namespace Pims.Dal.Configuration
+namespace Pims.Dal.Configuration.Views
 {
     /// <summary>
     /// PropertyConfiguration class, provides a way to configure the properties view in the database.

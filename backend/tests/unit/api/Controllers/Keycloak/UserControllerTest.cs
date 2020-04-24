@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {
@@ -19,6 +20,7 @@ namespace PimsApi.Test.Keycloak.Controllers
     [Trait("category", "api")]
     [Trait("area", "keycloak")]
     [Trait("group", "user")]
+    [ExcludeFromCodeCoverage]
     public class UserControllerTest
     {
         #region Variables

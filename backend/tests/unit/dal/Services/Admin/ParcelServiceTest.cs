@@ -9,6 +9,7 @@ using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
@@ -19,6 +20,7 @@ namespace Pims.Dal.Test.Services.Admin
     [Trait("category", "dal")]
     [Trait("area", "admin")]
     [Trait("group", "parcel")]
+    [ExcludeFromCodeCoverage]
     public class ParcelServiceTest
     {
         #region Data

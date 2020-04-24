@@ -16,31 +16,33 @@ using Pims.Core.Comparers;
 using System.Collections.Generic;
 using Pims.Dal.Entities.Models;
 using Pims.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Controllers
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "property")]
+    [ExcludeFromCodeCoverage]
     public class PropertyControllerTest
     {
         #region Variables
         public static IEnumerable<object[]> AllPropertiesFilters = new List<object[]>()
         {
-            new [] { new PropertyFilterModel(100, 0, 0, 0) },
-            new [] { new PropertyFilterModel(0, 100, 0, 0) },
-            new [] { new PropertyFilterModel(0, 0, 10, 0) },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 } },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 } },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) { Address = "Address" } },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) { Agencies = new [] { 1 } } },
-            new [] { new PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" } }
+            new object [] { new PropertyFilterModel(100, 0, 0, 0), false, false },
+            new object [] { new PropertyFilterModel(0, 100, 0, 0), false, false },
+            new object [] { new PropertyFilterModel(0, 0, 10, 0), false, false },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10), false, false },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Address = "Address" }, false, false },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Agencies = new [] { 1 } }, false, false },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 }, true, true },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 }, true, true },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" }, true, true },
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Municipality = "Municipality" }, true, true }
         };
 
         public static IEnumerable<object[]> ParcelOnlyFilters = new List<object[]>()
         {
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { Municipality = "Municipality" } },
             new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLotArea = 1 } },
             new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxLotArea = 1 } },
             new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLandArea = 1 } },
@@ -59,11 +61,21 @@ namespace Pims.Api.Test.Controllers
 
         public static IEnumerable<object[]> PropertyQueryFilters = new List<object[]>()
         {
-            new [] { new Uri("http://host/api/properties?Agencies=1,2") },
-            new [] { new Uri("http://host/api/properties?StatusId=2") },
-            new [] { new Uri("http://host/api/properties?ClassificationId=1") },
-            new [] { new Uri("http://host/api/properties?Address=Address") },
-            new [] { new Uri("http://host/api/properties?ProjectNumber=ProjectNumber") }
+            new object [] { new Uri("http://host/api/properties?Agencies=1,2"), true, true },
+            new object [] { new Uri("http://host/api/properties?StatusId=2"), true, true },
+            new object [] { new Uri("http://host/api/properties?ClassificationId=1"), true, true },
+            new object [] { new Uri("http://host/api/properties?Address=Address"), true, true },
+            new object [] { new Uri("http://host/api/properties?ProjectNumber=ProjectNumber"), true, true },
+            new object [] { new Uri("http://host/api/properties?MinLotArea=1"), true, true },
+            new object [] { new Uri("http://host/api/properties?MaxLotArea=1"), true, true },
+            new object [] { new Uri("http://host/api/properties?MinLandArea=1"), true, false },
+            new object [] { new Uri("http://host/api/properties?MaxLandArea=1"), true, false },
+            new object [] { new Uri("http://host/api/properties?ConstructionTypeId=1"), false, true },
+            new object [] { new Uri("http://host/api/properties?PredominateUseId=1"), false, true },
+            new object [] { new Uri("http://host/api/properties?FloorCount=1"), false, true },
+            new object [] { new Uri("http://host/api/properties?Tenancy=Tenancy"), false, true },
+            new object [] { new Uri("http://host/api/properties?MinRentableArea=1"), false, true },
+            new object [] { new Uri("http://host/api/properties?MaxRentableArea=1"), false, true }
         };
         #endregion
 
@@ -80,7 +92,7 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(AllPropertiesFilters))]
-        public void GetProperties_All_Success(PropertyFilterModel filter)
+        public void GetProperties_All_Success(PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
@@ -106,6 +118,8 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            Assert.Equal(includeParcels, filter.IncludeParcels);
+            Assert.Equal(includeBuildings, filter.IncludeBuildings);
         }
 
         /// <summary>
@@ -175,20 +189,24 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(PropertyQueryFilters))]
-        public void GetProperties_Query_Success(Uri uri)
+        public void GetProperties_Query_Success(Uri uri, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
             var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, uri);
 
-            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
-            var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
+            var parcel1 = EntityHelper.CreateParcel(1, 1, 1);
+            var parcel2 = EntityHelper.CreateParcel(2, 1, 1);
             var parcels = new[] { parcel1, parcel2 };
+
+            var building1 = EntityHelper.CreateBuilding(parcel1, 10);
+            var building2 = EntityHelper.CreateBuilding(parcel1, 11);
+            var buildings = new[] { building1, building2 };
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(new Entity.Building[0]);
+            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(includeParcels ? parcels : new Entity.Parcel[0]);
+            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(includeBuildings ? buildings : new Entity.Building[0]);
 
             // Act
             var result = controller.GetProperties();
@@ -196,10 +214,12 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels);
+            var expectedResult = new List<Model.PropertyModel>();
+            if (includeParcels) expectedResult.AddRange(mapper.Map<Model.PropertyModel[]>(parcels));
+            if (includeBuildings) expectedResult.AddRange(mapper.Map<Model.PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), includeParcels ? Times.Once() : Times.Never());
+            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), includeBuildings ? Times.Once() : Times.Never());
         }
 
         /// <summary>
@@ -247,7 +267,9 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(AllPropertiesFilters))]
-        public void GetPropertiesPage_Success(PropertyFilterModel filter)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
+        public void GetPropertiesPage_Success(PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
@@ -280,7 +302,9 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(PropertyQueryFilters))]
-        public void GetPropertiesPage_Query_Success(Uri uri)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
+        public void GetPropertiesPage_Query_Success(Uri uri, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();

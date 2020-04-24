@@ -9,6 +9,7 @@ using Pims.Dal.Security;
 using Pims.Dal.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
@@ -18,6 +19,7 @@ namespace Pims.Dal.Test.Services
     [Trait("category", "unit")]
     [Trait("category", "dal")]
     [Trait("group", "building")]
+    [ExcludeFromCodeCoverage]
     public class BuildingServiceTest
     {
         #region Data
@@ -30,6 +32,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
                 new object[] { new BuildingFilter() { Description = "Description" }, 1 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
+                new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5 },
                 new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1 },
                 new object[] { new BuildingFilter() { PredominateUseId = 2 }, 1 },
                 new object[] { new BuildingFilter() { MinRentableArea = 100 }, 1 },
@@ -89,8 +92,8 @@ namespace Pims.Dal.Test.Services
 
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
-            var parcel = init.CreateParcel(1);
-            var buildings = init.CreateBuildings(parcel, 2, 20);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 2, 20);
             buildings.Next(0).Latitude = 50;
             buildings.Next(0).Longitude = 25;
             buildings.Next(1).Agency = init.Agencies.Find(3);
@@ -102,6 +105,10 @@ namespace Pims.Dal.Test.Services
             buildings.Next(6).BuildingPredominateUseId = 2;
             buildings.Next(7).RentableArea = 100;
             buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(22);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
             var service = helper.CreateService<BuildingService>(dbName, user);
@@ -163,8 +170,8 @@ namespace Pims.Dal.Test.Services
 
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
-            var parcel = init.CreateParcel(1);
-            var buildings = init.CreateBuildings(parcel, 2, 20);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 10, 20);
             buildings.Next(0).Latitude = 50;
             buildings.Next(0).Longitude = 25;
             buildings.Next(1).Agency = init.Agencies.Find(3);
@@ -176,6 +183,11 @@ namespace Pims.Dal.Test.Services
             buildings.Next(6).BuildingPredominateUseId = 2;
             buildings.Next(7).RentableArea = 100;
             buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(2);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 31, 5);
+
             init.SaveChanges();
 
             var service = helper.CreateService<BuildingService>(dbName, user);
@@ -186,7 +198,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            Assert.Equal(expectedCount, result.Count());
+            Assert.Equal(expectedCount, result.Total);
         }
         #endregion
 

@@ -5,6 +5,7 @@ using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using Xunit;
 using Pims.Dal.Entities.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Routes.Admin
 {
@@ -16,6 +17,7 @@ namespace Pims.Api.Test.Routes.Admin
     [Trait("area", "admin")]
     [Trait("group", "parcel")]
     [Trait("group", "route")]
+    [ExcludeFromCodeCoverage]
     public class ParcelControllerTest
     {
         #region Variables
