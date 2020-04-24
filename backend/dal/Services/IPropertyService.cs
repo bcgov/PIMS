@@ -8,6 +8,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IPropertyService
     {
+        int Count();
         Paged<Property> GetPage(AllPropertyFilter filter);
         Paged<Property> GetPage(ParcelFilter filter);
         Paged<Property> GetPage(BuildingFilter filter);

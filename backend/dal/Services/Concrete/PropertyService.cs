@@ -28,6 +28,15 @@ namespace Pims.Dal.Services
 
         #region Methods
         /// <summary>
+        /// Returns the total number of properties in the database.
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return this.Context.Properties.Count();
+        }
+
+        /// <summary>
         /// Get an array of parcel properties within the specified filters.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>

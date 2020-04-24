@@ -1,5 +1,5 @@
-using Pims.Api.Controllers;
-using Pims.Api.Models.Property;
+using Pims.Api.Areas.Property.Controllers;
+using Pims.Api.Areas.Property.Models.Search;
 using Pims.Core.Test;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
@@ -9,20 +9,20 @@ using System.Diagnostics.CodeAnalysis;
 namespace Pims.Api.Test.Routes
 {
     /// <summary>
-    /// PropertyControllerTest class, provides a way to test endpoint routes.
+    /// SearchControllerTest class, provides a way to test endpoint routes.
     /// </summary>
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("group", "property")]
     [Trait("group", "route")]
     [ExcludeFromCodeCoverage]
-    public class PropertyControllerTest
+    public class SearchControllerTest
     {
         #region Variables
         #endregion
 
         #region Constructors
-        public PropertyControllerTest()
+        public SearchControllerTest()
         {
         }
         #endregion
@@ -34,17 +34,18 @@ namespace Pims.Api.Test.Routes
             // Arrange
             // Act
             // Assert
-            var type = typeof(PropertyController);
+            var type = typeof(SearchController);
             type.HasAuthorize();
-            type.HasRoute("properties");
-            type.HasRoute("v{version:apiVersion}/properties");
+            type.HasArea("properties");
+            type.HasRoute("[area]/search");
+            type.HasRoute("v{version:apiVersion}/[area]/search");
         }
 
         [Fact]
         public void GetProperties_Query_Route()
         {
             // Arrange
-            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetProperties));
+            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetProperties));
 
             // Act
             // Assert
@@ -57,7 +58,7 @@ namespace Pims.Api.Test.Routes
         public void GetProperties_Filter_Route()
         {
             // Arrange
-            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetProperties), typeof(PropertyFilterModel));
+            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetProperties), typeof(PropertyFilterModel));
 
             // Act
             // Assert
@@ -70,7 +71,7 @@ namespace Pims.Api.Test.Routes
         public void GetPropertiesPage_Query_Route()
         {
             // Arrange
-            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetPropertiesPage));
+            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetPropertiesPage));
 
             // Act
             // Assert
@@ -83,7 +84,7 @@ namespace Pims.Api.Test.Routes
         public void GetPropertiesPage_Filter_Route()
         {
             // Arrange
-            var endpoint = typeof(PropertyController).FindMethod(nameof(PropertyController.GetPropertiesPage), typeof(PropertyFilterModel));
+            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetPropertiesPage), typeof(PropertyFilterModel));
 
             // Act
             // Assert

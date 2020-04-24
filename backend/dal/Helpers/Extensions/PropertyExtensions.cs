@@ -89,7 +89,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.MinAssessedValue.HasValue)
                 query = query.Where(p => p.Assessed >= filter.MinAssessedValue);
             if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed >= filter.MaxAssessedValue);
+                query = query.Where(p => p.Assessed <= filter.MaxAssessedValue);
 
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
