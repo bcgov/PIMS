@@ -31,7 +31,7 @@ export interface IParcelListParams {
   maxLandArea: number | null;
 }
 export const PARCELS = (params: IParcelListParams | null) =>
-  params ? `/properties?${queryString.stringify(params)}` : '/properties'; // get filtered properties or all if not specified.
+  `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 export interface IParcelDetailParams {
   id: number;
 }

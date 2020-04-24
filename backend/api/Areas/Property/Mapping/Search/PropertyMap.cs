@@ -1,6 +1,7 @@
 using Mapster;
-using Model = Pims.Api.Models.Property;
+using Model = Pims.Api.Areas.Property.Models.Search;
 using Entity = Pims.Dal.Entities;
+using Pims.Dal.Entities;
 
 namespace Pims.Api.Mapping.Property
 {
@@ -9,7 +10,7 @@ namespace Pims.Api.Mapping.Property
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Parcel, Model.PropertyModel>()
-                .Map(dest => dest.PropertyTypeId, src => 0)
+                .Map(dest => dest.PropertyTypeId, src => PropertyTypes.Land)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
@@ -20,7 +21,7 @@ namespace Pims.Api.Mapping.Property
                 .Map(dest => dest.Longitude, src => src.Longitude);
 
             config.NewConfig<Entity.Building, Model.PropertyModel>()
-                .Map(dest => dest.PropertyTypeId, src => 1)
+                .Map(dest => dest.PropertyTypeId, src => PropertyTypes.Building)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.Parcel == null ? null : src.Parcel.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.Parcel == null ? null : src.Parcel.PIN)

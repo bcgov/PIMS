@@ -12,6 +12,7 @@ import { Claims } from 'constants/claims';
 import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';
 import AuthLayout from 'layouts/AuthLayout';
+import Test from 'pages/Test';
 
 const AppRouter: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const AppRouter: React.FC = () => {
       <Redirect exact from="/" to="/login" />
       <AppRoute path="/login" component={Login} layout={PublicLayout}></AppRoute>
       <AppRoute path="/forbidden" component={AccessDenied} layout={PublicLayout}></AppRoute>
+      <AppRoute path="/test" component={Test} layout={PublicLayout}></AppRoute>
       <AppRoute
         protected
         path="/admin/users"

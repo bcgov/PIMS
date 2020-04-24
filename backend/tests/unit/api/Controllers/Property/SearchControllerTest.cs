@@ -1,22 +1,21 @@
-using MapsterMapper;
-using Entity = Pims.Dal.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models.Property;
-using Moq;
-using Pims.Api.Controllers;
-using Pims.Api.Helpers.Exceptions;
-using Pims.Api.Models.Property;
-using Pims.Core.Test;
-using Pims.Dal;
-using Pims.Dal.Security;
+using Xunit;
 using System;
 using System.Linq;
-using Xunit;
-using Pims.Core.Comparers;
-using System.Collections.Generic;
-using Pims.Dal.Entities.Models;
-using Pims.Core.Extensions;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using Pims.Dal;
+using Pims.Dal.Security;
+using Pims.Dal.Entities.Models;
+using Pims.Core.Test;
+using Pims.Core.Extensions;
+using Pims.Core.Comparers;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Api.Areas.Property.Models.Search;
+using Pims.Api.Areas.Property.Controllers;
+using Moq;
+using Microsoft.AspNetCore.Mvc;
+using MapsterMapper;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -24,7 +23,7 @@ namespace Pims.Api.Test.Controllers
     [Trait("category", "api")]
     [Trait("group", "property")]
     [ExcludeFromCodeCoverage]
-    public class PropertyControllerTest
+    public class SearchControllerTest
     {
         #region Variables
         public static IEnumerable<object[]> AllPropertiesFilters = new List<object[]>()
@@ -80,7 +79,7 @@ namespace Pims.Api.Test.Controllers
         #endregion
 
         #region Constructors
-        public PropertyControllerTest()
+        public SearchControllerTest()
         {
         }
         #endregion
@@ -96,7 +95,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
@@ -113,8 +112,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels).Concat(mapper.Map<Model.PropertyModel[]>(buildings));
+            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<PropertyModel[]>(parcels).Concat(mapper.Map<PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
@@ -131,7 +130,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
@@ -146,8 +145,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels);
+            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<PropertyModel[]>(parcels);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
@@ -162,7 +161,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var building1 = new Entity.Building() { Id = 1 };
             var building2 = new Entity.Building() { Id = 2 };
@@ -177,8 +176,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(buildings);
+            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<PropertyModel[]>(buildings);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
@@ -193,7 +192,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, uri);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView, uri);
 
             var parcel1 = EntityHelper.CreateParcel(1, 1, 1);
             var parcel2 = EntityHelper.CreateParcel(2, 1, 1);
@@ -213,10 +212,10 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.PropertyModel[]>(actionResult.Value);
-            var expectedResult = new List<Model.PropertyModel>();
-            if (includeParcels) expectedResult.AddRange(mapper.Map<Model.PropertyModel[]>(parcels));
-            if (includeBuildings) expectedResult.AddRange(mapper.Map<Model.PropertyModel[]>(buildings));
+            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
+            var expectedResult = new List<PropertyModel>();
+            if (includeParcels) expectedResult.AddRange(mapper.Map<PropertyModel[]>(parcels));
+            if (includeBuildings) expectedResult.AddRange(mapper.Map<PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), includeParcels ? Times.Once() : Times.Never());
             service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), includeBuildings ? Times.Once() : Times.Never());
@@ -230,7 +229,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
 
@@ -249,7 +248,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
 
@@ -267,13 +266,13 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(AllPropertiesFilters))]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
+        [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
         public void GetPropertiesPage_Success(PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
@@ -291,8 +290,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Api.Models.PageModel<Model.PropertyModel>>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels).JoinAll(mapper.Map<Model.PropertyModel[]>(buildings));
+            var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<PropertyModel[]>(parcels).JoinAll(mapper.Map<PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }
@@ -302,13 +301,13 @@ namespace Pims.Api.Test.Controllers
         /// </summary>
         [Theory]
         [MemberData(nameof(PropertyQueryFilters))]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
+        [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
         public void GetPropertiesPage_Query_Success(Uri uri, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView, uri);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView, uri);
 
             var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
             var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
@@ -325,8 +324,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Api.Models.PageModel<Model.PropertyModel>>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.PropertyModel[]>(parcels);
+            var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<PropertyModel[]>(parcels);
             Assert.Equal(expectedResult, actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }
@@ -339,7 +338,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
 
@@ -357,7 +356,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<PropertyController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
 
