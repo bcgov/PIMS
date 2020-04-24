@@ -82,8 +82,8 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
-            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 1, 2);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.ParcelModel>>(actionResult.Value);
+            var expectedResult = new Api.Models.PageModel<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 2, 2);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
@@ -108,8 +108,8 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
-            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 1, 2);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.ParcelModel>>(actionResult.Value);
+            var expectedResult = new Api.Models.PageModel<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 2, 2);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
@@ -132,7 +132,7 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.ParcelModel>>(actionResult.Value);
             Assert.Empty(actualResult.Items);
             service.Verify(m => m.Parcel.Get(filter), Times.Once());
         }
@@ -163,8 +163,8 @@ namespace Pims.Api.Test.Controllers.Admin
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Paged<Model.ParcelModel>>(actionResult.Value);
-            var expectedResult = new Paged<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 1, 2);
+            var actualResult = Assert.IsType<Api.Models.PageModel<Model.ParcelModel>>(actionResult.Value);
+            var expectedResult = new Api.Models.PageModel<Model.ParcelModel>(mapper.Map<Model.ParcelModel[]>(existingParcels), 1, 2, 2);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Parcel.Get(It.IsAny<ParcelFilter>()), Times.Once());
         }
@@ -455,11 +455,11 @@ namespace Pims.Api.Test.Controllers.Admin
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            existingParcel.Evaluations.Add(new Entity.ParcelEvaluation(existingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45f));
+            existingParcel.Evaluations.Add(new Entity.ParcelEvaluation(existingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45m));
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45f));
-            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2019, 1, 1), Entity.EvaluationKeys.Assessed, 99999.33f));
+            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45m));
+            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2019, 1, 1), Entity.EvaluationKeys.Assessed, 99999.33m));
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
             service.Setup(m => m.Parcel.Update(It.IsAny<Entity.Parcel>())).Returns(existingParcel);
@@ -486,10 +486,10 @@ namespace Pims.Api.Test.Controllers.Admin
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            existingParcel.Evaluations.Add(new Entity.ParcelEvaluation(existingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45f));
+            existingParcel.Evaluations.Add(new Entity.ParcelEvaluation(existingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 12345.45m));
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 10000.45f));
+            updatingParcel.Evaluations.Add(new Entity.ParcelEvaluation(updatingParcel, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 10000.45m));
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
             service.Setup(m => m.Parcel.Update(It.IsAny<Entity.Parcel>())).Returns(existingParcel);
@@ -517,11 +517,11 @@ namespace Pims.Api.Test.Controllers.Admin
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            existingParcel.Fiscals.Add(new Entity.ParcelFiscal(existingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45f));
+            existingParcel.Fiscals.Add(new Entity.ParcelFiscal(existingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45m));
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45f));
-            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2019, Entity.FiscalKeys.Estimated, 99999.33f));
+            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45m));
+            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2019, Entity.FiscalKeys.Estimated, 99999.33m));
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
             service.Setup(m => m.Parcel.Update(It.IsAny<Entity.Parcel>())).Returns(existingParcel);
@@ -548,10 +548,10 @@ namespace Pims.Api.Test.Controllers.Admin
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            existingParcel.Fiscals.Add(new Entity.ParcelFiscal(existingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45f));
+            existingParcel.Fiscals.Add(new Entity.ParcelFiscal(existingParcel, 2020, Entity.FiscalKeys.Estimated, 12345.45m));
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2020, Entity.FiscalKeys.Estimated, 10000.45f));
+            updatingParcel.Fiscals.Add(new Entity.ParcelFiscal(updatingParcel, 2020, Entity.FiscalKeys.Estimated, 10000.45m));
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
             service.Setup(m => m.Parcel.Update(It.IsAny<Entity.Parcel>())).Returns(existingParcel);
@@ -580,16 +580,16 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33f));
+            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding1 = EntityHelper.CreateBuilding(updatingParcel, 1, "0001");
-            updatingBuilding1.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding1, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33f));
+            updatingBuilding1.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding1, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33m));
             updatingParcel.Buildings.Add(updatingBuilding1);
 
             var updatingBuilding2 = EntityHelper.CreateBuilding(updatingParcel, 2, "0002");
-            updatingBuilding2.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding2, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33f));
+            updatingBuilding2.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding2, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33m));
             updatingParcel.Buildings.Add(updatingBuilding2);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
@@ -620,12 +620,12 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33f));
+            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding = EntityHelper.CreateBuilding(updatingParcel, 1, "0002");
-            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33f));
+            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33m));
             updatingParcel.Buildings.Add(updatingBuilding);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
@@ -657,13 +657,13 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33f));
+            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding = EntityHelper.CreateBuilding(updatingParcel, 1, "0002");
-            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33f));
-            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2021, 1, 1), Entity.EvaluationKeys.Assessed, 2342.33f));
+            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33m));
+            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2021, 1, 1), Entity.EvaluationKeys.Assessed, 2342.33m));
             updatingParcel.Buildings.Add(updatingBuilding);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
@@ -695,12 +695,12 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33f));
+            existingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(existingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding = EntityHelper.CreateBuilding(updatingParcel, 1, "0002");
-            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33f));
+            updatingBuilding.Evaluations.Add(new Entity.BuildingEvaluation(updatingBuilding, new DateTime(2020, 1, 1), Entity.EvaluationKeys.Assessed, 9999.33m));
             updatingParcel.Buildings.Add(updatingBuilding);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
@@ -732,13 +732,13 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Fiscals.Add(new Entity.BuildingFiscal(existingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33f));
+            existingBuilding.Fiscals.Add(new Entity.BuildingFiscal(existingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding = EntityHelper.CreateBuilding(updatingParcel, 1, "0002");
-            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33f));
-            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2021, Entity.FiscalKeys.Estimated, 2342.33f));
+            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33m));
+            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2021, Entity.FiscalKeys.Estimated, 2342.33m));
             updatingParcel.Buildings.Add(updatingBuilding);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);
@@ -770,12 +770,12 @@ namespace Pims.Api.Test.Controllers.Admin
             var mapper = helper.GetService<IMapper>();
             var existingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var existingBuilding = EntityHelper.CreateBuilding(existingParcel, 1, "0001");
-            existingBuilding.Fiscals.Add(new Entity.BuildingFiscal(existingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33f));
+            existingBuilding.Fiscals.Add(new Entity.BuildingFiscal(existingBuilding, 2020, Entity.FiscalKeys.Estimated, 1000.33m));
             existingParcel.Buildings.Add(existingBuilding);
 
             var updatingParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var updatingBuilding = EntityHelper.CreateBuilding(updatingParcel, 1, "0002");
-            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2020, Entity.FiscalKeys.Estimated, 9999.33f));
+            updatingBuilding.Fiscals.Add(new Entity.BuildingFiscal(updatingBuilding, 2020, Entity.FiscalKeys.Estimated, 9999.33m));
             updatingParcel.Buildings.Add(updatingBuilding);
 
             service.Setup(m => m.Parcel.Get(It.IsAny<int>())).Returns(existingParcel);

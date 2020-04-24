@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Admin.Models.Role;
 using Pims.Api.Policies;
 using Pims.Dal.Entities;
-using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using System;
@@ -55,7 +54,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of roles.</returns>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Paged<Model.RoleModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.RoleModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-role" })]
         public IActionResult GetRoles(int page = 1, int quantity = 10, string name = null)
@@ -64,9 +63,9 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 50) quantity = 50;
 
-            var result = _pimsAdminService.Role.Get(page, quantity, name);
-            var paged = result.To(_mapper.Map<Model.RoleModel[]>);
-            return new JsonResult(paged);
+            var paged = _pimsAdminService.Role.Get(page, quantity, name);
+            var result = _mapper.Map<Api.Models.PageModel<Model.RoleModel>>(paged);
+            return new JsonResult(result);
         }
 
         /// <summary>
@@ -116,6 +115,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-role" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
         public IActionResult UpdateRole(Guid id, [FromBody] Model.RoleModel model)
         {
             var entity = _mapper.Map<Role>(model);
@@ -136,6 +136,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-role" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
         public IActionResult DeleteRole(Guid id, [FromBody] Model.RoleModel model)
         {
             var entity = _mapper.Map<Role>(model);

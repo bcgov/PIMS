@@ -2,12 +2,14 @@ using System.Security.Claims;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Pims.Dal.Security;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Core.Test
 {
     /// <summary>
     /// ControllerHelper static class, provides helper functions for setting up tests for controllers.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ControllerHelper
     {
         #region Methods

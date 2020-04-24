@@ -9,6 +9,7 @@ namespace Pims.Dal
     public interface IPimsService : IService
     {
         #region Properties
+        IPropertyService Property { get; }
         IBuildingService Building { get; }
         ClaimsPrincipal Principal { get; }
         ILookupService Lookup { get; }

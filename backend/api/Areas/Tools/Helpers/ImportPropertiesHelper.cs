@@ -200,7 +200,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 var code = new string(name.GetFirstLetterOfEachWord(true).Take(4).ToArray());
                 var last = new string(name.Split(" ", StringSplitOptions.RemoveEmptyEntries).Last().Take(4).ToArray());
                 if (last.Length >= 4) last = last.Substring(1, 3);
-                else if (last.Length < 4) last = last.Substring(1, last.Length - 1);
+                else if (last.Length < 4) last = last[1..];
 
                 // Check if the code is unique.
                 city = _cities.FirstOrDefault(c => String.Compare(c.Code, code, true) == 0);
@@ -291,14 +291,14 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Add a new fiscal values for each year.
             if (!p_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
             {
-                if (float.TryParse(property.NetBookValue, out float netBookValue))
+                if (decimal.TryParse(property.NetBookValue, out decimal netBookValue))
                     p_e.Fiscals.Add(new Entity.ParcelFiscal(p_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
             }
 
             // Add a new evaluation if new.
             if (!p_e.Evaluations.Any(e => e.Date == evaluationDate))
             {
-                if (float.TryParse(property.AssessedValue, out float assessedValue))
+                if (decimal.TryParse(property.AssessedValue, out decimal assessedValue))
                     p_e.Evaluations.Add(new Entity.ParcelEvaluation(p_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
             }
 
@@ -430,14 +430,14 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Add a new fiscal values for each year.
             if (!b_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
             {
-                if (float.TryParse(property.NetBookValue, out float netBookValue))
+                if (decimal.TryParse(property.NetBookValue, out decimal netBookValue))
                     b_e.Fiscals.Add(new Entity.BuildingFiscal(b_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
             }
 
             // Add a new evaluation if new.
             if (!b_e.Evaluations.Any(e => e.Date == evaluationDate))
             {
-                if (float.TryParse(property.AssessedValue, out float assessedValue))
+                if (decimal.TryParse(property.AssessedValue, out decimal assessedValue))
                     b_e.Evaluations.Add(new Entity.BuildingEvaluation(b_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
             }
 
