@@ -15,20 +15,22 @@ function AppNavBar() {
   const displayName = keycloak.displayName || keycloak.firstName || 'default';
 
   return (
-    <Navbar className="map-nav" expand="lg">
-      <Navbar.Toggle aria-controls="collapse" className="navbar-dark" />
-      <Nav>
-        <Navbar.Collapse className="links">
+    <Navbar variant="dark" className="map-nav" expand="lg">
+      <Navbar.Toggle aria-controls="collapse" className="navbar-dark mr-auto" />
+      <Navbar.Collapse className="links mr-auto">
+        <Nav>
           <AdminDropdown />
           <PropertyDropdown />
           <ViewProjects />
           <DisposeRequest />
           <DisposeApprove />
-        </Navbar.Collapse>
-        <Nav.Item className="profile">
+        </Nav>
+      </Navbar.Collapse>
+      <Nav className="profile align-items-center">
+        <Nav.Item className="profile-icon pr-0">
           <Image src={profileUrl} rounded />
         </Nav.Item>
-        <NavDropdown title={displayName} id="user-dropdown">
+        <NavDropdown className="px-0" title={displayName} id="user-dropdown">
           {history ? (
             <NavDropdown.Item
               onClick={() => {

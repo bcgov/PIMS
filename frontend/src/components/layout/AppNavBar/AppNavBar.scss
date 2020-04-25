@@ -1,73 +1,82 @@
-@import "../../../fonts.scss";
+@import '../../../fonts.scss';
 nav.map-nav {
-  background-color: #38598a;
   width: 100%;
-  font-family: "BCSans" Fallback, sans-serif;
-  padding-left: 14%;
+  font-family: 'BCSans' Fallback, sans-serif;
   white-space: nowrap;
-  padding: .25rem 1rem;
-  a.nav-link {
-    color: #fff !important;
-    font-size: 14px;
-    padding: .5rem .5rem;
-  }
+  padding: 0;
+  margin: 0 -1.5rem;
+
   .navbar-toggler {
-    font-size: .5rem;
+    font-size: 0.8rem;
     border-color: #ddd;
-    stroke: 'rgba(255,102,203, 0.5)';
-  }
-  .dropdown-menu {
-    background-color: #fff;
-    width: 100%;
-    margin-top: .25rem !important;
-    a.dropdown-item {
-      color: #003366 !important;
-      font-size: 14px;
-      line-height: 2.25rem;
-    }
-    .active {
-      background-color: #38598a;
-    }
-    a.dropdown-item:hover {
-      background-color: #fcba19;
-    }
-    border-radius: 0;
-    padding: 0;
-    margin-top: 0;
-    line-height: 0rem;
-  }
-
-  .profile {
-    padding-top: .125rem;
-    padding-left: .25rem;
-    img {
-      width: 29px;
-      height: 29px;
-    }
-  }
-
-  .navbar-collapse {
-    margin-top: 10px;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    height: 20px;
-    .nav-link {
-      border-right: 1px solid #fff;
-      padding: 0 2rem;
-    }
-  }
-
-  .navbar-collapse {
-    .nav-link {
-      border-right: 1px solid #fff;
-      padding: .5rem 2rem;
-    }
+    color: #ddd;
+    margin-left: 2.5rem;
   }
 
   .navbar-nav {
-    margin-left: 3rem;
-    width: 80%;
-    justify-content: flex-end;
-    flex-direction: row;
+    .nav-item {
+      height: 100%;
+    }
+    .nav-link {
+      font-size: 14px;
+      color: #fff;
+      padding: 0.75rem 2rem;
+    }
+
+    .dropdown {
+      background-color: transparent;
+
+      &.show {
+        background-color: #32507c;
+      }
+
+      .dropdown-menu {
+        width: 100%;
+        border-radius: 0;
+        line-height: 0;
+        background-color: #fff;
+        padding: 0;
+        border-top: 0;
+        margin-top: 0;
+
+        a.dropdown-item {
+          color: #003366;
+          font-size: 14px;
+          line-height: 2.25rem;
+          &:hover {
+            background-color: #fcba19;
+          }
+        }
+
+        .active {
+          background-color: #38598a;
+        }
+      }
+    }
+
+    &.profile {
+      flex-direction: row;
+      .profile-icon {
+        color: #fff;
+        img {
+          width: 29px;
+          height: 29px;
+        }
+      }
+      .nav-link {
+        padding-left: 0.5rem;
+      }
+    }
+  }
+
+  // mobile (small) view
+  .navbar-collapse {
+    &.show {
+      & + .profile {
+        flex-grow: 1;
+        flex-basis: 100%;
+        justify-content: center;
+      }
+    }
   }
 }
