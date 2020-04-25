@@ -1,3 +1,5 @@
+import './AuthLayout.scss';
+
 import React from 'react';
 import { Container, Spinner, Row, Col } from 'react-bootstrap';
 import { AuthStateContext } from 'contexts/authStateContext';
@@ -16,14 +18,14 @@ const AuthLayout: React.FC = ({ children }) => {
 
         return (
           <PublicLayout>
+            {!!keycloak?.authenticated && (
+              <Container fluid className="App-navbar px-0">
+                <Container className="px-0">
+                  <AppNavBar />
+                </Container>
+              </Container>
+            )}
             <Container fluid style={{ padding: 0 }}>
-              {!!keycloak?.authenticated && (
-                <Row noGutters>
-                  <Col>
-                    <AppNavBar />
-                  </Col>
-                </Row>
-              )}
               <Row noGutters>
                 <Col>{children}</Col>
               </Row>
