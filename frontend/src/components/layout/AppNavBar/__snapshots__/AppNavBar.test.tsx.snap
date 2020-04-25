@@ -6,20 +6,20 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
     className="map-nav"
     collapseOnSelect={false}
     expand="lg"
-    variant="light"
+    variant="dark"
   >
     <nav
-      className="map-nav navbar navbar-expand-lg navbar-light"
+      className="map-nav navbar navbar-expand-lg navbar-dark"
     >
       <NavbarToggle
         aria-controls="collapse"
-        className="navbar-dark"
+        className="navbar-dark mr-auto"
         label="Toggle navigation"
       >
         <button
           aria-controls="collapse"
           aria-label="Toggle navigation"
-          className="navbar-dark navbar-toggler collapsed"
+          className="navbar-dark mr-auto navbar-toggler collapsed"
           onClick={[Function]}
           type="button"
         >
@@ -28,52 +28,52 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
           />
         </button>
       </NavbarToggle>
-      <Nav
-        fill={false}
-        justify={false}
+      <NavbarCollapse
+        className="links mr-auto"
       >
-        <ForwardRef
-          as="div"
-          className="navbar-nav"
-          onSelect={[Function]}
+        <Collapse
+          appear={false}
+          className="links mr-auto"
+          dimension="height"
+          getDimensionValue={[Function]}
+          in={false}
+          mountOnEnter={false}
+          timeout={300}
+          unmountOnExit={false}
         >
-          <div
-            className="navbar-nav"
-            onKeyDown={[Function]}
+          <Transition
+            addEndListener={[Function]}
+            appear={false}
+            aria-expanded={null}
+            enter={true}
+            exit={true}
+            in={false}
+            mountOnEnter={false}
+            onEnter={[Function]}
+            onEntered={[Function]}
+            onEntering={[Function]}
+            onExit={[Function]}
+            onExited={[Function]}
+            onExiting={[Function]}
+            timeout={300}
+            unmountOnExit={false}
           >
-            <NavbarCollapse
-              className="links"
+            <div
+              aria-expanded={null}
+              className="links mr-auto navbar-collapse collapse"
             >
-              <Collapse
-                appear={false}
-                className="links"
-                dimension="height"
-                getDimensionValue={[Function]}
-                in={false}
-                mountOnEnter={false}
-                timeout={300}
-                unmountOnExit={false}
+              <Nav
+                fill={false}
+                justify={false}
               >
-                <Transition
-                  addEndListener={[Function]}
-                  appear={false}
-                  aria-expanded={null}
-                  enter={true}
-                  exit={true}
-                  in={false}
-                  mountOnEnter={false}
-                  onEnter={[Function]}
-                  onEntered={[Function]}
-                  onEntering={[Function]}
-                  onExit={[Function]}
-                  onExited={[Function]}
-                  onExiting={[Function]}
-                  timeout={300}
-                  unmountOnExit={false}
+                <ForwardRef
+                  as="div"
+                  className="navbar-nav"
+                  onSelect={[Function]}
                 >
                   <div
-                    aria-expanded={null}
-                    className="links navbar-collapse collapse"
+                    className="navbar-nav"
+                    onKeyDown={[Function]}
                   >
                     <AdminDropdown />
                     <PropertyDropdown />
@@ -81,14 +81,31 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     <DisposeRequest />
                     <DisposeApprove />
                   </div>
-                </Transition>
-              </Collapse>
-            </NavbarCollapse>
+                </ForwardRef>
+              </Nav>
+            </div>
+          </Transition>
+        </Collapse>
+      </NavbarCollapse>
+      <Nav
+        className="profile align-items-center"
+        fill={false}
+        justify={false}
+      >
+        <ForwardRef
+          as="div"
+          className="profile align-items-center navbar-nav"
+          onSelect={[Function]}
+        >
+          <div
+            className="profile align-items-center navbar-nav"
+            onKeyDown={[Function]}
+          >
             <NavItem
-              className="profile"
+              className="profile-icon pr-0"
             >
               <div
-                className="profile nav-item"
+                className="profile-icon pr-0 nav-item"
               >
                 <Image
                   fluid={false}
@@ -105,6 +122,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
               </div>
             </NavItem>
             <NavDropdown
+              className="px-0"
               id="user-dropdown"
               title="default"
             >
@@ -116,6 +134,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     "render": [Function],
                   }
                 }
+                className="px-0"
                 navbar={false}
               >
                 <ReactOverlaysDropdown
@@ -123,11 +142,11 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                   onToggle={[Function]}
                 >
                   <NavItem
-                    className="dropdown"
+                    className="px-0 dropdown"
                     onKeyDown={[Function]}
                   >
                     <div
-                      className="dropdown nav-item"
+                      className="px-0 dropdown nav-item"
                       onKeyDown={[Function]}
                     >
                       <DropdownToggle
