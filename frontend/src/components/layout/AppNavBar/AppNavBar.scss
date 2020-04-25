@@ -10,6 +10,7 @@ nav.map-nav {
     font-size: 0.8rem;
     border-color: #ddd;
     color: #ddd;
+    margin-left: 2.5rem;
   }
 
   .navbar-nav {
@@ -19,7 +20,7 @@ nav.map-nav {
     .nav-link {
       font-size: 14px;
       color: #fff;
-      padding: 0.5rem 2rem;
+      padding: 0.75rem 2rem;
     }
 
     .dropdown {
@@ -54,6 +55,7 @@ nav.map-nav {
     }
 
     &.profile {
+      flex-direction: row;
       .profile-icon {
         color: #fff;
         img {
@@ -63,6 +65,17 @@ nav.map-nav {
       }
       .nav-link {
         padding-left: 0.5rem;
+      }
+    }
+  }
+
+  // mobile (small) view
+  .navbar-collapse {
+    &.show {
+      & + .profile {
+        flex-grow: 1;
+        flex-basis: 100%;
+        justify-content: center;
       }
     }
   }

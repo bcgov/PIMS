@@ -16,7 +16,7 @@ function AppNavBar() {
 
   return (
     <Navbar variant="dark" className="map-nav" expand="lg">
-      <Navbar.Toggle aria-controls="collapse" className="navbar-dark" />
+      <Navbar.Toggle aria-controls="collapse" className="navbar-dark mr-auto" />
       <Navbar.Collapse className="links mr-auto">
         <Nav>
           <AdminDropdown />
