@@ -1,0 +1,35 @@
+.Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+
+  &.btn {
+    height: auto;
+    &:hover {
+      text-decoration: none;
+      opacity: 1;
+    }
+  }
+
+  &--disabled {
+    background-color: #cecece;
+    color: #e5e5e5;
+    user-select: none;
+    pointer-events: none;
+
+    .Button__value {
+      color: #ffffff;
+    }
+  }
+
+  &--icon-only {
+    .Button__icon {
+      margin-right: 0;
+    }
+  }
+
+  &__icon {
+    margin-right: 16px;
+  }
+}

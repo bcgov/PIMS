@@ -1,27 +1,64 @@
 import './MapFilterBar.scss';
 
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Col } from 'react-bootstrap';
+import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import { Form, Input, Select, SelectOption, Button, ButtonProps } from '../common/form';
-import { SearchIcon } from '../common/icons';
+import { Form, Select, SelectOption, Button, ButtonProps, InputGroup, Input } from '../common/form';
+import { FaUndo, FaSearch } from 'react-icons/fa';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
+  return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
+};
+
+const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
   return (
-    <Button
-      variant="warning"
-      type="submit"
-      className="pl-0"
-      {...props}
-      iconBefore={<SearchIcon className="mr-2" />}
-    >
-      Search
+    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
+      Reset
     </Button>
   );
 };
 
+const SearchBar: React.FC = () => {
+  const state: { options: any[]; placeholders: Record<string, string> } = {
+    options: [
+      { label: 'Address', value: 'address' },
+      { label: 'Municipality', value: 'municipality' },
+      { label: 'RAEG or SPP No.', value: 'projectNumber' },
+    ],
+    placeholders: {
+      address: 'Enter an address or city',
+      municipality: 'Enter a municipality',
+      projectNumber: 'Enter an SPP/RAEG number',
+    },
+  };
+
+  // access the form context values, no need to pass props
+  const {
+    values: { searchBy },
+    setFieldValue,
+  } = useFormikContext<MapFilterChangeEvent>();
+  const desc = state.placeholders[searchBy] || '';
+
+  const reset = () => {
+    setFieldValue('address', '');
+    setFieldValue('municipality', '');
+    setFieldValue('projectNumber', '');
+  };
+
+  return (
+    <InputGroup
+      fast={false}
+      formikProps={null as any}
+      prepend={<Select field="searchBy" options={state.options} onChange={reset} />}
+      field={searchBy}
+      placeholder={desc}
+    ></InputGroup>
+  );
+};
+
 export type MapFilterChangeEvent = {
+  searchBy: string;
   address: string;
   municipality: string;
   projectNumber: string;
@@ -45,25 +82,19 @@ type MapFilterProps = {
 const MapFilterBar: React.FC<MapFilterProps> = ({
   agencyLookupCodes,
   propertyClassifications,
-  lotSizes,
   onFilterChange,
 }) => {
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
   });
-  const mapLotSize = (size: number): SelectOption => ({
-    label: size > 1 ? `${size.toLocaleString()} acres` : `${size} acre`,
-    value: `${size}`,
-  });
-
   const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
-  const sizes = lotSizes.map(x => mapLotSize(x));
 
   return (
     <Formik<MapFilterChangeEvent>
       initialValues={{
+        searchBy: 'address',
         address: '',
         municipality: '',
         projectNumber: '',
@@ -74,49 +105,44 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        onFilterChange?.(values);
+        onFilterChange?.({ ...values });
+        setSubmitting(false);
+      }}
+      onReset={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        onFilterChange?.({ ...values });
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting }) => (
-        <Container fluid className="px-0 map-filter-container">
-          <Row>
-            <Col>
-              <Form>
-                <Form.Row className="map-filter-bar">
-                  <Col className="bar-item">
-                    <Input field="address" placeholder="Enter an address or city" />
-                  </Col>
-                  <Col className="bar-item">
-                    <Input field="municipality" placeholder="Enter a municipality" />
-                  </Col>
-                  <Col className="bar-item">
-                    <Input field="projectNumber" placeholder="Enter an SPP/RAEG number" />
-                  </Col>
-                  <Col className="bar-item">
-                    <Select field="agencies" placeholder="View Properties In" options={agencies} />
-                  </Col>
-                  <Col className="bar-item">
-                    <Select
-                      field="classificationId"
-                      placeholder="View by Classification"
-                      options={classifications}
-                    />
-                  </Col>
-                  <Col className="bar-item">
-                    <Select field="minLotSize" placeholder="No Min Lot Size" options={[...sizes]} />
-                  </Col>
-                  <Col className="bar-item">
-                    <Select field="maxLotSize" placeholder="No Max Lot Size" options={[...sizes]} />
-                  </Col>
-                  <Col className="bar-item flex-grow-0">
-                    <SearchButton disabled={isSubmitting} />
-                  </Col>
-                </Form.Row>
-              </Form>
+      {({ isSubmitting, handleReset }) => (
+        <Form>
+          <Form.Row className="map-filter-bar">
+            <Col className="bar-item">
+              <SearchBar />
             </Col>
-          </Row>
-        </Container>
+            <Col className="bar-item">
+              <Select field="agencies" placeholder="Enter an Agency" options={agencies} />
+            </Col>
+            <Col className="bar-item">
+              <Select
+                field="classificationId"
+                placeholder="Classification"
+                options={classifications}
+              />
+            </Col>
+            <Col className="bar-item d-flex align-items-center">
+              <Input field="minLotSize" placeholder="Min Lot Size" />
+              <span className="mx-2">-</span>
+              <Input field="maxLotSize" placeholder="Max Lot Size" />
+            </Col>
+            <Col className="bar-item flex-grow-0">
+              <SearchButton disabled={isSubmitting} />
+            </Col>
+            <Col className="bar-item flex-grow-0">
+              <ResetButton disabled={isSubmitting} onClick={handleReset} />
+            </Col>
+          </Form.Row>
+        </Form>
       )}
     </Formik>
   );
