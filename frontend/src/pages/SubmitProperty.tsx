@@ -1,10 +1,15 @@
 import './SubmitProperty.scss';
 
-import * as React from 'react';
-import { Row, Col, Spinner } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Row, Col, Spinner, Button } from 'react-bootstrap';
 import ParcelDetailForm from 'forms/ParcelDetailForm';
 import MapView from './MapView';
-import { IParcelDetail, storeParcelsAction, IProperty } from 'actions/parcelsActions';
+import {
+  IParcelDetail,
+  storeParcelsAction,
+  IProperty,
+  storeParcelDetail,
+} from 'actions/parcelsActions';
 import queryString from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -14,12 +19,14 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import * as actionTypes from 'constants/actionTypes';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { clearClickLatLng } from 'reducers/LeafletMouseSlice';
+import { useHistory } from 'react-router-dom';
 
 const SubmitProperty = (props: any) => {
   const query = props?.location?.search ?? {};
   const parcelId = props?.match?.params?.id;
-  const parsed = queryString.parse(query);
   const keycloak = useKeycloakWrapper();
+  const history = useHistory();
+  const [formDisabled, setFormDisabled] = useState(!!queryString.parse(query).disabled);
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
     state => state.leafletClickEvent.mapClickEvent,
   );
@@ -29,27 +36,37 @@ const SubmitProperty = (props: any) => {
   const activeParcelDetail = useSelector<RootState, IParcelDetail>(
     state => state.parcel.parcelDetail as IParcelDetail,
   );
+  const [cachedParcelDetail, setCachedParcelDetail] = useState(activeParcelDetail?.parcelDetail);
+
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
   const dispatch = useDispatch();
-
   if (
-    activeParcelDetail?.parcelDetail?.agencyId &&
-    !keycloak.hasAgency(activeParcelDetail?.parcelDetail?.agencyId)
+    cachedParcelDetail?.agencyId &&
+    !formDisabled &&
+    !keycloak.hasAgency(cachedParcelDetail?.agencyId)
   ) {
-    parsed.disabled = 'true'; //if the user doesn't belong to this properties agency, display a read only view.
+    setFormDisabled(true); //if the user doesn't belong to this properties agency, display a read only view.
   }
-  if (!keycloak.agencyId && !parsed.disabled) {
+  if (!keycloak.agencyId && !formDisabled) {
     throw Error('You must belong to an agency to submit properties');
   } else if (!keycloak.obj?.subject) {
     throw Error('Keycloak subject missing');
   }
-  //one time page load actions.
+  //Load and cache the parcel corresponding to the parcelId.
   React.useEffect(() => {
-    if (!activeParcelDetail?.parcelDetail && parcelId) {
+    if (!cachedParcelDetail && parcelId && !activeParcelDetail?.parcelDetail) {
+      //if we are displaying an existing property but have no data, load the detail.
       dispatch(fetchParcelDetail({ id: parseInt(parcelId) }));
+    } else if (!cachedParcelDetail && parcelId && activeParcelDetail?.parcelDetail) {
+      //if we are displaying an existing property and have the data, save it to state.
+      setCachedParcelDetail(activeParcelDetail?.parcelDetail);
+    } else if (cachedParcelDetail && parcelId && !activeParcelDetail?.parcelDetail) {
+      //if we are displaying an existing property and have no detail data but do have cached data
+      //save the cached data to the store.
+      dispatch(storeParcelDetail(cachedParcelDetail));
     }
     dispatch(clearClickLatLng());
-  }, []);
+  }, [activeParcelDetail?.parcelDetail]);
   //Add a pin to the map where the user has clicked.
   React.useEffect(() => {
     //If we click on the map, create a new pin at the click location.
@@ -70,19 +87,42 @@ const SubmitProperty = (props: any) => {
     }
   }, [leafletMouseEvent]);
   return (
-    <Row className="submitProperty">
+    <Row className="submitProperty" noGutters>
       <Col md={7} className="form">
-        {parcelDetailRequest?.isFetching ? (
-          <Spinner animation="border"></Spinner>
-        ) : (
-          <ParcelDetailForm
-            agencyId={keycloak.agencyId}
-            clickLatLng={leafletMouseEvent?.latlng}
-            parcelDetail={parcelId ? activeParcelDetail?.parcelDetail : null}
-            disabled={!!parsed?.disabled}
-            secret={keycloak.obj.subject}
-          />
-        )}
+        <Row className="title-bar" style={{ textAlign: 'left' }}>
+          <Col>
+            <h2>Submit a Property</h2>
+          </Col>
+          <Col style={{ textAlign: 'right' }}>
+            <Button variant="light" onClick={() => history.goBack()}>
+              Close
+            </Button>
+            <Button
+              disabled={
+                (!formDisabled && keycloak.hasAgency(cachedParcelDetail?.agencyId)) || !parcelId
+              }
+              variant="light"
+              onClick={() => setFormDisabled(false)}
+            >
+              Update
+            </Button>
+          </Col>
+        </Row>
+        <Row noGutters>
+          <Col>
+            {parcelDetailRequest?.isFetching || (parcelId && !cachedParcelDetail) ? (
+              <Spinner animation="border"></Spinner>
+            ) : (
+              <ParcelDetailForm
+                agencyId={keycloak.agencyId}
+                clickLatLng={leafletMouseEvent?.latlng}
+                parcelDetail={parcelId ? cachedParcelDetail : null}
+                disabled={formDisabled}
+                secret={keycloak.obj.subject}
+              />
+            )}
+          </Col>
+        </Row>
       </Col>
       <Col md={5} className="sideMap" title={parcelId ? '' : 'click on map to add a pin'}>
         <MapView

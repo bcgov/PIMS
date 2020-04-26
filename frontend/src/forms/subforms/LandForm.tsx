@@ -8,14 +8,14 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, Input, Select } from 'components/common/form';
+import { Form, FastSelect, InputGroup } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
+import { FastInput } from 'components/common/form/FastInput';
 
 interface LandProps {
   nameSpace?: string;
-  formikProps?: any;
   disabled?: boolean;
 }
 
@@ -63,9 +63,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Municipality
             </Form.Label>
-            <Input
+            <FastInput
+              formikProps={props}
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('municipality')}
             />
           </Form.Row>
@@ -73,9 +74,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Zoning
             </Form.Label>
-            <Input
+            <FastInput
+              formikProps={props}
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('zoning')}
             />
           </Form.Row>
@@ -83,9 +85,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Zoning Potential
             </Form.Label>
-            <Input
+            <FastInput
+              formikProps={props}
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('zoningPotential')}
             />
           </Form.Row>
@@ -93,10 +96,11 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Latitude
             </Form.Label>
-            <Input
+            <FastInput
+              formikProps={props}
               disabled={props.disabled}
               type="number"
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('latitude')}
             />
           </Form.Row>
@@ -104,10 +108,11 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Longitude
             </Form.Label>
-            <Input
+            <FastInput
+              formikProps={props}
               disabled={props.disabled}
               type="number"
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('longitude')}
             />
           </Form.Row>
@@ -127,9 +132,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Classification
             </Form.Label>
-            <Select
+            <FastSelect
+              formikProps={props}
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               placeholder="Must Select One"
               field={withNameSpace('classificationId')}
               options={classifications}
@@ -139,11 +145,14 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Lot Size
             </Form.Label>
-            <Input
+            <InputGroup
+              fast={true}
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-7"
               type="number"
               field={withNameSpace('landArea')}
+              formikProps={props}
+              postText="Acres"
             />
           </Form.Row>
 

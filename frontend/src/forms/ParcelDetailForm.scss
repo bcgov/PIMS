@@ -2,80 +2,30 @@
   text-align: left;
   font-size: 0.75rem;
   font-family: "BCSans" Fallback, sans-serif;
-  padding: 1rem 3rem 2rem 4rem;
   background-color: #f2f2f2;
-  .form-check{
-    height: calc(2.38rem);
+  .col-md-6 {
+    padding-right: 4rem;
+  }
+  .evaluationForm, .col-md-6 {
+    padding-left: 1rem;
+  }
+  .form-check {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
   }
+  .col {
+    padding: 0;
+  }
+  .form-row {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+  .form-group {
+    margin-bottom: 0;
+  }
   form .row {
     background-color: #fff;
-    .addressForm,
-    .landForm,
-    .evaluationForm,
-    .buildingForm,
-    .buildingTenancy,
-    .pidPinForm {
-      width:100%;
-      &.form-row {
-        flex-direction: row;
-        padding-left: 2rem;
-      }
-      .form-group {
-        flex-direction: column;
-        display: flex;
-        align-items: baseline;
-        width: 83.333333%;
-        max-height: 2.5rem;
-        height: 3rem;
-        padding: 0;
-      }
-      table {
-        td {
-          padding: 5px;
-        }
-        tbody td {
-          border-bottom: none;
-          border-top: none;
-        }
-        input {
-          padding: 3px;
-          font-size: .75rem;
-        }
-        input:disabled {
-          background-color: white;
-          border: none;
-        }
-        .form-group {
-          margin: 0;
-          padding: 0;
-          width:unset;
-          height: unset;
-        }
-        .input-group.form-group {
-          display: flex;
-        }
-        .input-group-content {
-          width: 80%;
-        }
-        .input-group-text {
-          padding: 0;
-          padding-right: 2px;
-          background-color: white;
-          border: none;
-        }
-        .input-group {
-          display: block;
-        }
-      }
-    }
-    .noPadding {
-      .addressForm {
-        padding-left: 0 !important;
-      }
-    }
     h2 {
       color: #494949;
       font-size: 20px;
@@ -85,7 +35,7 @@
       color: #fff;
       font-size: 1rem;
       line-height: 3rem;
-      padding-left: .75rem;
+      padding-left: 0.75rem;
     }
     h4 {
       color: #003366;
@@ -96,14 +46,54 @@
       display: inline;
     }
     .form-label {
-      padding: 0 1rem .5rem 0;
+      padding: 0 1rem 0.5rem 0;
+    }
+    .input-group {
+      flex-wrap: nowrap;
+    }
+    .evaluationForm .input-group.disabled .input-group-prepend .input-group-text {
+        border: none;
+        background-color: white;
+    }
+    .input-group-content {
+      padding: 0;
+      height: 2.5rem;
+      width: 100%;
+    }
+    .input-group-text {
+      height: calc(1.5em + .75rem + 2px);
+      padding: 2px;
     }
   }
   .btn.btn-primary {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
-  .form-control.is-invalid {
-    height: unset ;
+  table {
+    .is-valid {
+      background-image: none !important;
+    }
+    td {
+      padding: 5px;
+    }
+    tbody td {
+      border-bottom: none;
+      border-top: none;
+      padding-bottom: 0;
+      height: 3.75rem;
+    }
+    input {
+      padding: 3px;
+    }
+    input:disabled {
+      background-color: white;
+      border: none;
+    }
+  }
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  .date-picker.is-invalid {
+    padding-right: 0;
   }
 }

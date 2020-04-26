@@ -30,7 +30,7 @@ Array [
             IDIR/BCeID
           </p>
           <div
-            className="form-group"
+            className="  form-group"
           >
             <input
               className="form-control"
@@ -55,7 +55,7 @@ Array [
                 First Name
               </p>
               <div
-                className="form-group"
+                className="  form-group"
               >
                 <input
                   className="form-control"
@@ -78,7 +78,7 @@ Array [
                 Last Name
               </p>
               <div
-                className="form-group"
+                className="  form-group"
               >
                 <input
                   className="form-control"
@@ -99,7 +99,7 @@ Array [
             Email
           </p>
           <div
-            className="form-group"
+            className="  form-group"
           >
             <input
               className="form-control"
@@ -157,7 +157,7 @@ Array [
             Position
           </p>
           <div
-            className="form-group"
+            className="  form-group"
           >
             <input
               className="form-control"

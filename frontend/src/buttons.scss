@@ -61,6 +61,11 @@
   color: #fff;
 }
 
+.btn.btn-light:disabled {
+  background-color: #606060;
+  color: #fff;
+}
+
 .btn:focus,
 .btn:active,
 .btn.active {

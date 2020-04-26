@@ -26,7 +26,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
           Your request has been submitted.
         </div>
         <div
-          className="form-group"
+          className="  form-group"
         >
           <label
             className="form-label"
@@ -51,7 +51,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             className="col"
           >
             <div
-              className="form-group"
+              className="  form-group"
             >
               <label
                 className="form-label"
@@ -74,7 +74,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             className="col"
           >
             <div
-              className="form-group"
+              className="  form-group"
             >
               <label
                 className="form-label"
@@ -95,7 +95,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
           </div>
         </div>
         <div
-          className="form-group"
+          className="  form-group"
         >
           <label
             className="form-label"
@@ -142,7 +142,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
           </select>
         </div>
         <div
-          className="form-group"
+          className="  form-group"
         >
           <label
             className="form-label"
@@ -190,7 +190,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
           </select>
         </div>
         <div
-          className="form-group"
+          className="  form-group"
         >
           <label
             className="form-label"

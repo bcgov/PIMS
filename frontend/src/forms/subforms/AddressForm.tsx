@@ -7,10 +7,11 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, Input, Select } from 'components/common/form';
+import { Form, FastSelect } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
+import { FastInput } from 'components/common/form/FastInput';
 
 interface AddressProps {
   nameSpace?: string;
@@ -23,10 +24,10 @@ export const defaultAddressValues: IAddress = {
   city: undefined,
   cityId: '',
   province: undefined,
-  provinceId: '',
+  provinceId: 'BC',
   postal: '',
 };
-const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) => {
+const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
@@ -47,15 +48,21 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           <Form.Label column md={2}>
             Street Address
           </Form.Label>
-          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('line1')} />
+          <FastInput
+            formikProps={props}
+            outerClassName="col-md-10"
+            disabled={props.disabled}
+            field={withNameSpace('line1')}
+          />
         </Form.Row>
         <Form.Row>
           <Form.Label column md={2}>
             City
           </Form.Label>
-          <Select
-            className="col-md-10"
+          <FastSelect
+            formikProps={props}
             disabled={props.disabled}
+            outerClassName="col-md-10"
             placeholder="Must Select One"
             field={withNameSpace('cityId')}
             options={cities}
@@ -65,9 +72,10 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           <Form.Label column md={2}>
             Province
           </Form.Label>
-          <Select
-            disabled={props.disabled}
-            className="col-md-10"
+          <FastSelect
+            formikProps={props}
+            disabled={true}
+            outerClassName="col-md-10"
             placeholder="Must Select One"
             field={withNameSpace('provinceId')}
             options={provinces}
@@ -77,7 +85,12 @@ const AddressForm = <T extends unknown>(props: AddressProps & FormikProps<T>) =>
           <Form.Label column md={2}>
             Postal
           </Form.Label>
-          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('postal')} />
+          <FastInput
+            formikProps={props}
+            disabled={props.disabled}
+            outerClassName="col-md-10"
+            field={withNameSpace('postal')}
+          />
         </Form.Row>
       </Col>
     </Fragment>

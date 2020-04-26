@@ -48,7 +48,7 @@ export const Check: React.FC<CheckProps> = ({
   const asElement: any = is || 'input';
 
   return (
-    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
+    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : ''}>
       {!!label && <Form.Label>{label}</Form.Label>}
       <Form.Check
         as={asElement}

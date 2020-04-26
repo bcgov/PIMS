@@ -14,6 +14,8 @@ import { mountToJson } from 'enzyme-to-json';
 import SubmitProperty from './SubmitProperty';
 
 jest.mock('@react-keycloak/web');
+jest.mock('leaflet');
+
 Enzyme.configure({ adapter: new Adapter() });
 (useKeycloak as jest.Mock).mockReturnValue({
   keycloak: {
