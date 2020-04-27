@@ -865,7 +865,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/41a46ea3-e815-4272-9a17-693ba2409841",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/ff0cdf33-a4be-4da7-adb0-afa2d797a83b",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -875,7 +875,7 @@
 														"api",
 														"admin",
 														"users",
-														"41a46ea3-e815-4272-9a17-693ba2409841"
+														"ff0cdf33-a4be-4da7-adb0-afa2d797a83b"
 													]
 												}
 											},
@@ -932,7 +932,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"username\": \"administrator\",\r\n  \"displayName\": \"User, Administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"middleName\": \"Test\",\r\n  \"lastName\": \"User\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"isDisabled\": false,\r\n  \"emailVerified\": false,\r\n  \"agencies\": [\r\n    {\r\n      \"id\": 1,\r\n      \"name\": \"Ministry of Advanced Education, Skills & Training\",\r\n      \"code\": \"AEST\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.2066667\",\r\n      \"rowVersion\": \"AAAAAAAADE0=\"\r\n    },\r\n    {\r\n      \"id\": 3,\r\n      \"name\": \"Ministry of Corporate Services for the Natural Resources Sector\",\r\n      \"code\": \"CSNR\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.2066667\",\r\n      \"rowVersion\": \"AAAAAAAADE8=\"\r\n    }\r\n  ],\r\n  \"roles\": [\r\n    {\r\n      \"description\": \"System Administrator of the PIMS solution.\",\r\n      \"id\": \"0\",\r\n      \"code\": \"System Administrator\",\r\n      \"name\": \"System Administrator\",\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"type\": \"Role\",\r\n      \"createdOn\": \"2020-03-29T13:17:27.3033333\",\r\n      \"rowVersion\": \"AAAAAAAADcM=\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
+													"raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"username\": \"administrator\",\r\n  \"displayName\": \"User, Administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"middleName\": \"Test\",\r\n  \"lastName\": \"User\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"isDisabled\": false,\r\n  \"emailVerified\": false,\r\n  \"agencies\": [\r\n    {\r\n      \"id\": 1\r\n    },\r\n    {\r\n      \"id\": 3\r\n    }\r\n  ],\r\n  \"roles\": [\r\n    {\r\n      \"id\": \"0\",\r\n      \"name\": \"System Administrator\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1170,7 +1170,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels?page=1&quantity=10",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1180,6 +1180,16 @@
 														"api",
 														"admin",
 														"parcels"
+													],
+													"query": [
+														{
+															"key": "page",
+															"value": "1"
+														},
+														{
+															"key": "quantity",
+															"value": "10"
+														}
 													]
 												}
 											},
@@ -1204,7 +1214,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/1",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/4142",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1214,7 +1224,7 @@
 														"api",
 														"admin",
 														"parcels",
-														"1"
+														"4142"
 													]
 												}
 											},
@@ -1239,7 +1249,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/p-id/029-539-142",
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/admin/parcels/pid/029-539-142",
 													"protocol": "{{scheme}}",
 													"host": [
 														"{{host}}"
@@ -1249,7 +1259,7 @@
 														"api",
 														"admin",
 														"parcels",
-														"p-id",
+														"pid",
 														"029-539-142"
 													]
 												}
@@ -1379,7 +1389,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n  \"id\": 1,\r\n  \"pid\": \"000-000-092\",\r\n  \"statusId\": 1,\r\n  \"status\": \"Active\",\r\n  \"classificationId\": 1,\r\n  \"classification\": \"Core Strategic\",\r\n  \"agencyId\": 1,\r\n  \"agency\": \"AEST\",\r\n  \"address\": {\r\n    \"id\": 1,\r\n    \"line1\": \"134 St\",\r\n    \"cityId\": 1,\r\n    \"city\": \"No City Yet\",\r\n    \"provinceId\": \"BC\",\r\n    \"province\": \"British Columbia\",\r\n    \"postal\": \"V9C0E4\",\r\n    \"createdOn\": \"2020-03-30T13:54:23.2467674\",\r\n    \"rowVersion\": \"AAAAAAAAH0E=\"\r\n  },\r\n  \"latitude\": 0,\r\n  \"longitude\": 0,\r\n  \"landArea\": 50000,\r\n  \"description\": \"A parcel of land\",\r\n  \"landLegalDescription\": \"Legal Description\",\r\n  \"isSensitive\": true,\r\n  \"evaluations\": [\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2017,\r\n      \"estimatedValue\": 131233.5,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276447\",\r\n      \"rowVersion\": \"AAAAAAAAH+M=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2019,\r\n      \"estimatedValue\": 9999.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.827664\",\r\n      \"rowVersion\": \"AAAAAAAAH+Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2020,\r\n      \"estimatedValue\": 1111.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T14:36:57.4483055\",\r\n      \"rowVersion\": \"AAAAAAAAH2Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2021,\r\n      \"estimatedValue\": 33333.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276663\",\r\n      \"rowVersion\": \"AAAAAAAAH+U=\"\r\n    }\r\n  ],\r\n  \"buildings\": [\r\n    {\r\n      \"id\": 5,\r\n      \"parcelId\": 1,\r\n      \"agencyId\": 1,\r\n      \"localId\": \"222\",\r\n      \"description\": \"test\",\r\n      \"address\": {\r\n        \"id\": 6,\r\n        \"line1\": \"1323 St\",\r\n        \"cityId\": 1,\r\n        \"city\": \"No City Yet\",\r\n        \"provinceId\": \"BC\",\r\n        \"province\": \"British Columbia\",\r\n        \"postal\": \"V9C0E4\",\r\n        \"createdOn\": \"0001-01-01T00:00:00\",\r\n        \"updatedOn\": \"2020-03-30T15:26:11.8276547\",\r\n        \"rowVersion\": \"AAAAAAAAH98=\"\r\n      },\r\n      \"latitude\": 3,\r\n      \"longitude\": 3,\r\n      \"buildingConstructionTypeId\": 3,\r\n      \"buildingConstructionType\": \"Steel\",\r\n      \"buildingFloorCount\": 1,\r\n      \"buildingPredominateUseId\": 1,\r\n      \"buildingPredominateUse\": \"Research & Development Facility\",\r\n      \"buildingTenancy\": \"test\",\r\n      \"rentableArea\": 0,\r\n      \"isSensitive\": false,\r\n      \"evaluations\": [],\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.82765\",\r\n      \"rowVersion\": \"AAAAAAAAH+I=\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
+													"raw": "{\r\n  \"id\": 1,\r\n  \"pid\": \"000-000-092\",\r\n  \"statusId\": 1,\r\n  \"status\": \"Active\",\r\n  \"classificationId\": 1,\r\n  \"classification\": \"Core Strategic\",\r\n  \"agencyId\": 1,\r\n  \"agency\": \"AEST\",\r\n  \"address\": {\r\n    \"id\": 1,\r\n    \"line1\": \"134 St\",\r\n    \"cityId\": 1,\r\n    \"city\": \"No City Yet\",\r\n    \"provinceId\": \"BC\",\r\n    \"province\": \"British Columbia\",\r\n    \"postal\": \"V9C0E4\",\r\n    \"createdOn\": \"2020-03-30T13:54:23.2467674\",\r\n    \"rowVersion\": \"AAAAAAAAH0E=\"\r\n  },\r\n  \"latitude\": 0,\r\n  \"longitude\": 0,\r\n  \"landArea\": 50000,\r\n  \"description\": \"A parcel of land\",\r\n  \"landLegalDescription\": \"Legal Description\",\r\n  \"zoning\": \"zoning\",\r\n  \"zoningPotential\": \"potential\",\r\n  \"municipality\": \"municipality\",\r\n  \"isSensitive\": true,\r\n  \"evaluations\": [\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2017,\r\n      \"estimatedValue\": 131233.5,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276447\",\r\n      \"rowVersion\": \"AAAAAAAAH+M=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2019,\r\n      \"estimatedValue\": 9999.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.827664\",\r\n      \"rowVersion\": \"AAAAAAAAH+Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2020,\r\n      \"estimatedValue\": 1111.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T14:36:57.4483055\",\r\n      \"rowVersion\": \"AAAAAAAAH2Q=\"\r\n    },\r\n    {\r\n      \"parcelId\": 1,\r\n      \"fiscalYear\": 2021,\r\n      \"estimatedValue\": 33333.55,\r\n      \"appraisedValue\": 0,\r\n      \"assessedValue\": 0,\r\n      \"netBookValue\": 0,\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.8276663\",\r\n      \"rowVersion\": \"AAAAAAAAH+U=\"\r\n    }\r\n  ],\r\n  \"buildings\": [\r\n    {\r\n      \"id\": 5,\r\n      \"parcelId\": 1,\r\n      \"agencyId\": 1,\r\n      \"localId\": \"222\",\r\n      \"description\": \"test\",\r\n      \"address\": {\r\n        \"id\": 6,\r\n        \"line1\": \"1323 St\",\r\n        \"cityId\": 1,\r\n        \"city\": \"No City Yet\",\r\n        \"provinceId\": \"BC\",\r\n        \"province\": \"British Columbia\",\r\n        \"postal\": \"V9C0E4\",\r\n        \"createdOn\": \"0001-01-01T00:00:00\",\r\n        \"updatedOn\": \"2020-03-30T15:26:11.8276547\",\r\n        \"rowVersion\": \"AAAAAAAAH98=\"\r\n      },\r\n      \"latitude\": 3,\r\n      \"longitude\": 3,\r\n      \"buildingConstructionTypeId\": 3,\r\n      \"buildingConstructionType\": \"Steel\",\r\n      \"buildingFloorCount\": 1,\r\n      \"buildingPredominateUseId\": 1,\r\n      \"buildingPredominateUse\": \"Research & Development Facility\",\r\n      \"buildingTenancy\": \"test\",\r\n      \"rentableArea\": 0,\r\n      \"isSensitive\": false,\r\n      \"evaluations\": [],\r\n      \"createdOn\": \"0001-01-01T00:00:00\",\r\n      \"updatedOn\": \"2020-03-30T15:26:11.82765\",\r\n      \"rowVersion\": \"AAAAAAAAH+I=\"\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1578,6 +1588,370 @@
 							],
 							"protocolProfileBehavior": {},
 							"_postman_isSubFolder": true
+						},
+						{
+							"name": "property",
+							"item": [
+								{
+									"name": "search",
+									"item": [
+										{
+											"name": "properties",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"properties",
+														"search"
+													],
+													"query": [
+														{
+															"key": "neLatitude",
+															"value": "48.46654767913532"
+														},
+														{
+															"key": "neLongitude",
+															"value": "-123.330717086792"
+														},
+														{
+															"key": "swLatitude",
+															"value": "48.398949765641426"
+														},
+														{
+															"key": "swLongitude",
+															"value": "-123.40882301330568"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties - test",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search?address&agencies&classificationId=1&maxLandArea&minLandArea&municipality",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"properties",
+														"search"
+													],
+													"query": [
+														{
+															"key": "address",
+															"value": null
+														},
+														{
+															"key": "agencies",
+															"value": null
+														},
+														{
+															"key": "classificationId",
+															"value": "1"
+														},
+														{
+															"key": "maxLandArea",
+															"value": null
+														},
+														{
+															"key": "minLandArea",
+															"value": null
+														},
+														{
+															"key": "municipality",
+															"value": null
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties - municipality",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search?municipality=test",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"properties",
+														"search"
+													],
+													"query": [
+														{
+															"key": "municipality",
+															"value": "test"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties/filter",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"MinAssessedValue\": 45000,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/v0.1-alpha/properties/search/filter",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"v0.1-alpha",
+														"properties",
+														"search",
+														"filter"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties/page",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search/page?page=1&neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"properties",
+														"search",
+														"page"
+													],
+													"query": [
+														{
+															"key": "page",
+															"value": "1"
+														},
+														{
+															"key": "neLatitude",
+															"value": "48.46654767913532"
+														},
+														{
+															"key": "neLongitude",
+															"value": "-123.330717086792"
+														},
+														{
+															"key": "swLatitude",
+															"value": "48.398949765641426"
+														},
+														{
+															"key": "swLongitude",
+															"value": "-123.40882301330568"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties/page/filter",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"MinAssessedValue\": 45000,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search/page/filter",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"properties",
+														"search",
+														"page",
+														"filter"
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "report",
+							"item": [
+								{
+									"name": "property",
+									"item": [
+										{
+											"name": "properties - csv",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/csv",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/reports/properties?minAssessedValue=1&maxAssessedValue=1&all=true",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"reports",
+														"properties"
+													],
+													"query": [
+														{
+															"key": "minAssessedValue",
+															"value": "1"
+														},
+														{
+															"key": "maxAssessedValue",
+															"value": "1"
+														},
+														{
+															"key": "all",
+															"value": "true"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties -csv",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/csv",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"Page\": 1,\n\t\"Quantity\": 15,\n\t\"MinAssessedValue\": 0,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/reports/properties/filter",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"reports",
+														"properties",
+														"filter"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "properties - excel",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{scheme}}://{{host}}:{{port}}/api/reports/properties?minAssessedValue=1&maxAssessedValue=1",
+													"protocol": "{{scheme}}",
+													"host": [
+														"{{host}}"
+													],
+													"port": "{{port}}",
+													"path": [
+														"api",
+														"reports",
+														"properties"
+													],
+													"query": [
+														{
+															"key": "minAssessedValue",
+															"value": "1"
+														},
+														{
+															"key": "maxAssessedValue",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -1705,7 +2079,28 @@
 							"response": []
 						},
 						{
-							"name": "property classifications",
+							"name": "roles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/lookup/roles",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"lookup",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "property/classifications",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1756,7 +2151,7 @@
 					"name": "user",
 					"item": [
 						{
-							"name": "user info",
+							"name": "user/info",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1777,12 +2172,25 @@
 							"response": []
 						},
 						{
-							"name": "access request",
+							"name": "access/requests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1851e223-a932-4b30-bed4-e11dd6a270eb",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/request",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/requests",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1792,7 +2200,106 @@
 										"api",
 										"users",
 										"access",
-										"request"
+										"requests"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "access/requests/{id}",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1335e56f-6df7-42fd-83f8-53721c392a99",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/requests/1",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"users",
+										"access",
+										"requests",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "access/requests",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"id\":0,\r\n\t\"user\":{\r\n\t\t\"email\":\"james.dean@email.com\",\r\n\t\t\"position\":\"a position\"\r\n\t},\r\n\t\"agencies\":[\r\n\t\t{\"id\":14}\r\n\t],\r\n\t\"roles\":[\r\n\t\t{\"id\":\"c9fb2167-d675-455f-96ff-fb0c416246aa\"}\r\n\t],\r\n\t\"isGranted\":false,\r\n\t\"note\":\"test\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/requests",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"users",
+										"access",
+										"requests"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "access/requests/{id}",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"id\":8,\r\n\t\"userId\":\"ff0cdf33-a4be-4da7-adb0-afa2d797a83b\",\r\n\t\"user\":{\r\n\t\t\"id\":\"ff0cdf33-a4be-4da7-adb0-afa2d797a83b\",\r\n\t\t\"username\":\"james.dean\",\r\n\t\t\"email\":\"james.dean@email.com\",\r\n\t\t\"position\":\"a position\"\r\n\t},\r\n\t\"agencies\": [\r\n\t\t{\"id\":14}\r\n\t],\r\n\t\"roles\":[\r\n\t\t{\"id\":\"c9fb2167-d675-455f-96ff-fb0c416246aa\"}\r\n\t],\r\n\t\"isGranted\":false,\r\n\t\"note\":\"test\",\r\n\t\"rowVersion\": \"{{row-version}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/users/access/requests/8",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"users",
+										"access",
+										"requests",
+										"8"
 									]
 								}
 							},
@@ -1844,7 +2351,95 @@
 							"response": []
 						},
 						{
-							"name": "parcels",
+							"name": "parcels Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?municipality=test&address=&agencies=&classificationId&maxLandArea&minLandArea&neLatitude=48.44198478906882&neLongitude=-123.33998680114746&swLatitude=48.40951964833088&swLongitude=-123.37976932525635",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"parcels"
+									],
+									"query": [
+										{
+											"key": "municipality",
+											"value": "test"
+										},
+										{
+											"key": "address",
+											"value": ""
+										},
+										{
+											"key": "agencies",
+											"value": ""
+										},
+										{
+											"key": "classificationId",
+											"value": null
+										},
+										{
+											"key": "maxLandArea",
+											"value": null
+										},
+										{
+											"key": "minLandArea",
+											"value": null
+										},
+										{
+											"key": "neLatitude",
+											"value": "48.44198478906882"
+										},
+										{
+											"key": "neLongitude",
+											"value": "-123.33998680114746"
+										},
+										{
+											"key": "swLatitude",
+											"value": "48.40951964833088"
+										},
+										{
+											"key": "swLongitude",
+											"value": "-123.37976932525635"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "parcels - municipality",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?municipality=oak bay",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"parcels"
+									],
+									"query": [
+										{
+											"key": "municipality",
+											"value": "oak bay"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "parcels/filter",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -1872,21 +2467,14 @@
 								}
 							},
 							"response": []
-						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
-				},
-				{
-					"name": "property",
-					"item": [
+						},
 						{
-							"name": "properties",
+							"name": "parcels/{id}",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/properties?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/parcels/15",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1894,7 +2482,35 @@
 									"port": "{{port}}",
 									"path": [
 										"api",
-										"properties"
+										"parcels",
+										"15"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "building",
+					"item": [
+						{
+							"name": "buildings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/buildings?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"buildings"
 									],
 									"query": [
 										{
@@ -1919,13 +2535,13 @@
 							"response": []
 						},
 						{
-							"name": "properties",
+							"name": "buildings/filter",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"MinAssessedValue\": 45000,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+									"raw": "{\n\t\"MinEstimatedValue\": 50000,\n\t\"MaxEstimatedValue\": 10000000\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1933,7 +2549,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{scheme}}://{{host}}:{{port}}/api/v0.1-alpha/properties/filter",
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/buildings/filter",
 									"protocol": "{{scheme}}",
 									"host": [
 										"{{host}}"
@@ -1941,9 +2557,29 @@
 									"port": "{{port}}",
 									"path": [
 										"api",
-										"v0.1-alpha",
-										"properties",
+										"buildings",
 										"filter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "building/{id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{scheme}}://{{host}}:{{port}}/api/buildings/344",
+									"protocol": "{{scheme}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"buildings",
+										"344"
 									]
 								}
 							},
