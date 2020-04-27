@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Core.Test
@@ -6,6 +7,7 @@ namespace Pims.Core.Test
     /// <summary>
     /// EntityHelper static class, provides helper methods to create test entities.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static partial class EntityHelper
     {
         /// <summary>
