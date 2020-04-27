@@ -25,20 +25,28 @@ describe('getFetchLookupCodeAction action creator', () => {
     const url = ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all');
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
-    return getFetchLookupCodeAction()(dispatch).then(() => {
-      expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(successSpy).toHaveBeenCalledTimes(1);
-      expect(dispatch).toHaveBeenCalledTimes(6);
-    });
+    return getFetchLookupCodeAction()(dispatch)
+      .then(() => {
+        expect(requestSpy).toHaveBeenCalledTimes(1);
+        expect(successSpy).toHaveBeenCalledTimes(1);
+        expect(dispatch).toHaveBeenCalledTimes(6);
+      })
+      .catch(() => {
+        fail('it should not reach here');
+      });
   });
 
   it('Request failure, dispatches `error` with correct response', () => {
     const url = ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all');
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return getFetchLookupCodeAction()(dispatch).then(() => {
-      expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(errorSpy).toHaveBeenCalledTimes(1);
-      expect(dispatch).toHaveBeenCalledTimes(4);
-    });
+    return getFetchLookupCodeAction()(dispatch)
+      .then(() => {
+        expect(requestSpy).toHaveBeenCalledTimes(1);
+        expect(errorSpy).toHaveBeenCalledTimes(1);
+        expect(dispatch).toHaveBeenCalledTimes(4);
+      })
+      .catch(() => {
+        fail('it should not reach here');
+      });
   });
 });

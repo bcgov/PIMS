@@ -35,7 +35,7 @@ const renderLogin = () => {
   );
 };
 
-test('login renders correctly', () => {
+it('login renders correctly', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
   const history = createMemoryHistory();
   const tree = renderer
@@ -50,7 +50,7 @@ test('login renders correctly', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test('authenticated users are redirected to the mapview', () => {
+it('authenticated users are redirected to the mapview', () => {
   (useKeycloak as jest.Mock).mockReturnValue({
     keycloak: { authenticated: true, userInfo: { groups: ['System Administrator'] } },
   });
@@ -66,7 +66,7 @@ test('authenticated users are redirected to the mapview', () => {
   expect(history.location.pathname).toBe('/mapview');
 });
 
-test('new users are sent to the guest page', () => {
+it('new users are sent to the guest page', () => {
   (useKeycloak as jest.Mock).mockReturnValue({
     keycloak: { authenticated: true, realmAccess: { roles: [{}] } },
   });
@@ -93,19 +93,19 @@ test('new users are sent to the guest page', () => {
   expect(history.location.pathname).toBe('/access/request');
 });
 
-test('unAuthenticated users are shown the login screen', () => {
+it('unAuthenticated users are shown the login screen', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
   const { getByRole } = renderLogin();
   expect(getByRole('heading')).toHaveTextContent('Search and manage government properties');
 });
 
-test('a spinner is displayed if keycloak has not yet been initialized', () => {
+it('a spinner is displayed if keycloak has not yet been initialized', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: undefined });
   const { container } = renderLogin();
   expect(container.firstChild).toHaveClass('spinner-border');
 });
 
-test('the login button calls keycloaks login() method', () => {
+it('the login button calls keycloaks login() method', () => {
   const login = jest.fn();
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { login: login, authenticated: false } });
 

@@ -22,6 +22,7 @@ const App = () => {
       dispatch(getActivateUserAction());
       dispatch(getFetchLookupCodeAction());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

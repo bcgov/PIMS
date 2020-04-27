@@ -3,10 +3,12 @@ import renderer from 'react-test-renderer';
 import { render, wait, fireEvent } from '@testing-library/react';
 import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
 import * as MOCK from 'mocks/filterDataMock';
+import Axios from 'axios';
 
 const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
+const mockedAxios = Axios as jest.Mocked<typeof Axios>;
 
 describe('MapFilterBar', () => {
   it('renders correctly', () => {
@@ -26,6 +28,7 @@ describe('MapFilterBar', () => {
 
   it('submits correct values', async () => {
     // Arrange
+    mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
     const uiElement = (
       <MapFilterBar
         agencyLookupCodes={MOCK.AGENCIES}
