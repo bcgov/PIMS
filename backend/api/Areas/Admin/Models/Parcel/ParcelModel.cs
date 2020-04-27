@@ -6,7 +6,7 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
     {
         #region Properties
         public string PID { get; set; }
-
+        
         public int? PIN { get; set; }
 
         public float LandArea { get; set; }

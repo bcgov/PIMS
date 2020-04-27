@@ -283,7 +283,7 @@ namespace Pims.Dal.Test.Services
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             var dbName = StringHelper.Generate(10);
             helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
-
+            
             var service = helper.CreateService<ParcelService>(dbName, user);
             var context = helper.GetService<PimsContext>();
 
@@ -302,8 +302,9 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(parcel.Agency);
             Assert.NotNull(parcel.Address);
             Assert.NotNull(parcel.Address);
-            // TODO: Add asserts for Buildings
-            // TODO: Add asserts for Evaluations
+            Assert.NotNull(parcel.Evaluations);
+            Assert.NotNull(parcel.Fiscals);
+            Assert.NotNull(parcel.Buildings);
         }
 
         /// <summary>
