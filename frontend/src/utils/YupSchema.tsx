@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import moment from 'moment';
+import { EvaluationKeys } from 'constants/evaluationKeys';
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
     .min(1, 'Invalid Agency')
@@ -50,9 +51,13 @@ export const Address = Yup.object().shape({
 });
 
 const currentYear = moment().year();
-export const Evaluation = Yup.object().shape({
+export const Financial = Yup.object().shape({
   year: Yup.number(),
-  date: Yup.string().required('Required'),
+  date: Yup.string().when('key', {
+    is: val => val === EvaluationKeys.Appraised,
+    then: Yup.string().required('Required'),
+    otherwise: Yup.string().nullable(),
+  }),
   key: Yup.string().nullable(),
   value: Yup.number().required('Required'),
 });
@@ -96,9 +101,9 @@ export const Building = Yup.object().shape({
   isSensitive: Yup.boolean(),
   transferLeaseOnSale: Yup.boolean(),
   leaseExpiry: Yup.string().nullable(),
-  evaluations: Yup.array()
-    .compact((evaluation: any) => evaluation.year !== currentYear)
-    .of(Evaluation),
+  financials: Yup.array()
+    .compact((financial: any) => financial.year !== currentYear)
+    .of(Financial),
 });
 export const LandSchema = Yup.object().shape({
   statusId: Yup.boolean().required('Required'),
@@ -152,9 +157,9 @@ export const ParcelSchema = Yup.object()
           .required('pid or pin Required'),
       }),
       buildings: Yup.array().of(Building),
-      evaluations: Yup.array()
-        .compact((evaluation: any) => evaluation.year !== currentYear)
-        .of(Evaluation),
+      financials: Yup.array()
+        .compact((financial: any) => financial.year !== currentYear)
+        .of(Financial),
     },
     [['pin', 'pid']],
   )

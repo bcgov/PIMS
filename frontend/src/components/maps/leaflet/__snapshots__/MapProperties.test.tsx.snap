@@ -106,8 +106,19 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
       className="col"
     >
       <a
+        href="/submitProperty/1?disabled=true"
+        onClick={[Function]}
+      >
+        View
+      </a>
+      <a
         href="/submitProperty/1"
         onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": "5px",
+          }
+        }
       >
         Update
       </a>
