@@ -2,6 +2,7 @@ import { FunctionComponent, Fragment } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { Col } from 'react-bootstrap';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface PidPinProps {
   nameSpace?: string;
@@ -10,6 +11,7 @@ interface PidPinProps {
 export const defaultPidPinFormValues = {
   pid: '',
   pin: '',
+  projectNumber: '',
 };
 const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
   const withNameSpace: Function = (fieldName: string) => {
@@ -21,22 +23,36 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
       <Col className="pidPinForm" md={6}>
         <Form.Row>
           <Form.Label column md={2}>
-            PID
+            PID&nbsp;
+            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
           </Form.Label>
-          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('pid')} />
+          <Input
+            disabled={props.disabled}
+            outerClassName="col-md-10"
+            field={withNameSpace('pid')}
+          />
         </Form.Row>
-        <p style={{ textAlign: 'center' }}>OR</p>
+        <p style={{ textAlign: 'center', height: '2.75rem' }}>OR</p>
         <Form.Row>
           <Form.Label column md={2}>
-            PIN
+            PIN&nbsp;
+            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
           </Form.Label>
-          <Input disabled={props.disabled} className="col-md-10" field={withNameSpace('pin')} />
+          <Input
+            disabled={props.disabled}
+            outerClassName="col-md-10"
+            field={withNameSpace('pin')}
+          />
         </Form.Row>
         <Form.Row>
           <Form.Label column md={2}>
             RAEG or SPP
           </Form.Label>
-          <Input disabled={true} className="col-md-10" field={withNameSpace('projectNumber')} />
+          <Input
+            disabled={true}
+            outerClassName="col-md-10"
+            field={withNameSpace('projectNumber')}
+          />
         </Form.Row>
       </Col>
     </Fragment>

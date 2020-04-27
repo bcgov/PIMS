@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, FormCheckProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -23,6 +24,8 @@ type OptionalAttributes = {
   disabled?: boolean;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
+  /** style to use for the formgroup wrapping the inner element */
+  outerClassName?: string;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -37,6 +40,7 @@ export const Check: React.FC<CheckProps> = ({
   as: is, // `as` is reserved in typescript
   placeholder,
   className,
+  outerClassName,
   required,
   disabled,
   custom,
@@ -48,7 +52,10 @@ export const Check: React.FC<CheckProps> = ({
   const asElement: any = is || 'input';
 
   return (
-    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
+    <Form.Group
+      controlId={`input-${field}`}
+      className={classNames(!!required ? 'required' : '', outerClassName)}
+    >
       {!!label && <Form.Label>{label}</Form.Label>}
       <Form.Check
         as={asElement}
