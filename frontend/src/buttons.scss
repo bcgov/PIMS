@@ -61,6 +61,22 @@
   color: #fff;
 }
 
+.btn.btn-light:disabled {
+  background-color: #606060;
+  color: #fff;
+}
+
+.btn.btn-dark {
+  color: #fff;
+  background-color: #121212;
+  vertical-align: middle;
+  height: 24px;
+  padding: 1px;
+  svg {
+    vertical-align: baseline;
+  }
+}
+
 .btn:focus,
 .btn:active,
 .btn.active {

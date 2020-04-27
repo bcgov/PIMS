@@ -1,11 +1,15 @@
 import React from 'react';
-import { Form, FormControlProps, InputGroup } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
+import { Form, FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
+import { Input } from './Input';
+import { FastInput } from './FastInput';
+import { FormikProps } from 'formik';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
   field: string;
+  /** formik state used for context and memo calculations */
+  formikProps: FormikProps<any>;
 };
 
 type OptionalAttributes = {
@@ -25,66 +29,66 @@ type OptionalAttributes = {
   custom?: boolean;
   preText?: string;
   postText?: string;
+  fast?: boolean;
+  outerClassName?: string;
 };
 
 // only "field" is required for <Input>, the rest are optional
-export type InputProps = FormControlProps & OptionalAttributes & RequiredAttributes;
+export type InputGroupProps = FormControlProps & OptionalAttributes & RequiredAttributes;
 
 /**
- * Formik-connected <Input> form control
+ * Formik-connected <InputGroup> form control - allows for an input with pre or posttext.
  */
-export const FormikInputGroup: React.FC<InputProps> = ({
+export const InputGroup: React.FC<InputGroupProps> = ({
   field,
   label,
   as: is, // `as` is reserved in typescript
   placeholder,
-  className,
-  required,
   disabled,
+  required,
   custom,
   preText,
   postText,
+  outerClassName,
+  className,
+  fast,
+  formikProps,
   ...rest
 }) => {
-  const { values, handleChange, errors, touched, setFieldTouched } = useFormikContext();
-  const error = getIn(errors, field);
-  const touch = getIn(touched, field);
-  const asElement: any = is || 'input';
-
   return (
-    <Form.Group
-      controlId={`input-${field}`}
-      className={`input-group ${!!required ? 'required' : ''}`}
+    <div
+      className={classNames(
+        'input-group',
+        !!required ? 'required' : '',
+        outerClassName,
+        disabled ? 'disabled' : '',
+      )}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
 
       {preText && (
-        <InputGroup.Prepend>
-          <InputGroup.Text>{preText}</InputGroup.Text>
-        </InputGroup.Prepend>
+        <BootstrapInputGroup.Prepend>
+          <BootstrapInputGroup.Text>{preText}</BootstrapInputGroup.Text>
+        </BootstrapInputGroup.Prepend>
       )}
       <div className="input-group-content">
-        <Form.Control
-          as={asElement}
-          name={field}
-          className={className}
-          required={required}
-          disabled={disabled}
-          custom={custom}
-          isInvalid={!!touch && !!error}
-          {...rest}
-          value={getIn(values, field)}
-          placeholder={placeholder}
-          onBlur={() => setFieldTouched(field)}
-          onChange={handleChange}
-        />
-        {postText && (
-          <InputGroup.Append>
-            <InputGroup.Text>{postText}</InputGroup.Text>
-          </InputGroup.Append>
+        {fast ? (
+          <FastInput
+            formikProps={formikProps}
+            disabled={disabled}
+            field={field}
+            {...rest}
+            className={className}
+          />
+        ) : (
+          <Input field={field} disabled={disabled} {...rest} className={className} />
         )}
-        <DisplayError field={field} />
       </div>
-    </Form.Group>
+      {postText && (
+        <BootstrapInputGroup.Append>
+          <BootstrapInputGroup.Text>{postText}</BootstrapInputGroup.Text>
+        </BootstrapInputGroup.Append>
+      )}
+    </div>
   );
 };

@@ -85,7 +85,7 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : undefined}>
+    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : ''}>
       {!!label && <Form.Label>{label}</Form.Label>}
       {!!required && <span className="required">*</span>}
       <Form.Control

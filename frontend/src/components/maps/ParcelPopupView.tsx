@@ -63,15 +63,17 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               </ListGroup.Item>
             </ListGroup>
           </Col>
-          <Col>
-            {parcelDetail?.id &&
-              !props?.disabled &&
-              (!keycloak.hasAgency(parcelDetail?.agencyId) ? (
-                <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
-              ) : (
-                <Link to={`/submitProperty/${parcelDetail?.id}`}>Update</Link>
-              ))}
-          </Col>
+
+          {parcelDetail?.id && !props?.disabled && (
+            <Col>
+              <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
+              {keycloak.hasAgency(parcelDetail?.agencyId) && (
+                <Link style={{ paddingLeft: '5px' }} to={`/submitProperty/${parcelDetail?.id}`}>
+                  Update
+                </Link>
+              )}
+            </Col>
+          )}
         </Row>
       )}
     </Container>

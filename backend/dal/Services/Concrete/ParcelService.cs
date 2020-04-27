@@ -111,6 +111,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
                 .Include(p => p.Buildings)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
@@ -119,6 +120,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
                 .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&
                     (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
@@ -161,7 +163,9 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
@@ -201,7 +205,7 @@ namespace Pims.Dal.Services
                         foreach (var buildingEvaluation in building.Evaluations)
                         {
                             var existingBuildingEvaluation = existingBuilding.Evaluations
-                                .FirstOrDefault(e => e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
+                                .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
 
                             if (existingBuildingEvaluation == null)
                             {
@@ -212,12 +216,26 @@ namespace Pims.Dal.Services
                                 this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
                             }
                         }
+                        foreach (var buildingFiscal in building.Fiscals)
+                        {
+                            var existingBuildingFiscal = existingBuilding.Fiscals
+                                .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
+
+                            if (existingBuildingFiscal == null)
+                            {
+                                existingBuilding.Fiscals.Add(buildingFiscal);
+                            }
+                            else
+                            {
+                                this.Context.Entry(existingBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
+                            }
+                        }
                     }
                 }
                 foreach (var parcelEvaluation in parcel.Evaluations)
                 {
                     var existingEvaluation = existingParcel.Evaluations
-                        .FirstOrDefault(e => e.ParcelId == parcelEvaluation.ParcelId && e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
+                        .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
 
                     if (existingEvaluation == null)
                     {
@@ -226,6 +244,20 @@ namespace Pims.Dal.Services
                     else
                     {
                         this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
+                    }
+                }
+                foreach (var parcelFiscal in parcel.Fiscals)
+                {
+                    var existingParcelFiscal = existingParcel.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
+
+                    if (existingParcelFiscal == null)
+                    {
+                        existingParcel.Fiscals.Add(parcelFiscal);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingParcelFiscal).CurrentValues.SetValues(parcelFiscal);
                     }
                 }
             }
