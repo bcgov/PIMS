@@ -32,6 +32,7 @@ export interface IAddress {
 
 export interface IBuilding {
   id: number;
+  parcelId: number;
   localId: string;
   projectNumber?: string;
   description: string;
