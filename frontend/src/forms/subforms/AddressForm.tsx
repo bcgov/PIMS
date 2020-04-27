@@ -7,11 +7,10 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastSelect } from 'components/common/form';
+import { Form, FastSelect, FastInput } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
-import { FastInput } from 'components/common/form/FastInput';
 
 interface AddressProps {
   nameSpace?: string;

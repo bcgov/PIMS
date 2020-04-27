@@ -3,6 +3,7 @@ import { Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -73,7 +74,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     return (
       <Form.Group
         controlId={`input-${field}`}
-        className={[!!required ? 'required' : '', outerClassName ?? ''].join(' ')}
+        className={classNames(!!required ? 'required' : '', outerClassName)}
       >
         {!!label && <Form.Label>{label}</Form.Label>}
         {!!required && <span className="required">*</span>}

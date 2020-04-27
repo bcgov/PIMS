@@ -20,6 +20,7 @@ import * as actionTypes from 'constants/actionTypes';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { clearClickLatLng } from 'reducers/LeafletMouseSlice';
 import { useHistory } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa';
 
 const SubmitProperty = (props: any) => {
   const query = props?.location?.search ?? {};
@@ -94,17 +95,18 @@ const SubmitProperty = (props: any) => {
             <h2>Submit a Property</h2>
           </Col>
           <Col style={{ textAlign: 'right' }}>
-            <Button variant="light" onClick={() => history.goBack()}>
-              Close
-            </Button>
-            <Button
-              disabled={
-                (!formDisabled && keycloak.hasAgency(cachedParcelDetail?.agencyId)) || !parcelId
-              }
-              variant="light"
-              onClick={() => setFormDisabled(false)}
-            >
-              Update
+            {keycloak.hasAgency(cachedParcelDetail?.agencyId) && (
+              <Button
+                disabled={!formDisabled || !parcelId}
+                style={{ width: '144px' }}
+                variant="light"
+                onClick={() => setFormDisabled(false)}
+              >
+                Edit
+              </Button>
+            )}
+            <Button style={{ marginLeft: '7px' }} variant="dark" onClick={() => history.goBack()}>
+              <FaTimes size={20} />
             </Button>
           </Col>
         </Row>

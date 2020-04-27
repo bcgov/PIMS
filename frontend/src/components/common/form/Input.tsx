@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -52,7 +53,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <Form.Group
       controlId={`input-${field}`}
-      className={[!!required ? 'required' : '', outerClassName ?? ''].join(' ')}
+      className={classNames(!!required ? 'required' : '', outerClassName)}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
       {!!required && <span className="required">*</span>}

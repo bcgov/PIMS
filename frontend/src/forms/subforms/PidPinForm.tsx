@@ -2,6 +2,7 @@ import { FunctionComponent, Fragment } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { Col } from 'react-bootstrap';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface PidPinProps {
   nameSpace?: string;
@@ -22,7 +23,8 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
       <Col className="pidPinForm" md={6}>
         <Form.Row>
           <Form.Label column md={2}>
-            PID
+            PID&nbsp;
+            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
           </Form.Label>
           <Input
             disabled={props.disabled}
@@ -33,7 +35,8 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <p style={{ textAlign: 'center', height: '2.75rem' }}>OR</p>
         <Form.Row>
           <Form.Label column md={2}>
-            PIN
+            PIN&nbsp;
+            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
           </Form.Label>
           <Input
             disabled={props.disabled}

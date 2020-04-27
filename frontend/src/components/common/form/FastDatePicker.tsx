@@ -4,6 +4,7 @@ import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import moment from 'moment';
 import { FormGroup, FormControlProps } from 'react-bootstrap';
 import { formikFieldMemo } from 'utils';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -64,24 +65,17 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
     <FormGroup className={outerClassName ?? ''}>
       <span className={isInvalid}></span>
       <DatePicker
+        autoComplete="off"
         name={field}
-        value={value ?? moment()}
-        placeholderText="Enter date"
-        className={['form-control', 'date-picker', isInvalid, isValid].join(' ')}
+        placeholderText="--/--/----"
+        className={classNames('form-control', 'date-picker', isInvalid, isValid)}
         dateFormat="MM/dd/yyyy"
         selected={(value && new Date(value)) || null}
         onBlur={handleBlur}
         disabled={disabled}
         {...rest}
         onChange={(val: any) => {
-          setFieldValue(
-            field,
-            val
-              ? moment(val)
-                  .add('day', 1)
-                  .format('YYYY-MM-DD')
-              : '',
-          );
+          setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
         }}
       />
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>

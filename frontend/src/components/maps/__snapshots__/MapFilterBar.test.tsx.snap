@@ -22,7 +22,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             className="bar-item col"
           >
             <div
-              className="  form-group"
+              className="form-group"
             >
               <input
                 className="form-control"
@@ -39,7 +39,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             className="bar-item col"
           >
             <div
-              className="  form-group"
+              className="form-group"
             >
               <input
                 className="form-control"
@@ -56,7 +56,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             className="bar-item col"
           >
             <div
-              className="  form-group"
+              className="form-group"
             >
               <input
                 className="form-control"

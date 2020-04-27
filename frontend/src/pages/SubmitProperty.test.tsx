@@ -49,7 +49,7 @@ const mockDetails: IParcelDetail = {
     municipality: '',
     evaluations: [
       {
-        date: '2019',
+        date: '2020-01-01',
         key: '',
         value: 100000,
       },

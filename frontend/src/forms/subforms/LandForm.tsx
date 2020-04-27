@@ -8,11 +8,11 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastSelect, InputGroup } from 'components/common/form';
+import { Form, FastSelect, InputGroup, FastInput } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
-import { FastInput } from 'components/common/form/FastInput';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface LandProps {
   nameSpace?: string;
@@ -120,11 +120,12 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
-              Active
+              Active&nbsp;
+              <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
             </Form.Label>
             <Check
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('statusId')}
             />
           </Form.Row>
@@ -160,7 +161,11 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Sensitive Land
             </Form.Label>
-            <Check disabled={props.disabled} field={withNameSpace('isSensitive')} />
+            <Check
+              disabled={props.disabled}
+              field={withNameSpace('isSensitive')}
+              outerClassName="col-md-10"
+            />
           </Form.Row>
         </Col>
       </Form.Row>

@@ -3,6 +3,7 @@ import { Form, FormControlProps, InputGroup as BootstrapInputGroup } from 'react
 import { Input } from './Input';
 import { FastInput } from './FastInput';
 import { FormikProps } from 'formik';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -56,12 +57,12 @@ export const InputGroup: React.FC<InputGroupProps> = ({
 }) => {
   return (
     <div
-      className={[
+      className={classNames(
         'input-group',
         !!required ? 'required' : '',
-        outerClassName ?? '',
+        outerClassName,
         disabled ? 'disabled' : '',
-      ].join(' ')}
+      )}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
 

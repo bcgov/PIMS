@@ -33,10 +33,34 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  PID
+                  PID 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -64,10 +88,34 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  PIN
+                  PIN 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -88,7 +136,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   RAEG or SPP
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -114,7 +162,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Street Address
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -135,7 +183,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   City
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -166,7 +214,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Province
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -198,7 +246,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Postal
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -227,7 +275,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Assessed Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -242,7 +290,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -266,7 +314,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Appraised Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -281,7 +329,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -309,7 +357,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   NetBook Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -324,7 +372,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -348,7 +396,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Estimated Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -363,7 +411,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -406,7 +454,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Municipality
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -427,7 +475,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Zoning
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -448,7 +496,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Zoning Potential
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -469,7 +517,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Latitude
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -491,7 +539,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Longitude
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -514,13 +562,37 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Active
+                  Active 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className="form-group"
+                  className="col-md-10 form-group"
                 >
                   <div
-                    className="col-md-10 form-check"
+                    className="form-check"
                   >
                     <input
                       className="form-check-input position-static"
@@ -542,7 +614,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Classification
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -573,13 +645,13 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Lot Size
                 </label>
                 <div
-                  className="input-group  col-md-7 "
+                  className="input-group col-md-7"
                 >
                   <div
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -612,7 +684,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                   Sensitive Land
                 </label>
                 <div
-                  className="form-group"
+                  className="col-md-10 form-group"
                 >
                   <div
                     className="form-check"
@@ -673,7 +745,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -688,7 +760,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -716,7 +788,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -731,7 +803,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -785,7 +857,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               className="react-datepicker__input-container"
                             >
                               <input
-                                className="form-control date-picker  "
+                                autoComplete="off"
+                                className="form-control date-picker"
                                 disabled={false}
                                 name="financials.1.date"
                                 onBlur={[Function]}
@@ -793,7 +866,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                                 onClick={[Function]}
                                 onFocus={[Function]}
                                 onKeyDown={[Function]}
-                                placeholder="Enter date"
+                                placeholder="--/--/----"
                                 readOnly={false}
                                 type="text"
                                 value=""
@@ -804,7 +877,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -819,7 +892,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -850,7 +923,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                               className="react-datepicker__input-container"
                             >
                               <input
-                                className="form-control date-picker  "
+                                autoComplete="off"
+                                className="form-control date-picker"
                                 disabled={false}
                                 name="financials.5.date"
                                 onBlur={[Function]}
@@ -858,7 +932,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                                 onClick={[Function]}
                                 onFocus={[Function]}
                                 onKeyDown={[Function]}
-                                placeholder="Enter date"
+                                placeholder="--/--/----"
                                 readOnly={false}
                                 type="text"
                                 value=""
@@ -869,7 +943,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -884,7 +958,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -935,7 +1009,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -950,7 +1024,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -978,7 +1052,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -993,7 +1067,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -1044,7 +1118,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -1059,7 +1133,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -1087,7 +1161,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   "
+                          className="input-group"
                         >
                           <div
                             className="input-group-prepend"
@@ -1102,7 +1176,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -1349,10 +1423,34 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  PID
+                  PID 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1381,10 +1479,34 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  PIN
+                  PIN 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1406,7 +1528,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   RAEG or SPP
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1432,7 +1554,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Street Address
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1454,7 +1576,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   City
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -1486,7 +1608,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Province
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -1518,7 +1640,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Postal
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1548,7 +1670,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Assessed Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -1563,7 +1685,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -1587,7 +1709,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Appraised Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -1602,7 +1724,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -1630,7 +1752,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   NetBook Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -1645,7 +1767,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -1669,7 +1791,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Estimated Sum
                 </label>
                 <div
-                  className="input-group  col-md-10 disabled"
+                  className="input-group col-md-10 disabled"
                 >
                   <div
                     className="input-group-prepend"
@@ -1684,7 +1806,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -1727,7 +1849,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Municipality
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1749,7 +1871,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Zoning
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1771,7 +1893,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Zoning Potential
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1793,7 +1915,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Latitude
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1816,7 +1938,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Longitude
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <input
                     className="form-control"
@@ -1840,13 +1962,37 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Active
+                  Active 
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={14}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={14}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={14}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
                 </label>
                 <div
-                  className="form-group"
+                  className="col-md-10 form-group"
                 >
                   <div
-                    className="col-md-10 form-check"
+                    className="form-check"
                   >
                     <input
                       className="form-check-input position-static"
@@ -1868,7 +2014,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Classification
                 </label>
                 <div
-                  className=" col-md-10 form-group"
+                  className="col-md-10 form-group"
                 >
                   <select
                     className="form-control"
@@ -1900,13 +2046,13 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Lot Size
                 </label>
                 <div
-                  className="input-group  col-md-7 disabled"
+                  className="input-group col-md-7 disabled"
                 >
                   <div
                     className="input-group-content"
                   >
                     <div
-                      className="  form-group"
+                      className="form-group"
                     >
                       <input
                         className="form-control"
@@ -1940,7 +2086,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Sensitive Land
                 </label>
                 <div
-                  className="form-group"
+                  className="col-md-10 form-group"
                 >
                   <div
                     className="form-check"
@@ -2001,7 +2147,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2016,7 +2162,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2045,7 +2191,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2060,7 +2206,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2115,7 +2261,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               className="react-datepicker__input-container"
                             >
                               <input
-                                className="form-control date-picker  "
+                                autoComplete="off"
+                                className="form-control date-picker"
                                 disabled={true}
                                 name="financials.1.date"
                                 onBlur={[Function]}
@@ -2123,7 +2270,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                                 onClick={[Function]}
                                 onFocus={[Function]}
                                 onKeyDown={[Function]}
-                                placeholder="Enter date"
+                                placeholder="--/--/----"
                                 readOnly={false}
                                 type="text"
                                 value=""
@@ -2134,7 +2281,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2149,7 +2296,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2181,7 +2328,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                               className="react-datepicker__input-container"
                             >
                               <input
-                                className="form-control date-picker  "
+                                autoComplete="off"
+                                className="form-control date-picker"
                                 disabled={true}
                                 name="financials.5.date"
                                 onBlur={[Function]}
@@ -2189,7 +2337,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                                 onClick={[Function]}
                                 onFocus={[Function]}
                                 onKeyDown={[Function]}
-                                placeholder="Enter date"
+                                placeholder="--/--/----"
                                 readOnly={false}
                                 type="text"
                                 value=""
@@ -2200,7 +2348,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2215,7 +2363,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2267,7 +2415,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2282,7 +2430,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2311,7 +2459,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2326,7 +2474,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2378,7 +2526,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2393,7 +2541,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"
@@ -2422,7 +2570,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       </td>
                       <td>
                         <div
-                          className="input-group   disabled"
+                          className="input-group disabled"
                         >
                           <div
                             className="input-group-prepend"
@@ -2437,7 +2585,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="input-group-content"
                           >
                             <div
-                              className="  form-group"
+                              className="form-group"
                             >
                               <input
                                 className="form-control"

@@ -3,6 +3,7 @@
   width: 100%;
   margin: 0;
   background-color: #f2f2f2;
+  height: 0; //force override scrollbar.
   .leaflet-container {
     /* Subtract the header, nav-bar and footer sizes */
     padding-top: 0;

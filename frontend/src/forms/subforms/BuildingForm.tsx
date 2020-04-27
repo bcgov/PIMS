@@ -9,11 +9,10 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastDatePicker, FastSelect, InputGroup } from 'components/common/form';
+import { Form, FastDatePicker, FastSelect, InputGroup, FastInput } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
 import * as API from 'constants/API';
-import { FastInput } from 'components/common/form/FastInput';
 import { IBuilding } from 'actions/parcelsActions';
 
 export interface IFormBuilding extends IBuilding {
@@ -148,7 +147,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <Check
               disabled={props.disabled}
-              className="col-md-10"
+              outerClassName="col-md-10"
               field={withNameSpace('transferLeaseOnSale')}
             />
           </Form.Row>

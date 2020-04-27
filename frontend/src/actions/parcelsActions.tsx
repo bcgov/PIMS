@@ -57,13 +57,13 @@ export interface IBuilding {
 
 export interface IFiscal {
   fiscalYear?: number | any;
-  key: string | any;
+  key: string;
   value: number | any;
 }
 
 export interface IEvaluation {
   date?: Date | any;
-  key: string | any;
+  key: string;
   value: number | any;
 }
 
