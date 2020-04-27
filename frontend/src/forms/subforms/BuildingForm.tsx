@@ -28,6 +28,7 @@ export const defaultBuildingValues: any = {
   latitude: 0,
   longitude: 0,
   agencyId: 0,
+  parcelId: 0,
   rentableArea: '',
   buildingFloorCount: '',
   buildingConstructionType: undefined,

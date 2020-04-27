@@ -6,15 +6,21 @@ import { IBuilding } from 'actions/parcelsActions';
 import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Link } from 'react-router-dom';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
+  disabled?: boolean;
 }
 
-export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) => {
+export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildingDetailProps) => {
+  const keycloak = useKeycloakWrapper();
+  const buildingDetail: IBuilding | null | undefined = props?.building;
+
   return (
     <Container className="buildingPopup" fluid={true}>
-      {!building ? (
+      {!buildingDetail ? (
         <Alert variant="danger">Failed to load building details.</Alert>
       ) : (
         <Row>
@@ -22,7 +28,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
             <ListGroup>
               <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
-                {building?.evaluations
+                {buildingDetail?.evaluations
                   ?.find(e => e.key === EvaluationKeys.Assessed)
                   ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </ListGroup.Item>
@@ -31,30 +37,38 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = ({ building }) 
               <ListGroup.Item>
                 <div>
                   <Label>Address: </Label>
-                  {building?.address?.line1}
+                  {buildingDetail?.address?.line1}
                 </div>
                 <div>
-                  {building?.address?.city}, {building?.address?.province}{' '}
-                  {building?.address?.postal}
+                  {buildingDetail?.address?.city}, {buildingDetail?.address?.province}{' '}
+                  {buildingDetail?.address?.postal}
                 </div>
               </ListGroup.Item>
             </ListGroup>
             <ListGroup>
               <ListGroup.Item>
                 <Label>Floor Count: </Label>
-                {building?.buildingFloorCount}
+                {buildingDetail?.buildingFloorCount}
               </ListGroup.Item>
               <ListGroup.Item>
                 <Label>Predominate Use: </Label>
-                {building?.buildingPredominateUse}
+                {buildingDetail?.buildingPredominateUse}
               </ListGroup.Item>
-              {building?.projectNumber && (
+              {buildingDetail?.projectNumber && (
                 <ListGroup.Item>
                   <Label>RAEG or SPP: </Label>
-                  {building?.projectNumber}
+                  {buildingDetail?.projectNumber}
                 </ListGroup.Item>
               )}
             </ListGroup>
+          </Col>
+          <Col>
+            {!props?.disabled &&
+              (!keycloak.hasAgency(buildingDetail?.agencyId) ? (
+                <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
+              ) : (
+                <Link to={`/submitProperty/${buildingDetail?.parcelId}`}>Update</Link>
+              ))}
           </Col>
         </Row>
       )}
