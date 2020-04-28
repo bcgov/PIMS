@@ -370,32 +370,6 @@ namespace Pims.Api.Test.Controllers.Admin
         }
         #endregion
 
-        #region DeleteParcel
-        [Fact]
-        public void DeleteParcel_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyAdd);
-
-            var service = helper.GetService<Mock<IPimsAdminService>>();
-            var mapper = helper.GetService<IMapper>();
-            var existingParcel = EntityHelper.CreateParcel(1);
-            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()));
-            var modelToDelete = mapper.Map<Model.ParcelModel>(existingParcel);
-
-            // Act
-            var result = controller.DeleteParcel(existingParcel.Id, modelToDelete);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.ParcelModel>(existingParcel), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
-        }
-        #endregion
-
         #region AddParcel
         [Fact]
         public void AddParcel_Success()
@@ -796,6 +770,32 @@ namespace Pims.Api.Test.Controllers.Admin
             Assert.Equal(model.Buildings.First().Fiscals.Count(), actualParcel.Buildings.First().Fiscals.Count());
             Assert.Equal(model.Buildings.First().Fiscals.First().Value, actualParcel.Buildings.First().Fiscals.First().Value);
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+        #endregion
+
+        #region DeleteParcel
+        [Fact]
+        public void DeleteParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyDelete);
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            var mapper = helper.GetService<IMapper>();
+            var existingParcel = EntityHelper.CreateParcel(1);
+            service.Setup(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()));
+            var modelToDelete = mapper.Map<Model.ParcelModel>(existingParcel);
+
+            // Act
+            var result = controller.DeleteParcel(existingParcel.Id, modelToDelete);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.ParcelModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ParcelModel>(existingParcel), actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
         #endregion

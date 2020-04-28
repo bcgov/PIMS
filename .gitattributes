@@ -2,9 +2,15 @@
 * text=auto
 
 # Declare files that will always have LF line endings on checkout.
+text eol=lf
+*.cs text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
+*.sql text eol=lf
 *.tsx text eol=lf
 *.ts text eol=lf
 *.js text eol=lf
+*.jsx text eol=lf
 *.sh text eol=lf
 *.md text eol=lf
 *.json text eol=lf

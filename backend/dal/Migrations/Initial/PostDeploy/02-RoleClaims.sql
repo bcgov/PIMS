@@ -21,6 +21,10 @@ VALUES
 ),
     (
         'bbf27108-a0dc-4782-8025-7af7af711335'
+    , '223664c7-650c-40ac-8581-f40e10164537'   -- property-delete
+),
+    (
+        'bbf27108-a0dc-4782-8025-7af7af711335'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
 ),
     -- agency-administrator
@@ -35,6 +39,10 @@ VALUES
     (
         '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
     , '223664c7-650c-40ac-8581-f40e10064537'   -- property-edit
+),
+    (
+        '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
+    , '223664c7-650c-40ac-8581-f40e10164537'   -- property-delete
 ),
     (
         '6ae8448d-5f0a-4607-803a-df0bc4efdc0f'
@@ -119,4 +127,9 @@ VALUES
     (
         '6cdfeb00-6f67-4457-b46a-85bbbc97066c'
     , '4dc0f39a-32f0-43a4-9d90-62fd94f20567'   -- sensitive-view
+),
+    -- SRES
+    (
+        '08c52eec-6917-4512-ac02-7d7ff89ed7a6'
+    , '71e74513-a036-4df3-b724-a8c349b7fc28'   -- admin-properties
 )

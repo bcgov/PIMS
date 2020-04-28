@@ -59,7 +59,7 @@ const AccessRequestPage = () => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   });
   const roles = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.ROLE_CODE_SET_NAME;
+    return lookupCode.type === API.ROLE_CODE_SET_NAME && !!lookupCode.isPublic;
   });
 
   const accessRequest = data?.accessRequest;
