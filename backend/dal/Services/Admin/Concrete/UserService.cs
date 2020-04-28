@@ -170,6 +170,8 @@ namespace Pims.Dal.Services.Admin
             entity.UpdatedById = this.User.GetUserId(); // TODO: No longer needed.
             entity.UpdatedOn = DateTime.UtcNow;
             this.Context.Entry(accessRequest).CurrentValues.SetValues(entity);
+            accessRequest.UserId = accessRequest.User.Id;
+            Context.Entry(accessRequest).State = EntityState.Modified;
             this.Context.CommitTransaction();
             return entity;
         }
@@ -199,8 +201,8 @@ namespace Pims.Dal.Services.Admin
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
-        /// <param name="isGranted"></param>
-        public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
+        /// <param name="status"></param>
+        public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, AccessRequestStatus? status = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
@@ -212,7 +214,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.User)
                 .AsNoTracking();
 
-            query = query.Where(request => request.IsGranted == isGranted);
+            query = query.Where(request => request.Status == status);
             var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);
             return new Paged<AccessRequest>(accessRequests, page, quantity, query.Count());
         }

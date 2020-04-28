@@ -16,18 +16,6 @@ namespace Pims.Dal.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// get/set - Whether the request is disabled.
-        /// </summary>
-        /// <value></value>
-        public bool IsDisabled { get; set; }
-
-        /// <summary>
-        /// get/set - Whether the request has been granted
-        /// </summary>
-        /// <value></value>
-        public bool? IsGranted { get; set; }
-
-        /// <summary>
         /// get/set - Foreign key to User
         /// </summary>
         /// <returns></returns>
@@ -58,6 +46,11 @@ namespace Pims.Dal.Entities
         /// <typeparam name="UserRole"></typeparam>
         /// <returns></returns>
         public ICollection<AccessRequestRole> Roles { get; private set; } = new List<AccessRequestRole>();
+
+        /// <summary>
+        /// get - whether the request is approved, on hold or declined
+        /// </summary>
+        public AccessRequestStatus Status { get; set; } = AccessRequestStatus.OnHold;
         #endregion
 
         #region Constructors

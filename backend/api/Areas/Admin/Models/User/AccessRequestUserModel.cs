@@ -43,6 +43,12 @@ namespace Pims.Api.Areas.Admin.Models.User
         /// </summary>
         /// <value></value>
         public string Email { get; set; }
+
+        /// <summary>
+        /// get/set - The username.
+        /// </summary>
+        /// <value></value>
+        public string Username { get; set; }
         #endregion
     }
 }

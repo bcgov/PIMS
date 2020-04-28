@@ -22,6 +22,7 @@ import _ from 'lodash';
 import { AccessRequestSchema } from 'utils/YupSchema';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapLookupCode } from 'utils';
+import { AccessRequestStatus } from 'constants/accessStatus';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -75,7 +76,7 @@ const AccessRequestPage = () => {
       position: accessRequest?.user?.position ?? userInfo?.position ?? '',
     },
     agencies: accessRequest?.agencies ?? [],
-    isGranted: accessRequest?.isGranted ?? false,
+    status: accessRequest?.status || AccessRequestStatus.OnHold,
     roles: accessRequest?.roles ?? [],
     note: accessRequest?.note ?? '',
     agency: accessRequest?.agencies?.find(x => x).id,

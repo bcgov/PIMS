@@ -18,11 +18,11 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Id).IsRequired();
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
-            builder.Property(m => m.IsGranted);
+            builder.Property(m => m.Status);
 
             builder.HasOne(m => m.User).WithMany().HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.IsDisabled, m.IsGranted });
+            builder.HasIndex(m => new { m.Status});
 
             base.Configure(builder);
         }

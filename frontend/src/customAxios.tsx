@@ -11,7 +11,12 @@ const CustomAxios = ({
   selector,
   envelope = defaultEnvelope,
 }: { errorToastMessage?: string; selector?: Function; envelope?: typeof defaultEnvelope } = {}) => {
-  const instance = axios.create();
+  const instance = axios.create({
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${store.getState().jwt}`,
+    },
+  });
   instance.interceptors.request.use(config => {
     if (selector !== undefined) {
       const state = store.getState();

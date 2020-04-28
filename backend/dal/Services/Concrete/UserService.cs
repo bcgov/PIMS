@@ -99,7 +99,7 @@ namespace Pims.Dal.Services
                 .Include(a => a.User)
                 .AsNoTracking()
                 .OrderByDescending(a => a.CreatedOn)
-                .FirstOrDefault(a => a.UserId == userId && !a.IsDisabled);
+                .FirstOrDefault(a => a.UserId == userId && a.Status == AccessRequestStatus.OnHold);
             return accessRequest;
         }
 
@@ -120,6 +120,26 @@ namespace Pims.Dal.Services
                 .FirstOrDefault(a => a.Id == id) ?? throw new KeyNotFoundException();
             var userId = this.User.GetUserId();
             if (accessRequest.UserId != userId) throw new NotAuthorizedException();
+            return accessRequest;
+        }
+        /// <summary>
+        /// Delete an access request
+        /// </summary>
+        /// <param name="accessRequest">The item to be deleted</param>
+        /// <returns></returns>
+        public AccessRequest DeleteAccessRequest(AccessRequest accessRequest)
+        {
+            var entity = Context.AccessRequests
+                             .Include(a => a.Agencies)
+                             .ThenInclude(a => a.Agency)
+                             .Include(a => a.Roles)
+                             .ThenInclude(r => r.Role)
+                             .Include(a => a.User)
+                             .AsNoTracking()
+                             .FirstOrDefault(a => a.Id == accessRequest.Id) ?? throw new KeyNotFoundException();
+            Context.AccessRequests.Remove(entity);
+            Context.CommitTransaction();
+
             return accessRequest;
         }
 

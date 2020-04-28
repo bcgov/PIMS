@@ -1,3 +1,5 @@
+import { AccessRequestStatus } from 'constants/accessStatus';
+
 export interface IAccessRequest {
   id: number;
   userId: string;
@@ -5,9 +7,10 @@ export interface IAccessRequest {
   agencies: any[];
   roles: any[];
   note?: string | null;
-  isGranted: boolean;
+  status: AccessRequestStatus;
   rowVersion?: string;
   createdOn?: string;
+  position?: string;
 }
 
 interface IUser {
