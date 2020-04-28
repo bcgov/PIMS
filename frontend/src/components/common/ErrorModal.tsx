@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Button, Container } from 'react-bootstrap';
+import React from 'react';
 
-import { useHistory } from 'react-router-dom';
+import GenericModal from './GenericModal';
 
 /**
  * This component is intended for use with React Error Boundaries.
@@ -12,35 +11,8 @@ import { useHistory } from 'react-router-dom';
  * @param props
  */
 const ErrorModal = (props: any) => {
-  const history = useHistory();
-  const [show, setShow] = useState(true);
-  const handleClose =
-    props.handleClose ??
-    (() => {
-      history.push('/');
-      window.location.reload(false);
-    });
-  const close = () => {
-    setShow(false);
-    handleClose();
-  };
-
   return (
-    <Container>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>App Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body style={{ maxHeight: '500px' }}>{props.error.message}</Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="primary" onClick={close}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+    <GenericModal title="App Error" message={props.error.message} okButtonText="Ok"></GenericModal>
   );
 };
 
