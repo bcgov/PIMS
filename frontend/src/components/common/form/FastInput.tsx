@@ -69,6 +69,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
       return () => {
         unregisterField(field);
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
