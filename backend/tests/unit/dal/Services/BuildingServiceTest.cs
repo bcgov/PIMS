@@ -30,7 +30,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new BuildingFilter(50, 24, 50, 26), 0 },
                 new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1 },
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
-                new object[] { new BuildingFilter() { Description = "Description" }, 1 },
+                new object[] { new BuildingFilter() { Description = "DescriptionTest" }, 1 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
                 new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5 },
                 new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1 },
@@ -99,7 +99,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
-            buildings.Next(3).Description = "-Description-";
+            buildings.Next(3).Description = "-DescriptionTest-";
             buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
             buildings.Next(5).BuildingConstructionTypeId = 2;
             buildings.Next(6).BuildingPredominateUseId = 2;
@@ -177,7 +177,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
-            buildings.Next(3).Description = "-Description-";
+            buildings.Next(3).Description = "-DescriptionTest-";
             buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
             buildings.Next(5).BuildingConstructionTypeId = 2;
             buildings.Next(6).BuildingPredominateUseId = 2;

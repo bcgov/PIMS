@@ -30,7 +30,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new ParcelFilter(50, 24, 50, 26), 0 },
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1 },
                 new object[] { new ParcelFilter() { ClassificationId = 2 }, 1 },
-                new object[] { new ParcelFilter() { Description = "Description" }, 1 },
+                new object[] { new ParcelFilter() { Description = "DescriptionTest" }, 1 },
                 new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1 },
                 new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1 },
                 new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1 }
@@ -95,7 +95,7 @@ namespace Pims.Dal.Test.Services
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
-            parcels.Next(3).Description = "-Description-";
+            parcels.Next(3).Description = "-DescriptionTest-";
             parcels.Next(4).Municipality = "-Municipality-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
@@ -166,7 +166,7 @@ namespace Pims.Dal.Test.Services
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
-            parcels.Next(3).Description = "-Description-";
+            parcels.Next(3).Description = "-DescriptionTest-";
             parcels.Next(4).Municipality = "-Municipality-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";

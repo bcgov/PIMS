@@ -7,7 +7,6 @@ namespace Pims.Api.Models.Building
     public class BuildingModel : PropertyModel
     {
         #region Properties
-
         public int ParcelId { get; set; }
 
         public string LocalId { get; set; }

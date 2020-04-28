@@ -28,7 +28,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new ParcelFilter(50, 24, 50, 26), 0, 0 },
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1, 1 },
                 new object[] { new ParcelFilter() { ClassificationId = 2 }, 1, 1 },
-                new object[] { new ParcelFilter() { Description = "Description" }, 1, 1 },
+                new object[] { new ParcelFilter() { Description = "DescriptionTest" }, 1, 1 },
                 new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1, 1 },
                 new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1, 1 },
                 new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1, 1 }
@@ -41,7 +41,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new BuildingFilter(50, 24, 50, 26), 0, 0 },
                 new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1, 1 },
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1, 1 },
-                new object[] { new BuildingFilter() { Description = "Description" }, 1, 1 },
+                new object[] { new BuildingFilter() { Description = "DescriptionTest" }, 1, 1 },
                 new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5, 5 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
                 new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1, 1 },
@@ -57,7 +57,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter(50, 24, 50, 26), 0, 0 },
                 new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, 7, 7 },
                 new object[] { new AllPropertyFilter() { ClassificationId = 2 }, 2, 2 },
-                new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "Description" }, 20, 10 },
+                new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "DescriptionTest" }, 20, 10 },
                 new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, 11, 10 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, 20, 10 },
@@ -199,7 +199,7 @@ namespace Pims.Dal.Test.Services
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
-            parcels.Next(3).Description = "-Description-";
+            parcels.Next(3).Description = "-DescriptionTest-";
             parcels.Next(4).Municipality = "-Municipality-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
@@ -234,7 +234,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
-            buildings.Next(3).Description = "-Description-";
+            buildings.Next(3).Description = "-DescriptionTest-";
             buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
             buildings.Next(5).BuildingConstructionTypeId = 2;
             buildings.Next(6).BuildingPredominateUseId = 2;
