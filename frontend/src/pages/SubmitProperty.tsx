@@ -21,13 +21,17 @@ import { IGenericNetworkAction } from 'actions/genericActions';
 import { clearClickLatLng } from 'reducers/LeafletMouseSlice';
 import { useHistory } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
+import GenericModal from 'components/common/GenericModal';
+import { isStorageInUse, PARCEL_STORAGE_NAME, clearStorage } from 'utils/storageUtils';
 
 const SubmitProperty = (props: any) => {
   const query = props?.location?.search ?? {};
   const parcelId = props?.match?.params?.id;
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  const [formDisabled, setFormDisabled] = useState(!!queryString.parse(query).disabled);
+  const parsedQuery = queryString.parse(query);
+  const [formDisabled, setFormDisabled] = useState(!!parsedQuery.disabled);
+  const loadDraft = parsedQuery.loadDraft;
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
     state => state.leafletClickEvent.mapClickEvent,
   );
@@ -38,6 +42,7 @@ const SubmitProperty = (props: any) => {
     state => state.parcel.parcelDetail as IParcelDetail,
   );
   const [cachedParcelDetail, setCachedParcelDetail] = useState(activeParcelDetail?.parcelDetail);
+  const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
 
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
   const dispatch = useDispatch();
@@ -107,7 +112,17 @@ const SubmitProperty = (props: any) => {
                 Edit
               </Button>
             )}
-            <Button style={{ marginLeft: '7px' }} variant="dark" onClick={() => history.goBack()}>
+            <Button
+              style={{ marginLeft: '7px' }}
+              variant="dark"
+              onClick={() => {
+                if (!formDisabled && isStorageInUse(PARCEL_STORAGE_NAME)) {
+                  setShowSaveDraftDialog(true);
+                } else {
+                  history.goBack();
+                }
+              }}
+            >
               <FaTimes size={20} />
             </Button>
           </Col>
@@ -123,6 +138,7 @@ const SubmitProperty = (props: any) => {
                 parcelDetail={parcelId ? cachedParcelDetail : null}
                 disabled={formDisabled}
                 secret={keycloak.obj.subject}
+                loadDraft={!!loadDraft}
               />
             )}
           </Col>
@@ -137,6 +153,20 @@ const SubmitProperty = (props: any) => {
           onMarkerPopupClosed={() => {}}
         />
       </Col>
+      <GenericModal
+        title="Unsaved Draft"
+        message="You have not saved your changes. Are you sure you want to leave this page?"
+        cancelButtonText="Discard"
+        okButtonText="Continue Editing"
+        display={showSaveDraftDialog}
+        handleOk={() => {
+          setShowSaveDraftDialog(false);
+        }}
+        handleCancel={() => {
+          clearStorage(PARCEL_STORAGE_NAME);
+          history.goBack();
+        }}
+      />
     </Row>
   );
 };

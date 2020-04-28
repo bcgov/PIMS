@@ -284,7 +284,7 @@ describe('autosave functionality', () => {
     const differentKey = (
       <Provider store={store}>
         <Router history={history}>
-          <ParcelDetailForm agencyId={1} parcelDetail={null} secret="invalid" />
+          <ParcelDetailForm agencyId={1} parcelDetail={null} secret="invalid" loadDraft={true} />
         </Router>
       </Provider>
     );

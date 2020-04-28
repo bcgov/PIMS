@@ -9,6 +9,7 @@ import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import AppRouter from 'router';
+import OnLoadActions from 'OnLoadActions';
 
 export const store = configureStore();
 
@@ -32,7 +33,12 @@ const App = () => {
           return <Spinner animation="border"></Spinner>;
         }
 
-        return <AppRouter />;
+        return (
+          <>
+            <AppRouter />
+            <OnLoadActions />
+          </>
+        );
       }}
     </AuthStateContext.Consumer>
   );
