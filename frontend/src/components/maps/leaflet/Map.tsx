@@ -2,7 +2,7 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent, Icon } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -77,6 +77,25 @@ const Map: React.FC<MapProps> = ({
   });
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
+
+  // different markers for building and parcel
+  var greenIcon = new Icon({
+    iconUrl: require('assets/images/marker-icon-2x-green.png'),
+    shadowUrl: require('assets/images/marker-shadow.png'),
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
+  var blueIcon = new Icon({
+    iconUrl: require('assets/images/marker-icon-2x-blue.png'),
+    shadowUrl: require('assets/images/marker-shadow.png'),
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
 
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -168,13 +187,17 @@ const Map: React.FC<MapProps> = ({
   // the same ID could be found on both the parcel collection and building collection
   const generateKey = (p: IProperty) => `${p.propertyTypeId === 0 ? 'parcel' : 'building'}-${p.id}`;
 
-  const renderMarker = (p: IProperty) => (
-    <Marker
-      key={generateKey(p)}
-      position={[p.latitude, p.longitude]}
-      onClick={(e: any) => onMarkerClick?.(p)}
-    />
-  );
+  const renderMarker = (p: IProperty) => {
+    const icon = p.propertyTypeId === 0 ? greenIcon : blueIcon;
+    return (
+      <Marker
+        key={generateKey(p)}
+        position={[p.latitude, p.longitude]}
+        onClick={(e: any) => onMarkerClick?.(p)}
+        icon={icon}
+      />
+    );
+  };
 
   const renderPopup = (item: IPropertyDetail) => {
     const { propertyTypeId, parcelDetail } = item;
