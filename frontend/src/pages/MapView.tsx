@@ -104,7 +104,9 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   useEffect(() => {
     dispatch(fetchParcels(parcelBounds));
     dispatch(getFetchLookupCodeAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, parcelBounds]);
+
   return (
     <Map
       lat={propertyDetail?.parcelDetail?.latitude ?? 48.43}

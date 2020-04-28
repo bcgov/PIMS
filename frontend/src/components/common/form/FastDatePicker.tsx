@@ -58,6 +58,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
     return () => {
       unregisterField(field);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && disabled ? 'is-valid ' : '';

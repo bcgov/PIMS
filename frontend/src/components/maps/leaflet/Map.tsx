@@ -86,6 +86,7 @@ const Map: React.FC<MapProps> = ({
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoom;
   useEffect(() => {
     dispatch(resetMapViewZoom());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!interactive) {
@@ -151,6 +152,7 @@ const Map: React.FC<MapProps> = ({
   // --- Effects AKA network requests
   useEffect(() => {
     handleViewportChange();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapFilter]);
 
   useEffect(() => {
@@ -159,6 +161,7 @@ const Map: React.FC<MapProps> = ({
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // we need to namespace the keys as IDs are not enough here.

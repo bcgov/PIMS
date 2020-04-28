@@ -1,4 +1,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+![API (DEV)](https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=master)
+![APP (React)](https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=master)
 
 # PIMS
 
@@ -47,7 +49,10 @@ Objectives include:
 
 ## Project Status
 
-IN DEVELOPMENT
+![API (.Net Core)](https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=dev)
+![APP (React)](https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=dev)
+
+**IN DEVELOPMENT**
 
 ## Development
 
