@@ -6,14 +6,16 @@
 
   a {
     display: inline;
-    &:link, &:visited {
+    &:link,
+    &:visited {
       color: #ffffff;
       font-size: 16px;
       font-family: 'BCSans' Fallback, sans-serif;
       padding: 0 10px;
       border-right: 1px solid #666;
     }
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       text-decoration: underline;
     }
   }
