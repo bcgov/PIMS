@@ -142,7 +142,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     });
 
     const yupErrors = validateYupSchema(values, ParcelSchema).then(
-      () => { },
+      () => {},
       (err: any) => {
         return { ...yupToFormErrors(err), ...financialErrors };
       },

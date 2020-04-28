@@ -12,13 +12,14 @@
 
 .btn:hover {
   text-decoration: underline;
-}:disabled {
+}
+:disabled {
   text-decoration: none;
 }
 
 .btn.btn-primary {
   background-color: #003366;
-  font-family: "BCSans" Fallback, sans-serif;
+  font-family: 'BCSans' Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #ffffff;
   font-size: 16px;
@@ -29,14 +30,15 @@
 .btn:hover {
   opacity: 0.8;
 }
-.btn:disabled,.btn:hover:disabled {
-  opacity: .65;
+.btn:disabled,
+.btn:hover:disabled {
+  opacity: 0.65;
   cursor: unset;
 }
 
 .btn.btn-secondary {
   background-color: #ffffff;
-  font-family: "BCSans" Fallback, sans-serif;
+  font-family: 'BCSans' Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #494949;
   font-size: 16px;
@@ -49,7 +51,7 @@
 
 .btn.btn-light {
   background-color: #606060;
-  font-family: "BCSans" Fallback, sans-serif;
+  font-family: 'BCSans' Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #fff;
   font-size: 16px;
@@ -82,4 +84,3 @@
 .btn.active {
   background-color: #3b99fc !important;
 }
-
