@@ -82,7 +82,7 @@ describe('component functionality when requestAccess status is 200 and fetching 
       agencies: [],
       agency: undefined,
       id: 0,
-      isGranted: false,
+      status: 'OnHold',
       note: '',
       role: undefined,
       roles: [],

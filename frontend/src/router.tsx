@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import AccessDenied from 'pages/AccessDenied';
 import SubmitProperty from 'pages/SubmitProperty';
 import ManageUsers from 'pages/ManageUsers';
-import ManageAccessRequests from 'pages/ManageAccessRequests';
+import ManageAccessRequests from 'pages/admin/access/ManageAccessRequests';
 import { Claims } from 'constants/claims';
 import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';

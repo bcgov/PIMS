@@ -1,5 +1,6 @@
 // Network URL's
 import queryString from 'query-string';
+import { AccessRequestStatus } from './accessStatus';
 
 // Generic Params
 export interface IPaginateParams {
@@ -8,11 +9,8 @@ export interface IPaginateParams {
   sort?: string;
 }
 
-export interface IPaginateAccessRequests {
-  page: number;
-  quantity?: number;
-  sort?: string;
-  isGranted?: boolean | null;
+export interface IPaginateAccessRequests extends IPaginateParams {
+  status?: AccessRequestStatus | null;
 }
 
 // Parcels
@@ -68,5 +66,6 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 export const REQUEST_ACCESS = (id?: number) => `/users/access/requests${id ? '/' + id : ''}`; //request access url.
 export const REQUEST_ACCESS_ADMIN = () => `/keycloak/users/access/request`; //request access admin url.
 export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
-  `/admin/users/access/requests/?${queryString.stringify(params)}`; // get paged access requests
+  `/admin/access/requests?${queryString.stringify(params)}`; // get paged access requests
+export const REQUEST_ACCESS_DELETE = (id: number) => `/admin/access/requests/${id}`; // delete an access request
 export const POST_USERS = () => `/admin/users/my/agency`; // get paged list of users

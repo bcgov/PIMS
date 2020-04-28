@@ -22,6 +22,31 @@ export interface IStoreAccessRequestAction {
   accessRequest: IAccessRequest;
 }
 
+export interface IUpdateAccessRequestAction {
+  type: typeof ActionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN;
+  accessRequest: IAccessRequest;
+}
+
+export interface IFilterAccessRequestsAction {
+  type: typeof ActionTypes.FILTER_REQUEST_ACCESS_ADMIN;
+  filters: any;
+}
+
+export interface ISortAccessRequestsAction {
+  type: typeof ActionTypes.SORT_REQUEST_ACCESS_ADMIN;
+  sorting: any[];
+}
+
+export interface ISelectAccessRequestsAction {
+  type: typeof ActionTypes.SELECT_REQUEST_ACCESS_ADMIN;
+  selections: string[];
+}
+
+export interface IDeleteAccessRequestAction {
+  type: typeof ActionTypes.DELETE_REQUEST_ACCESS_ADMIN;
+  id: number;
+}
+
 /**
  * Store the single access request to redux.
  * @param accessRequest - a single access request

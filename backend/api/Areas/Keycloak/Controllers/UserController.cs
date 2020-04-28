@@ -8,6 +8,7 @@ using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using MapsterMapper;
+using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
@@ -34,7 +35,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// </summary>
         /// <param name="keycloakService"></param>
         /// <param name="mapper"></param>
-        public UserController(IPimsKeycloakService keycloakService, IMapper mapper)
+        public UserController(IMapper mapper, IPimsKeycloakService keycloakService)
         {
             _keycloakService = keycloakService;
             _mapper = mapper;
@@ -141,7 +142,6 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);
             var updatedEntity = await _keycloakService.UpdateAccessRequestAsync(entity);
-
             var user = _mapper.Map<Model.AccessRequestModel>(updatedEntity);
             return new JsonResult(user);
         }

@@ -179,32 +179,6 @@ namespace Pims.Api.Areas.Admin.Controllers
 
             return new JsonResult(model);
         }
-
-        #region Access Request
-        /// <summary>
-        /// Gets all of the access requests that have been submitted to the system.
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="quantity"></param>
-        /// <param name="sort"></param>
-        /// <param name="isGranted"></param>
-        /// <returns></returns>
-        [HttpGet("access/requests")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AccessRequestModel>), 200)]
-        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] { "admin-user" })]
-        public IActionResult GetAccessRequests(int page = 1, int quantity = 10, string sort = null, bool? isGranted = null)
-        {
-            if (page < 1) page = 1;
-            if (quantity < 1) quantity = 1;
-            if (quantity > 20) quantity = 20;
-
-            var paged = _pimsAdminService.User.GetAccessRequests(page, quantity, sort, isGranted);
-            var result = _mapper.Map<Api.Models.PageModel<Model.AccessRequestModel>>(paged);
-            return new JsonResult(result);
-        }
-        #endregion
         #endregion
     }
 }
