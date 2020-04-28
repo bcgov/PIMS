@@ -1,7 +1,14 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { Formik, FieldArray, FormikErrors, validateYupSchema, yupToFormErrors } from 'formik';
+import {
+  Formik,
+  FieldArray,
+  FormikErrors,
+  validateYupSchema,
+  yupToFormErrors,
+  FormikProps,
+} from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
 import BuildingForm, { defaultBuildingValues, IFormBuilding } from './subforms/BuildingForm';
@@ -29,6 +36,7 @@ import { Persist } from 'components/common/FormikPersist';
 import { LatLng } from 'leaflet';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import SumFinancialsForm from './subforms/SumFinancialsForm';
+import { PARCEL_STORAGE_NAME } from 'utils/storageUtils';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -36,6 +44,7 @@ interface ParcelPropertyProps {
   agencyId?: number;
   disabled?: boolean;
   clickLatLng?: LatLng;
+  loadDraft?: boolean;
 }
 
 export interface IFormParcel extends IParcel {
@@ -79,10 +88,14 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       buildings: buildings,
     };
   }
-  const setLatLng = (values: IParcel) => {
-    if (props.clickLatLng) {
-      values.latitude = props.clickLatLng.lat;
-      values.longitude = props.clickLatLng.lng;
+  const setLatLng = (formikProps: FormikProps<IFormParcel>) => {
+    if (
+      props.clickLatLng &&
+      props.clickLatLng.lat !== formikProps.values.latitude &&
+      props.clickLatLng.lng !== formikProps.values.longitude
+    ) {
+      formikProps.setFieldValue('latitude', props.clickLatLng.lat);
+      formikProps.setFieldValue('longitude', props.clickLatLng.lng);
     }
   };
   //convert all form values to the format accepted by the API.
@@ -183,13 +196,14 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         >
           {formikProps => (
             <Form>
-              {setLatLng(formikProps.values)}
+              {setLatLng(formikProps)}
               {!props.disabled && (
                 <Persist
                   writeOnly={props.parcelDetail?.id}
                   initialValues={initialValues}
                   secret={props.secret}
-                  name="parcelDetailForm"
+                  loadDraft={props.loadDraft}
+                  name={PARCEL_STORAGE_NAME}
                 />
               )}
               <Row noGutters>
