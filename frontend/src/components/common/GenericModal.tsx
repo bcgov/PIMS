@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Container } from 'react-bootstrap';
+
+import { useHistory } from 'react-router-dom';
+
+interface ModalProps {
+  /** Optional function to control behaviour of cancel button. Default is to close the modal. */
+  handleCancel?: Function;
+  /** Optional function to control behaviour of ok button. Default is to reload the app. */
+  handleOk?: Function;
+  /** Optional text to display on the cancel button. Default is Cancel. */
+  cancelButtonText?: string;
+  /** Optional test to display on the ok button. Default is Ok. */
+  okButtonText?: string;
+  /** Optional title to display - no default. */
+  title?: string;
+  /** Optional message to display - no default. */
+  message?: string;
+  /** allows the parent component to control the display of this modal.
+   * Default behaviour is to show this modal on creation and close it on button click. */
+  display?: boolean;
+  /** optional override to control the x button in the top right of the modal. Default is to show. */
+  closeButton?: boolean;
+}
+
+/**
+ * Generic Component used to display modal popups to the user.
+ * @param props customize the component with custom text, and an operation to take when the component is closed.
+ */
+const GenericModal = (props: ModalProps) => {
+  const history = useHistory();
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    if (props.display !== undefined) {
+      setShow(props.display);
+    }
+  }, [props.display]);
+
+  const emptyFunction = () => {};
+  const handleCancel = props.handleCancel ?? emptyFunction;
+
+  const close = () => {
+    setShow(false);
+    handleCancel();
+  };
+
+  const handleOk =
+    props.handleOk ??
+    (() => {
+      history.push('/');
+      window.location.reload();
+    });
+  const ok = () => {
+    setShow(false);
+    handleOk();
+  };
+
+  return (
+    <Container>
+      <Modal show={show} onHide={ok}>
+        <Modal.Header closeButton={props.closeButton}>
+          <Modal.Title>{props.title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body style={{ maxHeight: '500px' }}>{props.message}</Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="primary" onClick={ok}>
+            {props.okButtonText ?? 'Ok'}
+          </Button>
+          {props.cancelButtonText && (
+            <Button variant="warning" onClick={close}>
+              {props.cancelButtonText}
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+    </Container>
+  );
+};
+
+export default GenericModal;
