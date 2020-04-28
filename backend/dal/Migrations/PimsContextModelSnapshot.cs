@@ -34,12 +34,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsGranted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
@@ -47,6 +41,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -61,11 +58,11 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("Status");
+
                     b.HasIndex("UpdatedById");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("IsDisabled", "IsGranted");
 
                     b.ToTable("AccessRequests");
                 });

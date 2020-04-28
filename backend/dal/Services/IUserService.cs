@@ -14,6 +14,7 @@ namespace Pims.Dal.Services
         IEnumerable<int> GetAgencies(Guid userId);
         AccessRequest GetAccessRequest();
         AccessRequest GetAccessRequest(int id);
+        AccessRequest DeleteAccessRequest(AccessRequest accessRequest);
         AccessRequest AddAccessRequest(AccessRequest request);
         AccessRequest UpdateAccessRequest(AccessRequest request);
     }

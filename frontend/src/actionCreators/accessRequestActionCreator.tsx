@@ -3,16 +3,18 @@ import { request, success, error } from 'actions/genericActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import {
-  IStoreAccessRequestsAction,
-  storeAccessRequests,
   storeAccessRequest,
+  IFilterAccessRequestsAction,
+  ISelectAccessRequestsAction,
+  ISortAccessRequestsAction,
 } from 'actions/accessRequestActions';
 import { IAccessRequest } from 'interfaces/accessRequests';
 import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
-import { createRequestHeader } from 'utils/RequestHeaders';
+import { IColumnFilter, ISort } from 'reducers/accessRequestReducer';
+import { Dispatch } from 'react';
 
 /**
  * Converts the 'values' object into an IAccessRequest object
@@ -31,7 +33,7 @@ export const toAccessRequest = (values: any): IAccessRequest => {
     },
     agencies: isNaN(values.agency) ? [] : [{ id: parseInt(values.agency) }],
     roles: [{ id: values.role }],
-    isGranted: values.isGranted,
+    status: values.status,
     note: values.note,
     rowVersion: values.rowVersion,
   };
@@ -45,7 +47,7 @@ export const getCurrentAccessRequestAction = () => (dispatch: Function) => {
   dispatch(request(reducerTypes.GET_REQUEST_ACCESS));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS(), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS())
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.GET_REQUEST_ACCESS));
       dispatch(storeAccessRequest(response.data));
@@ -73,7 +75,6 @@ export const getSubmitAccessRequestAction = (accessRequest: IAccessRequest) => (
     .request({
       url: ENVIRONMENT.apiUrl + API.REQUEST_ACCESS(accessRequest.id),
       method: accessRequest.id === 0 ? 'post' : 'put',
-      headers: createRequestHeader().headers,
       data: accessRequest,
     })
     .then((response: AxiosResponse) => {
@@ -89,13 +90,16 @@ export const getSubmitAccessRequestAction = (accessRequest: IAccessRequest) => (
 export const getSubmitAdminAccessRequestAction = (accessRequest: IAccessRequest) => (
   dispatch: Function,
 ) => {
-  dispatch(request(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN));
+  dispatch(request(actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest, createRequestHeader())
+    .put(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest)
     .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status));
-      dispatch(hideLoading());
+      dispatch(success(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status, response.data));
+      dispatch({
+        type: actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN,
+        accessRequest: accessRequest,
+      });
     })
     .catch((axiosError: AxiosError) =>
       dispatch(
@@ -111,19 +115,60 @@ export const getAccessRequestsAction = (params: API.IPaginateAccessRequests) => 
   dispatch(request(actionTypes.GET_REQUEST_ACCESS));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_LIST(params), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_LIST(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_REQUEST_ACCESS, response.status));
-      const clearAction: IStoreAccessRequestsAction = {
+      dispatch({
         type: actionTypes.STORE_ACCESS_REQUESTS,
-        pagedAccessRequests: { page: 0, quantity: 0, total: 0, items: [] },
-      };
-      dispatch(clearAction); //TODO: this should not be necessary.
-      dispatch(storeAccessRequests(response.data));
+        pagedAccessRequests: response.data,
+      });
+
       dispatch(hideLoading());
     })
     .catch((axiosError: AxiosError) =>
       dispatch(error(actionTypes.GET_REQUEST_ACCESS, axiosError?.response?.status, axiosError)),
+    )
+    .finally(() => dispatch(hideLoading()));
+};
+
+export const getAccessRequestsFilterAction = (filters: {
+  [key: number]: IColumnFilter;
+}): IFilterAccessRequestsAction => ({
+  type: actionTypes.FILTER_REQUEST_ACCESS_ADMIN,
+  filters,
+});
+
+export const getAccessRequestsSelectAction = (
+  selections: string[] = [],
+): ISelectAccessRequestsAction => ({
+  type: actionTypes.SELECT_REQUEST_ACCESS_ADMIN,
+  selections,
+});
+
+export const getAccessRequestsSortAction = (sorting: ISort[] = []): ISortAccessRequestsAction => ({
+  type: actionTypes.SORT_REQUEST_ACCESS_ADMIN,
+  sorting,
+});
+
+export const getAccessRequestsDeleteAction = (id: number, data: IAccessRequest) => (
+  dispatch: Dispatch<any>,
+) => {
+  dispatch(request(actionTypes.DELETE_REQUEST_ACCESS_ADMIN));
+  dispatch(showLoading());
+  return CustomAxios()
+    .request({
+      method: 'DELETE',
+      url: ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_DELETE(id),
+      data,
+    })
+    .then(() => {
+      dispatch({ type: actionTypes.DELETE_REQUEST_ACCESS_ADMIN, id });
+      dispatch(hideLoading());
+    })
+    .catch((axiosError: AxiosError) =>
+      dispatch(
+        error(actionTypes.DELETE_REQUEST_ACCESS_ADMIN, axiosError?.response?.status, axiosError),
+      ),
     )
     .finally(() => dispatch(hideLoading()));
 };

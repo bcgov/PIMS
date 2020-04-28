@@ -1,6 +1,5 @@
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
-import { createRequestHeader } from 'utils/RequestHeaders';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
 
@@ -22,8 +21,7 @@ export interface IDownloadConfig extends AxiosRequestConfig {
  * @param config.fileName - The file name you want to save the download as.  By default it will use the current date.
  */
 const download = (config: IDownloadConfig) => (dispatch: Function) => {
-  const headers = createRequestHeader().headers;
-  const options = { ...config, headers: { ...headers, ...config.headers } };
+  const options = { ...config, headers: { ...config.headers } };
   dispatch(request(options.actionType));
   dispatch(showLoading());
   return CustomAxios()

@@ -7,13 +7,12 @@ import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
-import { createRequestHeader } from 'utils/RequestHeaders';
 
 export const getActivateUserAction = () => (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_ACTIVATE_USER));
   dispatch(showLoading());
   return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.ACTIVATE_USER(), null, createRequestHeader())
+    .post(ENVIRONMENT.apiUrl + API.ACTIVATE_USER(), null)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.ADD_ACTIVATE_USER, response.status));
       dispatch(hideLoading());
@@ -28,7 +27,7 @@ export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Functi
   dispatch(request(actionTypes.GET_USERS));
   dispatch(showLoading());
   return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params, createRequestHeader())
+    .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_USERS, response.status));
       dispatch(adminActions.storeUsers(response.data));
@@ -44,7 +43,7 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Functio
   dispatch(request(reducerTypes.GET_USER_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.USER_DETAIL(id))
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.GET_USER_DETAIL));
       dispatch(adminActions.storeUserDetail(response.data));
@@ -60,7 +59,7 @@ export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any)
   dispatch(request(reducerTypes.PUT_USER_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), updatedUser, createRequestHeader())
+    .put(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), updatedUser)
     .then((response: AxiosResponse) => {
       dispatch(success(reducerTypes.PUT_USER_DETAIL));
       dispatch(hideLoading());

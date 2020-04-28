@@ -7,7 +7,6 @@ import { IParcel } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
-import { createRequestHeader } from 'utils/RequestHeaders';
 
 export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
   dispatch: Function,
@@ -20,7 +19,7 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
     dispatch(request(actionTypes.GET_PARCELS));
     dispatch(showLoading());
     return CustomAxios()
-      .get(ENVIRONMENT.apiUrl + API.PARCELS(parcelBounds), createRequestHeader())
+      .get(ENVIRONMENT.apiUrl + API.PARCELS(parcelBounds))
       .then((response: AxiosResponse) => {
         dispatch(success(actionTypes.GET_PARCELS));
         dispatch(parcelsActions.storeParcelsAction(response.data));
@@ -39,7 +38,7 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch:
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data));
@@ -55,7 +54,7 @@ export const fetchBuildingDetail = (params: API.IBuildingDetailParams) => (dispa
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params), createRequestHeader())
+    .get(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeBuildingDetail(response.data));
@@ -77,7 +76,7 @@ export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_PARCEL));
   dispatch(showLoading());
   return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.ADD_PARCEL, parcel, createRequestHeader())
+    .post(ENVIRONMENT.apiUrl + API.ADD_PARCEL, parcel)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.ADD_PARCEL, response.status));
       dispatch(fetchParcelDetail(response.data));
@@ -94,7 +93,7 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.ADD_PARCEL + `/${parcel.id}`, parcel, createRequestHeader())
+    .put(ENVIRONMENT.apiUrl + API.ADD_PARCEL + `/${parcel.id}`, parcel)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.UPDATE_PARCEL, response.status));
       dispatch(fetchParcelDetail(response.data));
