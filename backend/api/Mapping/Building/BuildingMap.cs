@@ -7,12 +7,11 @@ namespace Pims.Api.Mapping.Building
 {
     public class BuildingMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Building, Model.BuildingModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -38,10 +37,9 @@ namespace Pims.Api.Mapping.Building
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
-
             config.NewConfig<Model.BuildingModel, Entity.Building>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)

@@ -30,6 +30,8 @@ namespace Pims.Core.Test
             var predominateUse = EntityHelper.CreateBuildingPredominateUse("use");
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
+            var classification = EntityHelper.CreatePropertyClassification("classification");
+            var status = EntityHelper.CreatePropertyStatus("status");
 
             return new Entity.Building(parcel, lat, lng)
             {
@@ -40,6 +42,11 @@ namespace Pims.Core.Test
                 Agency = agency,
                 AddressId = address.Id,
                 Address = address,
+                Classification = classification,
+                ClassificationId = classification.Id,
+                Description = $"description-{id}",
+                Status = status,
+                StatusId = status.Id,
                 BuildingPredominateUse = predominateUse,
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
@@ -92,6 +99,8 @@ namespace Pims.Core.Test
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault() ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
+            var classification = context.PropertyClassifications.FirstOrDefault() ?? EntityHelper.CreatePropertyClassification("classification");
+            var status = context.PropertyStatus.FirstOrDefault() ?? EntityHelper.CreatePropertyStatus("status");
 
             var building = new Entity.Building(parcel, lat, lng)
             {
@@ -102,6 +111,11 @@ namespace Pims.Core.Test
                 Agency = agency,
                 AddressId = address.Id,
                 Address = address,
+                Classification = classification,
+                ClassificationId = classification.Id,
+                Description = $"description-{id}",
+                Status = status,
+                StatusId = status.Id,
                 BuildingPredominateUse = predominateUse,
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
