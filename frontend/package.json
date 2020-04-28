@@ -69,8 +69,8 @@
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-prettier": "3.1.1",
     "husky": "4.2.3",
-    "lint-staged": "10.0.8",
     "prettier": "1.19.1",
+    "prettier-check": "2.0.0",
     "react-test-renderer": "16.12.0",
     "redux-mock-store": "1.5.4"
   },
@@ -80,8 +80,11 @@
     "test": "react-scripts test",
     "update-snapshots": "react-scripts test -- --updateSnapshot",
     "eject": "react-scripts eject",
-    "lint": "tsc --noEmit && eslint src --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\""
+    "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
+    "format:check": "prettier-check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
+    "pre-push:check": "npm run format:check && npm run lint"
   },
   "eslintConfig": {
     "extends": [
@@ -94,18 +97,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-push": "npm run pre-push:check"
     }
-  },
-  "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.+(json|css|md)": [
-      "prettier --write",
-      "git add"
-    ]
   },
   "browserslist": {
     "production": [
