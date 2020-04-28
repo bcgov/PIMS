@@ -1,12 +1,13 @@
 .parcelDetailForm {
   text-align: left;
   font-size: 0.75rem;
-  font-family: "BCSans" Fallback, sans-serif;
+  font-family: 'BCSans' Fallback, sans-serif;
   background-color: #f2f2f2;
   .col-md-6 {
     padding-right: 4rem;
   }
-  .evaluationForm, .col-md-6 {
+  .evaluationForm,
+  .col-md-6 {
     padding-left: 1rem;
   }
   .form-check {
@@ -52,8 +53,8 @@
       flex-wrap: nowrap;
     }
     .evaluationForm .input-group.disabled .input-group-prepend .input-group-text {
-        border: none;
-        background-color: white;
+      border: none;
+      background-color: white;
     }
     .input-group-content {
       padding: 0;
@@ -61,7 +62,7 @@
       width: 100%;
     }
     .input-group-text {
-      height: calc(1.5em + .75rem + 2px);
+      height: calc(1.5em + 0.75rem + 2px);
       padding: 2px;
     }
   }
