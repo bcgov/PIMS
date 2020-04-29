@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Pims.Dal.Services;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -11,6 +10,7 @@ namespace Pims.Dal.Services.Admin
         #region Properties
         ClaimsPrincipal Principal { get; }
         IUserService User { get; }
+        IClaimService Claim { get; }
         IRoleService Role { get; }
         IAgencyService Agency { get; }
         IParcelService Parcel { get; }

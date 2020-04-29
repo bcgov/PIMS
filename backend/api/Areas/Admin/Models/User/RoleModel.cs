@@ -15,6 +15,11 @@ namespace Pims.Api.Areas.Admin.Models.User
         public string Description { get; set; }
 
         /// <summary>
+        /// get/set - The keycloak group id.
+        /// </summary>
+        public Guid? KeycloakGroupId { get; set; }
+
+        /// <summary>
         /// get/set - Whether the role is public.
         /// One which users can request to join.
         /// </summary>
