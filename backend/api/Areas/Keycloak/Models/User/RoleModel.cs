@@ -5,7 +5,7 @@ namespace Pims.Api.Areas.Keycloak.Models.User
     /// <summary>
     /// RoleModel class, provides a model that represents a role.
     /// </summary>
-    public class RoleModel : Pims.Api.Models.LookupModel<Guid>
+    public class RoleModel : Api.Models.LookupModel<Guid>
     {
         #region Properties
         /// <summary>
@@ -13,6 +13,12 @@ namespace Pims.Api.Areas.Keycloak.Models.User
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the role is public.
+        /// One which users can request to join.
+        /// </summary>
+        public bool IsPublic { get; set; }
         #endregion
     }
 }

@@ -38,8 +38,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Paged<Building> Get(int page, int quantity, string sort)
         {
-            // TODO: Check for system-administrator role.
-            if (this.User == null) throw new NotAuthorizedException();
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var entities = this.Context.Buildings.AsNoTracking();
 
@@ -54,8 +53,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Building Get(int id)
         {
-            // TODO: Check for system-administrator role.
-            if (this.User == null) throw new NotAuthorizedException();
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
@@ -76,8 +74,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Building GetByLocalId(string localId)
         {
-            // TODO: Check for system-administrator role.
-            if (this.User == null) throw new NotAuthorizedException();
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
@@ -99,8 +96,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public Building GetByPidAndLocalId(int pid, string localId)
         {
-            // TODO: Check for system-administrator role.
-            if (this.User == null) throw new NotAuthorizedException();
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Buildings
                 .Include(p => p.BuildingConstructionType)
@@ -123,6 +119,7 @@ namespace Pims.Dal.Services.Admin
         public override Building Add(Building entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             if (entity.Agency != null)
                 this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
@@ -187,6 +184,7 @@ namespace Pims.Dal.Services.Admin
         public override Building Update(Building entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var building = this.Context.Buildings.Find(entity.Id);
             if (building == null) throw new KeyNotFoundException();
@@ -202,6 +200,7 @@ namespace Pims.Dal.Services.Admin
         public override void Remove(Building entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var building = this.Context.Buildings.Find(entity.Id);
             if (building == null) throw new KeyNotFoundException();

@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200424171751_Initial")]
+    [Migration("20200428234104_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1186,6 +1186,9 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(500);
 
                     b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

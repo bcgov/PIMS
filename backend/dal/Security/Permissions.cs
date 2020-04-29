@@ -24,6 +24,9 @@ namespace Pims.Dal.Security
         [Display(GroupName = "admin", Name = "admin-roles", Description = "Can administer application roles.")]
         AdminRoles,
 
+        [Display(GroupName = "admin", Name = "admin-properties", Description = "Can administer properties.")]
+        AdminProperties,
+
         [Display(GroupName = "property", Name = "property-view", Description = "Can view properties from inventory.")]
         PropertyView,
 
@@ -32,6 +35,9 @@ namespace Pims.Dal.Security
 
         [Display(GroupName = "property", Name = "property-edit", Description = "Can edit properties in inventory.")]
         PropertyEdit,
+
+        [Display(GroupName = "property", Name = "property-delete", Description = "Can delete properties in inventory.")]
+        PropertyDelete,
 
         [Display(GroupName = "property", Name = "sensitive-view", Description = "Can view sensitive properties in inventory.")]
         SensitiveView,

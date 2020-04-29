@@ -145,7 +145,7 @@ namespace Pims.Api.Test.Routes.Admin
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{id}");
-            endpoint.HasPermissions(Permissions.PropertyAdd);
+            endpoint.HasPermissions(Permissions.PropertyDelete);
         }
         #endregion
     }

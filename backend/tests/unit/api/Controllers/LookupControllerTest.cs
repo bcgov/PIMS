@@ -1,19 +1,18 @@
 using Xunit;
 using System;
-using Pims.Dal;
-using Pims.Api.Controllers;
-using Newtonsoft.Json;
-using Moq;
-using Model = Pims.Api.Models;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
-using MapsterMapper;
-using Pims.Core.Test;
-using Pims.Core.Comparers;
-using System.Collections.Generic;
 using System.Linq;
-using Pims.Core.Extensions;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using Pims.Dal;
+using Pims.Core.Test;
+using Pims.Core.Extensions;
+using Pims.Core.Comparers;
+using Pims.Api.Controllers;
+using Moq;
+using Model = Pims.Api.Models.Lookup;
+using Microsoft.AspNetCore.Mvc;
+using MapsterMapper;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -56,8 +55,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.CodeModel<int>[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.CodeModel<int>>(agency) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Models.CodeModel<int>[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Models.CodeModel<int>>(agency) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetAgencies(), Times.Once());
         }
 
@@ -82,8 +81,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.LookupModel<int>[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.LookupModel<int>>(propertyClassification) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Models.LookupModel<int>[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Models.LookupModel<int>>(propertyClassification) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetPropertyClassifications(), Times.Once());
         }
 
@@ -110,8 +109,8 @@ namespace Pims.Api.Test.Controllers
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.LookupModel<Guid>[]>(actionResult.Value);
-            Assert.Equal(new[] { mapper.Map<Model.LookupModel<Guid>>(role) }, actualResult, new DeepPropertyCompare());
+            var actualResult = Assert.IsType<Model.RoleModel[]>(actionResult.Value);
+            Assert.Equal(new[] { mapper.Map<Model.RoleModel>(role) }, actualResult, new DeepPropertyCompare());
             pimsService.Verify(m => m.Lookup.GetRoles(), Times.Once());
         }
 
@@ -158,15 +157,15 @@ namespace Pims.Api.Test.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsAssignableFrom<IEnumerable<object>>(actionResult.Value);
-            Assert.Equal(mapper.Map<Model.LookupModel<Guid>>(role), actualResult.First(), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.CodeModel<int>>(agency), actualResult.Next(1), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<int>>(propertyStatus), actualResult.Next(2), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<int>>(propertyClassification), actualResult.Next(3), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<string>>(province), actualResult.Next(4), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.CodeModel<int>>(city), actualResult.Next(5), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingConstructionType), actualResult.Next(6), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingPredominateUse), actualResult.Next(7), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Model.LookupModel<int>>(buildingOccupantType), actualResult.Next(8), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Model.RoleModel>(role), actualResult.First(), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.CodeModel<int>>(agency), actualResult.Next(1), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyStatus), actualResult.Next(2), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyClassification), actualResult.Next(3), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<string>>(province), actualResult.Next(4), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.CodeModel<int>>(city), actualResult.Next(5), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingConstructionType), actualResult.Next(6), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingPredominateUse), actualResult.Next(7), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingOccupantType), actualResult.Next(8), new ShallowPropertyCompare());
         }
         #endregion
     }

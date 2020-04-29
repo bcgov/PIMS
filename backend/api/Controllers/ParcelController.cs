@@ -152,7 +152,7 @@ namespace Pims.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [HasPermission(Permissions.PropertyAdd)]
+        [HasPermission(Permissions.PropertyDelete)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
@@ -167,7 +167,6 @@ namespace Pims.Api.Controllers
         }
 
         #region Page Endpoints
-
         /// <summary>
         /// Get a page of parcels that satisfy the filter parameters.
         /// </summary>

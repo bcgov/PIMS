@@ -116,7 +116,7 @@ namespace Pims.Api.Test.Routes
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{id}");
-            endpoint.HasPermissions(Permissions.PropertyAdd);
+            endpoint.HasPermissions(Permissions.PropertyDelete);
         }
 
         [Fact]

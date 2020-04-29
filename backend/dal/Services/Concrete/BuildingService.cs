@@ -44,6 +44,7 @@ namespace Pims.Dal.Services
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             IQueryable<Building> query = null;
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -51,7 +52,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcel)
                 .AsNoTracking()
                 .Where(p =>
-                (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
+                (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
                 p.Latitude != 0 &&
                 p.Longitude != 0 &&
                 p.Latitude <= neLat &&
@@ -103,6 +104,7 @@ namespace Pims.Dal.Services
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var building = this.Context.Buildings
                 .Include(p => p.Parcel)
@@ -118,7 +120,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Fiscals)
                 .AsNoTracking()
                 .FirstOrDefault(b => b.Id == id &&
-                    (!b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
+                    (isAdmin || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
 
             return building;
         }
@@ -133,13 +135,13 @@ namespace Pims.Dal.Services
             building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
-            var agency_id = this.User.GetAgency() ??
+            var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
             this.Context.Buildings.ThrowIfNotUnique(building);
 
-            building.CreatedById = this.User.GetUserId();
-            building.AgencyId = agency_id;
+            building.AgencyId = agency.Id;
+            building.Agency = agency;
             this.Context.Buildings.Add(building);
             this.Context.CommitTransaction();
             return building;
@@ -153,12 +155,13 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Building Update(Building building)
         {
-            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, Permissions.PropertyEdit);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
+            if (!isAdmin && !userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             // Do not allow switching agencies through this method.
             if (entity.AgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
@@ -166,8 +169,6 @@ namespace Pims.Dal.Services
             this.Context.Buildings.ThrowIfNotUnique(building);
 
             this.Context.Entry(entity).CurrentValues.SetValues(building);
-            entity.UpdatedById = this.User.GetUserId();
-            entity.UpdatedOn = DateTime.UtcNow;
 
             this.Context.Buildings.Update(entity); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
@@ -182,12 +183,13 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(Building building)
         {
-            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, Permissions.PropertyAdd);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
             var agency_ids = this.User.GetAgencies();
-            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
+            if (!isAdmin && !agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
             this.Context.Entry(entity).CurrentValues.SetValues(building);
 
