@@ -20,6 +20,7 @@ interface PersistState {
 }
 
 // Do not allow stored data to be loaded if the application version does not match.
+// Application version is loaded from the value in package.json.
 interface VersionedStorage {
   version: string;
   data: any;
@@ -81,7 +82,7 @@ class PersistImpl extends React.Component<
   };
 
   componentDidUpdate(prevProps: PersistProps & { formik: FormikProps<any> }) {
-    if (this.props.formik.isSubmitting) {
+    if (this.props.formik.isSubmitting && this.props.formik.isValid) {
       this.props.isSessionStorage
         ? window.sessionStorage.removeItem(this.props.name)
         : window.localStorage.removeItem(this.props.name);
