@@ -264,6 +264,7 @@ namespace Pims.Dal.Migrations
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
+                    KeycloakRoleId = table.Column<Guid>(nullable: true),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false)
                 },
@@ -419,6 +420,7 @@ namespace Pims.Dal.Migrations
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     IsDisabled = table.Column<bool>(nullable: false),
                     SortOrder = table.Column<int>(nullable: false),
+                    KeycloakGroupId = table.Column<Guid>(nullable: true),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     IsPublic = table.Column<bool>(nullable: false)
                 },

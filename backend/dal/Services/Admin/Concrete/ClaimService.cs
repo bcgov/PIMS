@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
@@ -13,21 +12,21 @@ using Pims.Dal.Security;
 namespace Pims.Dal.Services.Admin
 {
     /// <summary>
-    /// RoleService class, provides a service layer to administrate users within the datasource.
+    /// ClaimService class, provides a service layer to administrate users within the datasource.
     /// </summary>
-    public class RoleService : BaseService<Role>, IRoleService
+    public class ClaimService : BaseService<Claim>, IClaimService
     {
         #region Variables
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a RoleService, and initializes it with the specified arguments.
+        /// Creates a new instance of a ClaimService, and initializes it with the specified arguments.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public RoleService(PimsContext dbContext, ClaimsPrincipal user, ILogger<RoleService> logger) : base(dbContext, user, logger) { }
+        public ClaimService(PimsContext dbContext, System.Security.Claims.ClaimsPrincipal user, ILogger<ClaimService> logger) : base(dbContext, user, logger) { }
         #endregion
 
         #region Methods
@@ -38,17 +37,17 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Paged<Role> Get(int page, int quantity, string name = null)
+        public Paged<Claim> Get(int page, int quantity, string name = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            var query = this.Context.Roles.AsNoTracking();
+            var query = this.Context.Claims.AsNoTracking();
 
             if (!String.IsNullOrWhiteSpace(name))
                 query = query.Where(r => EF.Functions.Like(r.Name, $"%{name}%"));
 
-            var roles = query.Skip((page - 1) * quantity).Take(quantity);
-            return new Paged<Role>(roles.ToArray(), page, quantity, query.Count());
+            var claims = query.Skip((page - 1) * quantity).Take(quantity);
+            return new Paged<Claim>(claims.ToArray(), page, quantity, query.Count());
         }
 
         /// <summary>
@@ -57,83 +56,76 @@ namespace Pims.Dal.Services.Admin
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Role Get(Guid id)
+        public Claim Get(Guid id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            return this.Context.Roles
-                .Include(r => r.Claims)
-                .ThenInclude(r => r.Claim)
-                .AsNoTracking()
-                .FirstOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
+            return this.Context.Claims.AsNoTracking().FirstOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
-        /// Get the role with the specified name.
+        /// Get the claim with the specified name.
         /// </summary>
         /// <param name="name"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public Role GetByName(string name)
+        public Claim GetByName(string name)
         {
-            return this.Context.Roles
-                .Include(r => r.Claims)
-                .ThenInclude(r => r.Claim)
-                .AsNoTracking()
-                .FirstOrDefault(r => r.Name == name) ?? throw new KeyNotFoundException();
+            return this.Context.Claims.AsNoTracking().FirstOrDefault(r => r.Name == name) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
-        /// Updates the specified role in the datasource.
+        /// Updates the specified claim in the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override Role Update(Role entity)
+        public override Claim Update(Claim entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            var role = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var claim = this.Context.Claims.Find(entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(role).CurrentValues.SetValues(entity);
-            base.Update(role);
-            this.Context.Detach(role);
-            return role;
+            this.Context.Entry(claim).CurrentValues.SetValues(entity);
+            base.Update(claim);
+            this.Context.Detach(claim);
+            return claim;
         }
 
         /// <summary>
-        /// Remove the specified role from the datasource.
+        /// Remove the specified claim from the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        public override void Remove(Role entity)
+        public override void Remove(Claim entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
 
-            var role = this.Context.Roles.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var claim = this.Context.Claims.Find(entity.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(role).CurrentValues.SetValues(entity);
-            base.Remove(role);
+            this.Context.Entry(claim).CurrentValues.SetValues(entity);
+            base.Remove(claim);
         }
 
         /// <summary>
-        /// Remove the roles from the datasource, excluding those listed.
+        /// Remove the claims from the datasource, excluding those listed.
         /// </summary>
         /// <param name="exclude"></param>
         /// <returns></returns>
         public int RemoveAll(Guid[] exclude)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
-            var roles = this.Context.Roles.Include(r => r.Claims).Include(r => r.Users).Where(r => !exclude.Contains(r.Id));
-            roles.ForEach(r =>
+            var claims = this.Context.Claims
+                .Include(r => r.Roles)
+                .Where(r => !exclude.Contains(r.Id));
+            claims.ForEach(r =>
             {
-                r.Claims.Clear();
-                r.Users.Clear();
+                r.Roles.Clear();
             });
 
-            this.Context.Roles.RemoveRange(roles);
+            this.Context.Claims.RemoveRange(claims);
             var result = this.Context.CommitTransaction();
             return result;
         }

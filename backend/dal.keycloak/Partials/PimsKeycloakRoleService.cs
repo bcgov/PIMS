@@ -30,7 +30,7 @@ namespace Pims.Dal.Keycloak
 
                 foreach (var kgroup in kgroups)
                 {
-                    var erole = _pimsAdminService.Role.Find(kgroup.Id);
+                    var erole = _pimsAdminService.Role.GetByName(kgroup.Name);
 
                     if (erole == null)
                     {

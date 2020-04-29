@@ -10,6 +10,11 @@ namespace Pims.Dal.Entities
     {
         #region Properties
         /// <summary>
+        /// get/set - The GUID that identifies this Group in Keycloak.
+        /// </summary>
+        public Guid? KeycloakGroupId { get; set; }
+
+        /// <summary>
         /// get/set - The roles first name.
         /// </summary>
         /// <value></value>
