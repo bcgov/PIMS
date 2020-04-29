@@ -1,16 +1,16 @@
 using Mapster;
 using Model = Pims.Api.Areas.Admin.Models.User;
 using Entity = Pims.Dal.Entities;
+using System.Linq;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Areas.Admin.Mapping.User
 {
     public class UserMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.User, Model.UserModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
@@ -21,13 +21,11 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.LastName, src => src.LastName)
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.Note, src => src.Note)
-                .Map(dest => dest.Agencies, src => src.Agencies)
-                .Map(dest => dest.Roles, src => src.Roles)
+                .Map(dest => dest.Agencies, src => src.Agencies.Select(a => a.Agency))
+                .Map(dest => dest.Roles, src => src.Roles.Select(a => a.Role))
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
-
             config.NewConfig<Model.UserModel, Entity.User>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
@@ -40,7 +38,15 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.Agencies, src => src.Agencies)
                 .Map(dest => dest.Roles, src => src.Roles)
+                .AfterMappingInline((m, e) => UpdateUser(m, e))
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for signature")]
+        private void UpdateUser(Model.UserModel model, Entity.User entity)
+        {
+            entity.Agencies.ForEach(a => a.UserId = entity.Id);
+            entity.Roles.ForEach(r => r.UserId = entity.Id);
         }
     }
 }
