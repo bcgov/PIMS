@@ -5,10 +5,11 @@ import { Row, Col, Spinner, Button } from 'react-bootstrap';
 import ParcelDetailForm from 'forms/ParcelDetailForm';
 import MapView from './MapView';
 import {
-  IParcelDetail,
   storeParcelsAction,
   IProperty,
   storeParcelDetail,
+  IPropertyDetail,
+  IParcel,
 } from 'actions/parcelsActions';
 import queryString from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,10 +39,13 @@ const SubmitProperty = (props: any) => {
   const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[actionTypes.GET_PARCEL_DETAIL] as IGenericNetworkAction,
   );
-  const activeParcelDetail = useSelector<RootState, IParcelDetail>(
-    state => state.parcel.parcelDetail as IParcelDetail,
+  let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
+    state => state.parcel.parcelDetail as IPropertyDetail,
   );
-  const [cachedParcelDetail, setCachedParcelDetail] = useState(activeParcelDetail?.parcelDetail);
+
+  const [cachedParcelDetail, setCachedParcelDetail] = useState(
+    activePropertyDetail?.propertyTypeId === 0 ? activePropertyDetail?.parcelDetail : null,
+  );
   const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
 
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
@@ -60,20 +64,22 @@ const SubmitProperty = (props: any) => {
   }
   //Load and cache the parcel corresponding to the parcelId.
   React.useEffect(() => {
-    if (!cachedParcelDetail && parcelId && !activeParcelDetail?.parcelDetail) {
+    if (activePropertyDetail?.propertyTypeId === 1) {
+      dispatch(fetchParcelDetail({ id: parseInt(parcelId) }));
+    } else if (!cachedParcelDetail && parcelId && !activePropertyDetail?.parcelDetail) {
       //if we are displaying an existing property but have no data, load the detail.
       dispatch(fetchParcelDetail({ id: parseInt(parcelId) }));
-    } else if (!cachedParcelDetail && parcelId && activeParcelDetail?.parcelDetail) {
+    } else if (!cachedParcelDetail && parcelId && activePropertyDetail?.parcelDetail) {
       //if we are displaying an existing property and have the data, save it to state.
-      setCachedParcelDetail(activeParcelDetail?.parcelDetail);
-    } else if (cachedParcelDetail && parcelId && !activeParcelDetail?.parcelDetail) {
+      setCachedParcelDetail(activePropertyDetail?.parcelDetail);
+    } else if (cachedParcelDetail && parcelId && !activePropertyDetail?.parcelDetail) {
       //if we are displaying an existing property and have no detail data but do have cached data
       //save the cached data to the store.
-      dispatch(storeParcelDetail(cachedParcelDetail));
+      dispatch(storeParcelDetail(cachedParcelDetail as IParcel));
     }
     dispatch(clearClickLatLng());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeParcelDetail?.parcelDetail]);
+  }, [activePropertyDetail?.parcelDetail]);
   //Add a pin to the map where the user has clicked.
   React.useEffect(() => {
     //If we click on the map, create a new pin at the click location.
@@ -94,6 +100,7 @@ const SubmitProperty = (props: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leafletMouseEvent]);
+
   return (
     <Row className="submitProperty" noGutters>
       <Col md={7} className="form">
@@ -135,7 +142,7 @@ const SubmitProperty = (props: any) => {
               <ParcelDetailForm
                 agencyId={keycloak.agencyId}
                 clickLatLng={leafletMouseEvent?.latlng}
-                parcelDetail={parcelId ? cachedParcelDetail : null}
+                parcelDetail={parcelId ? (cachedParcelDetail as IParcel) : null}
                 disabled={formDisabled}
                 secret={keycloak.obj.subject}
                 loadDraft={!!loadDraft}
