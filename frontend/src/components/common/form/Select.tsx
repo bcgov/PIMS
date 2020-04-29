@@ -27,6 +27,8 @@ type OptionalAttributes = {
   multiple?: boolean;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
+  /** change event handler */
+  onChange?: React.FormEventHandler;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -54,6 +56,7 @@ export const Select: React.FC<SelectProps> = ({
   disabled,
   multiple,
   custom,
+  onChange,
   ...rest
 }) => {
   const { values, handleChange, setFieldValue, errors, touched } = useFormikContext();
@@ -67,6 +70,12 @@ export const Select: React.FC<SelectProps> = ({
       field,
       [].slice.call(selected).map((option: HTMLOptionElement & number) => option.value),
     );
+  };
+
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const updateFormValues = multiple ? handleMultipleChange : handleChange;
+    updateFormValues(e);
+    onChange?.(e);
   };
 
   const renderPlaceholder = () => {
@@ -99,7 +108,7 @@ export const Select: React.FC<SelectProps> = ({
         {...rest}
         value={getIn(values, field)}
         multiple={multiple}
-        onChange={multiple ? handleMultipleChange : handleChange}
+        onChange={onSelectChange}
       >
         {renderPlaceholder()}
         {renderOptions()}

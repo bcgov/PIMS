@@ -1,7 +1,9 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import './index.scss'; // should be loaded last to allow for overrides without having to resort to "!important"
+
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
-import './index.scss';
-import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App, { store } from './App';

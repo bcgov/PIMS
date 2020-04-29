@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { classSet } from 'utils';
+import classnames from 'classnames';
 import { DisplayError } from './DisplayError';
 
 type FieldProps = {
@@ -26,7 +26,7 @@ export const Field: React.FC<FieldProps> = ({
   ...rest
 }) => {
   // dynamically add CSS class "required" to form group
-  const cssClassNames = classSet({
+  const cssClassNames = classnames({
     required: !!required,
     [className!]: className,
   });
