@@ -36,6 +36,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Mapster;
 using Pims.Api.Helpers.Mapping;
+using System.Collections.Generic;
 
 namespace Pims.Api
 {
@@ -82,6 +83,12 @@ namespace Pims.Api
             {
                 options.Default.IgnoreNonMapped(true);
                 options.Default.IgnoreNullValues(true);
+                options.AllowImplicitDestinationInheritance = true;
+                options.AllowImplicitSourceInheritance = true;
+                options.Default.UseDestinationValue(member =>
+                    member.SetterModifier == AccessModifier.None &&
+                    member.Type.IsGenericType &&
+                    member.Type.GetGenericTypeDefinition() == typeof(ICollection<>));
             });
             services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));

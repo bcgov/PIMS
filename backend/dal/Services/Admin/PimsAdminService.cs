@@ -29,6 +29,12 @@ namespace Pims.Dal.Services.Admin
         public IRoleService Role { get { return _serviceProvider.GetService<IRoleService>(); } }
 
         /// <summary>
+        /// get - The claim service.
+        /// </summary>
+        /// <value></value>
+        public IClaimService Claim { get { return _serviceProvider.GetService<IClaimService>(); } }
+
+        /// <summary>
         /// get - The agency service.
         /// </summary>
         /// <value></value>

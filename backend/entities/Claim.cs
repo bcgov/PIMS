@@ -22,6 +22,11 @@ namespace Pims.Dal.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// get/set - The GUID that identifies this Role in Keycloak.
+        /// </summary>
+        public Guid? KeycloakRoleId { get; set; }
+
+        /// <summary>
         /// get/set - The claims first name.
         /// </summary>
         /// <value></value>

@@ -43,6 +43,7 @@ namespace Pims.Dal
         public static IServiceCollection AddPimsAdminService(this IServiceCollection services)
         {
             services.AddScoped<Services.Admin.IPimsAdminService, Services.Admin.PimsAdminService>();
+            services.AddScoped<Services.Admin.IClaimService, Services.Admin.ClaimService>();
             services.AddScoped<Services.Admin.IAgencyService, Services.Admin.AgencyService>();
             services.AddScoped<Services.Admin.IAddressService, Services.Admin.AddressService>();
             services.AddScoped<Services.Admin.IBuildingService, Services.Admin.BuildingService>();
