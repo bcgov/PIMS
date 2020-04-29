@@ -2,7 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="parcelPopup container-fluid"
+  className="buildingPopup container-fluid"
 >
   <div
     className="row"
@@ -50,34 +50,6 @@ exports[`renders correctly 1`] = `
              
           </div>
         </div>
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            PID: 
-          </p>
-           
-          1
-        </div>
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            RAEG or SPP:
-          </p>
-           
-          Test-Project-Number
-        </div>
       </div>
       <div
         className="list-group"
@@ -92,8 +64,9 @@ exports[`renders correctly 1`] = `
           <p
             className="label"
           >
-            Agency: 
+            Floor Count: 
           </p>
+          3
         </div>
         <div
           className="list-group-item"
@@ -104,29 +77,13 @@ exports[`renders correctly 1`] = `
           <p
             className="label"
           >
-            Classification: 
+            Predominate Use: 
           </p>
-          Test Classification
         </div>
       </div>
-    </div>
-    <div
-      className="col"
-    >
-      <a
-        href="/submitProperty/1?disabled=true"
-        onClick={[Function]}
-      >
-        View
-      </a>
       <a
         href="/submitProperty/1"
         onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": "5px",
-          }
-        }
       >
         Update
       </a>

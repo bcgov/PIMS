@@ -1,12 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { ParcelPopupView } from './ParcelPopupView';
+import { BuildingPopupView } from './BuildingPopupView';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { IAddress } from 'actions/parcelsActions';
 import { useKeycloak } from '@react-keycloak/web';
-
-const history = createMemoryHistory();
+import { render } from '@testing-library/react';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -18,28 +17,34 @@ jest.mock('@react-keycloak/web');
   },
 });
 
-const mockParcel = (agencyId: string) => {
-  var parcel = {
+const history = createMemoryHistory();
+
+const mockBuilding = (agencyId: string) => {
+  var building = {
     id: 1,
-    pid: '1',
-    pin: '1',
-    latitude: '1',
-    longitude: '1',
-    statusId: '1',
-    propertyStatus: 'Test Property Status',
-    municipality: 'Test Municipality',
-    projectNumber: 'Test-Project-Number',
-    classification: 'Test Classification',
-    description: 'Test Description',
-    landArea: '100',
-    classificationId: 1,
-    zoning: '',
+    parcelId: 1,
+    localId: 'string',
+    description: 'Test description',
+    address: ([
+      {
+        line1: '1234 Mock Street',
+        cityId: 1,
+        provinceId: 'BC',
+        postal: 'V0S1N0',
+      },
+    ] as unknown) as IAddress,
+    latitude: 50,
+    longitude: 50,
+    buildingFloorCount: 3,
+    buildingConstructionTypeId: 1,
+    buildingPredominateUseId: 'test',
+    buildingOccupantTypeId: 1,
+    occupantName: 'Mock Occupant',
+    transferLeaseOnSale: true,
+    buildingTenancy: 'string',
+    rentableArea: '1',
     agencyId: agencyId,
-    isSensitive: false,
-    landLegalDescription: 'Test Land Legal Description',
-    address: '1234 Test Addr',
     evaluations: [],
-    buildings: [],
     fiscals: [
       {
         fiscalYear: 2020,
@@ -47,16 +52,15 @@ const mockParcel = (agencyId: string) => {
         value: 'Value',
       },
     ],
-    zoningPotential: '',
   };
-  return parcel;
+  return building;
 };
 
 it('renders correctly', () => {
   const tree = renderer
     .create(
       <Router history={history}>
-        <ParcelPopupView parcel={mockParcel('1')} />
+        <BuildingPopupView building={mockBuilding('1')} />
       </Router>,
     )
     .toJSON();
@@ -66,7 +70,7 @@ it('renders correctly', () => {
 it('displays update option when user belongs to buildings agency', () => {
   const { getByText } = render(
     <Router history={history}>
-      <ParcelPopupView parcel={mockParcel('1')} />
+      <BuildingPopupView building={mockBuilding('1')} />
     </Router>,
   );
   expect(getByText(/Update/i));
@@ -75,7 +79,7 @@ it('displays update option when user belongs to buildings agency', () => {
 it('displays view option', () => {
   const { getByText } = render(
     <Router history={history}>
-      <ParcelPopupView parcel={mockParcel('2')} />
+      <BuildingPopupView building={mockBuilding('2')} />
     </Router>,
   );
   expect(getByText(/View/i));
