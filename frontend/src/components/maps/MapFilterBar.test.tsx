@@ -39,12 +39,10 @@ describe('MapFilterBar', () => {
     );
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
-    const municipality = container.querySelector('input[name="municipality"]');
-    const projectNumber = container.querySelector('input[name="projectNumber"]');
     const agencies = container.querySelector('select[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
-    const minLotSize = container.querySelector('select[name="minLotSize"]');
-    const maxLotSize = container.querySelector('select[name="maxLotSize"]');
+    const minLotSize = container.querySelector('input[name="minLotSize"]');
+    const maxLotSize = container.querySelector('input[name="maxLotSize"]');
     const submit = container.querySelector('button[type="submit"]');
 
     // Act
@@ -53,22 +51,6 @@ describe('MapFilterBar', () => {
       fireEvent.change(address!, {
         target: {
           value: 'mockaddress',
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.change(municipality!, {
-        target: {
-          value: 'mockmunicipality',
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.change(projectNumber!, {
-        target: {
-          value: 'mock-project-number',
         },
       });
     });
@@ -111,9 +93,10 @@ describe('MapFilterBar', () => {
 
     // Assert
     expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
+      searchBy: 'address',
       address: 'mockaddress',
-      municipality: 'mockmunicipality',
-      projectNumber: 'mock-project-number',
+      municipality: '',
+      projectNumber: '',
       agencies: '1',
       classificationId: '0',
       minLotSize: '1',

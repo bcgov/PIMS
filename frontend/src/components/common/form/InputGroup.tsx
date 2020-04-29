@@ -1,3 +1,5 @@
+import './InputGroup.scss';
+
 import React from 'react';
 import { Form, FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
 import { Input } from './Input';
@@ -28,6 +30,7 @@ type OptionalAttributes = {
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
   preText?: string;
+  prepend?: React.ReactNode;
   postText?: string;
   fast?: boolean;
   outerClassName?: string;
@@ -48,6 +51,7 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   required,
   custom,
   preText,
+  prepend: PrependComponent,
   postText,
   outerClassName,
   className,
@@ -71,17 +75,27 @@ export const InputGroup: React.FC<InputGroupProps> = ({
           <BootstrapInputGroup.Text>{preText}</BootstrapInputGroup.Text>
         </BootstrapInputGroup.Prepend>
       )}
+      {PrependComponent && (
+        <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
+      )}
       <div className="input-group-content">
         {fast ? (
           <FastInput
             formikProps={formikProps}
             disabled={disabled}
             field={field}
-            {...rest}
             className={className}
+            placeholder={placeholder}
+            {...rest}
           />
         ) : (
-          <Input field={field} disabled={disabled} {...rest} className={className} />
+          <Input
+            disabled={disabled}
+            field={field}
+            className={className}
+            placeholder={placeholder}
+            {...rest}
+          />
         )}
       </div>
       {postText && (

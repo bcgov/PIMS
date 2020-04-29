@@ -67,6 +67,7 @@ const Map: React.FC<MapProps> = ({
   const dispatch = useDispatch();
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
+    searchBy: 'address',
     address: '',
     municipality: '',
     projectNumber: '',
@@ -223,16 +224,16 @@ const Map: React.FC<MapProps> = ({
   return (
     <Container fluid className="px-0">
       {!disableMapFilterBar ? (
-        <Row noGutters>
-          <Col>
+        <Container fluid className="px-0 map-filter-container">
+          <Container className="px-0">
             <MapFilterBar
               agencyLookupCodes={agencies}
               propertyClassifications={propertyClassifications}
               lotSizes={lotSizes}
               onFilterChange={handleMapFilterChange}
             />
-          </Col>
-        </Row>
+          </Container>
+        </Container>
       ) : null}
       <Row noGutters>
         <Col>
