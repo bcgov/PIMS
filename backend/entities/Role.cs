@@ -16,6 +16,12 @@ namespace Pims.Dal.Entities
         public string Description { get; set; }
 
         /// <summary>
+        /// get/set - Whether the role is a public role.
+        /// One which new users can request to join.
+        /// </summary>
+        public bool IsPublic { get; set; } = false;
+
+        /// <summary>
         /// get - A collection of users that have this role.
         /// </summary>
         /// <typeparam name="UserRole"></typeparam>

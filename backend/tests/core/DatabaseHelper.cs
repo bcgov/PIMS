@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using Pims.Core.Helpers;
 using Pims.Dal;
@@ -50,6 +51,7 @@ namespace Pims.Core.Test
             helper.AddSingleton(user);
             var options = new DbContextOptionsBuilder<PimsContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
+                .ConfigureWarnings(m => m.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
 
             var contextAccessor = new Mock<IHttpContextAccessor>();

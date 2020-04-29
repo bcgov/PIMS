@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
+using Pims.Core.Extensions;
+using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 
@@ -24,19 +26,8 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Get the user's primary agency.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static int? GetAgency(this ClaimsPrincipal user)
-        {
-            var value = user?.FindFirstValue("agency");
-            return String.IsNullOrWhiteSpace(value) ? null : (int?)Int32.Parse(value);
-        }
-
-        /// <summary>
         /// Get the user's list of agencies they have access to.
-        /// Return an empty array if no agencies are found.
+        /// Return 'null' if no agencies are found.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -207,13 +198,97 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <param name="permission"></param>
-        /// <param name="message"></param>
         /// <exception type="NotAuthorizedException">User does not have the specified 'role'.</exception>
         /// <returns></returns>
         public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, params Permissions[] permission)
         {
             if (user == null || !user.HasPermission(permission)) throw new NotAuthorizedException();
             return user;
+        }
+
+        /// <summary>
+        /// If the user does not have any of the specified 'permission' throw a NotAuthorizedException.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <exception type="NotAuthorizedException">User does not have the specified 'role'.</exception>
+        /// <returns></returns>
+        public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, Permissions[] permission, string message = null)
+        {
+            if (user == null || !user.HasPermission(permission)) throw new NotAuthorizedException(message);
+            return user;
+        }
+
+        /// <summary>
+        /// Throw exception if the 'user' is not allowed to edit the specified entity.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="paramName"></param>
+        /// <param name="entity"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <exception type="ArgumentNullException">Entity argument cannot be null.</exception>
+        /// <exception type="RowVersionMissingException">Entity.RowVersion cannot be null.</exception>
+        /// <exception type="NotAuthorizedException">User must have specified 'role'.</exception>
+        /// <returns></returns>
+        public static T ThrowIfNotAllowedToEdit<T>(this ClaimsPrincipal user, string paramName, T entity, Permissions permission, string message = null) where T : BaseEntity
+        {
+            entity.ThrowIfNull(paramName);
+            entity.ThrowIfRowVersionNull(paramName);
+            user.ThrowIfNotAuthorized(permission, message);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Throw exception if the 'user' is not allowed to edit the specified entity.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="paramName"></param>
+        /// <param name="entity"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <exception type="ArgumentNullException">Entity argument cannot be null.</exception>
+        /// <exception type="RowVersionMissingException">Entity.RowVersion cannot be null.</exception>
+        /// <exception type="NotAuthorizedException">User must have specified 'role'.</exception>
+        /// <returns></returns>
+        public static T ThrowIfNotAllowedToEdit<T>(this ClaimsPrincipal user, string paramName, T entity, Permissions[] permission, string message = null) where T : BaseEntity
+        {
+            entity.ThrowIfNull(paramName);
+            entity.ThrowIfRowVersionNull(paramName);
+            user.ThrowIfNotAuthorized(permission, message);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Get the top level agency this user belongs to.
+        /// If they don't belong to any agencies return 'null'.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static Agency GetAgency(this ClaimsPrincipal user, PimsContext context)
+        {
+            var agencyIds = user.GetAgencies();
+
+            if (agencyIds == null || !agencyIds.Any()) return null;
+
+            var agencies = context.Agencies.Where(a => agencyIds.Contains(a.Id)).OrderBy(a => a.ParentId);
+
+            // This will only at most do two iterations before returning a value.
+            foreach (var agency in agencies)
+            {
+                // If we find a parent agency we will return it.
+                // Otherwise return the parent of the first child agency.
+                if (agency.ParentId == null) return agency;
+                return context.Agencies.Find(agency.ParentId);
+            }
+
+            return null; // This will never happen unless the DB is not synced with keycloak.
         }
     }
 }

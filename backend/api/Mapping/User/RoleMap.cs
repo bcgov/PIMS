@@ -11,11 +11,13 @@ namespace Pims.Api.Mapping.User
         {
             config.NewConfig<Entity.Role, Model.RoleModel>()
                 .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.IsPublic, src => src.IsPublic)
                 .Map(dest => dest.Users, src => src.Users)
                 .Inherits<Entity.LookupEntity<Guid>, Models.LookupModel<Guid>>();
 
             config.NewConfig<Model.RoleModel, Entity.Role>()
                 .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.IsPublic, src => src.IsPublic)
                 .Map(dest => dest.Users, src => src.Users)
                 .Inherits<Models.LookupModel<Guid>, Entity.LookupEntity<Guid>>();
         }

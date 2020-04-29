@@ -13,6 +13,12 @@ namespace Pims.Api.Areas.Admin.Models.Role
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the role is public.
+        /// One which users can request to join.
+        /// </summary>
+        public bool IsPublic { get; set; }
         #endregion
     }
 }

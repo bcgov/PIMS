@@ -311,9 +311,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model">The parcel model.</param>
-        /// <returns>The parcel who was deleted.</returns>
+        /// <returns>The parcel which was deleted.</returns>
         [HttpDelete("{id}")]
-        [HasPermission(Permissions.PropertyAdd)]
+        [HasPermission(Permissions.PropertyDelete)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [ProducesResponseType(typeof(BModel.ErrorResponseModel), 400)]

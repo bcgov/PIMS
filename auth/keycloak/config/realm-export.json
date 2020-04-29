@@ -1934,11 +1934,18 @@
       "containerId": "pims",
       "attributes": {}
     }, {
+      "id": "223664c7-650c-40ac-8581-f40e10164537",
+      "name": "property-delete",
+      "composite": false,
+      "clientRole": false,
+      "containerId": "pims",
+      "attributes": {}
+    }, {
       "id": "216b6a37-bc1c-4cf3-9a93-25f96277647e",
       "name": "system-administrator",
       "composite": true,
       "composites": {
-        "realm": ["property-view", "property-edit", "sensitive-view", "admin-roles", "admin-users", "property-add"]
+        "realm": ["property-view", "property-edit", "sensitive-view", "admin-roles", "admin-users", "property-add", "property-delete"]
       },
       "clientRole": false,
       "containerId": "pims",
@@ -1966,6 +1973,13 @@
       "containerId": "pims",
       "attributes": {}
     }, {
+      "id": "71e74513-a036-4df3-b724-a8c349b7fc28",
+      "name": "admin-properties",
+      "composite": false,
+      "clientRole": false,
+      "containerId": "pims",
+      "attributes": {}
+    }, {
       "id": "321e245b-ee7d-4d7c-83a8-56b5a9d33c2d",
       "name": "admin-roles",
       "composite": false,
@@ -1977,7 +1991,7 @@
       "name": "agency-administrator",
       "composite": true,
       "composites": {
-        "realm": ["property-view", "property-edit", "sensitive-view", "admin-roles", "admin-users", "property-add"]
+        "realm": ["property-view", "property-edit", "sensitive-view", "admin-roles", "admin-users", "property-add", "property-delete"]
       },
       "clientRole": false,
       "containerId": "pims",
@@ -2310,6 +2324,14 @@
     "realmRoles": ["system-administrator"],
     "clientRoles": {},
     "subGroups": []
+  }, {
+    "id": "08c52eec-6917-4512-ac02-7d7ff89ed7a6",
+    "name": "SRES",
+    "path": "/SRES",
+    "attributes": {},
+    "realmRoles": ["admin-properties", "property-delete"],
+    "clientRoles": {},
+    "subGroups": []
   }],
   "defaultRoles": ["offline_access", "uma_authorization"],
   "requiredCredentials": ["password"],
@@ -2363,7 +2385,7 @@
     }],
     "disableableCredentialTypes": [],
     "requiredActions": [],
-    "realmRoles": ["property-add", "sensitive-view", "property-edit", "offline_access", "admin-users", "property-view", "admin-roles", "uma_authorization"],
+    "realmRoles": ["property-add", "sensitive-view", "property-edit", "offline_access", "admin-users", "property-view", "property-delete", "admin-roles", "uma_authorization"],
     "clientRoles": {
       "account": ["view-profile", "manage-account"]
     },

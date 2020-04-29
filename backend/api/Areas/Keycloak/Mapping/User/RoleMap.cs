@@ -7,18 +7,16 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
 {
     public class RoleMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Role, Model.RoleModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.IsPublic, src => src.IsPublic)
                 .Inherits<Entity.LookupEntity<Guid>, Api.Models.LookupModel<Guid>>();
 
-
             config.NewConfig<Model.RoleModel, Entity.Role>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.IsPublic, src => src.IsPublic)
                 .Inherits<Api.Models.LookupModel<Guid>, Entity.LookupEntity<Guid>>();
         }
     }

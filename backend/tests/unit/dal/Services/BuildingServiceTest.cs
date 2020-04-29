@@ -121,6 +121,46 @@ namespace Pims.Dal.Test.Services
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
             Assert.Equal(expectedCount, result.Count());
         }
+
+        [Theory]
+        [MemberData(nameof(BuildingFilters))]
+        public void Get_Buildings_AsAdmin(BuildingFilter filter, int expectedCount)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 2, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(22);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 23, 5);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(dbName, user);
+
+            // Act
+            var result = service.Get(filter);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            Assert.Equal(expectedCount, result.Count());
+        }
         #endregion
 
         #region Get Paged Buildings
@@ -200,9 +240,73 @@ namespace Pims.Dal.Test.Services
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
             Assert.Equal(expectedCount, result.Total);
         }
+
+        [Theory]
+        [MemberData(nameof(BuildingFilters))]
+        public void Get_Page_AsAdmin(BuildingFilter filter, int expectedCount)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 10, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(2);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 31, 5);
+
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(dbName, user);
+
+            // Act
+            var result = service.GetPage(filter);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            Assert.Equal(expectedCount, result.Total);
+        }
         #endregion
 
         #region Get Building
+        /// <summary>
+        /// Building does not exist.
+        /// </summary>
+        [Fact]
+        public void Get_KeyNotFound()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcel = init.CreateParcel(1);
+            var building = init.CreateBuilding(parcel, 2);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(dbName, user);
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() =>
+                service.Get(1));
+        }
+
         /// <summary>
         /// User does not have 'property-view' claim.
         /// </summary>
@@ -253,29 +357,6 @@ namespace Pims.Dal.Test.Services
         }
 
         /// <summary>
-        /// Building does not exist.
-        /// </summary>
-        [Fact]
-        public void Get_KeyNotFound()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
-            var parcel = init.CreateParcel(1);
-            var building = init.CreateBuilding(parcel, 2);
-            init.SaveChanges();
-
-            var service = helper.CreateService<BuildingService>(dbName, user);
-
-            // Act
-            // Assert
-            Assert.Throws<KeyNotFoundException>(() =>
-                service.Get(1));
-        }
-
-        /// <summary>
         /// User is attempting to view sensitive building from another agency.
         /// </summary>
         [Fact]
@@ -300,6 +381,44 @@ namespace Pims.Dal.Test.Services
         }
 
         /// <summary>
+        /// User is attempting to view sensitive building from another agency.
+        /// </summary>
+        [Fact]
+        public void Get_Sensitive_WrongAgency_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcel = init.CreateParcel(1);
+            var building = init.CreateBuilding(parcel, 2);
+            building.IsSensitive = true;
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            var result = service.Get(2);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(EntityState.Detached, context.Entry(result).State);
+            Assert.Equal(building, result, new ShallowPropertyCompare());
+            Assert.NotNull(building.Address);
+            Assert.NotNull(building.Address.City);
+            Assert.NotNull(building.Address.Province);
+            Assert.NotNull(building.Status);
+            Assert.NotNull(building.Classification);
+            Assert.NotNull(building.Agency);
+            Assert.NotNull(building.Address);
+            Assert.NotNull(building.Address);
+            // TODO: Add asserts for Evaluations
+            // TODO: Add asserts for Fiscals
+        }
+
+        /// <summary>
         /// Building found.
         /// </summary>
         [Fact]
@@ -308,6 +427,43 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcel = init.CreateParcel(1);
+            var building = init.CreateBuilding(parcel, 2);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            var result = service.Get(2);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(EntityState.Detached, context.Entry(result).State);
+            Assert.Equal(building, result, new ShallowPropertyCompare());
+            Assert.NotNull(building.Address);
+            Assert.NotNull(building.Address.City);
+            Assert.NotNull(building.Address.Province);
+            Assert.NotNull(building.Status);
+            Assert.NotNull(building.Classification);
+            Assert.NotNull(building.Agency);
+            Assert.NotNull(building.Address);
+            Assert.NotNull(building.Address);
+            // TODO: Add asserts for Evaluations
+            // TODO: Add asserts for Fiscals
+        }
+
+        /// <summary>
+        /// Building found.
+        /// </summary>
+        [Fact]
+        public void Get_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
             var parcel = init.CreateParcel(1);
