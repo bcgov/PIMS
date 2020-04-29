@@ -1,0 +1,32 @@
+.input-group {
+  flex-wrap: nowrap;
+
+  .input-group-prepend {
+    .form-control {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  & > .input-group-content {
+    &:not(:first-child) {
+      .form-control {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+
+    .form-control {
+      position: relative;
+      flex: 1 1;
+      min-width: 0;
+      margin-bottom: 0;
+
+      &:hover {
+        z-index: 3;
+      }
+    }
+  }
+}

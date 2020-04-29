@@ -3,19 +3,6 @@ import { ILookupCode } from 'actions/lookupActions';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
 
-export const classSet = (input?: any): string => {
-  let classes = '';
-  if (input) {
-    for (const key in input) {
-      if (key && !!input[key]) {
-        classes += ` ${key}`;
-      }
-    }
-    return classes.trim();
-  }
-  return '';
-};
-
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
     return `${input.substr(0, maxLength)}...`;
