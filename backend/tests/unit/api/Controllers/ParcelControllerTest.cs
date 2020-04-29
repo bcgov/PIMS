@@ -307,7 +307,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ParcelController>(Permissions.PropertyAdd);
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyDelete);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();

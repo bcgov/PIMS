@@ -111,6 +111,39 @@ namespace Pims.Dal.Test.Services
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
             Assert.Equal(expectedCount, result.Count());
         }
+
+        [Theory]
+        [MemberData(nameof(ParcelFilters))]
+        public void Get_Parcels_AsAdmin(ParcelFilter filter, int expectedCount)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            var result = service.Get(filter);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(expectedCount, result.Count());
+        }
         #endregion
 
         #region Get Paged Parcels
@@ -157,6 +190,39 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+
+            var dbName = StringHelper.Generate(10);
+            using var init = helper.InitializeDatabase(dbName, user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            var result = service.GetPage(filter);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(expectedCount, result.Total);
+        }
+
+        [Theory]
+        [MemberData(nameof(ParcelFilters))]
+        public void Get_Page_AsAdmin(ParcelFilter filter, int expectedCount)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
 
             var dbName = StringHelper.Generate(10);
             using var init = helper.InitializeDatabase(dbName, user);
@@ -308,6 +374,42 @@ namespace Pims.Dal.Test.Services
         }
 
         /// <summary>
+        /// Parcel found.
+        /// </summary>
+        [Fact]
+        public void Get_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            var result = service.Get(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(EntityState.Detached, context.Entry(result).State);
+            Assert.Equal(parcel, result, new ShallowPropertyCompare());
+            Assert.NotNull(parcel.Address);
+            Assert.NotNull(parcel.Address.City);
+            Assert.NotNull(parcel.Address.Province);
+            Assert.NotNull(parcel.Status);
+            Assert.NotNull(parcel.Classification);
+            Assert.NotNull(parcel.Agency);
+            Assert.NotNull(parcel.Address);
+            Assert.NotNull(parcel.Address);
+            Assert.NotNull(parcel.Evaluations);
+            Assert.NotNull(parcel.Fiscals);
+            Assert.NotNull(parcel.Buildings);
+        }
+
+        /// <summary>
         /// Parcel found, but user does not have 'sensitive-view' claim.
         /// Remove sensitive buildings.
         /// </summary>
@@ -403,6 +505,215 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(2, result.Buildings.Count());
             Assert.True(result.IsSensitive);
             Assert.Equal(1, result.Buildings.Count(b => b.IsSensitive));
+        }
+
+        /// <summary>
+        /// Sensitive parcel found.
+        /// </summary>
+        [Fact]
+        public void Get_Sensitive_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties, Permissions.PropertyView);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.IsSensitive = true;
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            var result = service.Get(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(EntityState.Detached, context.Entry(result).State);
+            Assert.Equal(parcel, result, new ShallowPropertyCompare());
+            Assert.True(result.IsSensitive);
+        }
+        #endregion
+
+        #region Delete Parcel
+        /// <summary>
+        /// Parcel does not exist.
+        /// </summary>
+        [Fact]
+        public void Remove_KeyNotFound()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
+            var find = EntityHelper.CreateParcel(1);
+            var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() =>
+                service.Remove(find));
+        }
+
+        /// <summary>
+        /// User does not have 'property-delete' claim.
+        /// </summary>
+        [Fact]
+        public void Remove_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission();
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Remove(parcel));
+        }
+
+        /// <summary>
+        /// User does not have 'sensitive-delete' claim.
+        /// </summary>
+        [Fact]
+        public void Remove_Sensitive_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.IsSensitive = true;
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Remove(parcel));
+        }
+
+        /// <summary>
+        /// User does not have 'sensitive-delete' claim.
+        /// </summary>
+        [Fact]
+        public void Remove_Sensitive_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties).AddAgency(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.IsSensitive = true;
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            service.Remove(parcel);
+
+            // Assert
+            Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
+        }
+
+        /// <summary>
+        /// User is attempting to view sensitive parcel from another agency.
+        /// </summary>
+        [Fact]
+        public void Remove_WrongAgency_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Remove(parcel));
+        }
+
+        /// <summary>
+        /// User is attempting to view sensitive parcel from another agency.
+        /// </summary>
+        [Fact]
+        public void Remove_WrongAgency_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            service.Remove(parcel);
+
+            // Assert
+            Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
+        }
+
+        /// <summary>
+        /// Parcel found.
+        /// </summary>
+        [Fact]
+        public void Remove_Sensitive()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.SensitiveView).AddAgency(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.IsSensitive = true;
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            service.Remove(parcel);
+
+            // Assert
+            Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
+        }
+
+        /// <summary>
+        /// Parcel found.
+        /// </summary>
+        [Fact]
+        public void Remove()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var dbName = StringHelper.Generate(10);
+            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+
+            var service = helper.CreateService<ParcelService>(dbName, user);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            service.Remove(parcel);
+
+            // Assert
+            Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
         }
         #endregion
         #endregion

@@ -15,6 +15,12 @@ VALUES
         0
     ),
     (
+        '71e74513-a036-4df3-b724-a8c349b7fc28',
+        'admin-properties',
+        'Ability to administrate properties.',
+        0
+    ),
+    (
         '9b556b3f-441f-4d11-9f6f-14d455df4e05',
         'admin-agencies',
         'Ability to administrate agencies.',
@@ -36,6 +42,12 @@ VALUES
         '223664c7-650c-40ac-8581-f40e10064537',
         'property-edit',
         'Ability to edit properties.',
+        0
+    ),
+    (
+        '223664c7-650c-40ac-8581-f40e10164537',
+        'property-delete',
+        'Ability to delete properties.',
         0
     ),
     (

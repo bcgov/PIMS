@@ -44,10 +44,11 @@ namespace Pims.Dal.Services
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             IQueryable<Parcel> query = this.Context.Parcels.AsNoTracking().Where(p =>
-                (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
+                (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
                 p.Latitude != 0 &&
                 p.Longitude != 0 &&
                 p.Latitude <= neLat &&
@@ -101,6 +102,7 @@ namespace Pims.Dal.Services
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var parcel = this.Context.Parcels
                 .Include(p => p.Status)
@@ -123,7 +125,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&
-                    (!p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
+                    (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
             // Remove any sensitive buildings from the results if the user is not allowed to view them.
             parcel?.Buildings.RemoveAll(b => b.IsSensitive && !userAgencies.Contains(b.AgencyId));
@@ -140,12 +142,31 @@ namespace Pims.Dal.Services
             parcel.ThrowIfNull(nameof(parcel));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
-            var agency_id = this.User.GetAgency() ??
+            var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
 
-            parcel.AgencyId = agency_id;
+            parcel.AgencyId = agency.Id;
+            parcel.Agency = agency;
+            parcel.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
+            parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
+            parcel.Status = this.Context.PropertyStatus.Find(parcel.StatusId);
+            parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
+
+            parcel.Buildings.ForEach(b =>
+            {
+                b.Parcel = parcel;
+                b.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
+                b.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
+                b.Status = this.Context.PropertyStatus.Find(parcel.StatusId);
+                b.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
+                b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Find(b.BuildingConstructionTypeId);
+                b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Find(b.BuildingOccupantTypeId);
+                b.BuildingPredominateUse = this.Context.BuildingPredominateUses.Find(b.BuildingPredominateUseId);
+                
+            });
+
             this.Context.Parcels.Add(parcel);
             this.Context.CommitTransaction();
             return parcel;
@@ -159,6 +180,9 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
             var existingParcel = this.Context.Parcels
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
@@ -169,10 +193,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, "property-edit");
-
             var userAgencies = this.User.GetAgencies();
-            if (!userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+            if (!isAdmin && !userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
             if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
@@ -300,12 +322,15 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(Parcel parcel)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, Permissions.PropertyAdd);
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
 
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
             var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
 
-            var agency_ids = this.User.GetAgencies();
-            if (!agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove parcels outside of their agency.");
+            if (!isAdmin && (!userAgencies.Contains(entity.AgencyId) || entity.IsSensitive && !viewSensitive))
+                throw new NotAuthorizedException("User does not have permission to delete.");
 
             this.Context.Entry(entity).CurrentValues.SetValues(parcel);
 

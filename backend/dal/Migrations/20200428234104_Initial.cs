@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -9,6 +9,7 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreDeploy(migrationBuilder);
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -418,7 +419,8 @@ namespace Pims.Dal.Migrations
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     IsDisabled = table.Column<bool>(nullable: false),
                     SortOrder = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: true)
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    IsPublic = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

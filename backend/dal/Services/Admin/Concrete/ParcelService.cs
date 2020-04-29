@@ -327,6 +327,7 @@ namespace Pims.Dal.Services.Admin
         public override Parcel Update(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 
@@ -346,6 +347,7 @@ namespace Pims.Dal.Services.Admin
         public override void Remove(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 

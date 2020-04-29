@@ -1186,6 +1186,9 @@ namespace Pims.Dal.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")

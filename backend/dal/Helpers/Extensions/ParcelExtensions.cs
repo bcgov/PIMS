@@ -57,10 +57,11 @@ namespace Pims.Dal.Helpers.Extensions
             // Check if user has the ability to view sensitive properties.
             var userAgencies = user.GetAgencies();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Parcels.AsNoTracking().Where(p =>
-                !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
+                isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)));
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
                 query = query.Where(p =>
