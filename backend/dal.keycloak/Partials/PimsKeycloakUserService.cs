@@ -132,16 +132,17 @@ namespace Pims.Dal.Keycloak
             // Update Roles.
             addRoles.ForEach(async r =>
             {
-                if (r.Role?.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot assign a role to a user, when the role does not exist.");
+                if (role.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 euser.Roles.Add(new Entity.UserRole(euser, role));
-                await _keycloakService.AddGroupToUserAsync(user.Id, r.Role.KeycloakGroupId.Value);
+                await _keycloakService.AddGroupToUserAsync(user.Id, role.KeycloakGroupId.Value);
             });
             removeRoles.ForEach(async r =>
             {
-                if (r.Role?.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
+                var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot remove a role from a user, when the role does not exist.");
+                if (role.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 euser.Roles.Remove(r);
-                await _keycloakService.RemoveGroupFromUserAsync(user.Id, r.Role.KeycloakGroupId.Value);
+                await _keycloakService.RemoveGroupFromUserAsync(user.Id, role.KeycloakGroupId.Value);
             });
 
             // Update Agencies
