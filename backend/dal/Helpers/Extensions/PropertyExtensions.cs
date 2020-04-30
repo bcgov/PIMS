@@ -33,6 +33,9 @@ namespace Pims.Dal.Helpers.Extensions
             var query = context.Properties.AsNoTracking().Where(b =>
                 !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)));
 
+            if (filter.PropertyType.HasValue)
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType);
+
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
                 query = query.Where(b =>
                     b.Latitude != 0 &&

@@ -10,6 +10,8 @@ namespace Pims.Dal.Entities.Models
     public class AllPropertyFilter : PropertyFilter
     {
         #region Properties
+        public PropertyTypes? PropertyType { get; set; }
+
         #region Parcel Properties
         /// <summary>
         /// get/set - The parcel municipality.
@@ -183,6 +185,8 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+            this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
+
             this.Municipality = filter.GetStringValue(nameof(this.Municipality));
             this.Zoning = filter.GetStringValue(nameof(this.Zoning));
             this.ZoningPotential = filter.GetStringValue(nameof(this.ZoningPotential));
