@@ -9,23 +9,50 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
     public class UserModel
     {
         #region Properties
-        public Guid id { get; set; }
+        /// <summary>
+        /// get/set - The primary key for the user.
+        /// </summary>
+        public Guid Id { get; set; }
 
-        public string username { get; set; }
+        /// <summary>
+        /// get/set - A unique username to identify the user.
+        /// </summary>
+        public string Username { get; set; }
 
-        public bool enabled { get; set; }
+        /// <summary>
+        /// get/set - Whether the user is enabled.
+        /// </summary>
+        public bool Enabled { get; set; }
 
-        public bool totp { get; set; }
+        /// <summary>
+        /// get/set - I don't know...
+        /// </summary>
+        public bool Totp { get; set; }
 
-        public bool emailVerified { get; set; }
+        /// <summary>
+        /// get/set - Whether the user's email has been verified.
+        /// </summary>
+        public bool EmailVerified { get; set; }
 
-        public string firstName { get; set; }
+        /// <summary>
+        /// get/set - The user's first name.
+        /// </summary>
+        public string FirstName { get; set; }
 
-        public string lastName { get; set; }
+        /// <summary>
+        /// get/set - The user's last name.
+        /// </summary>
+        public string LastName { get; set; }
 
-        public string email { get; set; }
+        /// <summary>
+        /// get/set - The user's email.
+        /// </summary>
+        public string Email { get; set; }
 
-        public Dictionary<string, string[]> attributes { get; set; }
+        /// <summary>
+        /// get/set - A dictionary of attributes.
+        /// </summary>
+        public Dictionary<string, string[]> Attributes { get; set; }
         #endregion
     }
 }

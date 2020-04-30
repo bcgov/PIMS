@@ -132,14 +132,16 @@ namespace Pims.Dal.Keycloak
             // Update Roles.
             addRoles.ForEach(async r =>
             {
+                if (r.Role?.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot assign a role to a user, when the role does not exist.");
                 euser.Roles.Add(new Entity.UserRole(euser, role));
-                await _keycloakService.AddGroupToUserAsync(user.Id, r.RoleId);
+                await _keycloakService.AddGroupToUserAsync(user.Id, r.Role.KeycloakGroupId.Value);
             });
             removeRoles.ForEach(async r =>
             {
+                if (r.Role?.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 euser.Roles.Remove(r);
-                await _keycloakService.RemoveGroupFromUserAsync(user.Id, r.RoleId);
+                await _keycloakService.RemoveGroupFromUserAsync(user.Id, r.Role.KeycloakGroupId.Value);
             });
 
             // Update Agencies
@@ -182,7 +184,7 @@ namespace Pims.Dal.Keycloak
             var accessRequest = _pimsAdminService.User.GetAccessRequest(entity.Id);
             if (accessRequest.Status != Entity.AccessRequestStatus.Approved && entity.Status == Entity.AccessRequestStatus.Approved)
             {
-                Entity.User user = _pimsAdminService.User.Get(accessRequest.UserId);
+                var user = _pimsAdminService.User.Get(accessRequest.UserId);
                 entity.Agencies.ForEach((accessRequestAgency) =>
                 {
                     if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))
