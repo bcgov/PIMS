@@ -1,5 +1,6 @@
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Entities.Views;
+using System.Collections.Generic;
 
 namespace Pims.Dal.Services
 {
@@ -9,8 +10,7 @@ namespace Pims.Dal.Services
     public interface IPropertyService
     {
         int Count();
+        IEnumerable<Property> Get(AllPropertyFilter filter);
         Paged<Property> GetPage(AllPropertyFilter filter);
-        Paged<Property> GetPage(ParcelFilter filter);
-        Paged<Property> GetPage(BuildingFilter filter);
     }
 }

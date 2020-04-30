@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MapsterMapper;
 using Mapster;
 using System.Diagnostics.CodeAnalysis;
+using Pims.Api.Helpers.Mapping;
+using System.Collections.Generic;
 
 namespace Pims.Core.Test
 {
@@ -43,8 +45,17 @@ namespace Pims.Core.Test
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Pims"));
             assemblies.ForEach(a => config.Scan(a));
 
+            config.Default.IgnoreNonMapped(true);
+            config.Default.IgnoreNullValues(true);
+            config.AllowImplicitDestinationInheritance = true;
+            config.AllowImplicitSourceInheritance = true;
+            config.Default.UseDestinationValue(member =>
+                member.SetterModifier == AccessModifier.None &&
+                member.Type.IsGenericType &&
+                member.Type.GetGenericTypeDefinition() == typeof(ICollection<>));
+
             _services.AddSingleton(config);
-            _services.AddScoped<IMapper, ServiceMapper>();
+            _services.AddSingleton<IMapper, ServiceMapper>();
         }
         #endregion
 

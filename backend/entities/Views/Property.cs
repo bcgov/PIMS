@@ -49,9 +49,24 @@ namespace Pims.Dal.Entities.Views
         public int AgencyId { get; set; }
 
         /// <summary>
-        /// get/set - The agency this property belongs to.
+        /// get/set - The parent agency this property belongs to.
         /// /summary>
         public string Agency { get; set; }
+
+        /// <summary>
+        /// get/set - The parent agency code this property belongs to.
+        /// /summary>
+        public string AgencyCode { get; set; }
+
+        /// <summary>
+        /// get/set - The sub agency this property belongs to.
+        /// /summary>
+        public string SubAgency { get; set; }
+
+        /// <summary>
+        /// get/set - The sub agency code this property belongs to.
+        /// /summary>
+        public string SubAgencyCode { get; set; }
 
         /// <summary>
         /// get/set - The property description.
@@ -272,11 +287,16 @@ namespace Pims.Dal.Entities.Views
             this.Status = property.Status?.Name;
             this.ClassificationId = property.ClassificationId;
             this.Classification = property.Classification?.Name;
+
             this.AgencyId = property.AgencyId;
-            this.Agency = property.Agency?.Name;
+            this.Agency = property.Agency?.ParentId != null ? property.Agency.Parent?.Name : property.Agency?.Name;
+            this.AgencyCode = property.Agency?.ParentId != null ? property.Agency.Parent?.Code : property.Agency?.Code;
+            this.SubAgency = property.Agency?.ParentId != null ? null : property.Agency?.Name;
+            this.SubAgencyCode = property.Agency?.ParentId != null ? null : property.Agency?.Code;
+
             this.Description = property.Description;
             this.AddressId = property.AddressId;
-            this.Address = $"{property.Address?.Address1} {property.Address?.Address2}";
+            this.Address = $"{property.Address?.Address1} {property.Address?.Address2}".Trim();
             this.City = property.Address?.City?.Name;
             this.Province = property.Address?.Province?.Name;
             this.Postal = property.Address?.Postal;
