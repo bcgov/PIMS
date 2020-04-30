@@ -13,6 +13,7 @@ import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';
 import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test';
+import PropertyListView from 'features/properties/list/PropertyListView';
 
 const AppRouter: React.FC = () => {
   return (
@@ -45,6 +46,13 @@ const AppRouter: React.FC = () => {
         protected
         path="/mapView"
         component={MapView}
+        layout={AuthLayout}
+        claim={Claims.PROPERTY_VIEW}
+      />
+      <AppRoute
+        protected
+        path="/properties/list"
+        component={PropertyListView}
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
       />
