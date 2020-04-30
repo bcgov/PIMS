@@ -19,6 +19,12 @@ namespace Pims.Tools.Keycloak.Sync
         private readonly KeycloakOptions _options;
         private readonly HttpClient _client;
         private readonly ILogger _logger;
+        private readonly JsonSerializerOptions _serializationOptions = new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            IgnoreNullValues = true
+        };
         #endregion
 
         #region Constructors
@@ -77,16 +83,16 @@ namespace Pims.Tools.Keycloak.Sync
 
             if (response.IsSuccessStatusCode)
             {
-                var token = await JsonSerializer.DeserializeAsync<Models.Keycloak.TokenModel>(stream);
+                var token = await JsonSerializer.DeserializeAsync<Models.Keycloak.TokenModel>(stream, _serializationOptions);
                 _logger.LogInformation($"Successfully requested token: {_options.TokenUrl}");
-                _logger.LogTrace($"Access token: {token.access_token}");
+                _logger.LogTrace($"Access token: {token.Access_token}");
                 return token;
             }
             else
             {
                 if (response.Content.Headers.ContentType?.MediaType == "application/json")
                 {
-                    var results = await JsonSerializer.DeserializeAsync<object>(stream);
+                    var results = await JsonSerializer.DeserializeAsync<object>(stream, _serializationOptions); // TODO: convert to known object to extract error message.
                     var json = JsonSerializer.Serialize(results);
                     _logger.LogError(json);
                     throw new InvalidOperationException($"Failed to fetch new token. {response.StatusCode} - {json}");

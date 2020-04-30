@@ -9,27 +9,40 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
     public class GroupModel
     {
         #region Properties
-        public Guid id { get; set; }
+        /// <summary>
+        /// get/set - A unique primary key.
+        /// </summary>
+        public Guid? Id { get; set; }
 
-        public string name { get; set; }
+        /// <summary>
+        /// get/set - A unique name to identify this group.
+        /// </summary>
+        public string Name { get; set; }
 
-        public string path { get; set; }
+        /// <summary>
+        /// get/set - The full path to the group.
+        /// </summary>
+        public string Path { get; set; }
 
-        public string description { get; set; }
+        /// <summary>
+        /// get/set - An array of role names associated to this group.
+        /// </summary>
+        public string[] RealmRoles { get; set; }
 
-        public bool composite { get; set; }
+        /// <summary>
+        /// get/set - A dictionary of client roles.
+        /// </summary>
+        public Dictionary<string, string[]> ClientRoles { get; set; }
 
-        public bool clientRole { get; set; }
+        /// <summary>
+        /// get/set - An array of sub-groups.
+        /// </summary>
+        public string[] SubGroups { get; set; }
 
-        public string containerId { get; set; }
-
-        public string[] realmRoles { get; set; }
-
-        public Dictionary<string, string[]> clientRoles { get; set; }
-
-        public string[] subGroups { get; set; }
-
-        public Dictionary<string, string[]> attributes { get; set; }
+        /// <summary>
+        /// get/set - A dictionary of attributes.
+        /// </summary>
+        public Dictionary<string, string[]> Attributes { get; set; }
         #endregion
     }
 }
