@@ -1,0 +1,28 @@
+.user-management-table-wrapper {
+  > th {
+    font-weight: bold;
+  }
+}
+
+div[class^='MUIDataTableHeadCell-data-'] {
+  font-weight: bold;
+}
+.MuiTableHead-root {
+  tr {
+    th {
+      background-color: lighten($color: grey, $amount: 40%) !important;
+    }
+  }
+}
+
+div[class^='MUIDataTableToolbar-titleRoot'] {
+  text-align: left;
+  h6 {
+    font-weight: bolder !important;
+    font-size: 20px;
+  }
+}
+.MuiTableRow-root.Mui-selected,
+.MuiTableRow-root.Mui-selected:hover {
+  background-color: lighten($color: #38598a, $amount: 50%) !important;
+}

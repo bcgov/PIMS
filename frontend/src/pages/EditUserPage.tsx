@@ -24,11 +24,17 @@ import * as API from 'constants/API';
 import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
 
-const EditUserPage = (props: IUserDetailParams) => {
+interface IEditUserPageProps extends IUserDetailParams {
+  match?: any;
+}
+
+const EditUserPage = (props: IEditUserPageProps) => {
+  const userId = props?.match?.params?.id || props.id;
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchUserDetail({ id: props.id }));
-  }, [dispatch, props.id]);
+    dispatch(fetchUserDetail({ id: userId }));
+  }, [dispatch, userId]);
 
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -81,14 +87,15 @@ const EditUserPage = (props: IUserDetailParams) => {
     lastName: user.lastName,
     email: user.email,
     displayName: user.displayName,
-    isDisabled: false,
+    isDisabled: !!user.isDisabled,
     rowVersion: user.rowVersion,
     emailVerified: false,
     agencies: user.agencies,
     roles: user.roles,
     note: user.note,
-    agency: '',
-    role: '',
+    agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
+    role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
+    position: user.position,
   };
 
   return (
@@ -114,10 +121,9 @@ const EditUserPage = (props: IUserDetailParams) => {
               } else {
                 rolesToUpdate = user.roles;
               }
-
               dispatch(
                 getUpdateUserAction(
-                  { id: props.id },
+                  { id: userId },
                   {
                     id: user.id,
                     username: user.username,
@@ -130,6 +136,7 @@ const EditUserPage = (props: IUserDetailParams) => {
                     emailVerified: values.emailVerified,
                     agencies: agenciesToUpdate,
                     roles: rolesToUpdate,
+                    position: values.position,
                   },
                 ),
               );
@@ -155,7 +162,6 @@ const EditUserPage = (props: IUserDetailParams) => {
                 <Label>Email</Label>
                 <Input field="email" placeholder={props.values.email} type="email" />
 
-                <Label>Agency</Label>
                 {checkAgencies}
 
                 <Label>Position</Label>
@@ -165,7 +171,6 @@ const EditUserPage = (props: IUserDetailParams) => {
                   type="text"
                 />
 
-                <Label>Role</Label>
                 {checkRoles}
 
                 <Label>Notes</Label>

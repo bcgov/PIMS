@@ -5,10 +5,10 @@ using Pims.Dal.Security;
 using Pims.Dal.Keycloak;
 using Pims.Api.Policies;
 using Model = Pims.Api.Areas.Keycloak.Models.User;
+using AdminModels = Pims.Api.Areas.Admin.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Pims.Dal.Entities;
 using MapsterMapper;
-using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
@@ -115,16 +115,15 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(AdminModels.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
-        public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] Model.Update.UserModel model)
+        public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] AdminModels.UserModel model)
         {
             var user = _mapper.Map<Entity.User>(model);
-            await _keycloakService.UpdateUserAsync(user);
-            var result = _mapper.Map<Model.UserModel>(user);
-
+            var entity = await _keycloakService.UpdateUserAsync(user);
+            var result = _mapper.Map<AdminModels.UserModel>(entity);
             return new JsonResult(result);
         }
 

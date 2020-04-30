@@ -1,16 +1,16 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IPagedItems } from 'interfaces';
-import { IStoreUsersAction } from 'actions/adminActions';
+import { IPagedItems, IUser } from 'interfaces';
+import { IStoreUsersAction, IUpdateUserAction } from 'actions/adminActions';
 
 export interface IUsersState {
-  pagedUsers: IPagedItems;
+  pagedUsers: IPagedItems<IUser>;
 }
 
 const initialState: IUsersState = {
   pagedUsers: { page: 0, total: 0, quantity: 0, items: [] },
 };
 
-const usersReducer = (state = initialState, action: IStoreUsersAction) => {
+const usersReducer = (state = initialState, action: IStoreUsersAction | IUpdateUserAction) => {
   switch (action.type) {
     case actionTypes.STORE_USERS:
       return {
@@ -18,6 +18,17 @@ const usersReducer = (state = initialState, action: IStoreUsersAction) => {
         pagedUsers: {
           ...action.pagedUsers,
           items: [...action.pagedUsers.items],
+        },
+      };
+    case actionTypes.UPDATE_USER:
+      const items = [
+        ...state.pagedUsers.items.map((u: IUser) => (u.id === action.user.id ? action.user : u)),
+      ];
+      return {
+        ...state,
+        pagedUsers: {
+          ...state.pagedUsers,
+          items,
         },
       };
     default:

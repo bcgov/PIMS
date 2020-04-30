@@ -5,7 +5,7 @@ import { IPagedItems, IAccessRequest } from 'interfaces';
 
 export interface IStoreAccessRequestsAction {
   type: typeof ActionTypes.STORE_ACCESS_REQUESTS;
-  pagedAccessRequests: IPagedItems;
+  pagedAccessRequests: IPagedItems<IAccessRequest>;
 }
 
 /**

@@ -40,7 +40,8 @@ export const ADD_PARCEL = `/parcels`;
 export interface IUserDetailParams {
   id: string;
 }
-export const USER_DETAIL = (params: IUserDetailParams) => `/keycloak/users/${params.id}`;
+export const USER_DETAIL = (params: IUserDetailParams) => `/admin/users/${params.id}`;
+export const KEYCLOAK_USER_UPDATE = (params: IUserDetailParams) => `/keycloak/users/${params.id}`;
 
 export interface IBuildingDetailParams {
   id: number;

@@ -112,11 +112,6 @@ Array [
               value="test@user.com"
             />
           </div>
-          <p
-            className="label"
-          >
-            Agency
-          </p>
           <div
             className="required form-group"
           >
@@ -169,11 +164,6 @@ Array [
               type="text"
             />
           </div>
-          <p
-            className="label"
-          >
-            Role
-          </p>
           <div
             className="required form-group"
           >
