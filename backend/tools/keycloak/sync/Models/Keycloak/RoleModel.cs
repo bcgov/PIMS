@@ -9,19 +9,40 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
     public class RoleModel
     {
         #region Properties
-        public Guid id { get; set; }
+        /// <summary>
+        /// get/set - A primary key for the role.
+        /// </summary>
+        public Guid Id { get; set; }
 
-        public string name { get; set; }
+        /// <summary>
+        /// get/set - A unique name to identify the role.
+        /// </summary>
+        public string Name { get; set; }
 
-        public string description { get; set; }
+        /// <summary>
+        /// get/set - A description.
+        /// </summary>
+        public string Description { get; set; }
 
-        public bool composite { get; set; }
+        /// <summary>
+        /// get/set - Whether this is a composite role.
+        /// </summary>
+        public bool Composite { get; set; }
 
-        public bool clientRole { get; set; }
+        /// <summary>
+        /// get/set - Whether this is a client role.
+        /// </summary>
+        public bool ClientRole { get; set; }
 
-        public string containerId { get; set; }
+        /// <summary>
+        /// get/set - The container this role belongs in.
+        /// </summary>
+        public string ContainerId { get; set; }
 
-        public Dictionary<string, string[]> attributes { get; set; }
+        /// <summary>
+        /// get/set - A dictionary of attributes.
+        /// </summary>
+        public Dictionary<string, string[]> Attributes { get; set; }
         #endregion
     }
 }

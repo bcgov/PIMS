@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Pims.Tools.Keycloak.Sync
 {
     /// <summary>
@@ -8,6 +6,11 @@ namespace Pims.Tools.Keycloak.Sync
     public class SyncOptions
     {
         #region Properties
+        /// <summary>
+        /// get/set - An array of required claims.
+        /// </summary>
+        public string[] Claims { get; set; }
+
         /// <summary>
         /// get/set - Whether to retry a request after a failure.
         /// </summary>
