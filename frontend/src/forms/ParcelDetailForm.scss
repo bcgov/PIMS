@@ -3,6 +3,14 @@
   font-size: 0.75rem;
   font-family: 'BCSans' Fallback, sans-serif;
   background-color: #f2f2f2;
+  p {
+    margin-top: 1.5rem;
+    margin-bottom: 0rem;
+  }
+  .pidPinForm,
+  .sumFinancialsForm {
+    margin-bottom: 0 !important;
+  }
   .col-md-6 {
     padding-right: 4rem;
   }
@@ -47,7 +55,7 @@
       display: inline;
     }
     .form-label {
-      padding: 0 1rem 0.5rem 0;
+      padding: 0 1rem 0 0;
     }
     .input-group {
       flex-wrap: nowrap;

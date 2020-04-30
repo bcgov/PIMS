@@ -2,9 +2,11 @@ import React from 'react';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { PARCEL_STORAGE_NAME, clearStorage, isStorageInUse } from 'utils/storageUtils';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 const OnLoadActions: React.FC = () => {
   const history = useHistory();
+  const keycloak = useKeycloakWrapper();
 
   return (
     <GenericModal
@@ -13,7 +15,9 @@ const OnLoadActions: React.FC = () => {
       cancelButtonText="Discard"
       okButtonText="Resume Editing"
       display={
-        history.location.pathname !== '/submitProperty' && isStorageInUse(PARCEL_STORAGE_NAME)
+        history.location.pathname !== '/submitProperty' &&
+        isStorageInUse(PARCEL_STORAGE_NAME) &&
+        keycloak?.obj?.authenticated
       }
       handleOk={() => {
         history.push('/submitProperty?loadDraft=true');

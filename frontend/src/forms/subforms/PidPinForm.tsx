@@ -42,6 +42,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             disabled={props.disabled}
             outerClassName="col-md-10"
             field={withNameSpace('pin')}
+            type="number"
           />
         </Form.Row>
         <Form.Row>
