@@ -61,17 +61,6 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
-              Municipality
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled}
-              outerClassName="col-md-10"
-              field={withNameSpace('municipality')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
               Zoning
             </Form.Label>
             <FastInput
@@ -116,6 +105,18 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               field={withNameSpace('longitude')}
             />
           </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Agency
+            </Form.Label>
+            <FastInput
+              formikProps={props}
+              disabled={true}
+              type="string"
+              outerClassName="col-md-10"
+              field={withNameSpace('agency')}
+            />
+          </Form.Row>
         </Col>
         <Col md={6}>
           <Form.Row>
@@ -127,6 +128,17 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               disabled={props.disabled}
               outerClassName="col-md-10"
               field={withNameSpace('statusId')}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Municipality
+            </Form.Label>
+            <FastInput
+              formikProps={props}
+              disabled={props.disabled}
+              outerClassName="col-md-10"
+              field={withNameSpace('municipality')}
             />
           </Form.Row>
           <Form.Row>
