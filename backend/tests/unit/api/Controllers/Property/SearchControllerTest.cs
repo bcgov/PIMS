@@ -274,9 +274,9 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
-            var parcel = new Entity.Parcel(1, 51, 25);
+            var parcel = EntityHelper.CreateParcel(1, 51, 25);
             var parcels = new[] { parcel };
-            var building = new Entity.Building(parcel, 51, 25);
+            var building = EntityHelper.CreateBuilding(parcel, 51, "p1", "l1");
             var buildings = new[] { building };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -292,7 +292,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
             var expectedResult = mapper.Map<PropertyModel[]>(parcels).JoinAll(mapper.Map<PropertyModel[]>(buildings));
-            Assert.Equal(expectedResult, actualResult.Items, new DeepPropertyCompare());
+            Assert.Equal(expectedResult, actualResult.Items, new ShallowPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }
 
@@ -309,8 +309,8 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<SearchController>(Permissions.PropertyView, uri);
 
-            var parcel1 = new Entity.Parcel(1, 51, 25) { Id = 1 };
-            var parcel2 = new Entity.Parcel(2, 51, 26) { Id = 2 };
+            var parcel1 = EntityHelper.CreateParcel(1, 51, 25);
+            var parcel2 = EntityHelper.CreateParcel(2, 51, 26);
             var parcels = new[] { parcel1, parcel2 };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -326,7 +326,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
             var expectedResult = mapper.Map<PropertyModel[]>(parcels);
-            Assert.Equal(expectedResult, actualResult.Items, new DeepPropertyCompare());
+            Assert.Equal(expectedResult, actualResult.Items, new ShallowPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }
 
