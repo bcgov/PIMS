@@ -40,26 +40,31 @@ export const UserSchema = Yup.object().shape({
 });
 
 export const Address = Yup.object().shape({
-  address1: Yup.string().max(150, 'Address must be less then 150 characters'),
-  address2: Yup.string().max(150, 'Address must be less then 150 characters'),
+  line1: Yup.string()
+    .max(150, 'Address must be less then 150 characters')
+    .required('Required'),
+  line2: Yup.string().max(150, 'Address must be less then 150 characters'),
   cityId: Yup.string()
     .matches(/\d*/, 'Invalid City')
     .required('Required')
     .nullable(),
   provinceId: Yup.string().required('Required'),
-  postal: Yup.string().matches(/[a-zA-z][0-9][a-zA-z][0-9][a-zA-z][0-9]/, 'Invalid Postal Code'),
+  postal: Yup.string().matches(
+    /[a-zA-z][0-9][a-zA-z]\s*?[0-9][a-zA-z][0-9]/,
+    'Invalid Postal Code',
+  ),
 });
 
 const currentYear = moment().year();
 export const Financial = Yup.object().shape({
   year: Yup.number(),
-  date: Yup.string().when('key', {
-    is: val => val === EvaluationKeys.Appraised,
-    then: Yup.string().required('Required'),
-    otherwise: Yup.string().nullable(),
-  }),
+  date: Yup.string().nullable(),
   key: Yup.string().nullable(),
-  value: Yup.number().required('Required'),
+  value: Yup.number().when('key', {
+    is: val => val === EvaluationKeys.Appraised,
+    then: Yup.number().nullable(),
+    otherwise: Yup.number().required('Required'),
+  }),
 });
 
 export const Building = Yup.object().shape({

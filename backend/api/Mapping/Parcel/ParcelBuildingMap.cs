@@ -16,6 +16,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
+                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))

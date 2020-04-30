@@ -100,11 +100,12 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   };
   //convert all form values to the format accepted by the API.
   const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
-    values.pin = decimalOrEmpty(values.pin);
-    values.pid = values?.pid?.length ? values.pid : undefined;
+    values.pin = values?.pin ? parseInt(values.pin) : undefined;
+    values.pid = values?.pid ? values.pid : undefined;
     values.statusId = values.statusId ? 1 : 0;
     values.classificationId = decimalOrEmpty(values.classificationId);
     values.address.cityId = decimalOrEmpty(values.address.cityId);
+    values.address.postal = values.address.postal.replace(/ /g, '');
     const allFinancials = filterEmptyFinancials(values.financials);
     values.evaluations = _.filter(allFinancials, financial =>
       Object.keys(EvaluationKeys).includes(financial.key),
@@ -114,9 +115,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     );
     values.financials = [];
     values.buildings.forEach(building => {
-      //default latitude, longitude, agency to the parcel value if none provided.
-      building.latitude = building.latitude ? building.latitude : values.latitude;
-      building.longitude = building.longitude ? building.latitude : values.longitude;
       building.agencyId = building.agencyId = values.agencyId;
 
       if (!building.leaseExpiry || !building.leaseExpiry.length) {
@@ -208,20 +206,19 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               )}
               <Row noGutters>
                 <Col>
-                  <h3>Address</h3>
+                  <h3>Parcel Information</h3>
                   <Form.Row className="pidPinForm">
                     <PidPinForm disabled={props.disabled} />
                     <AddressForm {...formikProps} disabled={props.disabled} nameSpace="address" />
-                  </Form.Row>
-                  <Form.Row className="sumFinancialsForm">
-                    <SumFinancialsForm {...formikProps} />
                   </Form.Row>
                 </Col>
               </Row>
               <Row noGutters>
                 <Col>
-                  <h3>Land</h3>
                   {<LandForm {...formikProps} disabled={props.disabled}></LandForm>}
+                  <Form.Row className="sumFinancialsForm">
+                    <SumFinancialsForm {...formikProps} />
+                  </Form.Row>
                   <h4>Valuation Information</h4>
                   <EvaluationForm
                     {...formikProps}

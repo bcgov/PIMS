@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import React from 'react';
 import AddressForm, { defaultAddressValues } from './AddressForm';
 import EvaluationForm, { defaultFinancials } from './EvaluationForm';
@@ -9,7 +9,14 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastDatePicker, FastSelect, InputGroup, FastInput } from 'components/common/form';
+import {
+  Form,
+  FastDatePicker,
+  FastSelect,
+  InputGroup,
+  FastInput,
+  Input,
+} from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
 import * as API from 'constants/API';
@@ -25,8 +32,8 @@ export const defaultBuildingValues: any = {
   projectNumber: '',
   description: '',
   address: defaultAddressValues,
-  latitude: 0,
-  longitude: 0,
+  latitude: '',
+  longitude: '',
   agencyId: 0,
   parcelId: 0,
   rentableArea: '',
@@ -66,10 +73,27 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const withNameSpace: Function = (name?: string) => {
     return [props.nameSpace, `${props.index}`, name].filter(x => x).join('.');
   };
+
+  //set the lat/lon of this building, but only if the building lat/lon hasn't been touched and has no value.
+  if (
+    !getIn(props.touched, withNameSpace('latitude')) &&
+    !getIn(props.values, withNameSpace('latitude')) &&
+    props.touched.latitude
+  ) {
+    props.setFieldValue(withNameSpace('latitude'), props.values.latitude);
+  }
+  if (
+    !getIn(props.touched, withNameSpace('longitude')) &&
+    !getIn(props.values, withNameSpace('longitude')) &&
+    props.touched.longitude
+  ) {
+    props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
+  }
+
   return (
     <Fragment>
       <h4>Building Information</h4>
-      <Form.Row key={withNameSpace()} className="buildingForm">
+      <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
         <AddressForm {...props} nameSpace={withNameSpace('address')} />
         <Col md={6}>
           <Form.Row>
@@ -126,6 +150,46 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
           </Form.Row>
         </Col>
       </Form.Row>
+      <Form.Row>
+        <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Latitude
+            </Form.Label>
+            <FastInput
+              formikProps={props}
+              disabled={props.disabled}
+              type="number"
+              outerClassName="col-md-10"
+              field={withNameSpace('latitude')}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              RAEG or SPP
+            </Form.Label>
+            <Input
+              disabled={true}
+              outerClassName="col-md-10"
+              field={withNameSpace('projectNumber')}
+            />
+          </Form.Row>
+        </Col>
+        <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Longitude
+            </Form.Label>
+            <FastInput
+              formikProps={props}
+              disabled={props.disabled}
+              type="number"
+              outerClassName="col-md-10"
+              field={withNameSpace('longitude')}
+            />
+          </Form.Row>
+        </Col>
+      </Form.Row>
       <h4>Tenancy</h4>
       <Form.Row className="buildingTenancy">
         <Col md={6}>
@@ -167,7 +231,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
-              Tenancy
+              Tenancy %
             </Form.Label>
             <FastInput
               formikProps={props}
