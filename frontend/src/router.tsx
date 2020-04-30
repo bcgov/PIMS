@@ -13,7 +13,7 @@ import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';
 import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test';
-import PropertyListView from 'features/properties/list/PropertyListView';
+import { PropertyListView } from 'features/properties/list';
 
 const AppRouter: React.FC = () => {
   return (
