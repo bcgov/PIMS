@@ -32,7 +32,8 @@ namespace Pims.Tools.Keycloak.Sync
         private readonly JsonSerializerOptions _serializeOptions = new JsonSerializerOptions()
         {
             PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            IgnoreNullValues = true
         };
         #endregion
 
@@ -62,20 +63,15 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         public async Task<int> SyncAsync()
         {
-            // Check if token has expired.  If it has refresh it.
-            if (String.IsNullOrWhiteSpace(_token) || _tokenHandler.ReadJwtToken(_token).ValidTo <= DateTime.UtcNow)
-            {
-                var tokenNew = await _auth.RequestTokenAsync(_refreshToken);
-                _token = tokenNew.access_token;
-                _refreshToken = tokenNew.refresh_token;
-            }
+            await AddDefaultRolesToKeycloak();
+            await UpdateServiceAccount();
 
             // Fetch all Claims in PIMS and link or create them in keycloak.
             var claims = await HandleRequestAsync<PageModel<ClaimModel>>(HttpMethod.Get, $"{_options.Api.Uri}/admin/claims?page=1&quantity=50"); // TOD: Handle paging.
             foreach (var claim in claims?.Items)
             {
-                var kclaim = await GetClaimAsync(claim);
-                claim.KeycloakRoleId = kclaim.id;
+                var krole = await GetKeycloakRoleAsync(claim);
+                claim.KeycloakRoleId = krole.Id;
 
                 _logger.LogInformation($"Updating Claim '{claim.Name}'.");
                 await HandleRequestAsync<ClaimModel, ClaimModel>(HttpMethod.Put, $"{_options.Api.Uri}/admin/claims/{claim.Id}", claim);
@@ -85,8 +81,9 @@ namespace Pims.Tools.Keycloak.Sync
             var roles = await HandleRequestAsync<PageModel<RoleModel>>(HttpMethod.Get, $"{_options.Api.Uri}/admin/roles?page=1&quantity=50"); // TODO: Handle paging.
             foreach (var role in roles?.Items)
             {
-                var krole = await GetRoleAsync(role);
-                role.KeycloakGroupId = krole.id;
+                var prole = await HandleRequestAsync<RoleModel>(HttpMethod.Get, $"{_options.Api.Uri}/admin/roles/{role.Id}");
+                var krole = await GetKeycloakGroupAsync(prole);
+                role.KeycloakGroupId = krole.Id;
 
                 _logger.LogInformation($"Updating Role '{role.Name}'.");
                 await HandleRequestAsync<RoleModel, RoleModel>(HttpMethod.Put, $"{_options.Api.Uri}/admin/roles/{role.Id}", role);
@@ -101,18 +98,18 @@ namespace Pims.Tools.Keycloak.Sync
                 if (kuser == null) continue;
 
                 // Sync user agencies.
-                if (kuser.attributes == null) kuser.attributes = new Dictionary<string, string[]>();
-                kuser.attributes["agencies"] = user.Agencies.Select(a => a.Id.ToString()).ToArray();
+                if (kuser.Attributes == null) kuser.Attributes = new Dictionary<string, string[]>();
+                kuser.Attributes["agencies"] = user.Agencies.Select(a => a.Id.ToString()).ToArray();
 
                 _logger.LogInformation($"Updating User in Keycloak '{user.Username}'.");
-                var userResponse = await SendRequestAsync(HttpMethod.Put, $"{_options.Keycloak.Admin.Authority}/users/{kuser.id}", kuser);
+                var userResponse = await SendRequestAsync(HttpMethod.Put, $"{_options.Keycloak.Admin.Authority}/users/{kuser.Id}", kuser);
                 if (!userResponse.IsSuccessStatusCode)
                     throw new HttpResponseException(userResponse, $"Failed to update the user '{user.Username}' in keycloak");
 
                 // Sync user roles.
                 foreach (var role in user.Roles)
                 {
-                    var groupResponse = await SendRequestAsync(HttpMethod.Put, $"{_options.Keycloak.Admin.Authority}/users/{kuser.id}/groups/{role.KeycloakGroupId}");
+                    var groupResponse = await SendRequestAsync(HttpMethod.Put, $"{_options.Keycloak.Admin.Authority}/users/{kuser.Id}/groups/{role.KeycloakGroupId}");
                     if (!groupResponse.IsSuccessStatusCode)
                         throw new HttpResponseException(groupResponse, $"Failed to add the group '{role.Name}' to the user '{user.Username}' keycloak");
                 }
@@ -122,12 +119,45 @@ namespace Pims.Tools.Keycloak.Sync
         }
 
         /// <summary>
+        /// Adds default required roles to keycloak.
+        /// </summary>
+        /// <returns></returns>
+        private async Task AddDefaultRolesToKeycloak()
+        {
+            // Need to add basic roles to keycloak so that requests can be made to the API.
+            foreach (var claim in _options.Sync.Claims)
+            {
+                await GetKeycloakRoleAsync(new ClaimModel()
+                {
+                    Name = claim
+                });
+            }
+        }
+
+        /// <summary>
+        /// Update the service account with the appropriate roles.
+        /// </summary>
+        /// <returns></returns>
+        private async Task UpdateServiceAccount()
+        {
+            // Get the Service Account being used to run this job.
+            // Update the serviceAccountUser with the appropriate roles.
+            var saClients = await HandleRequestAsync<IEnumerable<KModel.ClientModel>>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/clients?clientId={_options.Keycloak.ClientId}");
+            var saUser = await HandleRequestAsync<KModel.UserModel>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/clients/{saClients.First().Id}/service-account-user");
+            var saRoles = await HandleRequestAsync<IEnumerable<KModel.RoleModel>>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/roles");
+
+            await SendRequestAsync(HttpMethod.Post, $"{_options.Keycloak.Admin.Authority}/users/{saUser.Id}/role-mappings/realm", saRoles.Where(r => _options.Sync.Claims.Contains(r.Name)).ToArray());
+            await RefreshAccessTokenAsync(true);
+        }
+
+        #region Claim/Role
+        /// <summary>
         /// Get the keycloak role that matches the PIMS claim.
         /// If it doesn't exist, create it in keycloak.
         /// </summary>
         /// <param name="claim"></param>
         /// <returns></returns>
-        private async Task<KModel.RoleModel> GetClaimAsync(ClaimModel claim)
+        private async Task<KModel.RoleModel> GetKeycloakRoleAsync(ClaimModel claim)
         {
             try
             {
@@ -142,19 +172,18 @@ namespace Pims.Tools.Keycloak.Sync
                 {
                     var krole = new KModel.RoleModel()
                     {
-                        id = claim.Id,
-                        name = claim.Name,
-                        description = claim.Description,
-                        composite = false,
-                        clientRole = false,
-                        containerId = _options.Keycloak.Realm
+                        Name = claim.Name,
+                        Description = claim.Description,
+                        Composite = false,
+                        ClientRole = false,
+                        ContainerId = _options.Keycloak.Realm
                     };
 
                     // Add the role to keycloak and sync with PIMS.
                     var kresponse = await SendRequestAsync(HttpMethod.Post, $"{_options.Keycloak.Admin.Authority}/roles", krole);
                     if (kresponse.StatusCode == HttpStatusCode.Created)
                     {
-                        return await GetClaimAsync(claim);
+                        return await GetKeycloakRoleAsync(claim);
                     }
                     else
                     {
@@ -165,44 +194,51 @@ namespace Pims.Tools.Keycloak.Sync
                 throw ex;
             }
         }
+        #endregion
 
+        #region Role/Group
         /// <summary>
         /// Get the keycloak group that matches the PIMS role.
         /// If it doesn't exist, create it in keycloak.
         /// </summary>
         /// <param name="role"></param>
+        /// <param name="update"></param>
         /// <returns></returns>
-        private async Task<KModel.GroupModel> GetRoleAsync(RoleModel role)
+        private async Task<KModel.GroupModel> GetKeycloakGroupAsync(RoleModel role, bool update = true)
         {
             try
             {
                 // Make a request to keycloak to find a matching group.
                 // If one is found, sync both keycloak and PIMS.
                 // If one is not found, add it to keycloak and sync with PIMS.
-                return await HandleRequestAsync<KModel.GroupModel>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/groups/{role.Id}");
+                var group = await HandleRequestAsync<KModel.GroupModel>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/groups/{role.KeycloakGroupId ?? role.Id}");
+
+                // If the roles match the claims, return it.
+                if (update)
+                    return await UpdateGroupInKeycloak(group, role);
+
+                return group;
             }
             catch (HttpResponseException ex)
             {
                 if (ex.StatusCode == HttpStatusCode.NotFound)
                 {
-                    var kgroup = new KModel.GroupModel()
-                    {
-                        id = role.Id,
-                        name = role.Name,
-                        path = $"/{role.Name}",
-                        description = role.Description,
-                        realmRoles = role.Claims.Select(c => c.Name).ToArray()
-                    };
+                    // Check if the group exists as a different name.
+                    var groups = await HandleRequestAsync<IEnumerable<KModel.GroupModel>>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/groups?search={role.Name}");
+                    var existingGroup = groups.FirstOrDefault(g => g.Name == role.Name);
 
-                    // Add the group to keycloak and sync with PIMS.
-                    var kresponse = await SendRequestAsync(HttpMethod.Post, $"{_options.Keycloak.Admin.Authority}/groups", kgroup);
-                    if (kresponse.StatusCode == HttpStatusCode.Created)
+                    if (existingGroup != null)
                     {
-                        return await GetRoleAsync(role);
+                        role.KeycloakGroupId = existingGroup.Id;
+                        if (update)
+                        {
+                            return await UpdateGroupInKeycloak(existingGroup, role);
+                        }
+                        return existingGroup;
                     }
                     else
                     {
-                        throw new HttpResponseException(kresponse, $"Failed to add the group '{role.Name}' to keycloak");
+                        return await AddGroupToKeycloak(role);
                     }
                 }
 
@@ -210,6 +246,91 @@ namespace Pims.Tools.Keycloak.Sync
             }
         }
 
+        /// <summary>
+        /// Add a group to keycloak.
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        private async Task<KModel.GroupModel> AddGroupToKeycloak(RoleModel role)
+        {
+            var addGroup = new KModel.GroupModel()
+            {
+                Name = role.Name,
+                Path = $"/{role.Name}",
+                RealmRoles = role.Claims.Select(c => c.Name).ToArray()
+            };
+
+            // Add the group to keycloak and sync with PIMS.
+            var response = await SendRequestAsync(HttpMethod.Post, $"{_options.Keycloak.Admin.Authority}/groups", addGroup);
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                // Get the Group Id
+                var groups = await HandleRequestAsync<IEnumerable<KModel.GroupModel>>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/groups?search={role.Name}");
+                role.KeycloakGroupId = groups.FirstOrDefault().Id;
+                return await GetKeycloakGroupAsync(role, false);
+            }
+            else
+            {
+                throw new HttpResponseException(response, $"Failed to add the group '{role.Name}' to keycloak");
+            }
+        }
+
+        /// <summary>
+        /// Update a group in keycloak.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        private async Task<KModel.GroupModel> UpdateGroupInKeycloak(KModel.GroupModel group, RoleModel role)
+        {
+            group.RealmRoles = role.Claims.Select(c => c.Name).ToArray();
+
+            // Update the group in keycloak.
+            var response = await SendRequestAsync(HttpMethod.Put, $"{_options.Keycloak.Admin.Authority}/groups/{group.Id}", group);
+            if (response.IsSuccessStatusCode)
+            {
+                await AddRolesToGroupInKeycloak(group, role);
+                return await GetKeycloakGroupAsync(role, false);
+            }
+            else
+            {
+                throw new HttpResponseException(response, $"Failed to update the group '{role.Name}' in keycloak");
+            }
+        }
+
+        /// <summary>
+        /// Add roles to the group in keycloak.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        private async Task AddRolesToGroupInKeycloak(KModel.GroupModel group, RoleModel role)
+        {
+            foreach (var claim in role.Claims)
+            {
+                // Get the matching role from keycloak.
+                //var krole = await HandleRequestAsync<KModel.RoleModel>(HttpMethod.Get, $"{_options.Keycloak.Admin.Authority}/roles/{claim.Name}");
+                var roles = role.Claims.Select(c => new KModel.RoleModel()
+                {
+                    Id = c.KeycloakRoleId.Value,
+                    Name = c.Name,
+                    Composite = false,
+                    ClientRole = false,
+                    ContainerId = _options.Keycloak.Realm,
+                    Description = c.Description
+                }).ToArray();
+
+                // Update the group in keycloak.
+                var response = await SendRequestAsync(HttpMethod.Post, $"{_options.Keycloak.Admin.Authority}/groups/{group.Id}/role-mappings/realm", roles);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpResponseException(response, $"Failed to update the group '{role.Name}' with the role '{claim.Name}' in keycloak");
+                }
+            }
+        }
+        #endregion
+
+        #region User
         /// <summary>
         /// Get the keycloak user that matches the PIMS user.
         /// If it doesn't exist return 'null'.
@@ -235,7 +356,9 @@ namespace Pims.Tools.Keycloak.Sync
                 throw ex;
             }
         }
+        #endregion
 
+        #region HTTP Requests
         /// <summary>
         /// Recursively retry after a failure based on configuration.
         /// </summary>
@@ -348,6 +471,8 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod method, string url)
         {
+            await RefreshAccessTokenAsync();
+
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("Authorization", $"Bearer {_token}");
             request.Headers.Add("User-Agent", "Pims.Tools.Import");
@@ -367,6 +492,8 @@ namespace Pims.Tools.Keycloak.Sync
         private async Task<HttpResponseMessage> SendRequestAsync<T>(HttpMethod method, string url, T data)
             where T: class
         {
+            await RefreshAccessTokenAsync();
+
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("Authorization", $"Bearer {_token}");
             request.Headers.Add("User-Agent", "Pims.Tools.Import");
@@ -381,6 +508,23 @@ namespace Pims.Tools.Keycloak.Sync
 
             return response;
         }
+
+        /// <summary>
+        /// Refresh the access token if required.
+        /// </summary>
+        /// <param name="force"></param>
+        /// <returns></returns>
+        private async Task RefreshAccessTokenAsync(bool force = false)
+        {
+            // Check if token has expired.  If it has refresh it.
+            if (force || String.IsNullOrWhiteSpace(_token) || _tokenHandler.ReadJwtToken(_token).ValidTo <= DateTime.UtcNow)
+            {
+                var tokenNew = await _auth.RequestTokenAsync(_refreshToken);
+                _token = tokenNew.Access_token;
+                _refreshToken = tokenNew.Refresh_token;
+            }
+        }
+        #endregion
         #endregion
     }
 }
