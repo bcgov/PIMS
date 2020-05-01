@@ -84,7 +84,7 @@ export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
     })
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionTypes.ADD_PARCEL, axiosError?.response?.status, axiosError));
-      throw axiosError;
+      throw Error(axiosError.response?.data.details);
     })
     .finally(() => dispatch(hideLoading()));
 };
@@ -101,7 +101,7 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
     })
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError));
-      throw axiosError;
+      throw Error(axiosError.response?.data.details);
     })
     .finally(() => dispatch(hideLoading()));
 };

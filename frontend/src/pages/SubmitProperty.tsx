@@ -106,7 +106,7 @@ const SubmitProperty = (props: any) => {
       <Col md={7} className="form">
         <Row className="title-bar" style={{ textAlign: 'left' }}>
           <Col>
-            <h2>Submit a Property</h2>
+            <h2>{formDisabled ? 'View' : 'Update'} Property</h2>
           </Col>
           <Col style={{ textAlign: 'right' }}>
             {keycloak.hasAgency(cachedParcelDetail?.agencyId) && (
@@ -152,13 +152,17 @@ const SubmitProperty = (props: any) => {
         </Row>
       </Col>
       <Col md={5} className="sideMap" title={parcelId ? '' : 'click on map to add a pin'}>
-        <MapView
-          disableMapFilterBar={true}
-          disabled={!!parcelId}
-          showParcelBoundaries={false}
-          onMarkerClick={() => {}}
-          onMarkerPopupClosed={() => {}}
-        />
+        {parcelDetailRequest?.isFetching || (parcelId && !cachedParcelDetail) ? (
+          <Spinner animation="border"></Spinner>
+        ) : (
+          <MapView
+            disableMapFilterBar={true}
+            disabled={!!parcelId}
+            showParcelBoundaries={false}
+            onMarkerClick={() => {}}
+            onMarkerPopupClosed={() => {}}
+          />
+        )}
       </Col>
       <GenericModal
         title="Unsaved Draft"
