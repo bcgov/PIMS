@@ -1,7 +1,7 @@
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { Formik, FormikErrors, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
+import { Formik, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
 import { IFormBuilding } from './subforms/BuildingForm';
@@ -135,9 +135,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         ...validateFinancials(building.financials, `buildings.${index}.financials`),
       };
     });
-
     const yupErrors: any = validateYupSchema(values, ParcelSchema).then(
-      () => {},
+      () => {
+        return financialErrors;
+      },
       (err: any) => {
         return _.merge(yupToFormErrors(err), financialErrors);
       },
@@ -153,7 +154,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           validateOnChange={false}
           validate={handleValidate}
           enableReinitialize={true}
-          onSubmit={values => {
+          onSubmit={(values, actions) => {
             let response: any;
             const apiValues = valuesToApiFormat(_.cloneDeep(values));
 
@@ -166,11 +167,11 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               .then(() => {
                 history.goBack();
               })
-              .catch((error: FormikErrors<IParcel>) => {
-                //swallow, allow global error handling.
-                //TODO: display errors on specific fields based on the error.
+              .catch((error: any) => {
+                actions.setStatus({ msg: error.toString() });
               })
               .finally(() => {
+                actions.setSubmitting(false);
                 dispatch(clear(actionTypes.ADD_PARCEL));
                 dispatch(clear(actionTypes.UPDATE_PARCEL));
               });
@@ -199,6 +200,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               <Row noGutters>
                 <Col>
                   {<LandForm {...formikProps} disabled={props.disabled}></LandForm>}
+                  <h4>Total values for parcel inclusive of existing building(s)</h4>
                   <Form.Row className="sumFinancialsForm">
                     <SumFinancialsForm {...formikProps} />
                   </Form.Row>
@@ -214,9 +216,15 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 <PagedBuildingForms disabled={props.disabled} />
               </Row>
               <div style={{ textAlign: 'right' }}>
+                {formikProps.status && formikProps.status.msg && (
+                  <p style={{ color: 'red' }}>{formikProps.status.msg}</p>
+                )}
                 {!props.disabled && (
                   <Button disabled={props.disabled} type="submit">
-                    Submit
+                    Submit&nbsp;
+                    {formikProps.isSubmitting && (
+                      <Spinner animation="border" size="sm" role="status" as="span" />
+                    )}
                   </Button>
                 )}
               </div>

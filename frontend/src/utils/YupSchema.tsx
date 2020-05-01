@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import moment from 'moment';
-import { EvaluationKeys } from 'constants/evaluationKeys';
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
     .min(1, 'Invalid Agency')
@@ -60,11 +59,7 @@ export const Financial = Yup.object().shape({
   year: Yup.number(),
   date: Yup.string().nullable(),
   key: Yup.string().nullable(),
-  value: Yup.number().when('key', {
-    is: val => val === EvaluationKeys.Appraised,
-    then: Yup.number().nullable(),
-    otherwise: Yup.number().required('Required'),
-  }),
+  value: Yup.number().nullable(),
 });
 
 export const Building = Yup.object().shape({
