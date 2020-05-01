@@ -9,9 +9,14 @@ import { IPagedItems } from 'interfaces';
 import { IPropertyFilter, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Container, Button } from 'react-bootstrap';
+import download from './../../../utils/download';
+import { useDispatch } from 'react-redux';
 
 const getPropertyListUrl = (filter: IPropertyFilter) =>
   `${ENVIRONMENT.apiUrl}/properties/search/page?${filter ? queryString.stringify(filter) : ''}`;
+
+const getPropertyReportUrl = (filter: IPropertyFilter) =>
+  `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
 const filter: IPropertyFilter = {
   page: 1,
@@ -35,6 +40,20 @@ const PropertyListView: React.FC = () => {
     fetch();
   }, []);
 
+  const dispatch = useDispatch();
+
+  const fetch = (accept: 'csv' | 'excel') =>
+    dispatch(
+      download({
+        url: getPropertyReportUrl(filter),
+        fileName: `properties.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        actionType: 'properties-report',
+        headers: {
+          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+        },
+      }),
+    );
+
   return (
     <Container fluid className="PropertyListView">
       <Container fluid className="px-0 filter-container">
@@ -50,8 +69,10 @@ const PropertyListView: React.FC = () => {
       <div className="ScrollContainer">
         <Container fluid className="content-heading">
           <h3 className="mr-auto">Results</h3>
-          <Button className="mr-2">Export as Excel</Button>
-          <Button>Export as CSV</Button>
+          <Button className="mr-2" onClick={() => fetch('excel')}>
+            Export as Excel
+          </Button>
+          <Button onClick={() => fetch('csv')}>Export as CSV</Button>
         </Container>
         <Table columns={columns} data={data} />
       </div>
