@@ -22,7 +22,7 @@ export interface ISort {
 }
 
 export interface IAccessRequestState {
-  pagedAccessRequests: IPagedItems;
+  pagedAccessRequests: IPagedItems<IAccessRequest>;
   filters: { [key: number]: IColumnFilter };
   selections: string[];
   sorting: ISort[];

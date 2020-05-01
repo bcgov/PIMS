@@ -2,6 +2,7 @@ using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Model = Pims.Api.Areas.Keycloak.Models.User;
+using AdminModels = Pims.Api.Areas.Admin.Models.User;
 using Moq;
 using Pims.Api.Areas.Keycloak.Controllers;
 using Pims.Core.Test;
@@ -121,7 +122,7 @@ namespace PimsApi.Test.Keycloak.Controllers
             var service = helper.GetService<Mock<IPimsKeycloakService>>();
             var user = new Entity.User(Guid.NewGuid(), "test", "test@test.com");
             service.Setup(m => m.UpdateUserAsync(It.IsAny<Entity.User>())).Returns(Task.FromResult(user));
-            var model = mapper.Map<Model.Update.UserModel>(user);
+            var model = mapper.Map<AdminModels.UserModel>(user);
 
             // Act
             var result = await controller.UpdateUserAsync(user.Id, model);
@@ -129,8 +130,8 @@ namespace PimsApi.Test.Keycloak.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType<Model.UserModel>(actionResult.Value);
-            var expectedResult = mapper.Map<Model.UserModel>(user);
+            var actualResult = Assert.IsType<AdminModels.UserModel>(actionResult.Value);
+            var expectedResult = mapper.Map<AdminModels.UserModel>(user);
             Assert.Equal(expectedResult.Id, actualResult.Id);
             Assert.Equal(expectedResult.DisplayName, actualResult.DisplayName);
             Assert.Equal(expectedResult.FirstName, actualResult.FirstName);
