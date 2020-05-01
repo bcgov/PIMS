@@ -12,7 +12,6 @@ export interface PersistProps {
   initialValues: any;
   debounce?: number;
   isSessionStorage?: boolean;
-  writeOnly?: boolean;
   loadDraft?: boolean;
 }
 interface PersistState {
@@ -59,7 +58,7 @@ class PersistImpl extends React.Component<
     const maybeState = this.props.isSessionStorage
       ? window.sessionStorage.getItem(this.props.name)
       : window.localStorage.getItem(this.props.name);
-    if (!this.props.writeOnly && maybeState && maybeState !== null) {
+    if (maybeState && maybeState !== null) {
       try {
         const bytes = AES.decrypt(maybeState, this.props.secret);
         const decryptedData: VersionedStorage = JSON.parse(bytes.toString(enc.Utf8));
@@ -95,7 +94,7 @@ class PersistImpl extends React.Component<
     const maybeState = this.props.isSessionStorage
       ? window.sessionStorage.getItem(this.props.name)
       : window.localStorage.getItem(this.props.name);
-    if (maybeState && !this.props.writeOnly) {
+    if (maybeState) {
       if (this.props.loadDraft) {
         this.loadForm();
       } else {

@@ -61,6 +61,9 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+  const classifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
+  }).map(mapLookupCode);
   const constructionType = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.CONSTRUCTION_CODE_SET_NAME;
   }).map(mapLookupCode);
@@ -106,6 +109,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingConstructionTypeId')}
+              type="number"
               options={constructionType}
             />
           </Form.Row>
@@ -145,6 +149,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingPredominateUseId')}
+              type="number"
               options={predominateUses}
             />
           </Form.Row>
@@ -166,18 +171,6 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
-              RAEG or SPP
-            </Form.Label>
-            <Input
-              disabled={true}
-              outerClassName="col-md-10"
-              field={withNameSpace('projectNumber')}
-            />
-          </Form.Row>
-        </Col>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
               Longitude
             </Form.Label>
             <FastInput
@@ -186,6 +179,32 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               type="number"
               outerClassName="col-md-10"
               field={withNameSpace('longitude')}
+            />
+          </Form.Row>
+        </Col>
+        <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              RAEG or SPP
+            </Form.Label>
+            <Input
+              disabled={true}
+              outerClassName="col-md-10"
+              field={withNameSpace('projectNumber')}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Classification
+            </Form.Label>
+            <FastSelect
+              formikProps={props}
+              disabled={props.disabled}
+              outerClassName="col-md-10"
+              placeholder="Must Select One"
+              field={withNameSpace('classificationId')}
+              type="number"
+              options={classifications}
             />
           </Form.Row>
         </Col>
@@ -203,6 +222,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingOccupantTypeId')}
+              type="number"
               options={occupantTypes}
             />
           </Form.Row>

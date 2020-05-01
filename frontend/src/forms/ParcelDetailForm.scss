@@ -3,16 +3,42 @@
   font-size: 0.75rem;
   font-family: 'BCSans' Fallback, sans-serif;
   background-color: #f2f2f2;
-  p {
-    margin-top: 1.5rem;
-    margin-bottom: 0rem;
-  }
+
   .pidPinForm,
   .sumFinancialsForm {
     margin-bottom: 0 !important;
+    p {
+      margin-top: 1.5rem;
+      margin-bottom: 0rem;
+    }
+  }
+  .buildingPaginate {
+    display: flex;
+    margin-top: -0.5rem;
+    .btn.pagedBuildingButton {
+      display: flex;
+      margin: 0;
+      padding: 0.5rem 0.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 0;
+      height: 2rem;
+    }
+    .page-item {
+      a {
+        border-radius: 0;
+        height: 2rem;
+      }
+    }
+    .pagination {
+      flex-wrap: wrap;
+    }
   }
   .col-md-6 {
     padding-right: 4rem;
+  }
+  .evaluationForm .pagination {
+    width: 100%;
+    justify-content: flex-end;
   }
   .evaluationForm,
   .col-md-6 {
@@ -33,6 +59,11 @@
   .form-group {
     margin-bottom: 0;
   }
+  h4 {
+    color: #003366;
+    font-size: 14px;
+    margin-left: 1rem;
+  }
   form .row {
     background-color: #fff;
     h2 {
@@ -49,6 +80,7 @@
     h4 {
       color: #003366;
       font-size: 14px;
+      padding-left: 1rem;
     }
     h5 {
       padding-left: 1rem;
@@ -97,6 +129,10 @@
     input:disabled {
       background-color: white;
       border: none;
+    }
+    .form-control.is-valid,
+    .form-control.is-invalid {
+      padding-right: 0.25rem;
     }
   }
   .react-datepicker-wrapper {

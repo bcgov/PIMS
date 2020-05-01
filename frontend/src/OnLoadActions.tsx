@@ -7,7 +7,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 const OnLoadActions: React.FC = () => {
   const history = useHistory();
   const keycloak = useKeycloakWrapper();
-
   return (
     <GenericModal
       title="Unsaved Draft"
@@ -15,7 +14,7 @@ const OnLoadActions: React.FC = () => {
       cancelButtonText="Discard"
       okButtonText="Resume Editing"
       display={
-        history.location.pathname !== '/submitProperty' &&
+        !history.location.pathname.includes('/submitProperty') &&
         isStorageInUse(PARCEL_STORAGE_NAME) &&
         keycloak?.obj?.authenticated
       }

@@ -29,6 +29,8 @@ type OptionalAttributes = {
   custom?: boolean;
   /** Class name of the input wrapper */
   outerClassName?: string;
+  /** Run the following formatter on value during onBlur */
+  onBlurFormatter?: Function;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -49,12 +51,15 @@ export const FastInput: React.FC<FastInputProps> = memo(
     required,
     disabled,
     custom,
+    type,
+    onBlurFormatter,
     formikProps: {
       values,
       errors,
       touched,
       handleChange,
       handleBlur,
+      setFieldValue,
       registerField,
       unregisterField,
     },
@@ -71,7 +76,6 @@ export const FastInput: React.FC<FastInputProps> = memo(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     return (
       <Form.Group
         controlId={`input-${field}`}
@@ -79,6 +83,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
       >
         {!!label && <Form.Label>{label}</Form.Label>}
         {!!required && <span className="required">*</span>}
+
         <Form.Control
           as={asElement}
           name={field}
@@ -90,8 +95,14 @@ export const FastInput: React.FC<FastInputProps> = memo(
           isValid={!!touch && !error && value && !disabled}
           value={value}
           placeholder={placeholder}
-          onBlur={handleBlur}
+          onBlur={(e: any) => {
+            if (onBlurFormatter) {
+              setFieldValue(field, onBlurFormatter(value));
+            }
+            handleBlur(e);
+          }}
           onChange={handleChange}
+          type={type}
           {...rest}
         />
         <DisplayError field={field} />
