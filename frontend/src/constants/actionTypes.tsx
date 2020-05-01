@@ -39,3 +39,4 @@ export const ADD_ACTIVATE_USER = 'activateUser';
 export const GET_USERS = 'getUsers';
 export const STORE_USER_DETAILS = 'STORE_USER_DETAILS';
 export const GET_USER = 'GET_USER';
+export const UPDATE_USER = 'UPDATE_USER';

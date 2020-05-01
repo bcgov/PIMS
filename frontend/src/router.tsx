@@ -6,7 +6,7 @@ import EditUserPage from './pages/EditUserPage';
 import Login from './pages/Login';
 import AccessDenied from 'pages/AccessDenied';
 import SubmitProperty from 'pages/SubmitProperty';
-import ManageUsers from 'pages/ManageUsers';
+import ManageUsers from 'pages/admin/users/ManageUsers';
 import ManageAccessRequests from 'pages/admin/access/ManageAccessRequests';
 import { Claims } from 'constants/claims';
 import AppRoute from 'utils/AppRoute';
@@ -57,7 +57,7 @@ const AppRouter: React.FC = () => {
       />
       <AppRoute
         protected
-        path="/admin/user"
+        path="/admin/user/:id?"
         component={EditUserPage}
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}

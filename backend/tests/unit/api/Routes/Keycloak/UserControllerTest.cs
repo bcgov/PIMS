@@ -1,5 +1,6 @@
 using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Pims.Api.Areas.Keycloak.Controllers;
+using AdminModels = Pims.Api.Areas.Admin.Models.User;
 using Pims.Core.Test;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
@@ -84,7 +85,7 @@ namespace Pims.Api.Test.Routes.Keycloak
         public void UpdateUserAsync_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.UpdateUserAsync), typeof(Guid), typeof(Model.Update.UserModel));
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.UpdateUserAsync), typeof(Guid), typeof(AdminModels.UserModel));
 
             // Act
             // Assert
