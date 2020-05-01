@@ -17,7 +17,9 @@ export interface IProperty {
   isSensitive: boolean;
   agencyId: number;
   agency: string;
-  subagency?: string;
+  agencyCode: string;
+  subAgency?: string;
+  subAgencyCode?: string;
 
   addressId: number;
   address: string;
@@ -32,9 +34,9 @@ export interface IProperty {
   netBookFiscalYear?: number;
 
   assessed: number;
-  assessedDate?: Date;
+  assessedDate?: Date | string;
   appraised: number;
-  appraisedDate?: Date;
+  appraisedDate?: Date | string;
 
   // Parcel Properties
   landArea: number;
@@ -54,8 +56,8 @@ export interface IProperty {
   floorCount?: number;
   tenancy?: string;
   occupantName?: string;
-  leaseExpiry?: Date;
-  TransferLeaseOnSale?: boolean;
+  leaseExpiry?: Date | string;
+  transferLeaseOnSale?: boolean;
   rentableArea?: number;
 }
 
