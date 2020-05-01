@@ -9,3 +9,4 @@ export * from './InputGroup';
 export * from './Select';
 export * from './FastSelect';
 export * from './TextArea';
+export * from './FastCurrencyInput';

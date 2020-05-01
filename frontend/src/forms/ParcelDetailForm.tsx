@@ -1,17 +1,10 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import {
-  Formik,
-  FieldArray,
-  FormikErrors,
-  validateYupSchema,
-  yupToFormErrors,
-  FormikProps,
-} from 'formik';
+import { Formik, FormikErrors, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
-import BuildingForm, { defaultBuildingValues, IFormBuilding } from './subforms/BuildingForm';
+import { IFormBuilding } from './subforms/BuildingForm';
 import AddressForm, { defaultAddressValues } from './subforms/AddressForm';
 import LandForm, { defaultLandValues } from './subforms/LandForm';
 import EvaluationForm, {
@@ -24,8 +17,6 @@ import './ParcelDetailForm.scss';
 import { useHistory } from 'react-router-dom';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { Form } from 'components/common/form';
-import { FaTimes } from 'react-icons/fa';
-import { decimalOrEmpty } from 'utils';
 
 import { IParcel } from 'actions/parcelsActions';
 import { clear } from 'actions/genericActions';
@@ -37,6 +28,7 @@ import { LatLng } from 'leaflet';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import SumFinancialsForm from './subforms/SumFinancialsForm';
 import { PARCEL_STORAGE_NAME } from 'utils/storageUtils';
+import PagedBuildingForms from './subforms/PagedBuildingForms';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -103,10 +95,8 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     values.pin = values?.pin ? parseInt(values.pin) : undefined;
     values.pid = values?.pid ? values.pid : undefined;
     values.statusId = values.statusId ? 1 : 0;
-    values.classificationId = decimalOrEmpty(values.classificationId);
-    values.address.cityId = decimalOrEmpty(values.address.cityId);
-    values.address.postal = values.address.postal.replace(/ /g, '');
     const allFinancials = filterEmptyFinancials(values.financials);
+
     values.evaluations = _.filter(allFinancials, financial =>
       Object.keys(EvaluationKeys).includes(financial.key),
     );
@@ -120,12 +110,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       if (!building.leaseExpiry || !building.leaseExpiry.length) {
         building.leaseExpiry = undefined;
       }
-      if (building.address) {
-        building.address.cityId = decimalOrEmpty(building.address.cityId);
-      }
-      building.buildingOccupantTypeId = decimalOrEmpty(building.buildingOccupantTypeId);
-      building.buildingPredominateUseId = decimalOrEmpty(building.buildingPredominateUseId);
-      building.buildingConstructionTypeId = decimalOrEmpty(building.buildingConstructionTypeId);
       const allFinancials = filterEmptyFinancials(building.financials);
       building.evaluations = _.filter(allFinancials, financial =>
         Object.keys(EvaluationKeys).includes(financial.key),
@@ -152,10 +136,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       };
     });
 
-    const yupErrors = validateYupSchema(values, ParcelSchema).then(
+    const yupErrors: any = validateYupSchema(values, ParcelSchema).then(
       () => {},
       (err: any) => {
-        return { ...yupToFormErrors(err), ...financialErrors };
+        return _.merge(yupToFormErrors(err), financialErrors);
       },
     );
     return Promise.resolve(yupErrors);
@@ -197,7 +181,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               {setLatLng(formikProps)}
               {!props.disabled && (
                 <Persist
-                  writeOnly={props.parcelDetail?.id}
                   initialValues={initialValues}
                   secret={props.secret}
                   loadDraft={props.loadDraft}
@@ -228,43 +211,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 </Col>
               </Row>
               <Row noGutters>
-                <Col>
-                  <h3>Buildings</h3>
-                  <FieldArray
-                    name="buildings"
-                    render={arrayHelpers => (
-                      <div>
-                        {!props.disabled && (
-                          <Button
-                            className="addBuilding"
-                            disabled={props.disabled}
-                            onClick={() => arrayHelpers.push(defaultBuildingValues)}
-                          >
-                            Add Building
-                          </Button>
-                        )}
-                        {formikProps.values.buildings.map((building, index) => {
-                          return (
-                            <div key={index}>
-                              {!props.disabled && (
-                                <Button variant="danger" onClick={() => arrayHelpers.remove(index)}>
-                                  <FaTimes size={14} />
-                                </Button>
-                              )}
-                              <h5>Building</h5>
-                              <BuildingForm
-                                {...formikProps}
-                                disabled={props.disabled}
-                                nameSpace="buildings"
-                                index={index}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  />
-                </Col>
+                <PagedBuildingForms disabled={props.disabled} />
               </Row>
               <div style={{ textAlign: 'right' }}>
                 {!props.disabled && (

@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import React from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { FormikProps, setIn, getIn } from 'formik';
-import { Form, InputGroup, FastDatePicker } from 'components/common/form';
+import { Form, FastDatePicker, FastCurrencyInput } from 'components/common/form';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
@@ -10,7 +10,8 @@ import moment from 'moment';
 import _ from 'lodash';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import { IPaginate } from 'utils/CommonFunctions';
-import { formikFieldMemo, decimalOrEmpty } from 'utils';
+import { formikFieldMemo } from 'utils';
+import PaginatedFormErrors from './PaginatedFormErrors';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -43,7 +44,7 @@ const pagedFinancials: IPaginate = {
 };
 
 const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials.find(
+  return financials?.find(
     financial =>
       (financial.year === year ||
         moment(financial.date).year() === year ||
@@ -108,9 +109,28 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   _.filter(evaluations, evaluation => {
-    evaluation.value = decimalOrEmpty(evaluation.value);
     return !!evaluation.value || (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date);
   });
+
+/**
+ * Get the paginated page numbers that contain errors.
+ */
+const getPageErrors = (errors: any, nameSpace: any) => {
+  const evaluationErrors = getIn(errors, nameSpace);
+  const errorsPerPage = Object.keys(keyTypes).length * NUMBER_OF_EVALUATIONS_PER_PAGE;
+  return _.uniq(
+    _.reduce(
+      evaluationErrors,
+      (acc: number[], error, index) => {
+        if (error) {
+          acc.push(Math.ceil((parseInt(index) + 1) / errorsPerPage));
+        }
+        return acc;
+      },
+      [],
+    ),
+  );
+};
 
 /**
  * Subform Component intended to be embedded in a higher level formik component.
@@ -132,6 +152,10 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
 
   return (
     <Fragment>
+      <PaginatedFormErrors
+        nameSpace="Evaluations"
+        errors={getPageErrors(props.errors, props.nameSpace)}
+      />
       <Form.Row className="evaluationForm">
         <Row noGutters>
           {Object.values(keyTypes).map(type => {
@@ -186,12 +210,9 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
                             )}
                           </td>
                           <td>
-                            <InputGroup
+                            <FastCurrencyInput
                               formikProps={props}
                               disabled={props.disabled}
-                              fast={true}
-                              type="number"
-                              preText="$"
                               field={withNameSpace('value', type, year)}
                             />
                           </td>
@@ -204,19 +225,19 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
             );
           })}
         </Row>
+        <WrappedPaginate
+          onPageChange={(page: any) => {
+            setCurrentPage(
+              _.slice(
+                pagedFinancials.items,
+                page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE,
+                page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE + NUMBER_OF_EVALUATIONS_PER_PAGE,
+              ),
+            );
+          }}
+          {...pagedFinancials}
+        />
       </Form.Row>
-      <WrappedPaginate
-        onPageChange={(page: any) => {
-          setCurrentPage(
-            _.slice(
-              pagedFinancials.items,
-              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE,
-              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE + NUMBER_OF_EVALUATIONS_PER_PAGE,
-            ),
-          );
-        }}
-        {...pagedFinancials}
-      />
     </Fragment>
   );
 };

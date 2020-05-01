@@ -7,7 +7,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastSelect, FastInput } from 'components/common/form';
+import { Form, FastSelect, FastInput, Select } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
@@ -64,6 +64,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             outerClassName="col-md-10"
             placeholder="Must Select One"
             field={withNameSpace('cityId')}
+            type="number"
             options={cities}
           />
         </Form.Row>
@@ -71,8 +72,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           <Form.Label column md={2}>
             Province
           </Form.Label>
-          <FastSelect
-            formikProps={props}
+          <Select
             disabled={true}
             outerClassName="col-md-10"
             placeholder="Must Select One"
@@ -88,6 +88,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             formikProps={props}
             disabled={props.disabled}
             outerClassName="col-md-10"
+            onBlurFormatter={(postal: string) => postal.replace(/ /g, '')}
             field={withNameSpace('postal')}
           />
         </Form.Row>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
+import classNames from 'classnames';
 
 type RequiredAttributes = {
   /** The field name */
@@ -29,6 +30,8 @@ type OptionalAttributes = {
   custom?: boolean;
   /** change event handler */
   onChange?: React.FormEventHandler;
+  /** Class name of the input wrapper */
+  outerClassName?: string;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -57,6 +60,7 @@ export const Select: React.FC<SelectProps> = ({
   multiple,
   custom,
   onChange,
+  outerClassName,
   ...rest
 }) => {
   const { values, handleChange, setFieldValue, errors, touched } = useFormikContext();
@@ -94,7 +98,10 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <Form.Group controlId={`input-${field}`} className={!!required ? 'required' : ''}>
+    <Form.Group
+      controlId={`input-${field}`}
+      className={classNames(!!required ? 'required' : '', outerClassName)}
+    >
       {!!label && <Form.Label>{label}</Form.Label>}
       {!!required && <span className="required">*</span>}
       <Form.Control

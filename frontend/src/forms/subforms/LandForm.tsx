@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import * as API from 'constants/API';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -117,6 +117,20 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               field={withNameSpace('agency')}
             />
           </Form.Row>
+          {getIn(props.values, withNameSpace('subAgency')) && (
+            <Form.Row>
+              <Form.Label column md={2}>
+                Sub-Agency
+              </Form.Label>
+              <FastInput
+                formikProps={props}
+                disabled={true}
+                type="string"
+                outerClassName="col-md-10"
+                field={withNameSpace('subAgency')}
+              />
+            </Form.Row>
+          )}
         </Col>
         <Col md={6}>
           <Form.Row>
@@ -148,6 +162,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <FastSelect
               formikProps={props}
               disabled={props.disabled}
+              type="number"
               outerClassName="col-md-10"
               placeholder="Must Select One"
               field={withNameSpace('classificationId')}
@@ -165,7 +180,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               type="number"
               field={withNameSpace('landArea')}
               formikProps={props}
-              postText="Acres"
+              postText="Hectares"
             />
           </Form.Row>
 
