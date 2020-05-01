@@ -69,13 +69,11 @@ const accessRequestReducer = (
         ...state,
         pagedAccessRequests: {
           ...state.pagedAccessRequests,
-          items: (state.pagedAccessRequests.items as IAccessRequest[]).filter(
-            x => x.id !== action.id,
-          ),
+          items: state.pagedAccessRequests.items.filter(x => x.id !== action.id),
         },
       };
     case actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN:
-      const items = (state.pagedAccessRequests.items as IAccessRequest[]).filter(
+      const items = state.pagedAccessRequests.items.filter(
         req => req.id !== action.accessRequest.id,
       );
       return { ...state, pagedAccessRequests: { ...state.pagedAccessRequests, items: items } };

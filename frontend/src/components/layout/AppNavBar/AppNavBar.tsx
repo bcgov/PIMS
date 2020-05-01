@@ -64,10 +64,13 @@ function SubmitPropertyNav() {
  */
 function PropertyDropdown() {
   const keycloak = useKeycloakWrapper();
+  const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
     <NavDropdown title="Manage Property" id="manage-property-dropdown">
       <SubmitPropertyNav />
-      <NavDropdown.Item>View Inventory</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => history.push('/properties/list')}>
+        View Inventory
+      </NavDropdown.Item>
     </NavDropdown>
   ) : null;
 }
