@@ -3,6 +3,7 @@ import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { Col } from 'react-bootstrap';
 import TooltipIcon from 'components/common/TooltipIcon';
+import { PidTooltip, PinTooltip } from 'forms/strings';
 
 interface PidPinProps {
   nameSpace?: string;
@@ -24,7 +25,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <Form.Row>
           <Form.Label column md={2}>
             PID&nbsp;
-            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
+            <TooltipIcon toolTipId="land-status" toolTip={PidTooltip} placement="right" />
           </Form.Label>
           <Input
             disabled={props.disabled}
@@ -36,7 +37,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <Form.Row>
           <Form.Label column md={2}>
             PIN&nbsp;
-            <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
+            <TooltipIcon toolTipId="land-status" toolTip={PinTooltip} placement="right" />
           </Form.Label>
           <Input
             disabled={props.disabled}

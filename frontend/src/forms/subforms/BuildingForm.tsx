@@ -95,7 +95,6 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
 
   return (
     <Fragment>
-      <h4>Building Information</h4>
       <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
         <AddressForm {...props} nameSpace={withNameSpace('address')} />
         <Col md={6}>

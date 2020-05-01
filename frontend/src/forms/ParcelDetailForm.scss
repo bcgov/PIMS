@@ -3,7 +3,10 @@
   font-size: 0.75rem;
   font-family: 'BCSans' Fallback, sans-serif;
   background-color: #f2f2f2;
-
+  p {
+    margin-left: 2rem;
+    font-size: 14px;
+  }
   .pidPinForm,
   .sumFinancialsForm {
     margin-bottom: 0 !important;
@@ -62,7 +65,6 @@
   h4 {
     color: #003366;
     font-size: 14px;
-    margin-left: 1rem;
   }
   form .row {
     background-color: #fff;
@@ -109,6 +111,9 @@
   .btn.btn-primary {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    .spinner-border {
+      position: relative;
+    }
   }
   table {
     .is-valid {

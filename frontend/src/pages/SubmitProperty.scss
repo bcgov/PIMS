@@ -23,4 +23,8 @@
     max-height: calc(100vh - 70px - 45px - 42px);
     overflow-y: scroll;
   }
+  .spinner-border {
+    position: absolute;
+    top: 50%;
+  }
 }
