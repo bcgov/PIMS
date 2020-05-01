@@ -1,7 +1,6 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
@@ -32,12 +31,6 @@ jest.mock('react-router-dom', () => ({
   useRouteMatch: () => ({ url: '/admin', path: '/admin' }),
 }));
 
-// Empty response
-const store = mockStore({
-  [reducerTypes.USERS]: { pagedUsers: [] },
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: {} },
-});
 const successStore = mockStore({
   [reducerTypes.USERS]: {
     pagedUsers: {
@@ -55,26 +48,14 @@ const successStore = mockStore({
     },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: {} },
-});
-const loadingStore = mockStore({
-  [reducerTypes.USERS]: {},
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: { [actionTypes.GET_USERS]: { isFetching: true } },
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_USERS]: {
+      isFetching: false,
+    },
+  },
 });
 
-it('renders Manage Users page correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <Router history={history}>
-          <ManageUsers />
-        </Router>
-      </Provider>,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-});
+// TODO: more user manage dashboard tests coming soon
 
 describe('component functionality', () => {
   const componentRender = (store: any) =>
@@ -86,26 +67,8 @@ describe('component functionality', () => {
       </Provider>,
     );
 
-  it('renders no users by default', () => {
-    const { getByText } = componentRender(store);
-    expect(getByText(/No Users available to be managed/i));
-  });
-
-  it('renders nothing while loading', () => {
-    const { queryByText } = componentRender(loadingStore);
-    expect(queryByText(/Manage Users/i)).toBeNull();
-  });
-
-  it('renders a table with users and their associated values', () => {
-    const { getByText } = componentRender(successStore);
-    expect(getByText(/testUser/i));
-    expect(getByText(/HLTH/i));
-    expect(getByText(/admin/i));
-  });
-
-  it('allows useres the option to edit', () => {
-    const { getByText } = componentRender(successStore);
-    expect(getByText(/edit/i));
-    //
+  it('renders users by default', () => {
+    const { getAllByText } = componentRender(successStore);
+    expect(getAllByText(/PIMS Users/i));
   });
 });

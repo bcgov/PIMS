@@ -1,15 +1,20 @@
 import * as ActionTypes from 'constants/actionTypes';
-import { IPagedItems, IUser, IUserDetails } from 'interfaces';
+import { IPagedItems, IUser, IUserDetails, IAgency, IRole } from 'interfaces';
 
 //Admin API actions
 export interface IStoreUsersAction {
   type: typeof ActionTypes.STORE_USERS;
-  pagedUsers: IPagedItems;
+  pagedUsers: IPagedItems<IUser>;
 }
 
 export interface IGetUserAction {
   type: typeof ActionTypes.GET_USER;
   pagedUsers: IUser;
+}
+
+export interface IUpdateUserAction {
+  type: typeof ActionTypes.UPDATE_USER;
+  user: IUser;
 }
 
 export interface IStoreUserDetail {
@@ -28,14 +33,12 @@ export const storeUsers = (pagedUsers: IStoreUsersAction) => ({
   pagedUsers: pagedUsers,
 });
 
+export const updateUser = (user: IUser): IUpdateUserAction => ({
+  type: ActionTypes.UPDATE_USER,
+  user,
+});
+
 export interface IAddNewRoleAndAgency {
   agency: IAgency;
   role: IRole;
-}
-
-export interface IAgency {
-  id?: number;
-}
-export interface IRole {
-  id?: number;
 }

@@ -59,8 +59,9 @@ export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any)
   dispatch(request(reducerTypes.PUT_USER_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.USER_DETAIL(id), updatedUser)
+    .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
     .then((response: AxiosResponse) => {
+      dispatch(adminActions.updateUser(response.data));
       dispatch(success(reducerTypes.PUT_USER_DETAIL));
       dispatch(hideLoading());
     })
