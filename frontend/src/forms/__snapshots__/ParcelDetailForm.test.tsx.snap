@@ -1585,6 +1585,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                     name="address.cityId"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    type="number"
                   >
                     <option
                       value=""
@@ -1615,7 +1616,6 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                     disabled={true}
                     id="input-address.provinceId"
                     name="address.provinceId"
-                    onBlur={[Function]}
                     onChange={[Function]}
                   >
                     <option
@@ -1868,6 +1868,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                     name="classificationId"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    type="number"
                   >
                     <option
                       value=""
@@ -1916,7 +1917,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                     <span
                       className="input-group-text"
                     >
-                      Acres
+                      Hectares
                     </span>
                   </div>
                 </div>
@@ -1965,34 +1966,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   Assessed Sum
                 </label>
                 <div
-                  className="input-group col-md-10 disabled"
+                  className="col-md-10 form-group"
                 >
-                  <div
-                    className="input-group-prepend"
-                  >
-                    <span
-                      className="input-group-text"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <div
-                    className="input-group-content"
-                  >
-                    <div
-                      className="form-group"
-                    >
-                      <input
-                        className="form-control"
-                        disabled={true}
-                        id="input-Assessed"
-                        name="Assessed"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value={10000}
-                      />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                  />
                 </div>
               </div>
               <div
@@ -2004,34 +1982,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   Appraised Sum
                 </label>
                 <div
-                  className="input-group col-md-10 disabled"
+                  className="col-md-10 form-group"
                 >
-                  <div
-                    className="input-group-prepend"
-                  >
-                    <span
-                      className="input-group-text"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <div
-                    className="input-group-content"
-                  >
-                    <div
-                      className="form-group"
-                    >
-                      <input
-                        className="form-control"
-                        disabled={true}
-                        id="input-Appraised"
-                        name="Appraised"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value={0}
-                      />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                  />
                 </div>
               </div>
             </div>
@@ -2047,34 +2002,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   NetBook Sum
                 </label>
                 <div
-                  className="input-group col-md-10 disabled"
+                  className="col-md-10 form-group"
                 >
-                  <div
-                    className="input-group-prepend"
-                  >
-                    <span
-                      className="input-group-text"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <div
-                    className="input-group-content"
-                  >
-                    <div
-                      className="form-group"
-                    >
-                      <input
-                        className="form-control"
-                        disabled={true}
-                        id="input-NetBook"
-                        name="NetBook"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value={10000}
-                      />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                  />
                 </div>
               </div>
               <div
@@ -2086,34 +2018,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   Estimated Sum
                 </label>
                 <div
-                  className="input-group col-md-10 disabled"
+                  className="col-md-10 form-group"
                 >
-                  <div
-                    className="input-group-prepend"
-                  >
-                    <span
-                      className="input-group-text"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <div
-                    className="input-group-content"
-                  >
-                    <div
-                      className="form-group"
-                    >
-                      <input
-                        className="form-control"
-                        disabled={true}
-                        id="input-Estimated"
-                        name="Estimated"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value={0}
-                      />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                  />
                 </div>
               </div>
             </div>
@@ -2159,34 +2068,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.0.value"
-                                name="financials.0.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value={10000}
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2202,34 +2088,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.4.value"
-                                name="financials.4.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2291,34 +2154,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.1.value"
-                                name="financials.1.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2357,34 +2197,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.5.value"
-                                name="financials.5.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2423,34 +2240,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.2.value"
-                                name="financials.2.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value={10000}
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2466,34 +2260,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.6.value"
-                                name="financials.6.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2532,34 +2303,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.3.value"
-                                name="financials.3.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2575,34 +2323,11 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                       </td>
                       <td>
                         <div
-                          className="input-group"
+                          className="form-group"
                         >
-                          <div
-                            className="input-group-prepend"
-                          >
-                            <span
-                              className="input-group-text"
-                            >
-                              $
-                            </span>
-                          </div>
-                          <div
-                            className="input-group-content"
-                          >
-                            <div
-                              className="form-group"
-                            >
-                              <input
-                                className="form-control"
-                                id="input-financials.7.value"
-                                name="financials.7.value"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2610,157 +2335,157 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                 </table>
               </div>
             </div>
+            <ul
+              className="pagination"
+            >
+              <li
+                className="page-item disabled"
+              >
+                <a
+                  aria-disabled="true"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  &lt;
+                </a>
+              </li>
+              <li
+                className="page-item active"
+              >
+                <a
+                  aria-current="page"
+                  aria-label="Page 1 is your current page"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  1
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 2"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  2
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 3"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  3
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 4"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  4
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  ...
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 8"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  8
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 9"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  9
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 10"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  10
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-disabled="false"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  &gt;
+                </a>
+              </li>
+            </ul>
           </div>
-          <ul
-            className="pagination"
-          >
-            <li
-              className="page-item disabled"
-            >
-              <a
-                aria-disabled="true"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                Previous
-              </a>
-            </li>
-            <li
-              className="page-item active"
-            >
-              <a
-                aria-current="page"
-                aria-label="Page 1 is your current page"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                1
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 2"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                2
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 3"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                3
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 4"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                4
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                ...
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 8"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                8
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 9"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                9
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-current={null}
-                aria-label="Page 10"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                10
-              </a>
-            </li>
-            <li
-              className="page-item"
-            >
-              <a
-                aria-disabled="false"
-                className="page-link"
-                onClick={[Function]}
-                onKeyPress={[Function]}
-                role="button"
-                tabIndex="0"
-              >
-                Next
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
       <div
@@ -2773,14 +2498,63 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
             Buildings
           </h3>
           <div>
-            <button
-              className="addBuilding btn btn-primary"
-              disabled={false}
-              onClick={[Function]}
-              type="button"
+            <span
+              className="buildingPaginate"
             >
-              Add Building
-            </button>
+              <button
+                className="pagedBuildingButton page-link btn btn-link"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height={14}
+                  size={14}
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 448 512"
+                  width={14}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                  />
+                </svg>
+              </button>
+              <button
+                className="pagedBuildingButton page-link btn btn-link"
+                disabled={true}
+                onClick={[Function]}
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height={14}
+                  size={14}
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 448 512"
+                  width={14}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
+                  />
+                </svg>
+              </button>
+            </span>
+            <div />
           </div>
         </div>
       </div>

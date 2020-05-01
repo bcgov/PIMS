@@ -27,6 +27,7 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+jest.mock('react-text-mask', () => () => <input type="text" />);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -143,7 +144,6 @@ describe('ParcelDetailForm', () => {
     };
 
     it('ParcelDetailForm renders correctly', () => {
-      const history = createMemoryHistory();
       const tree = renderer
         .create(
           <Provider store={store}>

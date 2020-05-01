@@ -61,7 +61,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const isInvalid = error && touch ? 'is-invalid ' : '';
-  const isValid = !error && touch && value && disabled ? 'is-valid ' : '';
+  const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
     <FormGroup className={outerClassName ?? ''}>
       <span className={isInvalid}></span>

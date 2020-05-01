@@ -3,7 +3,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import _ from 'lodash';
-import { Form, InputGroup } from 'components/common/form';
+import { Form, FastCurrencyInput } from 'components/common/form';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 
@@ -60,9 +60,8 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
           <Form.Label column md={2}>
             Assessed Sum
           </Form.Label>
-          <InputGroup
+          <FastCurrencyInput
             formikProps={formikProps}
-            preText="$"
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[EvaluationKeys.Assessed]}
@@ -73,9 +72,8 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
           <Form.Label column md={2}>
             Appraised Sum
           </Form.Label>
-          <InputGroup
+          <FastCurrencyInput
             formikProps={formikProps}
-            preText="$"
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[EvaluationKeys.Appraised]}
@@ -88,9 +86,8 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
           <Form.Label column md={2}>
             NetBook Sum
           </Form.Label>
-          <InputGroup
+          <FastCurrencyInput
             formikProps={formikProps}
-            preText="$"
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[FiscalKeys.NetBook]}
@@ -101,9 +98,8 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
           <Form.Label column md={2}>
             Estimated Sum
           </Form.Label>
-          <InputGroup
+          <FastCurrencyInput
             formikProps={formikProps}
-            preText="$"
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[FiscalKeys.Estimated]}

@@ -56,6 +56,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     multiple,
     outerClassName,
     custom,
+    type,
     formikProps: {
       values,
       errors,
@@ -70,6 +71,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
   }) => {
     const error = getIn(errors, field);
     const touch = getIn(touched, field);
+    const value = getIn(values, field);
     const asElement: any = is || 'select';
 
     const handleMultipleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -117,11 +119,17 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           disabled={disabled}
           custom={custom}
           isInvalid={!!touch && !!error}
-          onBlur={handleBlur}
+          onBlur={(e: any) => {
+            if (type === 'number' && !isNaN(parseInt(value))) {
+              setFieldValue(field, parseInt(value));
+            }
+            handleBlur(e);
+          }}
           isValid={false}
           value={getIn(values, field)}
           multiple={multiple}
           onChange={multiple ? handleMultipleChange : handleChange}
+          type={type}
           {...rest}
         >
           <Placeholder />
