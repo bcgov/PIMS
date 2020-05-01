@@ -10,7 +10,13 @@
 .App-content {
   padding-top: 72px;
   margin-bottom: 46px;
+
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
+
+  /* for Firefox */
+  min-height: 0;
 }
 
 .header-layout {
