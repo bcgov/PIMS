@@ -1,0 +1,56 @@
+$header-height: 72px;
+$footer-height: 46px;
+$navbar-height: 45px;
+$filter-height: 76px;
+$contentheading-height: 60px;
+
+.PropertyListView {
+  background-color: var(--light);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+  .filter-container {
+    height: 76px;
+    background-color: var(--light);
+
+    .map-filter-bar {
+      align-items: center;
+      padding: 1rem 0;
+
+      .bar-item {
+        .form-group {
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .btn-warning {
+        color: white;
+        font-weight: bold;
+      }
+
+      .form-control {
+        border-radius: 0;
+      }
+    }
+  }
+
+  .content-heading {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 1rem;
+  }
+
+  .ScrollContainer {
+    padding: 1rem 3rem;
+    max-height: calc(
+      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
+    );
+    overflow-y: scroll;
+
+    table {
+      background-color: #fff;
+    }
+  }
+}
