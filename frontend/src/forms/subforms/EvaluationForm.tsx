@@ -93,14 +93,20 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
   // Yup has major performance issues with the validation of large arrays.
   // As a result, handle the validation manually here.
   let errors = {};
-  financials.forEach((evaluation, index) => {
-    if (evaluation.date && evaluation.key === EvaluationKeys.Appraised && !evaluation.value) {
-      errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
-    } else if (
-      evaluation.value &&
-      evaluation.key === EvaluationKeys.Appraised &&
-      !evaluation.date
+  financials.forEach((financial, index) => {
+    //All financials are required for the current year except appraised.
+    if (
+      financial.year === moment().year() &&
+      !financial.value &&
+      financial.key !== EvaluationKeys.Appraised
     ) {
+      errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
+    }
+
+    //if one of date/value for the Appraised field is filled in the other field is required as well.
+    if (financial.date && financial.key === EvaluationKeys.Appraised && !financial.value) {
+      errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
+    } else if (financial.value && financial.key === EvaluationKeys.Appraised && !financial.date) {
       errors = setIn(errors, `${nameSpace}.${index}.date`, 'Required');
     }
   });

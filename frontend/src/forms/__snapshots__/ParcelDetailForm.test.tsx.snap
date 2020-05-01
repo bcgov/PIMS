@@ -1674,7 +1674,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Zoning
+                  Current Zoning
                 </label>
                 <div
                   className="col-md-10 form-group"
@@ -1695,7 +1695,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Zoning Potential
+                  Potential Zoning
                 </label>
                 <div
                   className="col-md-10 form-group"
@@ -1951,6 +1951,9 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
               </div>
             </div>
           </div>
+          <h4>
+            Total values for parcel inclusive of existing building(s)
+          </h4>
           <div
             className="sumFinancialsForm form-row"
           >
@@ -2554,6 +2557,9 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                 </svg>
               </button>
             </span>
+            <h4>
+              Building Information
+            </h4>
             <div />
           </div>
         </div>
@@ -2570,7 +2576,7 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
           disabled={false}
           type="submit"
         >
-          Submit
+          Submit 
         </button>
       </div>
     </form>

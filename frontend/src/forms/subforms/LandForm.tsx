@@ -61,7 +61,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
-              Zoning
+              Current Zoning
             </Form.Label>
             <FastInput
               formikProps={props}
@@ -72,7 +72,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
-              Zoning Potential
+              Potential Zoning
             </Form.Label>
             <FastInput
               formikProps={props}
