@@ -14,6 +14,7 @@ export const GET_PARCELS = 'parcels';
 export const GET_PARCEL_DETAIL = 'GET_PARCEL_DETAIL';
 export const ADD_PARCEL = 'ADD_PARCEL';
 export const UPDATE_PARCEL = 'UPDATE_PARCEL';
+export const DELETE_PARCEL = 'DELETE_PARCEL';
 
 // Lookup codes
 export const STORE_LOOKUP_CODE_RESULTS = 'STORE_LOOKUP_CODE_RESULTS';

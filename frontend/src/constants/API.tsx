@@ -35,7 +35,7 @@ export interface IParcelDetailParams {
 }
 
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
-export const ADD_PARCEL = `/parcels`;
+export const PARCEL_ROOT = `/parcels`;
 
 export interface IUserDetailParams {
   id: string;

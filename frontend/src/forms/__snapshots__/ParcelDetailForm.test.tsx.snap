@@ -2557,9 +2557,6 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                 </svg>
               </button>
             </span>
-            <h4>
-              Building Information
-            </h4>
             <div />
           </div>
         </div>
