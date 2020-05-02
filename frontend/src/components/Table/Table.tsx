@@ -1,6 +1,6 @@
 import './Table.scss';
 
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
 import { Table as BTable } from 'react-bootstrap';
 import { useTable, usePagination, TableOptions } from 'react-table';
 import { TablePagination } from '.';
@@ -8,7 +8,7 @@ import { TablePagination } from '.';
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
   fetchData?: Function;
-  loading?: boolean;
+  loading?: boolean; // TODO: Show loading indicator while fetching data from server
   pageCount?: number;
 }
 
@@ -17,7 +17,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
  * Uses `react-table` to handle table logic.
  */
 const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
-  const { columns, data, fetchData, loading, pageCount: controlledPageCount } = props;
+  const { columns, data, fetchData, pageCount: controlledPageCount } = props;
 
   // Use the useTable hook to create your table configuration
   const instance = useTable(
@@ -25,8 +25,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       columns,
       data,
       initialState: { pageIndex: 0 },
-      manualPagination: true, // Tell the usePagination
-      // hook that we'll handle our own data fetching
+      manualPagination: true, // Tell the usePagination hook
+      // that we'll handle our own data fetching.
       // This means we'll also have to provide our own
       // pageCount.
       pageCount: controlledPageCount,
@@ -44,16 +44,23 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     // which has only the rows for the active page
 
     // The rest of these things are super handy, too
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
+    // canPreviousPage,
+    // canNextPage,
+    // pageOptions,
+    // pageCount,
+    // gotoPage,
+    // nextPage,
+    // previousPage,
+    // setPageSize,
+
+    // Get state from react-table
     state: { pageIndex, pageSize },
   } = instance;
+
+  // Listen for changes in pagination and use the state to fetch our new data
+  useEffect(() => {
+    fetchData?.({ pageIndex, pageSize });
+  }, [fetchData, pageIndex, pageSize]);
 
   // Render the UI for your table
   return (
