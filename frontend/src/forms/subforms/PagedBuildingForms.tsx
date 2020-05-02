@@ -88,7 +88,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                 {...pagedBuildings}
               />
             </span>
-            <h4>Building Information</h4>
+            {!!formikProps.values.buildings.length && <h4>Building Information</h4>}
             <PaginatedFormErrors
               errors={getPageErrors(formikProps.errors, 'buildings')}
               nameSpace="Buildings"

@@ -76,7 +76,7 @@ export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_PARCEL));
   dispatch(showLoading());
   return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.ADD_PARCEL, parcel)
+    .post(ENVIRONMENT.apiUrl + API.PARCEL_ROOT, parcel)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.ADD_PARCEL, response.status));
       dispatch(fetchParcelDetail(response.data));
@@ -93,7 +93,7 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
   return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.ADD_PARCEL + `/${parcel.id}`, parcel)
+    .put(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, parcel)
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.UPDATE_PARCEL, response.status));
       dispatch(fetchParcelDetail(response.data));
@@ -102,6 +102,21 @@ export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError));
       throw Error(axiosError.response?.data.details);
+    })
+    .finally(() => dispatch(hideLoading()));
+};
+
+export const deleteParcel = (parcel: IParcel) => (dispatch: Function) => {
+  dispatch(request(actionTypes.DELETE_PARCEL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel })
+    .then((response: AxiosResponse) => {
+      dispatch(success(actionTypes.DELETE_PARCEL, response.status));
+      dispatch(hideLoading());
+    })
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.DELETE_PARCEL, axiosError?.response?.status, axiosError));
     })
     .finally(() => dispatch(hideLoading()));
 };

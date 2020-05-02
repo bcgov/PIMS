@@ -57,7 +57,7 @@ const GenericModal = (props: ModalProps) => {
 
   return (
     <Container>
-      <Modal show={show} onHide={ok}>
+      <Modal show={show} onHide={close}>
         <Modal.Header closeButton={props.closeButton}>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

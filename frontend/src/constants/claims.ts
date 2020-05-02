@@ -10,6 +10,7 @@ export enum Claims {
   DISPOSE_APPROVE = 'dispose-approve',
   ADMIN_USERS = 'admin-users',
   ADMIN_ROLES = 'admin-roles',
+  ADMIN_PROPERTIES = 'admin-properties',
 }
 
 export default Claims;
