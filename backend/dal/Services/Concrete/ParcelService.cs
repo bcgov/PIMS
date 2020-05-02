@@ -327,13 +327,28 @@ namespace Pims.Dal.Services
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
-            var entity = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            var entity = this.Context.Parcels
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             if (!isAdmin && (!userAgencies.Contains(entity.AgencyId) || entity.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
 
             this.Context.Entry(entity).CurrentValues.SetValues(parcel);
-
+            entity.Buildings.ForEach((building) =>
+            {
+                this.Context.BuildingEvaluations.RemoveRange(building.Evaluations);
+                this.Context.BuildingFiscals.RemoveRange(building.Fiscals);
+                this.Context.Buildings.Remove(building);
+            });
+            this.Context.ParcelEvaluations.RemoveRange(entity.Evaluations);
+            this.Context.ParcelFiscals.RemoveRange(entity.Fiscals);
             this.Context.Parcels.Remove(entity); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
             this.Context.CommitTransaction();
         }
