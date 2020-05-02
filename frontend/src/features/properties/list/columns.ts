@@ -1,6 +1,7 @@
 import { Column } from 'react-table';
+import { IProperty } from '.';
 
-export const columns: Column[] = [
+export const columns: Column<IProperty>[] = [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
@@ -39,7 +40,7 @@ export const columns: Column[] = [
   },
   {
     Header: 'Type',
-    accessor: '',
+    accessor: 'propertyTypeId',
   },
   {
     Header: 'Lot Size (in ha)',
