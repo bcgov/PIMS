@@ -3,7 +3,6 @@
   width: 100%;
   margin: 0;
   background-color: #f2f2f2;
-  height: 0; //force override scrollbar.
   .leaflet-container {
     /* Subtract the header, nav-bar and footer sizes */
     padding-top: 0;
@@ -14,17 +13,42 @@
     flex-direction: row;
   }
   .sideMap {
-    display: relative;
     padding: 0;
   }
   .form {
     background-color: #f2f2f2;
     padding: 1rem 3rem;
     max-height: calc(100vh - 70px - 45px - 42px);
+    height: calc(100vh - 70px - 45px - 42px);
     overflow-y: scroll;
   }
   .spinner-border {
     position: absolute;
     top: 50%;
+  }
+  .propertyButtons {
+    button {
+      margin-left: 0.5rem;
+      width: 75px;
+      height: 38px;
+      border: 2px solid #428bca;
+      background-color: #ffffff;
+      font-family: Arial;
+      font-size: 16px;
+      color: #428bca;
+      text-decoration: none solid rgb(66, 139, 202);
+      text-align: center;
+    }
+    :disabled {
+      border: 2px solid #b2e0ff;
+    }
+    button.close {
+      width: 38px;
+      height: 38px;
+      border: none;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 1;
+    }
   }
 }
