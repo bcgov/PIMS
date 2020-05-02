@@ -1,28 +1,24 @@
 import './Table.scss';
 
-import React from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
 import { Table as BTable } from 'react-bootstrap';
-import { useTable, Column, usePagination } from 'react-table';
+import { useTable, usePagination, TableOptions } from 'react-table';
+import { TablePagination } from '.';
 
-export type TableProps<T extends object = {}> = {
-  columns: Column<T>[];
-  data: T[];
+export interface TableProps<T extends object = {}> extends TableOptions<T> {
+  name: string;
   fetchData?: Function;
   loading?: boolean;
   pageCount?: number;
-};
+}
 
 /**
  * A table component. Supports sorting, filtering and paging.
  * Uses `react-table` to handle table logic.
  */
-const Table: React.FC<TableProps> = ({
-  columns,
-  data,
-  fetchData,
-  loading,
-  pageCount: controlledPageCount,
-}) => {
+const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
+  const { columns, data, fetchData, loading, pageCount: controlledPageCount } = props;
+
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     {
@@ -89,7 +85,7 @@ const Table: React.FC<TableProps> = ({
         Pagination can be built however you'd like.
         This is just a very basic UI implementation:
       */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -132,7 +128,8 @@ const Table: React.FC<TableProps> = ({
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
+      <TablePagination<T> instance={instance} />
     </>
   );
 };

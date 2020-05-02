@@ -74,7 +74,7 @@ const PropertyListView: React.FC = () => {
           </Button>
           <Button onClick={() => fetch('csv')}>Export as CSV</Button>
         </Container>
-        <Table columns={columns} data={data} />
+        <Table<IProperty> name="propertiesTable" columns={columns} data={data} />
       </div>
     </Container>
   );
