@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import queryString from 'query-string';
 import CustomAxios from 'customAxios';
 import { ENVIRONMENT } from 'constants/environment';
-import Table from 'components/Table';
+import { Table } from 'components/Table';
 import { IPagedItems } from 'interfaces';
 import { IPropertyFilter, IProperty } from '.';
 import { columns as cols } from './columns';
@@ -20,7 +20,7 @@ const getPropertyReportUrl = (filter: IPropertyFilter) =>
 
 const filter: IPropertyFilter = {
   page: 1,
-  quantity: 50,
+  quantity: 10,
   agencies: [1, 2, 3, 4, 5, 6],
 };
 
@@ -38,7 +38,7 @@ const PropertyListView: React.FC = () => {
       }
     };
     fetch();
-  }, []);
+  }, [filter]);
 
   const dispatch = useDispatch();
 
@@ -67,7 +67,7 @@ const PropertyListView: React.FC = () => {
         </Container>
       </Container>
       <div className="ScrollContainer">
-        <Container fluid className="content-heading">
+        <Container fluid className="TableToolbar">
           <h3 className="mr-auto">Results</h3>
           <Button className="mr-2" onClick={() => fetch('excel')}>
             Export as Excel
