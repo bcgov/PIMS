@@ -96,11 +96,11 @@ namespace Pims.Core.Test
             projectNumber ??= $"p{id}";
             agency ??= parcel.Agency;
             var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
-            var predominateUse = context.BuildingPredominateUses.FirstOrDefault() ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
-            var constructionType = context.BuildingConstructionTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingConstructionType("type");
-            var occupantType = context.BuildingOccupantTypes.FirstOrDefault() ?? EntityHelper.CreateBuildingOccupantType("occupant");
-            var classification = context.PropertyClassifications.FirstOrDefault() ?? EntityHelper.CreatePropertyClassification("classification");
-            var status = context.PropertyStatus.FirstOrDefault() ?? EntityHelper.CreatePropertyStatus("status");
+            var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
+            var constructionType = context.BuildingConstructionTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingConstructionType("type");
+            var occupantType = context.BuildingOccupantTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingOccupantType("occupant");
+            var classification = context.PropertyClassifications.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreatePropertyClassification("classification");
+            var status = context.PropertyStatus.FirstOrDefault(b => b.Id == 0) ?? EntityHelper.CreatePropertyStatus("status");
 
             var building = new Entity.Building(parcel, lat, lng)
             {
@@ -149,6 +149,33 @@ namespace Pims.Core.Test
                 context.CreateBuilding(parcel, i);
             }
             return parcel.Buildings.ToList();
+        }
+
+        /// <summary>
+        /// Change the status of the building.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="building"></param>
+        /// <param name="statusId"></param>
+        /// <returns></returns>
+        public static Entity.Building ChangeStatus(this PimsContext context, Entity.Building building, int statusId)
+        {
+            building.StatusId = statusId;
+            building.Status = context.PropertyStatus.First(s => s.Id == statusId);
+            return building;
+        }
+
+        /// <summary>
+        /// Change the status of the building.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="statusId"></param>
+        /// <returns></returns>
+        public static Entity.Building ChangeStatus(this Entity.Building building, Entity.PropertyStatus status)
+        {
+            building.Status = status;
+            building.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
+            return building;
         }
     }
 }

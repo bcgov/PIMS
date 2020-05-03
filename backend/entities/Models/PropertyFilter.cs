@@ -178,7 +178,7 @@ namespace Pims.Dal.Entities.Models
         public override bool IsValid()
         {
             return base.IsValid()
-                && (this.NELatitude.HasValue
+                || this.NELatitude.HasValue
                 || this.NELongitude.HasValue
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
@@ -191,7 +191,7 @@ namespace Pims.Dal.Entities.Models
                 || this.MaxEstimatedValue.HasValue
                 || this.Agencies?.Any() == true
                 || this.StatusId.HasValue
-                || this.ClassificationId.HasValue);
+                || this.ClassificationId.HasValue;
         }
         #endregion
     }

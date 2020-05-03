@@ -14,6 +14,8 @@ using Xunit;
 using Pims.Core.Comparers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -142,6 +144,8 @@ namespace Pims.Api.Test.Controllers
             // Arrange
             var helper = new TestHelper();
             var controller = helper.CreateController<BuildingController>(Permissions.PropertyView);
+            var request = helper.GetService<Mock<HttpRequest>>();
+            request.Setup(m => m.QueryString).Returns(new QueryString("?page=0"));
 
             var service = helper.GetService<Mock<IPimsService>>();
 
@@ -286,6 +290,8 @@ namespace Pims.Api.Test.Controllers
             // Arrange
             var helper = new TestHelper();
             var controller = helper.CreateController<BuildingController>(Permissions.PropertyView);
+            var request = helper.GetService<Mock<HttpRequest>>();
+            request.Setup(m => m.QueryString).Returns(new QueryString("?page=0"));
 
             var service = helper.GetService<Mock<IPimsService>>();
 
