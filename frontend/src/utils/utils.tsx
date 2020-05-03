@@ -10,6 +10,10 @@ export const truncate = (input: string, maxLength: number): string => {
   return input;
 };
 
+export const decimalOrUndefined = (input: string): number | undefined => {
+  return input !== '' ? parseInt(input, 10) : undefined;
+};
+
 export const decimalOrNull = (input: string): number | null => {
   return input !== '' ? parseInt(input, 10) : null;
 };
