@@ -7,7 +7,7 @@ import { TablePagination } from '.';
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
-  fetchData?: Function;
+  onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
   loading?: boolean; // TODO: Show loading indicator while fetching data from server
   pageCount?: number;
 }
@@ -17,7 +17,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
  * Uses `react-table` to handle table logic.
  */
 const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
-  const { columns, data, fetchData, pageCount: controlledPageCount } = props;
+  const { columns, data, onRequestData, pageCount: controlledPageCount } = props;
 
   // Use the useTable hook to create your table configuration
   const instance = useTable(
@@ -59,8 +59,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    fetchData?.({ pageIndex, pageSize });
-  }, [fetchData, pageIndex, pageSize]);
+    onRequestData?.({ pageIndex, pageSize });
+  }, [onRequestData, pageIndex, pageSize]);
 
   // Render the UI for your table
   return (
@@ -92,6 +92,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         Pagination can be built however you'd like.
         This is just a very basic UI implementation:
       */}
+      <TablePagination<T> instance={instance} />
       {/* <div className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
@@ -136,7 +137,6 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
           ))}
         </select>
       </div> */}
-      <TablePagination<T> instance={instance} />
     </>
   );
 };

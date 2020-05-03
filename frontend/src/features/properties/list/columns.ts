@@ -11,6 +11,10 @@ export const columns: Column<IProperty>[] = [
     accessor: 'subAgency',
   },
   {
+    Header: 'Property Name',
+    accessor: 'description',
+  },
+  {
     Header: 'Classification',
     accessor: 'classification',
   },

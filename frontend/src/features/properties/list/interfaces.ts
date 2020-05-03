@@ -69,7 +69,12 @@ export interface IPropertyFilter {
   quantity: number;
   address?: string;
   municipality?: string;
+  projectNumber?: string;
   classificationId?: number;
   statusId?: number;
-  agencies?: number[];
+  agencies?: number | number[];
+  minLandArea?: number;
+  maxLandArea?: number;
+  minLotArea?: number;
+  maxLotArea?: number;
 }
