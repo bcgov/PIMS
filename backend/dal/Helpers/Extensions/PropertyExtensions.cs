@@ -79,6 +79,11 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.Address))
                 query = query.Where(p => EF.Functions.Like(p.Address, $"%{filter.Address}%") || EF.Functions.Like(p.City, $"%{filter.Address}%"));
 
+            if (filter.MinLandArea.HasValue)
+                query = query.Where(p => p.LandArea >= filter.MinLandArea);
+            if (filter.MaxLandArea.HasValue)
+                query = query.Where(b => b.LandArea <= filter.MaxLandArea);
+
             if (filter.MinRentableArea.HasValue)
                 query = query.Where(p => p.RentableArea >= filter.MinRentableArea);
             if (filter.MaxRentableArea.HasValue)

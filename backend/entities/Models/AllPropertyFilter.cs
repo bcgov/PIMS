@@ -247,6 +247,8 @@ namespace Pims.Dal.Entities.Models
                 Municipality = filter.Municipality,
                 MinLandArea = filter.MinLandArea,
                 MaxLandArea = filter.MaxLandArea,
+                Zoning = filter.Zoning,
+                ZoningPotential = filter.ZoningPotential,
 
                 MinEstimatedValue = filter.MinEstimatedValue,
                 MaxEstimatedValue = filter.MaxEstimatedValue,
@@ -282,6 +284,10 @@ namespace Pims.Dal.Entities.Models
                 Address = filter.Address,
 
                 Municipality = filter.Municipality,
+                MinLandArea = filter.MinLandArea,
+                MaxLandArea = filter.MaxLandArea,
+                Zoning = filter.Zoning,
+                ZoningPotential = filter.ZoningPotential,
 
                 ConstructionTypeId = filter.ConstructionTypeId,
                 PredominateUseId = filter.PredominateUseId,

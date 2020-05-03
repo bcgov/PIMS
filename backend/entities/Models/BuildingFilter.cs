@@ -118,10 +118,8 @@ namespace Pims.Dal.Entities.Models
         #endregion
 
         #region Methods
-
-
         /// <summary>
-        /// Determine if a valid filter was provided.
+        /// Determine if the filter is specific to building criteria.
         /// </summary>
         /// <returns></returns>
         public override bool IsValid()
