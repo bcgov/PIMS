@@ -34,27 +34,28 @@ const getServerQuery = (state: {
   pageIndex: number;
   pageSize: number;
   filter: FilterBarState;
-  allAgencies: number[];
+  agencyIds: number[];
 }) => {
   const {
     pageIndex,
     pageSize,
-    // allAgencies,
+    agencyIds,
     filter: {
       address,
       municipality,
       projectNumber,
       classificationId,
-      // agencies,
+      agencies,
       minLotSize,
       maxLotSize,
     },
   } = state;
 
-  // const parsedAgencies =
-  //   agencies === null || agencies === undefined || agencies === ''
-  //     ? [...allAgencies]
-  //     : [parseInt(agencies, 10)];
+  // show properties for all agencies if none selected in the agency filter
+  let parsedAgencies = [...agencyIds];
+  if (agencies !== null && agencies !== undefined && agencies !== '') {
+    parsedAgencies = [parseInt(agencies, 10)];
+  }
 
   const query: IPropertyFilter = {
     ...initialQuery,
@@ -62,7 +63,7 @@ const getServerQuery = (state: {
     municipality,
     projectNumber,
     classificationId: decimalOrUndefined(classificationId),
-    agencies: [1, 2, 3, 4, 5, 6],
+    agencies: parsedAgencies,
     minLandArea: decimalOrUndefined(minLotSize),
     maxLandArea: decimalOrUndefined(maxLotSize),
     statusId: undefined, // TODO: this field is not yet implemented in FilterBar
@@ -77,14 +78,18 @@ const PropertyListView: React.FC = () => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-  });
-  const allAgencies = agencies.map(x => parseInt(x.id, 10));
+  const agencies = useMemo(
+    () =>
+      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
+      }),
+    [lookupCodes],
+  );
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
 
+  const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -114,8 +119,7 @@ const PropertyListView: React.FC = () => {
       setFilter({ ...value });
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [setFilter, setPageIndex],
   );
 
   // This will get called when the table needs new data
@@ -124,8 +128,7 @@ const PropertyListView: React.FC = () => {
       setPageSize(pageSize);
       setPageIndex(pageIndex);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [setPageSize, setPageIndex],
   );
 
   const fetchData = useCallback(
@@ -133,10 +136,12 @@ const PropertyListView: React.FC = () => {
       pageIndex,
       pageSize,
       filter,
+      agencyIds,
     }: {
       pageIndex: number;
       pageSize: number;
       filter: FilterBarState;
+      agencyIds: number[];
     }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
@@ -145,8 +150,8 @@ const PropertyListView: React.FC = () => {
       // setLoading(true);
 
       // Only update the data if this is the latest fetch
-      if (fetchId === fetchIdRef.current) {
-        const query = getServerQuery({ pageIndex, pageSize, filter, allAgencies });
+      if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
+        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
         const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
 
         // The server could send back total page count.
@@ -157,19 +162,18 @@ const PropertyListView: React.FC = () => {
         // setLoading(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [setData, setPageCount],
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    fetchData({ pageIndex, pageSize, filter });
-  }, [fetchData, handleRequestData, handleFilterChange, pageIndex, pageSize, filter]);
+    fetchData({ pageIndex, pageSize, filter, agencyIds });
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
 
   const dispatch = useDispatch();
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery({ pageIndex, pageSize, filter, allAgencies });
+    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
         url: getPropertyReportUrl(query),
