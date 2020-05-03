@@ -4,8 +4,17 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import { Form, Select, SelectOption, Button, ButtonProps, InputGroup, Input } from '../common/form';
+import {
+  Form,
+  Select,
+  Button,
+  ButtonProps,
+  InputGroup,
+  Input,
+  SelectOption,
+} from '../common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
+import { AutoCompleteText } from '../common/form/AutoCompleteText';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
@@ -121,7 +130,8 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
               <SearchBar />
             </Col>
             <Col className="bar-item">
-              <Select field="agencies" placeholder="Enter an Agency" options={agencies} />
+              <AutoCompleteText field="agencies" options={agencies} placeholder="Type an agency" />
+              {/* <Select field="agencies" placeholder="Enter an Agency" options={agencies} /> */}
             </Col>
             <Col className="bar-item">
               <Select

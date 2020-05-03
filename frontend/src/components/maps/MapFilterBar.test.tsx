@@ -39,7 +39,7 @@ describe('MapFilterBar', () => {
     );
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
-    const agencies = container.querySelector('select[name="agencies"]');
+    const agencies = container.querySelector('input[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('input[name="minLotSize"]');
     const maxLotSize = container.querySelector('input[name="maxLotSize"]');
@@ -58,7 +58,7 @@ describe('MapFilterBar', () => {
     await wait(() => {
       fireEvent.change(agencies!, {
         target: {
-          value: '1',
+          value: '',
         },
       });
     });
@@ -97,7 +97,7 @@ describe('MapFilterBar', () => {
       address: 'mockaddress',
       municipality: '',
       projectNumber: '',
-      agencies: '1',
+      agencies: '',
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',
