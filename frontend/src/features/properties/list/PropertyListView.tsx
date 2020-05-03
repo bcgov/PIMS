@@ -128,39 +128,43 @@ const PropertyListView: React.FC = () => {
     [],
   );
 
-  const fetchData = async ({
-    pageIndex,
-    pageSize,
-    filter,
-  }: {
-    pageIndex: number;
-    pageSize: number;
-    filter: FilterBarState;
-  }) => {
-    // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current;
+  const fetchData = useCallback(
+    async ({
+      pageIndex,
+      pageSize,
+      filter,
+    }: {
+      pageIndex: number;
+      pageSize: number;
+      filter: FilterBarState;
+    }) => {
+      // Give this fetch an ID
+      const fetchId = ++fetchIdRef.current;
 
-    // TODO: Set the loading state
-    // setLoading(true);
+      // TODO: Set the loading state
+      // setLoading(true);
 
-    // Only update the data if this is the latest fetch
-    if (fetchId === fetchIdRef.current) {
-      const query = getServerQuery({ pageIndex, pageSize, filter, allAgencies });
-      const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
+      // Only update the data if this is the latest fetch
+      if (fetchId === fetchIdRef.current) {
+        const query = getServerQuery({ pageIndex, pageSize, filter, allAgencies });
+        const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
 
-      // The server could send back total page count.
-      // For now we'll just calculate it.
-      setData(response.data.items);
-      setPageCount(Math.ceil(response.data.total / pageSize));
+        // The server could send back total page count.
+        // For now we'll just calculate it.
+        setData(response.data.items);
+        setPageCount(Math.ceil(response.data.total / pageSize));
 
-      // setLoading(false);
-    }
-  };
+        // setLoading(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
     fetchData({ pageIndex, pageSize, filter });
-  }, [handleRequestData, handleFilterChange, pageIndex, pageSize, filter]);
+  }, [fetchData, handleRequestData, handleFilterChange, pageIndex, pageSize, filter]);
 
   const dispatch = useDispatch();
 
