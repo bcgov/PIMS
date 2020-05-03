@@ -75,6 +75,7 @@
     "@types/yup": "0.26.32",
     "axios-mock-adapter": "1.17.0",
     "canvas": "2.6.1",
+    "cross-env": "7.0.2",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.2",
     "enzyme-to-json": "3.4.4",
@@ -88,8 +89,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom-fourteen --silent",
+    "build": "cross-env CI=true react-scripts build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom-fourteen --verbose --watchAll=false",
     "update-snapshots": "react-scripts test -- --updateSnapshot",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
