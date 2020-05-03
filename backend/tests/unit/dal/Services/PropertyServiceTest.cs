@@ -66,8 +66,10 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, StatusId = 1 }, 20, 10 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, StatusId = 1 }, 20, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, StatusId = 1 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, StatusId = 1 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, 11, 5 },
+                new object[] { new AllPropertyFilter() { Quantity = 2, StatusId = 1 }, 11, 2 },
             };
         #endregion
 
@@ -242,6 +244,8 @@ namespace Pims.Dal.Test.Services
             parcels.Next(4).Municipality = "-Municipality-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(7).LandArea = 5500.55f;
+            init.ChangeStatus(parcels.Next(8), 1);
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
             buildings.Next(0).Latitude = 50;
@@ -259,6 +263,13 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             buildings.AddRange(init.CreateBuildings(parcels.Next(4), 61, 10));
+
+            var buildings01 = init.CreateBuildings(parcels.Next(7), 100, 10);
+            var status01 = init.PropertyStatus.First(s => s.Id == 1);
+            buildings01.ForEach(b => {
+                b.ChangeStatus(status01);
+            });
+            buildings.AddRange(buildings01);
 
             init.SaveChanges();
 

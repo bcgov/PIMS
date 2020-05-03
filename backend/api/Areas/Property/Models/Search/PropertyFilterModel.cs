@@ -398,7 +398,7 @@ namespace Pims.Api.Areas.Property.Models.Search
         public override bool IsValid()
         {
             return base.IsValid()
-                && ( this.NELatitude.HasValue
+                || this.NELatitude.HasValue
                 || this.NELongitude.HasValue
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
@@ -419,7 +419,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.MinRentableArea.HasValue
                 || this.MaxRentableArea.HasValue
                 || !String.IsNullOrWhiteSpace(this.Municipality)
-                || !String.IsNullOrWhiteSpace(this.Tenancy));
+                || !String.IsNullOrWhiteSpace(this.Tenancy);
         }
         #endregion
     }
