@@ -4,15 +4,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import {
-  Form,
-  Select,
-  Button,
-  ButtonProps,
-  InputGroup,
-  Input,
-  SelectOption,
-} from '../common/form';
+import { Form, Select, Button, ButtonProps, InputGroup, Input, SelectOption } from '../common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
 import { AutoCompleteText } from '../common/form/AutoCompleteText';
 
