@@ -1,4 +1,8 @@
-import { Column } from 'react-table';
+import React from 'react';
+import { Column, CellProps } from 'react-table';
+import { Image } from 'react-bootstrap';
+import BuildingSvg from 'assets/images/icon-business.svg';
+import LandSvg from 'assets/images/icon-lot.svg';
 import { IProperty } from '.';
 
 export const columns: Column<IProperty>[] = [
@@ -33,6 +37,7 @@ export const columns: Column<IProperty>[] = [
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
+    // Cell: ({ cell: { value } }) => <Image src={BuildingSvg} />,
   },
   {
     Header: 'Netbook Value',
@@ -45,6 +50,10 @@ export const columns: Column<IProperty>[] = [
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
+    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
+      const icon = value === 0 ? LandSvg : BuildingSvg;
+      return <Image src={icon} />;
+    },
   },
   {
     Header: 'Lot Size (in ha)',
