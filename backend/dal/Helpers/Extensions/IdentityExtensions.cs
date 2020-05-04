@@ -280,7 +280,7 @@ namespace Pims.Dal.Helpers.Extensions
             var agencies = context.Agencies.Where(a => agencyIds.Contains(a.Id)).OrderBy(a => a.ParentId);
 
             // If one of the agencies is a parent, return it.
-            var parentAgency = agencies.FirstOrDefault(a => a.ParentId != null);
+            var parentAgency = agencies.FirstOrDefault(a => a.ParentId == null);
             if (parentAgency != null)
                 return parentAgency;
 
