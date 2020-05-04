@@ -1,9 +1,25 @@
 import './Table.scss';
 
 import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
-import { Table as BTable } from 'react-bootstrap';
-import { useTable, usePagination, TableOptions, Row } from 'react-table';
+import { useTable, usePagination, TableOptions, Row, useFlexLayout } from 'react-table';
+import classnames from 'classnames';
 import { TablePagination } from '.';
+
+// these provide a way to inject custom CSS into table headers and cells
+const headerProps = (props: any, { column }: any) => getStyles(props, true, column.align);
+const cellProps = (props: any, { cell }: any) => getStyles(props, false, cell.column.align);
+
+const getStyles = (props: any, isColumnHeader: boolean, align = 'left') => [
+  props,
+  {
+    style: {
+      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+      textAlign: align === 'right' ? 'right' : 'left',
+      alignItems: isColumnHeader ? 'center' : 'flex-start',
+      display: 'flex',
+    },
+  },
+];
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
@@ -17,6 +33,16 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
  * Uses `react-table` to handle table logic.
  */
 const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
+  const defaultColumn = React.useMemo(
+    () => ({
+      // When using the useFlexLayout:
+      minWidth: 30, // minWidth is only used as a limit for resizing
+      width: 150, // width is used for both the flex-basis and flex-grow
+      maxWidth: 200, // maxWidth is only used as a limit for resizing
+    }),
+    [],
+  );
+
   const { columns, data, onRequestData, pageCount: controlledPageCount } = props;
 
   // Use the useTable hook to create your table configuration
@@ -24,6 +50,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     {
       columns,
       data,
+      defaultColumn,
       initialState: { pageIndex: 0 },
       manualPagination: true, // Tell the usePagination hook
       // that we'll handle our own data fetching.
@@ -31,6 +58,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       // pageCount.
       pageCount: controlledPageCount,
     },
+    useFlexLayout,
     usePagination,
   );
 
@@ -42,16 +70,6 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     prepareRow,
     page, // Instead of using 'rows', we'll use page,
     // which has only the rows for the active page
-
-    // The rest of these things are super handy, too
-    // canPreviousPage,
-    // canNextPage,
-    // pageOptions,
-    // pageCount,
-    // gotoPage,
-    // nextPage,
-    // previousPage,
-    // setPageSize,
 
     // Get state from react-table
     state: { pageIndex, pageSize },
@@ -65,81 +83,45 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   // Render the UI for your table
   return (
     <>
-      <BTable {...getTableProps()}>
-        <thead className="thead-light">
+      <div {...getTableProps()} className="table">
+        <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <div {...headerGroup.getHeaderGroupProps()} className="tr">
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <div
+                  {...column.getHeaderProps(headerProps)}
+                  className={classnames(
+                    'th',
+                    column.isSorted ? (column.isSortedDesc ? 'sort-desc' : 'sort-asc') : '',
+                  )}
+                >
+                  {column.render('Header')}
+                </div>
               ))}
-            </tr>
+            </div>
           ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
+        </div>
+        <div {...getTableBodyProps()} className="tbody">
           {page.map((row: Row<T>, i) => {
             // This line is necessary to prepare the rows and get the row props from `react-table` dynamically
             prepareRow(row);
 
             // Each row can be rendered directly as a string using `react-table` render method
             return (
-              <tr {...row.getRowProps()}>
+              <div {...row.getRowProps()} className="tr">
                 {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  return (
+                    <div {...cell.getCellProps(cellProps)} className="td">
+                      {cell.render('Cell')}
+                    </div>
+                  );
                 })}
-              </tr>
+              </div>
             );
           })}
-        </tbody>
-      </BTable>
-      {/*
-        Pagination can be built however you'd like.
-        This is just a very basic UI implementation:
-      */}
+        </div>
+      </div>
       <TablePagination<T> instance={instance} />
-      {/* <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div> */}
     </>
   );
 };
