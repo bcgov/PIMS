@@ -1,3 +1,5 @@
+@import '../variables';
+
 .submitProperty {
   position: relative;
   width: 100%;
@@ -6,7 +8,9 @@
   .leaflet-container {
     /* Subtract the header, nav-bar and footer sizes */
     padding-top: 0;
-    min-height: calc(100vh - 70px - 45px - 42px);
+    min-height: calc(
+      100vh - #{$header-height} - #{$navbar-height} - #{$footer-height}
+    );
   }
   .title-bar {
     display: flex;
