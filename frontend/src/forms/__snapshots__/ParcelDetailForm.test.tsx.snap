@@ -1972,7 +1972,14 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   className="col-md-10 form-group"
                 >
                   <input
-                    type="text"
+                    className="form-control"
+                    disabled={true}
+                    mask={[Function]}
+                    name="Assessed"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0.00"
+                    value={10000}
                   />
                 </div>
               </div>
@@ -1988,7 +1995,14 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   className="col-md-10 form-group"
                 >
                   <input
-                    type="text"
+                    className="form-control"
+                    disabled={true}
+                    mask={[Function]}
+                    name="Appraised"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0.00"
+                    value=""
                   />
                 </div>
               </div>
@@ -2008,7 +2022,14 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   className="col-md-10 form-group"
                 >
                   <input
-                    type="text"
+                    className="form-control"
+                    disabled={true}
+                    mask={[Function]}
+                    name="NetBook"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0.00"
+                    value={10000}
                   />
                 </div>
               </div>
@@ -2024,7 +2045,14 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                   className="col-md-10 form-group"
                 >
                   <input
-                    type="text"
+                    className="form-control"
+                    disabled={true}
+                    mask={[Function]}
+                    name="Estimated"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0.00"
+                    value=""
                   />
                 </div>
               </div>
@@ -2074,7 +2102,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.0.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value={10000}
                           />
                         </div>
                       </td>
@@ -2094,7 +2128,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.4.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
@@ -2160,7 +2200,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.1.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
@@ -2203,7 +2249,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.5.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
@@ -2246,7 +2298,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.2.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value={10000}
                           />
                         </div>
                       </td>
@@ -2266,7 +2324,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.6.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
@@ -2309,7 +2373,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.3.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
@@ -2329,7 +2399,13 @@ exports[`ParcelDetailForm field validation ParcelDetailForm renders correctly 1`
                           className="form-group"
                         >
                           <input
-                            type="text"
+                            className="form-control"
+                            mask={[Function]}
+                            name="financials.7.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0.00"
+                            value=""
                           />
                         </div>
                       </td>
