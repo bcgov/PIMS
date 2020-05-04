@@ -1,25 +1,24 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { render, wait, fireEvent } from '@testing-library/react';
-import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
+import FilterBar, { IFilterBarState } from './FilterBar';
 import * as MOCK from 'mocks/filterDataMock';
 import Axios from 'axios';
 
-const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
+const onFilterChange = jest.fn<void, [IFilterBarState]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
 const mockedAxios = Axios as jest.Mocked<typeof Axios>;
 
-describe('MapFilterBar', () => {
+describe('FilterBar', () => {
   it('renders correctly', () => {
     // Capture any changes
     const tree = renderer
       .create(
-        <MapFilterBar
+        <FilterBar
           agencyLookupCodes={MOCK.AGENCIES}
           propertyClassifications={MOCK.CLASSIFICATIONS}
-          lotSizes={[1, 2, 3]}
-          onFilterChange={onFilterChange}
+          onChange={onFilterChange}
         />,
       )
       .toJSON();
@@ -30,16 +29,15 @@ describe('MapFilterBar', () => {
     // Arrange
     mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
     const uiElement = (
-      <MapFilterBar
+      <FilterBar
         agencyLookupCodes={MOCK.AGENCIES}
         propertyClassifications={MOCK.CLASSIFICATIONS}
-        lotSizes={[1, 2, 3]}
-        onFilterChange={onFilterChange}
+        onChange={onFilterChange}
       />
     );
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
-    const agencies = container.querySelector('input[name="agencies"]');
+    const agencies = container.querySelector('select[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('input[name="minLotSize"]');
     const maxLotSize = container.querySelector('input[name="maxLotSize"]');
@@ -58,7 +56,7 @@ describe('MapFilterBar', () => {
     await wait(() => {
       fireEvent.change(agencies!, {
         target: {
-          value: '2',
+          value: '1',
         },
       });
     });
@@ -92,12 +90,12 @@ describe('MapFilterBar', () => {
     });
 
     // Assert
-    expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
+    expect(onFilterChange).toBeCalledWith<[IFilterBarState]>({
       searchBy: 'address',
       address: 'mockaddress',
       municipality: '',
       projectNumber: '',
-      agencies: '2',
+      agencies: '1',
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',
