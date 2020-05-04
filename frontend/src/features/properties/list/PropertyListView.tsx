@@ -14,7 +14,7 @@ import download from 'utils/download';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import { IPropertyFilter, IProperty, FilterBar, FilterBarState } from '.';
+import { IPropertyFilter, IProperty, FilterBar, IFilterBarState } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 
@@ -33,7 +33,7 @@ const initialQuery: IPropertyFilter = {
 const getServerQuery = (state: {
   pageIndex: number;
   pageSize: number;
-  filter: FilterBarState;
+  filter: IFilterBarState;
   agencyIds: number[];
 }) => {
   const {
@@ -96,7 +96,7 @@ const PropertyListView: React.FC = () => {
   const [data, setData] = useState<IProperty[]>([]);
 
   // Filtering and pagination state
-  const [filter, setFilter] = useState<FilterBarState>({
+  const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
     address: '',
     municipality: '',
@@ -115,7 +115,7 @@ const PropertyListView: React.FC = () => {
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
-    async (value: FilterBarState) => {
+    async (value: IFilterBarState) => {
       setFilter({ ...value });
       setPageIndex(0); // Go to first page of results when filter changes
     },
@@ -140,7 +140,7 @@ const PropertyListView: React.FC = () => {
     }: {
       pageIndex: number;
       pageSize: number;
-      filter: FilterBarState;
+      filter: IFilterBarState;
       agencyIds: number[];
     }) => {
       // Give this fetch an ID
@@ -176,7 +176,7 @@ const PropertyListView: React.FC = () => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getPropertyReportUrl(query),
+        url: getPropertyReportUrl({ ...query, all: true }),
         fileName: `properties.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
