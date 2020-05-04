@@ -45,7 +45,7 @@ const SearchBar: React.FC = () => {
   const {
     values: { searchBy },
     setFieldValue,
-  } = useFormikContext<FilterBarState>();
+  } = useFormikContext<IFilterBarState>();
   const desc = state.placeholders[searchBy] || '';
 
   const reset = () => {
@@ -65,7 +65,7 @@ const SearchBar: React.FC = () => {
   );
 };
 
-export type FilterBarState = {
+export interface IFilterBarState {
   searchBy: string;
   address: string;
   municipality: string;
@@ -74,12 +74,12 @@ export type FilterBarState = {
   classificationId: string;
   minLotSize: string;
   maxLotSize: string;
-};
+}
 
 type FilterBarProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
-  onChange: (value: FilterBarState) => void;
+  onChange: (value: IFilterBarState) => void;
 };
 
 /**
@@ -98,7 +98,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
 
   return (
-    <Formik<FilterBarState>
+    <Formik<IFilterBarState>
       initialValues={{
         searchBy: 'address',
         address: '',
