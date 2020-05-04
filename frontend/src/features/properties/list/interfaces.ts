@@ -77,4 +77,5 @@ export interface IPropertyFilter {
   maxLandArea?: number;
   minLotArea?: number;
   maxLotArea?: number;
+  all?: boolean;
 }
