@@ -3,7 +3,7 @@
  */
 export interface IProperty {
   id: number;
-  propertyTypeId: string;
+  propertyTypeId: number;
   pid: string;
   pin?: string;
   statusId: number;

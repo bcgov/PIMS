@@ -2,7 +2,7 @@ import './Table.scss';
 
 import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
 import { Table as BTable } from 'react-bootstrap';
-import { useTable, usePagination, TableOptions } from 'react-table';
+import { useTable, usePagination, TableOptions, Row } from 'react-table';
 import { TablePagination } from '.';
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
@@ -76,8 +76,11 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
+          {page.map((row: Row<T>, i) => {
+            // This line is necessary to prepare the rows and get the row props from `react-table` dynamically
             prepareRow(row);
+
+            // Each row can be rendered directly as a string using `react-table` render method
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
