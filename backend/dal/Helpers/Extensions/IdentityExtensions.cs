@@ -265,8 +265,8 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Get the top level agency this user belongs to.
-        /// If they don't belong to any agencies return 'null'.
+        /// A user is supposed to only belong to one child agency or one parent agency.
+        /// While in Keycloak these rules can be broken, we have to assume the first parent agency, or the first child agency is the user's primary.
         /// </summary>
         /// <param name="user"></param>
         /// <param name="context"></param>
@@ -279,16 +279,13 @@ namespace Pims.Dal.Helpers.Extensions
 
             var agencies = context.Agencies.Where(a => agencyIds.Contains(a.Id)).OrderBy(a => a.ParentId);
 
-            // This will only at most do two iterations before returning a value.
-            foreach (var agency in agencies)
-            {
-                // If we find a parent agency we will return it.
-                // Otherwise return the parent of the first child agency.
-                if (agency.ParentId == null) return agency;
-                return context.Agencies.Find(agency.ParentId);
-            }
+            // If one of the agencies is a parent, return it.
+            var parentAgency = agencies.FirstOrDefault(a => a.ParentId != null);
+            if (parentAgency != null)
+                return parentAgency;
 
-            return null; // This will never happen unless the DB is not synced with keycloak.
+            // Assume the first agency is their primary
+            return agencies.FirstOrDefault();
         }
     }
 }
