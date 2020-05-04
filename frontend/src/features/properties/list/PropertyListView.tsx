@@ -188,7 +188,7 @@ const PropertyListView: React.FC = () => {
 
   return (
     <Container fluid className="PropertyListView">
-      <Container fluid className="px-0 filter-container">
+      <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <FilterBar
             agencyLookupCodes={agencies}
