@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MapFilterBar renders correctly 1`] = `
+exports[`FilterBar renders correctly 1`] = `
 <form
   className=""
   noValidate={true}
   onSubmit={[Function]}
 >
   <div
-    className="map-filter-bar form-row"
+    className="filter-bar form-row"
   >
     <div
       className="bar-item col"
@@ -69,21 +69,46 @@ exports[`MapFilterBar renders correctly 1`] = `
       className="bar-item col"
     >
       <div
-        className="AutoCompleteText"
+        className="form-group"
       >
-        <div
-          className="form-group"
+        <select
+          className="form-control"
+          id="input-agencies"
+          name="agencies"
+          onChange={[Function]}
+          value=""
         >
-          <input
-            autoComplete="off"
-            className="form-control"
-            id="input-agencies"
-            name="agencies"
-            onChange={[Function]}
-            placeholder="Type an agency"
+          <option
             value=""
-          />
-        </div>
+          >
+            Enter an Agency
+          </option>
+          <option
+            value="1"
+          >
+            AEST
+          </option>
+          <option
+            value="2"
+          >
+            HTLH
+          </option>
+          <option
+            value="3"
+          >
+            MOTI
+          </option>
+          <option
+            value="4"
+          >
+            FLNR
+          </option>
+          <option
+            value="5"
+          >
+            MAH
+          </option>
+        </select>
       </div>
     </div>
     <div
