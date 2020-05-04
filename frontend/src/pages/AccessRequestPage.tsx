@@ -122,7 +122,7 @@ const AccessRequestPage = () => {
     ) : null;
 
   return (
-    <div>
+    <div className="accessRequestPage">
       <div>
         <h3>Access Request</h3>
       </div>
