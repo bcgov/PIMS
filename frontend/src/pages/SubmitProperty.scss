@@ -8,9 +8,7 @@
   .leaflet-container {
     /* Subtract the header, nav-bar and footer sizes */
     padding-top: 0;
-    min-height: calc(
-      100vh - #{$header-height} - #{$navbar-height} - #{$footer-height}
-    );
+    min-height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   }
   .title-bar {
     display: flex;

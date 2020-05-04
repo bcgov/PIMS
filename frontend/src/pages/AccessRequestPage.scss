@@ -1,9 +1,7 @@
 @import '../variables';
 .accessRequestPage {
   overflow-y: scroll;
-  height: calc(
-    100vh - #{$header-height} - #{$navbar-height} - #{$footer-height}
-  );
+  height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
 }
 
 .userInfo {
