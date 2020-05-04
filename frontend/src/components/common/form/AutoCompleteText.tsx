@@ -9,7 +9,7 @@ import { useFormikContext } from 'formik';
 export const AutoCompleteText: React.FC<any> = ({ field, options, placeholder }) => {
   let items: any[] = [];
 
-  const { setFieldValue } = useFormikContext<any>();
+  const { setFieldValue, handleChange } = useFormikContext<any>();
 
   options.forEach((option: { label: any; value: any }) => {
     items.push(option);
@@ -27,6 +27,7 @@ export const AutoCompleteText: React.FC<any> = ({ field, options, placeholder })
     }
     setSuggestions(dynamicSuggestions);
     setText(val);
+    handleChange(e);
   };
 
   const suggestionSelected = (val: any) => {
@@ -43,7 +44,7 @@ export const AutoCompleteText: React.FC<any> = ({ field, options, placeholder })
       return (
         <div className="suggestionList">
           {suggestions.map((x: any) => (
-            <option value={x.value} onClick={() => suggestionSelected(x)}>
+            <option key={x.value} onClick={() => suggestionSelected(x)}>
               {x.label}
             </option>
           ))}
@@ -62,7 +63,6 @@ export const AutoCompleteText: React.FC<any> = ({ field, options, placeholder })
           value={text}
           onChange={onTextChanged}
           placeholder={placeholder}
-          type="text"
         />
         {renderSuggestions()}
         <DisplayError field={field} />
