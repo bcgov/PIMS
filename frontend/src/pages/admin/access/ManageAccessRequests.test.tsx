@@ -1,6 +1,5 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
-import { act } from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount } from 'enzyme';
 import { Provider } from 'react-redux';
@@ -13,6 +12,7 @@ import * as API from 'constants/API';
 import { ensureGridApiHasBeenSet } from '../../../utils/testUtils';
 import ManageAccessRequests from './ManageAccessRequests';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
+import { act as domAct } from 'react-dom/test-utils';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -81,7 +81,7 @@ const successStore = mockStore({
 
 const componentRender = async (store: any) => {
   let provider;
-  act(() => {
+  domAct(() => {
     provider = mount(
       <Provider store={store}>
         <ManageAccessRequests />

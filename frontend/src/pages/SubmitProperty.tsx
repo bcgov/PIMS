@@ -218,7 +218,7 @@ const CloseButton = ({ formDisabled, setShowSaveDraftDialog, history }: any) => 
       }
     }}
   >
-    <CloseSquare />
+    <CloseSquare title="close" />
   </Button>
 );
 
@@ -228,12 +228,13 @@ const EditButton = ({
   parcelId,
   formDisabled,
   setFormDisabled,
-}: any) =>
-  keycloak.hasAgency(cachedParcelDetail?.agencyId) ? (
+}: any) => {
+  return keycloak.hasAgency(cachedParcelDetail?.agencyId) ? (
     <Button disabled={!formDisabled || !parcelId} onClick={() => setFormDisabled(false)}>
       Edit
     </Button>
   ) : null;
+};
 
 const DeleteButton = ({ cachedParcelDetail, keycloak, dispatch, setShowDeleteDialog }: any) => {
   return (keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
