@@ -30,7 +30,7 @@ export interface IAccessRequestState {
 }
 
 const initialState: IAccessRequestState = {
-  pagedAccessRequests: { page: 0, total: 0, quantity: 0, items: [] },
+  pagedAccessRequests: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
   filters: {},
   sorting: [],
   selections: [],

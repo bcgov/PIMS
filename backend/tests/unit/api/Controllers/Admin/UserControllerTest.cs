@@ -64,7 +64,8 @@ namespace PimsApi.Test.Admin.Controllers
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var users = new Entity.User[] { EntityHelper.CreateUser("user1"), EntityHelper.CreateUser("user2") };
             var paged = new Entity.Models.Paged<Entity.User>(users);
-            var filter = new Entity.Models.UserFilter(1, 1, 1, "test", "test", "test", "test", "test", null);
+            var filter = new Entity.Models.UserFilter(1, 1, "test", "test",
+                "test", "test", "test", "test", false, "test", "test", null);
             service.Setup(m => m.User.Get(It.IsAny<Entity.Models.UserFilter>())).Returns(paged);
 
             // Act
@@ -91,7 +92,8 @@ namespace PimsApi.Test.Admin.Controllers
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var users = new Entity.User[] { EntityHelper.CreateUser("user1"), EntityHelper.CreateUser("user2") };
             var paged = new Entity.Models.Paged<Entity.User>(users);
-            var filter = new Entity.Models.UserFilter(1, 1, 1, "test", "test", "test", "test", "test", null);
+            var filter = new Entity.Models.UserFilter(1, 1, "test", "test",
+                "test", "test", "test", "test", false, "test", "test", null);
             service.Setup(m => m.User.Get(It.IsAny<Entity.Models.UserFilter>())).Returns(paged);
 
             // Act

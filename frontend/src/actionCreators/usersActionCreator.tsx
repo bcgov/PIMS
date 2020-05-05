@@ -39,6 +39,19 @@ export const getUsersAction = (params: API.IPaginateParams) => (dispatch: Functi
     .finally(() => dispatch(hideLoading()));
 };
 
+export const getUsersPaginationAction = (params: API.IGetUsersParams) => (dispatch: Function) => {
+  dispatch(showLoading());
+  return CustomAxios()
+    .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params)
+    .then((response: AxiosResponse) => {
+      dispatch(adminActions.storeUsers(response.data));
+    })
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError)),
+    )
+    .finally(() => dispatch(hideLoading()));
+};
+
 export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Function) => {
   dispatch(request(reducerTypes.GET_USER_DETAIL));
   dispatch(showLoading());
