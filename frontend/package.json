@@ -83,7 +83,7 @@
     "eslint-plugin-prettier": "3.1.1",
     "husky": "4.2.3",
     "prettier": "1.19.1",
-    "prettier-check": "2.0.0",
+    "pretty-quick": "2.0.1",
     "react-test-renderer": "16.12.0",
     "redux-mock-store": "1.5.4"
   },
@@ -96,8 +96,8 @@
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
-    "format:check": "prettier-check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "pre-push:check": "npm run format:check && npm run lint"
+    "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
+    "pre-push:check": "npm run check && npm run lint"
   },
   "eslintConfig": {
     "extends": [
@@ -110,6 +110,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "pretty-quick --staged",
       "pre-push": "npm run pre-push:check"
     }
   },
