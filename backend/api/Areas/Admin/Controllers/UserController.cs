@@ -93,12 +93,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         [SwaggerOperation(Tags = new[] { "admin-user" })]
         public IActionResult GetMyUsers(EModel.UserFilter filter)
         {
-            if (!(filter?.Agencies?.Any() ?? false))
-            {
-                filter.Agencies = this.User.GetAgencies();
-            }
-
-            if (!(filter?.Agencies?.Any() ?? false)) return BadRequest("Current user does not belong to an agency");
             return GetUsers(filter);
         }
 

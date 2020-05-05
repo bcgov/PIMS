@@ -9,6 +9,17 @@ export interface IPaginateParams {
   sort?: string;
 }
 
+export interface IGetUsersParams extends IPaginateParams {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  agency?: string;
+  role?: string;
+  isDisabled?: boolean;
+  position?: string;
+}
+
 export interface IPaginateAccessRequests extends IPaginateParams {
   status?: AccessRequestStatus | null;
 }

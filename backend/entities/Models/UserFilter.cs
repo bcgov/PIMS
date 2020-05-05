@@ -54,10 +54,28 @@ namespace Pims.Dal.Entities.Models
         public string Email { get; set; }
 
         /// <summary>
-        /// get/set - An array of agencies.
+        /// get/set - agency name.
         /// </summary>
         /// <value></value>
-        public int[] Agencies { get; set; }
+        public String Agency { get; set; }
+
+        /// <summary>
+        /// get/set - role name.
+        /// </summary>
+        /// <value></value>
+        public String Role { get; set; }
+
+        /// <summary>
+        /// get/set - position.
+        /// </summary>
+        /// <value></value>
+        public String Position { get; set; }
+
+        /// <summary>
+        /// get/set - account status
+        /// </summary>
+        /// <value></value>
+        public bool? IsDisabled { get; set; }
 
         /// <summary>
         /// get/set - An array of sorting conditions (i.e. FirstName desc, LastName asc)
@@ -88,22 +106,29 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
-        /// <param name="agencyId"></param>
+        /// <param name="agency"></param>
         /// <param name="username"></param>
         /// <param name="displayName"></param>
         /// <param name="lastName"></param>
         /// <param name="firstName"></param>
         /// <param name="email"></param>
+        /// <param name="isDisabled"></param>
+        /// <param name="position"></param>
+        /// <param name="role"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public UserFilter(int page, int quantity, int agencyId, string username, string displayName, string lastName, string firstName, string email, string[] sort) : this(page, quantity)
+        public UserFilter(int page, int quantity, String agency, string username, string displayName, string lastName,
+            string firstName, string email, bool? isDisabled, string position, string role, string[] sort) : this(page, quantity)
         {
-            this.Agencies = new[] { agencyId };
+            this.Agency = agency;
             this.Username = username;
             this.DisplayName = displayName;
             this.LastName = lastName;
             this.FirstName = firstName;
             this.Email = email;
+            this.IsDisabled = isDisabled;
+            this.Position = position;
+            this.Role = role;
             this.Sort = sort;
         }
 
@@ -123,7 +148,10 @@ namespace Pims.Dal.Entities.Models
             this.LastName = filter.GetStringValue(nameof(this.LastName));
             this.FirstName = filter.GetStringValue(nameof(this.FirstName));
             this.Email = filter.GetStringValue(nameof(this.Email));
-            this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
+            this.Agency = filter.GetStringValue(nameof(this.Agency));
+            this.Position = filter.GetStringValue(nameof(this.Position));
+            this.Role = filter.GetStringValue(nameof(this.Role));
+            this.IsDisabled = filter.GetValue<bool?>(nameof(this.IsDisabled));
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
         }
         #endregion
