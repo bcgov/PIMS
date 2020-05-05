@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -55,19 +56,8 @@ namespace Pims.Dal.Services.Admin
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
-            IQueryable<int> agencies = null;
-
-            if (User.HasPermission(Permissions.AgencyAdmin))
-            {
-                agencies = Context.Agencies.Where(a => User.GetAgencies().Contains(a.Id))
-                    .Select(a => a.Id);
-            } else if (User.HasPermission(Permissions.SystemAdmin))
-            {
-                agencies = Context.Agencies.Select(x => x.Id);
-
-            }
-
-            if (agencies == null || !agencies.Any())
+            var userAgencies = User.GetAgencies();
+            if (userAgencies == null || !userAgencies.Any())
             {
                 throw new NotAuthorizedException("Current user does not belong to an agency");
             }
@@ -77,8 +67,12 @@ namespace Pims.Dal.Services.Admin
                 .ThenInclude(a => a.Agency)
                 .Include(r => r.Roles)
                 .ThenInclude(r => r.Role)
-                .AsNoTracking()
-                .Where(u => u.Agencies.Any(a => agencies.Contains(a.AgencyId)));
+                .AsNoTracking();
+
+            if (User.HasPermission(Permissions.AgencyAdmin))
+            {
+                query = query.Where(user => user.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
+            }
 
             if (filter != null)
             {
@@ -102,9 +96,11 @@ namespace Pims.Dal.Services.Admin
                 if (filter.IsDisabled != null)
                     query = query.Where(u => u.IsDisabled == filter.IsDisabled);
                 if (!string.IsNullOrWhiteSpace(filter.Role))
-                    query = query.Where(u => u.Roles.Any(a => a.Role.Name.ToLower().Contains(filter.Role.ToLower())));
+                    query = query.Where(u => u.Roles.Any(r =>
+                        EF.Functions.Like(r.Role.Name, $"%{filter.Role}")));
                 if (!string.IsNullOrWhiteSpace(filter.Agency))
-                    query = query.Where(u => u.Agencies.Any(a => a.Agency.Name.ToLower().Contains(filter.Agency.ToLower())));
+                    query = query.Where(u => u.Agencies.Any(a =>
+                        EF.Functions.Like(a.Agency.Name, $"%{filter.Agency}")));
 
                 if (filter.Sort.Any())
                     query = query.OrderByProperty(filter.Sort);

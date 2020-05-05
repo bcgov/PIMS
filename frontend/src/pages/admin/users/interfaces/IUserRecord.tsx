@@ -4,9 +4,9 @@ export enum AccountActive {
 }
 
 export const accountActiveToBool = (status: string): boolean | undefined => {
-  if (!!status) return undefined;
+  if (!status) return undefined;
 
-  return AccountActive.YES ? false : true;
+  return status === AccountActive.YES;
 };
 
 export interface IUserRecord {
