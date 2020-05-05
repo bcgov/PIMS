@@ -5,32 +5,33 @@ import { Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { DisplayError } from './DisplayError';
 import { useFormikContext } from 'formik';
+import { SelectOption, SelectOptions } from './Select';
 
-export const AutoCompleteText: React.FC<any> = ({ field, options, placeholder }) => {
-  let items: any[] = [];
+export type IAutoCompleteProps = {
+  field: string;
+  placeholder?: string;
+  options: SelectOptions;
+};
 
+export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({ field, options, placeholder }) => {
   const { setFieldValue, handleChange } = useFormikContext<any>();
 
-  options.forEach((option: { label: any; value: any }) => {
-    items.push(option);
-  });
+  const [suggestions, setSuggestions] = useState<SelectOptions>([]);
+  const [text, setText] = useState<string>('');
 
-  const [suggestions, setSuggestions] = useState<any>([]);
-  const [text, setText] = useState<any>('');
-
-  const onTextChanged = (e: any) => {
+  const onTextChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    let dynamicSuggestions: any[] = [];
+    let dynamicSuggestions: SelectOptions = [];
     if (val.length > 0) {
       const regex = new RegExp(`${val}`, 'i');
-      dynamicSuggestions = items.filter(v => regex.test(v.label));
+      dynamicSuggestions = options.filter(v => regex.test(v.label));
     }
     setSuggestions(dynamicSuggestions);
     setText(val);
     handleChange(e);
   };
 
-  const suggestionSelected = (val: any) => {
+  const suggestionSelected = (val: SelectOption) => {
     setText(val.label);
     setSuggestions([]);
     setFieldValue(field, val.value);
