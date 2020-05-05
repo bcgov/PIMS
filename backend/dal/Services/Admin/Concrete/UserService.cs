@@ -8,6 +8,7 @@ using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Entities.Models;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 
@@ -53,32 +54,59 @@ namespace Pims.Dal.Services.Admin
         public Paged<User> Get(UserFilter filter = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            IQueryable<int> agencies = null;
+
+            if (User.HasPermission(Permissions.AgencyAdmin))
+            {
+                agencies = Context.Agencies.Where(a => User.GetAgencies().Contains(a.Id))
+                    .Select(a => a.Id);
+            } else if (User.HasPermission(Permissions.SystemAdmin))
+            {
+                agencies = Context.Agencies.Select(x => x.Id);
+
+            }
+
+            if (agencies == null || !agencies.Any())
+            {
+                throw new NotAuthorizedException("Current user does not belong to an agency");
+            }
+
             var query = this.Context.Users
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
                 .Include(r => r.Roles)
                 .ThenInclude(r => r.Role)
-                .AsNoTracking();
-
-            if (filter.Page < 1) filter.Page = 1;
-            if (filter.Quantity < 1) filter.Quantity = 1;
-            if (filter.Quantity > 50) filter.Quantity = 50;
+                .AsNoTracking()
+                .Where(u => u.Agencies.Any(a => agencies.Contains(a.AgencyId)));
 
             if (filter != null)
             {
+                if (filter.Page < 1) filter.Page = 1;
+                if (filter.Quantity < 1) filter.Quantity = 1;
+                if (filter.Quantity > 50) filter.Quantity = 50;
+                if (filter.Sort == null) filter.Sort = new string[] {};
+
                 if (!string.IsNullOrWhiteSpace(filter.Username))
-                    query = query.Where(u => EF.Functions.Like(u.Username, $"{filter.Username}"));
+                    query = query.Where(u => EF.Functions.Like(u.Username, $"%{filter.Username}%"));
                 if (!string.IsNullOrWhiteSpace(filter.DisplayName))
-                    query = query.Where(u => EF.Functions.Like(u.DisplayName, $"{filter.DisplayName}"));
+                    query = query.Where(u => EF.Functions.Like(u.DisplayName, $"%{filter.DisplayName}%"));
                 if (!string.IsNullOrWhiteSpace(filter.FirstName))
-                    query = query.Where(u => EF.Functions.Like(u.FirstName, $"{filter.FirstName}"));
+                    query = query.Where(u => EF.Functions.Like(u.FirstName, $"%{filter.FirstName}%"));
                 if (!string.IsNullOrWhiteSpace(filter.LastName))
-                    query = query.Where(u => EF.Functions.Like(u.LastName, $"{filter.LastName}"));
+                    query = query.Where(u => EF.Functions.Like(u.LastName, $"%{filter.LastName}%"));
                 if (!string.IsNullOrWhiteSpace(filter.Email))
-                    query = query.Where(u => EF.Functions.Like(u.Email, $"{filter.Email}"));
-                if (filter.Agencies?.Any() == true)
-                    query = query.Where(u => u.Agencies.Any(a => filter.Agencies.Contains(a.AgencyId)));
-                if (filter.Sort?.Any() == true)
+                    query = query.Where(u => EF.Functions.Like(u.Email, $"%{filter.Email}%"));
+                if (!string.IsNullOrWhiteSpace(filter.Position))
+                    query = query.Where(u => EF.Functions.Like(u.Position, $"%{filter.Position}%"));
+                if (filter.IsDisabled != null)
+                    query = query.Where(u => u.IsDisabled == filter.IsDisabled);
+                if (!string.IsNullOrWhiteSpace(filter.Role))
+                    query = query.Where(u => u.Roles.Any(a => a.Role.Name.ToLower().Contains(filter.Role.ToLower())));
+                if (!string.IsNullOrWhiteSpace(filter.Agency))
+                    query = query.Where(u => u.Agencies.Any(a => a.Agency.Name.ToLower().Contains(filter.Agency.ToLower())));
+
+                if (filter.Sort.Any())
                     query = query.OrderByProperty(filter.Sort);
             }
             var users = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);

@@ -65,10 +65,18 @@ export const RowActions = (props: IRowActionProps) => {
         <MoreIcon />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={close}>
-        <MenuItem disabled={props.active === AccountActive.YES} onClick={enableUser}>
+        <MenuItem
+          data-testid={`enable-${props.userId}`}
+          disabled={props.active === AccountActive.YES}
+          onClick={enableUser}
+        >
           Enable
         </MenuItem>
-        <MenuItem disabled={props.active === AccountActive.NO} onClick={disableUser}>
+        <MenuItem
+          data-testid={`disable-${props.userId}`}
+          disabled={props.active === AccountActive.NO}
+          onClick={disableUser}
+        >
           Disable
         </MenuItem>
         <MenuItem onClick={openUserDetails}>Open</MenuItem>

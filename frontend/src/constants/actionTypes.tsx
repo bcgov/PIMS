@@ -41,3 +41,7 @@ export const GET_USERS = 'getUsers';
 export const STORE_USER_DETAILS = 'STORE_USER_DETAILS';
 export const GET_USER = 'GET_USER';
 export const UPDATE_USER = 'UPDATE_USER';
+export const FILTER_USERS = 'FILTER_USERS';
+export const SORT_USERS = 'SORT_USERS';
+export const SET_USERS_PAGE_SIZE = 'SET_USERS_PAGE_SIZE';
+export const SET_USERS_SORT = 'SET_USERS_SORT';

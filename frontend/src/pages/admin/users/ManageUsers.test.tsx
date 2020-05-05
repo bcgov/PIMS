@@ -34,18 +34,51 @@ jest.mock('react-router-dom', () => ({
 const successStore = mockStore({
   [reducerTypes.USERS]: {
     pagedUsers: {
-      page: 1,
+      pageIndex: 0,
       total: 2,
       quantity: 2,
       items: [
         {
-          id: 1,
-          displayName: 'testUser',
+          id: '1',
+          username: 'testername1',
+          firstName: 'testUserFirst1',
+          lastName: 'testUserLast1',
+          isDisabled: false,
+          position: 'tester position',
+          agencies: [{ id: '1', name: 'HLTH' }],
+          roles: [{ id: '1', name: 'admin' }],
+        },
+        {
+          id: '2',
+          username: 'testername2',
+          firstName: 'testUser',
+          lastName: 'testUser',
+          isDisabled: true,
+          position: 'tester',
           agencies: [{ id: '1', name: 'HLTH' }],
           roles: [{ id: '1', name: 'admin' }],
         },
       ],
     },
+    rowsPerPage: 10,
+  },
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.NETWORK]: {
+    [actionTypes.GET_USERS]: {
+      isFetching: false,
+    },
+  },
+});
+
+const emptyUserListStore = mockStore({
+  [reducerTypes.USERS]: {
+    pagedUsers: {
+      pageIndex: 0,
+      total: 0,
+      quantity: 0,
+      items: [],
+    },
+    rowsPerPage: 10,
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,
   [reducerTypes.NETWORK]: {
@@ -67,8 +100,31 @@ describe('component functionality', () => {
       </Provider>,
     );
 
-  it('renders users by default', () => {
-    const { getAllByText } = componentRender(successStore);
+  it('renders users list', () => {
+    const { getAllByText, getAllByTestId, getByTestId } = componentRender(successStore);
     expect(getAllByText(/PIMS Users/i));
+    expect(getAllByText(/Rows per page/i));
+    expect(getAllByText(/1-2 of 2/i));
+    expect(getAllByText(/testername1/i));
+    expect(getAllByText(/testUserFirst1/i));
+    expect(getAllByText(/testUserLast1/i));
+    expect(getAllByText(/tester position/i));
+    expect(getAllByText(/admin/i));
+    expect(getAllByText(/HLTH/i));
+    expect(getAllByTestId('1-Yes')); // test account active status display (User 1 is active)
+    expect(getAllByTestId('2-No')); // test account active status display (User 2 is not active)
+
+    // check action buttons
+    expect(getByTestId('enable-1').getAttribute('aria-disabled')).toBe('true');
+    expect(getByTestId('disable-1').getAttribute('aria-disabled')).toBe('false');
+    expect(getByTestId('enable-2').getAttribute('aria-disabled')).toBe('false');
+    expect(getByTestId('disable-2').getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('renders empty table', () => {
+    const { getAllByText } = componentRender(emptyUserListStore);
+    expect(getAllByText(/PIMS Users/i));
+    expect(getAllByText(/Sorry, no matching records found/i));
+    expect(getAllByText(/0-0 of 0/i));
   });
 });
