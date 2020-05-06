@@ -7,7 +7,6 @@ import { IPagedItems } from 'interfaces/pagedItems';
 import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
-import './ManageUsers.scss';
 import { UsersList, TableStateChangeFn } from './components/UsersList';
 import { IUser } from 'interfaces';
 import { MUIDataTableState } from 'mui-datatables';
