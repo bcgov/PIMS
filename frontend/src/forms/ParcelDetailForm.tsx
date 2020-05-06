@@ -165,7 +165,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
             }
             response
               .then(() => {
-                history.goBack();
+                history.push('/');
               })
               .catch((error: any) => {
                 actions.setStatus({ msg: error.toString() });
