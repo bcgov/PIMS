@@ -62,7 +62,7 @@ export const defaultFinancials: IFinancial[] = _.flatten(
   yearsArray.map(year => {
     return Object.values(keyTypes).map(type => {
       return {
-        date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').toDate() : '',
+        date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').format('YYYY-MM-DD') : '',
         year: year,
         fiscalYear: year,
         key: type,

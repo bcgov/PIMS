@@ -1,8 +1,6 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { IParcelDetail } from 'actions/parcelsActions';
-import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -10,8 +8,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { useKeycloak } from '@react-keycloak/web';
-import { mountToJson } from 'enzyme-to-json';
 import SubmitProperty from './SubmitProperty';
+import { render, fireEvent, act } from '@testing-library/react';
+import { mockDetails } from 'mocks/filterDataMock';
 
 jest.mock('./MapView', () => () => <div id="mockMapView"></div>);
 jest.mock('@react-keycloak/web');
@@ -23,58 +22,16 @@ Enzyme.configure({ adapter: new Adapter() });
 (useKeycloak as jest.Mock).mockReturnValue({
   keycloak: {
     userInfo: {
-      agencies: ['1'],
+      agencies: [mockDetails[0]?.agencyId],
     },
     subject: 'test',
   },
 });
 const mockStore = configureMockStore([thunk]);
-
-// This will spoof the active parcel (the one that will populate the popup details)
-const mockDetails: IParcelDetail = {
-  propertyTypeId: 0,
-  parcelDetail: {
-    id: 1,
-    pid: '000-000-000',
-    pin: '',
-    projectNumber: '',
-    statusId: 0,
-    classificationId: 0,
-    zoning: '',
-    zoningPotential: '',
-    agencyId: 0,
-    latitude: 48,
-    longitude: 123,
-    propertyStatus: 'active',
-    classification: 'Core Operational',
-    description: 'test',
-    isSensitive: false,
-    municipality: '',
-    evaluations: [
-      {
-        date: 'December 25, 1991 13:12:00',
-        key: '',
-        value: 100000,
-      },
-    ],
-    fiscals: [],
-    address: {
-      line1: '1234 mock Street',
-      line2: 'N/A',
-      city: 'Victoria',
-      province: 'BC',
-      postal: 'V1V1V1',
-    },
-    landArea: 'unknown',
-    landLegalDescription: 'test',
-    buildings: [],
-    agency: 'FIN',
-  },
-};
 const history = createMemoryHistory();
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-  [reducerTypes.PARCEL]: { parcelDetail: mockDetails },
+  [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 0, parcelDetail: mockDetails[0] } },
   [reducerTypes.LEAFLET_CLICK_EVENT]: {},
   [reducerTypes.NETWORK]: {
     parcel: {
@@ -83,13 +40,96 @@ const store = mockStore({
   },
 });
 
-xit('SubmitProperty renders a disabled form if agency does not match current user.', () => {
-  const tree = mount(
-    <Provider store={store}>
-      <Router history={history}>
-        <SubmitProperty />
-      </Router>
-    </Provider>,
-  );
-  expect(mountToJson(tree.find(SubmitProperty))).toMatchSnapshot();
+const getSubmitProperty = (props: any, reduxStore: any = store) => (
+  <Provider store={reduxStore}>
+    <Router history={history}>
+      <SubmitProperty {...props} />
+    </Router>
+  </Provider>
+);
+
+describe('SubmitProperty', () => {
+  it('SubmitProperty loads building data in update mode', () => {
+    const store = mockStore({
+      [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+      [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 1, parcelDetail: mockDetails[0] } },
+      [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+      [reducerTypes.NETWORK]: {
+        parcel: {
+          status: 201,
+        },
+      },
+    });
+    const { getByText } = render(
+      getSubmitProperty({ match: { params: { id: mockDetails[0]?.id } } }, store),
+    );
+    getByText('Update Property');
+  });
+
+  it('SubmitProperty renders edit button if parcel detail loaded.', () => {
+    const { getByText } = render(
+      getSubmitProperty({ match: { params: { id: mockDetails[0]?.id } } }),
+    );
+    getByText('Update Property');
+  });
+
+  it('SubmitProperty delete functionality', () => {
+    const { getByText } = render(
+      getSubmitProperty({ match: { params: { id: mockDetails[0]?.id } } }),
+    );
+    const deleteButton = getByText('Delete');
+    act(() => {
+      fireEvent.click(deleteButton);
+    });
+    expect(getByText('Are you sure you want to permanently delete the property?')).toBeVisible();
+  });
+
+  it('SubmitProperty renders update header when given a parcelId', () => {
+    const { getByText } = render(
+      getSubmitProperty({ match: { params: { id: mockDetails[0]?.id } } }),
+    );
+    getByText('Update Property');
+  });
+
+  it('SubmitProperty renders a view header by default', () => {
+    const { getByText } = render(getSubmitProperty({ location: { search: 'disabled=true' } }));
+    getByText('View Property');
+  });
+
+  it('SubmitProperty edit button is disabled if agencies not match', () => {
+    let store: any = mockStore({
+      [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+      [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 1, parcelDetail: mockDetails[1] } },
+      [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+      [reducerTypes.NETWORK]: {
+        parcel: {
+          status: 201,
+        },
+      },
+    });
+
+    const { getByText } = render(getSubmitProperty({ match: { params: { id: 2 } } }, store));
+    expect(getByText('View Property')).toBeVisible();
+  });
+
+  it('SubmitProperty disables edit button when clicked', () => {
+    const { getByText } = render(
+      getSubmitProperty({ match: { params: { id: mockDetails[0]?.id } } }),
+    );
+    const edit = getByText('Edit');
+    act(() => {
+      fireEvent.click(edit);
+    });
+    expect(edit).toHaveAttribute('disabled');
+  });
+
+  it('Displays a modal when close is clicked if there is saved form data', () => {
+    window.localStorage.setItem('parcelDetailForm', 'some test data');
+    const { getByText, getByTitle } = render(getSubmitProperty({}));
+    const close = getByTitle('close');
+    act(() => {
+      fireEvent.click(close);
+    });
+    expect(getByText('Unsaved Draft')).toBeVisible();
+  });
 });
