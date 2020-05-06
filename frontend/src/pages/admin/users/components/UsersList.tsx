@@ -6,8 +6,33 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IUsersState } from 'reducers/usersReducer';
 import { IUsersSort } from 'actions/adminActions';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { grey } from '@material-ui/core/colors';
 
 export type TableStateChangeFn = (action: string, tableState: MUIDataTableState) => void;
+
+// Using the material ui theme to override some styles
+const getMuiTheme = () =>
+  createMuiTheme({
+    overrides: {
+      MUIDataTableHeadCell: {
+        fixedHeaderCommon: {
+          backgroundColor: grey[200],
+        },
+        data: {
+          fontWeight: 'bold',
+        },
+      },
+      MUIDataTableToolbar: {
+        titleRoot: {
+          textAlign: 'left',
+        },
+        titleText: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+  } as any);
 
 export interface IUsersListProps {
   data: IUserRecord[];
@@ -24,30 +49,32 @@ export const UsersList = (props: IUsersListProps) => {
   });
 
   return (
-    <MUIDataTable
-      title={'PIMS Users'}
-      data={props.data}
-      columns={columns(props.sort)}
-      options={{
-        pagination: true,
-        serverSide: true,
-        selectableRows: 'none',
-        page: props.page,
-        download: true,
-        downloadOptions: {},
-        print: false,
-        filter: true,
-        search: false,
-        viewColumns: false,
-        serverSideFilterList: filter,
-        count: props.totalRows,
-        rowsPerPage: props.pageSize,
-        rowsPerPageOptions: [2, 5, 10, 20, 30, 40, 50],
-        elevation: 1,
-        rowHover: true,
-        onTableChange: props.onTableChange,
-        sort: true,
-      }}
-    />
+    <MuiThemeProvider theme={getMuiTheme()}>
+      <MUIDataTable
+        title={'PIMS Users'}
+        data={props.data}
+        columns={columns(props.sort)}
+        options={{
+          pagination: true,
+          serverSide: true,
+          selectableRows: 'none',
+          page: props.page,
+          download: true,
+          downloadOptions: {},
+          print: false,
+          filter: true,
+          search: false,
+          viewColumns: false,
+          serverSideFilterList: filter,
+          count: props.totalRows,
+          rowsPerPage: props.pageSize,
+          rowsPerPageOptions: [2, 5, 10, 20, 30, 40, 50],
+          elevation: 1,
+          rowHover: true,
+          onTableChange: props.onTableChange,
+          sort: true,
+        }}
+      />
+    </MuiThemeProvider>
   );
 };
