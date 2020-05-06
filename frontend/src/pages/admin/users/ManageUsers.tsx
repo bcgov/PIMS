@@ -7,7 +7,6 @@ import { IPagedItems } from 'interfaces/pagedItems';
 import { toApiPaginateParams } from 'utils/CommonFunctions';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
-import './ManageUsers.scss';
 import { UsersList, TableStateChangeFn } from './components/UsersList';
 import { IUser } from 'interfaces';
 import { MUIDataTableState } from 'mui-datatables';
@@ -84,8 +83,8 @@ const ManageUsers = () => {
       firstName: u.firstName,
       lastName: u.lastName,
       active: u.isDisabled ? AccountActive.NO : AccountActive.YES,
-      role: u.roles && u.roles.length > 0 ? u.roles[0].name : 'No role attached',
-      agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : 'No agency associated',
+      role: u.roles && u.roles.length > 0 ? u.roles[0].name : '',
+      agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position,
     }),
   );
