@@ -56,12 +56,6 @@ namespace Pims.Dal.Services.Admin
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
-            var userAgencies = User.GetAgencies();
-            if (userAgencies == null || !userAgencies.Any())
-            {
-                throw new NotAuthorizedException("Current user does not belong to an agency");
-            }
-
             var query = this.Context.Users
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
@@ -71,7 +65,7 @@ namespace Pims.Dal.Services.Admin
 
             if (User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
-                query = query.Where(user => user.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
+                query = query.Where(user => user.Agencies.Any(a => this.User.GetAgencies().Contains(a.AgencyId)));
             }
 
             if (filter != null)
