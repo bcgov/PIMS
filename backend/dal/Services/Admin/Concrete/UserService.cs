@@ -69,7 +69,7 @@ namespace Pims.Dal.Services.Admin
                 .ThenInclude(r => r.Role)
                 .AsNoTracking();
 
-            if (User.HasPermission(Permissions.AgencyAdmin))
+            if (User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
                 query = query.Where(user => user.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
             }
