@@ -18,12 +18,14 @@ import AddressForm from './subforms/AddressForm';
 import BuildingForm from './subforms/BuildingForm';
 import PidPinForm from './subforms/PidPinForm';
 import { render, fireEvent, wait } from '@testing-library/react';
+import { act as domAct } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { mockDetails } from 'mocks/filterDataMock';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { fillInput } from 'utils/testUtils';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { LatLng } from 'leaflet';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
@@ -83,10 +85,19 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-const parcelDetailForm = () => (
+const parcelDetailForm = (
+  clickLatLng: LatLng | undefined = undefined,
+  loadDraft: boolean = true,
+) => (
   <Provider store={store}>
     <Router history={history}>
-      <ParcelDetailForm agencyId={1} parcelDetail={null} secret="test" />
+      <ParcelDetailForm
+        agencyId={1}
+        clickLatLng={clickLatLng}
+        parcelDetail={null}
+        secret="test"
+        loadDraft={loadDraft}
+      />
     </Router>
   </Provider>
 );
@@ -97,7 +108,7 @@ describe('ParcelDetailForm', () => {
       agencyId: 1,
       address: {
         line1: 'addressval',
-        cityId: 1,
+        cityId: '1',
         provinceId: '2222',
         postal: 'V8X3L5',
       },
@@ -109,13 +120,13 @@ describe('ParcelDetailForm', () => {
       municipality: 'municipalityVal',
       landArea: 1234,
       statusId: 1,
-      classificationId: 1,
+      classificationId: '1',
       isSensitive: false,
       latitude: 0,
       longitude: 0,
       evaluations: [
         {
-          date: '2020-01-01T08:00:00.000Z',
+          date: '2020-01-01',
           fiscalYear: 2020,
           year: 2020,
           key: EvaluationKeys.Assessed,
@@ -143,35 +154,33 @@ describe('ParcelDetailForm', () => {
     };
 
     it('ParcelDetailForm renders correctly', () => {
-      const tree = renderer
-        .create(
-          <Provider store={store}>
-            <Router history={history}>
-              <ParcelDetailForm secret="test" agencyId={1} parcelDetail={mockDetails[0]} />
-            </Router>
-          </Provider>,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      act(() => {
+        const tree = renderer
+          .create(
+            <Provider store={store}>
+              <Router history={history}>
+                <ParcelDetailForm secret="test" agencyId={1} parcelDetail={mockDetails[0]} />
+              </Router>
+            </Provider>,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
     });
 
-    xit('validates all required fields correctly', async () => {
-      const form = render(parcelDetailForm());
-      const submit = form.getByText('Submit');
+    it('validates all required fields correctly', async () => {
+      const { getByText, getAllByText } = render(parcelDetailForm());
+      const submit = getByText('Submit');
       await wait(() => {
         fireEvent.click(submit!);
       });
-      const errors = form.getAllByText('Required');
-      const idErrors = form.getAllByText('pid or pin Required');
-      expect(errors).toHaveLength(10);
+      const errors = getAllByText('Required');
+      const idErrors = getAllByText('pid or pin Required');
+      expect(errors).toHaveLength(9);
       expect(idErrors).toHaveLength(2);
     });
 
-    xit('submits all basic fields correctly', async done => {
-      //TODO: remove this mocking when the below todo is resolved.
-      jest.unmock('formik');
-      const formik = require('formik');
-      formik.validateYupSchema = jest.fn(() => Promise.resolve());
+    it('submits all basic fields correctly', async done => {
       const form = render(parcelDetailForm());
       const container = form.container;
       await fillInput(container, 'pin', exampleData.pin);
@@ -197,23 +206,41 @@ describe('ParcelDetailForm', () => {
       // TODO: add a function capable of filling this type of field
       await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
       await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
-
       const mockAxios = new MockAdapter(axios);
       const submit = form.getByText('Submit');
-
       mockAxios.onPost().reply(config => {
         expect(JSON.parse(config.data)).toEqual(exampleData);
         done();
-        return [200, Promise.resolve()];
+        return [200, Promise.resolve(config.data)];
       });
 
       await wait(() => {
         fireEvent.click(submit!);
       });
     });
+    it('displays a top level error message if submit fails', async done => {
+      jest.unmock('formik');
+      const formik = require('formik');
+      formik.validateYupSchema = jest.fn(() => Promise.resolve({}));
+      const { getByText, findByText, container } = render(parcelDetailForm());
+      const mockAxios = new MockAdapter(axios);
+      const submit = getByText('Submit');
+      mockAxios.onPost().reply(() => {
+        throw Error('test message');
+      });
+
+      await fillInput(container, 'financials.0.value', exampleData.evaluations[0].value);
+      await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
+      await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
+      await wait(() => {
+        fireEvent.click(submit!);
+      });
+      await findByText('Error');
+      done();
+    });
   });
 
-  xit('ParcelDetailForm renders view-only correctly', () => {
+  it('ParcelDetailForm renders view-only correctly', () => {
     const history = createMemoryHistory();
     const tree = renderer
       .create(
@@ -232,16 +259,26 @@ describe('ParcelDetailForm', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  xit('loads appropriate cities/provinces in dropdown for address form', () => {
+  it('loads click lat lng', () => {
+    const { container } = render(parcelDetailForm(new LatLng(1, 2)));
+    const latitude = container.querySelector('input[name="latitude"]');
+    const longitude = container.querySelector('input[name="longitude"]');
+    expect(latitude).toHaveValue(1);
+    expect(longitude).toHaveValue(2);
+  });
+
+  it('loads appropriate cities/provinces in dropdown for address form', () => {
     const addrForm = mount(parcelDetailForm()).find(AddressForm);
     expect(addrForm.text()).toContain('test city');
     expect(addrForm.text()).toContain('test province');
   });
 
   // Currently leaves an ugly warning but passes test
-  xit('provides appropriate specifications to add a new building', () => {
+  it('provides appropriate specifications to add a new building', () => {
     const component = mount(parcelDetailForm());
-    const addBuilding = component.find('[className="addBuilding btn btn-primary"]');
+    const addBuilding = component
+      .find('[className="pagedBuildingButton page-link btn btn-link"]')
+      .first();
     act(() => {
       addBuilding.simulate('click');
     });
@@ -253,7 +290,7 @@ describe('ParcelDetailForm', () => {
     expect(buildingForm.text()).toContain('occupent type test');
   });
 
-  xit('pidpin form renders', () => {
+  it('pidpin form renders', () => {
     expect(mount(parcelDetailForm()).find(PidPinForm)).toHaveLength(1);
   });
 });
@@ -271,14 +308,25 @@ describe('autosave functionality', () => {
       });
     });
   };
-  xit('form details are autosaved', async () => {
+  it('form details are autosaved', async () => {
     await persistFormData();
     const { container: updatedContainer } = render(parcelDetailForm());
     const address = updatedContainer.querySelector('input[name="address.line1"]');
     expect(address).toHaveValue('mockaddress');
   });
 
-  xit('a mismatched encryption key causes no form details to load.', async () => {
+  it('autosaved form details generate a modal window', async () => {
+    await persistFormData();
+    const { getByText, container } = render(parcelDetailForm(undefined, false));
+    const draftButton = getByText('Resume Editing');
+    domAct(() => {
+      draftButton.click();
+    });
+    const address = container.querySelector('input[name="address.line1"]');
+    expect(address).toHaveValue('mockaddress');
+  });
+
+  it('a mismatched encryption key causes no form details to load.', async () => {
     await persistFormData();
     const differentKey = (
       <Provider store={store}>
@@ -293,7 +341,7 @@ describe('autosave functionality', () => {
     expect(address).not.toHaveValue('mockaddress');
   });
 
-  xit('no data is loaded if this is an update or view', async () => {
+  it('no data is loaded if this is an update or view', async () => {
     await persistFormData();
     const updateForm = (
       <Provider store={store}>

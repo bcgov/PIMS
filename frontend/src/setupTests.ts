@@ -8,11 +8,17 @@ var localStorageMock = (function() {
   var store: any = {};
 
   return {
+    getKeys: function() {
+      return store;
+    },
     getItem: function(key: string) {
       return store[key] || null;
     },
     setItem: function(key: string, value: any) {
       store[key] = value.toString();
+    },
+    removeItem: function(key: string) {
+      store[key] = undefined;
     },
     clear: function() {
       store = {};

@@ -1,5 +1,6 @@
 import { wait, fireEvent } from '@testing-library/react';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
+import { act } from 'react-test-renderer';
 
 export const fillInput = async (
   container: HTMLElement,
@@ -9,19 +10,21 @@ export const fillInput = async (
 ) => {
   const input = container.querySelector(`${type}[name="${name}"]`);
   await wait(() => {
-    if (type === 'input') {
-      fireEvent.change(input!, {
-        target: {
-          value: value,
-        },
-      });
-    } else {
-      fireEvent.change(input!, {
-        target: {
-          value: value,
-        },
-      });
-    }
+    act(() => {
+      if (type === 'input') {
+        fireEvent.change(input!, {
+          target: {
+            value: value,
+          },
+        });
+      } else {
+        fireEvent.change(input!, {
+          target: {
+            value: value,
+          },
+        });
+      }
+    });
   });
 };
 
