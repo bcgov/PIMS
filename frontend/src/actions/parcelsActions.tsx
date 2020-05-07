@@ -24,7 +24,7 @@ export interface IAddress {
   line1: string;
   line2?: string;
   city?: string;
-  cityId: number | any;
+  cityId: number | '';
   province?: string;
   provinceId: string;
   postal: string;
@@ -37,57 +37,58 @@ export interface IBuilding {
   projectNumber?: string;
   description: string;
   address: IAddress;
-  latitude: number | any;
-  longitude: number | any;
-  buildingFloorCount: number | any;
+  latitude: number | '';
+  longitude: number | '';
+  buildingFloorCount: number | '';
   buildingConstructionType?: string;
-  buildingConstructionTypeId: number | any;
+  buildingConstructionTypeId: number | '';
   buildingPredominateUse?: string;
-  buildingPredominateUseId: string | any;
+  buildingPredominateUseId: number | '';
   buildingOccupantType?: string;
-  buildingOccupantTypeId: number | any;
+  buildingOccupantTypeId: number | '';
+  classificationId: number | '';
   leaseExpiry?: string;
   occupantName: string;
   transferLeaseOnSale: boolean;
   buildingTenancy: string;
-  rentableArea: number | any;
-  agencyId: number | any;
+  rentableArea: number | '';
+  agencyId: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
 }
 
 export interface IFiscal {
-  fiscalYear?: number | any;
+  fiscalYear?: number | '';
   key: string;
-  value: number | any;
+  value: number | '';
 }
 
 export interface IEvaluation {
-  date?: Date | any;
+  date?: Date | string;
   key: string;
-  value: number | any;
+  value: number | '';
 }
 
 export interface IParcel {
-  id: number | any;
+  id?: number | '';
   pid?: string;
-  pin: number | any;
+  pin?: number | '';
   projectNumber?: string;
-  latitude: number | any;
-  longitude: number | any;
-  statusId: number | any;
+  latitude: number | '';
+  longitude: number | '';
+  statusId: number | '';
   propertyStatus?: string;
   classification?: string;
-  classificationId: number | any;
+  classificationId: number | '';
   description: string;
-  address: IAddress | any;
-  landArea: number | any;
+  address?: IAddress;
+  landArea: number | '';
   landLegalDescription: string;
   zoning: string;
   zoningPotential: string;
   municipality: string;
   agency?: string;
-  agencyId: number | any;
+  agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
   evaluations: IEvaluation[];
@@ -96,7 +97,7 @@ export interface IParcel {
 
 export interface IAddress {
   line1: string;
-  cityId: number | any;
+  cityId: number | '';
   provinceId: string;
   postal: string;
 }

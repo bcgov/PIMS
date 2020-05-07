@@ -108,7 +108,7 @@ describe('ParcelDetailForm', () => {
       agencyId: 1,
       address: {
         line1: 'addressval',
-        cityId: '1',
+        cityId: 1,
         provinceId: '2222',
         postal: 'V8X3L5',
       },
@@ -120,7 +120,7 @@ describe('ParcelDetailForm', () => {
       municipality: 'municipalityVal',
       landArea: 1234,
       statusId: 1,
-      classificationId: '1',
+      classificationId: 1,
       isSensitive: false,
       latitude: 0,
       longitude: 0,

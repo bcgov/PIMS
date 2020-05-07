@@ -39,6 +39,15 @@ interface ParcelPropertyProps {
   loadDraft?: boolean;
 }
 
+export const getInitialValues = (): any => {
+  return {
+    ...defaultLandValues,
+    ...defaultPidPinFormValues,
+    address: defaultAddressValues,
+    buildings: [],
+    financials: defaultFinancials,
+  };
+};
 export interface IFormParcel extends IParcel {
   financials: any;
   buildings: IFormBuilding[];
@@ -47,17 +56,8 @@ export interface IFormParcel extends IParcel {
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const getInitialValues = (): any => {
-    return {
-      ...defaultLandValues,
-      ...defaultPidPinFormValues,
-      agencyId: props.agencyId,
-      address: defaultAddressValues,
-      buildings: [],
-      financials: defaultFinancials,
-    };
-  };
   let initialValues = getInitialValues();
+  initialValues.agencyId = props.agencyId;
   //Load all data if we are updating a parcel.
 
   if (props?.parcelDetail?.id) {
@@ -92,7 +92,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   };
   //convert all form values to the format accepted by the API.
   const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
-    values.pin = values?.pin ? parseInt(values.pin) : undefined;
+    values.pin = values?.pin ? values.pin : undefined;
     values.pid = values?.pid ? values.pid : undefined;
     values.statusId = values.statusId ? 1 : 0;
     const allFinancials = filterEmptyFinancials(values.financials);
