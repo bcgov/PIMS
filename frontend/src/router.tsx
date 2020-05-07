@@ -14,6 +14,7 @@ import PublicLayout from 'layouts/PublicLayout';
 import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test';
 import { PropertyListView } from 'features/properties/list';
+import { NotFoundPage } from 'pages/404/NotFoundPage';
 
 const AppRouter: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const AppRouter: React.FC = () => {
       <Redirect exact from="/" to="/login" />
       <AppRoute path="/login" component={Login} layout={PublicLayout}></AppRoute>
       <AppRoute path="/forbidden" component={AccessDenied} layout={PublicLayout}></AppRoute>
+      <AppRoute path="/page-not-found" component={NotFoundPage} layout={PublicLayout}></AppRoute>
       <AppRoute path="/test" component={Test} layout={PublicLayout}></AppRoute>
       <AppRoute
         protected
@@ -70,6 +72,7 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
       />
+      <AppRoute path="*" component={() => <Redirect to="/page-not-found" />} />
     </Switch>
   );
 };
