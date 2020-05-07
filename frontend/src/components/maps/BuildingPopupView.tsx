@@ -62,7 +62,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
               )}
             </ListGroup>
             {!props?.disabled &&
-              (!keycloak.hasAgency(buildingDetail?.agencyId) ? (
+              (!keycloak.hasAgency(buildingDetail?.agencyId as number) ? (
                 <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
               ) : (
                 <Link to={`/submitProperty/${buildingDetail?.parcelId}`}>Update</Link>

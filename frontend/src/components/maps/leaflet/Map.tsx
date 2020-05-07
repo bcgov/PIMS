@@ -207,7 +207,7 @@ const Map: React.FC<MapProps> = ({
     }
     return (
       <Popup
-        position={[parcelDetail.latitude, parcelDetail.longitude]}
+        position={[parcelDetail.latitude as number, parcelDetail.longitude as number]}
         offset={[0, -25]}
         onClose={() => onMarkerPopupClose?.(item)}
         closeButton={interactive}

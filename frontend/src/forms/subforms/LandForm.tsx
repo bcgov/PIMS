@@ -25,7 +25,7 @@ export const defaultLandValues: IParcel = {
   projectNumber: '',
   agency: undefined,
   agencyId: '',
-  address: null,
+  address: undefined,
   description: '',
   landLegalDescription: '',
   pin: '',

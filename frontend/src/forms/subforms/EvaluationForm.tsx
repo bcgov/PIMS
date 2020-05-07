@@ -23,7 +23,7 @@ interface EvaluationProps {
 /**
  * Extend IEvaluation, add the year of the evaluation (regardless of whether the date is set.)
  */
-interface IFinancial extends IFiscal, IEvaluation {
+export interface IFinancial extends IFiscal, IEvaluation {
   /** the year placeholder of this evaluation */
   year?: number;
   rowVersion?: string;
@@ -81,9 +81,9 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
     const index = indexOfFinancial(
       placeholderFinancials,
       evaluation.key,
-      evaluation.fiscalYear ?? moment(evaluation.date).year(),
+      (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
     );
-    evaluation.year = evaluation.fiscalYear ?? moment(evaluation.date).year();
+    evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
     placeholderFinancials[index] = evaluation;
   });
   return placeholderFinancials;
