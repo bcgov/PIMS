@@ -9,14 +9,21 @@
   padding-bottom: 30px;
 }
 
-.isDisabled {
-  padding-bottom: 10px;
+.is-disabled {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  :first-child {
+    margin-right: 10px;
+    margin-bottom: 0px;
+  }
 }
 
 .cancelSave {
   padding-top: 15px;
   padding-bottom: 10px;
 }
+
 .navBar {
   font-weight: 700;
   text-align: left;
@@ -25,4 +32,8 @@
 .required {
   color: red;
   font-weight: 700;
+}
+
+.user-edit-form-container {
+  justify-content: center;
 }

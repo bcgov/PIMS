@@ -1,21 +1,12 @@
 import React, { useEffect } from 'react';
-import {
-  Navbar,
-  Container,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  ButtonToolbar,
-  Button,
-} from 'react-bootstrap';
+import { Navbar, Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
 import { Form, Input, Select, SelectOption } from '../components/common/form';
 import { fetchUserDetail, getUpdateUserAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IUserDetails } from 'interfaces';
 import _ from 'lodash';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { UserUpdateSchema } from 'utils/YupSchema';
 import { IUserDetailParams } from 'constants/API';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
@@ -23,6 +14,8 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as API from 'constants/API';
 import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
+import { useHistory } from 'react-router-dom';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -30,7 +23,7 @@ interface IEditUserPageProps extends IUserDetailParams {
 
 const EditUserPage = (props: IEditUserPageProps) => {
   const userId = props?.match?.params?.id || props.id;
-
+  const history = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserDetail({ id: userId }));
@@ -65,6 +58,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     <Select
       label="Agency"
       field="agency"
+      data-testid="agency"
       required={true}
       options={selectAgencies}
       placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
@@ -75,11 +69,16 @@ const EditUserPage = (props: IEditUserPageProps) => {
     <Select
       label="Role"
       field="role"
+      data-testid="role"
       required={true}
       options={selectRoles}
       placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
     />
   );
+
+  const goBack = () => {
+    history.goBack();
+  };
 
   const initialValues = {
     username: user.username,
@@ -104,7 +103,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
         <Navbar.Brand href="#">User Information</Navbar.Brand>
       </Navbar>
       <Container fluid={true}>
-        <Row className="justify-content-md-center">
+        <Row className="user-edit-form-container">
           <Formik
             enableReinitialize
             initialValues={initialValues}
@@ -137,6 +136,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
                     agencies: agenciesToUpdate,
                     roles: rolesToUpdate,
                     position: values.position,
+                    note: values.note,
                   },
                 ),
               );
@@ -146,21 +146,42 @@ const EditUserPage = (props: IEditUserPageProps) => {
             {props => (
               <Form className="userInfo">
                 <Label>IDIR/BCeID</Label>
-                <Input field="username" value={props.values.username} readOnly={true} type="text" />
+                <Input
+                  data-testid="username"
+                  field="username"
+                  value={props.values.username}
+                  readOnly={true}
+                  type="text"
+                />
 
                 <Row>
                   <Col>
                     <Label>First Name</Label>
-                    <Input field="firstName" placeholder={props.values.firstName} type="text" />
+                    <Input
+                      data-testid="firstName"
+                      field="firstName"
+                      placeholder={props.values.firstName}
+                      type="text"
+                    />
                   </Col>
                   <Col>
                     <Label>Last Name</Label>
-                    <Input field="lastName" placeholder={props.values.lastName} type="text" />
+                    <Input
+                      data-testid="lastName"
+                      field="lastName"
+                      placeholder={props.values.lastName}
+                      type="text"
+                    />
                   </Col>
                 </Row>
 
                 <Label>Email</Label>
-                <Input field="email" placeholder={props.values.email} type="email" />
+                <Input
+                  data-testid="email"
+                  field="email"
+                  placeholder={props.values.email}
+                  type="email"
+                />
 
                 {checkAgencies}
 
@@ -169,43 +190,34 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   field="position"
                   placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
                   type="text"
+                  data-testid="position"
                 />
 
                 {checkRoles}
 
-                <Label>Notes</Label>
-                <InputGroup className="notes">
-                  <FormControl
-                    as="textarea"
-                    placeholder="Please specify why you need access to this site."
-                  />
-                </InputGroup>
-
-                <InputGroup className="isDisabled">
-                  <InputGroup.Prepend>
-                    <InputGroup.Text>Would you like to disable this user?</InputGroup.Text>
-                  </InputGroup.Prepend>
-                  <InputGroup.Append>
-                    <InputGroup.Checkbox
-                      onClick={() => (props.values.isDisabled = true)}
-                      name="isDisabled"
-                    />
-                  </InputGroup.Append>
-                </InputGroup>
-
-                <Label>Status</Label>
-                <Select
-                  field="status"
-                  placeholder="Please Select"
-                  options={[
-                    { value: 0, label: 'Approved' },
-                    { value: 1, label: 'Denied' },
-                  ]}
+                <Label>Note</Label>
+                <Input
+                  as="textarea"
+                  field="note"
+                  placeholder="A note about this user"
+                  type="text"
+                  data-testid="note"
                 />
+
+                <Form.Group className={'is-disabled'}>
+                  <Form.Label>
+                    Is Disabled?{' '}
+                    <TooltipIcon
+                      toolTipId="is-disabled-tooltip"
+                      toolTip={'Toggle to change account status and click save.'}
+                    />{' '}
+                  </Form.Label>
+                  <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                </Form.Group>
 
                 <Row className="justify-content-md-center">
                   <ButtonToolbar className="cancelSave">
-                    <Button className="mr-5" variant="outline-dark" type="reset">
+                    <Button className="mr-5" variant="outline-dark" type="button" onClick={goBack}>
                       Cancel
                     </Button>
                     <Button className="mr-5" type="submit">
