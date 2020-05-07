@@ -74,13 +74,14 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
     return lookupCode.type === API.OCCUPANT_TYPE_CODE_SET_NAME;
   }).map(mapLookupCode);
   const withNameSpace: Function = (name?: string) => {
-    return [props.nameSpace, `${props.index}`, name].filter(x => x).join('.');
+    return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
   };
 
   //set the lat/lon of this building, but only if the building lat/lon hasn't been touched and has no value.
   if (
     !getIn(props.touched, withNameSpace('latitude')) &&
     !getIn(props.values, withNameSpace('latitude')) &&
+    props.values.latitude &&
     props.touched.latitude
   ) {
     props.setFieldValue(withNameSpace('latitude'), props.values.latitude);
@@ -88,6 +89,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   if (
     !getIn(props.touched, withNameSpace('longitude')) &&
     !getIn(props.values, withNameSpace('longitude')) &&
+    props.values.longitude &&
     props.touched.longitude
   ) {
     props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
