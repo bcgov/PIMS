@@ -63,6 +63,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                     className="pagedBuildingButton page-link"
                     variant="link"
                     disabled={props.disabled}
+                    title="Add Building"
                     onClick={() => arrayHelpers.push(defaultBuildingValues)}
                   >
                     <FaPlus size={14} />
@@ -71,6 +72,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                     className="pagedBuildingButton page-link"
                     disabled={!buildings.length}
                     variant="link"
+                    title="Remove Building"
                     onClick={() => {
                       if (currentPage === buildings.length - 1) {
                         setCurrentPage(currentPage - 1);

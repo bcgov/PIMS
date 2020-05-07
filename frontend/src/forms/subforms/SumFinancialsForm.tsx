@@ -6,18 +6,23 @@ import _ from 'lodash';
 import { Form, FastCurrencyInput } from 'components/common/form';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { EvaluationKeys } from 'constants/evaluationKeys';
+import { IFinancial } from './EvaluationForm';
 
 /**
  * Sum the list of passed financials.
  * create an object where all sums are keyed by evaluation/fiscal type.
  * @param financials an unordered list of financials to sum.
  */
-const sumFinancials = (financials: any[]) => {
+const sumFinancials = (financials: IFinancial[]) => {
   const summedFinancials: any = {};
   Object.keys({ ...EvaluationKeys, ...FiscalKeys }).forEach(type => {
     const typedFinancials = _.filter(financials, financial => financial.key === type);
     const recentFinancialsForType = getMostRecentFinancials(typedFinancials);
-    summedFinancials[type] = _.reduce(recentFinancialsForType, (sum, f) => sum + f.value, 0);
+    summedFinancials[type] = _.reduce(
+      recentFinancialsForType,
+      (sum, f) => sum + (f.value as number),
+      0,
+    );
   });
   return summedFinancials;
 };
@@ -26,11 +31,11 @@ const sumFinancials = (financials: any[]) => {
  * get all financial values of the most recent year with one or more values.
  * @param financials an unordered list of financial values
  */
-const getMostRecentFinancials = (financials: any[]) => {
+const getMostRecentFinancials = (financials: IFinancial[]) => {
   const orderedFinancials = _.orderBy(financials, 'year', 'desc');
   return _.reduce(
     orderedFinancials,
-    (valuedFinancials: any[], orderedFinancial): any[] => {
+    (valuedFinancials: IFinancial[], orderedFinancial): IFinancial[] => {
       if (
         orderedFinancial.value &&
         (!valuedFinancials.length || valuedFinancials[0].year === orderedFinancial.year)

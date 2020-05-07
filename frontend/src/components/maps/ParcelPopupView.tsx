@@ -67,7 +67,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
           {parcelDetail?.id && !props?.disabled && (
             <Col>
               <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
-              {keycloak.hasAgency(parcelDetail?.agencyId) && (
+              {keycloak.hasAgency(parcelDetail?.agencyId as number) && (
                 <Link style={{ paddingLeft: '5px' }} to={`/submitProperty/${parcelDetail?.id}`}>
                   Update
                 </Link>
