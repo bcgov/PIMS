@@ -1,7 +1,6 @@
 import EditUserPage from './EditUserPage';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import configureMockStore from 'redux-mock-store';
@@ -10,15 +9,19 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
+import { render } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockStore = configureMockStore([thunk]);
+const history = createMemoryHistory();
 
 const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'roleVal', id: '2', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
@@ -30,8 +33,9 @@ const selectedUser = {
   isDisabled: false,
   emailVerified: false,
   agencies: [],
-  roles: [],
+  roles: [{ id: '2' }],
   rowVersion: 'AAAAAAAAB9E=',
+  note: 'test note',
 };
 
 const store = mockStore({
@@ -39,17 +43,13 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-const component = mount(
-  <Provider store={store}>
-    <EditUserPage id="TEST-ID" />,
-  </Provider>,
-);
-
 it('EditUserPage renders', () => {
   const tree = renderer
     .create(
       <Provider store={store}>
-        <EditUserPage id="TEST-ID" />,
+        <Router history={history}>
+          <EditUserPage id="TEST-ID" />,
+        </Router>
       </Provider>,
     )
     .toJSON();
@@ -57,43 +57,32 @@ it('EditUserPage renders', () => {
 });
 
 it('contains role options from lookup code + please select disabled option', () => {
-  const roleSelect = component.find('[field="role"]');
-  expect(roleSelect.find('option')).toHaveLength(2);
-});
-
-it('contains agency options from lookup code + please select disabled option', () => {
-  const agencySelect = component.find('[field="agency"]');
-  expect(agencySelect.find('option')).toHaveLength(2);
-});
-
-it('shows idir as read only field and autofilled', () => {
-  const usernameField = component.find('[field="username"]').first();
-  expect(usernameField.props().readOnly).toEqual(true);
-  expect(usernameField.props().value).toEqual('test.user');
+  const { getAllByText, getByTestId } = render(
+    <Provider store={store}>
+      <Router history={history}>
+        <EditUserPage id="TEST-ID" />,
+      </Router>
+    </Provider>,
+  );
+  expect(getAllByText(/Role/i));
+  expect(getAllByText(/roleVal/i));
+  expect(getAllByText(/agencyVal/i));
+  expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
 });
 
 describe('appropriate fields are autofilled', () => {
-  it('autofills first and last name', () => {
-    expect(
-      component
-        .find('[field="firstName"]')
-        .first()
-        .props().placeholder,
-    ).toEqual('Test');
-    expect(
-      component
-        .find('[field="lastName"]')
-        .first()
-        .props().placeholder,
-    ).toEqual('User');
-  });
-
-  it('autofills email', () => {
-    expect(
-      component
-        .find('[field="email"]')
-        .first()
-        .props().placeholder,
-    ).toEqual('test@user.com');
+  it('autofills  email, username, first and last name', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <EditUserPage id="TEST-ID" />,
+        </Router>
+      </Provider>,
+    );
+    expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
+    expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
+    expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
+    expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+    expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
   });
 });

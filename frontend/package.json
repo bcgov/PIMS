@@ -93,6 +93,7 @@
     "start": "react-scripts start",
     "build": "cross-env CI=true react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom-fourteen --verbose --watchAll=false --runInBand",
+    "test:watch": "react-scripts test --env=jsdom-fourteen",
     "update-snapshots": "react-scripts test -- --updateSnapshot",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
