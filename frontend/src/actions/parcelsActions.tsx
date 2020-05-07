@@ -14,9 +14,19 @@ export interface IStoreParcelsAction {
   parcelList: IProperty[];
 }
 
+export interface IStoreParcelAction {
+  type: typeof ActionTypes.STORE_PARCEL_FROM_MAP_EVENT;
+  parcel: IProperty;
+}
+
 export const storeParcelsAction = (parcelList: IProperty[]): IStoreParcelsAction => ({
   type: ActionTypes.STORE_PARCEL_RESULTS,
   parcelList: parcelList,
+});
+
+export const storeParcelAction = (parcel: IProperty): IStoreParcelAction => ({
+  type: ActionTypes.STORE_PARCEL_FROM_MAP_EVENT,
+  parcel,
 });
 
 //Parcel Detail API action

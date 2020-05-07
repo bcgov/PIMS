@@ -102,8 +102,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       return () => {
         unregisterField(field);
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [field, registerField, unregisterField]);
     return (
       <Form.Group
         controlId={`input-${field}`}
