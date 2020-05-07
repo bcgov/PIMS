@@ -20,7 +20,7 @@ pipeline {
     DEBUG_OUTPUT = "false"
 
     // Wait timeout in minutes
-    WAIT_TIMEOUT = 10
+    WAIT_TIMEOUT = 15
 
     CI = "true"
     PATHFINDER_URL = "pathfinder.gov.bc.ca"
@@ -103,7 +103,7 @@ pipeline {
         }
       }
     }
-    stage("Build API") {
+    stage("Build API and run tests") {
       agent any
       environment {
         COMP_NAME = "api"
@@ -207,16 +207,43 @@ pipeline {
         }
       }
     }
-    stage("Run Tests") {
+    stage("Run App Tests") {
       agent any
+      environment {
+        COMP_NAME = "app"
+      }
       when {
         anyOf {
-          environment name: "API_BUILT", value: "true"
           environment name: "FRONTEND_BUILT", value: "true"
         }
       }
       steps {
-        echo "[ci/cd]  Tests should be run here"
+        echo "[ci/cd]  Unit-Tests"
+        // script {
+        //   dir('frontend') {
+        //     try {
+        //       timeout(10) {
+        //         echo 'Installing NPM Dependencies...'
+        //         sh 'npm ci'
+
+        //         echo "Testing ${APP_NAME}-${COMP_NAME}..."
+        //         sh 'npm run test'
+        //       }
+        //     } catch (e) {
+        //       echo "${APP_NAME}-${COMP_NAME} failed"
+        //       throw e
+        //     }
+        //   }
+        // }
+      }
+      post {
+        success {
+          // stash name: COVERAGE_STASH, includes: 'api/coverage/**'
+          echo 'All Tests passed'
+        }
+        failure {
+          echo 'Tests failed'
+        }
       }
     }
     stage("Deploy API to DEV") {
