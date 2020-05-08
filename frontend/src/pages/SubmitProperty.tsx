@@ -5,11 +5,10 @@ import { Row, Col, Spinner, Button } from 'react-bootstrap';
 import ParcelDetailForm from 'forms/ParcelDetailForm';
 import MapView from './MapView';
 import {
-  storeParcelsAction,
-  IProperty,
   storeParcelDetail,
   IPropertyDetail,
   IParcel,
+  storeParcelAction,
 } from 'actions/parcelsActions';
 import queryString from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,7 +51,6 @@ const SubmitProperty = (props: any) => {
   const [cachedParcelDetail, setCachedParcelDetail] = useState(
     activePropertyDetail?.propertyTypeId === 0 ? activePropertyDetail?.parcelDetail : null,
   );
-  const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
 
   if (
     cachedParcelDetail?.agencyId &&
@@ -87,28 +85,23 @@ const SubmitProperty = (props: any) => {
       }
       dispatch(clearClickLatLng());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePropertyDetail?.parcelDetail, showDeleteDialog]);
+  }, [dispatch, activePropertyDetail, parcelId, cachedParcelDetail, showDeleteDialog]);
   //Add a pin to the map where the user has clicked.
   React.useEffect(() => {
     //If we click on the map, create a new pin at the click location.
     if (leafletMouseEvent) {
       if (!parcelId) {
         dispatch(
-          storeParcelsAction([
-            ...properties.filter(parcel => parcel?.id),
-            {
-              id: 0,
-              latitude: leafletMouseEvent.latlng.lat,
-              longitude: leafletMouseEvent.latlng.lng,
-              propertyTypeId: 0,
-            },
-          ]),
+          storeParcelAction({
+            id: 0,
+            latitude: leafletMouseEvent.latlng.lat,
+            longitude: leafletMouseEvent.latlng.lng,
+            propertyTypeId: 0,
+          }),
         );
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leafletMouseEvent]);
+  }, [leafletMouseEvent, dispatch, parcelId]);
 
   return (
     <Row className="submitProperty" noGutters>

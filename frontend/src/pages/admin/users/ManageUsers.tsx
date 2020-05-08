@@ -34,8 +34,7 @@ const ManageUsers = () => {
   );
   useEffect(() => {
     dispatch(getUsersAction(toApiPaginateParams(0, MAX_USERS_PER_PAGE)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const tableChange: TableStateChangeFn = (type: string, state: MUIDataTableState) => {
     switch (type) {
