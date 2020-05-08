@@ -21,9 +21,34 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
         working-directory: ${{env.working-directory}}
+      - name: Install coverlet for code coverage
+        run: dotnet tool install -g coverlet.console
+        working-directory: ${{env.working-directory}}
       - name: Build
         run: dotnet build --configuration Release --no-restore
         working-directory: ${{env.working-directory}}
       - name: Test
         run: dotnet test --no-restore --verbosity normal
         working-directory: ${{env.working-directory}}
+      - name: Generate code coverage
+        run: coverlet ./tests/unit/api/bin/Release/netcoreapp3.1/Pims.Api.Test.dll --target "dotnet" --targetargs "test ./ --no-build" -o "./tests/TestResults/coverage.json" --exclude "[*.Test]*" --exclude "[*]*Model" --exclude-by-attribute "CompilerGenerated" -f json
+        working-directory: ${{env.working-directory}}
+      - name: Merge code coverage
+        run: coverlet ./tests/unit/dal/bin/Release/netcoreapp3.1/Pims.Dal.Test.dll --target "dotnet" --targetargs "test ./ --no-build" -o "./tests/TestResults/coverage.json" --exclude "[*.Test]*" --exclude "[*]*Model" --exclude-by-attribute "CompilerGenerated" --merge-with "./tests/TestResults/coverage.json" -f json
+        working-directory: ${{env.working-directory}}
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.7
+        with:
+          # User defined upload name. Visible in Codecov UI
+          name: PIMS
+          # Repository upload token - get it from codecov.io. Required only for private repositories
+          token: c02e6ccf-6e0f-47cd-842e-ab2f488933b8
+          # Path to coverage file to upload
+          file: ${{env.working-directory}}/tests/TestResults/coverage.json
+          # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
+          flags: unittests
+          # Environment variables to tag the upload with (e.g. PYTHON | OS,PYTHON)
+          env_vars: C#
+          # Specify whether or not CI build should fail if Codecov runs into an error during upload
+          fail_ci_if_error: true
