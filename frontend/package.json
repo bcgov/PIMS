@@ -108,7 +108,6 @@
       "plugin:prettier/recommended"
     ],
     "rules": {
-      "react-hooks/exhaustive-deps": "off"
     }
   },
   "husky": {

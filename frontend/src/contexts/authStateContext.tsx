@@ -23,8 +23,7 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
     };
 
     loadUserInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [keycloak.obj]);
 
   return (
     <AuthStateContext.Provider

@@ -43,8 +43,7 @@ const AccessRequestPage = () => {
 
   useEffect(() => {
     dispatch(getCurrentAccessRequestAction());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const data = useSelector<RootState, IAccessRequestState>(
     state => state.accessRequest as IAccessRequestState,

@@ -106,8 +106,7 @@ const Map: React.FC<MapProps> = ({
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoom;
   useEffect(() => {
     dispatch(resetMapViewZoom());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   if (!interactive) {
     const map = mapRef.current?.leafletElement;
@@ -131,7 +130,7 @@ const Map: React.FC<MapProps> = ({
     return mapRef.current?.leafletElement.getBounds();
   };
 
-  const handleViewportChange = () => {
+  const handleViewportChange = (filter: MapFilterChangeEvent) => {
     const bounds = getBounds();
     const {
       address,
@@ -141,7 +140,7 @@ const Map: React.FC<MapProps> = ({
       classificationId,
       minLotSize,
       maxLotSize,
-    } = mapFilter;
+    } = filter;
     const e: MapViewportChangeEvent = {
       bounds,
       filter: {
@@ -161,6 +160,7 @@ const Map: React.FC<MapProps> = ({
 
   const handleMapFilterChange = (e: MapFilterChangeEvent) => {
     setMapFilter(e);
+    handleViewportChange(e);
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
@@ -169,19 +169,12 @@ const Map: React.FC<MapProps> = ({
     setActiveBasemap(current);
   };
 
-  // --- Effects AKA network requests
-  useEffect(() => {
-    handleViewportChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapFilter]);
-
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
     axios.get('/basemaps.json').then(result => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // we need to namespace the keys as IDs are not enough here.
@@ -245,10 +238,10 @@ const Map: React.FC<MapProps> = ({
             center={[lat, lng]}
             zoom={lastZoom}
             whenReady={() => {
-              handleViewportChange();
+              handleViewportChange(mapFilter);
             }}
             onViewportChanged={() => {
-              handleViewportChange();
+              handleViewportChange(mapFilter);
             }}
             onpreclick={onMapClick}
             closePopupOnClick={interactive}
