@@ -73,8 +73,7 @@ const CurrencyInput = ({
     return () => {
       unregisterField(field);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [field, registerField, unregisterField]);
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
