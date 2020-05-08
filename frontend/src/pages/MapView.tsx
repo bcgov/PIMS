@@ -104,8 +104,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   useEffect(() => {
     dispatch(fetchParcels(parcelBounds));
     dispatch(getFetchLookupCodeAction());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, parcelBounds]);
+  }, [dispatch]);
 
   return (
     <Map

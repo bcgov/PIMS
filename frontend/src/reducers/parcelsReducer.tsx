@@ -4,6 +4,7 @@ import {
   IStoreParcelDetail,
   IPropertyDetail,
   IStoreBuildingDetail,
+  IStoreParcelAction,
 } from 'actions/parcelsActions';
 import { IProperty } from 'actions/parcelsActions';
 
@@ -21,13 +22,18 @@ const initialState: IParcelState = {
 
 const parcelsReducer = (
   state = initialState,
-  action: IStoreParcelsAction | IStoreParcelDetail | IStoreBuildingDetail,
+  action: IStoreParcelsAction | IStoreParcelDetail | IStoreBuildingDetail | IStoreParcelAction,
 ) => {
   switch (action.type) {
     case actionTypes.STORE_PARCEL_RESULTS:
       return {
         ...state,
         parcels: [...action.parcelList],
+      };
+    case actionTypes.STORE_PARCEL_FROM_MAP_EVENT:
+      return {
+        ...state,
+        parcels: [...state.parcels.filter(parcel => parcel.id !== action.parcel.id), action.parcel],
       };
     case actionTypes.STORE_PARCEL_DETAIL:
       return {
