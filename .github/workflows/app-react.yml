@@ -12,6 +12,7 @@ jobs:
     env:
       CI: true
       working-directory: ./frontend
+      codeCov-token: ${{ secrets.CodeCov }}
 
     strategy:
       matrix:
@@ -36,7 +37,7 @@ jobs:
           # User defined upload name. Visible in Codecov UI
           name: PIMS
           # Repository upload token - get it from codecov.io. Required only for private repositories
-          token: c02e6ccf-6e0f-47cd-842e-ab2f488933b8
+          token: ${{env.codeCov-token}}
           # Path to coverage file to upload
           file: ${{env.working-directory}}/coverage/coverage-final.json
           # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
