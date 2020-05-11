@@ -119,7 +119,8 @@
     "coverageReporters": [
       "text-summary",
       "text",
-      "json"
+      "json",
+      "lcov"
     ]
   },
   "eslintConfig": {
