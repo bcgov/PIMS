@@ -1,7 +1,6 @@
 .AutoCompleteText {
   width: 300px;
-  border-color: black;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .AutoCompleteText form.Control {
@@ -17,13 +16,16 @@
 
 .suggestionList {
   background-color: white;
-  border: black;
+  border-style: solid;
+  border-color: lightslategray;
+  border-width: thin;
   font-size: 14px;
   text-align: left;
+  max-height: 600px;
   margin: 0;
   padding: 0;
   position: absolute;
-  overflow: visible;
+  overflow-y: auto;
   z-index: 999;
 }
 

@@ -128,11 +128,10 @@ describe('sub-form BuildingForm functionality', () => {
   it('submits all required field values', async done => {
     const validateSubmit = (values: any) => {
       expect(values).toEqual(mockBuilding);
-      done();
     };
     const form = render(getBuildingForm(mockBuilding, validateSubmit));
     const container = form.container;
-    await fillInput(container, 'address.cityId', mockBuilding.address.cityId, 'select');
+    await fillInput(container, 'address.cityId', Number(mockBuilding.address.cityId));
     await fillInput(container, 'address.line1', mockBuilding.address.line1);
     await fillInput(container, 'address.provinceId', mockBuilding.address.provinceId, 'select');
 
@@ -166,5 +165,6 @@ describe('sub-form BuildingForm functionality', () => {
     await wait(() => {
       fireEvent.click(submit!);
     });
+    done();
   });
 });

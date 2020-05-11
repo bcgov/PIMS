@@ -7,7 +7,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastSelect, FastInput, Select } from 'components/common/form';
+import { Form, FastInput, Select, AutoCompleteText } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
@@ -40,6 +40,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
+
   return (
     <Fragment>
       <Col className="addressForm" md={6}>
@@ -58,14 +59,13 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           <Form.Label column md={2}>
             City
           </Form.Label>
-          <FastSelect
-            formikProps={props}
-            disabled={props.disabled}
-            outerClassName="col-md-10"
-            placeholder="Must Select One"
+          <AutoCompleteText
+            autoSetting="new-password"
+            textVal={props.values.address.city}
             field={withNameSpace('cityId')}
-            type="number"
             options={cities}
+            disabled={props.disabled}
+            required={true}
           />
         </Form.Row>
         <Form.Row>
@@ -88,7 +88,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             formikProps={props}
             disabled={props.disabled}
             outerClassName="col-md-10"
-            onBlurFormatter={(postal: string) => postal.replace(/ /g, '')}
+            onBlurFormatter={(postal: string) => postal.replace(/[\s-]+/, '')}
             field={withNameSpace('postal')}
           />
         </Form.Row>

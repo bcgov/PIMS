@@ -10,3 +10,4 @@ export * from './Select';
 export * from './FastSelect';
 export * from './TextArea';
 export * from './FastCurrencyInput';
+export * from './AutoCompleteText';
