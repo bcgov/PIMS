@@ -29,6 +29,7 @@ objects:
       annotations:
         description: Defines how to build the application
       labels:
+        name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         role: backend
@@ -62,7 +63,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${COMP_NAME}:latest
+          name: ${APP_NAME}-${COMP_NAME}:${OUTPUT_IMAGE_TAG}
       resources:
         limits:
           cpu: ${CPU_LIMIT}
@@ -78,6 +79,7 @@ parameters:
     description: The name of the application component (e.g ui, backend, database).
     required: true
     value: api
+
   - name: GIT_REPO_URL
     displayName: Git Repository URL
     description: The URL of the repository with your application source code.
@@ -93,6 +95,7 @@ parameters:
     displayName: Context Directory
     description: Set this to use a subdirectory of the source code repository
     value: backend
+
   - name: DOTNET_BUILDER_IMAGE
     displayName: .NET builder
     description: The s2i image which is used to build the code.
@@ -103,6 +106,7 @@ parameters:
     description: The s2i image tag which is used to build the code.
     required: true
     value: "3.1"
+
   - name: DOTNET_STARTUP_PROJECT
     displayName: Startup Project
     description:
@@ -121,6 +125,13 @@ parameters:
   - name: DOTNET_TEST_PROJECTS
     displayName: Test projects
     description: Set this to a space separated list of test projects to run before publishing.
+
+  - name: OUTPUT_IMAGE_TAG
+    displayName: Output Image Tag
+    description: The tag given to the built image.
+    required: true
+    value: latest
+
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
