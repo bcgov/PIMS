@@ -5,14 +5,12 @@
 // ------------------
 def cli
 def notify
-def BE_COV_STASH = 'backend-coverage'
-def FE_COV_STASH = 'frontend-coverage'
 
 // --------------------
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
   options {
     disableResume()
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
@@ -47,7 +45,6 @@ pipeline {
   }
   stages {
     stage("Initialize") {
-      agent any
       steps {
         script {
           // load supporting functions from external script files
@@ -88,7 +85,6 @@ pipeline {
       }
     }
     stage("Force API Build?") {
-      agent any
       when { environment name: "API_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -106,7 +102,6 @@ pipeline {
       }
     }
     stage("Build API and run tests") {
-      agent any
       environment {
         COMP_NAME = "api"
       }
@@ -118,10 +113,23 @@ pipeline {
       }
       steps {
         echo "[ci/cd]  Building API artifacts..."
+        // script {
+        //   openshift.withCluster() {
+        //     openshift.withProject() {
+        //       def apiSelector = openshift.selector("bc", [ app: APP_NAME, component: COMP_NAME ])
+        //       if (!apiSelector.exists()) {
+        //         throw new Exception("Could not find API build with labels: app='${APP_NAME}', component='${COMP_NAME}'")
+        //       } else {
+        //         timeout(WAIT_TIMEOUT) {
+        //           apiSelector.startBuild("-w")
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       }
       post {
         success {
-          // stash name: BE_COV_STASH, includes: 'backend/coverage/**'
           script {
             env.API_BUILT = "true"
           }
@@ -129,7 +137,6 @@ pipeline {
       }
     }
     stage("Force FRONTEND Build?") {
-      agent any
       when { environment name: "FRONTEND_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -147,7 +154,6 @@ pipeline {
       }
     }
     stage("Build FRONTEND") {
-      agent any
       environment {
         COMP_NAME = "app"
         WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
@@ -160,6 +166,33 @@ pipeline {
       }
       steps {
         echo "[ci/cd]  Building FRONTEND artifacts..."
+        // script {
+        //   openshift.withCluster() {
+        //     openshift.withProject() {
+        //       // Build the base image. This image leverages Node to create a production build of the React frontend.
+        //       def build_config = "${APP_NAME}-${COMP_NAME}-base-dev"
+        //       def feBase = openshift.selector("bc", build_config)
+        //       if (!feBase.exists()) {
+        //         throw new Exception("Could not find FRONTEND-base build with name: '${build_config}'")
+        //       } else {
+        //         timeout(WAIT_TIMEOUT) {
+        //           feBase.startBuild("-w")
+        //         }
+        //       }
+
+        //       // Build the runtime image. This image serves the compiled React artifacts via an NGINX web-server.
+        //       def runtime_build_config = "${APP_NAME}-${COMP_NAME}-dev"
+        //       def feRuntime = openshift.selector("bc", runtime_build_config)
+        //       if (!feRuntime.exists()) {
+        //         throw new Exception("Could not find FRONTEND-runtime build with name: '${runtime_build_config}'")
+        //       } else {
+        //         timeout(WAIT_TIMEOUT) {
+        //           feRuntime.startBuild("-w")
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       }
       post {
         success {
@@ -169,7 +202,7 @@ pipeline {
         }
       }
     }
-    stage("Run FRONTEND Tests") {
+    stage("FRONTEND Tests") {
       agent {
         label 'jenkins-slave-npm'
       }
@@ -192,12 +225,9 @@ pipeline {
               timeout(20) {
                 sh 'node --version'
                 sh 'npm --version'
-                sh 'oc whoami'
-
-                sh 'cat package.json'
 
                 echo 'Installing NPM Dependencies...'
-                sh 'npm ci --verbose'
+                sh 'npm ci'
 
                 echo 'Reporting Outdated and Vulnerable Dependencies...'
                 sh 'npm audit || true'
@@ -226,8 +256,15 @@ pipeline {
         }
       }
     }
-    stage("Deploy API to DEV") {
-      agent any
+    stage("Quality Gate") {
+      options {
+        timeout(time: 1, unit: "MINUTES")
+      }
+      steps {
+        echo 'TODO: SonarQube integration'
+      }
+    }
+    stage("Deploy API -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -236,8 +273,27 @@ pipeline {
       }
       when { environment name: "API_BUILT", value: "true" }
       steps {
-        //...pretend deploy
-        echo "[ci/cd]  Deployment done!"
+        // script {
+        //   openshift.withCluster() {
+        //     openshift.withProject() {
+        //       def image_name = "${APP_NAME}-${COMP_NAME}"
+        //       // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
+        //       // Tag the images for deployment based on the image's hash
+        //       def hash = cli.getImageTagHash("${image_name}")
+        //       echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
+        //       openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
+        //     }
+
+        //     openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
+        //         def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
+        //         echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
+        //         // Wait for the deployment to complete.
+        //         // This will wait until the desired replicas are all available
+        //         dc.rollout().status()
+        //     }
+        //   }
+        // }
+        echo "[ci/cd]  API deployment done..."
       }
       post {
         success {
@@ -247,8 +303,7 @@ pipeline {
         }
       }
     }
-    stage("Deploy FRONTEND to DEV") {
-      agent any
+    stage("Deploy frontend -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -257,8 +312,27 @@ pipeline {
       }
       when { environment name: "FRONTEND_BUILT", value: "true" }
       steps {
-        //...pretend deploy
-        echo "[ci/cd]  Deployment done!"
+        // script {
+        //   openshift.withCluster() {
+        //     openshift.withProject() {
+        //       def image_name = "${APP_NAME}-${COMP_NAME}"
+        //       // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
+        //       // Tag the images for deployment based on the image's hash
+        //       def hash = cli.getImageTagHash("${image_name}")
+        //       echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
+        //       openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
+        //     }
+
+        //     openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
+        //         def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
+        //         echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
+        //         // Wait for the deployment to complete.
+        //         // This will wait until the desired replicas are all available
+        //         dc.rollout().status()
+        //     }
+        //   }
+        // }
+        echo "[ci/cd]  Frontend deployment done..."
       }
       post {
         success {
@@ -268,8 +342,7 @@ pipeline {
         }
       }
     }
-    stage("Send Notifications") {
-      agent any
+    stage("Notify") {
       when {
         anyOf {
           environment name: "API_DEPLOYED", value: "true"
@@ -277,12 +350,18 @@ pipeline {
         }
       }
       steps {
-        //...
-        echo "[ci/cd]  All good!"
+        echo '[ci/cd]  Notifications sent ...'
+        // script {
+        //   if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
+        //     notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        //   }
+        //   if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
+        //     notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        //   }
+        // }
       }
     }
     stage("No Changes") {
-      agent any
       when {
         allOf {
           environment name: "API_DEPLOYED", value: "false"
@@ -293,16 +372,27 @@ pipeline {
         script {
           echo "[ci/cd]  No changes ..."
           currentBuild.result = 'ABORTED'
+          // notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
         }
       }
     }
   }
   post {
     aborted {
-      echo "[ci/cd]  Pipeline ABORTED"
+      node('master') {
+        echo "--> PIPELINE ABORTED"
+        // script {
+        //   notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        // }
+    }
     }
     failure {
-      echo "[ci/cd]  Pipeline ERROR"
+      node('master') {
+        echo "--> PIPELINE ERROR"
+        // script {
+        //   notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        // }
+      }
     }
   }
 }

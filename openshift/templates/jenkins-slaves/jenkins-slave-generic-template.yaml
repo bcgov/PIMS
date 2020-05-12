@@ -14,7 +14,6 @@ objects:
     metadata:
       labels:
         build: "${NAME}"
-        role: jenkins-slave
       name: "${NAME}"
   - apiVersion: v1
     kind: BuildConfig
@@ -49,6 +48,47 @@ objects:
       triggers:
         - type: ConfigChange
         - type: ImageChange
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: "${NAME}"
+      labels:
+        role: jenkins-slave
+    data:
+      node10: |-
+        <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <inheritFrom></inheritFrom>
+          <name>${NAME}</name>
+          <label>${NAME}</label>
+          <instanceCap>2</instanceCap>
+          <idleMinutes>5</idleMinutes>
+          <activeDeadlineSeconds>600</activeDeadlineSeconds>
+          <serviceAccount>jenkins</serviceAccount>
+          <nodeSelector></nodeSelector>
+          <volumes/>
+          <containers>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+              <name>jnlp</name>
+              <image>docker-registry.default.svc:5000/${NAMESPACE}/${NAME}</image>
+              <privileged>false</privileged>
+              <alwaysPullImage>false</alwaysPullImage>
+              <workingDir>/tmp</workingDir>
+              <command></command>
+              <args>${computer.jnlpmac} ${computer.name}</args>
+              <ttyEnabled>false</ttyEnabled>
+              <resourceRequestCpu>${CPU_REQUEST}</resourceRequestCpu>
+              <resourceRequestMemory>${MEMORY_REQUEST}</resourceRequestMemory>
+              <resourceLimitCpu>${CPU_LIMIT}</resourceLimitCpu>
+              <resourceLimitMemory>${MEMORY_LIMIT}</resourceLimitMemory>
+              <envVars/>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          </containers>
+          <envVars/>
+          <annotations/>
+          <imagePullSecrets/>
+          <nodeProperties/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+
 parameters:
   - name: NAME
     displayName: Name
@@ -84,5 +124,26 @@ parameters:
     displayName: Path to Dockerfile
     description: Path for alternate Dockerfile to use for build
     value: Dockerfile
+  - name: NAMESPACE
+    description: Target namespace reference (i.e. 'jcxjin-tools')
+    displayName: Namespace
+    required: true
+    value: jcxjin-tools
+  - name: CPU_REQUEST
+    description: Minimal CPU needed to run
+    displayName: CPU Request
+    value: 500m
+  - name: CPU_LIMIT
+    description: Maximum CPU allowed to use
+    displayName: CPU Limit
+    value: 4000m
+  - name: MEMORY_REQUEST
+    description: Minimal amount of memory needed to run
+    displayName: Memory Request
+    value: 512Mi
+  - name: MEMORY_LIMIT
+    description: Maximum amount of memory allowed to use
+    displayName: Memory Limit
+    value: 4Gi
 labels:
   template: build-pod-template

@@ -10,7 +10,7 @@ def notify
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
   options {
     disableResume()
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
@@ -47,7 +47,6 @@ pipeline {
   }
   stages {
     stage("Initialize") {
-      agent any
       steps {
         script {
           // load supporting functions from external script files
@@ -88,7 +87,6 @@ pipeline {
       }
     }
     stage("Force API Build?") {
-      agent any
       when { environment name: "API_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -106,7 +104,6 @@ pipeline {
       }
     }
     stage("Build API and run tests") {
-      agent any
       environment {
         COMP_NAME = "api"
       }
@@ -143,7 +140,6 @@ pipeline {
       }
     }
     stage("Force FRONTEND Build?") {
-      agent any
       when { environment name: "FRONTEND_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -161,7 +157,6 @@ pipeline {
       }
     }
     stage("Build FRONTEND") {
-      agent any
       environment {
         COMP_NAME = "app"
         WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
@@ -210,8 +205,10 @@ pipeline {
         }
       }
     }
-    stage("Run App Tests") {
-      agent any
+    stage("FRONTEND Tests") {
+      agent {
+        label 'jenkins-slave-npm'
+      }
       environment {
         COMP_NAME = "app"
       }
@@ -221,27 +218,40 @@ pipeline {
         }
       }
       steps {
-        echo "[ci/cd]  Unit-Tests"
-        // script {
-        //   dir('frontend') {
-        //     try {
-        //       timeout(10) {
-        //         echo 'Installing NPM Dependencies...'
-        //         sh 'npm ci'
+        echo "[ci/cd]  FRONTEND Unit-Tests"
+        script {
+          // pull code
+          checkout scm
 
-        //         echo "Testing ${APP_NAME}-${COMP_NAME}..."
-        //         sh 'npm run test'
-        //       }
-        //     } catch (e) {
-        //       echo "${APP_NAME}-${COMP_NAME} failed"
-        //       throw e
-        //     }
-        //   }
-        // }
+          dir(FRONTEND_CONTEXT_DIRECTORY) {
+            try {
+              timeout(20) {
+                sh 'node --version'
+                sh 'npm --version'
+
+                echo 'Installing NPM Dependencies...'
+                sh 'npm ci'
+
+                echo 'Reporting Outdated and Vulnerable Dependencies...'
+                sh 'npm audit || true'
+                sh 'npm outdated || true'
+
+                echo "Linting and Testing Frontend..."
+                sh 'npm run lint'
+                sh 'npm run test'
+
+                echo 'Frontend Lint Checks and Tests passed'
+              }
+            } catch (e) {
+              echo 'Lint Checks and Tests failed'
+              throw e
+            }
+          }
+        }
       }
       post {
         success {
-          // stash name: COVERAGE_STASH, includes: 'api/coverage/**'
+          // stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
           echo 'All Tests passed'
         }
         failure {
@@ -249,8 +259,15 @@ pipeline {
         }
       }
     }
-    stage("Deploy API to DEV") {
-      agent any
+    stage("Quality Gate") {
+      options {
+        timeout(time: 1, unit: "MINUTES")
+      }
+      steps {
+        echo 'TODO: SonarQube integration'
+      }
+    }
+    stage("Deploy API -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -279,7 +296,7 @@ pipeline {
             }
           }
         }
-        echo "[ci/cd]  Deployment done!"
+        echo "[ci/cd]  API deployment done..."
       }
       post {
         success {
@@ -289,8 +306,7 @@ pipeline {
         }
       }
     }
-    stage("Deploy FRONTEND to DEV") {
-      agent any
+    stage("Deploy frontend -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -319,7 +335,7 @@ pipeline {
             }
           }
         }
-        echo "[ci/cd]  Deployment done!"
+        echo "[ci/cd]  Frontend deployment done..."
       }
       post {
         success {
@@ -329,8 +345,7 @@ pipeline {
         }
       }
     }
-    stage("Send Notifications") {
-      agent any
+    stage("Notify") {
       when {
         anyOf {
           environment name: "API_DEPLOYED", value: "true"
@@ -349,7 +364,6 @@ pipeline {
       }
     }
     stage("No Changes") {
-      agent any
       when {
         allOf {
           environment name: "API_DEPLOYED", value: "false"
