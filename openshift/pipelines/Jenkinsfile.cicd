@@ -23,8 +23,6 @@ pipeline {
     WAIT_TIMEOUT = 15
 
     CI = "true"
-    PATHFINDER_URL = "pathfinder.gov.bc.ca"
-    VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
 
     // The name of your application
     APP_NAME = "pims"
@@ -36,12 +34,18 @@ pipeline {
     // The name of the project namespace(s).
     NAME_SPACE = "jcxjin"
 
-    // Deployment configurations used within this pipeline
-    DEV_ENV = "dev"
+    // This should be provided by the OpenShift Pipeline Env variables
+    // The tag used to identify the image.
+    // IMAGE_TAG = "dev"
 
+    // This should be provided by the OpenShift Pipeline Env variables
     // We are building, then promoting to DEV with this pipeline
     // (source) -> (build output) -> DEV
-    DESTINATION = "${DEV_ENV}"
+    // DESTINATION = "dev"
+
+    // This should be provided by the OpenShift Pipeline Env variables
+    // The URI to the application being deployed.
+    // VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
   }
   stages {
     stage("Initialize") {
@@ -119,9 +123,10 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              def apiSelector = openshift.selector("bc", [ app: APP_NAME, component: COMP_NAME ])
+              def build_config = "${APP_NAME}-${COMP_NAME}-${IMAGE_TAG}"
+              def apiSelector = openshift.selector("bc", build_config)
               if (!apiSelector.exists()) {
-                throw new Exception("Could not find API build with labels: app='${APP_NAME}', component='${COMP_NAME}'")
+                throw new Exception("Could not find API build with name: '${build_config}'")
               } else {
                 timeout(WAIT_TIMEOUT) {
                   apiSelector.startBuild("-w")
@@ -175,7 +180,7 @@ pipeline {
           openshift.withCluster() {
             openshift.withProject() {
               // Build the base image. This image leverages Node to create a production build of the React frontend.
-              def build_config = "${APP_NAME}-${COMP_NAME}-base-dev"
+              def build_config = "${APP_NAME}-${COMP_NAME}-base-${IMAGE_TAG}"
               def feBase = openshift.selector("bc", build_config)
               if (!feBase.exists()) {
                 throw new Exception("Could not find FRONTEND-base build with name: '${build_config}'")
@@ -186,7 +191,7 @@ pipeline {
               }
 
               // Build the runtime image. This image serves the compiled React artifacts via an NGINX web-server.
-              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-dev"
+              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-${IMAGE_TAG}"
               def feRuntime = openshift.selector("bc", runtime_build_config)
               if (!feRuntime.exists()) {
                 throw new Exception("Could not find FRONTEND-runtime build with name: '${runtime_build_config}'")

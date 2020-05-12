@@ -29,13 +29,9 @@ pipeline {
     // The name of the project namespace(s).
     NAME_SPACE = "jcxjin"
 
-    // Deployment configurations used within this pipeline
-    DEV_ENV = "dev"
-    TEST_ENV = "test"
-
     // We are promoting DEV -> TEST with this pipeline
-    SOURCE = "${DEV_ENV}"
-    DESTINATION = "${TEST_ENV}"
+    SOURCE = "dev"
+    DESTINATION = "test"
   }
   stages {
     stage("Initialize") {

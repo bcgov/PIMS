@@ -6,10 +6,27 @@ metadata:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
 objects:
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Keycloak SSO client secrets"
+      labels:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-secret
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    stringData:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes the database server
       labels:
@@ -24,13 +41,14 @@ objects:
           port: 1433
           targetPort: 1433
       selector:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
       type: ClusterIP
       sessionAffinity: None
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to deploy the database server
       labels:
@@ -47,19 +65,19 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
               name: ${SQL_SERVER_RUNTIME_IMAGE}
       replicas: 1
       selector:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
       template:
         metadata:
-          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
           labels:
-            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
             app: ${APP_NAME}
             component: ${COMP_NAME}
             env: ${ENV_NAME}
@@ -68,9 +86,9 @@ objects:
           volumes:
             - name: mssql-data
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-data
+                claimName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-data
           containers:
-            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
               image: ""
               ports:
                 - containerPort: 1433
@@ -81,7 +99,7 @@ objects:
                 - name: MSSQL_SA_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-secret
+                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-secret
                       key: MSSQL_SA_PASSWORD
               resources:
                 limits:
@@ -92,7 +110,8 @@ objects:
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-data
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-data
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         app: ${APP_NAME}
         component: ${COMP_NAME}
@@ -122,15 +141,26 @@ parameters:
     value: dev
   - name: PROJECT_NAMESPACE
     displayName: OpenShift Project Namespace
-    description:
-      The namespace of the OpenShift project containing the application.
+    description: The namespace of the OpenShift project containing the application.
     required: true
     value: jcxjin
+  - name: ID
+    displayName: Unique Identifier
+    description: A unique identifier to allow for multiple instances (i.e. "-01").
+    value: ""
+
   - name: SQL_SERVER_RUNTIME_IMAGE
     displayName: Microsoft SQL Server image
     description: The Microsoft SQL Server image tag.
     required: true
     value: mssql-rhel-server:2019-latest
+
+  - name: MSSQL_SA_PASSWORD
+    displayName: Microsoft SQL Server Password
+    description: Microsoft SQL Server sa password
+    from: '[\w]{5}_[\w]{15}!'
+    generate: expression
+
   - name: MEMORY_LIMIT
     displayName: Memory Limit
     description: Maximum amount of memory the container can use.

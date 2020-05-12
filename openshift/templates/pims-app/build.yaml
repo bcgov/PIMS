@@ -127,6 +127,7 @@ parameters:
     description: The name of the application component.
     required: true
     value: "app"
+
   - name: BUILDIMAGE_NAMESPACE
     displayName: Source Image Namespace
     description: The s2i image namespace which is used to build the code.
@@ -139,6 +140,7 @@ parameters:
     displayName: Source Image Tag
     description: The s2i image tag which is used to build the code.
     value: "1-30"
+
   - name: RUNTIMEIMAGE_NAMESPACE
     displayName: Source Image Namespace
     description: The s2i image namespace which is used to build the code.
@@ -151,6 +153,7 @@ parameters:
     displayName: Source Image Tag
     description: The s2i image tag which is used to build the code.
     value: "latest"
+
   - name: GIT_URL
     displayName: GIT Source Repo URL
     description: A GIT URL to your source code.
@@ -166,11 +169,13 @@ parameters:
     description: The source context directory.
     required: false
     value: frontend
+
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
     description: The tag given to the built image.
     required: true
     value: latest
+
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
