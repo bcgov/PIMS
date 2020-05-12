@@ -13,13 +13,13 @@ For local running and experimentation run `docker run -i -t jenkins-slave-npm /b
 ## Build in OpenShift
 
 ```bash
-oc process -f ../jenkins-slave-generic-template.yml \
+oc process -f ../jenkins-slave-generic-template.yaml \
     -p NAME=jenkins-slave-npm \
     -p SOURCE_CONTEXT_DIR=openshift/templates/jenkins-slaves/jenkins-slave-npm \
     | oc apply -f -
 ```
 
-For all params see the list in the `../jenkins-slave-generic-template.yml` or run `oc process --parameters -f ../jenkins-slave-generic-template.yml`.
+For all params see the list in the `../jenkins-slave-generic-template.yaml` or run `oc process --parameters -f ../jenkins-slave-generic-template.yaml`.
 
 ## Jenkins
 

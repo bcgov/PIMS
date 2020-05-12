@@ -6,7 +6,7 @@ LABEL \
     io.openshift.tags="openshift,jenkins,agent,nodejs"
 
 ARG NODE_VERSION=v10.20.1
-ARG SONAR_VERSION=3.3.0.1492
+ARG SONAR_VERSION=4.3.0.2102
 
 USER 0
 
