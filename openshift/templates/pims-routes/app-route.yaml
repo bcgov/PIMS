@@ -1,0 +1,71 @@
+# This is a deploy template that will setup and configure routes to run the full PIMS solution.
+# Components in template
+#   - Route 1: API
+#   - Route 2: API Swagger docs
+#   - Route 3: APP
+kind: Template
+apiVersion: v1
+metadata:
+  name: pims-app-route
+  annotations:
+    openshift.io/display-name: React Route Template
+    description: Deployment template for a React application route.
+    tags: pims-app,react,app
+objects:
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${Id}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${Id}-docs
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: frontend
+    spec:
+      host: ${APP_DOMAIN}
+      to:
+        kind: Service
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${Id}
+        weight: 100
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+parameters:
+  - name: APP_NAME
+    displayName: App Name
+    description: The name of the application (grouped).
+    required: true
+    value: pims
+  - name: COMP_NAME
+    displayName: Component Name
+    description: The name of the application component (e.g ui, backend, database).
+    required: true
+    value: app
+  - name: ENV_NAME
+    displayName: Environment name
+    description: The name for this environment [dev, test, prod]
+    required: true
+    value: dev
+  - name: ID
+    displayName: Unique Identifier
+    description: A unique identifier to allow for multiple instances (i.e. "-01").
+    value: ""
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the application.
+    required: true
+    value: jcxjin
+  - name: APP_DOMAIN
+    displayName: Application Hostname
+    description:
+      The exposed hostname that will route to the the .NET Core service, if left blank a
+      value will be defaulted.
+    value: pims-dev.pathfinder.gov.bc.ca
+  - name: APP_PORT
+    displayName: Application Container Port
+    description: The port used to communicate with the Pod
+    value: "8080"

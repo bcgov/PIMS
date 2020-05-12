@@ -1,11 +1,13 @@
 # This is a deploy template that will setup and configure
 # a Pod to run that hosts a .NET Core 3.1 web application.
 # Components in template
-#   - Route
+#   - Route 1
+#   - Route 2
+#   - Secret
+#   - ConfigMap 1
+#   - ConfigMap 2
 #   - Service
 #   - DeploymentConfig
-#   - ConfigMap
-#   - Secret
 kind: Template
 apiVersion: v1
 metadata:
@@ -18,30 +20,58 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
     spec:
-      host: ${APPLICATION_DOMAIN}
-      path: ${DOMAIN_PATH}
+      host: ${APP_DOMAIN}
+      path: ${API_PATH}
       to:
         kind: Service
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         weight: 100
       port:
         targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-docs
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-docs
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    spec:
+      host: ${APP_DOMAIN}
+      path: ${API_DOCS_PATH}
+      to:
+        kind: Service
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+        weight: 100
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes and load balances the application pods.
       labels:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
@@ -56,16 +86,69 @@ objects:
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
+
       type: ClusterIP
       sessionAffinity: None
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Keycloak SSO client secrets"
+      labels:
+        name: ${APP_NAME}-${ENV_NAME}${ID}-sso-secret
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    data:
+      KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
+      KEYCLOAK_SERVICE_ACCOUNT_SECRET: ${KEYCLOAK_SERVICE_ACCOUNT_SECRET}
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-db-client
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Database client configuration"
+      labels:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-db-client
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    data:
+      CONNECTION_STRINGS_PIMS: ${CONNECTION_STRINGS_PIMS}
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-client
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Keycloak SSO client configuration"
+      labels:
+        name: ${APP_NAME}-${ENV_NAME}${ID}-sso-client
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    data:
+      KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE}
+      KEYCLOAK_AUTHORITY: ${KEYCLOAK_AUTHORITY}
+      KEYCLOAK_ADMIN_AUTHORITY: ${KEYCLOAK_ADMIN_AUTHORITY}
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Defines how to deploy ${APP_NAME}-${COMP_NAME}"
       labels:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
@@ -79,28 +162,29 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
-              name: "${APP_NAME}-${COMP_NAME}:${ENV_NAME}"
+              name: "${APP_NAME}-${COMP_NAME}:${IMAGE_TAG}"
       replicas: 1
       selector:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
       template:
         metadata:
-          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
           labels:
-            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
             app: ${APP_NAME}
             component: ${COMP_NAME}
             env: ${ENV_NAME}
             role: backend
         spec:
           containers:
-            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
               image: ""
               ports:
                 - containerPort: ${{APP_PORT}}
@@ -108,31 +192,47 @@ objects:
               env:
                 - name: ASPNETCORE_ENVIRONMENT
                   value: ${ASPNETCORE_ENVIRONMENT}
+                - name: ASPNETCORE_URLS
+                  value: ${ASPNETCORE_URLS}
+                - name: HealthChecks__LivePath
+                  value: ${LIVENESS_PATH}
+                - name: HealthChecks__ReadyPath
+                  value: ${READINESS_PATH}
+                - name: ConnectionStrings__PIMS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-db-client
+                      key: CONNECTION_STRINGS_PIMS
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-db-${ENV_NAME}-secret
+                      name: ${APP_NAME}-db-${ENV_NAME}${ID}-secret
                       key: MSSQL_SA_PASSWORD
+                - name: Keycloak__Audience
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-client
+                      key: KEYCLOAK_AUDIENCE
+                - name: Keycloak__Authority
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-client
+                      key: KEYCLOAK_AUTHORITY
+                - name: Keycloak__Admin__Authority
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-client
+                      key: KEYCLOAK_ADMIN_AUTHORITY
                 - name: Keycloak__Secret
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-sso-secret
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-secret
                       key: KEYCLOAK_SECRET
-                - name: Keycloak__Authority
+                - name: Keycloak__ServiceAccount__Secret
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-sso-secret
-                      key: KEYCLOAK_AUTHORITY
-                - name: Keycloak__Audience
-                  valueFrom:
-                    secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-sso-secret
-                      key: KEYCLOAK_AUDIENCE
-                - name: HealthChecksUI__Webhooks__0__Uri
-                  valueFrom:
-                    secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}-health-secret
-                      key: HealthChecksUI__Webhooks__0__Uri
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-sso-secret
+                      key: KEYCLOAK_SERVICE_ACCOUNT_SECRET
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
@@ -176,33 +276,87 @@ parameters:
     description: The name for this environment [dev, test, prod]
     required: true
     value: dev
-  - name: APPLICATION_DOMAIN
+  - name: ID
+    displayName: Unique Identifier
+    description: A unique identifier to allow for multiple instances (i.e. "-01").
+    value: ""
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the application.
+    required: true
+    value: jcxjin
+  - name: IMAGE_TAG
+    displayName: Image Tag Name
+    description: The image tag that will be used for this deployment.
+      This provides a way to setup an environment for other branches.
+    value: dev
+
+  - name: APP_DOMAIN
     displayName: Application Hostname
     description:
       The exposed hostname that will route to the the .NET Core service, if left blank a
       value will be defaulted.
     value: pims-dev.pathfinder.gov.bc.ca
-  - name: DOMAIN_PATH
-    displayName: Application URL path
-    description: The URL path to the application
-    value: "/api"
   - name: APP_PORT
     displayName: Application Port
     description: The port used to communicate with the Pod
     value: "8080"
-  - name: PROJECT_NAMESPACE
-    displayName: OpenShift Project Namespace
-    description:
-      The namespace of the OpenShift project containing the application.
-    required: true
-    value: jcxjin
+  - name: API_PATH
+    displayName: API URL path
+    description: The URL path to the API
+    value: "/api"
+  - name: API_DOCS_PATH
+    displayName: API Swagger URL path
+    description: The URL path to the swagger documentation
+    value: "/api-docs"
+
   - name: ASPNETCORE_ENVIRONMENT
     displayName: AspNetCore Environment
-    description:
-      The ASP Net Core deployment environment setting, e.g., Development,
-      Staging, Production
+    description: The ASP Net Core deployment environment setting,
+      [Development, Staging, Production].
     required: true
     value: Production
+  - name: ASPNETCORE_URLS
+    displayName: AspNetCore URLs
+    description: The ASP Net Core URLs that the service will listen to (i.e. http://*:8080).
+    value: http://*:8080
+
+  - name: CONNECTION_STRINGS_PIMS
+    displayName: PIMS API Database Connection String
+    description: The PIMS API database connection string.
+    value: Server=pims-db-dev,1433;User ID=sa;Database=pims
+  - name: KEYCLOAK_AUDIENCE
+    displayName: Keycloak SSO audience
+    description: The name of the client (i.e. pims-api).
+    value: pims-api
+  - name: KEYCLOAK_AUTHORITY
+    displayName: Keycloak SSO Authority
+    description: The full URL to the SSO Keycloak Admin client
+      (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/realms/xz0xtue5)
+  - name: KEYCLOAK_ADMIN_AUTHORITY
+    displayName: Keycloak SSO Admin Authority
+    description: The full URL to the SSO Keycloak Admin client
+      (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/admin/realms/xz0xtue5)
+  - name: KEYCLOAK_SECRET
+    displayName: Keycloak client secret.
+    description: The Keycloak SSO client secret.
+  - name: KEYCLOAK_SERVICE_ACCOUNT_SECRET
+    displayName: Keycloak Service Account client secret.
+    description: The Keycloak SSO Service Account client secret.
+
+  - name: HEALTH_SCHEME
+    displayName: Health Scheme
+    description: Scheme used to connect to health check endpoints (HTTP or HTTPS).
+    value: HTTP
+  - name: LIVENESS_PATH
+    displayName: Liveness Path
+    description: Liveness health check api path.
+    value: /health/live
+  - name: READINESS_PATH
+    displayName: Readiness Path
+    description: Readiness health check api path.
+    value: /health/ready
+
   - name: CPU_LIMIT
     displayName: CPU Limit
     description: Maximum amount of CPU the container can use.
@@ -219,15 +373,3 @@ parameters:
     displayName: Memory Request
     description: Starting amount of memory the container can use.
     value: 2Gi
-  - name: LIVENESS_PATH
-    displayName: Liveness Path
-    description: Liveness health check api path.
-    value: /api/live
-  - name: READINESS_PATH
-    displayName: Readiness Path
-    description: Readiness health check api path.
-    value: /api/ready
-  - name: HEALTH_SCHEME
-    displayName: Health Scheme
-    description: Scheme used to connect to health check endpoints (HTTP or HTTPS).
-    value: HTTP
