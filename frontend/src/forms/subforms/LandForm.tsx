@@ -136,7 +136,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           <Form.Row>
             <Form.Label column md={2}>
               Active&nbsp;
-              <TooltipIcon toolTipId="land-status" toolTip="placeholder" />
+              <TooltipIcon
+                toolTipId="land-status"
+                toolTip="Check this box to set the land status to active."
+              />
             </Form.Label>
             <Check
               disabled={props.disabled}
