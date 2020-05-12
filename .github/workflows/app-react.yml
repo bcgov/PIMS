@@ -30,7 +30,6 @@ jobs:
         working-directory: ${{env.working-directory}}
       - run: npm run coverage
         working-directory: ${{env.working-directory}}
-
       - name: Codecov
         uses: codecov/codecov-action@v1.0.7
         with:
