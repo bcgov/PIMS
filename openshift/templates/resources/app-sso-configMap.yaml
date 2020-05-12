@@ -4,17 +4,16 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: keycloak-frontend-secrets${ID}
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-sso-client
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keycloak client JSON configuration
       labels:
-        name: keycloak-frontend-secrets${ID}
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-sso-client
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: frontend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     typw: Opaque
     data:
       keycloak.json: '{

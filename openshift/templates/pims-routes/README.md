@@ -1,14 +1,14 @@
 # OpenShift Routes
 
 Configuration of the PIMS solution can be done in one of two ways presently.
-The first is to create external routes that redirect requests to the appropraite services.
+The first is to create external routes that redirect requests to the appropriate services.
 The second is to create one route to the frontend application and allow it to redirect requests through Nginx to the appropriate services.
 
 Both ways are viable, but they both independently must be specifically configured.
 Both have pros and cons.
 Presently the configuration used is separate routes.
 
-> It should also be noted that both options can be configured to run in parrallel together if required.
+> It should also be noted that both options can be configured to run in parallel together if required.
 
 ## Separate Routes
 

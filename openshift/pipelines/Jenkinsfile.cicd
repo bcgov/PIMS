@@ -34,16 +34,14 @@ pipeline {
     // The name of the project namespace(s).
     NAME_SPACE = "jcxjin"
 
-    // This should be provided by the OpenShift Pipeline Env variables
+    // Environment Variables that should be set in OpenShift
+    // -----------------------------------------------------
     // The tag used to identify the image.
     // IMAGE_TAG = "dev"
 
-    // This should be provided by the OpenShift Pipeline Env variables
-    // We are building, then promoting to DEV with this pipeline
-    // (source) -> (build output) -> DEV
+    // Which environment to deploy to.
     // DESTINATION = "dev"
 
-    // This should be provided by the OpenShift Pipeline Env variables
     // The URI to the application being deployed.
     // VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
   }

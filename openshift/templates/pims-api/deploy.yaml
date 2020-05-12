@@ -28,7 +28,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     spec:
       host: ${APP_DOMAIN}
       path: ${API_PATH}
@@ -50,9 +49,8 @@ objects:
         name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-docs
         app: ${APP_NAME}
         component: ${COMP_NAME}
-        env: ${ENV_NAME}x
+        env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     spec:
       host: ${APP_DOMAIN}
       path: ${API_DOCS_PATH}
@@ -78,7 +76,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     spec:
       ports:
         - name: ${APP_PORT}-tcp
@@ -89,7 +86,7 @@ objects:
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+
       type: ClusterIP
       sessionAffinity: None
   - kind: Secret
@@ -105,7 +102,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     type: Opaque
     data:
       KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
@@ -123,7 +119,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     type: Opaque
     data:
       CONNECTION_STRINGS_PIMS: ${CONNECTION_STRINGS_PIMS}
@@ -140,7 +135,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     type: Opaque
     data:
       KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE}
@@ -159,7 +153,6 @@ objects:
         component: ${COMP_NAME}
         env: ${ENV_NAME}
         role: backend
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
     spec:
       strategy:
         type: Rolling
@@ -176,10 +169,10 @@ objects:
               name: "${APP_NAME}-${COMP_NAME}:${IMAGE_TAG}"
       replicas: 1
       selector:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         app: ${APP_NAME}
         component: ${COMP_NAME}
         env: ${ENV_NAME}
-        id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
       template:
         metadata:
           name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
@@ -189,7 +182,6 @@ objects:
             component: ${COMP_NAME}
             env: ${ENV_NAME}
             role: backend
-            id: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
         spec:
           containers:
             - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
