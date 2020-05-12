@@ -175,7 +175,7 @@ describe('ParcelDetailForm', () => {
         fireEvent.click(submit!);
       });
       const errors = getAllByText('Required');
-      const idErrors = getAllByText('pid or pin Required');
+      const idErrors = getAllByText('PID or PIN Required');
       expect(errors).toHaveLength(9);
       expect(idErrors).toHaveLength(2);
     });
@@ -187,7 +187,7 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'municipality', exampleData.municipality);
       await fillInput(container, 'zoning', exampleData.zoning);
       await fillInput(container, 'zoningPotential', exampleData.zoningPotential);
-      await fillInput(container, 'address.cityId', exampleData.address.cityId.toString(), 'select');
+      await fillInput(container, 'address.cityId', exampleData.address.cityId.toString());
       await fillInput(container, 'address.provinceId', exampleData.address.provinceId, 'select');
       await fillInput(container, 'address.postal', exampleData.address.postal);
       await fillInput(container, 'address.line1', exampleData.address.line1);
@@ -210,14 +210,14 @@ describe('ParcelDetailForm', () => {
       const submit = form.getByText('Submit');
       mockAxios.onPost().reply(config => {
         expect(JSON.parse(config.data)).toEqual(exampleData);
-        done();
         return [200, Promise.resolve(config.data)];
       });
-
       await wait(() => {
         fireEvent.click(submit!);
       });
+      done();
     });
+
     it('displays a top level error message if submit fails', async done => {
       jest.unmock('formik');
       const formik = require('formik');
@@ -267,9 +267,8 @@ describe('ParcelDetailForm', () => {
     expect(longitude).toHaveValue(2);
   });
 
-  it('loads appropriate cities/provinces in dropdown for address form', () => {
+  it('loads appropriate provinces in dropdown for address form', () => {
     const addrForm = mount(parcelDetailForm()).find(AddressForm);
-    expect(addrForm.text()).toContain('test city');
     expect(addrForm.text()).toContain('test province');
   });
 

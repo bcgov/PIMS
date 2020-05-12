@@ -21,6 +21,7 @@ import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
 import * as API from 'constants/API';
 import { IBuilding } from 'actions/parcelsActions';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 export interface IFormBuilding extends IBuilding {
   financials: any;
@@ -94,6 +95,16 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   ) {
     props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
   }
+
+  const keycloak = useKeycloakWrapper();
+
+  const disableProjectNumber = () => {
+    if (keycloak.hasClaim('property-admin')) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <Fragment>
@@ -189,7 +200,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               RAEG or SPP
             </Form.Label>
             <Input
-              disabled={true}
+              disabled={disableProjectNumber()}
               outerClassName="col-md-10"
               field={withNameSpace('projectNumber')}
             />

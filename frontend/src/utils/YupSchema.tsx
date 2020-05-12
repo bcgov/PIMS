@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import moment from 'moment';
+
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
     .min(1, 'Invalid Agency')
@@ -49,7 +50,7 @@ export const Address = Yup.object().shape({
     .nullable(),
   provinceId: Yup.string().required('Required'),
   postal: Yup.string().matches(
-    /[a-zA-z][0-9][a-zA-z]\s*?[0-9][a-zA-z][0-9]/,
+    /^[a-zA-z][0-9][a-zA-z]\s*?[0-9][a-zA-z][0-9]$/,
     'Invalid Postal Code',
   ),
 });
@@ -59,7 +60,9 @@ export const Financial = Yup.object().shape({
   year: Yup.number(),
   date: Yup.string().nullable(),
   key: Yup.string().nullable(),
-  value: Yup.number().nullable(),
+  value: Yup.string()
+    .nullable()
+    .matches(/\d+(\.\d{1,2})?/, 'Only two decimal places are allowed'),
 });
 
 export const Building = Yup.object().shape({
@@ -141,7 +144,8 @@ export const LandSchema = Yup.object().shape({
     .required('Required'),
   landArea: Yup.number()
     .min(1, 'Land Area must be a positive number')
-    .required('Required'),
+    .required('Required')
+    .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
 });
 export const ParcelSchema = Yup.object()
   .shape(
@@ -151,14 +155,15 @@ export const ParcelSchema = Yup.object()
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
-          .required('pid or pin Required'),
+          .required('PID or PIN Required'),
       }),
       pin: Yup.string().when('pid', {
         is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .min(1)
-          .required('pid or pin Required'),
+          .required('PID or PIN Required')
+          .max(15, 'Please enter a valid PIN'),
       }),
       buildings: Yup.array().of(Building),
       financials: Yup.array()
