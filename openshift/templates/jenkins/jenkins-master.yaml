@@ -7,14 +7,14 @@ metadata:
       {"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","metadata":{"annotations":{"description":"Defines
       how to deploy
       jenkins"},"labels":{"app":"jenkins","name":"jenkins"},"name":"jenkins","namespace":"jcxjin-tools"},"spec":{"replicas":1,"selector":{"app":"jenkins"},"strategy":{"type":"Rolling"},"template":{"metadata":{"labels":{"app":"jenkins","name":"jenkins"},"name":"jenkins"},"spec":{"containers":[{"env":[{"name":"OPENSHIFT_ENABLE_OAUTH","value":"true"},{"name":"OPENSHIFT_JENKINS_JVM_ARCH","value":"x86_64"}],"image":"","name":"jenkins","ports":[{"containerPort":8080,"protocol":"TCP"}]}]}},"triggers":[{"type":"ConfigChange"},{"imageChangeParams":{"automatic":true,"containerNames":["jenkins"],"from":{"kind":"ImageStreamTag","name":"jenkins-2-rhel7:latest","namespace":"jcxjin-tools"}},"type":"ImageChange"}]}}
-  creationTimestamp: '2020-05-07T20:46:21Z'
+  creationTimestamp: "2020-05-07T20:46:21Z"
   generation: 19
   labels:
     app: jenkins
     name: jenkins
   name: jenkins
   namespace: jcxjin-tools
-  resourceVersion: '1772725797'
+  resourceVersion: "1772725797"
   selfLink: /apis/apps.openshift.io/v1/namespaces/jcxjin-tools/deploymentconfigs/jenkins
   uid: ceb58910-90a3-11ea-9ccd-0050568348cc
 spec:
@@ -38,15 +38,15 @@ spec:
       containers:
         - env:
             - name: OPENSHIFT_ENABLE_OAUTH
-              value: 'true'
+              value: "true"
             - name: OPENSHIFT_JENKINS_JVM_ARCH
               value: x86_64
             - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
-              value: 'true'
+              value: "true"
             - name: KUBERNETES_MASTER
-              value: 'https://kubernetes.default:443'
+              value: "https://kubernetes.default:443"
             - name: KUBERNETES_TRUST_CERTIFICATES
-              value: 'true'
+              value: "true"
             - name: JNLP_SERVICE_NAME
               value: jenkins-jnlp
             - name: JAVA_OPTS
@@ -85,7 +85,7 @@ spec:
           - jenkins
         from:
           kind: ImageStreamTag
-          name: 'jenkins:2'
+          name: "jenkins:2"
           namespace: openshift
         lastTriggeredImage: >-
           docker-registry.default.svc:5000/openshift/jenkins@sha256:36f8501570cd2846cc93f34a53010f3971803876bf11362399267fcd0368feb2
@@ -94,16 +94,16 @@ spec:
 status:
   availableReplicas: 1
   conditions:
-    - lastTransitionTime: '2020-05-07T21:48:07Z'
-      lastUpdateTime: '2020-05-07T21:48:07Z'
+    - lastTransitionTime: "2020-05-07T21:48:07Z"
+      lastUpdateTime: "2020-05-07T21:48:07Z"
       message: replication controller "jenkins-8" successfully rolled out
       reason: NewReplicationControllerAvailable
-      status: 'True'
+      status: "True"
       type: Progressing
-    - lastTransitionTime: '2020-05-07T21:48:24Z'
-      lastUpdateTime: '2020-05-07T21:48:24Z'
+    - lastTransitionTime: "2020-05-07T21:48:24Z"
+      lastUpdateTime: "2020-05-07T21:48:24Z"
       message: Deployment config has minimum availability.
-      status: 'True'
+      status: "True"
       type: Available
   details:
     causes:

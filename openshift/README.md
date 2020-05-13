@@ -34,11 +34,12 @@ Files in this folder are named with the following convention in mind:
 Follow the instructions below to setup all the components required to run PIMS in Openshift.
 
 1. [Base Images](./BASE_IMAGES.md)
-2. [Secrets](./OBJECTS.md) - _optional_
-3. [Objects](./OBJECTS.md)
-4. [Pipelines](./PIPELINES.md)
-5. [SonarQube](./SONARQUBE.md)
-6. [ZAP](./ZAP.md)
+1. [Secrets](./SECRETS.md) - _optional_
+1. [Objects](./OBJECTS.md)
+1. [Jenkins Slaves](./JENKINS_SLAVES.md) - _optional, unless running unit tests in the CI/CD pipeline_
+1. [Pipelines](./PIPELINES.md)
+1. [SonarQube](./SONARQUBE.md)
+1. [ZAP](./ZAP.md)
 
 ### Multiple Instances
 
@@ -53,7 +54,7 @@ To do this all you need to do is provide the `ID` parameter in the _deployments_
 
 ### More Information Available At
 
-[Link to OpenShift Documentation](https://docs.openshift.com/container-platform/3.10/using_images/other_images/jenkins.html)
+[Link to OpenShift Documentation](https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html)
 
 [Link to the Jenkins s2i image](https://github.com/BCDevOps/openshift-components/tree/master/cicd/jenkins)
 
@@ -65,21 +66,28 @@ To make a remote connection to a container in OpenShift you will need to open a 
 2. Paste the login command into bash and hit enter to log in.
 3. Switch your openshift environment in bash to the one you intend to modify using the command
 
-   > oc project jhnamn-foo.
+   ```bash
+   oc project <your-tools-project>
+   ```
 
 4. Get pod ids. Find the pod name that hosts your database and you want to remote into and save it for the next step (i.e. \$PODNAME=_mssql-00-foo_).
 
-   > oc get pods
+   ```bash
+   oc get pods
+   ```
 
 5. Create a local port to connect your client to using the command:
 
-   > oc port-forward $PODNAME $LOCALPORT:\$CONTAINERPORT
+   ```bash
+   oc port-forward $PODNAME $LOCALPORT:$CONTAINERPORT
+   ```
 
    \$LOCALPORT = The port you want to forward to locally.
 
    \$CONTAINERPORT = The port open on the container that communicates with the database.
 
-6. Configure your client to connect to the \$LOCALPORT you have selected with the host name/ip of `127.0.0.1` (please note that _localhost_ will not work).
+6. Configure your client to connect to the \$LOCALPORT you have selected with the host name/ip of `127.0.0.1`
+   - Please note that _localhost_ will not work, you have to use `127.0.0.1`.
 7. Cancel the command to close the connection.
 
 ### Troubleshooting template files
@@ -87,8 +95,9 @@ To make a remote connection to a container in OpenShift you will need to open a 
 To review the output from the pipeline template file before pushing changes to OpenShift:
 
 ```bash
-# "-o <format>" will set the output format. Valid values are "yaml" and "json"
-oc process -f openshift/templates/tools/pipeline.yaml --param-file=[.env] -o yaml
+# "-o <format>" will set the output format.
+# valid values: "yaml" | "json"
+oc process -f openshift/templates/jenkins/generic-pipeline.yaml --param-file=[.env] -o yaml
 ```
 
 Should output something like:

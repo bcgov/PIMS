@@ -6,11 +6,14 @@
 def cli
 def notify
 
+def FE_COV_STASH = 'fe-test-coverage'
+def API_COV_STASH = 'api-test-coverage'
+
 // --------------------
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
   options {
     disableResume()
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
@@ -47,7 +50,6 @@ pipeline {
   }
   stages {
     stage("Initialize") {
-      agent any
       steps {
         script {
           // load supporting functions from external script files
@@ -88,7 +90,6 @@ pipeline {
       }
     }
     stage("Force API Build?") {
-      agent any
       when { environment name: "API_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -106,7 +107,6 @@ pipeline {
       }
     }
     stage("Build API and run tests") {
-      agent any
       environment {
         COMP_NAME = "api"
       }
@@ -143,7 +143,6 @@ pipeline {
       }
     }
     stage("Force FRONTEND Build?") {
-      agent any
       when { environment name: "FRONTEND_HAS_CHANGES", value: "false" }
       steps {
         script {
@@ -161,7 +160,6 @@ pipeline {
       }
     }
     stage("Build FRONTEND") {
-      agent any
       environment {
         COMP_NAME = "app"
         WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
@@ -210,10 +208,13 @@ pipeline {
         }
       }
     }
-    stage("Run App Tests") {
-      agent any
+    stage("FRONTEND Tests") {
+      agent {
+        label 'jenkins-slave-npm'
+      }
       environment {
         COMP_NAME = "app"
+        CI = "true"
       }
       when {
         anyOf {
@@ -221,27 +222,40 @@ pipeline {
         }
       }
       steps {
-        echo "[ci/cd]  Unit-Tests"
-        // script {
-        //   dir('frontend') {
-        //     try {
-        //       timeout(10) {
-        //         echo 'Installing NPM Dependencies...'
-        //         sh 'npm ci'
+        echo "[ci/cd]  Run FRONTEND Test Cases"
+        script {
+          // pull code
+          checkout scm
 
-        //         echo "Testing ${APP_NAME}-${COMP_NAME}..."
-        //         sh 'npm run test'
-        //       }
-        //     } catch (e) {
-        //       echo "${APP_NAME}-${COMP_NAME} failed"
-        //       throw e
-        //     }
-        //   }
-        // }
+          dir(FRONTEND_CONTEXT_DIRECTORY) {
+            try {
+              timeout(20) {
+                sh 'node --version'
+                sh 'npm --version'
+
+                echo 'Installing NPM Dependencies...'
+                sh 'npm ci'
+
+                echo 'Reporting Outdated and Vulnerable Dependencies...'
+                sh 'npm audit || true'
+                sh 'npm outdated || true'
+
+                echo "Linting and Testing Frontend..."
+                sh 'npm run lint'
+                sh 'npm run coverage'
+
+                echo 'Frontend Lint Checks and Tests passed'
+              }
+            } catch (e) {
+              echo 'Lint Checks and Tests failed'
+              throw e
+            }
+          }
+        }
       }
       post {
         success {
-          // stash name: COVERAGE_STASH, includes: 'api/coverage/**'
+          stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
           echo 'All Tests passed'
         }
         failure {
@@ -249,8 +263,102 @@ pipeline {
         }
       }
     }
-    stage("Deploy API to DEV") {
-      agent any
+    stage("API Tests") {
+      agent {
+        label 'jenkins-slave-dotnet'
+      }
+      environment {
+        COMP_NAME = "api"
+        CI = "true"
+      }
+      when {
+        anyOf {
+          environment name: "API_BUILT", value: "true"
+        }
+      }
+      steps {
+        echo "[ci/cd]  Run API Test Cases"
+        script {
+          // pull code
+          checkout scm
+
+          dir(API_CONTEXT_DIRECTORY) {
+            try {
+              timeout(20) {
+                sh 'dotnet --version'
+                sh 'node --version'
+
+                echo 'Install dependencies...'
+                sh 'dotnet restore'
+
+                echo 'Build'
+                sh 'dotnet build --configuration Release --no-restore'
+
+                echo 'Testing the API...'
+                sh 'dotnet test --no-restore'
+
+                echo 'Generate code coverage'
+                sh '''
+                coverlet ./tests/unit/api/bin/Release/netcoreapp3.1/Pims.Api.Test.dll \
+                  --target "dotnet" \
+                  --targetargs "test ./ --no-build" \
+                  -o "./tests/TestResults/api-coverage.json" \
+                  --exclude "[*.Test]*" \
+                  --exclude "[*]*Model" \
+                  --exclude-by-attribute "CompilerGenerated" \
+                  -f json
+                '''
+                sh '''
+                coverlet ./tests/unit/dal/bin/Release/netcoreapp3.1/Pims.Dal.Test.dll \
+                  --target "dotnet" \
+                  --targetargs "test ./ --no-build" \
+                  -o "./tests/TestResults/coverage.xml" \
+                  --exclude "[*.Test]*" \
+                  --exclude "[*]*Model" \
+                  --exclude-by-attribute "CompilerGenerated" \
+                  --merge-with "./tests/TestResults/api-coverage.json" \
+                  -f opencover
+                '''
+
+                echo 'API Tests passed'
+              }
+            } catch (e) {
+              echo 'Lint Checks and Tests failed'
+              throw e
+            }
+          }
+        }
+      }
+      post {
+        success {
+          stash name: API_COV_STASH, includes: 'backend/tests/TestResults/**'
+          echo 'All Tests passed'
+        }
+        failure {
+          echo 'Tests failed'
+        }
+      }
+    }
+    stage("Quality Gate") {
+      options {
+        timeout(time: 1, unit: "MINUTES")
+      }
+      steps {
+        echo 'TODO: SonarQube integration'
+
+        // unstash API_COV_STASH
+        // unstash FE_COV_STASH
+
+        // echo 'Performing SonarQube static code analysis...'
+        // sh """
+        // sonar-scanner \
+        //   -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+        //   -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
+        //   -Dsonar.projectName='NRPTI (${JOB_NAME.toUpperCase()})'
+        // """
+      }
+    }
+    stage("Deploy API -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -279,7 +387,7 @@ pipeline {
             }
           }
         }
-        echo "[ci/cd]  Deployment done!"
+        echo "[ci/cd]  API deployment done..."
       }
       post {
         success {
@@ -289,8 +397,7 @@ pipeline {
         }
       }
     }
-    stage("Deploy FRONTEND to DEV") {
-      agent any
+    stage("Deploy frontend -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -319,7 +426,7 @@ pipeline {
             }
           }
         }
-        echo "[ci/cd]  Deployment done!"
+        echo "[ci/cd]  Frontend deployment done..."
       }
       post {
         success {
@@ -329,8 +436,7 @@ pipeline {
         }
       }
     }
-    stage("Send Notifications") {
-      agent any
+    stage("Notify") {
       when {
         anyOf {
           environment name: "API_DEPLOYED", value: "true"
@@ -349,7 +455,6 @@ pipeline {
       }
     }
     stage("No Changes") {
-      agent any
       when {
         allOf {
           environment name: "API_DEPLOYED", value: "false"
@@ -364,7 +469,7 @@ pipeline {
         }
       }
     }
-  }
+  } // stages
   post {
     aborted {
       node('master') {
@@ -380,5 +485,5 @@ pipeline {
         }
       }
     }
-  }
-}
+  } // post
+} // pipeline
