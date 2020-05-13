@@ -2,6 +2,7 @@ using Mapster;
 using System;
 using Model = Pims.Api.Areas.Admin.Models.Parcel;
 using Entity = Pims.Dal.Entities;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Areas.Admin.Mapping.Parcel
 {
@@ -18,7 +19,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.City, src => src.City == null ? null : src.City.Name)
                 .Map(dest => dest.ProvinceId, src => src.ProvinceId)
                 .Map(dest => dest.Province, src => src.Province == null ? null : src.Province.Name)
-                .Map(dest => dest.Postal, src => src.Postal)
+                .Map(dest => dest.Postal, src => src.Postal.FormatAsPostal())
                 .Inherits<Entity.BaseEntity, Pims.Api.Models.BaseModel>();
 
 
@@ -31,7 +32,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.City, src => String.IsNullOrWhiteSpace(src.City) ? null : new Entity.City() { Id = src.CityId, Name = src.City })
                 .Map(dest => dest.ProvinceId, src => src.ProvinceId)
                 .Map(dest => dest.Province, src => String.IsNullOrWhiteSpace(src.Province) ? null : new Entity.Province(src.ProvinceId, src.Province))
-                .Map(dest => dest.Postal, src => src.Postal)
+                .Map(dest => dest.Postal, src => src.Postal.Replace(" ", ""))
                 .Inherits<Pims.Api.Models.BaseModel, Entity.BaseEntity>();
         }
     }

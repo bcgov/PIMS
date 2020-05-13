@@ -41,6 +41,15 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
 
+  const postalCodeFormatter = (postal: string) => {
+    const regex = /[a-zA-z][0-9][a-zA-z][\s-]?[0-9][a-zA-z][0-9]/;
+    const format = postal.match(regex);
+    if (format !== null) {
+      postal = (format[0].substring(0, 3) + ' ' + format[0].slice(-3)).toUpperCase();
+    }
+    return postal;
+  };
+
   return (
     <Fragment>
       <Col className="addressForm" md={6}>
@@ -88,7 +97,9 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             formikProps={props}
             disabled={props.disabled}
             outerClassName="col-md-10"
-            onBlurFormatter={(postal: string) => postal.replace(/[\s-]+/, '')}
+            onBlurFormatter={(postal: string) =>
+              postal.replace(postal, postalCodeFormatter(postal))
+            }
             field={withNameSpace('postal')}
           />
         </Form.Row>
