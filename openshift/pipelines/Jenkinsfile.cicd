@@ -6,6 +6,9 @@
 def cli
 def notify
 
+def FE_COV_STASH = 'fe-test-coverage'
+def API_COV_STASH = 'api-test-coverage'
+
 // --------------------
 // Declarative Pipeline
 // --------------------
@@ -218,7 +221,7 @@ pipeline {
         }
       }
       steps {
-        echo "[ci/cd]  FRONTEND Unit-Tests"
+        echo "[ci/cd]  Run FRONTEND Test Cases"
         script {
           // pull code
           checkout scm
@@ -238,7 +241,7 @@ pipeline {
 
                 echo "Linting and Testing Frontend..."
                 sh 'npm run lint'
-                sh 'npm run test'
+                sh 'npm run coverage'
 
                 echo 'Frontend Lint Checks and Tests passed'
               }
@@ -251,7 +254,59 @@ pipeline {
       }
       post {
         success {
-          // stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+          stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+          echo 'All Tests passed'
+        }
+        failure {
+          echo 'Tests failed'
+        }
+      }
+    }
+    stage("API Tests") {
+      agent {
+        label 'jenkins-slave-dotnet'
+      }
+      environment {
+        COMP_NAME = "api"
+      }
+      when {
+        anyOf {
+          environment name: "API_BUILT", value: "true"
+        }
+      }
+      steps {
+        echo "[ci/cd]  Run API Test Cases"
+        script {
+          // pull code
+          checkout scm
+
+          dir(API_CONTEXT_DIRECTORY) {
+            try {
+              timeout(20) {
+                sh 'dotnet --version'
+                sh 'node --version'
+
+                echo 'Install dependencies...'
+                sh 'dotnet restore'
+
+                echo 'Build'
+                sh 'dotnet build --configuration Release --no-restore'
+
+                echo 'Testing the API...'
+                sh 'dotnet test --no-restore --verbosity normal'
+
+                echo 'API Tests passed'
+              }
+            } catch (e) {
+              echo 'Lint Checks and Tests failed'
+              throw e
+            }
+          }
+        }
+      }
+      post {
+        success {
+          stash name: API_COV_STASH, includes: 'backend/tests/TestResults/coverage.xml'
           echo 'All Tests passed'
         }
         failure {
@@ -265,6 +320,16 @@ pipeline {
       }
       steps {
         echo 'TODO: SonarQube integration'
+
+        // unstash COVERAGE_STASH
+
+        // echo 'Performing SonarQube static code analysis...'
+        // sh """
+        // sonar-scanner \
+        //   -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+        //   -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
+        //   -Dsonar.projectName='NRPTI (${JOB_NAME.toUpperCase()})'
+        // """
       }
     }
     stage("Deploy API -> DEV") {
