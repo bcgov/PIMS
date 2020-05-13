@@ -16,6 +16,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.LastName, src => src.LastName)
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.Position, src => src.Position)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.AccessRequestUserModel, Entity.User>()
@@ -26,6 +27,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.LastName, src => src.LastName)
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.Position, src => src.Position)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }
     }

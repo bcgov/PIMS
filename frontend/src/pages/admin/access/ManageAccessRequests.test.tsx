@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -9,10 +9,31 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import { ensureGridApiHasBeenSet } from '../../../utils/testUtils';
 import ManageAccessRequests from './ManageAccessRequests';
-import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
-import { act as domAct } from 'react-dom/test-utils';
+import { create, ReactTestInstance } from 'react-test-renderer';
+import { AccessRequestStatus } from 'constants/accessStatus';
+
+const accessRequests = {
+  page: 1,
+  total: 2,
+  quantity: 2,
+  items: [
+    {
+      id: 1,
+      status: AccessRequestStatus.OnHold,
+      roles: [{ id: '1', name: 'role1' }],
+      agencies: [{ id: '1', name: 'agency 1' }],
+      user: {
+        id: 'userid',
+        displayName: 'testUser',
+        firstName: 'firstName',
+        lastName: 'lastName',
+        email: 'user@email.com',
+        position: 'position 1',
+      },
+    },
+  ],
+};
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -32,44 +53,11 @@ jest.mock('react-router-dom', () => ({
   useRouteMatch: () => ({ url: '/admin', path: '/admin' }),
 }));
 
-const initialState = {
-  [reducerTypes.ACCESS_REQUEST]: {
-    pagedAccessRequests: { page: 0, total: 0, quantity: 0, items: [] },
-  },
-  [reducerTypes.NETWORK]: {
-    [actionTypes.GET_REQUEST_ACCESS]: {
-      isFetching: false,
-    },
-  },
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-};
-// Empty response
-const store = mockStore(initialState);
 const successStore = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {
-    pagedAccessRequests: {
-      page: 1,
-      total: 2,
-      quantity: 2,
-      items: [
-        {
-          id: 1,
-          roles: [{ id: '1' }],
-          agencies: [{ id: '1' }],
-          user: {
-            displayName: 'testUser',
-          },
-        },
-        {
-          id: 2,
-          roles: [{ id: '2' }],
-          agencies: [{ id: '1' }],
-          user: {
-            displayName: 'testUser',
-          },
-        },
-      ],
-    },
+    pageSize: 10,
+    filter: { searchText: '', role: '', agency: '' },
+    pagedAccessRequests: accessRequests,
   },
   [reducerTypes.NETWORK]: {
     [actionTypes.GET_REQUEST_ACCESS]: {
@@ -79,52 +67,49 @@ const successStore = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-const componentRender = async (store: any) => {
-  let provider;
-  domAct(() => {
-    provider = mount(
-      <Provider store={store}>
-        <ManageAccessRequests />
-      </Provider>,
-    );
-  });
-  return provider;
+const componentRender = (store: any) => {
+  let component = create(
+    <Provider store={store}>
+      <ManageAccessRequests />
+    </Provider>,
+  );
+  return component;
 };
 
-describe('component with access requests', () => {
-  let component: any;
-  let agGrid: AgGridReact;
-  beforeEach(async done => {
-    component = await componentRender(successStore);
-    agGrid = component.find(AgGridReact).instance() as AgGridReact;
-    ensureGridApiHasBeenSet(component).then(
-      () => done(),
-      () => fail('Grid API not set within expected time limits'),
-    );
+describe('Manage access requests', () => {
+  afterEach(() => jest.resetAllMocks());
+  it('Snapshot matches', () => {
+    const component = componentRender(successStore);
+    expect(component.toJSON()).toMatchSnapshot();
+    const instance = component.getInstance();
+    expect(instance?.findByType('table'));
   });
 
-  it('renders all rows', () => {
-    expect(!!agGrid.api).toBeTruthy();
-    agGrid.api?.selectAll();
-    expect(agGrid.api?.getSelectedNodes().length).toStrictEqual(2);
-  });
-});
-
-describe('component functionality', () => {
-  let component: any;
-  let agGrid: AgGridReact;
-  beforeEach(async done => {
-    component = await componentRender(store);
-    agGrid = component.find(AgGridReact).instance() as AgGridReact;
-    ensureGridApiHasBeenSet(component).then(
-      () => done(),
-      () => fail('Grid API not set within expected time limits'),
-    );
+  it('Table row count is 1', () => {
+    const component = componentRender(successStore);
+    const instance = component.root;
+    const table = (instance as ReactTestInstance).findByProps({ name: 'accessRequestsTable' });
+    expect(table.props.data.length).toBe(1);
   });
 
-  it('renders no rows to show', () => {
-    expect(!!agGrid.api).toBeTruthy();
-    agGrid.api?.selectAll();
-    expect(agGrid.api?.getSelectedNodes().length).toStrictEqual(0);
+  it('On Hold menu button is disabled', () => {
+    const component = componentRender(successStore);
+    const instance = component.root;
+    const holdMenuItem = (instance as ReactTestInstance).findByProps({ label: 'Hold' });
+    expect(holdMenuItem.props.disabled).toBeTruthy();
+  });
+
+  it('On Approve menu button is enabled', () => {
+    const component = componentRender(successStore);
+    const instance = component.root;
+    const holdMenuItem = (instance as ReactTestInstance).findByProps({ label: 'Approve' });
+    expect(holdMenuItem.props.disabled).toBeFalsy();
+  });
+
+  it('On Decline menu button is enabled', () => {
+    const component = componentRender(successStore);
+    const instance = component.root;
+    const holdMenuItem = (instance as ReactTestInstance).findByProps({ label: 'Decline' });
+    expect(holdMenuItem.props.disabled).toBeFalsy();
   });
 });

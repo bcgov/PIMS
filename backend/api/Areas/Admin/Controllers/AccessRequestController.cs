@@ -40,25 +40,34 @@ namespace Pims.Api.Areas.Admin.Controllers
         #endregion
 
         #region Endpoints
+
         /// <summary>
         /// Get a list of access requests
         /// </summary>
         /// <param name="page"></param>
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
+        /// <param name="searchText"></param>
+        /// <param name="role"></param>
+        /// <param name="agency"></param>
         /// <param name="status"></param>
         /// <returns></returns>
         [HttpGet("")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PModel.PageModel<Model.AccessRequestModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] { "admin-access-requests" })]
-        public IActionResult GetPage(int page = 1, int quantity = 10, string sort = null, Entity.AccessRequestStatus? status = Entity.AccessRequestStatus.OnHold)
+        [SwaggerOperation(Tags = new[] {"admin-access-requests"})]
+        public IActionResult GetPage(int page = 1, int quantity = 10, string sort = null,
+            string searchText = null, string role = null, string agency = null,
+            Entity.AccessRequestStatus status = Entity.AccessRequestStatus.OnHold)
         {
             if (page < 1) page = 1;
             if (quantity < 1) quantity = 1;
             if (quantity > 20) quantity = 20;
-            var result = _pimsAdminService.User.GetAccessRequests(page, quantity, sort, status);
+
+            var filter = new EModel.AccessRequestFilter(page, quantity, new [] {sort }, searchText, role, agency, status);
+
+            var result = _pimsAdminService.User.GetAccessRequests(filter);
             var models = _mapper.Map<Model.AccessRequestModel[]>(result.Items);
             var paged = new PModel.PageModel<Model.AccessRequestModel>(models, page, quantity, result.Total);
             return new JsonResult(paged);

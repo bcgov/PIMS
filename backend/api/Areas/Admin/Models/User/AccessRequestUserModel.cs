@@ -49,6 +49,12 @@ namespace Pims.Api.Areas.Admin.Models.User
         /// </summary>
         /// <value></value>
         public string Username { get; set; }
+
+        /// <summary>
+        /// get/set - The position.
+        /// </summary>
+        /// <value></value>
+        public string Position { get; set; }
         #endregion
     }
 }
