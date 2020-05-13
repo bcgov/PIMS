@@ -4,7 +4,9 @@ Provides a docker image of the .NET Core 3.1 runtime for use as a Jenkins slave.
 
 ## Build local
 
-`docker build -t jenkins-slave-dotnet .`
+```bash
+docker build -t jenkins-slave-dotnet .
+```
 
 ## Run local
 
@@ -15,6 +17,7 @@ For local running and experimentation run `docker run -i -t jenkins-slave-dotnet
 ```bash
 oc process -f ../jenkins-slave-generic-template.yaml \
     -p NAME=jenkins-slave-dotnet \
+    -p BUILDER_IMAGE_NAME=registry.redhat.io/dotnet/dotnet-31-jenkins-agent-rhel7 \
     -p SOURCE_CONTEXT_DIR=openshift/templates/jenkins-slaves/jenkins-slave-dotnet \
     | oc apply -f -
 ```

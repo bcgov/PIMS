@@ -4,7 +4,9 @@ Provides a docker image of the zap runtime for use as a Jenkins slave. The publi
 
 ## Build local
 
-`docker build -t jenkins-slave-zap .`
+```bash
+docker build -t jenkins-slave-zap .
+```
 
 ## Run local
 

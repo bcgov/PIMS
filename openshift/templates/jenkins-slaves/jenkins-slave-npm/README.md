@@ -4,7 +4,9 @@ Provides a docker image of the nodejs v10 runtime with npm for use as a Jenkins 
 
 ## Build local
 
-`docker build -t jenkins-slave-npm .`
+```bash
+docker build -t jenkins-slave-npm .
+```
 
 ## Run local
 
