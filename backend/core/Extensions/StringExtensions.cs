@@ -35,5 +35,10 @@ namespace Pims.Core.Extensions
         {
             return env != null && env.Equals("Production", StringComparison.OrdinalIgnoreCase);
         }
+
+        public static string FormatAsPostal(this string postal)
+        {
+            return postal.Insert(3, " ");
+        }
     }
 }
