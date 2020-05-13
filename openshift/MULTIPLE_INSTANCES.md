@@ -187,10 +187,10 @@ MEMORY_REQUEST=2Gi
 ### Pipeline
 
 ```bash
-oc process -f openshift/templates/tools/pipeline.yaml --parameters
+oc process -f openshift/templates/jenkins/generic-pipeline.yaml --parameters
 ```
 
-Create configuration file `/openshift/templates/tools/pipeline.{INSTANCE IDENTITY}.env`
+Create configuration file `/openshift/templates/jenkins/pipeline.{INSTANCE IDENTITY}.env`
 
 ```conf
 NAME={PIPELINE NAME}
@@ -220,5 +220,5 @@ oc process -f openshift/templates/pims-api/deploy.yaml --param-file=deploy.{INST
 oc process -f openshift/templates/pims-app/build.yaml --param-file=build.{INSTANCE IDENTITY}.env | oc create --save-config=true -f -
 oc process -f openshift/templates/pims-app/deploy.yaml --param-file=deploy.{INSTANCE IDENTITY}.env | oc create --save-config=true -f -
 # Pipeline
-oc process -f openshift/templates/tools/pipeline.yaml --param-file=pipeline.{INSTANCE IDENTITY}.env | oc create --save-config=true -f -
+oc process -f openshift/templates/jenkins/generic-pipeline.yaml --param-file=pipeline.{INSTANCE IDENTITY}.env | oc create --save-config=true -f -
 ```
