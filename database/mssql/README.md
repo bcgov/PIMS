@@ -4,18 +4,18 @@ If you want to use a MSSQL DB change the _database_ service in the _docker-compo
 
 ```yaml
 database:
-  restart: always
-  container_name: starter_db
+  restart: on-failure
+  container_name: api-db
   build:
     context: database/mssql
   env_file:
     - database/mssql/.env
   ports:
-    - "1433:1433"
+    - "5433:1433"
   volumes:
-    - database-data:/var/opt/mssql
+    - api-db-data:/var/opt/mssql
   networks:
-    - starter_kit
+    - pims
 ```
 
 ## MSSQL Environment Variables
@@ -29,13 +29,22 @@ To get the database running and initialized do the following;
 ACCEPT_EULA=Y
 MSSQL_SA_PASSWORD={password}
 MSSQL_PID=Developer
+TZ=America/Los_Angeles
+
+DB_NAME=pims
+DB_USER=admin
+DB_PASSWORD={password}
 ```
 
-| Key               | Value            | Description                                                  |
-| ----------------- | ---------------- | ------------------------------------------------------------ |
-| ACCEPT_EULA       | [Y\|N]           | Whether you accept the license agreement.                    |
-| MSSQL_SA_PASSWORD | {password}       | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft (see below). |
-| MSSQL_PID         | [Developer\|...] | The version of the database to install.                      |
+| Key               | Value               | Description                                                                                                                                         |
+| ----------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ACCEPT_EULA       | [Y\|N]              | Whether you accept the license agreement.                                                                                                           |
+| MSSQL_SA_PASSWORD | {password}          | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft (see below). |
+| MSSQL_PID         | Developer           | The edition of the database to install [Developer\|Express\|Standard\|Enterprise\|EnterpriseCore].                                                  |
+| TZ                | America/Los_Angeles | The timezone to run the database in. Bash into your container and use the command `tzselect` to manually change the timezone.                       |
+| DB_NAME           | pims                | The name of the database to create when the pod is deployed.                                                                                        |
+| DB_USER           | admin               | The name of the user account that pims will use to connect to the database instead of the 'sa'.                                                     |
+| DB_PASSWORD       | {password}          | Enter the `password` you want to secure the DB with. This password needs to be complex enough to match the requirements from Microsoft (see below). |
 
 ## Password Complexity
 
@@ -47,9 +56,17 @@ As per Microsoft documentation, the `MSSQL_SA_PASSWORD` value must meet the foll
   - Uppercase letters (A through Z)
   - Lowercase letters (a through z)
   - Base 10 digits (0 through 9)
-  - Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%).
+  - Non-alphanumeric characters such as: exclamation point (!), dollar sign (\$), number sign (#), or percent (%).
 
 Passwords can be up to 128 characters long. Use passwords that are as long and complex as possible.
+
+## Create a customized container
+
+If you do create your own Dockerfile, be aware of the foreground process, because this process controls the life of the container. If it exits, the container will shutdown. For example, if you want to run a script and start SQL Server, make sure that the SQL Server process is the right-most command. All other commands are run in the background. The following command illustrates this inside a Dockerfile:
+
+```bash
+/usr/src/app/do-my-sql-commands.sh & /opt/mssql/bin/sqlservr
+```
 
 ## Connection
 
@@ -73,4 +90,6 @@ Once inside the container, connect locally with sqlcmd. Note that sqlcmd is not 
 
 ## Related Information
 
-Configuration details [here](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15)
+- Configuration details [here](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15)
+- Running Scripts remotely [here](https://portworx.com/run-ha-sql-server-red-hat-openshift/)
+-

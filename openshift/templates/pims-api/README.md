@@ -54,7 +54,6 @@ oc process -f build.yaml --param-file=[.env] | oc -n "$namespace_tools" apply -f
 
 :zap: Read section [Customizing template parameters](#customizing-template-parameters) to learn how to customize these templates with your own parameters.
 
-
 ### Using Default Configurations
 
 If you are just trying to stand up the various cloud environments that this project uses and are not interested in applying any customizations, execute the commands below which will populate DEV, TEST and PROD with default values.
@@ -120,7 +119,7 @@ MEMORY_LIMIT             ...                6Gi
 
 If you only need to customize one or two aspects of the template, it might be useful to just override the default values in the command line. This is particularly useful when you want to build things off your own GitHub repo instead of the Province of BC one.
 
-*Example 1. Creating a build configuration from a different repo and branch*
+_Example 1. Creating a build configuration from a different repo and branch_
 
 ```bash
 cd openshift/templates/app/pims-api
@@ -131,7 +130,7 @@ oc process -f build.yaml \
   | oc -n "$namespace_tools" apply -f -
 ```
 
-*Example 2. Try out a newer version of .NET Core before pushing it to production.*
+_Example 2. Try out a newer version of .NET Core before pushing it to production._
 
 ```bash
 cd openshift/templates/app/pims-api
@@ -150,7 +149,8 @@ The .env files can be manually created or using the following bash commands.
 
 The `awk` will ignore the first line (headers) and print [COL-1]=[COL-3]. The final `grep` command will ignore values of 'expression' which is the value assigned to auto-generated fields (like database passwords for example).
 
-*Example 3. Generate .env files with default values*
+_Example 3. Generate .env files with default values_
+
 ```bash
 oc process --parameters -f pims-api-build.yaml | awk -F '[ ]{2,}' 'NR>1{ print $1"="$3 }' | grep -v '=expression'
 
@@ -160,9 +160,11 @@ COMP_NAME=api
 GIT_REPO_URL=https://github.com/bcgov/PIMS.git
 GIT_REF=dev
 SOURCE_CONTEXT_DIR=backend
+
 DOTNET_BUILDER_IMAGE=dotnet-31-rhel7
 DOTNET_BUILDER_TAG=3.1
 DOTNET_STARTUP_PROJECT=pims.api.csproj
+
 CPU_LIMIT=1
 MEMORY_LIMIT=6Gi
 ```
