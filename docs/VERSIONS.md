@@ -18,11 +18,13 @@ This will result in a versions like the following _1.0.34.3435_, or when prepari
 
 ## Rollback
 
-All releases should have permanent tags applied to them by our build/deploy pipeline. See [Managing Images](https://docs.openshift.com/container-platform/3.7/dev_guide/managing_images.html) for more details.
+All releases should have permanent tags applied to them by our build/deploy pipeline. See [Managing Images](https://docs.openshift.com/container-platform/3.7/dev_guide/managing_images.html) for more details. A permanent tag may either be added manually or using the corresponding step in the CICD Jenkins Pipeline.
 
-A new deployment instance will always be created in order to deploy an image with a unique permanent tag. This is what allows the rollback commands discussed below.
+Openshift Image streams maintains the history of tracking tags (ie. Dev, Test, Latest) and prunes images periodically based on age and usage. However, in most cases we should be able to rollback to a previous version of a tracking tag before it is pruned. However, in order to keep a complete release history all pushes to prod should be tracked with permanent tags.
 
-In order to rollback the deployment of a permanent tag, use `oc rollout undo dc/*` (to rollback the most recent deployment only) or `oc rollback *`. `oc rollback` supports `--to-version x` as well which can be used to rollback multiple releases at the same time. Both of these commands will revert the deployment configuration to the configuration used for that release, including the image and tag. `--dry-run` works for both commands to see what changes will be made by the rollback. Note that the commands listed above are completely reliant on proper permanent tagged images during pipeline builds. Images using tracking tags are overwritten during every change to source, as a result there is no way of rolling back those images other than creating a new release.
+In order to rollback a deployment, use `oc rollout undo dc/*` (to rollback the most recent deployment only) or `oc rollback *`. `oc rollback` supports `--to-version x` as well which can be used to rollback multiple releases at the same time. Both of these commands will revert the deployment configuration to the configuration used for that release, including the image, tag and image id. `--dry-run` works for both commands to see what changes will be made by the rollback.
+
+In order to see the id (sha hash) of a given tracking tag, either navigate to the desired deployment config # and click `Edit Yaml` the sha will be under `spec->template->spec->containers->env->image`. The equivalent CLI command is `oc rollout history dc/pims-api-dev --revision=x`
 
 The above process would need to be repeated for all deployment configurations that need to be rolled back (ie. pims-app, pims-api). The database may require migration(s) to be rolled back manually in addition to the oc steps above.
 
