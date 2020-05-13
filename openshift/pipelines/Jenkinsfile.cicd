@@ -295,7 +295,30 @@ pipeline {
                 sh 'dotnet build --configuration Release --no-restore'
 
                 echo 'Testing the API...'
-                sh 'dotnet test --no-restore --verbosity normal'
+                sh 'dotnet test --no-restore'
+
+                echo 'Generate code coverage'
+                sh '''
+                coverlet ./tests/unit/api/bin/Release/netcoreapp3.1/Pims.Api.Test.dll \
+                  --target "dotnet" \
+                  --targetargs "test ./ --no-build" \
+                  -o "./tests/TestResults/api-coverage.json" \
+                  --exclude "[*.Test]*" \
+                  --exclude "[*]*Model" \
+                  --exclude-by-attribute "CompilerGenerated" \
+                  -f json
+                '''
+                sh '''
+                coverlet ./tests/unit/dal/bin/Release/netcoreapp3.1/Pims.Dal.Test.dll \
+                  --target "dotnet" \
+                  --targetargs "test ./ --no-build" \
+                  -o "./tests/TestResults/coverage.xml" \
+                  --exclude "[*.Test]*" \
+                  --exclude "[*]*Model" \
+                  --exclude-by-attribute "CompilerGenerated" \
+                  --merge-with "./tests/TestResults/api-coverage.json" \
+                  -f opencover
+                '''
 
                 echo 'API Tests passed'
               }
@@ -308,7 +331,7 @@ pipeline {
       }
       post {
         success {
-          // stash name: API_COV_STASH, includes: 'backend/tests/TestResults/coverage.xml'
+          stash name: API_COV_STASH, includes: 'backend/tests/TestResults/**'
           echo 'All Tests passed'
         }
         failure {
@@ -323,7 +346,8 @@ pipeline {
       steps {
         echo 'TODO: SonarQube integration'
 
-        // unstash COVERAGE_STASH
+        // unstash API_COV_STASH
+        // unstash FE_COV_STASH
 
         // echo 'Performing SonarQube static code analysis...'
         // sh """
@@ -412,54 +436,54 @@ pipeline {
         }
       }
     }
-    stage("Notify") {
-      when {
-        anyOf {
-          environment name: "API_DEPLOYED", value: "true"
-          environment name: "FRONTEND_DEPLOYED", value: "true"
-        }
-      }
-      steps {
-        script {
-          if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-          }
-          if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-          }
-        }
-      }
-    }
-    stage("No Changes") {
-      when {
-        allOf {
-          environment name: "API_DEPLOYED", value: "false"
-          environment name: "FRONTEND_DEPLOYED", value: "false"
-        }
-      }
-      steps {
-        script {
-          echo "[ci/cd]  No changes ..."
-          currentBuild.result = 'ABORTED'
-          notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
-        }
-      }
-    }
+    // stage("Notify") {
+    //   when {
+    //     anyOf {
+    //       environment name: "API_DEPLOYED", value: "true"
+    //       environment name: "FRONTEND_DEPLOYED", value: "true"
+    //     }
+    //   }
+    //   steps {
+    //     script {
+    //       if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
+    //         notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+    //       }
+    //       if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
+    //         notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+    //       }
+    //     }
+    //   }
+    // }
+    // stage("No Changes") {
+    //   when {
+    //     allOf {
+    //       environment name: "API_DEPLOYED", value: "false"
+    //       environment name: "FRONTEND_DEPLOYED", value: "false"
+    //     }
+    //   }
+    //   steps {
+    //     script {
+    //       echo "[ci/cd]  No changes ..."
+    //       currentBuild.result = 'ABORTED'
+    //       notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+    //     }
+    //   }
+    // }
   }
-  post {
-    aborted {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-    }
-    }
-    failure {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-      }
-    }
-  }
+  // post {
+  //   aborted {
+  //     node('master') {
+  //       script {
+  //         notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+  //       }
+  //   }
+  //   }
+  //   failure {
+  //     node('master') {
+  //       script {
+  //         notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+  //       }
+  //     }
+  //   }
+  // }
 }
