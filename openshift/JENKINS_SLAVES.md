@@ -148,17 +148,9 @@ PIMS requires two Jenkins slave images: one for **Node 10** and one for **.NET C
 
 > TODO
 
-# Advanced Jenkins Topics
+# Advanced Jenkins Configuration
 
-## Configuration and Customization
-
-### Environment Variables
-
-- `NODEJS_SLAVE_IMAGE`
-
-  Setting this value overrides the image used for the default NodeJS agent pod configuration. The default NodeJS agent pod uses `docker.io/openshift/jenkins-agent-nodejs-8-centos7` or `registry.redhat.io/openshift3/jenkins-agent-nodejs-8-rhel7` depending whether you are running the CentOS or RHEL version of the Jenkins image. This variable must be set before Jenkins starts the first time for it to have an effect.
-
-### Volume Mount Points
+## Volume Mount Points
 
 The Jenkins image can be run with mounted volumes to enable persistent storage for the configuration:
 

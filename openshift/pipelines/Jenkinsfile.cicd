@@ -436,54 +436,54 @@ pipeline {
         }
       }
     }
-    // stage("Notify") {
-    //   when {
-    //     anyOf {
-    //       environment name: "API_DEPLOYED", value: "true"
-    //       environment name: "FRONTEND_DEPLOYED", value: "true"
-    //     }
-    //   }
-    //   steps {
-    //     script {
-    //       if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
-    //         notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-    //       }
-    //       if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
-    //         notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-    //       }
-    //     }
-    //   }
-    // }
-    // stage("No Changes") {
-    //   when {
-    //     allOf {
-    //       environment name: "API_DEPLOYED", value: "false"
-    //       environment name: "FRONTEND_DEPLOYED", value: "false"
-    //     }
-    //   }
-    //   steps {
-    //     script {
-    //       echo "[ci/cd]  No changes ..."
-    //       currentBuild.result = 'ABORTED'
-    //       notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
-    //     }
-    //   }
-    // }
-  }
-  // post {
-  //   aborted {
-  //     node('master') {
-  //       script {
-  //         notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-  //       }
-  //   }
-  //   }
-  //   failure {
-  //     node('master') {
-  //       script {
-  //         notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-  //       }
-  //     }
-  //   }
-  // }
-}
+    stage("Notify") {
+      when {
+        anyOf {
+          environment name: "API_DEPLOYED", value: "true"
+          environment name: "FRONTEND_DEPLOYED", value: "true"
+        }
+      }
+      steps {
+        script {
+          if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
+            notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+          }
+          if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
+            notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+          }
+        }
+      }
+    }
+    stage("No Changes") {
+      when {
+        allOf {
+          environment name: "API_DEPLOYED", value: "false"
+          environment name: "FRONTEND_DEPLOYED", value: "false"
+        }
+      }
+      steps {
+        script {
+          echo "[ci/cd]  No changes ..."
+          currentBuild.result = 'ABORTED'
+          notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+        }
+      }
+    }
+  } // stages
+  post {
+    aborted {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        }
+    }
+    }
+    failure {
+      node('master') {
+        script {
+          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+        }
+      }
+    }
+  } // post
+} // pipeline
