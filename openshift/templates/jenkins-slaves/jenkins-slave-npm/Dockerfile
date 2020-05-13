@@ -10,6 +10,7 @@ ARG SONAR_VERSION=4.3.0.2102
 
 USER 0
 
+# Install Nodejs 10, SonarQube Scanner
 RUN fix_permissions() { while [[ $# > 0 ]] ; do chgrp -R 0 "$1" && chmod -R g=u "$1"; shift; done } && \
     set -x && \
     curl -sSL -o /tmp/sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_VERSION}-linux.zip && \
