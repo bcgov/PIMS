@@ -50,7 +50,7 @@ export const Address = Yup.object().shape({
     .nullable(),
   provinceId: Yup.string().required('Required'),
   postal: Yup.string().matches(
-    /^[a-zA-z][0-9][a-zA-z]\s*?[0-9][a-zA-z][0-9]$/,
+    /^[a-zA-z][0-9][a-zA-z]\s*-*[0-9][a-zA-z][0-9]$/,
     'Invalid Postal Code',
   ),
 });
