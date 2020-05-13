@@ -99,7 +99,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const keycloak = useKeycloakWrapper();
 
   const disableProjectNumber = () => {
-    if (keycloak.hasClaim('property-admin')) {
+    if (keycloak.hasClaim('admin-properties')) {
       return false;
     } else {
       return true;
