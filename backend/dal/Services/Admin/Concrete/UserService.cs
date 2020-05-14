@@ -221,21 +221,17 @@ namespace Pims.Dal.Services.Admin
         /// <param name="quantity"></param>
         /// <param name="sort"></param>
         /// <param name="status"></param>
-        public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, AccessRequestStatus? status = null)
+        public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null,
+            AccessRequestStatus status = AccessRequestStatus.OnHold)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+            var sortArray = new string[] { };
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                sortArray[0] = sort;
+            }
 
-            var query = this.Context.AccessRequests
-                .Include(p => p.Agencies)
-                .ThenInclude(p => p.Agency)
-                .Include(p => p.Roles)
-                .ThenInclude(p => p.Role)
-                .Include(p => p.User)
-                .AsNoTracking();
-
-            query = query.Where(request => request.Status == status);
-            var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);
-            return new Paged<AccessRequest>(accessRequests, page, quantity, query.Count());
+            var filter = new AccessRequestFilter(page, quantity, sortArray, null, null, null, status);
+            return GetAccessRequests(filter);
         }
 
         /// <summary>
@@ -253,6 +249,12 @@ namespace Pims.Dal.Services.Admin
                 .ThenInclude(p => p.Role)
                 .Include(p => p.User)
                 .AsNoTracking();
+
+            var userAgencies = this.User.GetAgencies();
+            if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
+            {
+                query = query.Where(accessRequest => accessRequest.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
+            }
 
             query = query.Where(request => request.Status == filter.Status);
 
