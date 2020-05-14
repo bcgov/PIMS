@@ -103,7 +103,7 @@ objects:
         env: ${ENV_NAME}
         role: backend
     type: Opaque
-    data:
+    stringData:
       KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
       KEYCLOAK_SERVICE_ACCOUNT_SECRET: ${KEYCLOAK_SERVICE_ACCOUNT_SECRET}
   - kind: ConfigMap
@@ -207,7 +207,7 @@ objects:
                   valueFrom:
                     secretKeyRef:
                       name: ${APP_NAME}-db-${ENV_NAME}${ID}-secret
-                      key: MSSQL_SA_PASSWORD
+                      key: DB_PASSWORD
                 - name: Keycloak__Audience
                   valueFrom:
                     configMapKeyRef:
@@ -324,7 +324,7 @@ parameters:
   - name: CONNECTION_STRINGS_PIMS
     displayName: PIMS API Database Connection String
     description: The PIMS API database connection string.
-    value: Server=pims-db-dev,1433;User ID=sa;Database=pims
+    value: Server=pims-db-dev,1433;User ID=admin;Database=pims
   - name: KEYCLOAK_AUDIENCE
     displayName: Keycloak SSO audience
     description: The name of the client (i.e. pims-api).

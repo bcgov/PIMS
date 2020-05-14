@@ -4,11 +4,11 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: pims-api-build
+  name: pims-db-build
   annotations:
-    openshift.io/display-name: .NET Core 3.1 Build Template
-    description: Build template for a .NET Core 3.1 application.
-    tags: pims-api
+    openshift.io/display-name: Microsoft SQL Server
+    description: Relational database management system developed by Microsoft.
+    tags: pims-db
 objects:
   # The final build image.
   - kind: ImageStream
@@ -16,50 +16,53 @@ objects:
     metadata:
       name: ${APP_NAME}-${COMP_NAME}
       annotations:
-        description: Keeps track of changes in the application image
+        description: Keeps track of changes in the database image
       labels:
         app: ${APP_NAME}
         component: ${COMP_NAME}
-        role: backend
+        role: database
   # The build config that will be created will be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
       annotations:
-        description: Defines how to build the application
+        description: Defines how to build the database image
       labels:
         name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
         app: ${APP_NAME}
         component: ${COMP_NAME}
-        role: backend
+        role: database
         branch: ${GIT_REF}
     spec:
+      completionDeadlineSeconds: 1800
       triggers:
         - type: ImageChange
         - type: ConfigChange
       runPolicy: Serial
       source:
-        type: Git
         git:
           uri: ${GIT_URL}
           ref: ${GIT_REF}
-        contextDir: ${SOURCE_CONTEXT_DIR}
+        contextDir: ${CONTEXT_DIR}
+        dockerfile: |-
+          FROM ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
+          RUN mkdir -p /usr/config
+          WORKDIR /usr/config
+          COPY . /usr/config
+          USER root
+          RUN chmod -R g=u /etc/passwd
+          USER 10001
+          ENTRYPOINT ["./entrypoint.sh"]
+          EXPOSE 1433
+          VOLUME ["/var/opt/mssql"]
       strategy:
-        type: Source
-        sourceStrategy:
+        dockerStrategy:
           from:
             kind: ImageStreamTag
-            name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
-          env:
-            - name: DOTNET_CONFIGURATION
-              value: ${DOTNET_CONFIGURATION}
-            - name: DOTNET_STARTUP_PROJECT
-              value: ${DOTNET_STARTUP_PROJECT}
-            - name: DOTNET_PUBLISH_READYTORUN
-              value: ${DOTNET_PUBLISH_READYTORUN}
-            - name: DOTNET_TEST_PROJECTS
-              value: ${DOTNET_TEST_PROJECTS}
+            namespace: "${PROJECT_NAMESPACE}-tools"
+            name: ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
+        type: Docker
       output:
         to:
           kind: ImageStreamTag
@@ -76,9 +79,14 @@ parameters:
     value: pims
   - name: COMP_NAME
     displayName: Component Name
-    description: The name of the application component (e.g ui, backend, database).
+    description: The name of the application component (e.g api, app, db).
     required: true
-    value: api
+    value: db
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the application.
+    required: true
+    value: jcxjin
 
   - name: GIT_URL
     displayName: Git Repository URL
@@ -91,40 +99,21 @@ parameters:
       Set this to a branch name, tag or other ref of your repository if you
       are not using the default branch.
     value: dev
-  - name: SOURCE_CONTEXT_DIR
+  - name: CONTEXT_DIR
     displayName: Context Directory
     description: Set this to use a subdirectory of the source code repository
-    value: backend
+    value: database/mssql
 
-  - name: DOTNET_BUILDER_IMAGE
-    displayName: .NET builder
-    description: The s2i image which is used to build the code.
+  - name: MSSQL_IMAGE
+    displayName: Microsoft SQL Server Image
+    description: The s2i image which is used to host the database.
     required: true
-    value: dotnet-31-rhel7
-  - name: DOTNET_BUILDER_TAG
-    displayName: .NET builder tag
-    description: The s2i image tag which is used to build the code.
+    value: mssql-rhel-server
+  - name: MSSQL_IMAGE_TAG
+    displayName: Microsoft SQL Server Image tag
+    description: The s2i image which is used to host the database.
     required: true
-    value: "3.1"
-
-  - name: DOTNET_STARTUP_PROJECT
-    displayName: Startup Project
-    description:
-      Set this to a project file (e.g. csproj) or a folder containing a single
-      project file.
-    required: true
-    value: api/Pims.Api.csproj
-  - name: DOTNET_PUBLISH_READYTORUN
-    displayName: Ahead-of-time compilation
-    description: Set this to 'true' to perform an ahead-of-time compilation.
-    value: "true"
-  - name: DOTNET_CONFIGURATION
-    displayName: Configuration
-    description: Set this to configuration (Release/Debug).
-    value: "Release"
-  - name: DOTNET_TEST_PROJECTS
-    displayName: Test projects
-    description: Set this to a space separated list of test projects to run before publishing.
+    value: 2019-latest
 
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
@@ -136,7 +125,7 @@ parameters:
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
     required: true
-    value: "1"
+    value: "2"
   - name: MEMORY_LIMIT
     displayName: Memory Limit
     description: Maximum amount of memory the container can use.
