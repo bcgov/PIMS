@@ -4,6 +4,7 @@ import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
 import { useTable, usePagination, TableOptions, Row, useFlexLayout } from 'react-table';
 import classnames from 'classnames';
 import { TablePagination } from '.';
+import { ClickableCell } from './ColumnDefinition';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = (props: any, { column }: any) => getStyles(props, true, column.align);
@@ -26,6 +27,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
   loading?: boolean; // TODO: Show loading indicator while fetching data from server
   pageCount?: number;
+  onRowClick?: (data: T) => void;
 }
 
 /**
@@ -109,9 +111,15 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
             // Each row can be rendered directly as a string using `react-table` render method
             return (
               <div {...row.getRowProps()} className="tr">
-                {row.cells.map(cell => {
+                {row.cells.map((cell: ClickableCell<T>) => {
                   return (
-                    <div {...cell.getCellProps(cellProps)} className="td">
+                    <div
+                      {...cell.getCellProps(cellProps)}
+                      className="td"
+                      onClick={() =>
+                        props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
+                      }
+                    >
                       {cell.render('Cell')}
                     </div>
                   );

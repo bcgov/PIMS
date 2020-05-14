@@ -8,33 +8,32 @@ import {
   ISelectAccessRequestsAction,
   ISortAccessRequestsAction,
   IDeleteAccessRequestAction,
+  IUpdateAccessRequestPageSizeAction,
+  IFilterData,
+  IUpdateAccessRequestPageIndexAction,
+  ISort,
 } from 'actions/accessRequestActions';
 
-export interface IColumnFilter {
-  filterType: string;
-  type: string;
-  filter: string;
-}
-
-export interface ISort {
-  colId: string;
-  sort: string;
-}
+export const MAX_ACCESS_RESULTS_PER_PAGE = 100;
 
 export interface IAccessRequestState {
   pagedAccessRequests: IPagedItems<IAccessRequest>;
-  filters: { [key: number]: IColumnFilter };
+  filter: IFilterData;
   selections: string[];
-  sorting: ISort[];
+  sorting: ISort;
   accessRequest: IAccessRequest | null;
+  pageSize: number;
+  pageIndex: number;
 }
 
 const initialState: IAccessRequestState = {
   pagedAccessRequests: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
-  filters: {},
-  sorting: [],
+  filter: { agency: '', role: '', searchText: '' },
+  sorting: { column: 'username', direction: 'desc' },
   selections: [],
   accessRequest: null,
+  pageSize: MAX_ACCESS_RESULTS_PER_PAGE,
+  pageIndex: 0,
 };
 
 const accessRequestReducer = (
@@ -46,7 +45,9 @@ const accessRequestReducer = (
     | IUpdateAccessRequestAction
     | IFilterAccessRequestsAction
     | ISelectAccessRequestsAction
-    | IDeleteAccessRequestAction,
+    | IDeleteAccessRequestAction
+    | IUpdateAccessRequestPageSizeAction
+    | IUpdateAccessRequestPageIndexAction,
 ) => {
   switch (action.type) {
     case actionTypes.STORE_ACCESS_REQUESTS:
@@ -77,32 +78,16 @@ const accessRequestReducer = (
         req => req.id !== action.accessRequest.id,
       );
       return { ...state, pagedAccessRequests: { ...state.pagedAccessRequests, items: items } };
+    case actionTypes.UPDATE_REQUEST_ACCESS_PAGE_SIZE:
+      return { ...state, pageSize: action.pageSize };
+
+    case actionTypes.UPDATE_REQUEST_ACCESS_PAGE_INDEX:
+      return { ...state, pageIndex: action.pageIndex };
 
     case actionTypes.FILTER_REQUEST_ACCESS_ADMIN:
       return {
         ...state,
-        pagedAccessRequests: { ...state.pagedAccessRequests },
-        sorting: [...state.sorting],
-        selections: [...state.selections],
-        filter: action.filters,
-      };
-
-    case actionTypes.SELECT_REQUEST_ACCESS_ADMIN:
-      return {
-        ...state,
-        pagedAccessRequests: { ...state.pagedAccessRequests },
-        sorting: [...state.sorting],
-        filters: { ...state.filters },
-        selections: action.selections,
-      };
-
-    case actionTypes.SORT_REQUEST_ACCESS_ADMIN:
-      return {
-        ...state,
-        pagedAccessRequests: { ...state.pagedAccessRequests },
-        filters: { ...state.filters },
-        selections: state.selections,
-        sorting: action.sorting,
+        filter: action.filter,
       };
 
     default:

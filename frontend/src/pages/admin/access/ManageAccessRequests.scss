@@ -1,4 +1,45 @@
+@import '../../../variables';
+$filter-height: 76px;
+$table-fontSize: 13px;
+
 .manage-access-requests {
+  margin: 10px;
+
+  .ScrollContainer {
+    padding: 1rem 3rem;
+    max-height: calc(
+      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
+    );
+    overflow-y: scroll;
+
+    .TableToolbar {
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 1rem;
+
+      .title {
+        font-weight: bolder;
+      }
+    }
+
+    .search-bar {
+      border-top: lighten(grey, 40%) 1px solid !important;
+      padding: 12px;
+
+      .col {
+        &.page-size-selector {
+          display: flex;
+          flex-direction: row-reverse;
+        }
+      }
+    }
+
+    table {
+      background-color: #fff;
+      font-weight: 14px;
+    }
+  }
+
   .header {
     margin-bottom: 10px;
     margin-top: 10px;
@@ -39,4 +80,15 @@
   color: #000 !important;
   font-size: 11px !important;
   font-weight: bolder !important;
+}
+
+.td,
+.th {
+  font-size: $table-fontSize !important;
+  border-bottom: 1px solid #dee2e6;
+  border-top: none !important;
+}
+
+.th {
+  font-weight: bold;
 }

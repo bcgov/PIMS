@@ -7,13 +7,14 @@ import {
   IFilterAccessRequestsAction,
   ISelectAccessRequestsAction,
   ISortAccessRequestsAction,
+  IFilterData,
+  ISort,
 } from 'actions/accessRequestActions';
 import { IAccessRequest } from 'interfaces/accessRequests';
 import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
-import { IColumnFilter, ISort } from 'reducers/accessRequestReducer';
 import { Dispatch } from 'react';
 
 /**
@@ -131,11 +132,11 @@ export const getAccessRequestsAction = (params: API.IPaginateAccessRequests) => 
     .finally(() => dispatch(hideLoading()));
 };
 
-export const getAccessRequestsFilterAction = (filters: {
-  [key: number]: IColumnFilter;
-}): IFilterAccessRequestsAction => ({
+export const getAccessRequestsFilterAction = (
+  filter: IFilterData,
+): IFilterAccessRequestsAction => ({
   type: actionTypes.FILTER_REQUEST_ACCESS_ADMIN,
-  filters,
+  filter,
 });
 
 export const getAccessRequestsSelectAction = (
@@ -145,9 +146,9 @@ export const getAccessRequestsSelectAction = (
   selections,
 });
 
-export const getAccessRequestsSortAction = (sorting: ISort[] = []): ISortAccessRequestsAction => ({
-  type: actionTypes.SORT_REQUEST_ACCESS_ADMIN,
-  sorting,
+export const getAccessRequestsSortAction = (sort: ISort): ISortAccessRequestsAction => ({
+  type: actionTypes.UPDATE_REQUEST_ACCESS_SORT,
+  sort,
 });
 
 export const getAccessRequestsDeleteAction = (id: number, data: IAccessRequest) => (

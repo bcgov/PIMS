@@ -1,0 +1,16 @@
+.Access-Requests-filter {
+  margin-right: 0px;
+  margin-left: 0px;
+  .filters {
+    .col {
+      display: flex;
+      align-items: left;
+
+      &.actions {
+        :first-child {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

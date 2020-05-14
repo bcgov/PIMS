@@ -1,5 +1,6 @@
 import { ReactPaginateProps } from 'react-paginate';
 import { IPaginateParams } from 'constants/API';
+import { IFilterData } from 'actions/accessRequestActions';
 
 export interface IPaginate {
   page: number;
@@ -47,6 +48,21 @@ export const toApiPaginateParams = (
     page: page + 1,
     quantity: quantity,
     sort: sort,
+  };
+  return apiPaginateParams;
+};
+
+export const toAccessRequestApiPaginateParams = (
+  page: number,
+  quantity?: number,
+  sort?: string,
+  filter?: IFilterData,
+): IPaginateParams => {
+  const apiPaginateParams: IPaginateParams = {
+    page: page + 1,
+    quantity: quantity,
+    sort: sort,
+    ...filter,
   };
   return apiPaginateParams;
 };
