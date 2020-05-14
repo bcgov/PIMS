@@ -20,7 +20,7 @@ namespace Pims.Dal.Entities.Models
         /// <summary>
         /// Get/Set - Status
         /// </summary>
-        public AccessRequestStatus? Status { get; set; }
+        public AccessRequestStatus Status { get; set; }
 
         public AccessRequestFilter(int page, int quantity, string[] sort, string searchText, string role, string agency,
             AccessRequestStatus status)
