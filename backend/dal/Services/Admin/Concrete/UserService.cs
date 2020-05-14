@@ -9,7 +9,6 @@ using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 
@@ -61,7 +60,8 @@ namespace Pims.Dal.Services.Admin
                 .ThenInclude(a => a.Agency)
                 .Include(r => r.Roles)
                 .ThenInclude(r => r.Role)
-                .AsNoTracking();
+                .AsNoTracking()
+                .Where(u => !u.IsSystem);
 
             var userAgencies = this.User.GetAgencies();
             if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))

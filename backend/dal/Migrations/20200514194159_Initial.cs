@@ -29,7 +29,8 @@ namespace Pims.Dal.Migrations
                     Position = table.Column<string>(maxLength: 100, nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
                     EmailVerified = table.Column<bool>(nullable: false, defaultValue: false),
-                    Note = table.Column<string>(maxLength: 1000, nullable: true)
+                    Note = table.Column<string>(maxLength: 1000, nullable: true),
+                    IsSystem = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

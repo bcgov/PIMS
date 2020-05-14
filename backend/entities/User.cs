@@ -76,6 +76,12 @@ namespace Pims.Dal.Entities
         public string Note { get; set; }
 
         /// <summary>
+        /// get/set - Whether this user account is a system account.
+        /// A system account will not be visible through user management.
+        /// </summary>
+        public bool IsSystem { get; set; }
+
+        /// <summary>
         /// get - A collection of agencies this user belongs to.
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>
