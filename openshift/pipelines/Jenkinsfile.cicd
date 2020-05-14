@@ -358,6 +358,64 @@ pipeline {
         // """
       }
     }
+    stage("Tag API") {
+      environment {
+        COMP_NAME = "api"
+      }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              try {
+                timeout(time: 1, unit: "MINUTES") {
+                  def api_tag = input(message: "Enter the desired API tag", parameters: [
+                    string(name: 'API_TAG', defaultValue: '', description: 'Tag to apply to the API image.')
+                  ])
+                  if (api_tag != '') {
+                    def image_name = "${APP_NAME}-${COMP_NAME}"
+                    def hash = cli.getImageTagHash("${image_name}")
+                    echo "[ci/cd]  Create permanent tag ${api_tag} for image ${image_name}@${hash}"
+                    openshift.tag("${image_name}@${hash}", "${image_name}:${api_tag}")
+                  }
+                }
+              } catch (err) {
+                echo "${err}"
+                echo "[ci/cd]  No api tag specified"
+              }
+            }
+          }
+        }
+      }
+    }
+    stage("Tag App") {
+      environment {
+        COMP_NAME = "app"
+      }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              try {
+                timeout(time: 1, unit: "MINUTES") {
+                  def app_tag = input(message: "Enter the desired App tag", parameters: [
+                    string(name: 'APP_TAG', defaultValue: '', description: 'Tag to apply to the App image.')
+                  ])
+                  if (app_tag != '') {
+                    def image_name = "${APP_NAME}-${COMP_NAME}"
+                    def hash = cli.getImageTagHash("${image_name}")
+                    echo "[ci/cd]  Create permanent tag ${app_tag} for image ${image_name}@${hash}"
+                    openshift.tag("${image_name}@${hash}", "${image_name}:${app_tag}")
+                  }
+                }
+              } catch (err) {
+                echo "${err}"
+                echo "[ci/cd]  No app tag specified"
+              }
+            }
+          }
+        }
+      }
+    }
     stage("Deploy API -> DEV") {
       options {
         timeout(time: 5, unit: "MINUTES")
