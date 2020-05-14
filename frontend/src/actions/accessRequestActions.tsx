@@ -27,14 +27,25 @@ export interface IUpdateAccessRequestAction {
   accessRequest: IAccessRequest;
 }
 
+export interface IFilterData {
+  agency?: string;
+  role?: string;
+  searchText?: string;
+}
+
+export interface ISort {
+  column: string;
+  direction: string;
+}
+
 export interface IFilterAccessRequestsAction {
   type: typeof ActionTypes.FILTER_REQUEST_ACCESS_ADMIN;
-  filters: any;
+  filter: IFilterData;
 }
 
 export interface ISortAccessRequestsAction {
-  type: typeof ActionTypes.SORT_REQUEST_ACCESS_ADMIN;
-  sorting: any[];
+  type: typeof ActionTypes.UPDATE_REQUEST_ACCESS_SORT;
+  sort: ISort;
 }
 
 export interface ISelectAccessRequestsAction {
@@ -47,6 +58,16 @@ export interface IDeleteAccessRequestAction {
   id: number;
 }
 
+export interface IUpdateAccessRequestPageSizeAction {
+  type: typeof ActionTypes.UPDATE_REQUEST_ACCESS_PAGE_SIZE;
+  pageSize: number;
+}
+
+export interface IUpdateAccessRequestPageIndexAction {
+  type: typeof ActionTypes.UPDATE_REQUEST_ACCESS_PAGE_INDEX;
+  pageIndex: number;
+}
+
 /**
  * Store the single access request to redux.
  * @param accessRequest - a single access request
@@ -54,4 +75,23 @@ export interface IDeleteAccessRequestAction {
 export const storeAccessRequest = (accessRequest: IStoreAccessRequestAction) => ({
   type: ActionTypes.STORE_ACCESS_REQUEST,
   accessRequest: accessRequest,
+});
+
+export const getUpdateAccessRequestPageSize = (
+  pageSize: number,
+): IUpdateAccessRequestPageSizeAction => ({
+  type: ActionTypes.UPDATE_REQUEST_ACCESS_PAGE_SIZE,
+  pageSize,
+});
+
+export const getUpdateAccessRequestPageIndex = (
+  pageIndex: number,
+): IUpdateAccessRequestPageIndexAction => ({
+  type: ActionTypes.UPDATE_REQUEST_ACCESS_PAGE_INDEX,
+  pageIndex,
+});
+
+export const getUpdateAccessRequestSort = (sort: ISort): ISortAccessRequestsAction => ({
+  type: ActionTypes.UPDATE_REQUEST_ACCESS_SORT,
+  sort,
 });

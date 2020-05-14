@@ -42,7 +42,9 @@ namespace Pims.Api.Test.Routes.Admin
         public void GetPage_Route()
         {
             // Arrange
-            var endpoint = typeof(AccessRequestController).FindMethod(nameof(AccessRequestController.GetPage), typeof(int), typeof(int), typeof(string), typeof(AccessRequestStatus));
+            var endpoint = typeof(AccessRequestController).FindMethod(nameof(AccessRequestController.GetPage),
+                typeof(int), typeof(int), typeof(string), typeof(string),
+                typeof(string), typeof(string), typeof(AccessRequestStatus));
 
             // Act
             // Assert

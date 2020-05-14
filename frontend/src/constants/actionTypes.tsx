@@ -27,11 +27,13 @@ export const ADD_REQUEST_ACCESS = 'addRequestAccess';
 export const GET_REQUEST_ACCESS = 'getRequestAccess';
 export const UPDATE_REQUEST_ACCESS_ADMIN = 'updateRequestAccessAdmin';
 export const UPDATE_REQUEST_ACCESS_STATUS_ADMIN = 'updateRequestAccessStatusAdmin';
+export const UPDATE_REQUEST_ACCESS_PAGE_SIZE = 'updateRequestAccessPageSize';
+export const UPDATE_REQUEST_ACCESS_PAGE_INDEX = 'updateRequestAccessPageIndex';
+export const UPDATE_REQUEST_ACCESS_SORT = 'updateRequestAccessSort';
 export const FILTER_REQUEST_ACCESS_ADMIN = 'filterRequestAccessAdmin';
 export const SELECT_REQUEST_ACCESS_ADMIN = 'selectRequestAccessAdmin';
 export const DELETE_REQUEST_ACCESS_ADMIN = 'deleteRequestAccessAdmin';
 export const SORT_REQUEST_ACCESS_ADMIN = 'sortRequestAccessAdmin';
-
 export const STORE_ACCESS_REQUEST = 'STORE_ACCESS_REQUEST';
 export const GET_ACCESS_REQUEST = 'getAccessRequest';
 

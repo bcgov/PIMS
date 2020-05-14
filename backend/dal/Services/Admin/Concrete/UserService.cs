@@ -237,6 +237,42 @@ namespace Pims.Dal.Services.Admin
             var accessRequests = query.Skip((page - 1) * quantity).Take(quantity);
             return new Paged<AccessRequest>(accessRequests, page, quantity, query.Count());
         }
+
+        /// <summary>
+        /// Get all the access requests that users have match the specified filter
+        /// </summary>
+        /// <param name="filter"></param>
+        public Paged<AccessRequest> GetAccessRequests(AccessRequestFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            var query = this.Context.AccessRequests
+                .Include(p => p.Agencies)
+                .ThenInclude(p => p.Agency)
+                .Include(p => p.Roles)
+                .ThenInclude(p => p.Role)
+                .Include(p => p.User)
+                .AsNoTracking();
+
+            query = query.Where(request => request.Status == filter.Status);
+
+            if (!string.IsNullOrWhiteSpace(filter.Role))
+                query = query.Where(ar => ar.Roles.Any(r =>
+                    EF.Functions.Like(r.Role.Name, $"%{filter.Role}%")));
+
+            if (!string.IsNullOrWhiteSpace(filter.Agency))
+                query = query.Where(ar => ar.Agencies.Any(a =>
+                    EF.Functions.Like(a.Agency.Name, $"%{filter.Agency}%")));
+
+            if (!string.IsNullOrWhiteSpace(filter.SearchText))
+            {
+                query = query.Where(ar => EF.Functions.Like(ar.User.Username, $"%{filter.SearchText}%"));
+            }
+
+            var accessRequests = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+            return new Paged<AccessRequest>(accessRequests, filter.Page, filter.Quantity, query.Count());
+        }
+
         #endregion
     }
 }

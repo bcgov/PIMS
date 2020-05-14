@@ -10,8 +10,11 @@ function useCodeLookups() {
   const getCodeById = (type: string, id: string): string | undefined => {
     return lookupCodes.filter(code => code.type === type && code.id === id)?.find(x => x)?.code;
   };
+
+  const getByType = (type: string) => lookupCodes.filter(code => code.type === type);
   return {
     getCodeById: getCodeById,
+    getByType,
   };
 }
 
