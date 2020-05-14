@@ -1,22 +1,30 @@
 #!/bin/bash
 
 # wait for MSSQL server to start
-export STATUS=1
-i=0
+pid=$!
 
-while [[ $STATUS -ne 0 ]] && [[ $i -lt 30 ]]; do
-	i=$i+1
-	/opt/mssql-tools/bin/sqlcmd -t 1 -U sa -P $MSSQL_SA_PASSWORD -Q "select 1" >> /dev/null
-	STATUS=$?
+echo "Waiting for MS SQL to be available ⏳"
+/opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $MSSQL_SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"YAY WE ARE UP\" , @@servername"
+is_up=$?
+while [ $is_up -ne 0 ] ; do
+	echo -e $(date)
+	/opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $MSSQL_SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"YAY WE ARE UP\" , @@servername"
+	is_up=$?
+	sleep 5
 done
 
-if [ $STATUS -ne 0 ]; then
-	echo "Error: MSSQL SERVER took more than thirty seconds to start up."
-	exit 1
-fi
+echo "======= MSSQL SERVER STARTED ========"
+# Run every script in /scripts
+# TODO set a flag so that this is only done once on creation,
+#      and not every time the container runs
+# for foo in /scripts/*.sql
+# 	do /opt/mssql-tools/bin/sqlcmd -U sa -P $$SA_PASSWORD -l 30 -e -i $$foo
+# done
 
-echo "======= MSSQL SERVER STARTED ========" | tee -a ./config.log
 # Run the setup script to create the DB and the schema in the DB
-# /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $MSSQL_SA_PASSWORD -d master -i scripts/init.sql
+/opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -U sa -P $MSSQL_SA_PASSWORD -d master -i scripts/init.sql
 
-echo "======= MSSQL CONFIG COMPLETE =======" | tee -a ./config.log
+echo "======= MSSQL CONFIG COMPLETE ======="
+
+# Wait on the sqlserver process
+wait $pid

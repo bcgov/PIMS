@@ -46,7 +46,12 @@ else
 echo \
 "ACCEPT_EULA=Y
 MSSQL_SA_PASSWORD=$passvar
-MSSQL_PID=Developer" >> ./database/mssql/.env
+MSSQL_PID=Developer
+TZ=America/Los_Angeles
+DB_NAME=pims
+DB_USER=admin
+DB_PASSWORD=$passvar
+TIMEOUT_LENGTH=120" >> ./database/mssql/.env
 fi
 
 if test -f "./database/postgres/.env"; then
