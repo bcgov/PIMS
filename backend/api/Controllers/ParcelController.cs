@@ -116,7 +116,7 @@ namespace Pims.Api.Controllers
         public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
-
+            
             _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 

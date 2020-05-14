@@ -50,7 +50,7 @@ export const Address = Yup.object().shape({
     .nullable(),
   provinceId: Yup.string().required('Required'),
   postal: Yup.string().matches(
-    /^[a-zA-z][0-9][a-zA-z]\s*?[0-9][a-zA-z][0-9]$/,
+    /^[a-zA-z][0-9][a-zA-z][\s-]?[0-9][a-zA-z][0-9]$/,
     'Invalid Postal Code',
   ),
 });
@@ -98,9 +98,7 @@ export const Building = Yup.object().shape({
   buildingFloorCount: Yup.number()
     .min(1, 'Floor Count must be a positive number')
     .required('Required'),
-  buildingTenancy: Yup.string()
-    .max(100, 'Tenancy must be less then 100 characters')
-    .required('Required'),
+  buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   rentableArea: Yup.number()
     .min(1, 'Rentable Area must be a positive number')
     .required('Required'),
