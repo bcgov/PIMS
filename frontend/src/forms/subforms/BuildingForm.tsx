@@ -43,6 +43,8 @@ export const defaultBuildingValues: any = {
   buildingConstructionTypeId: '',
   buildingPredominateUse: undefined,
   buildingPredominateUseId: '',
+  classificationId: '',
+  classification: undefined,
   buildingOccupantType: undefined,
   buildingOccupantTypeId: '',
   transferLeaseOnSale: false,
@@ -78,21 +80,11 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
     return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
   };
 
-  //set the lat/lon of this building, but only if the building lat/lon hasn't been touched and has no value.
-  if (
-    !getIn(props.touched, withNameSpace('latitude')) &&
-    !getIn(props.values, withNameSpace('latitude')) &&
-    props.values.latitude &&
-    props.touched.latitude
-  ) {
+  //set the lat/lon of this building, but only if the building lat/lon has no value.
+  if (!getIn(props.values, withNameSpace('latitude')) && props.values.latitude) {
     props.setFieldValue(withNameSpace('latitude'), props.values.latitude);
   }
-  if (
-    !getIn(props.touched, withNameSpace('longitude')) &&
-    !getIn(props.values, withNameSpace('longitude')) &&
-    props.values.longitude &&
-    props.touched.longitude
-  ) {
+  if (!getIn(props.values, withNameSpace('longitude')) && props.values.longitude) {
     props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
   }
 
