@@ -8,6 +8,7 @@ INSERT INTO dbo.[Users] (
     , [LastName]
     , [Email]
     , [IsDisabled]
+    , [IsSystem]
 ) VALUES (
     '00000000-0000-0000-0000-000000000000'
     , 'system'
@@ -15,5 +16,6 @@ INSERT INTO dbo.[Users] (
     , 'system'
     , 'system'
     , 'pims@Pims.gov.bc.ca'
+    , 1
     , 1
 )
