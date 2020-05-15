@@ -294,30 +294,44 @@ pipeline {
                 echo 'Build'
                 sh 'dotnet build --configuration Release --no-restore'
 
-                echo 'Testing the API...'
-                sh 'dotnet test --no-restore'
-
-                echo 'Generate code coverage'
+                // For future reference, if we have N test projects the flow of events would be:
+                //
+                // **Pre-conditions:**
+                //  - All projects export their individual coverage percents in JSON and OpenCover format
+                //  - There's no way to merge OpenCover xmls together (that I could find)
+                //  - Common folder "../TestResults" is  git ignored so nothing gets in source control
+                //
+                // **Steps:**
+                //
+                // Test-project 1
+                //   - generate coverage files (without merging)
+                //   - copy results to common folder "../TestResults"
+                // Test-project 2
+                //   - generate coverage files merging with previous `coverage.json`
+                //   - the previous `coverage.opencoverage.xml` is ignored
+                //   - copy results to common folder "../TestResults"
+                //  ...
+                // Test-project N
+                //   - generate coverage files merging with previous `coverage.json`
+                //   - the previous `coverage.opencoverage.xml` is ignored
+                //   - copy results to common folder "../TestResults"
+                //
+                // The final `coverage.opencover.xml` is the one we want
+                echo 'Run API tests and collect code coverage'
                 sh '''
-                coverlet ./tests/unit/api/bin/Release/netcoreapp3.1/Pims.Api.Test.dll \
-                  --target "dotnet" \
-                  --targetargs "test ./ --no-build" \
-                  -o "./tests/TestResults/api-coverage.json" \
-                  --exclude "[*.Test]*" \
-                  --exclude "[*]*Model" \
-                  --exclude-by-attribute "CompilerGenerated" \
-                  -f json
-                '''
-                sh '''
-                coverlet ./tests/unit/dal/bin/Release/netcoreapp3.1/Pims.Dal.Test.dll \
-                  --target "dotnet" \
-                  --targetargs "test ./ --no-build" \
-                  -o "./tests/TestResults/coverage.xml" \
-                  --exclude "[*.Test]*" \
-                  --exclude "[*]*Model" \
-                  --exclude-by-attribute "CompilerGenerated" \
-                  --merge-with "./tests/TestResults/api-coverage.json" \
-                  -f opencover
+                cd tests/unit
+                mkdir -p TestResults
+                rm -rf api/TestResults
+                rm -rf dal/TestResults
+                cd api
+                dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
+                mv TestResults/*/* ../TestResults/
+                cd ..
+                cd dal
+                dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
+                mv TestResults/*/* ../TestResults/
+                cd ..
+                head TestResults/coverage.opencover.xml
                 '''
 
                 echo 'API Tests passed'
@@ -331,7 +345,7 @@ pipeline {
       }
       post {
         success {
-          stash name: API_COV_STASH, includes: 'backend/tests/TestResults/**'
+          stash name: API_COV_STASH, includes: 'backend/tests/unit/TestResults/**'
           echo 'All Tests passed'
         }
         failure {
