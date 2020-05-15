@@ -39,8 +39,8 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Formats the specified postal value.
         /// </summary>
-        /// <param name="postal"></param>
-        /// <returns></returns>
+        /// <param name="postal">The specified postal value</param>
+        /// <returns>Postal with format XXX XXX.</returns>
         public static string FormatAsPostal(this string postal)
         {
             if (postal?.Length == 6 && (!postal?.Contains(" ") ?? false))
