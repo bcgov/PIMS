@@ -94,7 +94,7 @@ then
 		| oc apply -f -
 	oc get route ${STATIC_PAGE_NAME} || \
 		oc expose svc ${STATIC_PAGE_NAME}
-	oc get dc ${STATIC_PAGE_NAME} -o yaml | grep '"image":' | awk '{ print $2 }' | tr -d ',"' \
+	oc get dc ${STATIC_PAGE_NAME} -o json | grep '"image":' | awk '{ print $2 }' | tr -d ',"' \
 		| tee -a ./container_img.log
 else
 	echo
