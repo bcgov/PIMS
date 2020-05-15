@@ -294,6 +294,29 @@ pipeline {
                 echo 'Build'
                 sh 'dotnet build --configuration Release --no-restore'
 
+                // For future reference, if we have N test projects the flow of events would be:
+                //
+                // **Pre-conditions:**
+                //  - All projects export their individual coverage percents in JSON and OpenCover format
+                //  - There's no way to merge OpenCover xmls together (that I could find)
+                //  - Common folder "../TestResults" is  git ignored so nothing gets in source control
+                //
+                // **Steps:**
+                //
+                // Test-project 1
+                //   - generate coverage files (without merging)
+                //   - copy results to common folder "../TestResults"
+                // Test-project 2
+                //   - generate coverage files merging with previous `coverage.json`
+                //   - the previous `coverage.opencoverage.xml` is ignored
+                //   - copy results to common folder "../TestResults"
+                //  ...
+                // Test-project N
+                //   - generate coverage files merging with previous `coverage.json`
+                //   - the previous `coverage.opencoverage.xml` is ignored
+                //   - copy results to common folder "../TestResults"
+                //
+                // The final `coverage.opencover.xml` is the one we want
                 echo 'Run API tests and collect code coverage'
                 sh '''
                 cd tests/unit
@@ -302,7 +325,7 @@ pipeline {
                 rm -rf dal/TestResults
                 cd api
                 dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
-                mv TestResults/*/coverage.json ../TestResults/coverage.json
+                mv TestResults/*/* ../TestResults/
                 cd ..
                 cd dal
                 dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
