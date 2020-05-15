@@ -25,6 +25,7 @@ type OptionalAttributes = {
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
   outerClassName?: string;
+  onBlurFormatter?: Function;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -43,9 +44,12 @@ export const Input: React.FC<InputProps> = ({
   required,
   disabled,
   custom,
+  onBlurFormatter,
   ...rest
 }) => {
-  const { handleChange, handleBlur, errors, touched, values } = useFormikContext<any>();
+  const { handleChange, handleBlur, errors, touched, values, setFieldValue } = useFormikContext<
+    any
+  >();
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const value = getIn(values, field);
@@ -69,7 +73,12 @@ export const Input: React.FC<InputProps> = ({
         isValid={false}
         value={rest.value ?? value}
         placeholder={placeholder}
-        onBlur={handleBlur}
+        onBlur={(e: any) => {
+          if (onBlurFormatter) {
+            setFieldValue(field, onBlurFormatter(value));
+          }
+          handleBlur(e);
+        }}
         onChange={handleChange}
       />
       <DisplayError field={field} />

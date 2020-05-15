@@ -152,7 +152,7 @@ export const ParcelSchema = Yup.object()
         is: val => val && val.length > 0,
         then: Yup.string().nullable(),
         otherwise: Yup.string()
-          .matches(/\d\d\d-\d\d\d-\d\d\d/, 'PID must be in the format ###-###-###')
+          .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
           .required('PID or PIN Required'),
       }),
       pin: Yup.string().when('pid', {
