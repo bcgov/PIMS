@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200429135731_Initial")]
+    [Migration("20200514194159_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1305,6 +1305,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<bool>("IsSystem")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
