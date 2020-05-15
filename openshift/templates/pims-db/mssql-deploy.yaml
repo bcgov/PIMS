@@ -90,6 +90,9 @@ objects:
             - name: mssql-data
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-data
+            - name: backup
+              persistentVolumeClaim:
+                claimName: "${BACKUP_VOLUME_NAME}"
           containers:
             - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
               image: ""
@@ -221,3 +224,8 @@ parameters:
     description: Volume space available for data, e.g. 512Mi, 2Gi
     value: 5Gi
     required: true
+  - name: "BACKUP_VOLUME_NAME"
+    displayName: "Backup Volume Name"
+    description: The name of the persistent volume used to store the backups.  Please note, when using the recommended nfs-backup storage class the name of the pvc MUST be taken from the manually provisioned claim; nfs-backup storage MUST be provisioned manually.
+    required: true
+    value: bk-jcxjin-dev-r9c53stkggh6
