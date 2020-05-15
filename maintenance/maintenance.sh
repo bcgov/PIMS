@@ -25,8 +25,8 @@ STATIC_PAGE_PORT=${STATIC_PAGE_PORT:-2015-tcp}
 IMG_SRC=${IMG_SRC:-bcgov-s2i-caddy}
 GIT_REPO=${GIT_REPO:-https://github.com/bcgov/pims.git}
 GIT_BRANCH=${GIT_BRANCH:-dev}
-OC_BUILD=${OC_BUILD:-../openshift/templates/maintenance/caddy.bc.json}
-OC_DEPLOY=${OC_DEPLOY:-../openshift/templates/maintenance/caddy.dc.json}
+OC_BUILD=${OC_BUILD:-../openshift/templates/maintenance/caddy.bc.yaml}
+OC_DEPLOY=${OC_DEPLOY:-../openshift/templates/maintenance/caddy.dc.yaml}
 BUILD_PROJECT=${BUILD_PROJECT:-jcxjin-tools}
 
 
@@ -94,7 +94,7 @@ then
 		| oc apply -f -
 	oc get route ${STATIC_PAGE_NAME} || \
 		oc expose svc ${STATIC_PAGE_NAME}
-	oc get dc ${STATIC_PAGE_NAME} -o json | grep '"image":' | awk '{ print $2 }' | tr -d ',"' \
+	oc get dc ${STATIC_PAGE_NAME} -o yaml | grep '"image":' | awk '{ print $2 }' | tr -d ',"' \
 		| tee -a ./container_img.log
 else
 	echo
