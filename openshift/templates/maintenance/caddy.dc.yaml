@@ -6,14 +6,14 @@ metadata:
 parameters:
   - name: NAME
     displayName: Name
-    description: The suffix for all created objects
+    description: The name used for deployments in openshift.
     required: false
     value: proxy-caddy
   - name: BUILD_PROJECT
     displayName: Build project
-    description: The suffix for all created objects
+    description: The openshift project hosting the maintenance page build.
     required: false
-    value: jcxjin-dev
+    value: jcxjin-tools
 objects:
   - kind: DeploymentConfig
     apiVersion: v1

@@ -6,12 +6,12 @@ metadata:
 parameters:
   - name: NAME
     displayName: Name
-    description: The suffix for all created objects
+    description: The name displayed for this build in openshift
     required: false
     value: proxy-caddy
   - name: GIT_REPO
     displayName: GIT_REPO
-    description: URL to GitHub repo with static content
+    description: URL to GitHub repo with static maintenance page content
     required: false
     value: https://github.com/bcgov/pims.git
   - name: GIT_BRANCH
