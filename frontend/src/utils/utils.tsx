@@ -1,7 +1,8 @@
 import { ILookupCode } from 'actions/lookupActions';
-
+import { startCase } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
+import { SortDirection } from 'components/Table/TableSort';
 
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
@@ -60,4 +61,12 @@ export const formikFieldMemo = (
     Object.keys(currentProps).length !== Object.keys(prevProps).length ||
     currentProps.isSubmitting !== prevProps.isSubmitting
   );
+};
+
+export const generateSortCriteria = (column: string, direction: SortDirection) => {
+  if (!column || !direction) {
+    return '';
+  }
+
+  return `${startCase(column).replace(' ', '')} ${direction}`;
 };

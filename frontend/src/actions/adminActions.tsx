@@ -1,6 +1,7 @@
 import * as ActionTypes from 'constants/actionTypes';
-import { IPagedItems, IUser, IUserDetails, IAgency, IRole } from 'interfaces';
+import { IPagedItems, IUser, IUserDetails, IAgency, IRole, IUsersFilter } from 'interfaces';
 import { IUserRecord } from 'pages/admin/users/interfaces/IUserRecord';
+import { TableSort } from 'components/Table/TableSort';
 
 //Admin API actions
 export interface IStoreUsersAction {
@@ -23,25 +24,24 @@ export interface IUpdateUserAction {
   user: IUser;
 }
 
-export type SortDirection = 'asc' | 'desc';
-export interface IUsersSort {
-  sortBy: keyof IUserRecord;
-  direction: SortDirection;
-}
-
 export interface ISortUsersAction {
   type: typeof ActionTypes.SORT_USERS;
-  sort: IUsersSort;
+  sort: TableSort<IUserRecord>;
 }
 
 export interface IFilterUsersAction {
   type: typeof ActionTypes.FILTER_USERS;
-  filter: string[][];
+  filter: IUsersFilter;
 }
 
 export interface IUsersPageSizeAction {
   type: typeof ActionTypes.SET_USERS_PAGE_SIZE;
   size: number;
+}
+
+export interface IUpdateUsersPageIndexAction {
+  type: typeof ActionTypes.SET_USERS_PAGE_INDEX;
+  pageIndex: number;
 }
 
 export interface IStoreUserDetail {
@@ -65,9 +65,9 @@ export const updateUser = (user: IUser): IUpdateUserAction => ({
   user,
 });
 
-export const setUsersFilter = (filterList: string[][]): IFilterUsersAction => ({
+export const getUsersFilterAction = (filter: IUsersFilter): IFilterUsersAction => ({
   type: ActionTypes.FILTER_USERS,
-  filter: filterList,
+  filter,
 });
 
 export const setUsersPageSize = (size: number) => ({
@@ -75,7 +75,12 @@ export const setUsersPageSize = (size: number) => ({
   size,
 });
 
-export const setUsersSort = (sort: IUsersSort): ISortUsersAction => ({
+export const getUsersPageIndexAction = (pageIndex: number): IUpdateUsersPageIndexAction => ({
+  type: ActionTypes.SET_USERS_PAGE_INDEX,
+  pageIndex,
+});
+
+export const getUsersSortAction = (sort: TableSort<IUserRecord>): ISortUsersAction => ({
   type: ActionTypes.SORT_USERS,
   sort,
 });

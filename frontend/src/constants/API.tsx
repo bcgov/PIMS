@@ -6,7 +6,7 @@ import { AccessRequestStatus } from './accessStatus';
 export interface IPaginateParams {
   page: number;
   quantity?: number;
-  sort?: string;
+  sort?: string | string[];
 }
 
 export interface IGetUsersParams extends IPaginateParams {
