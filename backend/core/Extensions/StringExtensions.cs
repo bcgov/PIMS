@@ -36,9 +36,16 @@ namespace Pims.Core.Extensions
             return env != null && env.Equals("Production", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Formats the specified postal value.
+        /// </summary>
+        /// <param name="postal">The specified postal value</param>
+        /// <returns>Postal with format XXX XXX.</returns>
         public static string FormatAsPostal(this string postal)
         {
-            return postal.Insert(3, " ");
+            if (postal?.Length == 6 && (!postal?.Contains(" ") ?? false))
+                return postal?.ToUpper().Insert(3, " ");
+            return postal?.ToUpper();
         }
     }
 }
