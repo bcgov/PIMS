@@ -98,7 +98,8 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
     if (
       financial.year === moment().year() &&
       !financial.value &&
-      financial.key !== EvaluationKeys.Appraised
+      financial.key !== EvaluationKeys.Appraised &&
+      financial.key !== FiscalKeys.Estimated
     ) {
       errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
     }
