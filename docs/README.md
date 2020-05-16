@@ -6,46 +6,47 @@ The PIMS solution will provide a geo-spatial inventory of properties to assist S
 
 The PIMS technical architecture stack continues to grow as features and enhancements are added. The current components and integrations are listed below;
 
-### Components
-
-|                                                     | Component             |  Name   | Technical Stack      |              Version | Description                                                                                                              |
-| --------------------------------------------------- | --------------------- | :-----: | -------------------- | -------------------: | ------------------------------------------------------------------------------------------------------------------------ |
-|                                                     | **Application**       |         |
-| <img src="./images/logo-react.svg" width="25">      | Front-end application |   app   | React/Node           |           16.12.0/10 | UI for PIMS                                                                                                              |
-| <img src="./images/logo-dotnetcore.svg" width="25"> | Back-end API          |   api   | .NET Core            |                  3.1 | RESTful Open API for data access                                                                                         |
-| <img src="./images/logo-mssql.svg" width="25">      | Backend database      |   db    | MSSQL                |                 2019 | Inventory datasource                                                                                                     |
-| <img src="./images/logo-keycloak.png" width="25">   | Authentication        |  auth   | KeyCloak             | 7&#46;3&#46;0&#46;GA | Authenticate users                                                                                                       |
-|                                                     | **GIS**               |
-| <img src="./images/logo-leaflett.png" width="25">   | Mapping               |   gis   | Leaflet              |                      | Source for UI maps                                                                                                       |
-|                                                     | **Infrastructure**    |
-| <img src="./images/logo-github.svg" width="25">     | Source Code           |   git   | GitHub               |                      | Source code repository                                                                                                   |
-| <img src="./images/logo-github.svg" width="25">     | GitHub Actions        |   git   | GitHub               |                      | GitHub Actions ensure stability before allowing merge                                                                    |
-| <img src="./images/logo-OpenShift.svg" width="25">  | Cloud Hosting         |   env   | OpenShift            |                 3.11 | Environment for solution                                                                                                 |
-| <img src="./images/logo-OpenShift.svg" width="25">  | DevOps Hosting        |   env   | OpenShift            |                 3.11 | CI/CD pipeline environment                                                                                               |
-| <img src="./images/logo-jenkins.svg" width="25">    | DevOps Pipeline       |  tool   | Jenkins              |              2.138.4 | CI/CD pipeline tooling                                                                                                   |
-| <img src="./images/logo-docker.svg" width="25">     | Containers            |  tool   | Docker               |                      | Container platform tooling                                                                                               |
-| <img src="./images/oauth-2.svg" width="25">         | Authentication        |  oath   | Open ID Connect      |                  2.0 | Identity membership managed by IDIR, BCeID and GitHub                                                                    |
-| <img src="./images/logo-dotnetcore.svg" width="25"> | EF Core               | library | EntityFramework Core |                3.1.3 | A lightweight, extensible, open source and cross-platform version of the popular Entity Framework data access technology |
-| <img src="./images/redux.svg" width="25">           | Redux                 | library | React+Redux          |                4.0.5 | A Predictable State Container for JS Apps                                                                                |
-| <img src="./images/formik.png" width="25">          | Formik                | library | React+Formik         |                2.1.4 | Build forms in React, without the tears                                                                                  |
-| <img src="./images/typescript.svg" width="25">      | Typescript            | library | Javascript           |                3.7.3 | TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.                                          |
-
 ## Documentation
 
 - [Architecture](./ARCHITECTURE.md)
 - [Start Developing](./DEVELOPMENT.md)
 - [GitHub Workflow](./GITHUB-WORKFLOW.md)
-- [DevOps - OpenShift](../openshift/README.md)
 - [Database](./DATABASE.md)
 - [Backend API](../backend/README.md)
 - [Frontend APP](../frontend/README.md)
+- [OpenShift](../openshift/README.md)
+- [DevOps CI/CD](./DEVOPS.md)
 - [Versions](./VERSIONS.md)
+
+### Components
+
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                | Component             | Technical Stack      |              Version | Description                                                                                                              |
+| --------------------------------------------------- | --------------------- | -------------------- | -------------------: | ------------------------------------------------------------------------------------------------------------------------ |
+|                                                     | **Application**       |
+| <img src="./images/logo-react.svg" width="25">      | Front-end application | React/Node           |           16.12.0/10 | UI for PIMS                                                                                                              |
+| <img src="./images/logo-dotnetcore.svg" width="25"> | Back-end API          | .NET Core            |                  3.1 | RESTful Open API for data access                                                                                         |
+| <img src="./images/logo-mssql.svg" width="25">      | Backend database      | MSSQL                |                 2019 | Inventory datasource                                                                                                     |
+| <img src="./images/logo-keycloak.png" width="25">   | Authentication        | KeyCloak             | 7&#46;3&#46;0&#46;GA | Authenticate users                                                                                                       |
+|                                                     | **GIS**               |
+| <img src="./images/logo-leaflett.png" width="25">   | Mapping               | Leaflet              |                      | Source for UI maps                                                                                                       |
+|                                                     | **Infrastructure**    |
+| <img src="./images/logo-github.svg" width="25">     | Source Code           | GitHub               |                      | Source code repository                                                                                                   |
+| <img src="./images/logo-github.svg" width="25">     | GitHub Actions        | GitHub               |                      | GitHub Actions ensure stability before allowing merge                                                                    |
+| <img src="./images/logo-OpenShift.svg" width="25">  | Cloud Hosting         | OpenShift            |                 3.11 | Environment for solution                                                                                                 |
+| <img src="./images/logo-OpenShift.svg" width="25">  | DevOps Hosting        | OpenShift            |                 3.11 | CI/CD pipeline environment                                                                                               |
+| <img src="./images/logo-jenkins.svg" width="25">    | DevOps Pipeline       | Jenkins              |              2.138.4 | CI/CD pipeline tooling                                                                                                   |
+| <img src="./images/logo-docker.svg" width="25">     | Containers            | Docker               |                      | Container platform tooling                                                                                               |
+| <img src="./images/oauth-2.svg" width="25">         | Authentication        | Open ID Connect      |                  2.0 | Identity membership managed by IDIR, BCeID and GitHub                                                                    |
+| <img src="./images/logo-dotnetcore.svg" width="25"> | EF Core               | EntityFramework Core |                3.1.3 | A lightweight, extensible, open source and cross-platform version of the popular Entity Framework data access technology |
+| <img src="./images/redux.svg" width="25">           | Redux                 | React+Redux          |                4.0.5 | A Predictable State Container for JS Apps                                                                                |
+| <img src="./images/formik.png" width="25">          | Formik                | React+Formik         |                2.1.4 | Build forms in React, without the tears                                                                                  |
+| <img src="./images/typescript.svg" width="25">      | Typescript            | Javascript           |                3.7.3 | TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.                                          |
 
 ## Tools
 
 There are a number of tools used to develop and analyze the PIMS project.
 
-|                                                      | Name                                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                               |
+|         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         | Name                                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                               |
 | :--------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |     <img src="./images/codecov.svg" width="25">      | [CodeCov](https://codecov.io/gh/bcgov/PIMS)                                                                                                                                                                                                                                                                                                                                              | Improve your code review workflow and quality. Codecov provides highly integrated tools to group, merge, archive, and compare coverage reports.                                                                                                                                           |
 | <img src="./images/logo-uptimerobot.svg" width="25"> | [UptimeRobot](https://stats.uptimerobot.com/M7nQzH52nW)                                                                                                                                                                                                                                                                                                                                  | Uptime Robot is all about helping you to keep your websites up                                                                                                                                                                                                                            |
