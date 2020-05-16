@@ -8,17 +8,18 @@ Versioning is supported through route paths.
 
 See Microsoft's AspNet Api Versioning plugin [here](https://github.com/microsoft/aspnet-api-versioning/wiki).
 
+- [Configuration](./VERSIONING.md)
+- [Semantic Versioning](../../docs/VERSIONS.md)
+
 ## Swagger
 
 The API is documented with Open API.
 
 ### Swagger UI
 
-`{scheme}://{host}:{port}/api/swagger`
-
--  [DEV](pims-dev.pathfinder.gov.bc.ca/api/swagger)
--  [TEST](pims-test.pathfinder.gov.bc.ca/api/swagger) [NOT AVAILABLE]
--  [PROD](pims.pathfinder.gov.bc.ca/api/swagger) [NOT AVAILABLE]
+- [DEV](pims-dev.pathfinder.gov.bc.ca/api-docs)
+- [TEST](pims-test.pathfinder.gov.bc.ca/api-docs)
+- [PROD](pims.gov.bc.ca/api-docs) <span style="color:red">[NOT AVAILABLE]</span>
 
 ## Healthchecks
 
@@ -27,11 +28,8 @@ The project HealthChecks.UI is a minimal UI interface that stores and shows the 
 
 See Microsoft AspNet Diagnostics Health Checks [here](https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/README.md).
 
-### Health Check UI
+### Health Check UI - Uptime Robot
 
-`{scheme}://{host}:{port}/api/healthchecks-ui`
-
-- [DEV](pims-dev.pathfinder.gov.bc.ca/api/healthchecks-ui)
-- [TEST](pims-test.pathfinder.gov.bc.ca/api/healthchecks-ui) [NOT AVAILABLE]
-- [PROD](pims.pathfinder.gov.bc.ca/api/healthchecks-ui) [NOT AVAILABLE]
-
+- [DEV](https://stats.uptimerobot.com/M7nQzH52nW)
+- [TEST](https://stats.uptimerobot.com/M7nQzH52nW) <span style="color:red">[NOT AVAILABLE]</span>
+- [PROD](https://stats.uptimerobot.com/M7nQzH52nW) <span style="color:red">[NOT AVAILABLE]</span>
