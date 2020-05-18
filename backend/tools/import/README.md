@@ -41,7 +41,47 @@ Some of these settings have default values contained in the `appsettings.json` c
 
 If you prefer, you can add your JSON files to the `/backend/tools/import/Data` folder and they will be ignored by **git**.
 
-## Run
+## Seeding the database - Makefile
+
+A `Makefile` is provided within this folder to automate the process of:
+
+* Requesting a keycloak token for **pims-service-account**
+* Activating the service account via an API call
+* Seeding the docker database via `dotnet run`
+
+#### Available commands
+
+```bash
+make run
+```
+
+If you need to troubleshoot;
+
+```bash
+make token
+# Your JWT token is: ey7hb....a1Q
+make help
+```
+
+#### Requirements
+
+For the `Makefile` to work you will need to:
+
+1. Ensure a valid `[.env]` file is present;
+
+2. Ensure the solution is currently running in docker; i.e `docker-compose up -d` 
+
+3. Ensure **Make** is installed in your shell. It comes pre-installed on macOS. For Windows, you can install `gnu-make` via [chocolatey](https://chocolatey.org/) or [scoop](https://scoop.sh/)
+
+   ```bash
+   choco install make
+   # -OR-
+   scoop install make
+   ```
+
+_Alternatively, you can follow the instructions below to seed the database manually_
+
+## Seeding the database manually
 
 To run the application ensure the configuration files are present and the JSON data file is in the correct location (i.e. the `/Data` folder).
 
@@ -51,37 +91,41 @@ Additionally the account must have the appropriate Keycloak roles (i.e. `system-
 
 When using `Keycloak:ClientId=pims-service-account` you will need to do the following (use Postman or `curl`);
 
-* Open Keycloak management console (running at http://keycloack:8080) and copy the client secret for `pims-service-account`;
+1. Open Keycloak management console (running at http://keycloack:8080) and copy the client secret for `pims-service-account`;
 
-![keycloak console](keycloak-service-account.png)
+   ![keycloak console](keycloak-service-account.png)
 
-- Get a valid JWT token for the service account - make sure to provide the **client_secret**;
+2. Get a valid keycloak token for the service account - make sure to provide the correct **client_secret**;
 
-```bash
-curl -L -X POST 'http://keycloak:8080/auth/realms/pims/protocol/openid-connect/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'client_id=pims-service-account' \
---data-urlencode 'grant_type=client_credentials' \
---data-urlencode 'audience=pims-service-account' \
---data-urlencode 'client_secret=xxxxxxxxxx'
-```
+    **NOTE** - Ensure you have an `.env` file setup with relevant environment variables before sourcing it
 
-- Make a request to the `/api/auth/activate` endpoint using that JWT token;
+    ```bash
+    [[ -f .env ]] && source .env
+    KC_TOKEN=$(curl -L -X POST "http://keycloak:8080/auth/realms/pims/protocol/openid-connect/token" \
+    --header "Content-Type: application/x-www-form-urlencoded" \
+    --data-urlencode "grant_type=client_credentials" \
+    --data-urlencode "audience=pims-service-account" \
+    --data-urlencode "client_id=pims-service-account" \
+    --data-urlencode "client_secret=${Keycloak__ClientSecret}" | jq -r '.access_token')
+    ```
 
-```bash
-curl -v -L -X POST 'http://localhost:5000/api/auth/activate' \
---header 'Content-Length: 0' \
---header 'Authorization: Bearer xxxxxxxxxx'
-```
+3. Make a request to the `/api/auth/activate` endpoint using that JWT token;
 
-* Go to the `/backend/tools/import` folder and execute the following;
+    ```bash
+    curl -v -L -X POST "http://localhost:5000/api/auth/activate" \
+    --header "Content-Length: 0" \
+    --header "Authorization: Bearer ${KC_TOKEN}"
+    ```
 
-```bash
-dotnet run
-```
+4. Go to the `/backend/tools/import` folder and execute the following;
 
-Alternatively, you can execute the compiled build directly if you have your environment variables setup.
+    ```bash
+    dotnet run
+    ```
 
-```bash
-./Pims.Tools.Import.exe
-```
+    Alternatively, you can execute the compiled build directly if you have your environment variables setup.
+
+    ```bash
+    Pims.Tools.Import.exe
+    ```
+

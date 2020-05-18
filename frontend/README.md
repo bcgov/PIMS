@@ -37,6 +37,23 @@ Make sure the host name matches both the Docker container name found in the `doc
 For example here it is set to `keycloak`, which means there is a `hosts` file entry for `127.0.0.1 keycloak` on your local computer and the `docker-compose.yaml` contains a `service` named `keycloak`.
 This is required so that Keycloak will correctly authenticate tokens for the specified **Issuer**.
 
+## Usage
+
+### Commands
+
+This project uses Make commands listed in the [Makefile](./Makefile) for ease of development. The available commands are as follows.
+
+| Command      | Description                                                 |
+| ------------ | ----------------------------------------------------------- |
+| make install | Setup the development environment; install NPM dependencies |
+| make build   | Builds the app for production to the `build` folder         |
+| make run     | Runs the app in the development mode                        |
+| make lint    | Runs the linter                                             |
+| make test    | Launches the test runner in the interactive watch mode      |
+| make clean   | Purges node_modules                                         |
+
+Refer to the [Makefile](./Makefile) for arguments required for the above commands.
+
 ## Available Scripts
 
 In the project directory, you can run:
