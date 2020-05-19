@@ -8,7 +8,7 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: "${NAME}-pims-backup"
   - kind: BuildConfig
     apiVersion: v1
     metadata:
@@ -46,7 +46,7 @@ parameters:
     displayName: Git Repo URL
     description: The URL to your GIT repo.
     required: true
-    value: https://github.com/devinleighsmith/backup-container.git
+    value: https://github.com/bcgov/backup-container.git
   - name: GIT_REF
     displayName: Git Reference
     description: The git reference or branch.

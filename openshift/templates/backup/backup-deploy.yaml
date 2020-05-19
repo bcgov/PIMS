@@ -358,7 +358,6 @@ parameters:
       MUST be taken from the manually provisioned claim; nfs-backup storage MUST be
       provisioned manually.
     required: true
-    value: bk-jcxjin-dev-r9c53stkggh6
   - name: BACKUP_VOLUME_SIZE
     displayName: Backup Volume Size
     description:
@@ -409,7 +408,7 @@ parameters:
       the database server to contain the database configuration and data files. For
       Mongo, please use /var/lib/mongodb/data . For MSSQL, please use /var/opt/mssql/data
     required: true
-    value: "/var/lib/pgsql/data"
+    value: "/var/opt/mssql/data"
   - name: CPU_REQUEST
     displayName: Resources CPU Request
     description: The resources CPU request (in cores) for this build.

@@ -228,4 +228,3 @@ parameters:
     displayName: "Backup Volume Name"
     description: The name of the persistent volume used to store the backups.  Please note, when using the recommended nfs-backup storage class the name of the pvc MUST be taken from the manually provisioned claim; nfs-backup storage MUST be provisioned manually.
     required: true
-    value: bk-jcxjin-dev-r9c53stkggh6
