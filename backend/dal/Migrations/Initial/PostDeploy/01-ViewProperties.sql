@@ -43,6 +43,7 @@ SELECT
 
     -- Building Properties
     , [LocalId] = null
+    , [ParcelId] = null
     , [BuildingConstructionTypeId] = 0
     , BuildingConstructionType = null
     , [BuildingFloorCount] = 0
@@ -151,6 +152,7 @@ SELECT
 
     -- Building Properties
     , [LocalId] = b.[LocalId]
+    , [ParcelId] = b.[ParcelId]
     , [BuildingConstructionTypeId] = b.[BuildingConstructionTypeId]
     , BuildingConstructionType = bct.[Name]
     , [BuildingFloorCount] = b.[BuildingFloorCount]

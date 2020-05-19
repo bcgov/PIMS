@@ -101,6 +101,7 @@ namespace Pims.Api.Mapping.Property
                 .Map(dest => dest.AppraisedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date)
 
                 .Map(dest => dest.LocalId, src => src.LocalId)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
                 .Map(dest => dest.ConstructionType, src => src.BuildingConstructionType.Name)
                 .Map(dest => dest.PredominateUseId, src => src.BuildingPredominateUseId)
@@ -159,6 +160,7 @@ namespace Pims.Api.Mapping.Property
                 .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
                 .Map(dest => dest.LocalId, src => src.LocalId)
+                .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
                 .Map(dest => dest.ConstructionType, src => src.BuildingConstructionType)
                 .Map(dest => dest.PredominateUseId, src => src.BuildingPredominateUseId)
