@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Formik, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
@@ -29,6 +29,11 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import SumFinancialsForm from './subforms/SumFinancialsForm';
 import { PARCEL_STORAGE_NAME } from 'utils/storageUtils';
 import PagedBuildingForms from './subforms/PagedBuildingForms';
+import * as API from 'constants/API';
+import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCodeState } from 'reducers/lookupCodeReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from 'reducers/rootReducer';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -57,9 +62,26 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
   let initialValues = getInitialValues();
+  const lookupCodes = useSelector<RootState, ILookupCode[]>(
+    state => (state.lookupCode as ILookupCodeState).lookupCodes,
+  );
+
+  const agencies = useMemo(
+    () =>
+      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
+      }),
+    [lookupCodes],
+  );
+
+  agencies.forEach(x => {
+    if (x.id.toString() === props.agencyId?.toString()) {
+      initialValues.agency = x.code;
+    }
+  });
+
   initialValues.agencyId = props.agencyId;
   //Load all data if we are updating a parcel.
-
   if (props?.parcelDetail?.id) {
     const buildings = props.parcelDetail?.buildings.map(building => {
       return {
