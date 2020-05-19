@@ -59,6 +59,14 @@ const SubmitProperty = (props: any) => {
   ) {
     setFormDisabled(true); //if the user doesn't belong to this properties agency, display a read only view.
   }
+  if (
+    parsedQuery.disabled === undefined &&
+    formDisabled === true &&
+    cachedParcelDetail?.agencyId &&
+    keycloak.hasAgency(cachedParcelDetail?.agencyId)
+  ) {
+    setFormDisabled(false);
+  }
   if (!keycloak.agencyId && !formDisabled) {
     throw Error('You must belong to an agency to submit properties');
   } else if (!keycloak.obj?.subject) {
