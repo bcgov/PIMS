@@ -205,6 +205,11 @@ namespace Pims.Dal.Entities.Views
         public string LocalId { get; set; }
 
         /// <summary>
+        /// get/set - The parent parcel Id.
+        /// </summary>
+        public int? ParcelId { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the property building construction type.
         /// </summary>
         public int BuildingConstructionTypeId { get; set; }
@@ -331,6 +336,7 @@ namespace Pims.Dal.Entities.Views
             this.PID = building.Parcel?.PID ?? 0;
             this.PIN = building.Parcel?.PIN;
             this.LocalId = building.LocalId;
+            this.ParcelId = building.ParcelId;
             this.BuildingConstructionTypeId = building.BuildingConstructionTypeId;
             this.BuildingConstructionType = building.BuildingConstructionType?.Name;
             this.BuildingFloorCount = building.BuildingFloorCount;
