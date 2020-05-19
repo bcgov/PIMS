@@ -10,7 +10,6 @@ metadata:
     description: Build template for a .NET Core 3.1 application.
     tags: pims-api
 objects:
-  # The final build image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
@@ -60,6 +59,8 @@ objects:
               value: ${DOTNET_PUBLISH_READYTORUN}
             - name: DOTNET_TEST_PROJECTS
               value: ${DOTNET_TEST_PROJECTS}
+            - name: DOTNET_TOOLS
+              value: ${DOTNET_TOOLS}
       output:
         to:
           kind: ImageStreamTag
@@ -131,6 +132,11 @@ parameters:
     description: The tag given to the built image.
     required: true
     value: latest
+  - name: DOTNET_TOOLS
+    displayName: Output Tools
+    description: Dotnet tools to install during build.
+    required: true
+    value: dotnet-ef
 
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
