@@ -270,7 +270,7 @@ Array [
         role="table"
         style={
           Object {
-            "minWidth": "1640px",
+            "minWidth": "1290px",
           }
         }
       >
@@ -284,7 +284,7 @@ Array [
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "360px",
+                "minWidth": "390px",
               }
             }
           >
@@ -298,11 +298,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "65 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "65px",
                 }
               }
             >
@@ -358,11 +358,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "120 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "120px",
                 }
               }
             >
@@ -398,11 +398,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "65 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "65px",
                 }
               }
             >
@@ -418,11 +418,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "95 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "95px",
                 }
               }
             >
@@ -438,11 +438,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "100 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "100px",
                 }
               }
             >
@@ -458,11 +458,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "100 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "100px",
                 }
               }
             >
@@ -478,11 +478,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "100 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "100px",
                 }
               }
             >
@@ -498,11 +498,11 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "60 0 auto",
+                  "flex": "50 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "30px",
                   "textAlign": "left",
-                  "width": "60px",
+                  "width": "50px",
                 }
               }
             >
@@ -527,6 +527,25 @@ Array [
               }
             >
               Lot Size (in ha)
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "65 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "65px",
+                }
+              }
+            >
+              
             </div>
           </div>
         </div>
