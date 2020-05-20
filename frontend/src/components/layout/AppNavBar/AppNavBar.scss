@@ -1,4 +1,4 @@
-@import '../../../fonts.scss';
+@import '../../../styles.scss';
 nav.map-nav {
   width: 100%;
   font-family: 'BCSans' Fallback, sans-serif;
@@ -40,16 +40,16 @@ nav.map-nav {
         margin-top: 0;
 
         a.dropdown-item {
-          color: #003366;
+          color: $primary-color;
           font-size: 14px;
           line-height: 2.25rem;
           &:hover {
-            background-color: #fcba19;
+            background-color: $accent-color;
           }
         }
 
         .active {
-          background-color: #38598a;
+          background-color: $primary-light-color;
         }
       }
     }

@@ -32,23 +32,26 @@ Array [
                     className="form-group"
                   >
                     <select
-                      className="form-control"
+                      className="form-select form-control"
                       id="input-searchBy"
                       name="searchBy"
                       onChange={[Function]}
                       value="address"
                     >
                       <option
+                        className="option"
                         value="address"
                       >
                         Address
                       </option>
                       <option
+                        className="option"
                         value="municipality"
                       >
                         Municipality
                       </option>
                       <option
+                        className="option"
                         value="projectNumber"
                       >
                         RAEG or SPP No.
@@ -82,7 +85,7 @@ Array [
                 className="form-group"
               >
                 <select
-                  className="form-control"
+                  className="form-select form-control"
                   id="input-agencies"
                   name="agencies"
                   onChange={[Function]}
@@ -94,6 +97,7 @@ Array [
                     Enter an Agency
                   </option>
                   <option
+                    className="option"
                     value="1"
                   >
                     agencyVal
@@ -108,7 +112,7 @@ Array [
                 className="form-group"
               >
                 <select
-                  className="form-control"
+                  className="form-select form-control"
                   id="input-classificationId"
                   name="classificationId"
                   onChange={[Function]}

@@ -17,6 +17,6 @@ export interface IUserRecord {
   lastName?: string;
   isDisabled?: boolean;
   agency?: string;
-  role?: string;
+  roles?: string;
   position?: string;
 }

@@ -1,3 +1,5 @@
+@import '../styles.scss';
+
 .parcelDetailForm {
   text-align: left;
   font-size: 0.75rem;
@@ -63,7 +65,7 @@
     margin-bottom: 0;
   }
   h4 {
-    color: #003366;
+    color: $primary-color;
     font-size: 14px;
   }
   form .row {
@@ -73,14 +75,14 @@
       font-size: 20px;
     }
     h3 {
-      background-color: #38598a;
+      background-color: $primary-light-color;
       color: #fff;
       font-size: 1rem;
       line-height: 3rem;
       padding-left: 0.75rem;
     }
     h4 {
-      color: #003366;
+      color: $primary-color;
       font-size: 14px;
       padding-left: 1rem;
     }

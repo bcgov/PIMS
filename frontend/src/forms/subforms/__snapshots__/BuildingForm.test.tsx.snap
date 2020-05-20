@@ -76,7 +76,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           className="col-md-10 form-group"
         >
           <select
-            className="form-control"
+            className="form-select form-control"
             disabled={true}
             id="input-address.provinceId"
             name="address.provinceId"
@@ -89,6 +89,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               Must Select One
             </option>
             <option
+              className="option"
               value="2"
             >
               test province

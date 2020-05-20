@@ -95,7 +95,7 @@ export const ManageUsersPage = () => {
       firstName: u.firstName,
       lastName: u.lastName,
       isDisabled: u.isDisabled,
-      role: u.roles && u.roles.length > 0 ? u.roles[0].name : '',
+      roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position,
     }),
