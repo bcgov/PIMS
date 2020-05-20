@@ -16,5 +16,12 @@ export type ClickableCell<D extends object = {}> = Cell<D> & { column: Clickable
 
 export type ColumnWithProps<D extends object = {}> = Column<D> & {
   align?: 'left' | 'right';
+  useWidthPercentage?: boolean;
+} & IClickableCell &
+  ISortableCell;
+
+export type ColumnWithPropsInstance<D extends object = {}> = ColumnInstance<D> & {
+  align?: 'left' | 'right';
+  useWidthPercentage?: boolean;
 } & IClickableCell &
   ISortableCell;
