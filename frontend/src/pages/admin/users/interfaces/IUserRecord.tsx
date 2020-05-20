@@ -15,7 +15,7 @@ export interface IUserRecord {
   username?: string;
   firstName?: string;
   lastName?: string;
-  active?: AccountActive;
+  isDisabled?: boolean;
   agency?: string;
   role?: string;
   position?: string;

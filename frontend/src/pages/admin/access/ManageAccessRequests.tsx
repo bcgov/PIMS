@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { Table } from 'components/Table';
-import { IPaginate, toAccessRequestApiPaginateParams } from 'utils/CommonFunctions';
+import { IPaginate, toFilteredApiPaginateParams } from 'utils/CommonFunctions';
 import * as API from 'constants/API';
 import { IAccessRequest } from 'interfaces';
 import './ManageAccessRequests.scss';
@@ -55,7 +55,7 @@ const ManageAccessRequests = () => {
 
   React.useEffect(() => {
     if (!updateRequestAccessAdmin?.isFetching) {
-      const paginateParams: API.IPaginateAccessRequests = toAccessRequestApiPaginateParams(
+      const paginateParams: API.IPaginateAccessRequests = toFilteredApiPaginateParams<IFilterData>(
         pageIndex,
         pageSize,
         '',

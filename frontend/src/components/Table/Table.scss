@@ -14,10 +14,44 @@
     }
   }
 
+  .table-loading,
+  .no-rows-message {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
   .td,
   .th {
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
+
+    .sortable-column {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+
+      :nth-child(2) {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.table-toolbar {
+  display: flex;
+  flex-direction: row-reverse;
+  align-content: center;
+
+  div {
+    .Menu-root {
+      margin-right: 30px;
+    }
   }
 }

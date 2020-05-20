@@ -1,0 +1,12 @@
+@import '../../fonts.scss';
+
+.search-bar {
+  padding: 12px;
+  background-color: #f2f2f2;
+  .bar-item {
+    .form-group {
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

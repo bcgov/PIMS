@@ -1,43 +1,28 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreIcon from '@material-ui/icons/MoreHoriz';
-import { AccountActive } from '../interfaces/IUserRecord';
+import { IUserRecord } from '../interfaces/IUserRecord';
 import { useStore, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IUser } from 'interfaces';
 import { getUpdateUserAction } from 'actionCreators/usersActionCreator';
-export interface IRowActionProps {
-  userId: string;
-  active: AccountActive;
-}
+import { Menu } from 'components/menu/Menu';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { CellProps } from 'react-table';
+import { IUsersState } from 'reducers/usersReducer';
 
-export const RowActions = (props: IRowActionProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+export const RowActions = (props: CellProps<IUserRecord>) => {
   const store = useStore();
   const dispatch = useDispatch();
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const close = () => {
-    setAnchorEl(null);
-  };
-
   const getUser = (): IUser | undefined =>
-    (store.getState() as RootState).users.pagedUsers.items.find(
-      (user: IUser) => user.id === props.userId,
+    ((store.getState() as RootState).users as IUsersState).pagedUsers.items.find(
+      (user: IUser) => user.id === props.row.original.id,
     );
 
   const changeAccountStatus = async (disabled: boolean) => {
     const user = getUser();
     if (user) {
       user.isDisabled = disabled;
-      await getUpdateUserAction({ id: props.userId }, user)(dispatch);
-      close();
+      await getUpdateUserAction({ id: props.row.original.id }, user)(dispatch);
     }
   };
   const enableUser = async () => {
@@ -49,38 +34,29 @@ export const RowActions = (props: IRowActionProps) => {
   };
 
   const openUserDetails = () => {
-    close();
-    window.location.assign(`/admin/user/${props.userId}`);
+    window.location.assign(`/admin/user/${props.row.original.id}`);
   };
 
   return (
-    <div>
-      <IconButton
-        aria-label="more"
-        aria-controls="long-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        size="small"
-      >
-        <MoreIcon />
-      </IconButton>
-      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={close}>
-        <MenuItem
-          data-testid={`enable-${props.userId}`}
-          disabled={props.active === AccountActive.YES}
-          onClick={enableUser}
-        >
-          Enable
-        </MenuItem>
-        <MenuItem
-          data-testid={`disable-${props.userId}`}
-          disabled={props.active === AccountActive.NO}
-          onClick={disableUser}
-        >
-          Disable
-        </MenuItem>
-        <MenuItem onClick={openUserDetails}>Open</MenuItem>
-      </Menu>
-    </div>
+    <Menu
+      options={[
+        {
+          label: 'Enable',
+          disabled: !props.row.original.isDisabled,
+          onClick: enableUser,
+        },
+        {
+          label: 'Disable',
+          disabled: props.row.original.isDisabled,
+          onClick: disableUser,
+        },
+        {
+          label: 'Open',
+          onClick: openUserDetails,
+        },
+      ]}
+    >
+      <FiMoreHorizontal />
+    </Menu>
   );
 };
