@@ -270,7 +270,7 @@ Array [
         role="table"
         style={
           Object {
-            "minWidth": "1290px",
+            "minWidth": undefined,
           }
         }
       >
@@ -284,7 +284,7 @@ Array [
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "390px",
+                "minWidth": "1060px",
               }
             }
           >
@@ -300,11 +300,12 @@ Array [
                   "display": "flex",
                   "flex": "65 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "65px",
                   "textAlign": "left",
-                  "width": "65px",
+                  "width": "3.5%",
                 }
               }
+              width="3.5%"
             >
               Agency
             </div>
@@ -318,13 +319,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Sub Agency
             </div>
@@ -338,13 +340,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Property Name
             </div>
@@ -358,13 +361,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "120 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "120px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Classification
             </div>
@@ -378,13 +382,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "150 0 auto",
+                  "flex": "160 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "160px",
                   "textAlign": "left",
-                  "width": "150px",
+                  "width": "14%",
                 }
               }
+              width="14%"
             >
               Street Address
             </div>
@@ -398,13 +403,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "65 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "65px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               City
             </div>
@@ -418,13 +424,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "95 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "95px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Municipality
             </div>
@@ -438,13 +445,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "100 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "100px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Assessed Value
             </div>
@@ -458,13 +466,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "100 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "100px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Netbook Value
             </div>
@@ -478,13 +487,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "100 0 auto",
+                  "flex": "80 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "80px",
                   "textAlign": "left",
-                  "width": "100px",
+                  "width": "7%",
                 }
               }
+              width="7%"
             >
               Estimated Value
             </div>
@@ -498,13 +508,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "50 0 auto",
+                  "flex": "65 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "65px",
                   "textAlign": "left",
-                  "width": "50px",
+                  "width": "3.5%",
                 }
               }
+              width="3.5%"
             >
               Type
             </div>
@@ -518,13 +529,14 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "80 0 auto",
+                  "flex": "65 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "65px",
                   "textAlign": "left",
-                  "width": "80px",
+                  "width": "3.5%",
                 }
               }
+              width="3.5%"
             >
               Lot Size (in ha)
             </div>
@@ -539,13 +551,14 @@ Array [
                   "display": "flex",
                   "flex": "65 0 auto",
                   "justifyContent": "flex-start",
-                  "minWidth": "30px",
+                  "minWidth": "65px",
                   "textAlign": "left",
-                  "width": "65px",
+                  "width": "3.5%",
                 }
               }
+              width="3.5%"
             >
-              
+               
             </div>
           </div>
         </div>
