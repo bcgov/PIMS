@@ -10,8 +10,8 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import { render } from '@testing-library/react';
-import ManageUsers from './ManageUsers';
+import { ManageUsersPage } from './ManageUsersPage';
+import { create, ReactTestInstance } from 'react-test-renderer';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -70,61 +70,25 @@ const successStore = mockStore({
   },
 });
 
-const emptyUserListStore = mockStore({
-  [reducerTypes.USERS]: {
-    pagedUsers: {
-      pageIndex: 0,
-      total: 0,
-      quantity: 0,
-      items: [],
-    },
-    rowsPerPage: 10,
-  },
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: {
-    [actionTypes.GET_USERS]: {
-      isFetching: false,
-    },
-  },
-});
-
-// TODO: more user manage dashboard tests coming soon
-
 describe('component functionality', () => {
   const componentRender = (store: any) =>
-    render(
+    create(
       <Provider store={store}>
         <Router history={history}>
-          <ManageUsers />
+          <ManageUsersPage />
         </Router>
       </Provider>,
     );
 
-  it('renders users list', () => {
-    const { getAllByText, getAllByTestId, getByTestId } = componentRender(successStore);
-    expect(getAllByText(/PIMS Users/i));
-    expect(getAllByText(/Rows per page/i));
-    expect(getAllByText(/1-2 of 2/i));
-    expect(getAllByText(/testername1/i));
-    expect(getAllByText(/testUserFirst1/i));
-    expect(getAllByText(/testUserLast1/i));
-    expect(getAllByText(/tester position/i));
-    expect(getAllByText(/admin/i));
-    expect(getAllByText(/HLTH/i));
-    expect(getAllByTestId('1-Yes')); // test account active status display (User 1 is active)
-    expect(getAllByTestId('2-No')); // test account active status display (User 2 is not active)
-
-    // check action buttons
-    expect(getByTestId('enable-1').getAttribute('aria-disabled')).toBe('true');
-    expect(getByTestId('disable-1').getAttribute('aria-disabled')).toBe('false');
-    expect(getByTestId('enable-2').getAttribute('aria-disabled')).toBe('false');
-    expect(getByTestId('disable-2').getAttribute('aria-disabled')).toBe('true');
+  it('Snapshot matches', () => {
+    const component = componentRender(successStore);
+    expect(component.toJSON()).toMatchSnapshot();
   });
 
-  it('renders empty table', () => {
-    const { getAllByText } = componentRender(emptyUserListStore);
-    expect(getAllByText(/PIMS Users/i));
-    expect(getAllByText(/Sorry, no matching records found/i));
-    expect(getAllByText(/0-0 of 0/i));
+  it('Table row count is 2', () => {
+    const component = componentRender(successStore);
+    const instance = component.root;
+    const table = (instance as ReactTestInstance).findByProps({ name: 'usersTable' });
+    expect(table.props.data.length).toBe(2);
   });
 });

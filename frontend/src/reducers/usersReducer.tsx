@@ -1,28 +1,31 @@
 import * as actionTypes from 'constants/actionTypes';
-import { IPagedItems, IUser } from 'interfaces';
+import { IPagedItems, IUser, IUsersFilter } from 'interfaces';
 import {
   IStoreUsersAction,
   IUpdateUserAction,
   IFilterUsersAction,
   IUsersPageSizeAction,
-  IUsersSort,
   ISortUsersAction,
+  IUpdateUsersPageIndexAction,
 } from 'actions/adminActions';
-
-export const MAX_USERS_PER_PAGE: number = 10;
+import { TableSort } from 'components/Table/TableSort';
+import { IUserRecord } from 'pages/admin/users/interfaces/IUserRecord';
+import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
 
 export interface IUsersState {
   pagedUsers: IPagedItems<IUser>;
   rowsPerPage: number;
-  filterList: string[][];
-  sort: IUsersSort;
+  filter: IUsersFilter;
+  sort: TableSort<IUserRecord>;
+  pageIndex: number;
 }
 
 const initialState: IUsersState = {
   pagedUsers: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
-  rowsPerPage: MAX_USERS_PER_PAGE,
-  filterList: [[], [], [], [], [], [], [], [], [], []],
-  sort: { sortBy: 'username', direction: 'asc' },
+  rowsPerPage: DEFAULT_PAGE_SIZE,
+  filter: {},
+  sort: { column: 'username', direction: 'asc' },
+  pageIndex: 0,
 };
 
 const usersReducer = (
@@ -32,7 +35,8 @@ const usersReducer = (
     | IUpdateUserAction
     | IFilterUsersAction
     | IUsersPageSizeAction
-    | ISortUsersAction,
+    | ISortUsersAction
+    | IUpdateUsersPageIndexAction,
 ) => {
   switch (action.type) {
     case actionTypes.STORE_USERS:
@@ -56,9 +60,12 @@ const usersReducer = (
       };
 
     case actionTypes.FILTER_USERS:
-      return { ...state, filterList: action.filter };
+      return { ...state, filter: action.filter };
     case actionTypes.SET_USERS_PAGE_SIZE:
       return { ...state, rowsPerPage: action.size };
+
+    case actionTypes.SET_USERS_PAGE_INDEX:
+      return { ...state, pageIndex: action.pageIndex };
 
     case actionTypes.SORT_USERS:
       return { ...state, sort: action.sort };

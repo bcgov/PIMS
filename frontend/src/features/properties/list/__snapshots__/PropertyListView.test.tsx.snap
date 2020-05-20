@@ -287,6 +287,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -306,6 +307,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -325,6 +327,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -344,6 +347,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -363,6 +367,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -382,6 +387,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -401,6 +407,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -420,6 +427,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -439,6 +447,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -458,6 +467,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -477,6 +487,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -496,6 +507,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {
@@ -515,10 +527,14 @@ Array [
           </div>
         </div>
         <div
-          className="tbody"
-          role="rowgroup"
-        />
+          className="no-rows-message"
+        >
+          No rows to display
+        </div>
       </div>
+      <div
+        className="table-toolbar"
+      />
     </div>
   </div>,
   ",",

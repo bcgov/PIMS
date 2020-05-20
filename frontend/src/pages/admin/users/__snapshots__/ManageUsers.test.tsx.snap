@@ -1,359 +1,229 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Manage access requests Snapshot matches 1`] = `
+exports[`component functionality Snapshot matches 1`] = `
 <div
-  className="manage-access-requests"
+  className="users-management-page"
 >
-  <div
-    className="ScrollContainer"
+  <form
+    className=""
+    noValidate={true}
+    onSubmit={[Function]}
   >
     <div
-      className="TableToolbar container-fluid"
-    >
-      <span
-        className="title mr-auto"
-      >
-        PIMS Guests (Pending Approval)
-      </span>
-    </div>
-    <div
-      className="search-bar"
+      className="search-bar form-row"
     >
       <div
-        className="row"
+        className="bar-item col"
       >
         <div
-          className="col-8"
+          className="form-group"
         >
-          <div
-            className="Access-Requests-filter container"
-          >
-            <div
-              className="filters row"
-            >
-              <div
-                className="filter col"
-              >
-                <div>
-                  <div
-                    className="Menu-root"
-                  >
-                    <div
-                      className="Menu-button"
-                      onClick={[Function]}
-                    >
-                      Agency: Show all
-                        
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        strokeWidth="0"
-                        style={
-                          Object {
-                            "color": undefined,
-                          }
-                        }
-                        viewBox="0 0 320 512"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                        />
-                      </svg>
-                    </div>
-                    <div
-                      className="Menu-items"
-                      style={
-                        Object {
-                          "width": "260px",
-                        }
-                      }
-                    >
-                      <input
-                        className="Menu-filter form-control form-control-sm"
-                        onChange={[Function]}
-                        placeholder="Filter agencies"
-                        style={
-                          Object {
-                            "width": "calc(260px - 10px)",
-                          }
-                        }
-                        type="search"
-                      />
-                      <div
-                        className="Menu-options list-group"
-                        onKeyDown={[Function]}
-                      >
-                        <div
-                          className="Menu-item list-group-item"
-                          data-rb-event-key={null}
-                          disabled={false}
-                          onClick={[Function]}
-                        >
-                          agencyVal
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col"
-              >
-                <div>
-                  <div
-                    className="Menu-root"
-                  >
-                    <div
-                      className="Menu-button"
-                      onClick={[Function]}
-                    >
-                      Role: Show all
-                        
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        strokeWidth="0"
-                        style={
-                          Object {
-                            "color": undefined,
-                          }
-                        }
-                        viewBox="0 0 320 512"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                        />
-                      </svg>
-                    </div>
-                    <div
-                      className="Menu-items"
-                      style={
-                        Object {
-                          "width": "200px",
-                        }
-                      }
-                    >
-                      <input
-                        className="Menu-filter form-control form-control-sm"
-                        onChange={[Function]}
-                        placeholder="Filter roles"
-                        style={
-                          Object {
-                            "width": "calc(200px - 10px)",
-                          }
-                        }
-                        type="search"
-                      />
-                      <div
-                        className="Menu-options list-group"
-                        onKeyDown={[Function]}
-                      >
-                        <div
-                          className="Menu-item list-group-item"
-                          data-rb-event-key={null}
-                          disabled={false}
-                          onClick={[Function]}
-                        >
-                          roleVal
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col"
-              >
-                <input
-                  className="form-control"
-                  onChange={[Function]}
-                  placeholder="search"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                className="actions col"
-              >
-                <button
-                  className="Button Button--icon-only bg-warning btn btn-primary btn-sm"
-                  disabled={false}
-                  type="button"
-                >
-                  <div
-                    className="Button__icon"
-                  >
-                    <svg
-                      fill="currentColor"
-                      height={20}
-                      onClick={[Function]}
-                      size={20}
-                      stroke="currentColor"
-                      strokeWidth="0"
-                      style={
-                        Object {
-                          "color": undefined,
-                        }
-                      }
-                      viewBox="0 0 512 512"
-                      width={20}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-                <button
-                  className="Button btn btn-outline-primary btn-sm"
-                  disabled={false}
-                  onClick={[Function]}
-                  type="button"
-                >
-                  <div
-                    className="Button__icon"
-                  >
-                    <svg
-                      fill="currentColor"
-                      height={20}
-                      size={20}
-                      stroke="currentColor"
-                      strokeWidth="0"
-                      style={
-                        Object {
-                          "color": undefined,
-                        }
-                      }
-                      viewBox="0 0 512 512"
-                      width={20}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    className="Button__value"
-                  >
-                    Reset
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="page-size-selector col"
-        >
-          <div>
-            <div
-              className="Menu-root"
-            >
-              <div
-                className="Menu-button"
-                onClick={[Function]}
-              >
-                <div
-                  style={
-                    Object {
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <span>
-                    Show
-                  </span>
-                  <input
-                    className="form-control form-control-sm"
-                    defaultValue="10"
-                    style={
-                      Object {
-                        "marginLeft": 10,
-                        "marginRight": 10,
-                        "width": 50,
-                      }
-                    }
-                  />
-                  <span>
-                    Entries
-                  </span>
-                </div>
-              </div>
-              <div
-                className="Menu-items"
-                style={
-                  Object {
-                    "width": "60px",
-                  }
-                }
-              >
-                <div
-                  className="Menu-options list-group"
-                  onKeyDown={[Function]}
-                >
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    10
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    20
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    30
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    40
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    50
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    100
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <input
+            className="form-control"
+            id="input-username"
+            name="username"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="IDIR/BCeID"
+          />
         </div>
       </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            id="input-firstName"
+            name="firstName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="First name"
+          />
+        </div>
+      </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            id="input-lastName"
+            name="lastName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Last name"
+          />
+        </div>
+      </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            id="input-email"
+            name="email"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Email"
+          />
+        </div>
+      </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            id="input-position"
+            name="position"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Position"
+          />
+        </div>
+      </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <select
+            className="form-control"
+            id="input-agency"
+            name="agency"
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Agency
+            </option>
+            <option
+              value="agencyVal"
+            >
+              agencyVal
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="bar-item col"
+      >
+        <div
+          className="form-group"
+        >
+          <select
+            className="form-control"
+            id="input-role"
+            name="role"
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Role
+            </option>
+            <option
+              value="roleVal"
+            >
+              roleVal
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="bar-item flex-grow-0 col"
+      >
+        <button
+          className="Button Button--icon-only bg-warning btn btn-primary"
+          disabled={false}
+          type="submit"
+        >
+          <div
+            className="Button__icon"
+          >
+            <svg
+              fill="currentColor"
+              height={20}
+              size={20}
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width={20}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+      <div
+        className="bar-item flex-grow-0 col"
+      >
+        <button
+          className="Button btn btn-outline-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="reset"
+        >
+          <div
+            className="Button__icon"
+          >
+            <svg
+              fill="currentColor"
+              height={20}
+              size={20}
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width={20}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+              />
+            </svg>
+          </div>
+          <div
+            className="Button__value"
+          >
+            Reset
+          </div>
+        </button>
+      </div>
     </div>
+  </form>
+  <div
+    className="container-fluid"
+    style={
+      Object {
+        "marginTop": 10,
+      }
+    }
+  >
     <div
       className="table"
       role="table"
@@ -495,7 +365,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Status
+            Active
           </div>
           <div
             className="th"
@@ -592,8 +462,10 @@ exports[`Manage access requests Snapshot matches 1`] = `
             }
           >
             <a
-              href="/admin/user/userid"
-            />
+              href="/admin/user/1"
+            >
+              testername1
+            </a>
           </div>
           <div
             className="td"
@@ -612,7 +484,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            firstName
+            testUserFirst1
           </div>
           <div
             className="td"
@@ -631,7 +503,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            lastName
+            testUserLast1
           </div>
           <div
             className="td"
@@ -650,7 +522,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            user@email.com
+            
           </div>
           <div
             className="td"
@@ -669,7 +541,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            position 1
+            tester position
           </div>
           <div
             className="td"
@@ -688,7 +560,24 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            On Hold
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+              />
+            </svg>
           </div>
           <div
             className="td"
@@ -707,7 +596,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            agency 1
+            HLTH
           </div>
           <div
             className="td"
@@ -726,7 +615,291 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            role1
+            admin
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "75 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "75px",
+              }
+            }
+          >
+            <div>
+              <div
+                className="Menu-root"
+              >
+                <div
+                  className="Menu-button"
+                  onClick={[Function]}
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="1"
+                    />
+                    <circle
+                      cx="19"
+                      cy="12"
+                      r="1"
+                    />
+                    <circle
+                      cx="5"
+                      cy="12"
+                      r="1"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="Menu-items"
+                  style={
+                    Object {
+                      "width": "100px",
+                    }
+                  }
+                >
+                  <div
+                    className="Menu-options list-group"
+                    onKeyDown={[Function]}
+                  >
+                    <div
+                      className="Menu-item list-group-item disabled"
+                      data-rb-event-key={null}
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      Enable
+                    </div>
+                    <div
+                      className="Menu-item list-group-item"
+                      data-rb-event-key={null}
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      Disable
+                    </div>
+                    <div
+                      className="Menu-item list-group-item"
+                      data-rb-event-key={null}
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      Open
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="tr"
+          role="row"
+          style={
+            Object {
+              "display": "flex",
+              "flex": "1 0 auto",
+              "minWidth": "780px",
+            }
+          }
+        >
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "150 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+          >
+            <a
+              href="/admin/user/2"
+            >
+              testername2
+            </a>
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "150 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+          >
+            testUser
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "150 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+          >
+            testUser
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "200 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "200px",
+                "textAlign": "left",
+                "width": "200px",
+              }
+            }
+          >
+            
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "150 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+          >
+            tester
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 352 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+              />
+            </svg>
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "200 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "200px",
+                "textAlign": "left",
+                "width": "200px",
+              }
+            }
+          >
+            HLTH
+          </div>
+          <div
+            className="td"
+            onClick={[Function]}
+            role="cell"
+            style={
+              Object {
+                "alignItems": "flex-start",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "200 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "200px",
+                "textAlign": "left",
+                "width": "200px",
+              }
+            }
+          >
+            admin
           </div>
           <div
             className="td"
@@ -804,7 +977,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                       disabled={false}
                       onClick={[Function]}
                     >
-                      Approve
+                      Enable
                     </div>
                     <div
                       className="Menu-item list-group-item disabled"
@@ -812,7 +985,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                       disabled={false}
                       onClick={[Function]}
                     >
-                      Hold
+                      Disable
                     </div>
                     <div
                       className="Menu-item list-group-item"
@@ -820,15 +993,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                       disabled={false}
                       onClick={[Function]}
                     >
-                      Decline
-                    </div>
-                    <div
-                      className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
-                      onClick={[Function]}
-                    >
-                      Delete
+                      Open
                     </div>
                   </div>
                 </div>
