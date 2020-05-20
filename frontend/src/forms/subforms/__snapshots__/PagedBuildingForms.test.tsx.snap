@@ -140,7 +140,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               className="col-md-10 form-group"
             >
               <select
-                className="form-control"
+                className="form-select form-control"
                 disabled={true}
                 id="input-buildings.0.address.provinceId"
                 name="buildings.0.address.provinceId"
@@ -153,6 +153,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   Must Select One
                 </option>
                 <option
+                  className="option"
                   value="2222"
                 >
                   test province

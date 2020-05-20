@@ -22,23 +22,26 @@ exports[`MapFilterBar renders correctly 1`] = `
             className="form-group"
           >
             <select
-              className="form-control"
+              className="form-select form-control"
               id="input-searchBy"
               name="searchBy"
               onChange={[Function]}
               value="address"
             >
               <option
+                className="option"
                 value="address"
               >
                 Address
               </option>
               <option
+                className="option"
                 value="municipality"
               >
                 Municipality
               </option>
               <option
+                className="option"
                 value="projectNumber"
               >
                 RAEG or SPP No.
@@ -93,7 +96,7 @@ exports[`MapFilterBar renders correctly 1`] = `
         className="form-group"
       >
         <select
-          className="form-control"
+          className="form-select form-control"
           id="input-classificationId"
           name="classificationId"
           onChange={[Function]}
@@ -105,21 +108,25 @@ exports[`MapFilterBar renders correctly 1`] = `
             Classification
           </option>
           <option
+            className="option"
             value="0"
           >
             Core Operational
           </option>
           <option
+            className="option"
             value="1"
           >
             Core Strategic
           </option>
           <option
+            className="option"
             value="2"
           >
             Surplus Active
           </option>
           <option
+            className="option"
             value="3"
           >
             Surplus Encumbered
