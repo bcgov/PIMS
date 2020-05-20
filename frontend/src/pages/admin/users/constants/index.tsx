@@ -62,8 +62,8 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     minWidth: 200,
   },
   {
-    Header: 'Role',
-    accessor: 'role',
+    Header: 'Roles',
+    accessor: 'roles',
     align: 'left',
     clickable: true,
     minWidth: 200,

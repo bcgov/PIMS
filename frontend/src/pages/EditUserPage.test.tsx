@@ -64,7 +64,7 @@ it('contains role options from lookup code + please select disabled option', () 
       </Router>
     </Provider>,
   );
-  expect(getAllByText(/Role/i));
+  expect(getAllByText(/Roles/i));
   expect(getAllByText(/roleVal/i));
   expect(getAllByText(/agencyVal/i));
   expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');

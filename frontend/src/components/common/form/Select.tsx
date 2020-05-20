@@ -3,6 +3,7 @@ import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
+import './Select.scss';
 
 type RequiredAttributes = {
   /** The field name */
@@ -91,7 +92,7 @@ export const Select: React.FC<SelectProps> = ({
 
   const renderOptions = () => {
     return options.map(option => (
-      <option key={option.value} value={option.value}>
+      <option key={option.value} value={option.value} className="option">
         {option.label}
       </option>
     ));
@@ -107,7 +108,7 @@ export const Select: React.FC<SelectProps> = ({
       <Form.Control
         as={asElement}
         name={field}
-        className={className}
+        className={classNames(className, 'form-select')}
         required={required}
         disabled={disabled}
         custom={custom}

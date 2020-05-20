@@ -130,7 +130,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             *
           </span>
           <select
-            className="form-control"
+            className="form-select form-control"
             id="input-agency"
             name="agency"
             onChange={[Function]}
@@ -178,7 +178,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             *
           </span>
           <select
-            className="form-control"
+            className="form-select form-control"
             id="input-role"
             name="role"
             onChange={[Function]}

@@ -41,10 +41,10 @@ const EditUserPage = (props: IEditUserPageProps) => {
   });
 
   const user = useSelector<RootState, IUserDetails>(state => state.GET_USER_DETAIL as IUserDetails);
-
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
+    selected: !!user.roles.find(x => x.id === code.id.toString()),
   });
 
   const selectAgencies = agencies.map(c => mapLookupCode(c));
@@ -67,9 +67,10 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
   const checkRoles = (
     <Select
-      label="Role"
-      field="role"
+      label="Roles"
+      field="roles"
       data-testid="role"
+      multiple={true}
       required={true}
       options={selectRoles}
       placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
@@ -90,7 +91,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     rowVersion: user.rowVersion,
     emailVerified: false,
     agencies: user.agencies,
-    roles: user.roles,
+    roles: user.roles.map(x => x.id),
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
@@ -115,8 +116,8 @@ const EditUserPage = (props: IEditUserPageProps) => {
                 agenciesToUpdate = user.agencies;
               }
 
-              if (values.role !== '') {
-                rolesToUpdate = [{ id: values.role }];
+              if (values.roles) {
+                rolesToUpdate = values.roles.map(r => ({ id: r }));
               } else {
                 rolesToUpdate = user.roles;
               }

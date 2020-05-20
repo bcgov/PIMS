@@ -1,3 +1,5 @@
+@import './colors.scss';
+
 .btn {
   height: 44px;
 }
@@ -18,7 +20,7 @@
 }
 
 .btn.btn-primary {
-  background-color: #003366;
+  background-color: $primary-color;
   font-family: 'BCSans' Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #ffffff;

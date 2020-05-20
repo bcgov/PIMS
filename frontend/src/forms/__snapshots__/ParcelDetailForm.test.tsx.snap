@@ -217,7 +217,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   className="col-md-10 form-group"
                 >
                   <select
-                    className="form-control"
+                    className="form-select form-control"
                     disabled={true}
                     id="input-address.provinceId"
                     name="address.provinceId"
@@ -230,6 +230,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       Must Select One
                     </option>
                     <option
+                      className="option"
                       value="2222"
                     >
                       test province

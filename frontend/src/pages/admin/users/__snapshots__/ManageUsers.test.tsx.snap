@@ -99,7 +99,7 @@ exports[`component functionality Snapshot matches 1`] = `
           className="form-group"
         >
           <select
-            className="form-control"
+            className="form-select form-control"
             id="input-agency"
             name="agency"
             onChange={[Function]}
@@ -110,6 +110,7 @@ exports[`component functionality Snapshot matches 1`] = `
               Agency
             </option>
             <option
+              className="option"
               value="agencyVal"
             >
               agencyVal
@@ -124,7 +125,7 @@ exports[`component functionality Snapshot matches 1`] = `
           className="form-group"
         >
           <select
-            className="form-control"
+            className="form-select form-control"
             id="input-role"
             name="role"
             onChange={[Function]}
@@ -135,6 +136,7 @@ exports[`component functionality Snapshot matches 1`] = `
               Role
             </option>
             <option
+              className="option"
               value="roleVal"
             >
               roleVal
@@ -405,7 +407,7 @@ exports[`component functionality Snapshot matches 1`] = `
               }
             }
           >
-            Role
+            Roles
           </div>
           <div
             className="th"

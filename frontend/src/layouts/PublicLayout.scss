@@ -1,3 +1,5 @@
+@import '../styles.scss';
+
 .App {
   padding: 0;
   display: flex;
@@ -21,9 +23,9 @@
 
 .header-layout {
   // colors
-  background-color: #003366;
+  background-color: $primary-color;
   border: none;
-  border-bottom: 2px solid #fcba19;
+  border-bottom: 2px solid $accent-color;
 
   // sizing
   flex-shrink: 0;
@@ -31,9 +33,9 @@
 
 .footer-layout {
   // colors
-  background-color: #003366;
+  background-color: $primary-color;
   border: none;
-  border-top: 2px solid #fcba19;
+  border-top: 2px solid $accent-color;
 
   // sizing
   flex-shrink: 0;
