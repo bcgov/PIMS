@@ -4,6 +4,8 @@ import { Input, Form } from 'components/common/form';
 import { Col } from 'react-bootstrap';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { PidTooltip, PinTooltip } from 'forms/strings';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from 'constants/claims';
 
 interface PidPinProps {
   nameSpace?: string;
@@ -33,6 +35,11 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
+
+  const keycloak = useKeycloakWrapper();
+
+  const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
+
   return (
     <Fragment>
       <Col className="pidPinForm" md={6}>
@@ -66,7 +73,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             RAEG or SPP
           </Form.Label>
           <Input
-            disabled={true}
+            disabled={projectNumberDisabled}
             outerClassName="col-md-10"
             field={withNameSpace('projectNumber')}
           />
