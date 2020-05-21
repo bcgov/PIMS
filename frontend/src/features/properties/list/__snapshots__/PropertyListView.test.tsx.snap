@@ -543,6 +543,7 @@ Array [
             <div
               className="th"
               colSpan={1}
+              onClick={[Function]}
               role="columnheader"
               style={
                 Object {

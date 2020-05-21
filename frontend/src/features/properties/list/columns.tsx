@@ -18,21 +18,16 @@ const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => format
 const howManyColumns = 13;
 const totalWidthPercent = 100; // how wide the table should be; e.g. 100%
 
-// Setup a few sample widths: x/2, 1x, 2x
-const x = Math.floor(totalWidthPercent / howManyColumns);
-const Sizes = {
-  SM: {
-    width: x / 2, // percent
-    minWidth: 65, // px
-  },
-  MD: {
-    width: x, // percent
-    minWidth: 80, // px
-  },
-  LG: {
-    width: 2 * x, // percent
-    minWidth: 160, // px
-  },
+// Setup a few sample widths: x/2, 1x, 2x (percentage-based)
+const unit = Math.floor(totalWidthPercent / howManyColumns);
+const spacing = {
+  xxsmall: 1,
+  xsmall: unit / 4,
+  small: unit / 2,
+  medium: unit,
+  large: unit * 2,
+  xlarge: unit * 4,
+  xxlarge: unit * 8,
 };
 
 export const columns: ColumnWithProps<IProperty>[] = [
@@ -40,84 +35,84 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.SM.width,
-    minWidth: Sizes.SM.minWidth,
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65, // px
   },
   {
     Header: 'Sub Agency',
     accessor: 'subAgency',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Property Name',
     accessor: 'description',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Classification',
     accessor: 'classification',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.LG.width,
-    minWidth: Sizes.LG.minWidth,
+    responsive: true,
+    width: spacing.large,
+    minWidth: 160,
   },
   {
     Header: 'City',
     accessor: 'city',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Municipality',
     accessor: 'municipality',
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
     Cell: MoneyCell,
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Netbook Value',
     accessor: 'netBook',
     Cell: MoneyCell,
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Estimated Value',
     accessor: 'estimated',
     Cell: MoneyCell,
     align: 'left',
-    useWidthPercentage: true,
-    width: Sizes.MD.width,
-    minWidth: Sizes.MD.minWidth,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
   },
   {
     Header: 'Type',
@@ -126,24 +121,27 @@ export const columns: ColumnWithProps<IProperty>[] = [
       const icon = value === 0 ? LandSvg : BuildingSvg;
       return <Image src={icon} />;
     },
-    useWidthPercentage: true,
-    width: Sizes.SM.width,
-    minWidth: Sizes.SM.minWidth,
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65,
   },
   {
     Header: 'Lot Size (in ha)',
     accessor: 'landArea',
     Cell: NumberCell,
-    useWidthPercentage: true,
-    width: Sizes.SM.width,
-    minWidth: Sizes.SM.minWidth,
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65,
   },
   {
     Header: ' ',
     id: 'view-link-column',
-    // return the parcel ID associated with this row
-    // for buildings we need the parent `parcelId` property
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65,
     accessor: row => {
+      // Return the parcel ID associated with this row.
+      // For buildings we need the parent `parcelId` property
       const id = row.propertyTypeId === 0 ? row.id : row.parcelId;
       return id ?? -1;
     },
@@ -153,8 +151,5 @@ export const columns: ColumnWithProps<IProperty>[] = [
       }
       return null;
     },
-    useWidthPercentage: true,
-    width: Sizes.SM.width,
-    minWidth: Sizes.SM.minWidth,
   },
 ];

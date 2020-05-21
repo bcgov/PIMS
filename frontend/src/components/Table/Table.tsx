@@ -1,10 +1,18 @@
 import './Table.scss';
 
 import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
-import { useTable, usePagination, useFlexLayout, TableOptions, Row, Cell, IdType } from 'react-table';
+import {
+  useTable,
+  usePagination,
+  useFlexLayout,
+  TableOptions,
+  Row,
+  Cell,
+  IdType,
+} from 'react-table';
 import classnames from 'classnames';
 import { TablePagination } from '.';
-import { ClickableCell, ClickableColumnInstance, ColumnWithPropsInstance } from './ColumnDefinition';
+import { CellWithProps, ColumnInstanceWithProps } from './types';
 import { TableSort, SortDirection } from './TableSort';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import { TablePageSizeSelector } from './PageSizeSelector';
@@ -14,7 +22,7 @@ import { Spinner } from 'react-bootstrap';
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
   props: any,
-  { column }: { column: ColumnWithPropsInstance<T> },
+  { column }: { column: ColumnInstanceWithProps<T> },
 ) => {
   return getStyles(props, true, column);
 };
@@ -26,10 +34,10 @@ const cellProps = <T extends object>(props: any, { cell }: { cell: Cell<T> }) =>
 const getStyles = <T extends object>(
   props: any,
   isHeader: boolean,
-  column: ColumnWithPropsInstance<T>,
+  column: ColumnInstanceWithProps<T>,
 ) => {
   // override column width when percentage value is provided - react-table deals with pixel values
-  const colSize = !!column?.useWidthPercentage
+  const colSize = !!column?.responsive
     ? {
         width: `${column?.width}%`,
       }
@@ -115,7 +123,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     onRequestData?.({ pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
 
-  const getNextSortDirection = (column: ClickableColumnInstance<T>): SortDirection => {
+  const getNextSortDirection = (column: ColumnInstanceWithProps<T>): SortDirection => {
     if (!props.sort) return 'asc';
 
     if (props.sort.column !== column.id || props.sort.direction === 'desc') {
@@ -125,7 +133,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     return 'desc';
   };
 
-  const renderHeaderCell = (column: ClickableColumnInstance<T>) => {
+  const renderHeaderCell = (column: ColumnInstanceWithProps<T>) => {
     const isSorted = props.sort && props.sort.column === column.id;
     if (!column.sortable || !isSorted) {
       return column.render('Header');
@@ -168,7 +176,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
           // Each row can be rendered directly as a string using `react-table` render method
           return (
             <div {...row.getRowProps()} className="tr">
-              {row.cells.map((cell: ClickableCell<T>) => {
+              {row.cells.map((cell: CellWithProps<T>) => {
                 return (
                   <div
                     {...cell.getCellProps(cellProps)}
@@ -195,7 +203,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
-              {headerGroup.headers.map((column: ClickableColumnInstance<T>) => (
+              {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
                 <div
                   {...column.getHeaderProps(headerProps)}
                   onClick={() =>
