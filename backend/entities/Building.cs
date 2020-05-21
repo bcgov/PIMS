@@ -95,6 +95,11 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <typeparam name="BuildingFiscals"></typeparam>
         public ICollection<BuildingFiscal> Fiscals { get; private set; } = new List<BuildingFiscal>();
+
+        /// <summary>
+        /// get - A collection of projects this building is assocated to.
+        /// </summary>
+        public ICollection<ProjectProperty> Projects { get; } = new List<ProjectProperty>();
         #endregion
 
         #region Constructors

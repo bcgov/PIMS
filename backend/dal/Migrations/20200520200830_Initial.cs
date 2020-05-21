@@ -287,6 +287,38 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectStatus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectStatus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatus_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatus_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PropertyClassifications",
                 columns: table => new
                 {
@@ -436,6 +468,74 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Roles_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskType = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    IsOptional = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => new { x.TaskType, x.Id });
+                    table.ForeignKey(
+                        name: "FK_Tasks_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TierLevels",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TierLevels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TierLevels_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TierLevels_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -694,6 +794,51 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    ProjectNumber = table.Column<string>(maxLength: 25, nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    ProjectStatusId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    Note = table.Column<string>(maxLength: 2000, nullable: true),
+                    TierLevelId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.ProjectNumber);
+                    table.ForeignKey(
+                        name: "FK_Projects_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_ProjectStatus_ProjectStatusId",
+                        column: x => x.ProjectStatusId,
+                        principalTable: "ProjectStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Projects_TierLevels_TierLevelId",
+                        column: x => x.TierLevelId,
+                        principalTable: "TierLevels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Parcels",
                 columns: table => new
                 {
@@ -760,6 +905,50 @@ namespace Pims.Dal.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTasks",
+                columns: table => new
+                {
+                    ProjectNumber = table.Column<string>(maxLength: 25, nullable: false),
+                    TaskId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    TaskType = table.Column<int>(nullable: false),
+                    IsCompleted = table.Column<bool>(nullable: false),
+                    CompletedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTasks", x => new { x.ProjectNumber, x.TaskId });
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_Projects_ProjectNumber",
+                        column: x => x.ProjectNumber,
+                        principalTable: "Projects",
+                        principalColumn: "ProjectNumber",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_Tasks_TaskType_TaskId",
+                        columns: x => new { x.TaskType, x.TaskId },
+                        principalTable: "Tasks",
+                        principalColumns: new[] { "TaskType", "Id" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1005,6 +1194,57 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuildingFiscals_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectProperties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    ProjectNumber = table.Column<string>(maxLength: 25, nullable: false),
+                    PropertyType = table.Column<int>(nullable: false),
+                    ParcelId = table.Column<int>(nullable: true),
+                    BuildingId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectProperties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectProperties_Buildings_BuildingId",
+                        column: x => x.BuildingId,
+                        principalTable: "Buildings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectProperties_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectProperties_Parcels_ParcelId",
+                        column: x => x.ParcelId,
+                        principalTable: "Parcels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectProperties_Projects_ProjectNumber",
+                        column: x => x.ProjectNumber,
+                        principalTable: "Projects",
+                        principalColumn: "ProjectNumber",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectProperties_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -1382,6 +1622,105 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectProperties_BuildingId",
+                table: "ProjectProperties",
+                column: "BuildingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProperties_CreatedById",
+                table: "ProjectProperties",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProperties_ParcelId",
+                table: "ProjectProperties",
+                column: "ParcelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProperties_UpdatedById",
+                table: "ProjectProperties",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProperties_ProjectNumber_ParcelId_BuildingId",
+                table: "ProjectProperties",
+                columns: new[] { "ProjectNumber", "ParcelId", "BuildingId" },
+                unique: true,
+                filter: "[ParcelId] IS NOT NULL AND [BuildingId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_CreatedById",
+                table: "Projects",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_Name",
+                table: "Projects",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ProjectStatusId",
+                table: "Projects",
+                column: "ProjectStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_TierLevelId",
+                table: "Projects",
+                column: "TierLevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_UpdatedById",
+                table: "Projects",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_Name_ProjectStatusId_TierLevelId",
+                table: "Projects",
+                columns: new[] { "Name", "ProjectStatusId", "TierLevelId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_CreatedById",
+                table: "ProjectStatus",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_Name",
+                table: "ProjectStatus",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_UpdatedById",
+                table: "ProjectStatus",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_IsDisabled_Name_SortOrder",
+                table: "ProjectStatus",
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTasks_CreatedById",
+                table: "ProjectTasks",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTasks_UpdatedById",
+                table: "ProjectTasks",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTasks_TaskType_TaskId",
+                table: "ProjectTasks",
+                columns: new[] { "TaskType", "TaskId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTasks_ProjectNumber_TaskId_IsCompleted_CompletedOn",
+                table: "ProjectTasks",
+                columns: new[] { "ProjectNumber", "TaskId", "IsCompleted", "CompletedOn" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PropertyClassifications_CreatedById",
                 table: "PropertyClassifications",
                 column: "CreatedById");
@@ -1497,6 +1836,42 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "IsDisabled", "Name" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tasks_CreatedById",
+                table: "Tasks",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_UpdatedById",
+                table: "Tasks",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_IsDisabled_TaskType_Name_SortOrder",
+                table: "Tasks",
+                columns: new[] { "IsDisabled", "TaskType", "Name", "SortOrder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TierLevels_CreatedById",
+                table: "TierLevels",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TierLevels_Name",
+                table: "TierLevels",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TierLevels_UpdatedById",
+                table: "TierLevels",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TierLevels_IsDisabled_Name_SortOrder",
+                table: "TierLevels",
+                columns: new[] { "IsDisabled", "Name", "SortOrder" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserAgencies_AgencyId",
                 table: "UserAgencies",
                 column: "AgencyId");
@@ -1577,6 +1952,12 @@ namespace Pims.Dal.Migrations
                 name: "ParcelFiscals");
 
             migrationBuilder.DropTable(
+                name: "ProjectProperties");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTasks");
+
+            migrationBuilder.DropTable(
                 name: "PropertyTypes");
 
             migrationBuilder.DropTable(
@@ -1595,6 +1976,12 @@ namespace Pims.Dal.Migrations
                 name: "Buildings");
 
             migrationBuilder.DropTable(
+                name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Tasks");
+
+            migrationBuilder.DropTable(
                 name: "Claims");
 
             migrationBuilder.DropTable(
@@ -1611,6 +1998,12 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "Parcels");
+
+            migrationBuilder.DropTable(
+                name: "ProjectStatus");
+
+            migrationBuilder.DropTable(
+                name: "TierLevels");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

@@ -26,14 +26,20 @@ namespace Pims.Dal
         public DbSet<BuildingConstructionType> BuildingConstructionTypes { get; set; }
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
         public DbSet<BuildingOccupantType> BuildingOccupantTypes { get; set; }
-        public DbSet<City> Cities { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
         public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }
         public DbSet<ParcelFiscal> ParcelFiscals { get; set; }
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
         public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectStatus> ProjectStatus { get; set; }
+        public DbSet<ProjectProperty> ProjectProperties { get; set; }
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
+        public DbSet<TierLevel> TierLevels { get; set; }
+        public DbSet<Task> Tasks { get; set; }
         public DbSet<Province> Provinces { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Pims.Dal.Entities.Claim> Claims { get; set; }
