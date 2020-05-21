@@ -46,6 +46,7 @@ export interface IProperty {
   zoningPotential: string;
 
   // Building Properties
+  parcelId?: number;
   localId?: string;
   constructionTypeId?: number;
   constructionType?: string;

@@ -1,10 +1,18 @@
 import './Table.scss';
 
 import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
-import { useTable, usePagination, TableOptions, Row, useFlexLayout, IdType } from 'react-table';
+import {
+  useTable,
+  usePagination,
+  useFlexLayout,
+  TableOptions,
+  Row,
+  Cell,
+  IdType,
+} from 'react-table';
 import classnames from 'classnames';
 import { TablePagination } from '.';
-import { ClickableCell, ClickableColumnInstance } from './ColumnDefinition';
+import { CellWithProps, ColumnInstanceWithProps } from './types';
 import { TableSort, SortDirection } from './TableSort';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import { TablePageSizeSelector } from './PageSizeSelector';
@@ -12,20 +20,43 @@ import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
 import { Spinner } from 'react-bootstrap';
 
 // these provide a way to inject custom CSS into table headers and cells
-const headerProps = (props: any, { column }: any) => getStyles(props, true, column.align);
-const cellProps = (props: any, { cell }: any) => getStyles(props, false, cell.column.align);
+const headerProps = <T extends object>(
+  props: any,
+  { column }: { column: ColumnInstanceWithProps<T> },
+) => {
+  return getStyles(props, true, column);
+};
 
-const getStyles = (props: any, isColumnHeader: boolean, align = 'left') => [
-  props,
-  {
-    style: {
-      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-      textAlign: align === 'right' ? 'right' : 'left',
-      alignItems: isColumnHeader ? 'center' : 'flex-start',
-      display: 'flex',
+const cellProps = <T extends object>(props: any, { cell }: { cell: Cell<T> }) => {
+  return getStyles(props, false, cell.column);
+};
+
+const getStyles = <T extends object>(
+  props: any,
+  isHeader: boolean,
+  column: ColumnInstanceWithProps<T>,
+) => {
+  // override column width when percentage value is provided - react-table deals with pixel values
+  const colSize = !!column?.responsive
+    ? {
+        width: `${column?.width}%`,
+      }
+    : {};
+  // return CSS styles: `props` are react-table defaults, the rest are our overrides...
+  return [
+    props,
+    {
+      style: {
+        justifyContent: column?.align === 'right' ? 'flex-end' : 'flex-start',
+        textAlign: column?.align === 'right' ? 'right' : 'left',
+        alignItems: isHeader ? 'center' : 'flex-start',
+        display: 'flex',
+        ...colSize,
+      },
     },
-  },
-];
+    colSize,
+  ];
+};
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
@@ -50,8 +81,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     () => ({
       // When using the useFlexLayout:
       minWidth: 30, // minWidth is only used as a limit for resizing
-      width: 150, // width is used for both the flex-basis and flex-grow
-      maxWidth: 200, // maxWidth is only used as a limit for resizing
+      width: 100, // width is used for both the flex-basis and flex-grow
     }),
     [],
   );
@@ -93,7 +123,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     onRequestData?.({ pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
 
-  const getNextSortDirection = (column: ClickableColumnInstance<T>): SortDirection => {
+  const getNextSortDirection = (column: ColumnInstanceWithProps<T>): SortDirection => {
     if (!props.sort) return 'asc';
 
     if (props.sort.column !== column.id || props.sort.direction === 'desc') {
@@ -103,7 +133,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     return 'desc';
   };
 
-  const renderHeaderCell = (column: ClickableColumnInstance<T>) => {
+  const renderHeaderCell = (column: ColumnInstanceWithProps<T>) => {
     const isSorted = props.sort && props.sort.column === column.id;
     if (!column.sortable || !isSorted) {
       return column.render('Header');
@@ -146,7 +176,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
           // Each row can be rendered directly as a string using `react-table` render method
           return (
             <div {...row.getRowProps()} className="tr">
-              {row.cells.map((cell: ClickableCell<T>) => {
+              {row.cells.map((cell: CellWithProps<T>) => {
                 return (
                   <div
                     {...cell.getCellProps(cellProps)}
@@ -169,11 +199,11 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   // Render the UI for your table
   return (
     <>
-      <div {...getTableProps()} className="table">
+      <div {...getTableProps({ style: { minWidth: undefined } })} className="table">
         <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
-              {headerGroup.headers.map((column: ClickableColumnInstance<T>) => (
+              {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
                 <div
                   {...column.getHeaderProps(headerProps)}
                   onClick={() =>
