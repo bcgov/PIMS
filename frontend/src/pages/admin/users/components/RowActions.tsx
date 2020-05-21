@@ -37,8 +37,12 @@ export const RowActions = (props: CellProps<IUserRecord>) => {
     window.location.assign(`/admin/user/${props.row.original.id}`);
   };
 
+  const isLastRow = props.row.original.id === props.data[props.data.length - 1].id;
+
   return (
     <Menu
+      alignTop={isLastRow && props.data.length >= 20}
+      disableScroll={true}
       options={[
         {
           label: 'Enable',

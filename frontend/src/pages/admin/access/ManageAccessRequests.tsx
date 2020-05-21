@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { Table } from 'components/Table';
 import { IPaginate, toFilteredApiPaginateParams } from 'utils/CommonFunctions';
@@ -17,12 +17,7 @@ import * as actionTypes from 'constants/actionTypes';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';
 import { IAccessRequestModel } from './interfaces';
 import { AccessRequestFilter } from './components/Filter';
-import { Menu, IMenuItemProps } from 'components/menu/Menu';
-import {
-  getUpdateAccessRequestPageSize,
-  IFilterData,
-  getUpdateAccessRequestPageIndex,
-} from 'actions/accessRequestActions';
+import { IFilterData, getUpdateAccessRequestPageIndex } from 'actions/accessRequestActions';
 import { columnDefinitions } from './constants/constants';
 import { AccessRequestDetails } from './components/Details';
 
@@ -83,12 +78,6 @@ const ManageAccessRequests = () => {
       } as IAccessRequestModel),
   );
 
-  const pageSizeOptions: IMenuItemProps[] = [10, 20, 30, 40, 50, 100].map(size => ({
-    label: size,
-    value: size,
-    onClick: () => dispatch(getUpdateAccessRequestPageSize(size)),
-  }));
-
   const showDetails = (req: IAccessRequestModel) => {
     setSelectedRequest(req);
   };
@@ -100,27 +89,10 @@ const ManageAccessRequests = () => {
           <span className="title mr-auto">PIMS Guests (Pending Approval)</span>
         </Container>
         <div className="search-bar">
-          <Row>
-            <Col xs={8}>
-              <AccessRequestFilter
-                initialValues={filter}
-                applyFilter={filter => dispatch(getAccessRequestsFilterAction(filter))}
-              />
-            </Col>
-            <Col className="page-size-selector">
-              <Menu options={pageSizeOptions} width="60px">
-                <div style={{ display: 'flex' }}>
-                  <span>Show</span>
-                  <Form.Control
-                    size="sm"
-                    defaultValue={`${pageSize}`}
-                    style={{ width: 50, marginLeft: 10, marginRight: 10 }}
-                  />
-                  <span>Entries</span>
-                </div>
-              </Menu>
-            </Col>
-          </Row>
+          <AccessRequestFilter
+            initialValues={filter}
+            applyFilter={filter => dispatch(getAccessRequestsFilterAction(filter))}
+          />
         </div>
         {!!selectedRequest && (
           <AccessRequestDetails

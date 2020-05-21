@@ -6,12 +6,7 @@ $table-fontSize: 13px;
   margin: 10px;
 
   .ScrollContainer {
-    padding: 1rem 3rem;
-    max-height: calc(
-      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
-    );
-    overflow-y: scroll;
-
+    padding-bottom: 25px;
     .TableToolbar {
       display: flex;
       flex-direction: row;
@@ -19,18 +14,6 @@ $table-fontSize: 13px;
 
       .title {
         font-weight: bolder;
-      }
-    }
-
-    .search-bar {
-      border-top: lighten(grey, 40%) 1px solid !important;
-      padding: 12px;
-
-      .col {
-        &.page-size-selector {
-          display: flex;
-          flex-direction: row-reverse;
-        }
       }
     }
 

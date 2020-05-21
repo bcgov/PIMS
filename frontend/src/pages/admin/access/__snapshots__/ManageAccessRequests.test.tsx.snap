@@ -20,336 +20,226 @@ exports[`Manage access requests Snapshot matches 1`] = `
       className="search-bar"
     >
       <div
-        className="row"
+        className="Access-Requests-filter container"
       >
         <div
-          className="col-8"
+          className="filters row"
         >
           <div
-            className="Access-Requests-filter container"
+            className="filter col"
           >
-            <div
-              className="filters row"
-            >
+            <div>
               <div
-                className="filter col"
+                className="Menu-root"
               >
-                <div>
-                  <div
-                    className="Menu-root"
-                  >
-                    <div
-                      className="Menu-button"
-                      onClick={[Function]}
-                    >
-                      Agency: Show all
-                        
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        strokeWidth="0"
-                        style={
-                          Object {
-                            "color": undefined,
-                          }
-                        }
-                        viewBox="0 0 320 512"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                        />
-                      </svg>
-                    </div>
-                    <div
-                      className="Menu-items"
-                      style={
-                        Object {
-                          "width": "260px",
-                        }
-                      }
-                    >
-                      <input
-                        className="Menu-filter form-control form-control-sm"
-                        onChange={[Function]}
-                        placeholder="Filter agencies"
-                        style={
-                          Object {
-                            "width": "calc(260px - 10px)",
-                          }
-                        }
-                        type="search"
-                      />
-                      <div
-                        className="Menu-options list-group"
-                        onKeyDown={[Function]}
-                      >
-                        <div
-                          className="Menu-item list-group-item"
-                          data-rb-event-key={null}
-                          disabled={false}
-                          onClick={[Function]}
-                        >
-                          agencyVal
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col"
-              >
-                <div>
-                  <div
-                    className="Menu-root"
-                  >
-                    <div
-                      className="Menu-button"
-                      onClick={[Function]}
-                    >
-                      Role: Show all
-                        
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        strokeWidth="0"
-                        style={
-                          Object {
-                            "color": undefined,
-                          }
-                        }
-                        viewBox="0 0 320 512"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                        />
-                      </svg>
-                    </div>
-                    <div
-                      className="Menu-items"
-                      style={
-                        Object {
-                          "width": "200px",
-                        }
-                      }
-                    >
-                      <input
-                        className="Menu-filter form-control form-control-sm"
-                        onChange={[Function]}
-                        placeholder="Filter roles"
-                        style={
-                          Object {
-                            "width": "calc(200px - 10px)",
-                          }
-                        }
-                        type="search"
-                      />
-                      <div
-                        className="Menu-options list-group"
-                        onKeyDown={[Function]}
-                      >
-                        <div
-                          className="Menu-item list-group-item"
-                          data-rb-event-key={null}
-                          disabled={false}
-                          onClick={[Function]}
-                        >
-                          roleVal
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col"
-              >
-                <input
-                  className="form-control"
-                  onChange={[Function]}
-                  placeholder="search"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                className="actions col"
-              >
-                <button
-                  className="Button Button--icon-only bg-warning btn btn-primary btn-sm"
-                  disabled={false}
-                  type="button"
-                >
-                  <div
-                    className="Button__icon"
-                  >
-                    <svg
-                      fill="currentColor"
-                      height={20}
-                      onClick={[Function]}
-                      size={20}
-                      stroke="currentColor"
-                      strokeWidth="0"
-                      style={
-                        Object {
-                          "color": undefined,
-                        }
-                      }
-                      viewBox="0 0 512 512"
-                      width={20}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-                <button
-                  className="Button btn btn-outline-primary btn-sm"
-                  disabled={false}
+                <div
+                  className="Menu-button"
                   onClick={[Function]}
-                  type="button"
                 >
-                  <div
-                    className="Button__icon"
-                  >
-                    <svg
-                      fill="currentColor"
-                      height={20}
-                      size={20}
-                      stroke="currentColor"
-                      strokeWidth="0"
-                      style={
-                        Object {
-                          "color": undefined,
-                        }
+                  Agency: Show all
+                    
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
                       }
-                      viewBox="0 0 512 512"
-                      width={20}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    className="Button__value"
+                    }
+                    viewBox="0 0 320 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    Reset
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="Menu-items left"
+                  style={
+                    Object {
+                      "width": "260px",
+                    }
+                  }
+                >
+                  <input
+                    className="Menu-filter form-control form-control-sm"
+                    onChange={[Function]}
+                    placeholder="Filter agencies"
+                    style={
+                      Object {
+                        "width": "calc(260px - 10px)",
+                      }
+                    }
+                    type="search"
+                  />
+                  <div
+                    className="Menu-options scrollable list-group"
+                    onKeyDown={[Function]}
+                  >
+                    <div
+                      className="Menu-item list-group-item"
+                      data-rb-event-key={null}
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      agencyVal
+                    </div>
                   </div>
-                </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="page-size-selector col"
-        >
-          <div>
-            <div
-              className="Menu-root"
-            >
+          <div
+            className="col"
+          >
+            <div>
               <div
-                className="Menu-button"
-                onClick={[Function]}
+                className="Menu-root"
               >
                 <div
-                  style={
-                    Object {
-                      "display": "flex",
-                    }
-                  }
+                  className="Menu-button"
+                  onClick={[Function]}
                 >
-                  <span>
-                    Show
-                  </span>
-                  <input
-                    className="form-control form-control-sm"
-                    defaultValue="10"
+                  Role: Show all
+                    
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
                     style={
                       Object {
-                        "marginLeft": 10,
-                        "marginRight": 10,
-                        "width": 50,
+                        "color": undefined,
                       }
                     }
-                  />
-                  <span>
-                    Entries
-                  </span>
+                    viewBox="0 0 320 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                    />
+                  </svg>
                 </div>
-              </div>
-              <div
-                className="Menu-items"
-                style={
-                  Object {
-                    "width": "60px",
-                  }
-                }
-              >
                 <div
-                  className="Menu-options list-group"
-                  onKeyDown={[Function]}
+                  className="Menu-items left"
+                  style={
+                    Object {
+                      "width": "200px",
+                    }
+                  }
                 >
+                  <input
+                    className="Menu-filter form-control form-control-sm"
+                    onChange={[Function]}
+                    placeholder="Filter roles"
+                    style={
+                      Object {
+                        "width": "calc(200px - 10px)",
+                      }
+                    }
+                    type="search"
+                  />
                   <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
+                    className="Menu-options scrollable list-group"
+                    onKeyDown={[Function]}
                   >
-                    10
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    20
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    30
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    40
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    50
-                  </div>
-                  <div
-                    className="Menu-item list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    100
+                    <div
+                      className="Menu-item list-group-item"
+                      data-rb-event-key={null}
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      roleVal
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            className="col"
+          >
+            <input
+              className="form-control"
+              onChange={[Function]}
+              placeholder="search"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            className="actions col"
+          >
+            <button
+              className="Button Button--icon-only bg-warning btn btn-primary btn-sm"
+              disabled={false}
+              type="button"
+            >
+              <div
+                className="Button__icon"
+              >
+                <svg
+                  fill="currentColor"
+                  height={20}
+                  onClick={[Function]}
+                  size={20}
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width={20}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                  />
+                </svg>
+              </div>
+            </button>
+            <button
+              className="Button btn btn-outline-primary btn-sm"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <div
+                className="Button__icon"
+              >
+                <svg
+                  fill="currentColor"
+                  height={20}
+                  size={20}
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width={20}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                  />
+                </svg>
+              </div>
+              <div
+                className="Button__value"
+              >
+                Reset
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -933,7 +823,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             }
           >
             <div
-              className="Menu-options list-group"
+              className="Menu-options scrollable list-group"
               onKeyDown={[Function]}
             >
               <div
