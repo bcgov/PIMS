@@ -88,7 +88,7 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get all provinces sorted by SortOrder and Name
+        /// Get all provinces sorted by Name
         /// </summary>
         public IEnumerable<Province> GetProvinces()
         {
@@ -96,11 +96,20 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get all roles sorted by SortOrder and Name
+        /// Get all roles sorted by Name
         /// </summary>
         public IEnumerable<Role> GetRoles()
         {
             return this.Context.Roles.AsNoTracking().OrderBy(a => a.Name).ToArray();
+        }
+
+        /// <summary>
+        /// Get all the tier levels sorted by SortOrder and Name.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TierLevel> GetTierLevels()
+        {
+            return this.Context.TierLevels.AsNoTracking().OrderBy(t => t.SortOrder).ThenBy(t => t.Name).ToArray();
         }
         #endregion
     }

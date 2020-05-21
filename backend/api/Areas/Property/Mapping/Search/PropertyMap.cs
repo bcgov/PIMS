@@ -5,7 +5,7 @@ using Pims.Dal.Entities;
 using System.Linq;
 using System;
 
-namespace Pims.Api.Mapping.Property
+namespace Pims.Api.Areas.Property.Mapping.Search
 {
     public class PropertyMap : IRegister
     {

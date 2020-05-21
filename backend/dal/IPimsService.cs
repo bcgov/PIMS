@@ -11,10 +11,12 @@ namespace Pims.Dal
         #region Properties
         IPropertyService Property { get; }
         IBuildingService Building { get; }
+        IProjectService Project { get; }
         ClaimsPrincipal Principal { get; }
         ILookupService Lookup { get; }
         IParcelService Parcel { get; }
         IUserService User { get; }
+        ITaskService Task { get; }
         #endregion
 
         #region Methods

@@ -17,7 +17,7 @@ INSERT INTO dbo.[Tasks] (
     , 0
     , 'Surplus Declaration & Readiness Checklist document emailed to SRES.'
     , 0
-    , 2
+    , 1
 ), (
     2
     , 1
@@ -25,7 +25,7 @@ INSERT INTO dbo.[Tasks] (
     , 0
     , 'Triple Bottom Line document emailed to SRES.'
     , 0
-    , 4
+    , 2
 )
 
 SET IDENTITY_INSERT dbo.[Tasks] OFF
