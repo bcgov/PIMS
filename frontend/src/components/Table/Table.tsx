@@ -231,6 +231,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
             options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
             value={props.pageSize || DEFAULT_PAGE_SIZE}
             onChange={onPageSizeChange}
+            alignTop={props.data.length >= 20}
           />
         )}
       </div>

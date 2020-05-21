@@ -47,7 +47,7 @@ exports[`Page size selector Snapshot matches 1`] = `
         }
       >
         <div
-          className="Menu-options list-group"
+          className="Menu-options scrollable list-group"
           onKeyDown={[Function]}
         >
           <div
