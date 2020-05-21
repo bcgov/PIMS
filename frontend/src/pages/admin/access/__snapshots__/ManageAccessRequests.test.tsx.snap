@@ -359,7 +359,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
       role="table"
       style={
         Object {
-          "minWidth": "1375px",
+          "minWidth": undefined,
         }
       }
     >
@@ -387,11 +387,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -407,11 +407,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -427,11 +427,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -467,11 +467,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -583,11 +583,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "flex-start",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -604,11 +604,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "flex-start",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -623,11 +623,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "flex-start",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
@@ -661,11 +661,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 "alignItems": "flex-start",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "150 0 auto",
+                "flex": "100 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
                 "textAlign": "left",
-                "width": "150px",
+                "width": "100px",
               }
             }
           >
