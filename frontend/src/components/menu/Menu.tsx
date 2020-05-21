@@ -12,6 +12,8 @@ export interface IMenuItemProps {
 }
 
 export const MenuItem = (props: IMenuItemProps) => {
+  const ref = React.useRef(null);
+
   const onClick = () => {
     if (props.onClick) {
       props.onClick(props.value);
@@ -19,7 +21,7 @@ export const MenuItem = (props: IMenuItemProps) => {
   };
 
   return (
-    <ListGroup.Item disabled={props.disabled} className="Menu-item" onClick={onClick}>
+    <ListGroup.Item ref={ref} disabled={props.disabled} className="Menu-item" onClick={onClick}>
       {props.label}
     </ListGroup.Item>
   );
@@ -31,6 +33,10 @@ interface IProps {
   width?: string;
   enableFilter?: boolean; // hide or show the menu items filter
   searchPlaceholder?: string;
+  alignLeft?: boolean;
+  alignTop?: boolean;
+  disableScroll?: boolean;
+  disableScrollToMenuElement?: boolean;
 }
 
 export const Menu: React.FC<IProps> = ({
@@ -40,7 +46,12 @@ export const Menu: React.FC<IProps> = ({
   enableFilter: filter,
   searchPlaceholder,
   children,
+  alignLeft,
+  alignTop,
+  disableScroll,
+  disableScrollToMenuElement,
 }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
   const [filterText, setFilterText] = React.useState('');
 
@@ -55,6 +66,13 @@ export const Menu: React.FC<IProps> = ({
     setFilterText(event.target.value);
   };
 
+  const handleOpenClick = () => {
+    setOpen(!open);
+    if (ref.current !== null && !disableScrollToMenuElement) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const menuItems =
     !filter || !filterText
       ? options
@@ -66,10 +84,13 @@ export const Menu: React.FC<IProps> = ({
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div className="Menu-root">
-        <div className="Menu-button" onClick={() => setOpen(!open)}>
+        <div className="Menu-button" ref={ref} onClick={() => handleOpenClick()}>
           {children || <span>{label || 'Menu'}</span>}
         </div>
-        <div className={classNames('Menu-items', { open })} style={{ width: menuWidth }}>
+        <div
+          className={classNames('Menu-items', { open, left: alignLeft, top: alignTop })}
+          style={{ width: menuWidth }}
+        >
           {filter && (
             <Form.Control
               style={{ width: `calc(${menuWidth} - 10px)` }}
@@ -80,7 +101,7 @@ export const Menu: React.FC<IProps> = ({
               placeholder={searchPlaceholder || 'Filter'}
             />
           )}
-          <ListGroup className="Menu-options">
+          <ListGroup className={classNames('Menu-options', { scrollable: !disableScroll })}>
             {menuItems.map((option: IMenuItemProps, index: number) => (
               <MenuItem
                 key={index}

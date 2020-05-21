@@ -58,15 +58,24 @@ export const AccessRequestFilter = (props: IProps) => {
           <Menu
             searchPlaceholder="Filter agencies"
             enableFilter={true}
+            alignLeft={true}
             width="260px"
             options={agencies}
+            disableScrollToMenuElement={true}
           >
             {`Agency: ${filterState.agency || 'Show all'}`}&nbsp;&nbsp;
             <FaCaretDown />
           </Menu>
         </Col>
         <Col>
-          <Menu searchPlaceholder="Filter roles" enableFilter={true} width="200px" options={roles}>
+          <Menu
+            disableScrollToMenuElement={true}
+            searchPlaceholder="Filter roles"
+            enableFilter={true}
+            alignLeft={true}
+            width="200px"
+            options={roles}
+          >
             {`Role: ${filterState.role || 'Show all'}`}&nbsp;&nbsp;
             <FaCaretDown />
           </Menu>

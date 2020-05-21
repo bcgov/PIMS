@@ -21,15 +21,25 @@
       display: flex !important;
     }
 
+    &.left {
+      left: 0;
+    }
+
+    &.top {
+      bottom: 0;
+    }
+
     .Menu-filter {
       margin: 5px;
     }
 
     .Menu-options {
-      max-height: 220px;
-      overflow: scroll;
       box-shadow: 2px 2px 5px #888888;
       z-index: 1000;
+      &.scrollable {
+        max-height: 220px;
+        overflow: scroll;
+      }
     }
 
     .Menu-item {

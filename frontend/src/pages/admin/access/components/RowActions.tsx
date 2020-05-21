@@ -49,8 +49,12 @@ export const RowActions = (props: CellProps<IAccessRequestModel>) => {
     }
   };
 
+  const isLastRow = accessRequest.id === props.data[props.data.length - 1].id;
+
   return (
     <Menu
+      alignTop={isLastRow && props.data.length >= 20}
+      disableScroll={true}
       options={[
         {
           label: 'Approve',
