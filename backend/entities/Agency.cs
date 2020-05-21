@@ -54,6 +54,11 @@ namespace Pims.Dal.Entities
         /// <typeparam name="UserAgency"></typeparam>
         /// <returns></returns>
         public ICollection<UserAgency> Users { get; } = new List<UserAgency>();
+
+        /// <summary>
+        /// get - A collectino of projects that belong to this agency.
+        /// </summary>
+        public ICollection<Project> Projects { get; } = new List<Project>();
         #endregion
 
         #region Constructors

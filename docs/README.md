@@ -14,9 +14,14 @@ The PIMS technical architecture stack continues to grow as features and enhancem
 - [Database](./DATABASE.md)
 - [Backend API](../backend/README.md)
 - [Frontend APP](../frontend/README.md)
+- [Security](./SECURITY.md)
 - [OpenShift](../openshift/README.md)
 - [DevOps CI/CD](./DEVOPS.md)
 - [Versions](./VERSIONS.md)
+
+## SRES Process Documentation
+
+- [Disposal Projects](./sres/DISPOSAL-PROJECTS.md)
 
 ### Components
 
