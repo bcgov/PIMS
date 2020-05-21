@@ -23,6 +23,12 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Description).HasMaxLength(1000);
 
+            builder.Property(m => m.Route).IsRequired();
+            builder.Property(m => m.Route).HasMaxLength(150);
+
+            builder.Property(m => m.Workflow).IsRequired();
+            builder.Property(m => m.Workflow).HasMaxLength(200);
+
             builder.HasIndex(m => new { m.Name }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 

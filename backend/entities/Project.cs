@@ -20,14 +20,24 @@ namespace Pims.Dal.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// get/set - The foreign key to the owning agency.
+        /// </summary>
+        public int AgencyId { get; set;  }
+
+        /// <summary>
+        /// get/set - The owning agency.
+        /// </summary>
+        public Agency Agency { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the project status.
         /// </summary>
-        public int ProjectStatusId { get; set; }
+        public int StatusId { get; set; }
 
         /// <summary>
         /// get/set - The project status.
         /// </summary>
-        public ProjectStatus ProjectStatus { get; set; }
+        public ProjectStatus Status { get; set; }
 
         /// <summary>
         /// get/set - A description of the project.

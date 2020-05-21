@@ -6,70 +6,94 @@ INSERT INTO dbo.[ProjectStatus] (
     , [Name]
     , [IsDisabled]
     , [Description]
+    , [Route]
+    , [Workflow]
 ) VALUES (
     0
     , 0
     , 'Draft'
     , 0
     , 'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.'
+    , '/project/draft'
+    , 'SubmitDisposal'
 ), (
     1
     , 1
-    , 'Properties Selected'
+    , 'Select Properties'
     , 0
-    , 'Properties have been added to the project.'
+    , 'Add properties to the project.'
+    , '/project/properties'
+    , 'SubmitDisposal'
 ), (
     2
     , 2
-    , 'Financials Updated'
+    , 'Update Information'
     , 0
-    , 'Property financial information has been updated for the current fiscal year.'
+    , 'Assign tier level, classification and update current financial information.'
+    , '/project/information'
+    , 'SubmitDisposal'
 ), (
     3
     , 3
-    , 'Documents Emailed'
+    , 'Required Documentation'
     , 0
-    , 'Documents have been emailed (Surplus Declaration, Readiness Checklist, Triple Bottom Line).'
+    , 'Required documentation has been completed and sent (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
+    , '/project/documentation'
+    , 'SubmitDisposal'
 ), (
     4
     , 4
-    , 'Ready for Submit'
+    , 'Approval'
     , 0
-    , 'The project is ready to be submitted for review.'
+    , 'The project is ready to be approved by owning agency.'
+    , '/project/approval'
+    , 'SubmitDisposal'
 ), (
     5
     , 5
     , 'Submitted'
     , 0
     , 'The project has been submitted for review to be added to the Surplus Property Program.'
+    , '/project/submitted'
+    , 'SubmitDisposal,ReviewDisposal'
 ), (
     6
     , 6
-    , 'Financials Reviewed'
+    , 'Property Review'
     , 0
-    , 'Property financial information has been reviewed.'
+    , 'Property information review.'
+    , '/project/property/review'
+    , 'ReviewDisposal'
 ), (
     7
     , 7
-    , 'Documents Reviewed'
+    , 'Document Review'
     , 0
-    , 'Documents have been reviewed (Surplus Declaration, Readiness Checklist, Triple Bottom Line).'
+    , 'Documentation reviewed (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
+    , '/project/documentation'
+    , 'ReviewDisposal'
 ), (
     8
     , 8
     , 'First Nation Consultation'
     , 0
-    , 'First Nation Consultation has been completed.'
+    , 'First Nation Consultation process.'
+    , '/project/fist/nation/consultation'
+    , 'ReviewDisposal'
 ), (
     9
     , 9
     , 'Approved'
     , 0
     , 'The project has been approved to be added to the Surplus Property Program.'
+    , '/project/approved'
+    , 'ReviewDisposal'
 ), (
     10
     , 10
     , 'Denied'
     , 0
     , 'The project has been denied to be added to the Surplus Property Program.'
+    , '/project/denied'
+    , 'ReviewDisposal'
 )

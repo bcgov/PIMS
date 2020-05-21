@@ -299,7 +299,9 @@ namespace Pims.Dal.Migrations
                     Name = table.Column<string>(maxLength: 150, nullable: false),
                     IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
                     SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true)
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    Route = table.Column<string>(maxLength: 150, nullable: false),
+                    Workflow = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -804,14 +806,28 @@ namespace Pims.Dal.Migrations
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    ProjectStatusId = table.Column<int>(nullable: false),
+                    AgencyId = table.Column<int>(nullable: false),
+                    StatusId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     Note = table.Column<string>(maxLength: 2000, nullable: true),
-                    TierLevelId = table.Column<int>(nullable: false)
+                    TierLevelId = table.Column<int>(nullable: false),
+                    AgencyId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.ProjectNumber);
+                    table.ForeignKey(
+                        name: "FK_Projects_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Agencies_AgencyId1",
+                        column: x => x.AgencyId1,
+                        principalTable: "Agencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Projects_Users_CreatedById",
                         column: x => x.CreatedById,
@@ -819,8 +835,8 @@ namespace Pims.Dal.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Projects_ProjectStatus_ProjectStatusId",
-                        column: x => x.ProjectStatusId,
+                        name: "FK_Projects_ProjectStatus_StatusId",
+                        column: x => x.StatusId,
                         principalTable: "ProjectStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1649,6 +1665,16 @@ namespace Pims.Dal.Migrations
                 filter: "[ParcelId] IS NOT NULL AND [BuildingId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_AgencyId",
+                table: "Projects",
+                column: "AgencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_AgencyId1",
+                table: "Projects",
+                column: "AgencyId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_CreatedById",
                 table: "Projects",
                 column: "CreatedById");
@@ -1660,9 +1686,9 @@ namespace Pims.Dal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectStatusId",
+                name: "IX_Projects_StatusId",
                 table: "Projects",
-                column: "ProjectStatusId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_TierLevelId",
@@ -1675,9 +1701,9 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_Name_ProjectStatusId_TierLevelId",
+                name: "IX_Projects_Name_StatusId_TierLevelId_AgencyId",
                 table: "Projects",
-                columns: new[] { "Name", "ProjectStatusId", "TierLevelId" });
+                columns: new[] { "Name", "StatusId", "TierLevelId", "AgencyId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatus_CreatedById",

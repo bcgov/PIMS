@@ -974,6 +974,12 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AgencyId1")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -995,13 +1001,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<int>("ProjectStatusId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TierLevelId")
                         .HasColumnType("int");
@@ -1014,18 +1020,22 @@ namespace Pims.Dal.Migrations
 
                     b.HasKey("ProjectNumber");
 
+                    b.HasIndex("AgencyId");
+
+                    b.HasIndex("AgencyId1");
+
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("ProjectStatusId");
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("TierLevelId");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Name", "ProjectStatusId", "TierLevelId");
+                    b.HasIndex("Name", "StatusId", "TierLevelId", "AgencyId");
 
                     b.ToTable("Projects");
                 });
@@ -1114,6 +1124,11 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
+                    b.Property<string>("Route")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -1129,6 +1144,11 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<string>("Workflow")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
@@ -2085,13 +2105,22 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Project", b =>
                 {
+                    b.HasOne("Pims.Dal.Entities.Agency", "Agency")
+                        .WithMany()
+                        .HasForeignKey("AgencyId")
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.Agency", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("AgencyId1");
+
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "ProjectStatus")
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("ProjectStatusId")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
