@@ -31,7 +31,7 @@ help:
 
 test: lint ## Runs frontend unit tests via Jest
 	@echo "$(P) Running the unit tests..."
-	@npm run test
+	@npm run test -- -u
 
 format: ## Runs prettier
 	@echo "$(P) Formatting the codebase..."

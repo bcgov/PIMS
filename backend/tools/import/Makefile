@@ -24,7 +24,7 @@ P = ${GREEN}[+]${RESET}
 
 
 # include env vars
-include .env
+-include .env
 
 KC_TOKEN := $(shell curl -s -L -X POST "http://keycloak:8080/auth/realms/pims/protocol/openid-connect/token" \
 	--header "Content-Type: application/x-www-form-urlencoded" \
