@@ -68,6 +68,11 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <typeparam name="ParcelFiscals"></typeparam>
         public ICollection<ParcelFiscal> Fiscals { get; private set; } = new List<ParcelFiscal>();
+
+        /// <summary>
+        /// get - A collection of projects this parcel is assocated to.
+        /// </summary>
+        public ICollection<ProjectProperty> Projects { get; } = new List<ProjectProperty>();
         #endregion
 
         #region Constructors
