@@ -25,11 +25,12 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Description).HasMaxLength(1000);
             builder.Property(m => m.Note).HasMaxLength(2000);
 
+            builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.TierLevel).WithMany().HasForeignKey(m => m.TierLevelId).OnDelete(DeleteBehavior.ClientSetNull);
-            builder.HasOne(m => m.ProjectStatus).WithMany().HasForeignKey(m => m.ProjectStatusId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(m => new { m.Name }).IsUnique();
-            builder.HasIndex(m => new { m.Name, m.ProjectStatusId, m.TierLevelId });
+            builder.HasIndex(m => new { m.Name, m.StatusId, m.TierLevelId, m.AgencyId });
 
             base.Configure(builder);
         }

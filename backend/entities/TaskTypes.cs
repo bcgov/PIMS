@@ -7,12 +7,8 @@ namespace Pims.Dal.Entities
     {
         None = 0,
         /// <summary>
-        /// A list of tasks related to submitting a disposal project.
+        /// A list of documents required for disposal project.
         /// </summary>
-        DisposalProjectSubmit = 1,
-        /// <summary>
-        /// A list of tasks related to approving a disposal project.
-        /// </summary>
-        DisposalProjectApprove = 2,
+        DisposalProjectDocuments = 1
     }
 }

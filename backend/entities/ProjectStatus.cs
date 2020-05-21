@@ -10,6 +10,16 @@ namespace Pims.Dal.Entities
         /// get/set - A description of the tier.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// get/set - The route to the component/page that represents this status.
+        /// </summary>
+        public string Route { get; set; }
+
+        /// <summary>
+        /// get/set - A way to identify related workflow statuses.
+        /// </summary>
+        public string Workflow { get; set; }
         #endregion
 
         #region Constructors

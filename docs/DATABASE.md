@@ -8,9 +8,9 @@ The PIMS solution currently uses a MSSQL datasource hosted within a Linux contai
 
 <img src="./images/logo-mssql.svg" width="50" style="float:left">
 
-  **Microsoft SQL Server** 2019
+**Microsoft SQL Server** 2019
 
-  [Docker Image](mcr.microsoft.com/mssql/rhel/server:2019-latest)
+[Docker Image](mcr.microsoft.com/mssql/rhel/server:2019-latest)
 
 ## Additional Links and Information
 
@@ -21,7 +21,7 @@ The PIMS solution currently uses a MSSQL datasource hosted within a Linux contai
 
 ## Architectural Design
 
-The primary purpose of this datasource is to maintain an inventory of properties (Parcels and Buildings). Additionally to authorize and associate Users with their respective properties. There are also a number of supporting lists to support the front-end application user experience.
+The primary purpose of this datasource is to maintain an inventory of properties (Parcels, Buildings and Projects). Additionally to authorize and associate Users with their respective properties. There are also a number of supporting lists to support the front-end application user experience.
 
 ### Enterprise Relational Diagram
 
@@ -41,6 +41,7 @@ The following are the primary objects;
 | --------- | ------------------------------------------------------------ |
 | Parcels   | Land inventory                                               |
 | Buildings | Building inventory                                           |
+| Projects  | Project inventory (disposal, aquisition)                     |
 | Users     | Users accounts within PIMS                                   |
 | Roles     | Roles that authorize abilities within PIMS                   |
 | Agencies  | A ministry, crown corporation or entity that owns properties |
@@ -50,14 +51,16 @@ The following are the primary objects;
 
 The following provide a way to manage lists of values within the solution;
 
-| Object                    | Description                               |
-| ------------------------- | ----------------------------------------- |
-| PropertyTypes             | List of property types [land \| building] |
-| PropertyClassifications   | List of property classifications          |
-| PropertyStatus            | List of property status                   |
-| Cities                    | List of cities                            |
-| Provinces                 | List of provinces                         |
-| BuildingConstructionTypes | List of building construction types       |
-| BuildingPredominateUses   | List of building predominate uses         |
-| BuildingOccupantTypes     | List of building occupant types           |
-
+| Object                    | Description                                  |
+| ------------------------- | -------------------------------------------- |
+| PropertyTypes             | List of property types [land \| building]    |
+| PropertyClassifications   | List of property classifications             |
+| PropertyStatus            | List of property status                      |
+| Cities                    | List of cities                               |
+| Provinces                 | List of provinces                            |
+| BuildingConstructionTypes | List of building construction types          |
+| BuildingPredominateUses   | List of building predominate uses            |
+| BuildingOccupantTypes     | List of building occupant types              |
+| TierLevels                | List of project tier levels                  |
+| Project Status            | List of project status                       |
+| Tasks                     | List of tasks to complete a process or stage |
