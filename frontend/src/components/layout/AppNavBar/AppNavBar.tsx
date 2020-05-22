@@ -100,17 +100,11 @@ function ViewProjects() {
 }
 
 /**
- * Start a Project navigation dropdown menu.
+ * Disposal Project navigation dropdown menu.
  */
 function DisposeRequest() {
   const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
-    <NavDropdown title="Start a Project" id="start-project-dropdown">
-      <NavDropdown.Item>Acquisition Project</NavDropdown.Item>
-      <NavDropdown.Item>Disposition Project</NavDropdown.Item>
-      <NavDropdown.Item>Request Exemption</NavDropdown.Item>
-    </NavDropdown>
-  ) : null;
+  return keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? <Nav.Link>Dispose Properties</Nav.Link> : null;
 }
 
 /**
