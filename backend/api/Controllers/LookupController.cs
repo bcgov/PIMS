@@ -82,6 +82,20 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// Get all of the project tier levels.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("project/tier/levels")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Models.LookupModel<int>>), 200)]
+        [SwaggerOperation(Tags = new[] { "lookup" })]
+        public IActionResult GetTierLevels()
+        {
+            var tierLevels = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetTierLevels());
+            return new JsonResult(tierLevels.ToArray());
+        }
+
+        /// <summary>
         /// Get all of the code values
         /// </summary>
         /// <returns></returns>
@@ -100,6 +114,7 @@ namespace Pims.Api.Controllers
             var constructionTypeCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingConstructionTypes());
             var predominateUseCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingPredominateUses());
             var occupantTypeCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
+            var tierLevelCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetTierLevels());
 
             var codes = new List<object>();
             codes.AddRange(roleCodes);
@@ -111,6 +126,7 @@ namespace Pims.Api.Controllers
             codes.AddRange(constructionTypeCodes);
             codes.AddRange(predominateUseCodes);
             codes.AddRange(occupantTypeCodes);
+            codes.AddRange(tierLevelCodes);
             return new JsonResult(codes);
         }
         #endregion
