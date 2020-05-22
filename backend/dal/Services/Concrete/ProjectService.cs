@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -18,6 +19,10 @@ namespace Pims.Dal.Services
     /// </summary>
     public class ProjectService : BaseService<Project>, IProjectService
     {
+        #region Variables
+        private readonly ProjectOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a ProjectService, and initializes it with the specified arguments.
@@ -25,7 +30,10 @@ namespace Pims.Dal.Services
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, ILogger<ProjectService> logger) : base(dbContext, user, logger) { }
+        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IOptions<ProjectOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, logger)
+        {
+            _options = options.Value;
+        }
         #endregion
 
         #region Methods
@@ -123,6 +131,7 @@ namespace Pims.Dal.Services
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding projects.");
 
+            project.ProjectNumber = this.Context.GenerateProjectNumber(_options.NumberFormat); // Auto-generate the project number.  // TODO: Handle subsequent failure and orphaned project number.
             project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
             project.Agency = agency;
             project.StatusId = 0; // Always start a project as a Draft.

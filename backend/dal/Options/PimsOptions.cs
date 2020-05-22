@@ -6,6 +6,7 @@ namespace Pims.Dal
     {
         #region Properties
         public ServiceAccountOptions ServiceAccount { get; set; }
+        public ProjectOptions Project { get; set; }
         #endregion
     }
 }

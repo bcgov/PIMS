@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pims.Dal.Configuration;
@@ -33,6 +32,7 @@ namespace Pims.Dal
         public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectNumber> ProjectNumbers { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
         public DbSet<ProjectProperty> ProjectProperties { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }

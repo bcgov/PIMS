@@ -287,6 +287,35 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectNumbers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectNumbers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectNumbers_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectNumbers_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectStatus",
                 columns: table => new
                 {
@@ -1638,6 +1667,16 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectNumbers_CreatedById",
+                table: "ProjectNumbers",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectNumbers_UpdatedById",
+                table: "ProjectNumbers",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectProperties_BuildingId",
                 table: "ProjectProperties",
                 column: "BuildingId");
@@ -1678,12 +1717,6 @@ namespace Pims.Dal.Migrations
                 name: "IX_Projects_CreatedById",
                 table: "Projects",
                 column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_Name",
-                table: "Projects",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_StatusId",
@@ -1976,6 +2009,9 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "ParcelFiscals");
+
+            migrationBuilder.DropTable(
+                name: "ProjectNumbers");
 
             migrationBuilder.DropTable(
                 name: "ProjectProperties");
