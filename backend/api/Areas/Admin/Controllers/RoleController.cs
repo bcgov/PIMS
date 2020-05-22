@@ -86,6 +86,23 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// GET - Returns a role for the specified 'name' from the datasource.
+        /// </summary>
+        /// <param name="name">The unique 'name' for the role to return.</param>
+        /// <returns>The role requested.</returns>
+        [HttpGet("name/{name}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.RoleModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-role" })]
+        public IActionResult GetRoleByName(string name)
+        {
+            var entity = _pimsAdminService.Role.GetByName(name);
+            var role = _mapper.Map<Model.RoleModel>(entity);
+            return new JsonResult(role);
+        }
+
+        /// <summary>
         /// POST - Add a new role to the datasource.
         /// </summary>
         /// <param name="model">The role model.</param>

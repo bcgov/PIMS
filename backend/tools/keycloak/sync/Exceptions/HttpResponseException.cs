@@ -33,7 +33,6 @@ namespace Pims.Tools.Keycloak.Sync.Exceptions
             this.StatusCode = response.StatusCode;
             using var stream = response.Content.ReadAsStreamAsync().Result;
             this.Details = stream.ReadStream();
-
         }
         #endregion
     }

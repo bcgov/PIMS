@@ -1,4 +1,6 @@
-namespace Pims.Tools.Keycloak.Sync
+using Pims.Tools.Keycloak.Sync.Configuration.Realm;
+
+namespace Pims.Tools.Keycloak.Sync.Configuration
 {
     /// <summary>
     /// SyncOptions class, provides a way to configure the sync controls.
@@ -6,11 +8,6 @@ namespace Pims.Tools.Keycloak.Sync
     public class SyncOptions
     {
         #region Properties
-        /// <summary>
-        /// get/set - An array of required claims.
-        /// </summary>
-        public string[] Claims { get; set; }
-
         /// <summary>
         /// get/set - Whether to retry a request after a failure.
         /// </summary>
@@ -28,6 +25,11 @@ namespace Pims.Tools.Keycloak.Sync
         /// </summary>
         /// <value></value>
         public int AbortAfterFailure { get; set; } = 1;
+
+        /// <summary>
+        /// get/set - Configuration of the realm.
+        /// </summary>
+        public RealmOptions Realm { get; set; }
         #endregion
     }
 }

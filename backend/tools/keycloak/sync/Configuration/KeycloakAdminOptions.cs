@@ -1,4 +1,4 @@
-namespace Pims.Tools.Keycloak.Sync
+namespace Pims.Tools.Keycloak.Sync.Configuration
 {
     /// <summary>
     /// KeycloakAdminOptions class, provides a way to configure the connection to Keycloak.

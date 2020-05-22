@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Pims.Tools.Keycloak.Sync
 {
@@ -11,22 +10,22 @@ namespace Pims.Tools.Keycloak.Sync
     {
         #region Variables
         private readonly ILogger _logger;
-        private readonly ToolOptions _config;
-        private readonly IFactory _factory;
+        private readonly ISyncFactory _syncFactory;
+        private readonly IRealmFactory _realmFactory;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new instance of a Startup class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="optionsTool"></param>
-        /// <param name="factory"></param>
+        /// <param name="realmFactory"></param>
+        /// <param name="syncFactory"></param>
         /// <param name="logger"></param>
-        public Startup(IOptionsMonitor<ToolOptions> optionsTool, IFactory factory, ILogger<Startup> logger)
+        public Startup(IRealmFactory realmFactory, ISyncFactory syncFactory, ILogger<Startup> logger)
         {
-            _config = optionsTool.CurrentValue;
+            _realmFactory = realmFactory;
+            _syncFactory = syncFactory;
             _logger = logger;
-            _factory = factory;
         }
         #endregion
 
@@ -36,13 +35,20 @@ namespace Pims.Tools.Keycloak.Sync
         /// </summary>
         /// <param name="args"></param>
         /// <return></return>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Standard argument for console application.")]
         public async Task<int> Run(string[] args)
         {
-            _logger.LogInformation("Keycloak Sync Started");
+            _logger.LogInformation("Keycloak Realm Factory Started");
 
-            var result = await _factory.SyncAsync();
+            var result = await _realmFactory.InitAsync();
 
-            _logger.LogInformation("Keycloak Sync Stopping");
+            _logger.LogInformation("Keycloak Realm Factory Stopping");
+
+            _logger.LogInformation("Keycloak Sync Factory Started");
+
+            result += await _syncFactory.SyncAsync();
+
+            _logger.LogInformation("Keycloak Sync Factory Stopping");
 
             return result;
         }
