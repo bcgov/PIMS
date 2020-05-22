@@ -242,93 +242,25 @@ describe('AppNavBar', () => {
       expect(element).toBeTruthy();
     });
 
-    describe('AppNavBar Start a Project Dropdown', () => {
-      it('AppNavBar include Start a Project Dropdown', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: ['dispose-request'],
-            },
+    it('AppNavBar include Disposal Project Link', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: ['dispose-request'],
           },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        const element = getByText('Start a Project');
-
-        expect(element).toBeTruthy();
+        },
       });
 
-      it('AppNavBar include Acquisition Project Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: ['dispose-request'],
-            },
-          },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        fireEvent.click(getByText('Start a Project'));
-        const element = getByText('Acquisition Project');
-
-        expect(element).toBeTruthy();
-      });
-
-      it('AppNavBar include Disposition Project Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: ['dispose-request'],
-            },
-          },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        fireEvent.click(getByText('Start a Project'));
-        const element = getByText('Disposition Project');
-
-        expect(element).toBeTruthy();
-      });
-
-      it('AppNavBar include Request Exemption Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: ['dispose-request'],
-            },
-          },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        fireEvent.click(getByText('Start a Project'));
-        const element = getByText('Request Exemption');
-
-        expect(element).toBeTruthy();
-      });
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const link = getByText('Dispose Properties');
+      expect(link).toBeTruthy();
     });
   });
 });
