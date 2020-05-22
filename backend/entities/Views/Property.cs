@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Dal.Entities.Views
 {
@@ -117,6 +118,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The most recent estimate.
         /// </summary>
+        [Column(TypeName = "MONEY")]
         public decimal Estimated { get; set; }
 
         /// <summary>
@@ -127,6 +129,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The most recent netbook value.
         /// </summary>
+        [Column(TypeName = "MONEY")]
         public decimal NetBook { get; set; }
 
         /// <summary>
@@ -137,6 +140,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The most recent assessment.
         /// </summary>
+        [Column(TypeName = "MONEY")]
         public decimal Assessed { get; set; }
 
         /// <summary>
@@ -147,6 +151,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The most recent appraisal.
         /// </summary>
+        [Column(TypeName = "MONEY")]
         public decimal Appraised { get; set; }
 
         /// <summary>
