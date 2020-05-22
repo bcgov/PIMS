@@ -18,38 +18,42 @@ namespace Pims.Dal
         /// <summary>
         /// get - The user calling the service.
         /// </summary>
-        /// <value></value>
         public ClaimsPrincipal Principal { get; }
 
         /// <summary>
         /// get - The property services.
         /// </summary>
-        /// <value></value>
         public IPropertyService Property { get { return _serviceProvider.GetService<IPropertyService>(); } }
 
         /// <summary>
         /// get - The building services.
         /// </summary>
-        /// <value></value>
         public IBuildingService Building { get { return _serviceProvider.GetService<IBuildingService>(); } }
+
+        /// <summary>
+        /// get - The project services.
+        /// </summary>
+        public IProjectService Project { get { return _serviceProvider.GetService<IProjectService>(); } }
 
         /// <summary>
         /// get - The lookup services.
         /// </summary>
-        /// <value></value>
         public ILookupService Lookup { get { return _serviceProvider.GetService<ILookupService>(); } }
 
         /// <summary>
         /// get - The parcel services.
         /// </summary>
-        /// <value></value>
         public IParcelService Parcel { get { return _serviceProvider.GetService<IParcelService>(); } }
 
         /// <summary>
         /// get - The user services.
         /// </summary>
-        /// <value></value>
         public IUserService User { get { return _serviceProvider.GetService<IUserService>(); } }
+
+        /// <summary>
+        /// get - The task services.
+        /// </summary>
+        public ITaskService Task { get { return _serviceProvider.GetService<ITaskService>(); } }
 
         #endregion
 

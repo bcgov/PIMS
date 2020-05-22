@@ -2306,6 +2306,173 @@
               ],
               "protocolProfileBehavior": {},
               "_postman_isSubFolder": true
+            },
+            {
+              "name": "project",
+              "item": [
+                {
+                  "name": "dispose",
+                  "item": [
+                    {
+                      "name": "/projects/disposal/workflow",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/workflow",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal", "workflow"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/tasksCopy",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/tasks",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal", "tasks"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/tasksCopy Copy",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "4d45e1cc-5ba8-4174-8546-00be05fd2eaf",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/AUniqueID",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal", "AUniqueID"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/tasksCopy Copy Copy",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n\t\"projectNumber\": \"AUniqueID\",\n\t\"name\": \"A name\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 0,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/tasksCopy Copy Copy Copy",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "47db1587-4de0-41a2-a120-829097318e33",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n  \"projectNumber\": \"AUniqueID\",\r\n  \"name\": \"A name 2\",\r\n  \"statusId\": 0,\r\n  \"status\": \"Draft\",\r\n  \"tierLevelId\": 1,\r\n  \"tierLevel\": \"Tier 1\",\r\n  \"description\": \"A description\",\r\n  \"note\": \"A note\",\r\n  \"agencyId\": 1,\r\n  \"agency\": \"AEST\",\r\n  \"properties\": [],\r\n  \"tasks\": [\r\n    {\r\n      \"projectNumber\": \"AUniqueID\",\r\n      \"taskId\": 1,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false\r\n    },\r\n    {\r\n      \"projectNumber\": \"AUniqueID\",\r\n      \"taskId\": 2,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false\r\n    }\r\n  ],\r\n  \"rowVersion\": \"AAAAAAAACYk=\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/name",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal", "name"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/tasksCopy Copy Copy Copy Copy",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "9e2fbe72-5874-4f9b-9963-69b23e630eb1",
+                            "exec": [""],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n  \"projectNumber\": \"AUniqueID\",\r\n  \"name\": \"A name\",\r\n  \"statusId\": 0,\r\n  \"status\": \"Draft\",\r\n  \"tierLevelId\": 1,\r\n  \"tierLevel\": \"Tier 1\",\r\n  \"description\": \"A description\",\r\n  \"note\": \"A note\",\r\n  \"agencyId\": 1,\r\n  \"agency\": \"AEST\",\r\n  \"properties\": [],\r\n  \"tasks\": [\r\n    {\r\n      \"projectNumber\": \"AUniqueID\",\r\n      \"taskId\": 1,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false\r\n    },\r\n    {\r\n      \"projectNumber\": \"AUniqueID\",\r\n      \"taskId\": 2,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false\r\n    }\r\n  ],\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/AUniqueID",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "disposal", "AUniqueID"]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
+                }
+              ],
+              "protocolProfileBehavior": {},
+              "_postman_isSubFolder": true
             }
           ],
           "protocolProfileBehavior": {},
@@ -2315,7 +2482,7 @@
           "name": "lookup",
           "item": [
             {
-              "name": "all",
+              "name": "/all",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -2330,7 +2497,7 @@
               "response": []
             },
             {
-              "name": "agencies",
+              "name": "/agencies",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -2345,7 +2512,7 @@
               "response": []
             },
             {
-              "name": "roles",
+              "name": "/roles",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -2360,7 +2527,22 @@
               "response": []
             },
             {
-              "name": "property/classifications",
+              "name": "/project/tier/levels",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{scheme}}://{{host}}:{{port}}/api/lookup/project/tier/levels",
+                  "protocol": "{{scheme}}",
+                  "host": ["{{host}}"],
+                  "port": "{{port}}",
+                  "path": ["api", "lookup", "project", "tier", "levels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/property/classifications",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -2638,6 +2820,16 @@
             },
             {
               "name": "parcels/filter",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "01144697-2e2a-496c-a2ff-208d7c4205ad",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [],

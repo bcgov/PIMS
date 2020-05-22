@@ -128,7 +128,7 @@ namespace Pims.Dal.Services
                     (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
             // Remove any sensitive buildings from the results if the user is not allowed to view them.
-            parcel?.Buildings.RemoveAll(b => b.IsSensitive && !userAgencies.Contains(b.AgencyId));
+            parcel?.Buildings.RemoveAll(b => !isAdmin && b.IsSensitive && !userAgencies.Contains(b.AgencyId));
             return parcel;
         }
 
@@ -191,7 +191,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
@@ -204,11 +204,11 @@ namespace Pims.Dal.Services
             //Add/Update a parcel and all child collections
             if (existingParcel == null)
             {
-                this.Context.Add(parcel);
+                this.Context.Add(parcel); // TODO: This should not be here!  This does not follow design of single purpose functions.
             }
             else
             {
-                this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
+                this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel); // TODO: Fix concurrency issue
                 this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
                 foreach (var building in parcel.Buildings)
                 {
