@@ -1,4 +1,5 @@
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using System.Collections.Generic;
 
 namespace Pims.Dal.Services
@@ -8,6 +9,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IProjectService
     {
+        Paged<Project> GetPage(ProjectFilter filter);
         Project Get(string projectNumber);
         Project Add(Project project);
         Project Update(Project project);
