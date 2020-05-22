@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -42,6 +43,27 @@ namespace Pims.Dal.Services
                 .Where(s => EF.Functions.Like(s.Workflow, $"%{workflow}%"));
 
             return status.ToArray();
+        }
+
+        /// <summary>
+        /// Get a page with an array of projects within the specified filters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Paged<Project> GetPage(ProjectFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            filter.ThrowIfNull(nameof(filter));
+            if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
+
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var total = query.Count();
+            var items = query
+                .Skip((filter.Page - 1) * filter.Quantity)
+                .Take(filter.Quantity)
+                .ToArray();
+
+            return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
         /// <summary>
