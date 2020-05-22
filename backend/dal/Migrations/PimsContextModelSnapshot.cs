@@ -1026,9 +1026,6 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TierLevelId");
@@ -1038,6 +1035,41 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("Name", "StatusId", "TierLevelId", "AgencyId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectNumber", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("ProjectNumbers");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectProperty", b =>
@@ -2128,6 +2160,17 @@ namespace Pims.Dal.Migrations
                         .WithMany()
                         .HasForeignKey("TierLevelId")
                         .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectNumber", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("Pims.Dal.Entities.User", null)
                         .WithMany()

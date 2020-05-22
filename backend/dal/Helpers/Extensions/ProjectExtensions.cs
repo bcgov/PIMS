@@ -61,5 +61,44 @@ namespace Pims.Dal.Helpers.Extensions
 
             return query;
         }
+
+        /// Generate a new project number in the database.
+        /// NOTE - this saves current changes to the datasource and should be called before other changes.
+        /// If the subsequent save to the database fails the project number will be unused and result in an orphan.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static Entity.ProjectNumber GenerateProjectNumber(this PimsContext context)
+        {
+            var projectNumber = new Entity.ProjectNumber();
+            context.ProjectNumbers.Add(projectNumber);
+            context.SaveChanges();
+            return projectNumber;
+        }
+
+        /// <summary>
+        /// Generate a new project number in the database.
+        /// NOTE - this saves current changes to the datasource and should be called before other changes.
+        /// If the subsequent save to the database fails the project number will be unused and result in an orphan.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string GenerateProjectNumber(this PimsContext context, string format)
+        {
+            var projectNumber = context.GenerateProjectNumber();
+            return projectNumber.Generate(format);
+        }
+
+        /// <summary>
+        /// Generate a formatted project number for a project for the specified `projectNumber`.
+        /// </summary>
+        /// <param name="projectNumber"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string Generate(this Entity.ProjectNumber projectNumber, string format)
+        {
+            return String.Format(format, projectNumber.Id);
+        }
     }
 }
