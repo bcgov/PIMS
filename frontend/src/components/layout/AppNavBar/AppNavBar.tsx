@@ -104,7 +104,10 @@ function ViewProjects() {
  */
 function DisposeRequest() {
   const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? <Nav.Link>Dispose Properties</Nav.Link> : null;
+  const history = useHistory();
+  return keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
+    <Nav.Link onClick={() => history.push('/dispose/project/draft')}>Dispose Properties</Nav.Link>
+  ) : null;
 }
 
 /**

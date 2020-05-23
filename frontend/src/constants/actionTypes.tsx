@@ -49,3 +49,8 @@ export const SORT_USERS = 'SORT_USERS';
 export const SET_USERS_PAGE_SIZE = 'SET_USERS_PAGE_SIZE';
 export const SET_USERS_PAGE_INDEX = 'SET_USERS_PAGE_INDEX';
 export const SET_USERS_SORT = 'SET_USERS_SORT';
+
+//projects
+export enum ProjectActions {
+  GET_PROJECT_WORKFLOW = 'GET_PROJECT_WORKFLOW',
+}

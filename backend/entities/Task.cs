@@ -12,7 +12,7 @@ namespace Pims.Dal.Entities
         public TaskTypes TaskType { get; set; }
 
         /// <summary>
-        /// get/set - A description of the tier.
+        /// get/set - A description of the task.
         /// </summary>
         public string Description { get; set; }
 

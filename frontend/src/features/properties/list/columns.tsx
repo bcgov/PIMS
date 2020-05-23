@@ -7,7 +7,7 @@ import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { IProperty } from '.';
-import { ColumnWithProps } from 'components/Table';
+import { ColumnWithProps } from 'components/Table/types';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 

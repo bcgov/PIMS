@@ -81,3 +81,6 @@ export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
   `/admin/access/requests?${queryString.stringify(params)}`; // get paged access requests
 export const REQUEST_ACCESS_DELETE = (id: number) => `/admin/access/requests/${id}`; // delete an access request
 export const POST_USERS = () => `/admin/users/my/agency`; // get paged list of users
+
+// Projects
+export const PROJECT_DISPOSE_WORKFLOW = () => `/projects/disposal/workflow`;

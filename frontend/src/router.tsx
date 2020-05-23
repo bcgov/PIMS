@@ -15,6 +15,7 @@ import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test';
 import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
+import { ProjectDisposeView } from 'features/projects/dispose';
 
 const AppRouter: React.FC = () => {
   return (
@@ -57,6 +58,13 @@ const AppRouter: React.FC = () => {
         component={PropertyListView}
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
+      />
+      <AppRoute
+        protected
+        path="/dispose"
+        component={ProjectDisposeView}
+        layout={AuthLayout}
+        claim={Claims.DISPOSE_REQUEST}
       />
       <AppRoute
         protected
