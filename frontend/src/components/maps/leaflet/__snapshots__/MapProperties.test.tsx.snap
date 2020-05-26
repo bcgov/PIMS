@@ -47,9 +47,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
             1234 mock Street
           </div>
           <div>
-            Victoria
             , 
-            BC
              
             V1V1V1
           </div>
