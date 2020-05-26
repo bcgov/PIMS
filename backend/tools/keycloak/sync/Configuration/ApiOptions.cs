@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Pims.Tools.Keycloak.Sync
+namespace Pims.Tools.Keycloak.Sync.Configuration
 {
     /// <summary>
     /// ApiOptions class, provides a way to configure the connection to the API.

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Tools.Keycloak.Sync.Models
 {
@@ -76,6 +77,32 @@ namespace Pims.Tools.Keycloak.Sync.Models
         /// get/set - An array of roles the user is a member of.
         /// </summary>
         public IEnumerable<RoleModel> Roles { get; set; } = new List<RoleModel>();
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a UserModel class.
+        /// </summary>
+        public UserModel() { }
+
+        /// <summary>
+        /// Creates a new instance of a UserModel class, initializes with specified arguments.
+        /// </summary>
+        /// <param name="user"></param>
+        public UserModel(Keycloak.UserModel user)
+        {
+            this.Id = user.Id;
+            this.Username = user.Username;
+            this.Position = user.Attributes?.ContainsKey("position") ?? false ? user.Attributes["position"].FirstOrDefault() : null;
+            this.FirstName = user.FirstName;
+            this.MiddleName = user.Attributes?.ContainsKey("middleName") ?? false ? user.Attributes["middleName"].FirstOrDefault() : null;
+            this.LastName = user.LastName;
+            this.DisplayName = user.Attributes?.ContainsKey("displayName") ?? false ? user.Attributes["displayName"].FirstOrDefault() : $"{this.LastName}, {this.FirstName}";
+            this.Email = user.Email;
+            this.IsDisabled = user.Enabled;
+            this.EmailVerified = user.EmailVerified;
+            this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a => new AgencyModel() { Id = Int32.Parse(a) }).ToArray() : null;
+        }
         #endregion
     }
 }

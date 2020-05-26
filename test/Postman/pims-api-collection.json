@@ -453,6 +453,168 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "users/{id}/role-mappings/realm",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"id\": \"216b6a37-bc1c-4cf3-9a93-25f96277647e\",\r\n        \"name\": \"system-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"71e74513-a036-4df3-b724-a8c349b7fc28\",\r\n        \"name\": \"admin-properties\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19a7105b-8916-4b21-9570-92575ec20b6a\",\r\n        \"name\": \"offline_access\",\r\n        \"description\": \"${role_offline-access}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19177dc6-5851-4159-99cd-173ea66dd28e\",\r\n        \"name\": \"dispose-request\",\r\n        \"description\": \"Ability to request to dispose properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10164537\",\r\n        \"name\": \"property-delete\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"70c9ca1b-fae5-4677-9da2-4c9241a04c12\",\r\n        \"name\": \"agency-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"dcd7d269-d6eb-49a1-a482-fc6d6aa0945f\",\r\n        \"name\": \"uma_authorization\",\r\n        \"description\": \"${role_uma_authorization}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"5fd96f19-abe1-47e7-8a54-0a707bc3e4a4\",\r\n        \"name\": \"property-add\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"4dc0f39a-32f0-43a4-9d90-62fd94f20567\",\r\n        \"name\": \"sensitive-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10064537\",\r\n        \"name\": \"property-edit\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"b9405307-99bc-42af-be07-1ff54758b968\",\r\n        \"name\": \"dispose-approve\",\r\n        \"description\": \"Ability to approve disposal of a properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"3928c68a-0c64-4131-a2ca-a918de821f09\",\r\n        \"name\": \"admin-agencies\",\r\n        \"description\": \"Ability to administrate agencies.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n        \"name\": \"admin-users\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1\",\r\n        \"name\": \"property-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"321e245b-ee7d-4d7c-83a8-56b5a9d33c2d\",\r\n        \"name\": \"admin-roles\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/18517715-472b-421d-861f-bb2f643e658a/role-mappings/realm",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "users",
+                    "18517715-472b-421d-861f-bb2f643e658a",
+                    "role-mappings",
+                    "realm"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "users/{id}/role-mappings/realm",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"id\": \"216b6a37-bc1c-4cf3-9a93-25f96277647e\",\r\n        \"name\": \"system-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"71e74513-a036-4df3-b724-a8c349b7fc28\",\r\n        \"name\": \"admin-properties\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19a7105b-8916-4b21-9570-92575ec20b6a\",\r\n        \"name\": \"offline_access\",\r\n        \"description\": \"${role_offline-access}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19177dc6-5851-4159-99cd-173ea66dd28e\",\r\n        \"name\": \"dispose-request\",\r\n        \"description\": \"Ability to request to dispose properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10164537\",\r\n        \"name\": \"property-delete\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"70c9ca1b-fae5-4677-9da2-4c9241a04c12\",\r\n        \"name\": \"agency-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"dcd7d269-d6eb-49a1-a482-fc6d6aa0945f\",\r\n        \"name\": \"uma_authorization\",\r\n        \"description\": \"${role_uma_authorization}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"5fd96f19-abe1-47e7-8a54-0a707bc3e4a4\",\r\n        \"name\": \"property-add\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"4dc0f39a-32f0-43a4-9d90-62fd94f20567\",\r\n        \"name\": \"sensitive-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10064537\",\r\n        \"name\": \"property-edit\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"b9405307-99bc-42af-be07-1ff54758b968\",\r\n        \"name\": \"dispose-approve\",\r\n        \"description\": \"Ability to approve disposal of a properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"3928c68a-0c64-4131-a2ca-a918de821f09\",\r\n        \"name\": \"admin-agencies\",\r\n        \"description\": \"Ability to administrate agencies.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n        \"name\": \"admin-users\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1\",\r\n        \"name\": \"property-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"321e245b-ee7d-4d7c-83a8-56b5a9d33c2d\",\r\n        \"name\": \"admin-roles\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/9ceeafc1-5065-42e2-835f-73b9e8ff31ea/role-mappings/realm",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "users",
+                    "9ceeafc1-5065-42e2-835f-73b9e8ff31ea",
+                    "role-mappings",
+                    "realm"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "users/{id}/role-mappings/realm Copy",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[{\r\n    \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n    \"name\": \"admin-users\",\r\n    \"composite\": false,\r\n    \"clientRole\": false,\r\n    \"containerId\": \"pims\",\r\n    \"attributes\": {}\r\n}]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/9ceeafc1-5065-42e2-835f-73b9e8ff31ea/role-mappings/realm",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "users",
+                    "9ceeafc1-5065-42e2-835f-73b9e8ff31ea",
+                    "role-mappings",
+                    "realm"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "users/{id}/role-mappings/clients/{id}",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"id\": \"216b6a37-bc1c-4cf3-9a93-25f96277647e\",\r\n        \"name\": \"system-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"71e74513-a036-4df3-b724-a8c349b7fc28\",\r\n        \"name\": \"admin-properties\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19a7105b-8916-4b21-9570-92575ec20b6a\",\r\n        \"name\": \"offline_access\",\r\n        \"description\": \"${role_offline-access}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19177dc6-5851-4159-99cd-173ea66dd28e\",\r\n        \"name\": \"dispose-request\",\r\n        \"description\": \"Ability to request to dispose properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10164537\",\r\n        \"name\": \"property-delete\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"70c9ca1b-fae5-4677-9da2-4c9241a04c12\",\r\n        \"name\": \"agency-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"dcd7d269-d6eb-49a1-a482-fc6d6aa0945f\",\r\n        \"name\": \"uma_authorization\",\r\n        \"description\": \"${role_uma_authorization}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"5fd96f19-abe1-47e7-8a54-0a707bc3e4a4\",\r\n        \"name\": \"property-add\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"4dc0f39a-32f0-43a4-9d90-62fd94f20567\",\r\n        \"name\": \"sensitive-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10064537\",\r\n        \"name\": \"property-edit\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"b9405307-99bc-42af-be07-1ff54758b968\",\r\n        \"name\": \"dispose-approve\",\r\n        \"description\": \"Ability to approve disposal of a properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"3928c68a-0c64-4131-a2ca-a918de821f09\",\r\n        \"name\": \"admin-agencies\",\r\n        \"description\": \"Ability to administrate agencies.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n        \"name\": \"admin-users\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1\",\r\n        \"name\": \"property-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"321e245b-ee7d-4d7c-83a8-56b5a9d33c2d\",\r\n        \"name\": \"admin-roles\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/18517715-472b-421d-861f-bb2f643e658a/role-mappings/clients/1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "users",
+                    "18517715-472b-421d-861f-bb2f643e658a",
+                    "role-mappings",
+                    "clients",
+                    "1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/user/{id}/groups",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/508bc4d9-5720-4df4-9ad6-51bb516d1ada/groups",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "users",
+                    "508bc4d9-5720-4df4-9ad6-51bb516d1ada",
+                    "groups"
+                  ]
+                }
+              },
+              "response": []
             }
           ],
           "protocolProfileBehavior": {},
@@ -482,7 +644,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/roles/system-administrator",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/roles/agency-administrator",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -492,7 +654,30 @@
                     "realms",
                     "{{realm}}",
                     "roles",
-                    "system-administrator"
+                    "agency-administrator"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "roles/{id}/composites",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/roles/system-administrator/composites",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "roles",
+                    "system-administrator",
+                    "composites"
                   ]
                 }
               },
@@ -529,7 +714,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"id\": \"41a46ea3-e815-4272-9a17-693ba2409841\",\r\n  \"username\": \"administrator\",\r\n  \"firstName\": \"Administrator\",\r\n  \"lastName\": \"User1\",\r\n  \"email\": \"administrator@email.com\",\r\n  \"emailVerified\": false,\r\n  \"enabled\": true,\r\n  \"attributes\": {\r\n    \"agency\": [\r\n      \"1\"\r\n    ],\r\n    \"agencies\": [\r\n      \"2\",\r\n      \"1\"\r\n    ]\r\n  }\r\n}",
+                  "raw": "{\r\n    \"id\": \"c3e1dafc-379b-45ce-86e5-babdff3ec5d3\",\r\n    \"name\": \"agency-administrator\",\r\n    \"description\": \"Agency Administrator of the users agency.\",\r\n    \"composite\": true,\r\n    \"clientRole\": false,\r\n    \"containerId\": \"xz0xtue5\",\r\n    \"attributes\": {}\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -537,7 +722,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/roles/41a46ea3-e815-4272-9a17-693ba2409841",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/roles/agency-administrator",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -547,7 +732,7 @@
                     "realms",
                     "{{realm}}",
                     "roles",
-                    "41a46ea3-e815-4272-9a17-693ba2409841"
+                    "agency-administrator"
                   ]
                 }
               },
@@ -618,30 +803,15 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups",
-                  "protocol": "{{keycloak-scheme}}",
-                  "host": ["{{keycloak-host}}"],
-                  "port": "{{keycloak-port}}",
-                  "path": ["auth", "admin", "realms", "{{realm}}", "groups"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "groups - search",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups?search=Admin",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups?search%3DAgency",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
                   "path": ["auth", "admin", "realms", "{{realm}}", "groups"],
                   "query": [
                     {
-                      "key": "search",
-                      "value": "Admin"
+                      "key": "search=Agency",
+                      "value": null
                     }
                   ]
                 }
@@ -695,12 +865,36 @@
               "response": []
             },
             {
+              "name": "/groups/{id}",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Test\",\r\n    \"path\": \"/Test\",\r\n    \"attributes\": {},\r\n    \"realmRoles\": [],\r\n    \"clientRoles\": {\r\n        \"realm-management\": [\r\n            \"realm-admin\"\r\n        ]\r\n    },\r\n    \"subGroups\": [],\r\n    \"access\": {\r\n        \"view\": true,\r\n        \"manage\": true,\r\n        \"manageMembership\": true\r\n    }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups/",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": ["auth", "admin", "realms", "{{realm}}", "groups", ""]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "groups/{id}/role-mappings",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups/09704f13-27d7-4d80-be4b-0357263fad74/role-mappings",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/groups/6ae8448d-5f0a-4607-803a-df0bc4efdc0f/role-mappings",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -710,31 +904,8 @@
                     "realms",
                     "{{realm}}",
                     "groups",
-                    "09704f13-27d7-4d80-be4b-0357263fad74",
+                    "6ae8448d-5f0a-4607-803a-df0bc4efdc0f",
                     "role-mappings"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "user groups",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/508bc4d9-5720-4df4-9ad6-51bb516d1ada/groups",
-                  "protocol": "{{keycloak-scheme}}",
-                  "host": ["{{keycloak-host}}"],
-                  "port": "{{keycloak-port}}",
-                  "path": [
-                    "auth",
-                    "admin",
-                    "realms",
-                    "{{realm}}",
-                    "users",
-                    "508bc4d9-5720-4df4-9ad6-51bb516d1ada",
-                    "groups"
                   ]
                 }
               },
@@ -745,7 +916,7 @@
           "_postman_isSubFolder": true
         },
         {
-          "name": "client",
+          "name": "clients",
           "item": [
             {
               "name": "clients",
@@ -769,12 +940,12 @@
               "response": []
             },
             {
-              "name": "clients/{id}/service-account-user Copy",
+              "name": "clients/{id}",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/5218e515-1fca-45d7-a021-f6d51214653f/service-account-user",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -784,7 +955,29 @@
                     "realms",
                     "{{realm}}",
                     "clients",
-                    "5218e515-1fca-45d7-a021-f6d51214653f",
+                    "1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "clients/{id}/service-account-user Copy",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4/service-account-user",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "clients",
+                    "1ac0e198-e1e4-4426-a2d3-8f6c62eeb4c4",
                     "service-account-user"
                   ]
                 }
@@ -792,21 +985,12 @@
               "response": []
             },
             {
-              "name": "users/{id}/role-mappings/realm",
+              "name": "clients/{id}/optional-client-scopes",
               "request": {
-                "method": "POST",
+                "method": "GET",
                 "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "[\r\n    {\r\n        \"id\": \"216b6a37-bc1c-4cf3-9a93-25f96277647e\",\r\n        \"name\": \"system-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"71e74513-a036-4df3-b724-a8c349b7fc28\",\r\n        \"name\": \"admin-properties\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19a7105b-8916-4b21-9570-92575ec20b6a\",\r\n        \"name\": \"offline_access\",\r\n        \"description\": \"${role_offline-access}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"19177dc6-5851-4159-99cd-173ea66dd28e\",\r\n        \"name\": \"dispose-request\",\r\n        \"description\": \"Ability to request to dispose properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10164537\",\r\n        \"name\": \"property-delete\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"70c9ca1b-fae5-4677-9da2-4c9241a04c12\",\r\n        \"name\": \"agency-administrator\",\r\n        \"composite\": true,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"dcd7d269-d6eb-49a1-a482-fc6d6aa0945f\",\r\n        \"name\": \"uma_authorization\",\r\n        \"description\": \"${role_uma_authorization}\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"5fd96f19-abe1-47e7-8a54-0a707bc3e4a4\",\r\n        \"name\": \"property-add\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"4dc0f39a-32f0-43a4-9d90-62fd94f20567\",\r\n        \"name\": \"sensitive-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"223664c7-650c-40ac-8581-f40e10064537\",\r\n        \"name\": \"property-edit\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"b9405307-99bc-42af-be07-1ff54758b968\",\r\n        \"name\": \"dispose-approve\",\r\n        \"description\": \"Ability to approve disposal of a properties.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"3928c68a-0c64-4131-a2ca-a918de821f09\",\r\n        \"name\": \"admin-agencies\",\r\n        \"description\": \"Ability to administrate agencies.\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n        \"name\": \"admin-users\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"91fc8939-2dea-44a1-bd17-a1c8f0fe5dc1\",\r\n        \"name\": \"property-view\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    },\r\n    {\r\n        \"id\": \"321e245b-ee7d-4d7c-83a8-56b5a9d33c2d\",\r\n        \"name\": \"admin-roles\",\r\n        \"composite\": false,\r\n        \"clientRole\": false,\r\n        \"containerId\": \"pims\"\r\n    }\r\n]",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/9ceeafc1-5065-42e2-835f-73b9e8ff31ea/role-mappings/realm",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/7fc39596-ee23-4c81-8c19-bfa927b43593/optional-client-scopes",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -815,31 +999,21 @@
                     "admin",
                     "realms",
                     "{{realm}}",
-                    "users",
-                    "9ceeafc1-5065-42e2-835f-73b9e8ff31ea",
-                    "role-mappings",
-                    "realm"
+                    "clients",
+                    "7fc39596-ee23-4c81-8c19-bfa927b43593",
+                    "optional-client-scopes"
                   ]
                 }
               },
               "response": []
             },
             {
-              "name": "users/{id}/role-mappings/realm Copy",
+              "name": "clients/{id}/evaluate-scopes/protocol-mappers",
               "request": {
-                "method": "DELETE",
+                "method": "GET",
                 "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "[{\r\n    \"id\": \"fd86ddec-8f9d-4d7b-8c69-956062c5104f\",\r\n    \"name\": \"admin-users\",\r\n    \"composite\": false,\r\n    \"clientRole\": false,\r\n    \"containerId\": \"pims\",\r\n    \"attributes\": {}\r\n}]",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
                 "url": {
-                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/users/9ceeafc1-5065-42e2-835f-73b9e8ff31ea/role-mappings/realm",
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/7fc39596-ee23-4c81-8c19-bfa927b43593/evaluate-scopes/protocol-mappers",
                   "protocol": "{{keycloak-scheme}}",
                   "host": ["{{keycloak-host}}"],
                   "port": "{{keycloak-port}}",
@@ -848,11 +1022,106 @@
                     "admin",
                     "realms",
                     "{{realm}}",
-                    "users",
-                    "9ceeafc1-5065-42e2-835f-73b9e8ff31ea",
-                    "role-mappings",
-                    "realm"
+                    "clients",
+                    "7fc39596-ee23-4c81-8c19-bfa927b43593",
+                    "evaluate-scopes",
+                    "protocol-mappers"
                   ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "clients/{id}/protocol-mappers/models",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/7fc39596-ee23-4c81-8c19-bfa927b43593/protocol-mappers/models",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "clients",
+                    "7fc39596-ee23-4c81-8c19-bfa927b43593",
+                    "protocol-mappers",
+                    "models"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "clients/{id}/protocol-mappers/models Copy",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"id\": \"737b4e24-9d20-4d6d-bc4f-cef73675109b\",\r\n    \"name\": \"Groups\",\r\n    \"protocol\": \"openid-connect\",\r\n    \"protocolMapper\": \"oidc-group-membership-mapper\",\r\n    \"consentRequired\": false,\r\n    \"config\": {\r\n        \"full.path\": \"false\",\r\n        \"id.token.claim\": \"false\",\r\n        \"access.token.claim\": \"true\",\r\n        \"claim.name\": \"groups\",\r\n        \"userinfo.token.claim\": \"true\"\r\n    }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/{{realm}}/clients/7fc39596-ee23-4c81-8c19-bfa927b43593/protocol-mappers/models/737b4e24-9d20-4d6d-bc4f-cef73675109b",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": [
+                    "auth",
+                    "admin",
+                    "realms",
+                    "{{realm}}",
+                    "clients",
+                    "7fc39596-ee23-4c81-8c19-bfa927b43593",
+                    "protocol-mappers",
+                    "models",
+                    "737b4e24-9d20-4d6d-bc4f-cef73675109b"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "realms",
+          "item": [
+            {
+              "name": "/realms",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": ["auth", "admin", "realms"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/realms/{name}",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{keycloak-scheme}}://{{keycloak-host}}:{{keycloak-port}}/auth/admin/realms/xz0xtue5",
+                  "protocol": "{{keycloak-scheme}}",
+                  "host": ["{{keycloak-host}}"],
+                  "port": "{{keycloak-port}}",
+                  "path": ["auth", "admin", "realms", "xz0xtue5"]
                 }
               },
               "response": []
@@ -1231,7 +1500,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/a0a4be96-9d6f-4ced-88fb-b6c821e82dfe",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/admin/users/41a46ea3-e815-4272-9a17-693ba2409841",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -1239,7 +1508,7 @@
                             "api",
                             "admin",
                             "users",
-                            "a0a4be96-9d6f-4ced-88fb-b6c821e82dfe"
+                            "41a46ea3-e815-4272-9a17-693ba2409841"
                           ]
                         }
                       },
@@ -1385,6 +1654,27 @@
                             "admin",
                             "roles",
                             "fbe5fc86-f69e-4610-a746-0113d29e04cd"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "roles/name/{name}",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/admin/roles/name/Real Estate Manager",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "admin",
+                            "roles",
+                            "name",
+                            "Real Estate Manager"
                           ]
                         }
                       },
@@ -2378,7 +2668,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n\t\"projectNumber\": \"AUniqueID\",\n\t\"name\": \"A name\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 0,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
+                          "raw": "{\n\t\"projectNumber\": \"AUniqueID\",\n\t\"name\": \"A name 2\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 0,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -2462,6 +2752,89 @@
                           "host": ["{{host}}"],
                           "port": "{{port}}",
                           "path": ["api", "projects", "disposal", "AUniqueID"]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
+                },
+                {
+                  "name": "search",
+                  "item": [
+                    {
+                      "name": "/projects/search/page",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/search/page?page=1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "search", "page"],
+                          "query": [
+                            {
+                              "key": "page",
+                              "value": "1"
+                            },
+                            {
+                              "key": "projectNumber",
+                              "value": "test",
+                              "disabled": true
+                            },
+                            {
+                              "key": "agencies",
+                              "value": "1,2,3",
+                              "disabled": true
+                            },
+                            {
+                              "key": "statusId",
+                              "value": "0",
+                              "disabled": true
+                            },
+                            {
+                              "key": "tierLevelId",
+                              "value": "1",
+                              "disabled": true
+                            },
+                            {
+                              "key": "name",
+                              "value": "name",
+                              "disabled": true
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/search/page/filter",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n\t\"name\": \"test\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/search/page/filter",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "projects",
+                            "search",
+                            "page",
+                            "filter"
+                          ]
                         }
                       },
                       "response": []

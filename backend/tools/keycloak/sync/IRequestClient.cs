@@ -1,0 +1,101 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace Pims.Tools.Keycloak.Sync
+{
+    /// <summary>
+    /// IRequestClient interface, provides an HTTP client to make requests and handle refresh token.
+    /// </summary>
+    public interface IRequestClient
+    {
+        /// <summary>
+        /// Returns the full URI for the Keycloak admin API.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        string AdminRoute(string route);
+
+        /// <summary>
+        /// Recursively retry after a failure based on configuration.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <param name="attempt"></param>
+        Task<RT> RetryAsync<RT>(HttpMethod method, string url, int attempt = 1)
+            where RT : class;
+
+        /// <summary>
+        /// Recursively retry after a failure based on configuration.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <param name="data"></param>
+        /// <param name="attempt"></param>
+        /// <returns></returns>
+        Task<RT> RetryAsync<RT, T>(HttpMethod method, string url, T data = default, int attempt = 1)
+            where RT : class
+            where T : class;
+
+        /// <summary>
+        /// Send an HTTP GET request.
+        /// Deserialize the result into the specified 'RT' type.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="onError"></param>
+        /// <returns></returns>
+        Task<RT> HandleGetAsync<RT>(string url, Func<HttpResponseMessage, bool> onError = null)
+            where RT : class;
+
+        /// <summary>
+        /// Send an HTTP request.
+        /// Deserialize the result into the specified 'RT' type.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <param name="onError"></param>
+        /// <returns></returns>
+        Task<RT> HandleRequestAsync<RT>(HttpMethod method, string url, Func<HttpResponseMessage, bool> onError = null)
+            where RT : class;
+
+        /// <summary>
+        /// Send the items in an HTTP request.
+        /// Deserialize the result into the specified 'RT' type.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <param name="data"></param>
+        /// <param name="onError"></param>
+        /// <returns></returns>
+        Task<RT> HandleRequestAsync<RT, T>(HttpMethod method, string url, T data, Func<HttpResponseMessage, bool> onError = null)
+            where RT : class
+            where T : class;
+
+        /// <summary>
+        /// Send an HTTP request.
+        /// Refresh the access token if required.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        Task<HttpResponseMessage> SendRequestAsync(HttpMethod method, string url);
+
+        /// <summary>
+        /// Send the items in an HTTP request.
+        /// Refresh the access token if required.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="url"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task<HttpResponseMessage> SendRequestAsync<T>(HttpMethod method, string url, T data)
+            where T : class;
+
+        /// <summary>
+        /// Refresh the access token if required.
+        /// </summary>
+        /// <param name="force"></param>
+        /// <returns></returns>
+        Task RefreshAccessTokenAsync(bool force = false);
+    }
+}

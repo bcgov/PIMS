@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Tools.Keycloak.Sync.Configuration;
 
 namespace Pims.Tools.Keycloak.Sync
 {
