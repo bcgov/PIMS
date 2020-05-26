@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 namespace Pims.Tools.Keycloak.Sync
 {
     /// <summary>
-    /// IFactory interface, provides a way to sync PIMS with Keycloak.
+    /// ISyncFactory interface, provides a way to sync PIMS with Keycloak.
     /// </summary>
-    public interface IFactory
+    public interface ISyncFactory
     {
         /// <summary>
         /// Sync roles, groups and users.

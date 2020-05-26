@@ -1,5 +1,7 @@
+using Pims.Tools.Keycloak.Sync.Configuration.Realm;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
 {
@@ -43,6 +45,28 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
         /// get/set - A dictionary of attributes.
         /// </summary>
         public Dictionary<string, string[]> Attributes { get; set; }
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a GroupModel class.
+        /// </summary>
+        public GroupModel() { }
+
+        /// <summary>
+        /// Creates a new instance of a GroupModel class, initializes with specified arguments.
+        /// </summary>
+        /// <param name="group"></param>
+        public GroupModel(GroupOptions group)
+        {
+            this.Name = group.Name;
+            this.RealmRoles = group.RealmRoles.ToArray();
+            this.ClientRoles = new Dictionary<string, string[]>();
+            foreach (var role in group.ClientRoles?.Where(r => true))
+            {
+                this.ClientRoles.Add(role.ClientId, role.ClientRoles.ToArray());
+            }
+        }
         #endregion
     }
 }

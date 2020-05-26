@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Pims.Tools.Keycloak.Sync.Configuration;
+using Pims.Tools.Keycloak.Sync.Exceptions;
 
 namespace Pims.Tools.Keycloak.Sync
 {
@@ -41,7 +43,9 @@ namespace Pims.Tools.Keycloak.Sync
                 })
                 .AddTransient<Startup>()
                 .AddTransient<JwtSecurityTokenHandler>()
-                .AddTransient<IFactory, Factory>()
+                .AddScoped<IRequestClient, RequestClient>()
+                .AddTransient<IRealmFactory, RealmFactory>()
+                .AddTransient<ISyncFactory, SyncFactory>()
                 .AddSingleton<IOpenIdConnector, OpenIdConnector>();
 
             services.AddHttpClient("Pims.Tools.Keycloak.Sync", client => { });
@@ -53,6 +57,11 @@ namespace Pims.Tools.Keycloak.Sync
             try
             {
                 result = await provider.GetService<Startup>().Run(args);
+            }
+            catch (HttpResponseException ex)
+            {
+                logger.LogCritical(ex, $"An HTTP request failed - {ex.StatusCode}: {ex.Details}");
+                result = 1;
             }
             catch (Exception ex)
             {

@@ -124,6 +124,23 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Add the specified user to the datasource.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public override User Add(User entity)
+        {
+            entity.ThrowIfNull(nameof(entity));
+
+            entity.Roles.ForEach(r => this.Context.Entry(r).State = EntityState.Added);
+            entity.Agencies.ForEach(a => this.Context.Entry(a).State = EntityState.Added);
+
+            base.Add(entity);
+            this.Context.Detach(entity);
+            return entity;
+        }
+
+        /// <summary>
         /// Updates the specified user in the datasource.
         /// </summary>
         /// <param name="entity"></param>
