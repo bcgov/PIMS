@@ -1,0 +1,49 @@
+import * as React from 'react';
+import styled from 'styled-components';
+import { Button } from 'react-bootstrap';
+
+const StepActionsWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+`;
+
+interface IStepActionsProps {
+  onSave: () => void;
+  onNext: () => void;
+  saveDisabled?: boolean;
+  nextDisabled?: boolean;
+}
+
+/**
+ * A component for project disposal step actions
+ * @component
+ * @example
+ * const api = useApi();
+ * const step = useStepper();
+ * const save = (data) => api.post('/project/disposal', data);
+ * const onSave = () => save(data);
+ * const onNext = () =>  save(data).then(() => step.next());
+ * const saveDisabled = false;
+ * const nextDisabled = false;
+ * return (
+ *  <StepActions onNext={onNext} onSave={onSave} nextDisabled={nextDisabled} saveDisabled={saveDisabled}/>
+ * );
+ */
+export const StepActions: React.FC<IStepActionsProps> = ({
+  onSave,
+  onNext,
+  nextDisabled,
+  saveDisabled,
+}) => {
+  return (
+    <StepActionsWrapper>
+      <Button disabled={nextDisabled} style={{ marginLeft: 10 }} onClick={onNext}>
+        Next
+      </Button>
+      <Button disabled={saveDisabled} onClick={onSave}>
+        Save
+      </Button>
+    </StepActionsWrapper>
+  );
+};
