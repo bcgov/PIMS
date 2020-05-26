@@ -12,7 +12,7 @@ using System.Linq;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Entities;
 
-namespace Pims.Api.Areas.Property.Controllers
+namespace Pims.Api.Areas.Project.Controllers
 {
     /// <summary>
     /// DisposeController class, provides endpoints for managing disposal projects.
@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Property.Controllers
         public IActionResult AddProject(ProjectModel model)
         {
             var project = _pimsService.Project.Add(_mapper.Map<Entity.Project>(model));
-            return new JsonResult(_mapper.Map<ProjectModel>(project));
+            return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project));
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/delete/{id})")]
-        public IActionResult RemoveProject(string projectNumber, ProjectModel model)
+        public IActionResult DeleteProject(string projectNumber, ProjectModel model)
         {
             _pimsService.Project.Remove(_mapper.Map<Entity.Project>(model));
             return new JsonResult(model);

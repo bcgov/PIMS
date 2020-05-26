@@ -1,55 +1,54 @@
-using Model = Pims.Api.Areas.Admin.Models.User;
+using Model = Pims.Api.Areas.Admin.Models.Role;
 using Pims.Api.Areas.Admin.Controllers;
 using Pims.Core.Test;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using Xunit;
-using Pims.Dal.Entities.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Test.Routes.Admin
 {
     /// <summary>
-    /// UserControllerTest class, provides a way to test endpoint routes.
+    /// RoleControllerTest class, provides a way to test endpoint routes.
     /// </summary>
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("area", "admin")]
-    [Trait("group", "user")]
+    [Trait("group", "role")]
     [Trait("group", "route")]
     [ExcludeFromCodeCoverage]
-    public class UserControllerTest
+    public class RoleControllerTest
     {
         #region Variables
         #endregion
 
         #region Constructors
-        public UserControllerTest()
+        public RoleControllerTest()
         {
         }
         #endregion
 
         #region Tests
         [Fact]
-        public void User_Route()
+        public void Role_Route()
         {
             // Arrange
             // Act
             // Assert
-            var type = typeof(UserController);
-            type.HasPermissions(Permissions.AdminUsers);
+            var type = typeof(RoleController);
+            type.HasPermissions(Permissions.AdminRoles);
             type.HasArea("admin");
-            type.HasRoute("[area]/users");
-            type.HasRoute("v{version:apiVersion}/[area]/users");
+            type.HasRoute("[area]/roles");
+            type.HasRoute("v{version:apiVersion}/[area]/roles");
             type.HasApiVersion("1.0");
         }
 
         [Fact]
-        public void GetUsers_Query_Route()
+        public void GetRoles_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetUsers));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.GetRoles), typeof(int), typeof(int), typeof(string));
 
             // Act
             // Assert
@@ -58,34 +57,34 @@ namespace Pims.Api.Test.Routes.Admin
         }
 
         [Fact]
-        public void GetUsers_Route()
+        public void GetRole_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetUsers), typeof(UserFilter));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.GetRole), typeof(Guid));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPost("filter");
+            endpoint.HasGet("{id}");
         }
 
         [Fact]
-        public void GetMyUsers_Route()
+        public void GetRoleByName_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.GetMyUsers), typeof(UserFilter));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.GetRoleByName), typeof(string));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPost("my/agency");
+            endpoint.HasGet("name/{name}");
         }
 
         [Fact]
-        public void AddUser_Route()
+        public void AddRole_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.AddUser), typeof(Model.UserModel));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.AddRole), typeof(Model.RoleModel));
 
             // Act
             // Assert
@@ -94,10 +93,10 @@ namespace Pims.Api.Test.Routes.Admin
         }
 
         [Fact]
-        public void UpdateUser_Route()
+        public void UpdateRole_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.UpdateUser), typeof(Guid), typeof(Model.UserModel));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.UpdateRole), typeof(Guid), typeof(Model.RoleModel));
 
             // Act
             // Assert
@@ -106,10 +105,10 @@ namespace Pims.Api.Test.Routes.Admin
         }
 
         [Fact]
-        public void DeleteUser_Route()
+        public void DeleteRole_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.DeleteUser), typeof(Guid), typeof(Model.UserModel));
+            var endpoint = typeof(RoleController).FindMethod(nameof(RoleController.DeleteRole), typeof(Guid), typeof(Model.RoleModel));
 
             // Act
             // Assert
