@@ -17,19 +17,43 @@ import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 
 const AppRouter: React.FC = () => {
+  const getTitle = (page: string) => {
+    return `PIMS${' - ' + page}`;
+  };
   return (
     <Switch>
       <Redirect exact from="/" to="/login" />
-      <AppRoute path="/login" component={Login} layout={PublicLayout}></AppRoute>
-      <AppRoute path="/forbidden" component={AccessDenied} layout={PublicLayout}></AppRoute>
-      <AppRoute path="/page-not-found" component={NotFoundPage} layout={PublicLayout}></AppRoute>
-      <AppRoute path="/test" component={Test} layout={PublicLayout}></AppRoute>
+      <AppRoute
+        path="/login"
+        title={getTitle('Login')}
+        component={Login}
+        layout={PublicLayout}
+      ></AppRoute>
+      <AppRoute
+        path="/forbidden"
+        title={getTitle('Forbidden')}
+        component={AccessDenied}
+        layout={PublicLayout}
+      ></AppRoute>
+      <AppRoute
+        path="/page-not-found"
+        title={getTitle('Page Not Found')}
+        component={NotFoundPage}
+        layout={PublicLayout}
+      ></AppRoute>
+      <AppRoute
+        path="/test"
+        title={getTitle('Test')}
+        component={Test}
+        layout={PublicLayout}
+      ></AppRoute>
       <AppRoute
         protected
         path="/admin/users"
         component={ManageUsersPage}
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
+        title={getTitle('Users Management')}
       ></AppRoute>
       <AppRoute
         protected
@@ -37,12 +61,14 @@ const AppRouter: React.FC = () => {
         component={ManageAccessRequests}
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
+        title={getTitle('Access Requests')}
       ></AppRoute>
       <AppRoute
         protected
         path="/access/request"
         component={AccessRequestPage}
         layout={AuthLayout}
+        title={getTitle('Request Access')}
       ></AppRoute>
       <AppRoute
         protected
@@ -50,6 +76,7 @@ const AppRouter: React.FC = () => {
         component={MapView}
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
+        title={getTitle('Map View')}
       />
       <AppRoute
         protected
@@ -57,6 +84,7 @@ const AppRouter: React.FC = () => {
         component={PropertyListView}
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
+        title={getTitle('View Inventory')}
       />
       <AppRoute
         protected
@@ -64,6 +92,7 @@ const AppRouter: React.FC = () => {
         component={SubmitProperty}
         layout={AuthLayout}
         claim={Claims.PROPERTY_ADD}
+        title={getTitle('Submit Property')}
       />
       <AppRoute
         protected
@@ -71,8 +100,9 @@ const AppRouter: React.FC = () => {
         component={EditUserPage}
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
+        title={getTitle('Edit User')}
       />
-      <AppRoute path="*" component={() => <Redirect to="/page-not-found" />} />
+      <AppRoute title="*" path="*" component={() => <Redirect to="/page-not-found" />} />
     </Switch>
   );
 };
