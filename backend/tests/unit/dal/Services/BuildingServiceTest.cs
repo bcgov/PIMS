@@ -90,8 +90,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
             buildings.Next(0).Latitude = 50;
@@ -111,7 +110,7 @@ namespace Pims.Dal.Test.Services
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             var result = service.Get(filter);
@@ -130,8 +129,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
             buildings.Next(0).Latitude = 50;
@@ -151,7 +149,7 @@ namespace Pims.Dal.Test.Services
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             var result = service.Get(filter);
@@ -208,8 +206,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
             buildings.Next(0).Latitude = 50;
@@ -230,7 +227,7 @@ namespace Pims.Dal.Test.Services
 
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             var result = service.GetPage(filter);
@@ -249,8 +246,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
             buildings.Next(0).Latitude = 50;
@@ -271,7 +267,7 @@ namespace Pims.Dal.Test.Services
 
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             var result = service.GetPage(filter);
@@ -293,13 +289,12 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             // Assert
@@ -316,13 +311,12 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -340,14 +334,13 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             building.IsSensitive = true;
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -365,14 +358,13 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             building.IsSensitive = true;
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
 
             // Act
             // Assert
@@ -389,14 +381,13 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             building.IsSensitive = true;
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -427,13 +418,12 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -464,13 +454,12 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             init.SaveChanges();
 
-            var service = helper.CreateService<BuildingService>(dbName, user);
+            var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act

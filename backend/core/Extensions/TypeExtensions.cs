@@ -27,6 +27,7 @@ namespace Pims.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Argument is required for extension method.")]
         public static T CreateInstance<T>(this Type type)
         {
             return (T)Activator.CreateInstance<T>();
@@ -125,6 +126,7 @@ namespace Pims.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns>True if the type/object is nullable.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Argument is required for extension method.")]
         public static bool IsNullableType<T>(this T obj)
         {
             var type = typeof(T);
@@ -165,7 +167,12 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static Type GetItemType(this Type type)
         {
-            if (!type.IsGenericType || !type.IsEnumerable()) return type;
+            if (!type.IsGenericType)
+            {
+                if (type.IsEnumerable())
+                    return type.GetElementType();
+                return type;
+            }
             return type.GetGenericArguments()[0];
         }
 

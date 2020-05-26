@@ -2,6 +2,7 @@ using Pims.Core.Helpers;
 using Pims.Dal;
 using Pims.Dal.Security;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Pims.Core.Test
@@ -48,6 +49,7 @@ namespace Pims.Core.Test
 
         /// <summary>
         /// Creates an instance of a service of the specified 'T' type and initializes it with the specified 'user'.
+        /// If the 'PimsContext' already has been added as a service it will use it, otherwise it will create a new random context.
         /// Will use any 'args' passed in instead of generating defaults.
         /// Once you create a service you can no longer add to the services collection.
         /// </summary>
@@ -58,8 +60,13 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static T CreateService<T>(this TestHelper helper, ClaimsPrincipal user, params object[] args) where T : IService
         {
-            var dbName = StringHelper.Generate(10);
-            return helper.CreateService<T>(helper.CreatePimsContext(dbName, user, false), args);
+            if (!helper.Services.Any(s => s.ServiceType == typeof(PimsContext)))
+            {
+                var dbName = StringHelper.Generate(10);
+                return helper.CreateService<T>(helper.CreatePimsContext(dbName, user, false), args);
+            }
+
+            return helper.CreateService<T>(args);
         }
 
         /// <summary>
@@ -92,6 +99,25 @@ namespace Pims.Core.Test
         {
             helper.MockConstructorArguments<T>(args);
             helper.AddSingleton(context);
+
+            helper.BuildServiceProvider();
+            var service = helper.CreateInstance<T>();
+
+            return service;
+        }
+
+        /// <summary>
+        /// Creates an instance of a service of the specified 'T' type and initializes it with the specified 'user'.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a service you can no longer add to the services collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static T CreateService<T>(this TestHelper helper, params object[] args) where T : IService
+        {
+            helper.MockConstructorArguments<T>(args);
 
             helper.BuildServiceProvider();
             var service = helper.CreateInstance<T>();
