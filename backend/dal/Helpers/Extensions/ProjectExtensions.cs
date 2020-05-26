@@ -100,5 +100,35 @@ namespace Pims.Dal.Helpers.Extensions
         {
             return String.Format(format, projectNumber.Id);
         }
+
+        /// <summary>
+        /// Add a parcel(s) to the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="parcels"></param>
+        /// <returns></returns>
+        public static Entity.Project AddProperty(this Entity.Project project, params Entity.Parcel[] parcels)
+        { 
+            parcels.ForEach(p =>
+            {
+                project.Properties.Add(new Entity.ProjectProperty(project, p));
+            });
+            return project;
+        }
+
+        /// <summary>
+        /// Add a building(s) to the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="buildings"></param>
+        /// <returns></returns>
+        public static Entity.Project AddProperty(this Entity.Project project, params Entity.Building[] buildings)
+        {
+            buildings.ForEach(b =>
+            {
+                project.Properties.Add(new Entity.ProjectProperty(project, b));
+            });
+            return project;
+        }
     }
 }

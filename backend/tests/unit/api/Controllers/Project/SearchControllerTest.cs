@@ -1,0 +1,177 @@
+using Xunit;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using Pims.Dal;
+using Pims.Dal.Security;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Core.Test;
+using Pims.Core.Extensions;
+using Pims.Core.Comparers;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Api.Areas.Project.Models.Search;
+using Pims.Api.Areas.Project.Controllers;
+using Moq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using MapsterMapper;
+using Entity = Pims.Dal.Entities;
+using System.Linq;
+
+namespace Pims.Api.Test.Controllers.Project
+{
+    [Trait("category", "unit")]
+    [Trait("category", "api")]
+    [Trait("group", "project")]
+    [ExcludeFromCodeCoverage]
+    public class SearchControllerTest
+    {
+        #region Variables
+        public static IEnumerable<object[]> ProjectsFilters = new List<object[]>()
+        {
+            new object [] { new ProjectFilterModel() { ProjectNumber = "ProjectNumber" } },
+            new object [] { new ProjectFilterModel() { Name = "Name" } },
+            new object [] { new ProjectFilterModel() { Agencies = new [] { 1 } } },
+            new object [] { new ProjectFilterModel() { StatusId = 1 } },
+            new object [] { new ProjectFilterModel() { TierLevelId = 1 } }
+        };
+
+        public static IEnumerable<object[]> ProjectQueryFilters = new List<object[]>()
+        {
+            new object [] { new Uri("http://host/api/projects?Agencies=1,2") },
+            new object [] { new Uri("http://host/api/projects?StatusId=2") },
+            new object [] { new Uri("http://host/api/projects?TierLevelId=1") },
+            new object [] { new Uri("http://host/api/projects?Name=Name") },
+            new object [] { new Uri("http://host/api/projects?ProjectNumber=ProjectNumber") }
+        };
+        #endregion
+
+        #region Constructors
+        public SearchControllerTest()
+        {
+        }
+        #endregion
+
+        #region Tests
+        #region GetProjectsPage
+        /// <summary>
+        /// Make a successful request with a filter.
+        /// </summary>
+        [Theory]
+        [MemberData(nameof(ProjectsFilters))]
+        public void GetProjectsPage_Success(ProjectFilterModel filter)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+
+            var projects = EntityHelper.CreateProjects(1, 20);
+            var parcels = EntityHelper.CreateParcels(1, 2);
+            var buildings1 = EntityHelper.CreateBuildings(parcels.Next(0), 1, 5);
+            var buildings2 = EntityHelper.CreateBuildings(parcels.Next(1), 6, 5);
+
+            projects.Next(0)
+                .AddProperty(parcels.Next(0))
+                .AddProperty(buildings1.ToArray());
+
+            projects.Next(1)
+                .AddProperty(parcels.Next(1))
+                .AddProperty(buildings2.ToArray());
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var page = new Entity.Models.Paged<Entity.Project>(projects, filter.Page, filter.Quantity);
+            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+
+            // Act
+            var result = controller.GetProjectsPage(filter);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Api.Models.PageModel<ProjectModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<ProjectModel[]>(projects);
+            Assert.Equal(expectedResult, actualResult.Items.ToArray(), new ShallowPropertyCompare());
+            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a successful request with a query filter.
+        /// </summary>
+        [Theory]
+        [MemberData(nameof(ProjectQueryFilters))]
+        public void GetProjectsPage_Query_Success(Uri uri)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView, uri);
+
+            var projects = EntityHelper.CreateProjects(1, 20);
+            var parcels = EntityHelper.CreateParcels(1, 2);
+            var buildings1 = EntityHelper.CreateBuildings(parcels.Next(0), 1, 5);
+            var buildings2 = EntityHelper.CreateBuildings(parcels.Next(1), 6, 5);
+
+            projects.Next(0)
+                .AddProperty(parcels.Next(0))
+                .AddProperty(buildings1.ToArray());
+
+            projects.Next(1)
+                .AddProperty(parcels.Next(1))
+                .AddProperty(buildings2.ToArray());
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var page = new Entity.Models.Paged<Entity.Project>(projects);
+            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+
+            // Act
+            var result = controller.GetProjectsPage();
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Api.Models.PageModel<ProjectModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<ProjectModel[]>(projects);
+            Assert.Equal(expectedResult, actualResult.Items.ToArray(), new ShallowPropertyCompare());
+            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Make a failed request because the query doesn't contain filter values.
+        /// </summary>
+        [Fact]
+        public void GetProjectsPage_Query_NoFilter_BadRequest()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+            var request = helper.GetService<Mock<HttpRequest>>();
+            request.Setup(m => m.QueryString).Returns(new QueryString("?page=0"));
+
+            var service = helper.GetService<Mock<IPimsService>>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetProjectsPage());
+            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Never());
+        }
+
+        /// <summary>
+        /// Make a failed request because the body doesn't contain a fitler object.
+        /// </summary>
+        [Fact]
+        public void GetProjectsPage_NoFilter_BadRequest()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+
+            // Act
+            // Assert
+            Assert.Throws<BadRequestException>(() => controller.GetProjectsPage(null));
+            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Never());
+        }
+        #endregion
+        #endregion
+    }
+}

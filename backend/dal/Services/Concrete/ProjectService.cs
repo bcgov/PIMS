@@ -112,8 +112,8 @@ namespace Pims.Dal.Services
             // Remove any sensitive properties from the results if the user is not allowed to view them.
             if (!viewSensitive)
             {
-                project?.Properties.RemoveAll(p => p.Parcel.IsSensitive);
-                project?.Properties.RemoveAll(p => p.Building.IsSensitive);
+                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
+                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
             }
             return project;
         }

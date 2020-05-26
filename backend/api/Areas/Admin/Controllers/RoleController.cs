@@ -15,7 +15,7 @@ namespace Pims.Api.Areas.Admin.Controllers
     /// <summary>
     /// RoleController class, provides endpoints for managing roles.
     /// </summary>
-    [HasPermission(Permissions.SystemAdmin)]
+    [HasPermission(Permissions.AdminRoles)]
     [ApiController]
     [Area("admin")]
     [ApiVersion("1.0")]

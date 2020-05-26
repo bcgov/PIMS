@@ -265,7 +265,7 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var parcel = EntityHelper.CreateParcel(1);
-            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()));
+            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>())).Returns(parcel);
             var model = mapper.Map<Model.ParcelModel>(parcel);
 
             // Act
@@ -290,7 +290,7 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var parcel = EntityHelper.CreateParcel(1);
-            service.Setup(m => m.Parcel.Add(It.IsAny<Entity.Parcel>()));
+            service.Setup(m => m.Parcel.Update(It.IsAny<Entity.Parcel>())).Returns(parcel);
             var model = mapper.Map<Model.ParcelModel>(parcel);
 
             // Act
