@@ -6,9 +6,7 @@ import { Container, Button } from 'react-bootstrap';
 import queryString from 'query-string';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import CustomAxios from 'customAxios';
 import { ENVIRONMENT } from 'constants/environment';
-import { IPagedItems } from 'interfaces';
 import { decimalOrUndefined } from 'utils';
 import download from 'utils/download';
 import { RootState } from 'reducers/rootReducer';
@@ -17,9 +15,7 @@ import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { IPropertyFilter, IProperty, FilterBar, IFilterBarState } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
-
-const getPropertyListUrl = (filter: IPropertyFilter) =>
-  `${ENVIRONMENT.apiUrl}/properties/search/page?${filter ? queryString.stringify(filter) : ''}`;
+import service from '../service';
 
 const getPropertyReportUrl = (filter: IPropertyFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -152,12 +148,12 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-        const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
+        const data = await service.getPropertyList(query);
 
         // The server could send back total page count.
         // For now we'll just calculate it.
-        setData(response.data.items);
-        setPageCount(Math.ceil(response.data.total / pageSize));
+        setData(data.items);
+        setPageCount(Math.ceil(data.total / pageSize));
 
         // setLoading(false);
       }

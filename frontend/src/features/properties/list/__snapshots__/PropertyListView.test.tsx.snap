@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Property list view renders 1`] = `
+exports[`Property list view Matches snapshot 1`] = `
 Array [
   <div
     className="PropertyListView container-fluid"
@@ -122,6 +122,12 @@ Array [
                     value=""
                   >
                     Classification
+                  </option>
+                  <option
+                    className="option"
+                    value="1"
+                  >
+                    classificationVal
                   </option>
                 </select>
               </div>
