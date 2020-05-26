@@ -18,7 +18,7 @@ using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Http;
 
-namespace Pims.Api.Test.Controllers
+namespace Pims.Api.Test.Controllers.Property
 {
     [Trait("category", "unit")]
     [Trait("category", "api")]

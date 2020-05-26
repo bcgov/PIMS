@@ -32,9 +32,11 @@ namespace Pims.Dal.Entities
         /// Create a new instance of a Task class.
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="type"></param>
         /// <param name="name"></param>
-        public Task(int id, string name) : base(id, name)
+        public Task(int id, TaskTypes type, string name) : base(id, name)
         {
+            this.TaskType = type;
         }
         #endregion
     }
