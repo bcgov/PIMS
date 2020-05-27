@@ -749,7 +749,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
           </a>
         </li>
         <li
-          className="page-item active disabled"
+          className="page-item active"
         >
           <a
             aria-current="page"
