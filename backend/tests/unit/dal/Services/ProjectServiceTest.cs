@@ -3,6 +3,7 @@ using Pims.Core.Comparers;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
 using Pims.Core.Test;
+using Microsoft.Extensions.Options;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -389,7 +390,32 @@ namespace Pims.Dal.Test.Services
         }
         #endregion
 
-        #region Add
+        /// <summary>
+        /// User with appropriate permission successfully adds new project. Project Number is auto-generated.
+        /// </summary>
+        #region Add 
+        [Fact]
+        public void Add_Project()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+            project.ProjectNumber = "test-generation-override";
+
+            var options = Options.Create(new ProjectOptions(){NumberFormat="TEST-{0:00000}"});
+
+            helper.CreatePimsContext(user).SaveChanges(project);
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+            
+            // Assert 
+            Assert.NotNull(result);
+            Assert.NotNull(result.ProjectNumber);
+            Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
+        }
         #endregion
 
         #region Update
