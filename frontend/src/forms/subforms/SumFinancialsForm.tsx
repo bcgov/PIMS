@@ -48,15 +48,42 @@ const getMostRecentFinancials = (financials: IFinancial[]) => {
   );
 };
 
+type SumProps = {
+  showAppraisal?: boolean;
+  formikProps: FormikProps<any>;
+};
+
 /**
  * Component that displays the most recent summed financials from each type (netbook, estimate, ...)
  * @param param0 formik props for sum/memo calculations
  */
-const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
+const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
   const allFinancials = [
-    ...(formikProps.values?.financials ?? []),
-    ..._.flatten(_.map(formikProps.values?.buildings ?? [], 'financials')),
+    ...(props.formikProps.values?.financials ?? []),
+    ..._.flatten(_.map(props.formikProps.values?.buildings ?? [], 'financials')),
   ];
+
+  const withAppraised = () => {
+    if (props.showAppraisal) {
+      return (
+        <Form.Row>
+          <Form.Label column md={2}>
+            Appraised Sum
+          </Form.Label>
+          <FastCurrencyInput
+            formikProps={props.formikProps}
+            disabled={true}
+            outerClassName="col-md-10"
+            value={summedFinancials[EvaluationKeys.Appraised]}
+            field={EvaluationKeys.Appraised}
+          />
+        </Form.Row>
+      );
+    } else {
+      return null;
+    }
+  };
+
   const summedFinancials: any = sumFinancials(allFinancials) ?? {};
   return (
     <Fragment>
@@ -66,25 +93,14 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
             Assessed Sum
           </Form.Label>
           <FastCurrencyInput
-            formikProps={formikProps}
+            formikProps={props.formikProps}
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[EvaluationKeys.Assessed]}
             field={EvaluationKeys.Assessed}
           />
         </Form.Row>
-        <Form.Row>
-          <Form.Label column md={2}>
-            Appraised Sum
-          </Form.Label>
-          <FastCurrencyInput
-            formikProps={formikProps}
-            disabled={true}
-            outerClassName="col-md-10"
-            value={summedFinancials[EvaluationKeys.Appraised]}
-            field={EvaluationKeys.Appraised}
-          />
-        </Form.Row>
+        {withAppraised()}
       </Col>
       <Col md={6}>
         <Form.Row>
@@ -92,7 +108,7 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
             NetBook Sum
           </Form.Label>
           <FastCurrencyInput
-            formikProps={formikProps}
+            formikProps={props.formikProps}
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[FiscalKeys.NetBook]}
@@ -104,7 +120,7 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
             Estimated Sum
           </Form.Label>
           <FastCurrencyInput
-            formikProps={formikProps}
+            formikProps={props.formikProps}
             disabled={true}
             outerClassName="col-md-10"
             value={summedFinancials[FiscalKeys.Estimated]}
@@ -122,8 +138,8 @@ const SumFinancialsForm: React.FC<FormikProps<any>> = formikProps => {
 export default memo(
   SumFinancialsForm,
   (prevProps, props) =>
-    !props.values ||
-    (prevProps?.values?.financials === props?.values?.financials &&
-      _.map(prevProps?.values?.buildings, 'financials') ===
-        _.map(props?.values?.buildings, 'financials')),
+    !props.formikProps.values ||
+    (prevProps?.formikProps.values?.financials === props?.formikProps.values?.financials &&
+      _.map(prevProps?.formikProps.values?.buildings, 'financials') ===
+        _.map(props?.formikProps.values?.buildings, 'financials')),
 );
