@@ -1,16 +1,26 @@
+@import '../../styles.scss';
+
 .table {
   .thead-light {
     .th {
       color: #495057;
       background-color: #e9ecef;
-      border-color: #dee2e6;
+      border-color: $table-color;
     }
   }
 
   .thead {
     .th {
       vertical-align: bottom;
-      border-bottom: 2px solid #dee2e6;
+      border-bottom: 2px solid $table-color;
+    }
+  }
+
+  .tbody {
+    .tr {
+      &:hover {
+        background-color: $table-color;
+      }
     }
   }
 
@@ -29,7 +39,7 @@
   .th {
     padding: 0.75rem;
     vertical-align: top;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid $table-color;
 
     .sortable-column {
       display: flex;
