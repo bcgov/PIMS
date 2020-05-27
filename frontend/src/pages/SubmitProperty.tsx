@@ -151,7 +151,7 @@ const SubmitProperty = (props: any) => {
         ) : (
           <MapView
             disableMapFilterBar={true}
-            disabled={!!parcelId}
+            disabled={formDisabled}
             showParcelBoundaries={false}
             onMarkerClick={() => {}}
             onMarkerPopupClosed={() => {}}
