@@ -89,8 +89,7 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Latitude = 50;
             parcels.Next(0).Longitude = 25;
@@ -104,7 +103,7 @@ namespace Pims.Dal.Test.Services.Admin
             parcels.Next(7).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -128,10 +127,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -150,10 +148,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -172,10 +169,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -198,10 +194,9 @@ namespace Pims.Dal.Test.Services.Admin
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.SensitiveView).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -226,10 +221,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -248,10 +242,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -271,10 +264,9 @@ namespace Pims.Dal.Test.Services.Admin
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
             var find = EntityHelper.CreateParcel(1, 1, 1, 1);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -293,10 +285,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -316,10 +307,9 @@ namespace Pims.Dal.Test.Services.Admin
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.AgencyAdmin).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -340,10 +330,9 @@ namespace Pims.Dal.Test.Services.Admin
             var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.SensitiveView).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            var dbName = StringHelper.Generate(10);
-            helper.CreatePimsContext(dbName, user, true).AddOne(parcel);
+            helper.CreatePimsContext(user, true).SaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(dbName, user);
+            var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
             // Act

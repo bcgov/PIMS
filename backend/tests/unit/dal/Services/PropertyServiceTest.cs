@@ -1,5 +1,4 @@
 using Pims.Core.Extensions;
-using Pims.Core.Helpers;
 using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
@@ -123,8 +122,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Latitude = 50;
@@ -156,7 +154,7 @@ namespace Pims.Dal.Test.Services
 
             init.SaveChanges();
 
-            var service = helper.CreateService<PropertyService>(dbName, user);
+            var service = helper.CreateService<PropertyService>(user);
 
             // Act
             var result = service.GetPage(filter);
@@ -177,8 +175,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Latitude = 50;
@@ -210,7 +207,7 @@ namespace Pims.Dal.Test.Services
 
             init.SaveChanges();
 
-            var service = helper.CreateService<PropertyService>(dbName, user);
+            var service = helper.CreateService<PropertyService>(user);
 
             // Act
             var result = service.GetPage(filter);
@@ -231,8 +228,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
 
-            var dbName = StringHelper.Generate(10);
-            using var init = helper.InitializeDatabase(dbName, user);
+            using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Latitude = 50;
@@ -273,7 +269,7 @@ namespace Pims.Dal.Test.Services
 
             init.SaveChanges();
 
-            var service = helper.CreateService<PropertyService>(dbName, user);
+            var service = helper.CreateService<PropertyService>(user);
 
             // Act
             var result = service.GetPage(filter);
