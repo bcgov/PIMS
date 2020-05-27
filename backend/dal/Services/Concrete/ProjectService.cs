@@ -161,6 +161,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Project Update(Project project)
         {
+            project.ThrowIfNull(nameof(project));
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -177,7 +178,7 @@ namespace Pims.Dal.Services
                 .SingleOrDefault(p => p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!isAdmin && !userAgencies.Contains(project.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
+            if (!isAdmin && !userAgencies.Contains(existingProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
             // Do not allow switching agencies through this method.
             if (existingProject.AgencyId != project.AgencyId) throw new NotAuthorizedException("Project cannot be transferred to the specified agency.");
@@ -266,7 +267,7 @@ namespace Pims.Dal.Services
             {
                 var existingTask = existingProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
 
-                if (existingProject == null)
+                if (existingTask == null)
                 {
                     existingProject.Tasks.Add(task);
                 }
