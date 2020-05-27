@@ -3,6 +3,7 @@ import './TablePagination.scss';
 import React, { useCallback, ReactElement, PropsWithChildren } from 'react';
 import { TableInstance } from 'react-table';
 import ReactPaginate from 'react-paginate';
+import classNames from 'classnames';
 
 export type TablePaginationProps<T extends object> = PropsWithChildren<{
   instance: TableInstance<T>;
@@ -55,7 +56,7 @@ const TablePagination = <T extends object>(props: TablePaginationProps<T>): Reac
       pageRangeDisplayed={5}
       onPageChange={handleChangePage}
       // css
-      activeClassName="active"
+      activeClassName={classNames('active', { disabled: pageCount === 1 })}
       breakClassName="page-item"
       breakLinkClassName="page-link"
       containerClassName="pagination"
