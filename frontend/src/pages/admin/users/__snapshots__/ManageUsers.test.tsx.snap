@@ -1041,10 +1041,85 @@ exports[`component functionality Snapshot matches 1`] = `
           </a>
         </li>
         <li
-          className="page-item disabled"
+          className="page-item"
         >
           <a
-            aria-disabled="true"
+            aria-current={null}
+            aria-label="Page 2"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            2
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-current={null}
+            aria-label="Page 3"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            3
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-current={null}
+            aria-label="Page 4"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            4
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-current={null}
+            aria-label="Page 5"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            5
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-current={null}
+            aria-label="Page 6"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            6
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-disabled="false"
             className="page-link"
             onClick={[Function]}
             onKeyPress={[Function]}
