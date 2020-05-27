@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MapsterMapper;
 using Mapster;
 using System.Diagnostics.CodeAnalysis;
-using Pims.Api.Helpers.Mapping;
 using System.Collections.Generic;
 
 namespace Pims.Core.Test

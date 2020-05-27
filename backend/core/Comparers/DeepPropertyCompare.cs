@@ -23,7 +23,7 @@ namespace Pims.Core.Comparers
         public new bool Equals([AllowNull] object x, [AllowNull] object y)
         {
             // Only root objects cannot be null.  Child objects that are null will be equal.
-            if (x == null || y == null || GetHashCode(x) != GetHashCode(y)) return false;
+            if (x == null || y == null || GetHashCode(x) != GetHashCode(y) || x.GetType() != y.GetType()) return false;
 
             var type = x.GetType();
             var children = type.GetCachedProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => !p.PropertyType.IsValueType && p.PropertyType != typeof(string) && !p.PropertyType.IsEnumerable());
