@@ -15,7 +15,7 @@
     "keycloak-js": "9.0.2",
     "leaflet": "1.6.0",
     "lodash": "4.17.15",
-    "moment": "2.24.0",
+    "moment": "2.25.3",
     "node-sass": "4.13.1",
     "query-string": "6.10.1",
     "react": "16.12.0",
