@@ -18,6 +18,8 @@ interface EvaluationProps {
   nameSpace: string;
   /** whether this form is enabled for editing */
   disabled?: boolean;
+  /** only want to show appraisal when the property belongs to a project */
+  showAppraisal?: boolean;
 }
 
 /**
@@ -166,70 +168,74 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
       <Form.Row className="evaluationForm">
         <Row noGutters>
           {Object.values(keyTypes).map(type => {
-            return (
-              <Col md={3} key={type}>
-                <h6>{type}</h6>
-                <Table bordered>
-                  <thead>
-                    <tr>
-                      <td>
-                        {EvaluationKeys.Appraised === type && 'Date'}
-                        {EvaluationKeys.Assessed === type && 'Year'}
-                        {(FiscalKeys.Estimated === type || FiscalKeys.NetBook === type) &&
-                          'Fiscal Year'}
-                      </td>
-                      <td>Value</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentPage?.map(year => {
-                      return (
-                        <tr key={type + year}>
-                          <td>
-                            {type === EvaluationKeys.Assessed && (
-                              <Form.Control
-                                disabled={true}
-                                readOnly={true}
-                                type="string"
-                                value={year.toString()}
-                              />
-                            )}
-                            {isFiscal(type) && (
-                              <Form.Control
-                                disabled={true}
-                                readOnly={true}
-                                type="string"
-                                value={`${year - 1}/${year}`}
-                              />
-                            )}
-                            {type === EvaluationKeys.Appraised && (
-                              <FastDatePicker
+            if (!props.showAppraisal && type === EvaluationKeys.Appraised) {
+              return null;
+            } else {
+              return (
+                <Col md={3} key={type}>
+                  <h6>{type}</h6>
+                  <Table bordered>
+                    <thead>
+                      <tr>
+                        <td>
+                          {EvaluationKeys.Appraised === type && 'Date'}
+                          {EvaluationKeys.Assessed === type && 'Year'}
+                          {(FiscalKeys.Estimated === type || FiscalKeys.NetBook === type) &&
+                            'Fiscal Year'}
+                        </td>
+                        <td>Value</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentPage?.map(year => {
+                        return (
+                          <tr key={type + year}>
+                            <td>
+                              {type === EvaluationKeys.Assessed && (
+                                <Form.Control
+                                  disabled={true}
+                                  readOnly={true}
+                                  type="string"
+                                  value={year.toString()}
+                                />
+                              )}
+                              {isFiscal(type) && (
+                                <Form.Control
+                                  disabled={true}
+                                  readOnly={true}
+                                  type="string"
+                                  value={`${year - 1}/${year}`}
+                                />
+                              )}
+                              {type === EvaluationKeys.Appraised && (
+                                <FastDatePicker
+                                  formikProps={props}
+                                  disabled={props.disabled}
+                                  minDate={moment(year, 'YYYY')
+                                    .startOf('year')
+                                    .toDate()}
+                                  maxDate={moment(year, 'YYYY')
+                                    .endOf('year')
+                                    .toDate()}
+                                  field={withNameSpace('date', type, year)}
+                                />
+                              )}
+                            </td>
+                            <td>
+                              <FastCurrencyInput
                                 formikProps={props}
                                 disabled={props.disabled}
-                                minDate={moment(year, 'YYYY')
-                                  .startOf('year')
-                                  .toDate()}
-                                maxDate={moment(year, 'YYYY')
-                                  .endOf('year')
-                                  .toDate()}
-                                field={withNameSpace('date', type, year)}
+                                field={withNameSpace('value', type, year)}
                               />
-                            )}
-                          </td>
-                          <td>
-                            <FastCurrencyInput
-                              formikProps={props}
-                              disabled={props.disabled}
-                              field={withNameSpace('value', type, year)}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </Col>
-            );
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                </Col>
+              );
+            }
           })}
         </Row>
         <WrappedPaginate

@@ -12,7 +12,7 @@ describe('sub-form SumFinancialsForm functionality', () => {
       <Formik initialValues={initialValues} onSubmit={() => {}}>
         {formikProps => (
           <Form>
-            <SumFinancialsForm {...formikProps}></SumFinancialsForm>
+            <SumFinancialsForm formikProps={formikProps}></SumFinancialsForm>
           </Form>
         )}
       </Formik>
@@ -21,14 +21,12 @@ describe('sub-form SumFinancialsForm functionality', () => {
   it('sums financial data', () => {
     const financials: IFinancial[] = [
       { key: EvaluationKeys.Assessed, value: 100 },
-      { key: EvaluationKeys.Appraised, value: 1000 },
       { key: FiscalKeys.Estimated, value: 10000 },
       { key: FiscalKeys.NetBook, value: 100000 },
     ];
     const sumFinancialsForm = getSumFinancialsForm({ financials: financials });
     const { getByDisplayValue } = render(sumFinancialsForm);
     expect(getByDisplayValue('100')).toBeVisible();
-    expect(getByDisplayValue('1000')).toBeVisible();
     expect(getByDisplayValue('10000')).toBeVisible();
     expect(getByDisplayValue('100000')).toBeVisible();
   });
@@ -66,6 +64,6 @@ describe('sub-form SumFinancialsForm functionality', () => {
   it('displays no sums if passed no financial values', () => {
     const sumFinancialsForm = getSumFinancialsForm({});
     const { getAllByPlaceholderText } = render(sumFinancialsForm);
-    expect(getAllByPlaceholderText('$0.00')).toHaveLength(4);
+    expect(getAllByPlaceholderText('$0.00')).toHaveLength(3);
   });
 });
