@@ -17,7 +17,7 @@
     "lodash": "4.17.15",
     "moment": "2.24.0",
     "node-sass": "4.13.1",
-    "query-string": "6.10.1",
+    "query-string": "6.12.1",
     "react": "16.12.0",
     "react-app-polyfill": "1.0.5",
     "react-bootstrap": "1.0.0-beta.16",
