@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -22,6 +22,8 @@ type OptionalAttributes = {
   required?: boolean;
   /** Specifies that the HTML element should be disabled */
   disabled?: boolean;
+  /** Used for restricting user input */
+  pattern?: RegExp;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
   outerClassName?: string;
@@ -41,6 +43,7 @@ export const Input: React.FC<InputProps> = ({
   placeholder,
   className,
   outerClassName,
+  pattern,
   required,
   disabled,
   custom,
@@ -54,6 +57,12 @@ export const Input: React.FC<InputProps> = ({
   const touch = getIn(touched, field);
   const value = getIn(values, field);
   const asElement: any = is || 'input';
+  const [restricted, setRestricted] = useState('');
+  const handleRestrictedChange = (event: any) => {
+    let val = event.target.value;
+    pattern?.test(val) && setRestricted(val);
+    handleChange(event);
+  };
   return (
     <Form.Group
       controlId={`input-${field}`}
@@ -71,15 +80,16 @@ export const Input: React.FC<InputProps> = ({
         isInvalid={!!touch && !!error}
         {...rest}
         isValid={false}
-        value={rest.value ?? value}
+        value={pattern ? restricted : rest.value ?? value}
         placeholder={placeholder}
         onBlur={(e: any) => {
           if (onBlurFormatter) {
+            pattern && setRestricted(onBlurFormatter(value));
             setFieldValue(field, onBlurFormatter(value));
           }
           handleBlur(e);
         }}
-        onChange={handleChange}
+        onChange={pattern ? handleRestrictedChange : handleChange}
       />
       <DisplayError field={field} />
     </Form.Group>
