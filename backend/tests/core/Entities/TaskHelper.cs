@@ -1,3 +1,5 @@
+using Pims.Dal;
+using System;
 using System.Collections.Generic;
 using Entity = Pims.Dal.Entities;
 
@@ -43,6 +45,28 @@ namespace Pims.Core.Test
                 new Entity.Task(1, type, "Task 1") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.Task(2, type, "Task 2") { RowVersion = new byte[] { 12, 13, 14 } }
             };
+        }
+
+        /// <summary>
+        /// Create a new instance of a Task.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Entity.Task CreateTask(this PimsContext context, int id, Entity.TaskTypes type, string name)
+        {
+            var task = new Entity.Task(id, type, name)
+            {
+                CreatedById = Guid.NewGuid(),
+                CreatedOn = DateTime.UtcNow,
+                UpdatedById = Guid.NewGuid(),
+                UpdatedOn = DateTime.UtcNow,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            context.Tasks.Add(task);
+            return task;
         }
     }
 }
