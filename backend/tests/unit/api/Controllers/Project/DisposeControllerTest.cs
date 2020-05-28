@@ -163,7 +163,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(project.StatusId, actualResult.StatusId);
             Assert.Equal(project.TierLevelId, actualResult.TierLevelId);
             Assert.Equal(project.AgencyId, actualResult.AgencyId);
-            Assert.Equal(project.Properties.Count(), actualResult.Properties.Count());
+            Assert.Equal(project.Properties.Count(), actualResult.ProjectProperties.Count());
         }
         #endregion
 
