@@ -31,7 +31,7 @@ objects:
     data:
       keycloak.json: '{
         "realm": "${KEYCLOAK_REALM}",
-        "auth-server-url": "https://sso-${ENV_NAME}.pathfinder.gov.bc.ca/auth",
+        "auth-server-url": "${KEYCLOAK_AUTHORITY_URL}",
         "ssl-required": "external",
         "resource": "${APP_NAME}-${COMP_NAME}",
         "public-client": true,
@@ -250,6 +250,11 @@ parameters:
     description: The path to use to mount the config file.
     required: true
     value: "/tmp/app/dist/"
+  - name: KEYCLOAK_AUTHORITY_URL
+    displayName: Keycloak Authority URL
+    description: The Keycloak authority URL.
+    required: true
+    value: "https://sso-dev.pathfinder.gov.bc.ca/auth"
 
   - name: REAL_IP_FROM
     description:

@@ -2,47 +2,61 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: "${NAME}-deployment-template"
+  name: "pims-db-backup-deployment"
 objects:
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: "${BACKUP_VOLUME_NAME}"
+      name: ${BACKUP_VOLUME_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        app: "${NAME}-persistent"
-        template: "${NAME}-persistent-template"
+        name: ${BACKUP_VOLUME_NAME}
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
     spec:
-      storageClassName: "${BACKUP_VOLUME_CLASS}"
+      storageClassName: ${BACKUP_VOLUME_CLASS}
       accessModes:
         - ReadWriteMany
       resources:
         requests:
-          storage: "${BACKUP_VOLUME_SIZE}"
+          storage: ${BACKUP_VOLUME_SIZE}
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: "${VERIFICATION_VOLUME_NAME}"
+      name: ${VERIFICATION_VOLUME_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        app: "${NAME}-persistent"
-        template: "${NAME}-persistent-template"
+        name: ${VERIFICATION_VOLUME_NAME}
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
     spec:
-      storageClassName: "${VERIFICATION_VOLUME_CLASS}"
+      storageClassName: ${VERIFICATION_VOLUME_CLASS}
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: "${VERIFICATION_VOLUME_SIZE}"
+          storage: ${VERIFICATION_VOLUME_SIZE}
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: backup-${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: backup-${NAME}
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
     type: Opaque
     stringData:
-      webhook-url: "${WEBHOOK_URL}"
+      webhook-url: ${WEBHOOK_URL}
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: "${FTP_SECRET_KEY}"
+      name: ${FTP_SECRET_KEY}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${FTP_SECRET_KEY}
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
     type: Opaque
     stringData:
       ftp-url: "${FTP_URL}"
@@ -51,9 +65,12 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: backup-${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        template: "${NAME}-deployment"
+        name: backup-${NAME}
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
       annotations:
         description: Defines how to deploy the ${NAME} server
     spec:
@@ -65,19 +82,19 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - "${NAME}"
+              - "backup-${NAME}"
             from:
               kind: ImageStreamTag
-              namespace: "${IMAGE_NAMESPACE}"
-              name: "${SOURCE_IMAGE_NAME}:${TAG_NAME}"
+              namespace: ${IMAGE_NAMESPACE}
+              name: ${IMAGE_NAME}:${IMAGE_TAG}
       replicas: 1
       selector:
-        name: "${NAME}"
+        name: "backup-${NAME}"
       template:
         metadata:
-          name: "${NAME}"
+          name: "backup-${NAME}"
           labels:
-            name: "${NAME}"
+            name: "backup-${NAME}"
         spec:
           volumes:
             - name: "${BACKUP_VOLUME_NAME}"
@@ -86,14 +103,14 @@ objects:
             - name: "${VERIFICATION_VOLUME_NAME}"
               persistentVolumeClaim:
                 claimName: "${VERIFICATION_VOLUME_NAME}"
-            - name: "${NAME}-config-volume"
+            - name: "backup-${NAME}-config-volume"
               configMap:
                 name: "${CONFIG_MAP_NAME}"
                 items:
                   - key: "${CONFIG_FILE_NAME}"
                     path: "${CONFIG_FILE_NAME}"
           containers:
-            - name: "${NAME}"
+            - name: backup-${NAME}
               image: ""
               ports: []
               env:
@@ -147,7 +164,7 @@ objects:
                 - name: WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:
-                      name: "${NAME}"
+                      name: "backup-${NAME}"
                       key: webhook-url
                 - name: ENVIRONMENT_FRIENDLY_NAME
                   value: "${ENVIRONMENT_FRIENDLY_NAME}"
@@ -161,28 +178,41 @@ objects:
                   cpu: "${CPU_LIMIT}"
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
-                - name: "${BACKUP_VOLUME_NAME}"
-                  mountPath: "${BACKUP_DIR}"
-                - name: "${VERIFICATION_VOLUME_NAME}"
-                  mountPath: "${VERIFICATION_VOLUME_MOUNT_PATH}"
-                - name: "${NAME}-config-volume"
-                  mountPath: "${CONFIG_MOUNT_PATH}${CONFIG_FILE_NAME}"
-                  subPath: "${CONFIG_FILE_NAME}"
+                - name: ${BACKUP_VOLUME_NAME}
+                  mountPath: ${BACKUP_DIR}
+                - name: ${VERIFICATION_VOLUME_NAME}
+                  mountPath: ${VERIFICATION_VOLUME_MOUNT_PATH}
+                - name: backup-${NAME}-config-volume
+                  mountPath: ${CONFIG_MOUNT_PATH}${CONFIG_FILE_NAME}
+                  subPath: ${CONFIG_FILE_NAME}
 parameters:
+  - name: APP_NAME
+    displayName: App Name
+    description: The name of the application (grouped).
+    required: true
+    value: pims
+  - name: COMP_NAME
+    displayName: Component Name
+    description: The name of the application component (e.g ui, backend, database).
+    required: true
+    value: backup
+
   - name: NAME
-    displayName: Name
-    description:
-      The name assigned to all of the resources.  Use 'backup-{database name}'
-      depending on your database provider
+    displayName: Backup Image Name
+    description: A unique name to identify the backup image
     required: true
-    value: backup-mssql
-  - name: SOURCE_IMAGE_NAME
-    displayName: Source Image Name
-    description:
-      The name of the image to use for this resource.  Use 'backup-{database
-      name}' depending on your database provider
+    value: mssql
+  - name: ENV_NAME
+    displayName: Environment name
+    description: The name for this environment [dev, test, prod]
     required: true
-    value: backup-mssql
+    value: dev
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the deployed application.
+    required: true
+    value: jcxjin
+
   - name: IMAGE_NAMESPACE
     displayName: Image Namespace
     description:
@@ -190,11 +220,19 @@ parameters:
       the application.
     required: true
     value: jcxjin-tools
-  - name: TAG_NAME
+  - name: IMAGE_NAME
+    displayName: Source Image Name
+    description:
+      The name of the image to use for this resource.  Use 'backup-{database
+      name}' depending on your database provider
+    required: true
+    value: backup-mssql
+  - name: IMAGE_TAG
     displayName: Environment TAG name
     description: The TAG name for this environment, e.g., dev, test, prod
     required: true
     value: dev
+
   - name: DATABASE_SERVICE_NAME
     displayName: Database Service Name
     description:
@@ -409,23 +447,24 @@ parameters:
       Mongo, please use /var/lib/mongodb/data . For MSSQL, please use /var/opt/mssql/data
     required: true
     value: "/var/opt/mssql/data"
+
   - name: CPU_REQUEST
     displayName: Resources CPU Request
     description: The resources CPU request (in cores) for this build.
     required: true
-    value: "0"
+    value: 250Mi
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
     required: true
-    value: "0"
+    value: 250Mi
   - name: MEMORY_REQUEST
     displayName: Resources Memory Request
     description: The resources Memory request (in Mi, Gi, etc) for this build.
     required: true
-    value: 0Mi
+    value: 256MiB
   - name: MEMORY_LIMIT
     displayName: Resources Memory Limit
     description: The resources Memory limit (in Mi, Gi, etc) for this build.
     required: true
-    value: 0Mi
+    value: 1GiB

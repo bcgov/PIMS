@@ -168,7 +168,7 @@ objects:
                 - >-
                   dotnet ef database update --project=api --context=pimsContext
                   --verbose
-              containerName: pims-api-dev
+              containerName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
             failurePolicy: Abort
           timeoutSeconds: 600
           updatePeriodSeconds: 1
