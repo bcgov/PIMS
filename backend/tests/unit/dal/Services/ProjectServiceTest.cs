@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
-using Pims.Core.Helpers;
 using Pims.Core.Test;
-using Microsoft.Extensions.Options;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -56,7 +55,7 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            
+
             var init = helper.CreatePimsContext(user, true);
             var status = EntityHelper.CreateProjectStatuses();
             init.SaveRange(status);
@@ -247,7 +246,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).SaveChanges(project);
-            
+
             var service = helper.CreateService<ProjectService>(user);
             var context = helper.GetService<PimsContext>();
 
@@ -390,10 +389,10 @@ namespace Pims.Dal.Test.Services
         }
         #endregion
 
+        #region Add
         /// <summary>
         /// User with appropriate permission successfully adds new project. Project Number is auto-generated.
         /// </summary>
-        #region Add 
         [Fact]
         public void Add_Project()
         {
@@ -401,24 +400,442 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
+
             project.ProjectNumber = "test-generation-override";
 
             var options = Options.Create(new ProjectOptions(){NumberFormat="TEST-{0:00000}"});
-
             helper.CreatePimsContext(user).SaveChanges(project);
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
             var result = service.Add(project);
-            
-            // Assert 
+
+            // Assert
             Assert.NotNull(result);
             Assert.NotNull(result.ProjectNumber);
             Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
         }
+
+        [Fact]
+        public void Add_DraftStatus()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(project, result);
+            Assert.Equal(0, result.StatusId);
+        }
+
+        [Fact]
+        public void Add_AddTasks()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+            var tasks = EntityHelper.CreateTasks(Entity.TaskTypes.DisposalProjectDocuments);
+            var task = EntityHelper.CreateTask(20, Entity.TaskTypes.None, "test tasks");
+            project.Tasks.Add(new Entity.ProjectTask(project, task));
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency).SaveRange(tasks).SaveChanges(task);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(project, result);
+            Assert.Equal(0, result.StatusId);
+            Assert.Single(result.Tasks);
+        }
+
+        [Fact]
+        public void Add_DefaultTasks()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+            var tasks = EntityHelper.CreateTasks(Entity.TaskTypes.DisposalProjectDocuments);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency).SaveRange(tasks);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(project, result);
+            Assert.Equal(0, result.StatusId);
+            Assert.Equal(tasks.Count(), result.Tasks.Count());
+        }
+
+        [Fact]
+        public void Add_NoProject_Throws_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd);
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => service.Add(null));
+        }
+
+        [Fact]
+        public void Add_Permission_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+        }
+
+        [Fact]
+        public void Add_NoAgency_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+        }
+
+        [Fact]
+        public void Add_Agency_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(2);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+        }
         #endregion
 
         #region Update
+        [Fact]
+        public void Update()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.CreatePimsContext(user);
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Description = "A new description";
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Equal("A new description", result.Description);
+        }
+
+        [Fact]
+        public void Update_AsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties).AddAgency(1);
+
+            var init = helper.CreatePimsContext(user);
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Description = "A new description";
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Equal("A new description", result.Description);
+        }
+
+        [Fact]
+        public void Update_Task()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var task = init.CreateTask(20, Entity.TaskTypes.None, "testing");
+            init.SaveChanges(task);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AddTask(task);
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Single(result.Tasks);
+        }
+
+        [Fact]
+        public void Update_AddParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            init.SaveChanges(parcel);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AddProperty(parcel);
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
+        }
+
+        [Fact]
+        public void Update_UpdateParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            project.AddProperty(parcel);
+            init.SaveChanges(parcel);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Properties.First().Parcel.Description = "updated";
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
+            Assert.Equal("updated", result.Properties.First().Parcel.Description);
+        }
+
+        [Fact]
+        public void Update_AddBuilding()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            var building = init.CreateBuilding(parcel, 20);
+            init.SaveChanges(building);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AddProperty(building);
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
+        }
+
+        [Fact]
+        public void Update_UpdateBuilding()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            var building = init.CreateBuilding(parcel, 20);
+            project.AddProperty(building);
+            init.SaveChanges(building);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Properties.First().Building.Description = "updated";
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(projectToUpdate, result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
+            Assert.Equal("updated", result.Properties.First().Building.Description);
+        }
+
+        [Fact]
+        public void Update_NoProject_Throws_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit);
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => service.Update(null));
+        }
+
+        [Fact]
+        public void Update_Permission_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project.Agency);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+        }
+
+        [Fact]
+        public void Update_NoAgency_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+        }
+
+        [Fact]
+        public void Update_Agency_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit).AddAgency(2);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+        }
+
+        [Fact]
+        public void Update_ChangeAgency_Throws_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+
+            helper.CreatePimsContext(user).SaveChanges(project);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AgencyId = 2;
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Update(projectToUpdate));
+        }
         #endregion
 
         #region Remove
