@@ -69,7 +69,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     name="pid"
                     onBlur={[Function]}
                     onChange={[Function]}
-                    value="000-000-000"
+                    value=""
                   />
                 </div>
               </div>
