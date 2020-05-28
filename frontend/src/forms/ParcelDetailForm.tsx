@@ -224,11 +224,12 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   {<LandForm {...formikProps} disabled={props.disabled}></LandForm>}
                   <h4>Total values for parcel inclusive of existing building(s)</h4>
                   <Form.Row className="sumFinancialsForm">
-                    <SumFinancialsForm {...formikProps} />
+                    <SumFinancialsForm formikProps={formikProps} showAppraisal={false} />
                   </Form.Row>
                   <h4>Valuation Information</h4>
                   <EvaluationForm
                     {...formikProps}
+                    showAppraisal={false}
                     disabled={props.disabled}
                     nameSpace="financials"
                   />

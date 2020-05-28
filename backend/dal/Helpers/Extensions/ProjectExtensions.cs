@@ -130,5 +130,20 @@ namespace Pims.Dal.Helpers.Extensions
             });
             return project;
         }
+
+        /// <summary>
+        /// Add a tasks to the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="tasks"></param>
+        /// <returns></returns>
+        public static Entity.Project AddTask(this Entity.Project project, params Entity.Task[] tasks)
+        {
+            tasks.ForEach(t =>
+            {
+                project.Tasks.Add(new Entity.ProjectTask(project, t));
+            });
+            return project;
+        }
     }
 }
