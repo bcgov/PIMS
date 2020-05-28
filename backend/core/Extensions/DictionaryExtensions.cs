@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Pims.Core.Extensions
@@ -45,7 +46,7 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static int[] GetIntArrayValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, string separator = ",")
         {
-            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues value) ? value.ToString().Split(separator).Select(v => { int.TryParse(v, out int iv); return iv; }).ToArray() : new int[0];
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues value) ? value.ToString().Split(separator).Select(v => { return int.TryParse(v, out int iv) ? (int?)iv : null; }).Where(v => v != null).Select(v => (int)v).ToArray() : new int[0];
         }
 
         /// <summary>
@@ -154,6 +155,7 @@ namespace Pims.Core.Extensions
 
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as the specified type 'T'.
+        /// If the value doesn't convert correctly it will return a default value of the specified type 'T'.
         /// </summary>
         /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
@@ -162,7 +164,22 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static T GetValue<T>(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, T defaultValue = default)
         {
-            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues value) ? (T)Convert.ChangeType(value, typeof(T)) : defaultValue;
+            var type = typeof(T);
+            var nullabletype = Nullable.GetUnderlyingType(type);
+            var baseType = nullabletype ?? type;
+            var found = dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues value);
+
+            if (!found) return defaultValue;
+
+            try
+            {
+                return (T)Convert.ChangeType(value.ToString(), baseType);
+            }
+            catch
+            {
+                // Ignore exception and return default value.
+                return defaultValue;
+            }
         }
     }
 }

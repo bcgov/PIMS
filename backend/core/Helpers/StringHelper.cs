@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Pims.Core.Helpers
 {
@@ -8,32 +9,37 @@ namespace Pims.Core.Helpers
     public static class StringHelper
     {
         #region Variables
-        private static Random rand = new Random(DateTime.Now.Second);
+        private static readonly Random rand = new Random(DateTime.Now.Second);
         #endregion
 
         #region Methods
         /// <summary>
-        /// Generate a random set of characters.
+        /// Generate a random set of characters to the specified 'length'.
+        /// The longer the length, the more random the value.
         /// </summary>
-        /// <param name="len"></param>
+        /// <param name="length"></param>
         /// <returns></returns>
-        public static string Generate(int len)
+        public static string Generate(int length)
         {
-            string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "sh", "zh", "t", "v", "w", "x" };
-            string[] vowels = { "a", "e", "i", "o", "u", "ae", "y" };
-            string Name = "";
-            Name += consonants[rand.Next(consonants.Length)].ToUpper();
-            Name += vowels[rand.Next(vowels.Length)];
+            if (length < 2) throw new ArgumentException("Length must be greater than or equal to 2.", nameof(length));
+
+            var constonants = new [] { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "t", "v", "w", "x" };
+            var vowels = new[] { "a", "e", "i", "o", "u", "y" };
+            var numbers = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            var symbols = new[] { "_", "+", "-", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "?" };
+            var all = constonants.Concat(vowels).Concat(numbers).Concat(symbols).ToArray();
+
+            string value = "";
+            value += constonants[rand.Next(constonants.Length)].ToUpper();
+            value += vowels[rand.Next(vowels.Length)];
             int b = 2; //b tells how many times a new letter has been added. It's 2 right now because the first two letters are already in the name.
-            while (b < len)
+            while (b < length)
             {
-                Name += consonants[rand.Next(consonants.Length)];
-                b++;
-                Name += vowels[rand.Next(vowels.Length)];
+                value += all[rand.Next(all.Length)];
                 b++;
             }
 
-            return Name;
+            return value;
         }
         #endregion
     }
