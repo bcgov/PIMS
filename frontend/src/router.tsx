@@ -15,6 +15,7 @@ import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test';
 import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
+import { ProjectDisposeView } from 'features/projects/dispose';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -85,6 +86,14 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
         title={getTitle('View Inventory')}
+      />
+      <AppRoute
+        protected
+        path="/dispose"
+        component={ProjectDisposeView}
+        layout={AuthLayout}
+        claim={Claims.DISPOSE_REQUEST}
+        title={getTitle('Dispose Property')}
       />
       <AppRoute
         protected

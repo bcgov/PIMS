@@ -1,0 +1,26 @@
+@import '../../../fonts.scss';
+
+.filter-container {
+  background-color: #f2f2f2;
+
+  .filter-bar {
+    align-items: center;
+    padding: 1rem 0;
+
+    .bar-item {
+      .form-group {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    .btn-warning {
+      color: white;
+      font-weight: bold;
+    }
+
+    .form-control {
+      border-radius: 0;
+    }
+  }
+}

@@ -17,7 +17,7 @@ namespace Pims.Api.Mapping.Building
                 .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.Status, src => src.Status)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
-                .Map(dest => dest.Classification, src => src.Classification)
+                .Map(dest => dest.Classification, src => src.Classification.Name)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
