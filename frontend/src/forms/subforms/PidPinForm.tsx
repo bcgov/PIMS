@@ -51,6 +51,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           <Input
             disabled={props.disabled}
             outerClassName="col-md-10"
+            pattern={RegExp(/^[\d\- ]*$/)}
             onBlurFormatter={(pid: string) => pid.replace(pid, pidFormatter(pid))}
             field={withNameSpace('pid')}
           />
