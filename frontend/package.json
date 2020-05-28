@@ -39,7 +39,7 @@
     "redux-thunk": "2.3.0",
     "styled-components": "5.1.0",
     "text-mask-addons": "3.8.0",
-    "typescript": "3.7.3",
+    "typescript": "3.8.3",
     "yup": "0.28.3"
   },
   "devDependencies": {
