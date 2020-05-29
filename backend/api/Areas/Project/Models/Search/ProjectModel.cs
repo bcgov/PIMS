@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Api.Areas.Project.Models.Search
 {
     /// <summary>
@@ -70,6 +72,21 @@ namespace Pims.Api.Areas.Project.Models.Search
         /// get/set - The owning subagency code.
         /// </summary>
         public string SubAgencyCode { get; set; }
+
+        /// <summary>
+        /// get/set - Project properties
+        /// </summary>
+        public IEnumerable<ProjectPropertyModel> Properties { get; set; } = new List<ProjectPropertyModel>();
+
+        /// <summary>
+        /// get/set - User Id
+        /// </summary>
+        public string UpdatedBy { get; set; }
+
+        /// <summary>
+        /// get/set - User Id
+        /// </summary>
+        public string CreatedBy { get; set; }
         #endregion
     }
 }

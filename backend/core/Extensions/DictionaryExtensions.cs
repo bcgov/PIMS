@@ -181,5 +181,21 @@ namespace Pims.Core.Extensions
                 return defaultValue;
             }
         }
+
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as a boolean.
+        /// </summary>
+        /// <param name="IDictionary<string"></param>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static bool? GetBoolNullValue(
+            this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key,
+            bool? defaultValue = null)
+        {
+            return dict.GetValue(key, defaultValue);
+        }
     }
 }

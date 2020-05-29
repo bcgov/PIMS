@@ -17,9 +17,16 @@
   }
 
   .tbody {
-    .tr {
-      &:hover {
-        background-color: $table-color;
+    .tr-wrapper {
+      border-bottom: 1px solid $table-color;
+
+      .tr {
+        &:hover {
+          background-color: $table-color;
+        }
+        .td {
+          border: none;
+        }
       }
     }
   }
@@ -40,6 +47,15 @@
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid $table-color;
+
+    &.expander {
+      display: flex;
+      align-items: center;
+    }
+
+    .expand-button:focus {
+      background: none !important;
+    }
 
     .sortable-column {
       display: flex;

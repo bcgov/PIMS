@@ -646,7 +646,7 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
-           
+
             init.SaveChanges(parcel);
 
             var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });

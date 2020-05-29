@@ -454,271 +454,275 @@ exports[`Manage access requests Snapshot matches 1`] = `
         role="rowgroup"
       >
         <div
-          className="tr"
-          role="row"
-          style={
-            Object {
-              "display": "flex",
-              "flex": "1 0 auto",
-              "minWidth": "780px",
-            }
-          }
+          className="tr-wrapper"
         >
           <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
+            className="tr"
+            role="row"
             style={
               Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
+                "flex": "1 0 auto",
+                "minWidth": "780px",
               }
             }
           >
-            <a
-              href="/admin/user/userid"
-            />
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-          >
-            firstName
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
+            >
+              <a
+                href="/admin/user/userid"
+              />
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-          >
-            lastName
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "200 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "200px",
-                "textAlign": "left",
-                "width": "200px",
+            >
+              firstName
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-          >
-            user@email.com
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
+            >
+              lastName
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "200 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "200px",
+                  "textAlign": "left",
+                  "width": "200px",
+                }
               }
-            }
-          >
-            position 1
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
+            >
+              user@email.com
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-          >
-            On Hold
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "200 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "200px",
-                "textAlign": "left",
-                "width": "200px",
+            >
+              position 1
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-          >
-            agency 1
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "200 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "200px",
-                "textAlign": "left",
-                "width": "200px",
+            >
+              On Hold
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "200 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "200px",
+                  "textAlign": "left",
+                  "width": "200px",
+                }
               }
-            }
-          >
-            role1
-          </div>
-          <div
-            className="td"
-            onClick={[Function]}
-            role="cell"
-            style={
-              Object {
-                "alignItems": "flex-start",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "75 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "75px",
+            >
+              agency 1
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "200 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "200px",
+                  "textAlign": "left",
+                  "width": "200px",
+                }
               }
-            }
-          >
-            <div>
-              <div
-                className="Menu-root"
-              >
+            >
+              role1
+            </div>
+            <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "75 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "75px",
+                }
+              }
+            >
+              <div>
                 <div
-                  className="Menu-button"
-                  onClick={[Function]}
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    style={
-                      Object {
-                        "color": undefined,
-                      }
-                    }
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="19"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="5"
-                      cy="12"
-                      r="1"
-                    />
-                  </svg>
-                </div>
-                <div
-                  className="Menu-items"
-                  style={
-                    Object {
-                      "width": "100px",
-                    }
-                  }
+                  className="Menu-root"
                 >
                   <div
-                    className="Menu-options list-group"
-                    onKeyDown={[Function]}
+                    className="Menu-button"
+                    onClick={[Function]}
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      style={
+                        Object {
+                          "color": undefined,
+                        }
+                      }
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    className="Menu-items"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
                   >
                     <div
-                      className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
-                      onClick={[Function]}
+                      className="Menu-options list-group"
+                      onKeyDown={[Function]}
                     >
-                      Approve
-                    </div>
-                    <div
-                      className="Menu-item list-group-item disabled"
-                      data-rb-event-key={null}
-                      disabled={false}
-                      onClick={[Function]}
-                    >
-                      Hold
-                    </div>
-                    <div
-                      className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
-                      onClick={[Function]}
-                    >
-                      Decline
-                    </div>
-                    <div
-                      className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
-                      onClick={[Function]}
-                    >
-                      Delete
+                      <div
+                        className="Menu-item list-group-item"
+                        data-rb-event-key={null}
+                        disabled={false}
+                        onClick={[Function]}
+                      >
+                        Approve
+                      </div>
+                      <div
+                        className="Menu-item list-group-item disabled"
+                        data-rb-event-key={null}
+                        disabled={false}
+                        onClick={[Function]}
+                      >
+                        Hold
+                      </div>
+                      <div
+                        className="Menu-item list-group-item"
+                        data-rb-event-key={null}
+                        disabled={false}
+                        onClick={[Function]}
+                      >
+                        Decline
+                      </div>
+                      <div
+                        className="Menu-item list-group-item"
+                        data-rb-event-key={null}
+                        disabled={false}
+                        onClick={[Function]}
+                      >
+                        Delete
+                      </div>
                     </div>
                   </div>
                 </div>

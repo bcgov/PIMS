@@ -17,6 +17,7 @@ import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import { ProjectDisposeView } from 'features/projects/dispose';
 import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
+import { ProjectListView } from 'features/projects/list';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -103,6 +104,14 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.DISPOSE_REQUEST}
         title={getTitle('Dispose Property Complete')}
+      />
+      <AppRoute
+        protected
+        path="/projects/list"
+        component={ProjectListView}
+        layout={AuthLayout}
+        claim={Claims.PROPERTY_VIEW}
+        title={getTitle('View Projects')}
       />
       <AppRoute
         protected

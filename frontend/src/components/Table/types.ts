@@ -8,6 +8,7 @@ interface IExtraColumnProps {
   sortable?: boolean;
   // Whether to use width percentages vs hard-coded widths in pixels. Percentages support responsive design.
   responsive?: boolean;
+  expandable?: boolean;
 }
 
 // Typings for configuration sent to `react-table`

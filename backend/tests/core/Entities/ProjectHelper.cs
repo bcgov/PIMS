@@ -36,6 +36,7 @@ namespace Pims.Core.Test
             status ??= EntityHelper.CreateProjectStatus("status");
             var tierLevel = EntityHelper.CreateTierLevel("tierLevel");
 
+            var user = CreateUser(Guid.NewGuid(), "project tester", "asasa", "asasa", null, agency);
             return new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
             {
                 Agency = agency,
@@ -43,9 +44,11 @@ namespace Pims.Core.Test
                 Status = status,
                 StatusId = status.Id,
                 Description = $"description-{id}",
-                CreatedById = Guid.NewGuid(),
+                CreatedBy = user,
+                CreatedById = user.Id,
                 CreatedOn = DateTime.UtcNow,
-                UpdatedById = Guid.NewGuid(),
+                UpdatedById = user.Id,
+                UpdatedBy = user,
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
