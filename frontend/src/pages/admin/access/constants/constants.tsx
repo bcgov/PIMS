@@ -4,6 +4,7 @@ import { IAccessRequestModel } from '../interfaces';
 import { CellProps } from 'react-table';
 import { AccessStatusDisplayMapper } from 'constants/accessStatus';
 import { RowActions } from '../components/RowActions';
+import { IProject } from 'features/projects/dispose';
 
 export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
   {
@@ -68,3 +69,15 @@ export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
     width: 75,
   },
 ];
+
+export const initialValues: IProject = {
+  projectNumber: '',
+  name: '',
+  note: '',
+  description: '',
+  properties: [],
+  tierLevelId: 1,
+  statusId: 0,
+  agencyId: 0,
+  tasks: [],
+};

@@ -21,7 +21,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
-                .Map(dest => dest.Properties, src => src.Properties)
+                .Map(dest => dest.ProjectProperties, src => src.Properties)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -33,7 +33,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
-                .Map(dest => dest.Properties, src => src.Properties)
+                .Map(dest => dest.Properties, src => src.ProjectProperties)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }

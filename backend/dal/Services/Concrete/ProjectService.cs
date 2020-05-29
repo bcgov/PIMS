@@ -102,9 +102,19 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Evaluations)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Fiscals)
-                .Include(p => p.Properties).ThenInclude(b => b.Building)
-                .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Classification)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address).ThenInclude(a => a.City)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency).ThenInclude(a => a.Parent)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Classification)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address).ThenInclude(a => a.City)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
@@ -188,18 +198,35 @@ namespace Pims.Dal.Services
 
             foreach (var property in project.Properties)
             {
-                var existingProperty = existingProject.Properties.FirstOrDefault(b => b.Id == property.Id);
+                var existingProperty = existingProject.Properties.FirstOrDefault(b => b.PropertyType == PropertyTypes.Land
+                && b.ParcelId == property.ParcelId
+                && b.ProjectNumber == project.ProjectNumber
+                ||
+                b.PropertyType == PropertyTypes.Building
+                && b.ProjectNumber == project.ProjectNumber
+                && b.BuildingId == property.BuildingId);
 
                 if (existingProperty == null)
                 {
-                    existingProject.Properties.Add(property);
+                    //Todo: Navigation properties on project object were causing concurrency exceptions.
+                    ProjectProperty projectProperty = new ProjectProperty()
+                    {
+                        ProjectNumber = project.ProjectNumber,
+                        ParcelId = property.ParcelId,
+                        BuildingId = property.BuildingId,
+                        PropertyType = property.PropertyType
+                    };
+                    existingProject.Properties.Add(projectProperty);
                 }
                 else
                 {
-                    this.Context.Entry(existingProperty).CurrentValues.SetValues(property);
-
+                    property.Id = existingProperty.Id;
+                    //Todo: this is not required at this time, but was causing the property to be marked for removal.
+                    //this.Context.Entry(existingProperty).CurrentValues.SetValues(property);
                     if (property.PropertyType == PropertyTypes.Land)
                     {
+                        // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
                         foreach (var evaluation in property.Parcel.Evaluations)
                         {
                             var existingEvaluation = existingProperty.Parcel.Evaluations
@@ -231,6 +258,8 @@ namespace Pims.Dal.Services
                     }
                     else if (property.PropertyType == PropertyTypes.Building)
                     {
+                        // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Building.ClassificationId = property.Building.ClassificationId;
                         foreach (var evaluation in property.Building.Evaluations)
                         {
                             var existingEvaluation = existingProperty.Building.Evaluations
@@ -263,17 +292,18 @@ namespace Pims.Dal.Services
                 }
             }
 
+            
             foreach (var task in project.Tasks)
             {
-                var existingTask = existingProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
+                var existingProjectTask = existingProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
 
-                if (existingTask == null)
+                if (existingProjectTask == null)
                 {
                     existingProject.Tasks.Add(task);
                 }
                 else
                 {
-                    this.Context.Entry(existingTask).CurrentValues.SetValues(task);
+                    this.Context.Entry(existingProjectTask).CurrentValues.SetValues(task);
                 }
             }
 
