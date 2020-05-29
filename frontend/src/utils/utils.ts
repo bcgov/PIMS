@@ -3,6 +3,10 @@ import { startCase } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
 import { SortDirection } from 'components/Table/TableSort';
+import { AxiosResponse, AxiosError } from 'axios';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { success, error, request } from 'actions/genericActions';
+import moment from 'moment';
 
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
@@ -63,10 +67,43 @@ export const formikFieldMemo = (
   );
 };
 
+/** Provides default redux boilerplate applicable to most axios redux actions
+ * @param dispatch Dispatch function
+ * @param actionType All dispatched GenericNetworkActions will use this action type.
+ * @param axiosPromise The result of an axios.get, .put, ..., call.
+ */
+export const handleAxiosResponse = (
+  dispatch: Function,
+  actionType: string,
+  axiosPromise: Promise<AxiosResponse<any>>,
+): Promise<any> => {
+  dispatch(request(actionType));
+  dispatch(showLoading());
+  return axiosPromise
+    .then((response: AxiosResponse) => {
+      dispatch(success(actionType));
+      dispatch(hideLoading());
+      return response.data;
+    })
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionType, axiosError?.response?.status, axiosError));
+      throw axiosError;
+    })
+    .finally(() => dispatch(hideLoading()));
+};
+
 export const generateSortCriteria = (column: string, direction: SortDirection) => {
   if (!column || !direction) {
     return '';
   }
 
   return `${startCase(column).replace(' ', '')} ${direction}`;
+};
+
+/**
+ * get the fiscal year (ending in) based on the current date.
+ */
+export const getCurrentFiscalYear = (): number => {
+  const now = moment();
+  return now.month() >= 3 ? now.add(1, 'years').year() : now.year();
 };

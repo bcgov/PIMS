@@ -11,6 +11,10 @@ import userDetailReducer from './userDetailReducer';
 import jwtSlice from './JwtSlice';
 import keycloakReadySlice from './keycloakReadySlice';
 import mapViewZoomSlice from './mapViewZoomSlice';
+import projectWorkflowSlice from 'features/projects/dispose/slices/projectWorkflowSlice';
+import { ProjectReducers } from 'constants/reducerTypes';
+import projectSlice from 'features/projects/dispose/slices/projectSlice';
+import projectTasksSlice from 'features/projects/dispose/slices/projectTasksSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -22,6 +26,9 @@ export const reducerObject = {
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
+  [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,
+  [ProjectReducers.TASKS]: projectTasksSlice.reducer,
+  [ProjectReducers.PROJECT]: projectSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,
   [reducerTypes.MAP_VIEW_ZOOM]: mapViewZoomSlice.reducer,
 };

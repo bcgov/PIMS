@@ -76,7 +76,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - An array of properties associated with this project.
         /// </summary>
-        public IEnumerable<ProjectPropertyModel> Properties { get; set; } = new List<ProjectPropertyModel>();
+        public IEnumerable<ProjectPropertyModel> ProjectProperties { get; set; } = new List<ProjectPropertyModel>();
 
         /// <summary>
         /// get/set - An array of tasks associated with this project.

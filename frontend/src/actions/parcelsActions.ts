@@ -57,6 +57,7 @@ export interface IBuilding {
   buildingOccupantType?: string;
   buildingOccupantTypeId: number | '';
   classificationId: number | '';
+  classification: string;
   leaseExpiry?: string;
   occupantName: string;
   transferLeaseOnSale: boolean;
@@ -68,15 +69,21 @@ export interface IBuilding {
 }
 
 export interface IFiscal {
+  parcelId?: number;
+  buildingId?: number;
   fiscalYear?: number | '';
   key: string;
   value: number | '';
+  rowVersion?: string;
 }
 
 export interface IEvaluation {
+  parcelId?: number;
+  buildingId?: number;
   date?: Date | string;
   key: string;
   value: number | '';
+  rowVersion?: string;
 }
 
 export interface IParcel {
@@ -106,6 +113,7 @@ export interface IParcel {
 }
 
 export interface IAddress {
+  id?: number;
   line1: string;
   cityId: number | '';
   provinceId: string;

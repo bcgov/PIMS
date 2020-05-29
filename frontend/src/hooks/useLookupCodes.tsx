@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
+import { mapLookupCode } from 'utils';
 
 function useCodeLookups() {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -12,7 +13,10 @@ function useCodeLookups() {
   };
 
   const getByType = (type: string) => lookupCodes.filter(code => code.type === type);
+
+  const getOptionsByType = (type: string) => getByType(type).map(mapLookupCode);
   return {
+    getOptionsByType: getOptionsByType,
     getCodeById: getCodeById,
     getByType,
   };

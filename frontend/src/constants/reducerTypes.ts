@@ -30,3 +30,10 @@ export const MAP_VIEW_ZOOM = 'mapViewZoom';
 export const LEAFLET_CLICK_EVENT = 'leafletClickEvent';
 export const GET_USER_DETAIL = 'GET_USER_DETAIL';
 export const PUT_USER_DETAIL = 'PUT_USER_DETAIL';
+
+// Projects
+export enum ProjectReducers {
+  WORKFLOW = 'projectWorkflow',
+  PROJECT = 'project',
+  TASKS = 'tasks',
+}

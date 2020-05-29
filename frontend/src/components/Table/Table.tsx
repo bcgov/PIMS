@@ -9,6 +9,7 @@ import {
   Row,
   Cell,
   IdType,
+  useRowSelect,
 } from 'react-table';
 import classnames from 'classnames';
 import { TablePagination } from '.';
@@ -18,6 +19,7 @@ import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import { TablePageSizeSelector } from './PageSizeSelector';
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
 import { Spinner } from 'react-bootstrap';
+import _ from 'lodash';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -70,7 +72,24 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   onPageSizeChange?: (size: number) => void;
   sort?: TableSort<T>;
   noRowsMessage?: string;
+  setSelectedRows?: Function;
+  lockPageSize?: boolean;
 }
+
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
+  const defaultRef = React.useRef();
+  const resolvedRef: any = ref || defaultRef;
+
+  React.useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return (
+    <>
+      <input type="checkbox" ref={resolvedRef} {...rest} />
+    </>
+  );
+});
 
 /**
  * A table component. Supports sorting, filtering and paging.
@@ -86,7 +105,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     [],
   );
 
-  const { columns, data, onRequestData, pageCount: controlledPageCount } = props;
+  const { columns, data, onRequestData, pageCount: controlledPageCount, setSelectedRows } = props;
 
   // Use the useTable hook to create your table configuration
   const instance = useTable(
@@ -103,6 +122,36 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     },
     useFlexLayout,
     usePagination,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => {
+        return props.setSelectedRows
+          ? [
+              {
+                id: 'selection',
+                // Make this column a groupByBoundary. This ensures that groupBy columns
+                // are placed after it
+                groupByBoundary: true,
+                // The header can use the table's getToggleAllRowsSelectedProps method
+                // to render a checkbox
+                Header: ({ getToggleAllRowsSelectedProps }) => (
+                  <div>
+                    <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  </div>
+                ),
+                // The cell can use the individual row's getToggleRowSelectedProps method
+                // to the render a checkbox
+                Cell: ({ row }: { row: any }) => (
+                  <div>
+                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                  </div>
+                ),
+              },
+              ...columns,
+            ]
+          : columns;
+      });
+    },
   );
 
   // Use the state and functions returned from useTable to build your UI
@@ -115,13 +164,21 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     // which has only the rows for the active page
 
     // Get state from react-table
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, selectedRowIds },
   } = instance;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
     onRequestData?.({ pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
+
+  useEffect(() => {
+    if (setSelectedRows && Object.keys(selectedRowIds).length) {
+      const selectedRows = _.filter(page, { isSelected: true });
+      const selectedData = selectedRows.map((row: Row<T>) => row.original);
+      setSelectedRows(selectedData);
+    }
+  }, [data, setSelectedRows, page, selectedRowIds]);
 
   const getNextSortDirection = (column: ColumnInstanceWithProps<T>): SortDirection => {
     if (!props.sort) return 'asc';
@@ -181,9 +238,9 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                   <div
                     {...cell.getCellProps(cellProps)}
                     className="td"
-                    onClick={() =>
-                      props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
-                    }
+                    onClick={() => {
+                      props.onRowClick && cell.column.clickable && props.onRowClick(row.original);
+                    }}
                   >
                     {cell.render('Cell')}
                   </div>
@@ -225,8 +282,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         {renderBody()}
       </div>
       <div className="table-toolbar">
-        <TablePagination<T> instance={instance} />
-        {props.data.length > 0 && (
+        {props.pageSize !== -1 && <TablePagination<T> instance={instance} />}
+        {!props.lockPageSize && props.data.length > 0 && (
           <TablePageSizeSelector
             options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
             value={props.pageSize || DEFAULT_PAGE_SIZE}

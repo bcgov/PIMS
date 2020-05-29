@@ -1,0 +1,105 @@
+import React, { useCallback } from 'react';
+import { IPropertyFilter, IFilterBarState } from '..';
+import { decimalOrUndefined } from 'utils';
+import { ENVIRONMENT } from 'constants/environment';
+import CustomAxios from 'customAxios';
+import { IPagedItems } from 'interfaces';
+import { IProperty } from 'actions/parcelsActions';
+import queryString from 'query-string';
+
+const initialQuery: IPropertyFilter = {
+  page: 1,
+  quantity: 10,
+};
+
+const getServerQuery = (state: {
+  pageIndex: number;
+  pageSize: number;
+  filter: IFilterBarState;
+  agencyIds: number[];
+}) => {
+  const {
+    pageIndex,
+    pageSize,
+    agencyIds,
+    filter: {
+      address,
+      municipality,
+      projectNumber,
+      classificationId,
+      agencies,
+      minLotSize,
+      maxLotSize,
+    },
+  } = state;
+
+  // show properties for all agencies if none selected in the agency filter
+  let parsedAgencies = [...agencyIds];
+  if (agencies !== null && agencies !== undefined && agencies !== '') {
+    parsedAgencies = [parseInt(agencies, 10)];
+  }
+
+  const query: IPropertyFilter = {
+    ...initialQuery,
+    address,
+    municipality,
+    projectNumber,
+    classificationId: decimalOrUndefined(classificationId),
+    agencies: parsedAgencies,
+    minLandArea: decimalOrUndefined(minLotSize),
+    maxLandArea: decimalOrUndefined(maxLotSize),
+    statusId: undefined, // TODO: this field is not yet implemented in FilterBar
+    page: pageIndex + 1,
+    quantity: pageSize,
+  };
+  return query;
+};
+
+const getPropertyListUrl = (filter: IPropertyFilter) =>
+  `${ENVIRONMENT.apiUrl}/properties/search/page?${filter ? queryString.stringify(filter) : ''}`;
+
+interface UseTableProps {
+  fetchIdRef: React.MutableRefObject<number>;
+  setData: Function;
+  setPageCount: Function;
+}
+
+function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
+  const fetchData = useCallback(
+    async ({
+      pageIndex,
+      pageSize,
+      filter,
+      agencyIds,
+    }: {
+      pageIndex: number;
+      pageSize: number;
+      filter: IFilterBarState;
+      agencyIds: number[];
+    }) => {
+      // Give this fetch an ID
+      const fetchId = ++fetchIdRef.current;
+
+      // TODO: Set the loading state
+      // setLoading(true);
+
+      // Only update the data if this is the latest fetch
+      if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
+        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+        const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
+
+        // The server could send back total page count.
+        // For now we'll just calculate it.
+        setData(response.data.items);
+        setPageCount(Math.ceil(response.data.total / pageSize));
+
+        // setLoading(false);
+      }
+    },
+    [fetchIdRef, setData, setPageCount],
+  );
+
+  return fetchData;
+}
+
+export default useTable;

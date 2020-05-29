@@ -19,7 +19,7 @@ namespace Pims.Api.Models.Parcel
 
         public int AgencyId { get; set; }
 
-        public string SubAgency { get; set; }
+        public virtual string SubAgency { get; set; }
 
         public string Agency { get; set; }
 
