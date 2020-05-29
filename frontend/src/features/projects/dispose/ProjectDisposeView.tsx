@@ -33,7 +33,7 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
     (dispatch(createProject(initialValues)) as any).then((project: IProject) => {
       dispatch(saveProject(project));
       history.push(
-        `${match.url}/${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
+        `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
       );
     });
   }
