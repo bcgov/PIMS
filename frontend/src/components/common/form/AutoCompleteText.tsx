@@ -1,6 +1,6 @@
 import './AutoCompleteText.scss';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { DisplayError } from './DisplayError';
@@ -26,13 +26,22 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
   autoSetting,
   required,
 }) => {
-  const { setFieldValue, handleChange, errors, touched } = useFormikContext<any>();
+  const { values, setFieldValue, handleChange, errors, touched } = useFormikContext<any>();
   const [suggestions, setSuggestions] = useState<SelectOptions>([]);
   const [text, setText] = useState<string>('');
   const [loaded, setLoaded] = useState<boolean>(false);
 
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
+  const value = getIn(values, field);
+
+  // Listen for changes in form value. Reset auto-complete if form value is empty
+  useEffect(() => {
+    if (value === null || value === undefined || value === '') {
+      setText('');
+      setSuggestions([]);
+    }
+  }, [value]);
 
   const onTextChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
