@@ -191,7 +191,7 @@ parameters:
   - name: MSSQL_SA_PASSWORD
     displayName: Microsoft SQL Server Password
     description: Microsoft SQL Server sa password
-    from: '[\w]{5}_[\w]{15}!'
+    from: '[\w]{5}_[\w]{15}_1aB!'
     generate: expression
   - name: TIMEZONE
     displayName: Timezone
@@ -211,7 +211,7 @@ parameters:
   - name: DB_PASSWORD
     displayName: Microsoft SQL Server Password
     description: Microsoft SQL Server sa password
-    from: '[\w]{12}'
+    from: '[\w]{12}_1Ab!'
     generate: expression
 
   - name: CPU_LIMIT

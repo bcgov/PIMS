@@ -160,16 +160,16 @@ objects:
           intervalSeconds: 1
           maxSurge: 25%
           maxUnavailable: 25%
-          pre:
-            execNewPod:
-              command:
-                - bash
-                - "-c"
-                - >-
-                  dotnet ef database update --project=api --context=pimsContext
-                  --verbose
-              containerName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
-            failurePolicy: Abort
+          # pre:
+          #   execNewPod:
+          #     command:
+          #       - bash
+          #       - "-c"
+          #       - >-
+          #         dotnet ef database update --project=api --context=pimsContext
+          #         --verbose
+          #     containerName: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}
+          #   failurePolicy: Abort
           timeoutSeconds: 600
           updatePeriodSeconds: 1
       triggers:
