@@ -4,6 +4,7 @@ using Pims.Tools.Keycloak.Sync.Configuration;
 using Pims.Tools.Keycloak.Sync.Exceptions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;

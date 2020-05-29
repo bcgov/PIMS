@@ -13,10 +13,12 @@ The PIMS technical architecture stack continues to grow as features and enhancem
 - [GitHub Workflow](./GITHUB-WORKFLOW.md)
 - [Database](./DATABASE.md)
 - [Backend API](../backend/README.md)
+  - [Swagger](https://pims-dev.pathfinder.gov.bc.ca/api-docs/index.html)
 - [Frontend APP](../frontend/README.md)
 - [Security](./SECURITY.md)
 - [OpenShift](../openshift/README.md)
 - [DevOps CI/CD](./DEVOPS.md)
+- [Code Quality](./CODE-QUALITY.md)
 - [Versions](./VERSIONS.md)
 
 ## SRES Process Documentation

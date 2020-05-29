@@ -170,6 +170,10 @@ namespace Pims.Tools.Keycloak.Sync
                 // Add the group to keycloak.
                 var rRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute("groups"), group);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
+
+                // Have to look for it now that we've added it.
+                groups = await _client.HandleGetAsync<KModel.GroupModel[]>(_client.AdminRoute($"groups?search={config.Name}"), r => true);
+                group = groups.FirstOrDefault();
             }
             else
             {
@@ -227,12 +231,33 @@ namespace Pims.Tools.Keycloak.Sync
                 var rRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute("clients"), client);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
 
+                clients = await _client.HandleGetAsync<KModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={config.ClientId}"));
+                client = clients.FirstOrDefault();
+
                 // Add protocol mappers
-                foreach (var cMapper in client.ProtocolMappers ?? Enumerable.Empty<KModel.ProtocolMapperModel>())
+                var mappers = await _client.HandleGetAsync<KModel.ProtocolMapperModel[]>(_client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"));
+                foreach (var cMapper in config.ProtocolMappers ?? Enumerable.Empty<ProtocolMapperOptions>())
                 {
                     // Check if it needs to be added or updated.
-                    var cpmRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"), cMapper);
-                    if (!cpmRes.IsSuccessStatusCode) throw new HttpResponseException(cpmRes);
+                    var mapper = mappers.FirstOrDefault(m => m.Name == cMapper.Name);
+
+                    if (mapper == null)
+                    {
+                        mapper = new KModel.ProtocolMapperModel(cMapper);
+
+                        var cpmRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"), mapper);
+                        if (!cpmRes.IsSuccessStatusCode) throw new HttpResponseException(cpmRes);
+                    }
+                    else
+                    {
+                        mapper.Name = cMapper.Name;
+                        mapper.Protocol = cMapper.Protocol;
+                        mapper.ProtocolMapper = cMapper.ProtocolMapper;
+                        mapper.Config = cMapper.Config;
+
+                        var cpmRes = await _client.SendRequestAsync(HttpMethod.Put, _client.AdminRoute($"clients/{client.Id}/protocol-mappers/models/{mapper.Id}"), mapper);
+                        if (!cpmRes.IsSuccessStatusCode) throw new HttpResponseException(cpmRes);
+                    }
                 }
 
                 // Fetch Service Account if required.

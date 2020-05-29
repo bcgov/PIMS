@@ -206,6 +206,7 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
         /// <param name="client"></param>
         public ClientModel(ClientOptions client)
         {
+            this.ClientId = client.ClientId;
             this.Name = client.Name;
             this.Description = client.Description;
             this.Enabled = client.Enabled;
@@ -234,7 +235,10 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
             this.WebOrigins = client.WebOrigins;
             this.AdminUrl = client.AdminUrl;
 
-            this.ProtocolMappers = client.ProtocolMappers.Select(m => new ProtocolMapperModel(m)).ToArray();
+            if (client.ProtocolMappers != null)
+            {
+                this.ProtocolMappers = client.ProtocolMappers.Select(m => new ProtocolMapperModel(m)).ToArray();
+            }
         }
         #endregion
     }
