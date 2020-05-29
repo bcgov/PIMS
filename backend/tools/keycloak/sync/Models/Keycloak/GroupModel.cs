@@ -61,10 +61,13 @@ namespace Pims.Tools.Keycloak.Sync.Models.Keycloak
         {
             this.Name = group.Name;
             this.RealmRoles = group.RealmRoles.ToArray();
-            this.ClientRoles = new Dictionary<string, string[]>();
-            foreach (var role in group.ClientRoles?.Where(r => true))
+            if (group.ClientRoles != null)
             {
-                this.ClientRoles.Add(role.ClientId, role.ClientRoles.ToArray());
+                this.ClientRoles = new Dictionary<string, string[]>();
+                foreach (var role in group.ClientRoles)
+                {
+                    this.ClientRoles.Add(role.ClientId, role.ClientRoles.ToArray());
+                }
             }
         }
         #endregion

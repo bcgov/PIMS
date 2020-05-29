@@ -2,19 +2,19 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: "${NAME}-build-template"
+  name: "mssql-backup-build"
   creationTimestamp:
 objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: "${NAME}-pims-backup"
+      name: backup-${NAME}
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: backup-${NAME}
       labels:
-        app: "${NAME}"
+        app: backup-${NAME}
     spec:
       triggers:
         - type: ImageChange
@@ -23,40 +23,40 @@ objects:
       source:
         type: Git
         git:
-          uri: "${GIT_REPO_URL}"
-          ref: "${GIT_REF}"
-        contextDir: "${SOURCE_CONTEXT_DIR}"
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+        contextDir: ${CONTEXT_DIR}
       strategy:
         type: Docker
         dockerStrategy:
-          dockerfilePath: "${DOCKER_FILE_PATH}"
+          dockerfilePath: ${DOCKER_FILE_PATH}
       output:
         to:
           kind: ImageStreamTag
-          name: "${NAME}:${OUTPUT_IMAGE_TAG}"
+          name: backup-${NAME}:${OUTPUT_IMAGE_TAG}
 parameters:
   - name: NAME
-    displayName: Name
-    description:
-      The name assigned to all of the resources.  Use 'backup-{database name}'
-      depending on your database provider
+    displayName: Backup Image Name
+    description: A unique name to identify the backup image
     required: true
-    value: backup-mssql
-  - name: GIT_REPO_URL
+    value: mssql
+
+  - name: GIT_URL
     displayName: Git Repo URL
     description: The URL to your GIT repo.
     required: true
-    value: https://github.com/bcgov/backup-container.git
+    value: https://github.com/BCDevOps/backup-container.git
   - name: GIT_REF
     displayName: Git Reference
     description: The git reference or branch.
     required: true
     value: mssql
-  - name: SOURCE_CONTEXT_DIR
+  - name: CONTEXT_DIR
     displayName: Source Context Directory
     description: The source context directory.
     required: false
     value: "/docker"
+
   - name: DOCKER_FILE_PATH
     displayName: Docker File
     description:
@@ -65,6 +65,7 @@ parameters:
       for MSSQL builds.
     required: false
     value: Dockerfile_MSSQL
+
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
     description: The tag given to the built image.

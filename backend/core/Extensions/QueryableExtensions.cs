@@ -122,7 +122,7 @@ namespace Pims.Core.Extensions
             foreach (var part in path.Split('.'))
             {
                 var prop = type.GetCachedProperties().FirstOrDefault(p => p.Name == part) ?? throw new ArgumentException($"Property path '{type.Name}.{path}' is invalid.", nameof(path));
-                type = prop.PropertyType.IsEnumerable() ? prop.PropertyType.GetItemType() : prop.PropertyType;
+                type = prop.PropertyType.IsEnumerable() && prop.PropertyType != typeof(string) ? prop.PropertyType.GetItemType() : prop.PropertyType;
             }
 
             return type;
