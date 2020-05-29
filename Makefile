@@ -33,13 +33,13 @@ help:
 
 local: | build run ## Runs the steps for local development
 
-restart-local: | close build run ## Recreates local environment
+restart: | stop build run ## Recreates local environment
 
 run: ## Runs the local development containers
 	@echo "$(P) Running client and server..."
 	@docker-compose up -d
 
-close: ## Closes the local development containers
+stop: ## Closes the local development containers
 	@echo "$(P) Stopping client and server..."
 	@docker-compose down
 
@@ -61,4 +61,4 @@ local-server-tests: ## Runs the server tests in a container
 	@echo "$(P) Running server unit tests..."
 	@docker-compose run backend dotnet test
 
-.PHONY: local restart-local run close build clean local-client-tests local-server-tests
+.PHONY: local restart run stop build clean local-client-tests local-server-tests
