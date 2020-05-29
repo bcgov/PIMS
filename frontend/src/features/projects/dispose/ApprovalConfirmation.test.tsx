@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { Form } from 'react-bootstrap';
 import { noop } from 'lodash';
 
-const renderComponent = (checked: boolean, onChange: OnChangeType) => {
+const renderComponent = (checked: boolean) => {
   //const userDisplayName = 'PIMS User';
   const fieldName = 'confirmation';
   return renderer.create(

@@ -1,21 +1,32 @@
 import './SelectProjectProperties.scss';
 
 import React from 'react';
-import { Container } from 'react-bootstrap';
-import { projectWorkflowComponents } from '..';
+import { Container, Form } from 'react-bootstrap';
+import { IStepProps } from '..';
+import ReviewProjectForm from '../forms/ReviewProjectForm';
+import { Formik } from 'formik';
+import useStepper from '../hooks/useStepper';
+import useStepForm from './useStepForm';
 /**
  * Read only version of all step components. TODO: provide ability to update fields on this form.
  * {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
-const ReviewProjectStep = () => {
+const ReviewProjectStep = ({ formikRef }: IStepProps) => {
+  const { project } = useStepper();
+  const { onSubmit } = useStepForm();
   return (
     <Container fluid className="ReviewInfoForm">
-      <h3>Review</h3>
-      {projectWorkflowComponents
-        .slice(0, projectWorkflowComponents.length - 1) //don't include the last component (this component).
-        .map(wfc => (
-          <wfc.component isReadOnly={true} />
-        ))}
+      <Formik
+        initialValues={project}
+        validateOnChange={false}
+        enableReinitialize={true}
+        innerRef={formikRef}
+        onSubmit={onSubmit}
+      >
+        <Form>
+          <ReviewProjectForm />
+        </Form>
+      </Formik>
     </Container>
   );
 };

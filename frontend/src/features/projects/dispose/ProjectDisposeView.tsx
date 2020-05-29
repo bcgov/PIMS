@@ -13,6 +13,7 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
 import queryString from 'query-string';
 import { initialValues } from 'pages/admin/access/constants/constants';
 import { saveProject } from './slices/projectSlice';
+import useStepper from './hooks/useStepper';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -21,16 +22,19 @@ import { saveProject } from './slices/projectSlice';
 const ProjectDisposeView = ({ match, location }: { match: Match; location: Location }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { workflowStatuses } = useStepper();
 
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
-  if (!projectNumber) {
+  if (!projectNumber && workflowStatuses) {
     (dispatch(createProject(initialValues)) as any).then((project: IProject) => {
       dispatch(saveProject(project));
-      history.push(`${match.url}?projectNumber=${project.projectNumber}`);
+      history.push(
+        `${match.url}/${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
+      );
     });
   }
 

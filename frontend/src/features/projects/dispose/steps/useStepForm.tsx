@@ -9,19 +9,22 @@ import useStepper from '../hooks/useStepper';
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useDispatch();
-  const { currentStatus } = useStepper();
+  const { getLastCompletedStatusId } = useStepper();
 
   const onSubmit = (values: IProject, actions: any) => {
     const apiValues = _.cloneDeep(values);
-    apiValues.statusId = currentStatus.sortOrder + 1;
     let response: any;
+    apiValues.statusId = getLastCompletedStatusId();
+    console.log(apiValues.statusId);
     if (!apiValues.projectNumber) {
       response = dispatch(createProject(apiValues));
     } else {
       response = dispatch(updateProject(apiValues));
     }
     response
-      .then(() => dispatch(fetchProject(apiValues.projectNumber)))
+      .then(() => {
+        dispatch(fetchProject(apiValues.projectNumber));
+      })
       .catch((error: any) => {
         actions.setStatus({ msg: error.toString() });
       })

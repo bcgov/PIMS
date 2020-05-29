@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext } from 'react';
 import './ProjectDisposeView.scss';
 import { Container } from 'react-bootstrap';
-import { Route, match as Match, useHistory } from 'react-router-dom';
+import { Route, match as Match, useHistory, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { IStatus } from './slices/projectWorkflowSlice';
 import { RootState } from 'reducers/rootReducer';
@@ -22,7 +22,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const { nextStep, project } = useStepper();
+  const { nextStep } = useStepper();
 
   const getComponentPath = (wfc: ProjectWorkflowComponent) => {
     return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
@@ -33,12 +33,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     statusAtRoute = statusAtRoute ?? workflowStatuses[0];
     if (setCurrentStatus) setCurrentStatus(statusAtRoute);
   }, [location.pathname, setCurrentStatus, workflowStatuses]);
-
-  useEffect(() => {
-    if (currentStatus && project?.projectNumber) {
-      history.push(`${match.url}${currentStatus.route}?projectNumber=${project.projectNumber}`);
-    }
-  }, [currentStatus, history, match.url, project]);
 
   return (
     <>
@@ -56,11 +50,16 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
               render={() => <wfc.component formikRef={formikRef} />}
             />
           ))}
+          <Route title="*" path="dispose/*" component={() => <Redirect to="/page-not-found" />} />
+
           <StepActions
             onSave={() => formikRef.current?.handleSubmit()}
             onNext={() =>
               formikRef.current?.submitForm().then(() => {
-                nextStep();
+                const hasNextStep = nextStep();
+                if (!hasNextStep) {
+                  history.push('/project/completed');
+                }
               })
             }
           />

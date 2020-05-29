@@ -1,17 +1,14 @@
 import './SelectProjectProperties.scss';
 
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
-import { RootState } from 'reducers/rootReducer';
 import { Formik } from 'formik';
-import { Form, TextArea } from 'components/common/form';
+import { Form } from 'components/common/form';
 import { IStepProps } from '../interfaces';
-import { ITask } from '../slices/projectTasksSlice';
-import { Check } from 'components/common/form/Check';
 import useStepForm from './useStepForm';
 import useStepper from '../hooks/useStepper';
 import StepErrorSummary from './StepErrorSummary';
+import DocumentationForm from '../forms/DocumentationForm';
 
 /**
  * Displays all tasks from TASK table as clickable checkboxes.
@@ -20,14 +17,13 @@ import StepErrorSummary from './StepErrorSummary';
 const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit } = useStepForm();
   const { project } = useStepper();
-  const disposeTasks = useSelector<RootState, ITask[]>(state => state.tasks);
   if (!project) {
     // Step does not allow creation of new properties
     throw Error('Unexpected error updating project. Please reload your project.');
   }
 
   return (
-    <Container fluid className="UpdateInfoStep">
+    <Container fluid className="DocumentationStep">
       <Formik
         initialValues={project}
         innerRef={formikRef}
@@ -46,24 +42,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
       >
         {() => (
           <Form>
-            <h3>Documentation</h3>
-            {disposeTasks.map((task, index) => (
-              <Form.Row key={task.name}>
-                <Check outerClassName="col-md-1" field={`tasks.${index}.isCompleted`} />
-                <Form.Label column md={6}>
-                  {task.description}
-                </Form.Label>
-              </Form.Row>
-            ))}
-
-            {!isReadOnly && (
-              <Form.Row>
-                <Form.Label className="col-md-12" style={{ textAlign: 'left' }}>
-                  Notes:
-                </Form.Label>
-                <TextArea outerClassName="col-md-8" field="note" />
-              </Form.Row>
-            )}
+            <DocumentationForm isReadOnly={isReadOnly} />
             <StepErrorSummary />
           </Form>
         )}

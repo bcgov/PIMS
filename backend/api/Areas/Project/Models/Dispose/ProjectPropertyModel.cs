@@ -1,6 +1,4 @@
 using Pims.Dal.Entities;
-using Parcels = Pims.Api.Models.Parcel;
-using Buildings = Pims.Api.Models.Building;
 using System;
 
 namespace Pims.Api.Areas.Project.Models.Dispose
@@ -31,14 +29,14 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// </summary>
         public int? ParcelId { get; set; }
 
-        public Parcels.ParcelModel Parcel { get; set; }
+        public ParcelModel Parcel { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the building.
         /// </summary>
         public int? BuildingId { get; set; }
 
-        public Buildings.BuildingModel Building { get; set; }
+        public BuildingModel Building { get; set; }
         #endregion
     }
 }
