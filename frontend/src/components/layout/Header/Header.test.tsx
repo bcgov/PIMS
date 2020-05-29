@@ -1,5 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 import { useKeycloak } from '@react-keycloak/web';
 import Header from './Header';
 import { Provider } from 'react-redux';
@@ -10,20 +12,16 @@ jest.mock('@react-keycloak/web');
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
-
-jest.mock('react-router-dom', () => ({
-  useHistory: () => ({
-    push: jest.fn(),
-    location: {},
-  }),
-}));
+const history = createMemoryHistory();
 
 test('header renders correctly', () => {
   (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
   const tree = renderer
     .create(
       <Provider store={store}>
-        <Header />
+        <Router history={history}>
+          <Header />
+        </Router>
       </Provider>,
     )
     .toJSON();

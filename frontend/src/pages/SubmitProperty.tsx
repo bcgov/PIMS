@@ -25,6 +25,13 @@ import { isStorageInUse, PARCEL_STORAGE_NAME, clearStorage } from 'utils/storage
 import { Claims } from 'constants/claims';
 import { ReactComponent as CloseSquare } from 'assets/images/close-square.svg';
 
+/** Form mode */
+enum Mode {
+  View,
+  Create,
+  Update,
+}
+
 const SubmitProperty = (props: any) => {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
@@ -35,6 +42,9 @@ const SubmitProperty = (props: any) => {
   const parsedQuery = queryString.parse(query);
   const [formDisabled, setFormDisabled] = useState(!!parsedQuery.disabled);
   const loadDraft = parsedQuery.loadDraft;
+
+  const mode = formDisabled ? Mode.View : parcelId ? Mode.Update : Mode.Create;
+  const formTitle = mode === Mode.Create ? 'Submit a Property' : 'Property Detail';
 
   const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -116,7 +126,7 @@ const SubmitProperty = (props: any) => {
       <Col md={7} className="form">
         <Row className="title-bar" style={{ textAlign: 'left' }}>
           <Col>
-            <h2>{formDisabled ? 'View' : 'Update'} Property</h2>
+            <h2>{formTitle}</h2>
           </Col>
           <Col style={{ textAlign: 'right' }}>
             <span className="propertyButtons">
