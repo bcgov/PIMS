@@ -84,7 +84,7 @@ export const Input: React.FC<InputProps> = ({
           isInvalid={!!touch && !!error}
           {...rest}
           isValid={false}
-          value={pattern ? restricted : rest.value ?? value}
+          value={pattern && !value ? restricted : rest.value ?? value}
           placeholder={placeholder}
           onBlur={(e: any) => {
             if (onBlurFormatter) {
