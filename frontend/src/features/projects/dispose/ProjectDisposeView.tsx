@@ -32,7 +32,7 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
   if (!projectNumber && workflowStatuses) {
     (dispatch(createProject(initialValues)) as any).then((project: IProject) => {
       dispatch(saveProject(project));
-      history.push(
+      history.replace(
         `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
       );
     });
@@ -48,7 +48,7 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
     }
   }, [dispatch, projectNumber]);
 
-  return getProjectRequest && !getProjectRequest.isFetching ? (
+  return projectNumber ? (
     <StepContextProvider>
       <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>
     </StepContextProvider>

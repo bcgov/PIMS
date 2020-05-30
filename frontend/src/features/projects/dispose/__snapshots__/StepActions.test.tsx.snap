@@ -15,7 +15,7 @@ exports[`Approval Confirmation Matches Snapshot 1`] = `
     }
     type="button"
   >
-    Next
+    Submit
   </button>
   <button
     className="btn btn-primary"

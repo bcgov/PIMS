@@ -33,6 +33,7 @@ type OptionalAttributes = {
   onChange?: React.FormEventHandler;
   /** Class name of the input wrapper */
   outerClassName?: string;
+  /** input "type" ie. string, number */
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -61,10 +62,12 @@ export const Select: React.FC<SelectProps> = ({
   multiple,
   custom,
   onChange,
+  type,
   outerClassName,
   ...rest
 }) => {
-  const { values, handleChange, setFieldValue, errors, touched } = useFormikContext();
+  const { values, handleBlur, handleChange, setFieldValue, errors, touched } = useFormikContext();
+  const value = getIn(values, field);
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const asElement: any = is || 'select';
@@ -117,6 +120,12 @@ export const Select: React.FC<SelectProps> = ({
         value={getIn(values, field)}
         multiple={multiple}
         onChange={onSelectChange}
+        onBlur={(e: any) => {
+          if (type === 'number' && !isNaN(parseInt(value))) {
+            setFieldValue(field, parseInt(value));
+          }
+          handleBlur(e);
+        }}
       >
         {renderPlaceholder()}
         {renderOptions()}

@@ -1,0 +1,46 @@
+import * as Yup from 'yup';
+
+export const ApprovalConfirmationStepSchema = Yup.object().shape({
+  confirmation: Yup.boolean()
+    .oneOf([true], 'You must confirm approval before continuing.')
+    .required('Required'),
+});
+
+export const DocumentationStepSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .max(100, 'Email must be less than 100 characters'),
+  firstName: Yup.string().max(100, 'First Name must be less than 100 characters'),
+  middleName: Yup.string().max(100, 'Middle Name must be less than 100 characters'),
+  lastName: Yup.string().max(100, 'Last Name must be less than 100 characters'),
+});
+
+export const UpdateInfoStepYupSchema = Yup.object().shape({
+  properties: Yup.array().of(
+    Yup.object().shape({
+      classification: Yup.string().required('Required'),
+      netBook: Yup.number()
+        .required()
+        .min(0.01, 'Minimum value is $0.01')
+        .max(1000000000, 'Maximum value is $1,000,000,000')
+        .required('Required'),
+      estimated: Yup.number()
+        .required()
+        .min(0.01, 'Minimum value is $0.01')
+        .max(1000000000, 'Maximum value is $1,000,000,000')
+        .required('Required'),
+    }),
+  ),
+});
+
+export const SelectProjectPropertiesStepYupSchema = Yup.object().shape({
+  properties: Yup.array()
+    .required('You must select at least one property')
+    .min(1, 'You must select at least one property'),
+});
+
+export const ProjectDraftStepYupSchema = Yup.object().shape({
+  projectNumber: Yup.string().required('Required'),
+  name: Yup.string().required('Required'),
+  description: Yup.string(),
+});

@@ -1,14 +1,21 @@
-import './SelectProjectProperties.scss';
-
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Formik, setIn } from 'formik';
 import { Form } from 'components/common/form';
-import { IStepProps } from '../interfaces';
+import { IStepProps, IProjectTask, IProject } from '../interfaces';
 import useStepForm from './useStepForm';
 import useStepper from '../hooks/useStepper';
 import StepErrorSummary from './StepErrorSummary';
 import DocumentationForm from '../forms/DocumentationForm';
+
+const handleValidate = (values: IProject) => {
+  return values.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
+    if (!task.isCompleted) {
+      errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
+    }
+    return errors;
+  }, {});
+};
 
 /**
  * Displays all tasks from TASK table as clickable checkboxes.
@@ -27,6 +34,8 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
       <Formik
         initialValues={project}
         innerRef={formikRef}
+        validate={handleValidate}
+        validateOnChange={false}
         onSubmit={(values, actions) => {
           // set the completed on dates during submission.
           values.tasks.forEach((task: any, index: any) => {

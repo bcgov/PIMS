@@ -23,7 +23,10 @@ type OptionalAttributes = {
   disabled?: boolean;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
+  /** className to apply to div wrapping the table component */
   outerClassName?: string;
+  /** allows table rows to be selected using this function */
+  setSelectedRows?: Function;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -36,11 +39,12 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   field,
   outerClassName,
   disabled,
+  setSelectedRows,
 }) => {
   const { values } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
 
-  const columns = useMemo(() => getColumns(true), []);
+  const columns = useMemo(() => getColumns(!disabled), [disabled]);
 
   return (
     <Container fluid>
@@ -51,6 +55,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
           data={existingProperties}
           pageSize={-1}
           lockPageSize
+          setSelectedRows={setSelectedRows}
         />
       </div>
       <DisplayError field={field} />

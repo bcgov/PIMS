@@ -36,15 +36,17 @@ exports[`renders RequestAccessPage correctly 1`] = `
           >
             IDIR/BCeID
           </label>
-          <input
-            className="form-control"
-            id="input-user.username"
-            name="user.username"
-            onBlur={[Function]}
-            onChange={[Function]}
-            readOnly={true}
-            type="text"
-          />
+          <span>
+            <input
+              className="form-control"
+              id="input-user.username"
+              name="user.username"
+              onBlur={[Function]}
+              onChange={[Function]}
+              readOnly={true}
+              type="text"
+            />
+          </span>
         </div>
         <div
           className="row"
@@ -61,15 +63,17 @@ exports[`renders RequestAccessPage correctly 1`] = `
               >
                 First Name
               </label>
-              <input
-                className="form-control"
-                id="input-user.firstName"
-                name="user.firstName"
-                onBlur={[Function]}
-                onChange={[Function]}
-                readOnly={true}
-                type="text"
-              />
+              <span>
+                <input
+                  className="form-control"
+                  id="input-user.firstName"
+                  name="user.firstName"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  readOnly={true}
+                  type="text"
+                />
+              </span>
             </div>
           </div>
           <div
@@ -84,15 +88,17 @@ exports[`renders RequestAccessPage correctly 1`] = `
               >
                 Last Name
               </label>
-              <input
-                className="form-control"
-                id="input-user.lastName"
-                name="user.lastName"
-                onBlur={[Function]}
-                onChange={[Function]}
-                readOnly={true}
-                type="text"
-              />
+              <span>
+                <input
+                  className="form-control"
+                  id="input-user.lastName"
+                  name="user.lastName"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  readOnly={true}
+                  type="text"
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -105,15 +111,17 @@ exports[`renders RequestAccessPage correctly 1`] = `
           >
             Email
           </label>
-          <input
-            className="form-control"
-            id="input-user.email"
-            name="user.email"
-            onBlur={[Function]}
-            onChange={[Function]}
-            readOnly={true}
-            type="email"
-          />
+          <span>
+            <input
+              className="form-control"
+              id="input-user.email"
+              name="user.email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              readOnly={true}
+              type="email"
+            />
+          </span>
         </div>
         <div
           className="required form-group"
@@ -133,6 +141,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             className="form-select form-control"
             id="input-agency"
             name="agency"
+            onBlur={[Function]}
             onChange={[Function]}
             required={true}
           >
@@ -152,16 +161,18 @@ exports[`renders RequestAccessPage correctly 1`] = `
           >
             Position
           </label>
-          <input
-            className="form-control"
-            id="input-user.position"
-            name="user.position"
-            onBlur={[Function]}
-            onChange={[Function]}
-            placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-            type="text"
-            value=""
-          />
+          <span>
+            <input
+              className="form-control"
+              id="input-user.position"
+              name="user.position"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+              type="text"
+              value=""
+            />
+          </span>
         </div>
         <div
           className="required form-group"
@@ -181,6 +192,7 @@ exports[`renders RequestAccessPage correctly 1`] = `
             className="form-select form-control"
             id="input-role"
             name="role"
+            onBlur={[Function]}
             onChange={[Function]}
             required={true}
           >
@@ -200,15 +212,17 @@ exports[`renders RequestAccessPage correctly 1`] = `
           >
             Notes
           </label>
-          <textarea
-            className="form-control"
-            id="input-note"
-            name="note"
-            onBlur={[Function]}
-            onChange={[Function]}
-            placeholder="Please specify why you need access to this site."
-            value=""
-          />
+          <span>
+            <textarea
+              className="form-control"
+              id="input-note"
+              name="note"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Please specify why you need access to this site."
+              value=""
+            />
+          </span>
         </div>
         <p>
           By clicking request, you agree to our

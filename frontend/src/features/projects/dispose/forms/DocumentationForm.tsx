@@ -24,18 +24,18 @@ const DocumentationForm = ({ isReadOnly }: IStepProps) => {
       <h3>Documentation</h3>
       {disposeTasks.map((task, index) => (
         <Form.Row key={task.name}>
-          <Check outerClassName="col-md-1" field={`tasks.${index}.isCompleted`} />
-          <Form.Label column md={6}>
-            {task.description}
-          </Form.Label>
+          <Check
+            field={`tasks.${index}.isCompleted`}
+            postLabel={task.description}
+            required
+            disabled={isReadOnly}
+          />
         </Form.Row>
       ))}
 
       {!isReadOnly && (
         <Form.Row>
-          <Form.Label className="col-md-12" style={{ textAlign: 'left' }}>
-            Notes:
-          </Form.Label>
+          <Form.Label className="col-md-12">Notes:</Form.Label>
           <TextArea outerClassName="col-md-8" field="note" />
         </Form.Row>
       )}

@@ -10,6 +10,7 @@ import useStepper from '../hooks/useStepper';
 import { initialValues } from 'pages/admin/access/constants/constants';
 import StepErrorSummary from './StepErrorSummary';
 import ProjectDraftForm from '../forms/ProjectDraftForm';
+import { ProjectDraftStepYupSchema } from '../forms/disposalYupSchema';
 
 /**
  * Initial Project creation step - allows entry of high level project information.
@@ -28,10 +29,10 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
   }
 
   return (
-    <Container fluid className="ProjectDraftStep">
+    <Container fluid>
       <Formik
         initialValues={draftFormValues}
-        validateOnChange={false}
+        validationSchema={ProjectDraftStepYupSchema}
         enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={onSubmit}

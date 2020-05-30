@@ -25,6 +25,7 @@ exports[`FilterBar renders correctly 1`] = `
               className="form-select form-control"
               id="input-searchBy"
               name="searchBy"
+              onBlur={[Function]}
               onChange={[Function]}
               value="address"
             >
@@ -55,15 +56,17 @@ exports[`FilterBar renders correctly 1`] = `
           <div
             className="form-group"
           >
-            <input
-              className="form-control"
-              id="input-address"
-              name="address"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="Enter an address or city"
-              value=""
-            />
+            <span>
+              <input
+                className="form-control"
+                id="input-address"
+                name="address"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Enter an address or city"
+                value=""
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -78,6 +81,7 @@ exports[`FilterBar renders correctly 1`] = `
           className="form-select form-control"
           id="input-agencies"
           name="agencies"
+          onBlur={[Function]}
           onChange={[Function]}
           value=""
         >
@@ -129,6 +133,7 @@ exports[`FilterBar renders correctly 1`] = `
           className="form-select form-control"
           id="input-classificationId"
           name="classificationId"
+          onBlur={[Function]}
           onChange={[Function]}
           value=""
         >
@@ -170,15 +175,17 @@ exports[`FilterBar renders correctly 1`] = `
       <div
         className="form-group"
       >
-        <input
-          className="form-control"
-          id="input-minLotSize"
-          name="minLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Min Lot Size"
-          value=""
-        />
+        <span>
+          <input
+            className="form-control"
+            id="input-minLotSize"
+            name="minLotSize"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Min Lot Size"
+            value=""
+          />
+        </span>
       </div>
       <span
         className="mx-2"
@@ -188,15 +195,17 @@ exports[`FilterBar renders correctly 1`] = `
       <div
         className="form-group"
       >
-        <input
-          className="form-control"
-          id="input-maxLotSize"
-          name="maxLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Max Lot Size"
-          value=""
-        />
+        <span>
+          <input
+            className="form-control"
+            id="input-maxLotSize"
+            name="maxLotSize"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Max Lot Size"
+            value=""
+          />
+        </span>
       </div>
     </div>
     <div

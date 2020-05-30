@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import './ProjectDraftForm.scss';
+import React, { Fragment, useState } from 'react';
+import { Row, Col, Button } from 'react-bootstrap';
 import { Form, Input, TextArea } from 'components/common/form';
 
 import { IStepProps } from '../interfaces';
@@ -9,39 +10,53 @@ import { IStepProps } from '../interfaces';
  * @param param0 isReadOnly disable editing
  */
 const ProjectDraftForm = ({ isReadOnly }: IStepProps) => {
+  const [disabled, setDisabled] = useState(isReadOnly);
   return (
     <Fragment>
-      <Row style={{ textAlign: 'left' }}>
+      <Button disabled={!disabled} className="edit" onClick={() => setDisabled(false)}>
+        Edit
+      </Button>
+      {isReadOnly && <h3>Review</h3>}
+      <Row style={{ textAlign: 'left' }} className="ProjectDraftForm">
         <Col>
           <Form.Row>
-            <Form.Label column md={2}>
-              Project Number
-            </Form.Label>
             <Input
               placeholder="SPP-XXXXXX"
               disabled={true}
-              outerClassName="col-md-8"
               field="projectNumber"
+              label="Project Number"
+              className="col-md-2"
+              outerClassName="col-md-10"
+              required
             />
           </Form.Row>
           <Form.Row>
-            <Form.Label column md={2}>
-              Name
-            </Form.Label>
-            <Input outerClassName="col-md-8" field="name" />
+            <Input
+              disabled={disabled}
+              field="name"
+              label="Name"
+              className="col-md-3"
+              outerClassName="col-md-10"
+              required
+            />
           </Form.Row>
           <Form.Row>
-            <Form.Label column md={2}>
-              Description
-            </Form.Label>
-            <Input outerClassName="col-md-8" field="description" />
+            <Input
+              disabled={disabled}
+              field="description"
+              label="Description"
+              className="col-md-5"
+              outerClassName="col-md-10"
+            />
           </Form.Row>
           {!isReadOnly && (
             <Form.Row>
-              <Form.Label className="col-md-12" style={{ textAlign: 'left' }}>
-                Notes:
-              </Form.Label>
-              <TextArea outerClassName="col-md-8" field="note" />
+              <TextArea
+                field="note"
+                label="Notes"
+                className="col-md-6"
+                outerClassName="col-md-10"
+              />
             </Form.Row>
           )}
         </Col>
