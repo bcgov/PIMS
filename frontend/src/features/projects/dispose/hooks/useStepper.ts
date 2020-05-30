@@ -35,7 +35,7 @@ export const isStatusCompleted = (
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
   return !!(
-    furthestCompletedStep?.sortOrder && furthestCompletedStep?.sortOrder >= status.sortOrder
+    furthestCompletedStep?.sortOrder && furthestCompletedStep?.sortOrder > status.sortOrder
   );
 };
 
@@ -49,9 +49,9 @@ export const isStatusNavigable = (
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
   if (!furthestCompletedStep) {
-    return status.sortOrder === 0;
+    return false;
   }
-  return status.sortOrder <= furthestCompletedStep.sortOrder + 1;
+  return status.sortOrder <= furthestCompletedStep.sortOrder;
 };
 
 const getLastCompletedStatusId = (
@@ -64,8 +64,8 @@ const getLastCompletedStatusId = (
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
   if (
-    currentStatus.sortOrder > (furthestCompletedStep?.sortOrder ?? 0) ||
-    currentStatus.sortOrder === 0
+    currentStatus.sortOrder >= (furthestCompletedStep?.sortOrder ?? 0) ||
+    furthestCompletedStep?.sortOrder === 0
   ) {
     return currentStatus.sortOrder + 1;
   }
@@ -93,7 +93,6 @@ const useStepper = () => {
     getNextStep: () => getNextWorkflowStatus(workflowStatuses, currentStatus),
     nextStep: (): boolean => {
       const nextStatus = getNextWorkflowStatus(workflowStatuses, currentStatus);
-      console.log(nextStatus);
       if (!nextStatus) {
         return false;
       }
@@ -106,6 +105,10 @@ const useStepper = () => {
     canGoToStatus: (status: IStatus) => isStatusNavigable(workflowStatuses, status, project),
     getLastCompletedStatusId: () =>
       getLastCompletedStatusId(workflowStatuses, currentStatus, project),
+    goToStep: (statusId: number) =>
+      history.push(
+        `/dispose${workflowStatuses[statusId].route}?projectNumber=${project.projectNumber}`,
+      ),
   };
 };
 export default useStepper;

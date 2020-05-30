@@ -1,0 +1,16 @@
+.ReviewProjectStep {
+  button.edit {
+    display: block;
+    float: right;
+    margin-top: 20px;
+  }
+  .review-header {
+    display: flex;
+  }
+  .review-buttons {
+    text-align: right;
+    button {
+      margin-left: 10px;
+    }
+  }
+}

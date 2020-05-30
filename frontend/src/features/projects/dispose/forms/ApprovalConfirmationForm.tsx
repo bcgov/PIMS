@@ -18,10 +18,7 @@ const ApprovalConfirmationForm = ({ isReadOnly }: IStepProps) => {
     <Fragment>
       <h3>Approval</h3>
       <Form.Row>
-        <Check outerClassName="col-md-1" field={fieldName} />
-        <Form.Label column md={11}>
-          {label}
-        </Form.Label>
+        <Check field={fieldName} postLabel={label} required disabled={isReadOnly} />
       </Form.Row>
     </Fragment>
   );

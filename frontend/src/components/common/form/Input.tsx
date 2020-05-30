@@ -68,30 +68,36 @@ export const Input: React.FC<InputProps> = ({
       controlId={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
     >
-      {!!label && <Form.Label>{label}</Form.Label>}
-      {!!required && <span className="required">*</span>}
-      <Form.Control
-        as={asElement}
-        name={field}
-        className={className}
-        required={required}
-        disabled={disabled}
-        custom={custom}
-        isInvalid={!!touch && !!error}
-        {...rest}
-        isValid={false}
-        value={pattern ? restricted : rest.value ?? value}
-        placeholder={placeholder}
-        onBlur={(e: any) => {
-          if (onBlurFormatter) {
-            pattern && setRestricted(onBlurFormatter(value));
-            setFieldValue(field, onBlurFormatter(value));
-          }
-          handleBlur(e);
-        }}
-        onChange={pattern ? handleRestrictedChange : handleChange}
-      />
-      <DisplayError field={field} />
+      {!!label && (
+        <Form.Label>
+          {label}
+          {!!required && <span className="required">*</span>}
+        </Form.Label>
+      )}
+      <span className={className}>
+        <Form.Control
+          as={asElement}
+          name={field}
+          required={required}
+          disabled={disabled}
+          custom={custom}
+          isInvalid={!!touch && !!error}
+          {...rest}
+          isValid={false}
+          value={pattern ? restricted : rest.value ?? value}
+          placeholder={placeholder}
+          onBlur={(e: any) => {
+            if (onBlurFormatter) {
+              pattern && setRestricted(onBlurFormatter(value));
+              setFieldValue(field, onBlurFormatter(value));
+            }
+            handleBlur(e);
+          }}
+          onChange={pattern ? handleRestrictedChange : handleChange}
+        />
+        {!label && !!required && <span className="required">*</span>}
+        <DisplayError field={field} />
+      </span>
     </Form.Group>
   );
 };

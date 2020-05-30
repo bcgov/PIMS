@@ -1,4 +1,4 @@
-.ProjectDisposeView {
+.SelectProjectProperties {
   background-color: var(--light);
   display: flex;
   flex-direction: column;
@@ -33,6 +33,9 @@
     display: flex;
     flex-direction: row;
     padding-bottom: 2rem;
+    h3 {
+      padding: 0;
+    }
   }
 
   .ScrollContainer {
@@ -49,5 +52,9 @@
 
   .DisposeForm {
     padding: 1rem 3rem;
+  }
+
+  .invalid-feedback {
+    text-align: right;
   }
 }

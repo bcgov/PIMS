@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
+import useStepper from './hooks/useStepper';
 
 const StepActionsWrapper = styled.div`
   width: 100%;
@@ -36,10 +37,12 @@ export const StepActions: React.FC<IStepActionsProps> = ({
   nextDisabled,
   saveDisabled,
 }) => {
+  const { getNextStep } = useStepper();
+  const nextLabel = getNextStep() ? 'Next' : 'Submit';
   return (
     <StepActionsWrapper>
       <Button disabled={nextDisabled} style={{ marginLeft: 10 }} onClick={onNext}>
-        Next
+        {nextLabel}
       </Button>
       <Button disabled={saveDisabled} onClick={onSave}>
         Save

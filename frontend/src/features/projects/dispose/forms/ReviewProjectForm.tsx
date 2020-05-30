@@ -1,5 +1,11 @@
 import React, { Fragment } from 'react';
-import { projectWorkflowComponents } from '..';
+import './ReviewProjectForm.scss';
+import UpdateInfoForm from './UpdateInfoForm';
+import DocumentationForm from './DocumentationForm';
+import ApprovalConfirmationForm from './ApprovalConfirmationForm';
+import ProjectDraftForm from './ProjectDraftForm';
+import { Form } from 'react-bootstrap';
+import { TextArea } from 'components/common/form';
 
 /**
  * Form component of ReviewProjectForm.
@@ -8,12 +14,16 @@ import { projectWorkflowComponents } from '..';
 const ReviewProjectForm = () => {
   return (
     <Fragment>
-      <h3>Review</h3>
-      {projectWorkflowComponents
-        .slice(0, projectWorkflowComponents.length - 1) //don't include the last component (this component).
-        .map(wfc => (
-          <wfc.component isReadOnly={true} />
-        ))}
+      <ProjectDraftForm isReadOnly={true} />
+      <UpdateInfoForm isReadOnly={true} />
+      <DocumentationForm isReadOnly={true} />
+      <ApprovalConfirmationForm isReadOnly={true} />
+      <Form.Row>
+        <Form.Label className="col-md-12" style={{ textAlign: 'left' }}>
+          Notes:
+        </Form.Label>
+        <TextArea disabled={true} outerClassName="col-md-8" field="note" />
+      </Form.Row>
     </Fragment>
   );
 };

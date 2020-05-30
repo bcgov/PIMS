@@ -1,0 +1,15 @@
+.ProjectDraftForm {
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .form-label {
+    flex: 0 0 16.7%;
+    max-width: 16.7%;
+  }
+
+  .form-row .form-group {
+    display: flex;
+  }
+}

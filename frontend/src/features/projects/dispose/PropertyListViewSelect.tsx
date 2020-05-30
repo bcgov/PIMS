@@ -103,7 +103,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       {!disabled && (
         <div className="ScrollContainer">
           <Container fluid className="TableToolbar">
-            <h3 className="mr-auto">Select 1 or more Properties for the Project</h3>
+            <h3 className="mr-auto">Available Properties</h3>
             <Button
               onClick={() => {
                 setProjectProperties(
@@ -131,7 +131,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       )}
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h3 className="mr-auto">Properties In Project</h3>
+          <h3 className="mr-auto">Properties in the Project</h3>
           <Button
             onClick={() => {
               setRemovedProperties([]);

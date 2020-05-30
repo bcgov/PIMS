@@ -292,7 +292,10 @@ namespace Pims.Dal.Services
                 }
             }
 
-            
+            // Remove any properties from this project that are no longer associated.
+            existingProject.Properties.RemoveAll(existingProperty =>
+                !project.Properties.Any(property => existingProperty.Id == property.Id && existingProperty.ProjectNumber == property.ProjectNumber));
+
             foreach (var task in project.Tasks)
             {
                 var existingProjectTask = existingProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
