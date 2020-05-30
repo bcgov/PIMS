@@ -80,6 +80,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             disabled={true}
             id="input-address.provinceId"
             name="address.provinceId"
+            onBlur={[Function]}
             onChange={[Function]}
             value="2"
           >
@@ -316,15 +317,17 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         <div
           className="col-md-10 form-group"
         >
-          <input
-            className="form-control"
-            disabled={true}
-            id="input-projectNumber"
-            name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            value="projectNumber"
-          />
+          <span>
+            <input
+              className="form-control"
+              disabled={true}
+              id="input-projectNumber"
+              name="projectNumber"
+              onBlur={[Function]}
+              onChange={[Function]}
+              value="projectNumber"
+            />
+          </span>
         </div>
       </div>
       <div
@@ -416,18 +419,22 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           className="col-md-10 form-group"
         >
           <div
-            className="form-check"
+            className="check-field"
           >
-            <input
-              className="form-check-input position-static"
-              defaultChecked={true}
-              disabled={false}
-              id="input-transferLeaseOnSale"
-              name="transferLeaseOnSale"
-              onChange={[Function]}
-              type="checkbox"
-              value={true}
-            />
+            <div
+              className="form-check"
+            >
+              <input
+                className="form-check-input position-static"
+                defaultChecked={true}
+                disabled={false}
+                id="input-transferLeaseOnSale"
+                name="transferLeaseOnSale"
+                onChange={[Function]}
+                type="checkbox"
+                value={true}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -528,16 +535,20 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           className="form-group"
         >
           <div
-            className="col-md-10 form-check"
+            className="check-field"
           >
-            <input
-              className="form-check-input position-static"
-              disabled={false}
-              id="input-sensitiveBuilding"
-              name="sensitiveBuilding"
-              onChange={[Function]}
-              type="checkbox"
-            />
+            <div
+              className="col-md-10 form-check"
+            >
+              <input
+                className="form-check-input position-static"
+                disabled={false}
+                id="input-sensitiveBuilding"
+                name="sensitiveBuilding"
+                onChange={[Function]}
+                type="checkbox"
+              />
+            </div>
           </div>
         </div>
       </div>

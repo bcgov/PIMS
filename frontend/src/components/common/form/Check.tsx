@@ -1,4 +1,5 @@
 import React from 'react';
+import './Check.scss';
 import { Form, FormCheckProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -10,8 +11,10 @@ type RequiredAttributes = {
 };
 
 type OptionalAttributes = {
-  /** The form component label */
+  /** The form component label to display before the checkbox */
   label?: string;
+  /** The form component label to display after the checkbox */
+  postLabel?: string;
   /** The underlying HTML element to use when rendering the FormControl */
   as?: React.ElementType;
   /** Short hint that describes the expected value of an <input> element */
@@ -37,6 +40,7 @@ export type CheckProps = FormCheckProps & OptionalAttributes & RequiredAttribute
 export const Check: React.FC<CheckProps> = ({
   field,
   label,
+  postLabel,
   as: is, // `as` is reserved in typescript
   placeholder,
   className,
@@ -56,21 +60,24 @@ export const Check: React.FC<CheckProps> = ({
       controlId={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
     >
-      {!!label && <Form.Label>{label}</Form.Label>}
-      <Form.Check
-        as={asElement}
-        name={field}
-        className={className}
-        required={required}
-        disabled={disabled}
-        custom={custom}
-        defaultChecked={getIn(values, field)}
-        isInvalid={!!touch && !!error}
-        {...rest}
-        value={getIn(values, field)}
-        placeholder={placeholder}
-        onChange={handleChange}
-      />
+      <div className="check-field">
+        {!!label && <Form.Label>{label}</Form.Label>}
+        <Form.Check
+          as={asElement}
+          name={field}
+          className={className}
+          required={required}
+          disabled={disabled}
+          custom={custom}
+          defaultChecked={getIn(values, field)}
+          isInvalid={!!touch && !!error}
+          {...rest}
+          value={getIn(values, field)}
+          placeholder={placeholder}
+          onChange={handleChange}
+        />
+        {!!postLabel && <Form.Label>{postLabel}</Form.Label>}
+      </div>
       <DisplayError field={field} />
     </Form.Group>
   );

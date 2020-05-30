@@ -5,6 +5,8 @@ import { IStepProps } from '../interfaces';
 import useStepForm from './useStepForm';
 import useStepper from '../hooks/useStepper';
 import ApprovalConfirmationForm from '../forms/ApprovalConfirmationForm';
+import { ApprovalConfirmationStepSchema } from '../forms/disposalYupSchema';
+import StepErrorSummary from './StepErrorSummary';
 
 /**
  * Single checkbox allowing user to confirm that they have permission to submit.
@@ -12,17 +14,28 @@ import ApprovalConfirmationForm from '../forms/ApprovalConfirmationForm';
  */
 const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit } = useStepForm();
-  const { project } = useStepper();
-  const initialValues = { ...project, confirmation: false };
-  return (
+  const { project, projectStatusCompleted, currentStatus } = useStepper();
+  let confirmation = false;
+  if (currentStatus && projectStatusCompleted(currentStatus)) {
+    confirmation = true;
+  }
+  const initialValues = { ...project, confirmation };
+  return currentStatus ? (
     <Container fluid className="ApprovalConfirmationStep">
-      <Formik initialValues={initialValues} innerRef={formikRef} onSubmit={onSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={ApprovalConfirmationStepSchema}
+        innerRef={formikRef}
+        onSubmit={onSubmit}
+        enableReinitialize={true}
+      >
         <Form>
           <ApprovalConfirmationForm isReadOnly={isReadOnly} />
+          <StepErrorSummary />
         </Form>
       </Formik>
     </Container>
-  );
+  ) : null;
 };
 
 export default ApprovalConfirmationStep;

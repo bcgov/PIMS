@@ -1,4 +1,4 @@
-import './SelectProjectProperties.scss';
+import './SelectProjectPropertiesStep.scss';
 
 import React, { useMemo, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import * as API from 'constants/API';
 import _ from 'lodash';
 import useStepper from '../hooks/useStepper';
 import StepErrorSummary from './StepErrorSummary';
+import { SelectProjectPropertiesStepYupSchema } from '../forms/disposalYupSchema';
 
 /**
  * Form to display two property list views, one for searching/selecting and one to show
@@ -62,6 +63,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
 
   return isReadOnly ? null : (
     <Container fluid className="SelectProjectProperties">
+      <h3 className="mr-auto">Select 1 or more Properties for the Project</h3>
       {!isReadOnly && (
         <Container fluid className="filter-container border-bottom">
           <Container className="px-0">
@@ -73,7 +75,14 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
           </Container>
         </Container>
       )}
-      <Formik initialValues={project} innerRef={formikRef} onSubmit={onSubmit}>
+      <Formik
+        initialValues={project}
+        innerRef={formikRef}
+        onSubmit={onSubmit}
+        validateOnChange={false}
+        validateOnBlur={true}
+        validationSchema={SelectProjectPropertiesStepYupSchema}
+      >
         {() => (
           <Form>
             <PropertyListViewSelect

@@ -15,7 +15,6 @@ const useStepForm = () => {
     const apiValues = _.cloneDeep(values);
     let response: any;
     apiValues.statusId = getLastCompletedStatusId();
-    console.log(apiValues.statusId);
     if (!apiValues.projectNumber) {
       response = dispatch(createProject(apiValues));
     } else {
@@ -31,8 +30,9 @@ const useStepForm = () => {
       .finally(() => {
         dispatch(clear(ProjectActions.ADD_PROJECT));
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
+        actions.setSubmitting(false);
       });
-    actions.setSubmitting(false);
+    return response;
   };
   return { onSubmit };
 };

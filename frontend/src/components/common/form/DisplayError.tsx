@@ -13,5 +13,7 @@ type DisplayErrorProps = {
 export const DisplayError: React.FC<DisplayErrorProps> = ({ field }) => {
   const { errors } = useFormikContext();
   const error = !!field ? getIn(errors, field) : null;
-  return !!error ? <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback> : null;
+  return !!error && typeof error === 'string' ? (
+    <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+  ) : null;
 };

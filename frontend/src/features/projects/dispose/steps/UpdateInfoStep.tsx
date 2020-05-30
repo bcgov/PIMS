@@ -1,5 +1,3 @@
-import './SelectProjectProperties.scss';
-
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik } from 'formik';
@@ -9,6 +7,7 @@ import useStepForm from './useStepForm';
 import useStepper from '../hooks/useStepper';
 import StepErrorSummary from './StepErrorSummary';
 import UpdateInfoForm from '../forms/UpdateInfoForm';
+import { UpdateInfoStepYupSchema } from '../forms/disposalYupSchema';
 
 /**
  * Update property information already associated to this project on a property list view.
@@ -24,7 +23,12 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
 
   return (
     <Container fluid className="UpdateInfoStep">
-      <Formik initialValues={project} innerRef={formikRef} onSubmit={onSubmit}>
+      <Formik
+        initialValues={project}
+        validationSchema={UpdateInfoStepYupSchema}
+        innerRef={formikRef}
+        onSubmit={onSubmit}
+      >
         <Form>
           <UpdateInfoForm isReadOnly={isReadOnly} />
           <StepErrorSummary />

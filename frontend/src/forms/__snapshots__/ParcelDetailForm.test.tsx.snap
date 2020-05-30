@@ -62,15 +62,17 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-pid"
-                    name="pid"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value=""
-                  />
+                  <span>
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-pid"
+                      name="pid"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </span>
                 </div>
               </div>
               <p
@@ -118,16 +120,18 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-pin"
-                    name="pin"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    type="number"
-                    value=""
-                  />
+                  <span>
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-pin"
+                      name="pin"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      type="number"
+                      value=""
+                    />
+                  </span>
                 </div>
               </div>
               <div
@@ -141,15 +145,17 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-projectNumber"
-                    name="projectNumber"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value=""
-                  />
+                  <span>
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-projectNumber"
+                      name="projectNumber"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </span>
                 </div>
               </div>
             </div>
@@ -221,6 +227,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     disabled={true}
                     id="input-address.provinceId"
                     name="address.provinceId"
+                    onBlur={[Function]}
                     onChange={[Function]}
                     value="1"
                   >
@@ -429,18 +436,22 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   className="col-md-10 form-group"
                 >
                   <div
-                    className="form-check"
+                    className="check-field"
                   >
-                    <input
-                      className="form-check-input position-static"
-                      defaultChecked={1}
-                      disabled={true}
-                      id="input-statusId"
-                      name="statusId"
-                      onChange={[Function]}
-                      type="checkbox"
-                      value={1}
-                    />
+                    <div
+                      className="form-check"
+                    >
+                      <input
+                        className="form-check-input position-static"
+                        defaultChecked={1}
+                        disabled={true}
+                        id="input-statusId"
+                        name="statusId"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value={1}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -552,18 +563,22 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   className="col-md-10 form-group"
                 >
                   <div
-                    className="form-check"
+                    className="check-field"
                   >
-                    <input
-                      className="form-check-input position-static"
-                      defaultChecked={false}
-                      disabled={true}
-                      id="input-isSensitive"
-                      name="isSensitive"
-                      onChange={[Function]}
-                      type="checkbox"
-                      value={false}
-                    />
+                    <div
+                      className="form-check"
+                    >
+                      <input
+                        className="form-check-input position-static"
+                        defaultChecked={false}
+                        disabled={true}
+                        id="input-isSensitive"
+                        name="isSensitive"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value={false}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
