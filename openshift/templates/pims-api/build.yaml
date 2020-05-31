@@ -50,6 +50,7 @@ objects:
           from:
             kind: ImageStreamTag
             name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
+          # scripts: https://raw.githubusercontent.com/bcgov/PIMS/dev/.s2i/bin
           env:
             - name: DOTNET_CONFIGURATION
               value: ${DOTNET_CONFIGURATION}
