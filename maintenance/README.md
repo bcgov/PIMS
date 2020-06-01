@@ -34,7 +34,7 @@ For the sake of simplicity all examples will use jcxjin-test.
 
    ```
    oc patch route pims-app-test -n jcxjin-test -p \
-       '{ "spec": { "to": { "name": "proxy-caddy", "port": { "targetPort": "2015-tcp" }}}'
+       '{ "spec": { "to": { "name": "proxy-caddy" }, "port": { "targetPort": "2015-tcp" }}}'
    oc patch route proxy-caddy -n jcxjin-test -p \
        '{ "spec": { "to": { "name": "pims-app-test" }, "port": { "targetPort": "8080-tcp" }}}'
    ```
