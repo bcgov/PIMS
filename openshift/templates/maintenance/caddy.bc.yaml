@@ -14,9 +14,11 @@ parameters:
     description: URL to GitHub repo with static maintenance page content
     required: false
     value: https://github.com/bcgov/pims.git
-  - name: GIT_BRANCH
-    displayName: GIT_BRANCH
-    description: Branch related to GitHub repo
+  - name: GIT_REF
+    displayName: GIT_REF
+    description:
+      Set this to a branch name, tag or other ref of your repository if you
+      are not using the default branch.
     required: false
     value: dev
   - name: IMG_SRC
@@ -55,7 +57,7 @@ objects:
         contextDir: maintenance
         git:
           uri: "${GIT_REPO}"
-          ref: "${GIT_BRANCH}"
+          ref: "${GIT_REF}"
       strategy:
         type: Source
         sourceStrategy:

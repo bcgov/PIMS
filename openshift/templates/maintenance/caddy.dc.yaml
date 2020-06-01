@@ -2,26 +2,65 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: "${APP_NAME}"
+  name: proxy-caddy
 parameters:
   - name: NAME
     displayName: Name
     description: The name used for deployments in openshift.
     required: false
     value: proxy-caddy
-  - name: BUILD_PROJECT
-    displayName: Build project
-    description: The openshift project hosting the maintenance page build.
-    required: false
-    value: jcxjin-tools
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the application.
+    required: true
+    value: jcxjin
+  - name: ENV_NAME
+    displayName: Environment name
+    description: The name for this environment [dev, test, prod]
+    required: true
+    value: dev
+
+  - name: APP_DOMAIN
+    displayName: Application Hostname
+    description:
+      The exposed hostname that will route to the the React frontend, if left blank a
+      value will be defaulted.
+    value: proxy-caddy-dev.pathfinder.gov.bc.ca
+  - name: APP_PORT
+    displayName: Application Port
+    description: The port used to communicate with the Pod
+    value: "2015"
 objects:
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${NAME}
+        app: ${NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${APP_DOMAIN}
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${NAME}
+        weight: 100
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: ${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       creationTimestamp:
       labels:
-        app: "${NAME}"
+        name: ${NAME}
+        app: ${NAME}
+        env: ${ENV_NAME}
     spec:
       strategy:
         type: Rolling
@@ -42,7 +81,7 @@ objects:
               - "${NAME}"
             from:
               kind: ImageStreamTag
-              namespace: "${BUILD_PROJECT}"
+              namespace: "${PROJECT_NAMESPACE}-tools"
               name: "${NAME}:latest"
       replicas: 1
       revisionHistoryLimit: 10
@@ -77,10 +116,13 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${NAME}"
+      name: ${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       creationTimestamp:
       labels:
-        app: "${NAME}"
+        name: ${NAME}
+        app: ${NAME}
+        env: ${ENV_NAME}
     spec:
       ports:
         - name: 2015-tcp
