@@ -57,7 +57,7 @@ export const Input: React.FC<InputProps> = ({
   const touch = getIn(touched, field);
   const value = getIn(values, field);
   const asElement: any = is || 'input';
-  const [restricted, setRestricted] = useState('');
+  const [restricted, setRestricted] = useState(value);
   const handleRestrictedChange = (event: any) => {
     let val = event.target.value;
     pattern?.test(val) && setRestricted(val);
@@ -84,7 +84,7 @@ export const Input: React.FC<InputProps> = ({
           isInvalid={!!touch && !!error}
           {...rest}
           isValid={false}
-          value={pattern && !value ? restricted : rest.value ?? value}
+          value={pattern ? restricted : rest.value ?? value}
           placeholder={placeholder}
           onBlur={(e: any) => {
             if (onBlurFormatter) {
