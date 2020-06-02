@@ -146,6 +146,11 @@ objects:
                     secretKeyRef:
                       name: "${DATABASE_DEPLOYMENT_NAME}"
                       key: "${DATABASE_PASSWORD_KEY_NAME}"
+                - name: MSSQL_SA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${DATABASE_DEPLOYMENT_NAME}"
+                      key: "${DATABASE_PASSWORD_KEY_NAME}"
                 - name: FTP_URL
                   valueFrom:
                     secretKeyRef:
@@ -462,9 +467,9 @@ parameters:
     displayName: Resources Memory Request
     description: The resources Memory request (in Mi, Gi, etc) for this build.
     required: true
-    value: 256MiB
+    value: 256Mi
   - name: MEMORY_LIMIT
     displayName: Resources Memory Limit
     description: The resources Memory limit (in Mi, Gi, etc) for this build.
     required: true
-    value: 1GiB
+    value: 1Gi
