@@ -1,0 +1,374 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Update Info Form Matches Snapshot 1`] = `
+<form
+  className=""
+>
+  <div
+    className="form-row"
+  >
+    <h3
+      className="col-md-10"
+    >
+      Properties in the Project
+    </h3>
+    <span
+      className="col-md-2"
+    >
+      <button
+        className="edit btn btn-primary"
+        disabled={true}
+        onClick={[Function]}
+        type="button"
+      >
+        Edit
+      </button>
+    </span>
+  </div>
+  <div
+    className="form-row"
+  >
+    <label
+      className="form-label col-form-label col-md-1"
+    >
+      Tier
+    </label>
+    <div
+      className="col-md-2 form-group"
+    >
+      <select
+        className="form-select form-control"
+        id="input-tierLevelId"
+        name="tierLevelId"
+        onBlur={[Function]}
+        onChange={[Function]}
+        value={1}
+      >
+        <option
+          value=""
+        >
+          Must Select One
+        </option>
+        <option
+          className="option"
+          value="1"
+        >
+          Tier 1
+        </option>
+        <option
+          className="option"
+          value="2"
+        >
+          Tier 2
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    className="container-fluid"
+  >
+    <div
+      className="ScrollContainer"
+    >
+      <div
+        className="table"
+        role="table"
+        style={
+          Object {
+            "minWidth": undefined,
+          }
+        }
+      >
+        <div
+          className="thead thead-light"
+        >
+          <div
+            className="tr"
+            role="row"
+            style={
+              Object {
+                "display": "flex",
+                "flex": "1 0 auto",
+                "minWidth": "360px",
+              }
+            }
+          >
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Agency
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Sub Agency
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Property Name
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "140 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "140px",
+                }
+              }
+            >
+              Classification
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Street Address
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              City
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Municipality
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Assessed Value
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Netbook Value
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              Estimated Value
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "60 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "60px",
+                }
+              }
+            >
+              Type
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "80 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "80px",
+                }
+              }
+            >
+              Lot Size (in ha)
+            </div>
+          </div>
+        </div>
+        <div
+          className="no-rows-message"
+        >
+          No rows to display
+        </div>
+      </div>
+      <div
+        className="table-toolbar"
+      />
+    </div>
+  </div>
+  <div
+    className="notes form-row"
+  >
+    <label
+      className="col-md-12 form-label"
+    >
+      Notes:
+    </label>
+    <div
+      className="col-md-8 form-group"
+    >
+      <span
+        className=""
+      >
+        <textarea
+          className="form-control"
+          id="input-note"
+          name="note"
+          onBlur={[Function]}
+          onChange={[Function]}
+        />
+      </span>
+    </div>
+  </div>
+</form>
+`;

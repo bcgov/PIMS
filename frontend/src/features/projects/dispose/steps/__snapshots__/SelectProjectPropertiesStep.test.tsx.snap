@@ -908,22 +908,19 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="form-row"
+      className="notes form-row"
     >
       <label
         className="col-md-12 form-label"
-        style={
-          Object {
-            "textAlign": "left",
-          }
-        }
       >
         Notes:
       </label>
       <div
         className="col-md-8 form-group"
       >
-        <span>
+        <span
+          className=""
+        >
           <textarea
             className="form-control"
             id="input-note"
