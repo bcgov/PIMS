@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stepper renders correctly based off of workflow 1`] = `
+<div
+  className="ProjectDisposeView container-fluid"
+>
+  <h1>
+    Dispose Project
+  </h1>
+  <div
+    className="bs-stepper"
+  >
+    <h6 />
+    <div
+      className="bs-stepper-header"
+    >
+      <div
+        className="step active"
+        data-target="stepper-0"
+      >
+        <button
+          className="step-trigger"
+          disabled={false}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            1
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Draft
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    className="step-content container-fluid"
+  >
+    <div
+      className="sc-AxjAm jGlSVf"
+    >
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+          }
+        }
+        type="button"
+      >
+        Next
+      </button>
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+`;
