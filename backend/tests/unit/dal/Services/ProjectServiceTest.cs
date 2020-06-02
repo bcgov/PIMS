@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Pims.Core.Comparers;
@@ -579,7 +580,7 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
+            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
         }
 
@@ -600,11 +601,12 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Description = "A new description";
-            var result = service.Update(projectToUpdate);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
+            projectToUpdate.Should().BeEquivalentTo(result, options => options.Excluding(x => x.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
         }
 
@@ -630,7 +632,7 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
+            projectToUpdate.Should().BeEquivalentTo(result);
             Assert.Single(result.Tasks);
         }
 
@@ -644,6 +646,7 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
+           
             init.SaveChanges(parcel);
 
             var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
@@ -652,17 +655,25 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(parcel);
-            var result = service.Update(projectToUpdate);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
             Assert.Single(result.Properties);
+            result.Should().BeEquivalentTo(projectToUpdate, options => options
+            .IgnoringCyclicReferences()
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Parcel.Projects")
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
+            .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
         }
 
+        /**
+         * Only financials and classifications will be updated by the service. Other updates should be ignored.
+         */
         [Fact]
-        public void Update_UpdateParcel()
+        public void Update_UpdateParcel_IgnoredField()
         {
             // Arrange
             var helper = new TestHelper();
@@ -680,14 +691,49 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Properties.First().Parcel.Description = "updated";
-            var result = service.Update(projectToUpdate);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
             Assert.Single(result.Properties);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
-            Assert.Equal("updated", result.Properties.First().Parcel.Description);
+            Assert.Equal("description-1", result.Properties.First().Parcel.Description);
+        }
+
+        /**
+         * Classification and financials are the only supported update fields
+         */
+        [Fact]
+        public void Update_UpdateParcel_Supported()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            var parcelEvaluation = init.CreateParcelEvaluation(parcel.Id);
+            project.AddProperty(parcel);
+            init.SaveChanges(parcel);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Properties.First().Parcel.ClassificationId = 2;
+            projectToUpdate.Properties.First().Parcel.Evaluations.Add(parcelEvaluation);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
+            Assert.Equal(2, result.Properties.First().Parcel.ClassificationId);
+            Assert.Equal(1, result.Properties.First().Parcel.Evaluations.Count);
         }
 
         [Fact]
@@ -709,17 +755,27 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(building);
-            var result = service.Update(projectToUpdate);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
             Assert.Single(result.Properties);
+            result.Should().BeEquivalentTo(projectToUpdate, options => options
+            .IgnoringCyclicReferences()
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Projects")
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Parcel")
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Agency.Parcels")
+            .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
+            .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
         }
 
+        /**
+         * Only financials and classifications will be updated by the service. Other updates should be ignored.
+         */
         [Fact]
-        public void Update_UpdateBuilding()
+        public void Update_UpdateBuilding_IgnoredField()
         {
             // Arrange
             var helper = new TestHelper();
@@ -738,14 +794,52 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Properties.First().Building.Description = "updated";
-            var result = service.Update(projectToUpdate);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(projectToUpdate, result);
             Assert.Single(result.Properties);
             Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
-            Assert.Equal("updated", result.Properties.First().Building.Description);
+            Assert.Equal("description-20", result.Properties.First().Building.Description);
+        }
+
+        /**
+         * Classification and financials are the only supported update fields
+         */
+        [Fact]
+        public void Update_UpdateBuilding_Supported()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1, project.Agency);
+            var building = init.CreateBuilding(parcel, 20);
+            var newClassification = init.PropertyClassifications.Find(2);
+            var parcelEvaluation = init.CreateBuildingEvaluation(building.Id);
+            project.AddProperty(building);
+            init.SaveChanges(building);
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Properties.First().Building.Classification = newClassification;
+            projectToUpdate.Properties.First().Building.ClassificationId = 2;
+            projectToUpdate.Properties.First().Building.Evaluations.Add(parcelEvaluation);
+            service.Update(projectToUpdate);
+            var result = service.Get(project.ProjectNumber);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result.Properties);
+            Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
+            Assert.Equal(2, result.Properties.First().Building.ClassificationId);
+            Assert.Equal(1, result.Properties.First().Building.Evaluations.Count);
         }
 
         [Fact]
