@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="container-fluid"
+>
+  <form
+    className=""
+    noValidate={true}
+    onSubmit={[Function]}
+  >
+    <button
+      className="edit btn btn-primary"
+      disabled={true}
+      onClick={[Function]}
+      type="button"
+    >
+      Edit
+    </button>
+    <div
+      className="ProjectDraftForm row"
+      style={
+        Object {
+          "textAlign": "left",
+        }
+      }
+    >
+      <div
+        className="col"
+      >
+        <div
+          className="form-row"
+        >
+          <div
+            className="required col-md-10 form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-projectNumber"
+            >
+              Project Number
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <span
+              className="col-md-2"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-projectNumber"
+                name="projectNumber"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="SPP-XXXXXX"
+                required={true}
+                value=""
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <div
+            className="required col-md-10 form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-name"
+            >
+              Name
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <span
+              className="col-md-3"
+            >
+              <input
+                className="form-control"
+                id="input-name"
+                name="name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                required={true}
+                value=""
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <div
+            className="col-md-10 form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-description"
+            >
+              Description
+            </label>
+            <span
+              className="col-md-5"
+            >
+              <input
+                className="form-control"
+                id="input-description"
+                name="description"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value=""
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <div
+            className="col-md-10 form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-note"
+            >
+              Notes
+            </label>
+            <span
+              className="col-md-6"
+            >
+              <textarea
+                className="form-control"
+                id="input-note"
+                name="note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value=""
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "textAlign": "right",
+        }
+      }
+    />
+  </form>
+</div>
+`;
