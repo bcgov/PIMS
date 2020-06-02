@@ -10,9 +10,13 @@ import { Form } from 'react-bootstrap';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
 const mockStore = configureMockStore([thunk]);
 const mockProject = { project: { tierLevelId: 1, properties: [] } };
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 const store = mockStore({
   ...mockProject,
   [reducerTypes.LOOKUP_CODE]: {
