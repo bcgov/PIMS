@@ -3,10 +3,7 @@ import { Container } from 'react-bootstrap';
 import { Formik, setIn } from 'formik';
 import { Form } from 'components/common/form';
 import { IStepProps, IProjectTask, IProject } from '../interfaces';
-import useStepForm from './useStepForm';
-import useStepper from '../hooks/useStepper';
-import StepErrorSummary from './StepErrorSummary';
-import DocumentationForm from '../forms/DocumentationForm';
+import { useStepForm, useStepper, DocumentationForm, StepErrorSummary } from '..';
 
 const handleValidate = (values: IProject) => {
   return values.tasks.reduce((errors: any, task: IProjectTask, index: number) => {

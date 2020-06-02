@@ -121,19 +121,18 @@ exports[`renders correctly 1`] = `
           </div>
         </div>
         <div
-          className="form-row"
+          className="notes form-row"
         >
-          <div
-            className="col-md-10 form-group"
+          <label
+            className="col-md-12 form-label"
           >
-            <label
-              className="form-label"
-              htmlFor="input-note"
-            >
-              Notes
-            </label>
+            Notes:
+          </label>
+          <div
+            className="col-md-8 form-group"
+          >
             <span
-              className="col-md-6"
+              className="col-md-12"
             >
               <textarea
                 className="form-control"

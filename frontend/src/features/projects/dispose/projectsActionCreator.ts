@@ -1,13 +1,10 @@
-import { saveProjectTasks } from './slices/projectTasksSlice';
 import { ProjectActions } from '../../../constants/actionTypes';
 import { handleAxiosResponse } from '../../../utils/utils';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
-import { saveProjectStatus } from './slices/projectWorkflowSlice';
-import { IProject } from './interfaces';
-import { saveProject } from './slices/projectSlice';
 import { toApiProject } from './projectConverter';
+import { saveProjectStatus, saveProjectTasks, saveProject, IProject } from '.';
 
 export const fetchProjectWorkflow = () => (dispatch: Function) => {
   const axiosResponse = CustomAxios()

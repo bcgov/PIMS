@@ -5,7 +5,7 @@ import React from 'react';
 import { Column, CellProps } from 'react-table';
 import { Image } from 'react-bootstrap';
 import { formatMoney, formatNumber } from 'utils';
-import { IProperty } from './interfaces';
+import { IProperty } from '../interfaces';
 import { useFormikContext } from 'formik';
 import { FastCurrencyInput, FastSelect } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';

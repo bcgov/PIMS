@@ -6,12 +6,12 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { IFilterBarState, IProperty } from '.';
+import { IFilterBarState, IProperty } from '..';
 import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
 import { getColumns } from './columns';
 import { Table } from 'components/Table';
-import useTable from './hooks/useTable';
+import useTable from '../hooks/useTable';
 
 type RequiredAttributes = {
   /** The field name */

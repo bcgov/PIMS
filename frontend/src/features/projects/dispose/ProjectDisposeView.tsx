@@ -5,15 +5,11 @@ import { match as Match, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProject, createProject } from 'features/projects/dispose/projectsActionCreator';
 import { RootState } from 'reducers/rootReducer';
-import { IProject } from '.';
+import { IProject, initialValues, saveProject, StepContextProvider, useStepper } from '.';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
-import { StepContextProvider } from './hooks/stepperContext';
-import ProjectDisposeLayout from './ProjectDisposeLayout';
 import queryString from 'query-string';
-import { initialValues } from 'pages/admin/access/constants/constants';
-import { saveProject } from './slices/projectSlice';
-import useStepper from './hooks/useStepper';
+import ProjectDisposeLayout from './ProjectDisposeLayout';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
