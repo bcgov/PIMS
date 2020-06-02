@@ -1,15 +1,16 @@
-import { IStatus } from './../slices/projectWorkflowSlice';
-import { initialValues } from '../../../../pages/admin/access/constants/constants';
 import { useEffect, useContext } from 'react';
 import { fetchProjectTasks, fetchProjectWorkflow } from '../projectsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IProject } from '..';
+import { IProject, initialValues, IStatus, StepperContext, IProjectWrapper } from '..';
 import _ from 'lodash';
-import { StepperContext } from './stepperContext';
-import { IProjectWrapper } from '../slices/projectSlice';
 import { useHistory } from 'react-router-dom';
 
+/**
+ * Get the status after the current status in this workflow. Return undefined if there is no next step.
+ * @param workflowStatuses A list of all relevant workflowStatuses
+ * @param currentStatus The current status within the above list
+ */
 export const getNextWorkflowStatus = (
   workflowStatuses: IStatus[],
   currentStatus: IStatus | undefined,
@@ -25,6 +26,12 @@ export const getNextWorkflowStatus = (
   return workflowStatuses[currentStatusIndex];
 };
 
+/**
+ * Determine if the status passed to this function has been completed in the given project for this workflow.
+ * @param workflowStatuses A list of all relevant workflowStatuses
+ * @param status The status to check for completion
+ * @param project The project that is going through this workflow
+ */
 export const isStatusCompleted = (
   workflowStatuses: IStatus[],
   status: IStatus,
@@ -39,6 +46,12 @@ export const isStatusCompleted = (
   );
 };
 
+/**
+ * Is the user allowed to navigate to this status, based on their current status within this project?
+ * @param workflowStatuses A list of all relevant workflowStatuses
+ * @param status The status to check for navigability
+ * @param project The project that is going through this workflow
+ */
 export const isStatusNavigable = (
   workflowStatuses: IStatus[],
   status: IStatus,
@@ -54,6 +67,12 @@ export const isStatusNavigable = (
   return status.sortOrder <= furthestCompletedStep.sortOrder;
 };
 
+/**
+ * Get the last completed status (step) for this project workflow.
+ * @param workflowStatuses A list of all relevant workflowStatuses
+ * @param currentStatus The current status within the above list
+ * @param project The project that is going through this workflow
+ */
 const getLastCompletedStatusId = (
   workflowStatuses: IStatus[],
   currentStatus: IStatus,
@@ -72,6 +91,10 @@ const getLastCompletedStatusId = (
   return project.statusId;
 };
 
+/**
+ * Hook providing status(step) logic methods as well as actual state.
+ * Used to synchronize stepper UI with step UI.
+ */
 const useStepper = () => {
   const dispatch = useDispatch();
   const history = useHistory();

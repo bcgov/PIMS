@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { Form, TextArea } from 'components/common/form';
+import { Form, Check } from 'components/common/form';
 import { IStepProps } from '../interfaces';
-import { ITask } from '../slices/projectTasksSlice';
-import { Check } from 'components/common/form/Check';
-import useStepper from '../hooks/useStepper';
+import { useStepper, ITask, ProjectNotes } from '..';
 
 /**
  * Form component of DocumentationForm.
@@ -33,12 +31,7 @@ const DocumentationForm = ({ isReadOnly }: IStepProps) => {
         </Form.Row>
       ))}
 
-      {!isReadOnly && (
-        <Form.Row>
-          <Form.Label className="col-md-12">Notes:</Form.Label>
-          <TextArea outerClassName="col-md-8" field="note" />
-        </Form.Row>
-      )}
+      {!isReadOnly && <ProjectNotes />}
     </Fragment>
   );
 };

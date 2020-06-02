@@ -3,9 +3,12 @@ import { IStatus } from '../slices/projectWorkflowSlice';
 
 export const StepperContext = createContext({} as any);
 
-// The Provider must be wrapping your app/page that will use UserContext
+/**
+ * React Context that tracks the user's current status/step within the dispose workflow.
+ * @param props
+ */
 export const StepContextProvider = (props: { children?: any }) => {
-  // Use State to keep the values. Initial values are obtained from UserContextProvider’s props.
+  // Use State to keep the values. Initial values are obtained from StepperContextProvider’s props.
   const [currentStatus, setCurrentStatus] = useState<IStatus>();
   // Make the context object (or array)
   const stepContext = { currentStatus, setCurrentStatus };
@@ -13,4 +16,4 @@ export const StepContextProvider = (props: { children?: any }) => {
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;
 };
 
-export const { Consumer: UserContextConsumer } = StepperContext;
+export const { Consumer: StepContextConsumer } = StepperContext;

@@ -10,7 +10,7 @@ export interface IProperty {
   pid: string;
   pin?: number;
   statusId: number;
-  status: string;
+  status?: string;
   classificationId: number;
   classification: string;
   description: string;
@@ -142,6 +142,18 @@ export interface IProjectProperty {
   buildingId?: number;
   building?: IApiProperty;
 }
+
+export const initialValues: IProject = {
+  projectNumber: '',
+  name: '',
+  note: '',
+  description: '',
+  properties: [],
+  tierLevelId: 1,
+  statusId: 0,
+  agencyId: 0,
+  tasks: [],
+};
 
 export interface IApiProject {
   projectNumber: string;

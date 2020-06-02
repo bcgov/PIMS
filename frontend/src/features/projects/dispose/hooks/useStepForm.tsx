@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { IProject } from '..';
 import { clear } from 'actions/genericActions';
 import _ from 'lodash';
-import useStepper from '../hooks/useStepper';
+import useStepper from './useStepper';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {

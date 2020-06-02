@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { FormControlProps, Container } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
-import { IProperty } from '.';
+import { IProperty } from '..';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';

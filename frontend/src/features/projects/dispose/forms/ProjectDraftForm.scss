@@ -4,12 +4,16 @@
     flex-wrap: wrap;
   }
 
-  .form-label {
+  .form-label:not(.col-md-12) {
     flex: 0 0 16.7%;
     max-width: 16.7%;
   }
 
   .form-row .form-group {
     display: flex;
+  }
+
+  span.col-md-12 {
+    padding: 0;
   }
 }
