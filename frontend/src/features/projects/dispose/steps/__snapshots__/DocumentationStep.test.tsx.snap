@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="DocumentationStep container-fluid"
+>
+  <form
+    className=""
+    noValidate={true}
+    onSubmit={[Function]}
+  >
+    <h3>
+      Documentation
+    </h3>
+    <div
+      className="form-row"
+    >
+      <div
+        className="required form-group"
+      >
+        <div
+          className="check-field"
+        >
+          <div
+            className="form-check"
+          >
+            <input
+              className="form-check-input position-static"
+              disabled={false}
+              id="input-tasks.0.isCompleted"
+              name="tasks.0.isCompleted"
+              onChange={[Function]}
+              required={true}
+              type="checkbox"
+            />
+          </div>
+          <label
+            className="form-label"
+            htmlFor="input-tasks.0.isCompleted"
+          >
+            Task #1
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <div
+        className="required form-group"
+      >
+        <div
+          className="check-field"
+        >
+          <div
+            className="form-check"
+          >
+            <input
+              className="form-check-input position-static"
+              disabled={false}
+              id="input-tasks.1.isCompleted"
+              name="tasks.1.isCompleted"
+              onChange={[Function]}
+              required={true}
+              type="checkbox"
+            />
+          </div>
+          <label
+            className="form-label"
+            htmlFor="input-tasks.1.isCompleted"
+          >
+            Task #2
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="col-md-12 form-label"
+      >
+        Notes:
+      </label>
+      <div
+        className="col-md-8 form-group"
+      >
+        <span>
+          <textarea
+            className="form-control"
+            id="input-note"
+            name="note"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "textAlign": "right",
+        }
+      }
+    />
+  </form>
+</div>
+`;

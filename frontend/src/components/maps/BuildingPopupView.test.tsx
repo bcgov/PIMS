@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { BuildingPopupView } from './BuildingPopupView';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { IAddress } from 'actions/parcelsActions';
+import { IAddress, IBuilding } from 'actions/parcelsActions';
 import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
 
@@ -11,7 +11,7 @@ jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
   keycloak: {
     userInfo: {
-      agencies: ['1'],
+      agencies: [1],
     },
     subject: 'test',
   },
@@ -19,8 +19,8 @@ jest.mock('@react-keycloak/web');
 
 const history = createMemoryHistory();
 
-const mockBuilding = (agencyId: string) => {
-  var building = {
+const mockBuilding = (agencyId: number) => {
+  var building: IBuilding = {
     id: 1,
     parcelId: 1,
     localId: 'string',
@@ -37,19 +37,21 @@ const mockBuilding = (agencyId: string) => {
     longitude: 50,
     buildingFloorCount: 3,
     buildingConstructionTypeId: 1,
-    buildingPredominateUseId: 'test',
+    buildingPredominateUseId: 0,
     buildingOccupantTypeId: 1,
+    classification: 'test',
+    classificationId: 2,
     occupantName: 'Mock Occupant',
     transferLeaseOnSale: true,
     buildingTenancy: 'string',
-    rentableArea: '1',
+    rentableArea: 1,
     agencyId: agencyId,
     evaluations: [],
     fiscals: [
       {
         fiscalYear: 2020,
         key: 'Key',
-        value: 'Value',
+        value: 2,
       },
     ],
   };
@@ -60,7 +62,7 @@ it('renders correctly', () => {
   const tree = renderer
     .create(
       <Router history={history}>
-        <BuildingPopupView building={mockBuilding('1')} />
+        <BuildingPopupView building={mockBuilding(1)} />
       </Router>,
     )
     .toJSON();
@@ -70,7 +72,7 @@ it('renders correctly', () => {
 it('displays update option when user belongs to buildings agency', () => {
   const { getByText } = render(
     <Router history={history}>
-      <BuildingPopupView building={mockBuilding('1')} />
+      <BuildingPopupView building={mockBuilding(1)} />
     </Router>,
   );
   expect(getByText(/Update/i));
@@ -79,7 +81,7 @@ it('displays update option when user belongs to buildings agency', () => {
 it('displays view option', () => {
   const { getByText } = render(
     <Router history={history}>
-      <BuildingPopupView building={mockBuilding('2')} />
+      <BuildingPopupView building={mockBuilding(2)} />
     </Router>,
   );
   expect(getByText(/View/i));
