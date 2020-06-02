@@ -6,14 +6,17 @@ import { useSelector } from 'react-redux';
 import { IStatus } from './slices/projectWorkflowSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
-import { ProjectWorkflowComponent, projectWorkflowComponents } from '.';
-import GeneratedDisposeStepper from './GeneratedDisposeStepper';
+import {
+  ProjectWorkflowComponent,
+  projectWorkflowComponents,
+  StepperContext,
+  useStepper,
+  StepActions,
+} from '.';
 import { FormikValues } from 'formik';
-import { StepActions } from './StepActions';
-import useStepper from './hooks/useStepper';
-import { StepperContext } from './hooks/stepperContext';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
+import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.

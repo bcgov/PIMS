@@ -1,9 +1,8 @@
 import './ProjectDraftForm.scss';
 import React, { Fragment, useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { Form, Input, TextArea } from 'components/common/form';
-
-import { IStepProps } from '../interfaces';
+import { Form, Input } from 'components/common/form';
+import { IStepProps, ProjectNotes } from '..';
 
 /**
  * Form component of ProjectDraftForm.
@@ -49,16 +48,7 @@ const ProjectDraftForm = ({ isReadOnly }: IStepProps) => {
               outerClassName="col-md-10"
             />
           </Form.Row>
-          {!isReadOnly && (
-            <Form.Row>
-              <TextArea
-                field="note"
-                label="Notes"
-                className="col-md-6"
-                outerClassName="col-md-10"
-              />
-            </Form.Row>
-          )}
+          {!isReadOnly && <ProjectNotes className="col-md-12" />}
         </Col>
       </Row>
     </Fragment>

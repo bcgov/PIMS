@@ -69,19 +69,7 @@ export const toFlatProject = (project?: IApiProject) => {
     };
     return property;
   });
-
-  const flatProject: IProject = {
-    projectNumber: project.projectNumber,
-    name: project.name,
-    description: project.description,
-    properties: flatProperties,
-    note: project.note,
-    agencyId: project.agencyId,
-    tierLevelId: project.tierLevelId,
-    tasks: project.tasks,
-    statusId: project.statusId,
-    rowVersion: project.rowVersion,
-  };
+  const flatProject: IProject = { ...project, properties: flatProperties };
 
   return flatProject;
 };

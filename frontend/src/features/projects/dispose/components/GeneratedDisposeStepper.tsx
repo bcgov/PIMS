@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IStatus } from 'features/projects/dispose/slices/projectWorkflowSlice';
 import Stepper from 'components/common/Stepper';
-import useStepper from './hooks/useStepper';
+import useStepper from '../hooks/useStepper';
 
 interface GeneratedDisposeStepperProps {
   activeStep: number;

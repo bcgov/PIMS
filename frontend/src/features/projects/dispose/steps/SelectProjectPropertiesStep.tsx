@@ -5,18 +5,22 @@ import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import { RootState } from 'reducers/rootReducer';
 import { Formik } from 'formik';
-import { Form, TextArea } from 'components/common/form';
-import { IStepProps } from '../interfaces';
-import { PropertyListViewSelect } from '../PropertyListViewSelect';
-import useStepForm from './useStepForm';
-import { FilterBar, IFilterBarState } from '..';
+import { Form } from 'components/common/form';
+import {
+  FilterBar,
+  IFilterBarState,
+  IStepProps,
+  useStepForm,
+  useStepper,
+  SelectProjectPropertiesStepYupSchema,
+  StepErrorSummary,
+  ProjectNotes,
+} from '..';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import _ from 'lodash';
-import useStepper from '../hooks/useStepper';
-import StepErrorSummary from './StepErrorSummary';
-import { SelectProjectPropertiesStepYupSchema } from '../forms/disposalYupSchema';
+import { PropertyListViewSelect } from '../components/PropertyListViewSelect';
 
 /**
  * Form to display two property list views, one for searching/selecting and one to show
@@ -91,12 +95,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
               setPageIndex={setPageIndex}
               field="properties"
             />
-            <Form.Row>
-              <Form.Label className="col-md-12" style={{ textAlign: 'left' }}>
-                Notes:
-              </Form.Label>
-              <TextArea outerClassName="col-md-8" field="note" />
-            </Form.Row>
+            <ProjectNotes />
             <StepErrorSummary />
           </Form>
         )}

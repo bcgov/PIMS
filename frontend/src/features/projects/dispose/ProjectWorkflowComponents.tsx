@@ -1,11 +1,14 @@
-import { DisposeWorkflowStatus, ProjectWorkflowComponent } from '.';
+import {
+  DisposeWorkflowStatus,
+  ProjectWorkflowComponent,
+  ProjectDraftStep,
+  SelectProjectPropertiesStep,
+  UpdateInfoStep,
+  DocumentationStep,
+  ApprovalConfirmationStep,
+  ReviewProjectStep,
+} from '.';
 import React from 'react';
-import SelectProjectPropertiesStep from './steps/SelectProjectPropertiesStep';
-import ProjectDraftStep from './steps/ProjectDraftStep';
-import UpdateInfoStep from './steps/UpdateInfoStep';
-import DocumentationStep from './steps/DocumentationStep';
-import ApprovalConfirmationStep from './steps/ApprovalConfirmationStep';
-import ReviewProjectStep from './steps/ReviewProjectStep';
 
 /**
  * TODO: re-evaluate this approach. It may be cleaner/simpler to just hardcode these components to their respective routes.

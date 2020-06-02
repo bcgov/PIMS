@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
-import useStepper from './hooks/useStepper';
+import useStepper from '../hooks/useStepper';
 
 const StepActionsWrapper = styled.div`
   width: 100%;
