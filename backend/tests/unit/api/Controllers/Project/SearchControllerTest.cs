@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using System.Linq;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Test.Controllers.Project
 {
@@ -29,11 +30,11 @@ namespace Pims.Api.Test.Controllers.Project
         #region Variables
         public static IEnumerable<object[]> ProjectsFilters = new List<object[]>()
         {
-            new object [] { new ProjectFilterModel() { ProjectNumber = "ProjectNumber" } },
-            new object [] { new ProjectFilterModel() { Name = "Name" } },
-            new object [] { new ProjectFilterModel() { Agencies = new [] { 1 } } },
-            new object [] { new ProjectFilterModel() { StatusId = 1 } },
-            new object [] { new ProjectFilterModel() { TierLevelId = 1 } }
+            new object [] { new ProjectFilter() { ProjectNumber = "ProjectNumber" } },
+            new object [] { new ProjectFilter() { Name = "Name" } },
+            new object [] { new ProjectFilter() { Agencies = new [] { 1 } } },
+            new object [] { new ProjectFilter() { StatusId = 1 } },
+            new object [] { new ProjectFilter() { TierLevelId = 1 } }
         };
 
         public static IEnumerable<object[]> ProjectQueryFilters = new List<object[]>()
@@ -59,7 +60,7 @@ namespace Pims.Api.Test.Controllers.Project
         /// </summary>
         [Theory]
         [MemberData(nameof(ProjectsFilters))]
-        public void GetProjectsPage_Success(ProjectFilterModel filter)
+        public void GetProjectsPage_Success(ProjectFilter filter)
         {
             // Arrange
             var helper = new TestHelper();

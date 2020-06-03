@@ -19,7 +19,7 @@ namespace Pims.Api.Test.Helpers
             new List<object[]>
             {
                 new object[] { new[] { new { Id = 1, Name = "test1" }, new { Id = 2, Name = "test2" } }, 2 },
-                new object[] { new[] { new Entity.TierLevel(1, "test1"), new Entity.TierLevel(2, "test2") }, 10 }
+                new object[] { new[] { new Entity.TierLevel(1, "test1"), new Entity.TierLevel(2, "test2") }, 112 }
             };
         #endregion
 

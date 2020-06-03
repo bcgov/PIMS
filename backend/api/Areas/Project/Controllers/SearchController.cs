@@ -58,7 +58,7 @@ namespace Pims.Api.Areas.Project.Controllers
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetProjectsPage(new ProjectFilterModel(query));
+            return GetProjectsPage(new ProjectFilter(query));
         }
 
         /// <summary>
@@ -71,12 +71,13 @@ namespace Pims.Api.Areas.Project.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetProjectsPage([FromBody]ProjectFilterModel filter)
+        public IActionResult GetProjectsPage([FromBody]ProjectFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Projects filter must contain valid values.");
 
-            var page = _pimsService.Project.GetPage((ProjectFilter)filter);
+            var page = _pimsService.Project.GetPage(filter);
+
             var result = _mapper.Map<PageModel<ProjectModel>>(page);
             return new JsonResult(result);
         }

@@ -1,6 +1,6 @@
 import './Table.scss';
 
-import React, { PropsWithChildren, ReactElement, useEffect } from 'react';
+import React, { PropsWithChildren, ReactElement, useEffect, ReactNode } from 'react';
 import {
   useTable,
   usePagination,
@@ -18,8 +18,9 @@ import { TableSort, SortDirection } from './TableSort';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import { TablePageSizeSelector } from './PageSizeSelector';
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
-import { Spinner } from 'react-bootstrap';
 import _ from 'lodash';
+import { Spinner, Collapse } from 'react-bootstrap';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -60,6 +61,13 @@ const getStyles = <T extends object>(
   ];
 };
 
+interface DetailsOptions<T extends object> {
+  render: (data: T) => ReactNode;
+  icons?: { open: ReactNode; closed: ReactNode };
+  onExpand?: (data: T[]) => void;
+  checkExpanded: (row: T, state: T[]) => boolean;
+}
+
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
   onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
@@ -74,6 +82,8 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   noRowsMessage?: string;
   setSelectedRows?: Function;
   lockPageSize?: boolean;
+  detailsPanel?: DetailsOptions<T>;
+  hideToolbar?: boolean;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -96,6 +106,7 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
  * Uses `react-table` to handle table logic.
  */
 const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
+  const [expandedRows, setExpandedRows] = React.useState<T[]>([]);
   const defaultColumn = React.useMemo(
     () => ({
       // When using the useFlexLayout:
@@ -225,32 +236,86 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       return <div className="no-rows-message">{props.noRowsMessage || 'No rows to display'}</div>;
     }
 
+    const handleExpandClick = (data: T) => {
+      if (expandedRows.find(x => x === data)) {
+        setExpandedRows(expandedRows.filter(x => x !== data));
+      } else {
+        setExpandedRows([...expandedRows, data]);
+      }
+    };
+
+    const renderRow = (row: Row<T>, index: number) => {
+      return (
+        <div key={index} className="tr-wrapper">
+          <div {...row.getRowProps()} className="tr">
+            {renderExpandRowStateButton(
+              props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
+              'td',
+              () => handleExpandClick(row.original),
+            )}
+            {row.cells.map((cell: CellWithProps<T>) => {
+              return (
+                <div
+                  {...cell.getCellProps(cellProps)}
+                  className="td"
+                  onClick={() =>
+                    props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
+                  }
+                >
+                  {cell.render('Cell')}
+                </div>
+              );
+            })}
+          </div>
+          {props.detailsPanel && (
+            <Collapse in={props.detailsPanel.checkExpanded(row.original, expandedRows)}>
+              <div style={{ padding: 10 }}>{props.detailsPanel.render(row.original)}</div>
+            </Collapse>
+          )}
+        </div>
+      );
+    };
+
     return (
       <div {...getTableBodyProps()} className="tbody">
-        {page.map((row: Row<T>, i) => {
+        {page.map((row: Row<T>, index: number) => {
           // This line is necessary to prepare the rows and get the row props from `react-table` dynamically
           prepareRow(row);
           // Each row can be rendered directly as a string using `react-table` render method
-          return (
-            <div {...row.getRowProps()} className="tr">
-              {row.cells.map((cell: CellWithProps<T>) => {
-                return (
-                  <div
-                    {...cell.getCellProps(cellProps)}
-                    className="td"
-                    onClick={() => {
-                      props.onRowClick && cell.column.clickable && props.onRowClick(row.original);
-                    }}
-                  >
-                    {cell.render('Cell')}
-                  </div>
-                );
-              })}
-            </div>
-          );
+          return renderRow(row, index);
         })}
       </div>
     );
+  };
+
+  const renderExpandRowStateButton = (open?: boolean, className?: string, onClick?: () => void) => {
+    const detailsClosedIcon =
+      props.detailsPanel && props.detailsPanel.icons?.closed ? (
+        props.detailsPanel.icons?.closed
+      ) : (
+        <FaAngleRight />
+      );
+    const detailsOpenedIcon =
+      props.detailsPanel && props.detailsPanel.icons?.open ? (
+        props.detailsPanel.icons?.open
+      ) : (
+        <FaAngleDown />
+      );
+    return (
+      props.detailsPanel && (
+        <div className={className} onClick={onClick}>
+          {open ? detailsOpenedIcon : detailsClosedIcon}
+        </div>
+      )
+    );
+  };
+
+  const handleExpandAll = () => {
+    if (expandedRows.length !== props.data.length) {
+      setExpandedRows(props.data);
+    } else {
+      setExpandedRows([]);
+    }
   };
 
   // Render the UI for your table
@@ -260,6 +325,11 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
+              {renderExpandRowStateButton(
+                expandedRows.length === props.data.length,
+                'th expander',
+                handleExpandAll,
+              )}
               {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
                 <div
                   {...column.getHeaderProps(headerProps)}
@@ -281,17 +351,19 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         </div>
         {renderBody()}
       </div>
-      <div className="table-toolbar">
-        {props.pageSize !== -1 && <TablePagination<T> instance={instance} />}
-        {!props.lockPageSize && props.data.length > 0 && (
-          <TablePageSizeSelector
-            options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
-            value={props.pageSize || DEFAULT_PAGE_SIZE}
-            onChange={onPageSizeChange}
-            alignTop={props.data.length >= 20}
-          />
-        )}
-      </div>
+      {!props.hideToolbar && (
+        <div className="table-toolbar">
+          {props.pageSize !== -1 && <TablePagination<T> instance={instance} />}
+          {!props.lockPageSize && props.data.length > 0 && (
+            <TablePageSizeSelector
+              options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
+              value={props.pageSize || DEFAULT_PAGE_SIZE}
+              onChange={onPageSizeChange}
+              alignTop={props.data.length >= 20}
+            />
+          )}
+        </div>
+      )}
     </>
   );
 };
