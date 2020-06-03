@@ -8,6 +8,7 @@ import { Label } from 'components/common/Label';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Link } from 'react-router-dom';
+import Claims from 'constants/claims';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
@@ -62,7 +63,8 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
               )}
             </ListGroup>
             {!props?.disabled &&
-              (!keycloak.hasAgency(buildingDetail?.agencyId as number) ? (
+              (!keycloak.hasAgency(buildingDetail?.agencyId as number) &&
+              !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
                 <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
               ) : (
                 <Link to={`/submitProperty/${buildingDetail?.parcelId}`}>Update</Link>
