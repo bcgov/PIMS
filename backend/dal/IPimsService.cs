@@ -17,6 +17,7 @@ namespace Pims.Dal
         IParcelService Parcel { get; }
         IUserService User { get; }
         ITaskService Task { get; }
+        IWorkflowService Workflow { get; }
         #endregion
 
         #region Methods

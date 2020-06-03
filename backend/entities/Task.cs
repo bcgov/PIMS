@@ -1,3 +1,5 @@
+using System;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -6,11 +8,6 @@ namespace Pims.Dal.Entities
     public class Task : LookupEntity<int>
     {
         #region Properties
-        /// <summary>
-        /// get/set - The task type this task belongs to - shared PRIMARY KEY
-        /// </summary>
-        public TaskTypes TaskType { get; set; }
-
         /// <summary>
         /// get/set - A description of the tier.
         /// </summary>
@@ -31,12 +28,12 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a Task class.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="type"></param>
+        /// <param name="status"></param>
         /// <param name="name"></param>
-        public Task(int id, TaskTypes type, string name) : base(id, name)
+        public Task(string name)
         {
-            this.TaskType = type;
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(name));
+            this.Name = name;
         }
         #endregion
     }

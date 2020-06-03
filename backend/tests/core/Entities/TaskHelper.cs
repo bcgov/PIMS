@@ -14,37 +14,61 @@ namespace Pims.Core.Test
         /// Create a new instance of a Task.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="type"></param>
         /// <param name="name"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(int id, Entity.TaskTypes type, string name)
+        public static Entity.Task CreateTask(int id, string name, Entity.ProjectStatus status = null)
         {
-            return new Entity.Task(id, type, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            var task = new Entity.Task(name) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
+
+            if (status != null)
+            {
+                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
+            }
+
+            return task;
         }
 
         /// <summary>
         /// Create a new instance of a Task.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="type"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(string name, Entity.TaskTypes type)
+        public static Entity.Task CreateTask(string name, Entity.ProjectStatus status = null)
         {
-            return new Entity.Task(1, type, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            var task = new Entity.Task(name) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } };
+
+            if (status != null)
+            {
+                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
+            }
+
+            return task;
         }
 
         /// <summary>
         /// Creates a default list of tasks.
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public static List<Entity.Task> CreateTasks(Entity.TaskTypes type = Entity.TaskTypes.DisposalProjectDocuments)
+        public static List<Entity.Task> CreateDefaultTasks(Entity.ProjectStatus status = null)
         {
-            return new List<Entity.Task>()
+            var tasks = new List<Entity.Task>()
             {
-                new Entity.Task(1, type, "Task 1") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Task(2, type, "Task 2") { RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.Task("Task 1") { Id = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Task("Task 2") { Id = 2, RowVersion = new byte[] { 12, 13, 14 } }
             };
+
+            if (status != null)
+            {
+                foreach (var task in tasks)
+                {
+                    status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
+                }
+            }
+
+            return tasks;
         }
 
         /// <summary>
@@ -52,19 +76,27 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="context"></param>
         /// <param name="id"></param>
-        /// <param name="type"></param>
         /// <param name="name"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(this PimsContext context, int id, Entity.TaskTypes type, string name)
+        public static Entity.Task CreateTask(this PimsContext context, int id, string name, Entity.ProjectStatus status)
         {
-            var task = new Entity.Task(id, type, name)
+            var task = new Entity.Task(name)
             {
+                Id = id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
+
+            if (status != null)
+            {
+                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
+                context.ProjectStatus.Update(status);
+            }
+
             context.Tasks.Add(task);
             return task;
         }

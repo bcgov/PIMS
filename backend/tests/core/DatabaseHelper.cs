@@ -102,7 +102,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static PimsContext InitializeDatabase(this TestHelper helper, ClaimsPrincipal user)
         {
-            return helper.InitializeDatabase(StringHelper.Generate(10), user);
+            return helper.InitializeDatabase(StringHelper.Generate(15), user);
         }
 
         /// <summary>
@@ -116,18 +116,18 @@ namespace Pims.Core.Test
         public static PimsContext InitializeDatabase(this TestHelper helper, string dbName, ClaimsPrincipal user)
         {
             var context = helper.CreatePimsContext(dbName, user, true);
-            context.SaveRange(EntityHelper.CreatePropertyClassifications());
-            context.SaveRange(EntityHelper.CreatePropertyStatuses());
-            context.SaveRange(EntityHelper.CreateProvinces());
-            context.SaveRange(EntityHelper.CreateCities());
-            context.SaveRange(EntityHelper.CreateRoles());
-            context.SaveRange(EntityHelper.CreateBuildingPredominateUses());
-            context.SaveRange(EntityHelper.CreateBuildingConstructionTypes());
-            context.SaveRange(EntityHelper.CreateBuildingOccupantTypes());
-            context.SaveRange(EntityHelper.CreateAgencies());
-            context.SaveRange(EntityHelper.CreateTierLevels());
-            context.SaveRange(EntityHelper.CreateTasks());
-            context.SaveRange(EntityHelper.CreateProjectStatuses());
+            context.AddRange(EntityHelper.CreateDefaultPropertyClassifications());
+            context.AddRange(EntityHelper.CreateDefaultPropertyStatuses());
+            context.AddRange(EntityHelper.CreateDefaultProvinces());
+            context.AddRange(EntityHelper.CreateDefaultCities());
+            context.AddRange(EntityHelper.CreateDefaultRoles());
+            context.AddRange(EntityHelper.CreateDefaultBuildingPredominateUses());
+            context.AddRange(EntityHelper.CreateDefaultBuildingConstructionTypes());
+            context.AddRange(EntityHelper.CreateDefaultBuildingOccupantTypes());
+            context.AddRange(EntityHelper.CreateDefaultAgencies());
+            context.AddRange(EntityHelper.CreateDefaultTierLevels());
+            context.AddRange(EntityHelper.CreateDefaultProjectStatuses());
+            context.SaveChanges();
             return context;
         }
 
@@ -151,7 +151,7 @@ namespace Pims.Core.Test
         /// <param name="helper"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static PimsContext SaveChanges<T>(this TestHelper helper, params T[] entity)
+        public static PimsContext AddAndSaveChanges<T>(this TestHelper helper, params T[] entity)
             where T : class
         {
             var context = helper.GetService<PimsContext>();
@@ -167,7 +167,7 @@ namespace Pims.Core.Test
         /// <param name="context"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static PimsContext SaveRange<T>(this TestHelper helper, IEnumerable<T> entities)
+        public static PimsContext AddAndSaveRange<T>(this TestHelper helper, IEnumerable<T> entities)
             where T : class
         {
             var context = helper.GetService<PimsContext>();
@@ -194,7 +194,37 @@ namespace Pims.Core.Test
         /// <param name="context"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static PimsContext SaveChanges<T>(this PimsContext context, params T[] entity)
+        public static PimsContext UpdateAndSaveChanges<T>(this PimsContext context, params T[] entity)
+            where T : class
+        {
+            context.Set<T>().UpdateRange(entity);
+            context.SaveChanges();
+            return context;
+        }
+
+        /// <summary>
+        /// Add to the PimsContext 'context' with the specified data in 'entities'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public static PimsContext UpdateAndSaveRange<T>(this PimsContext context, IEnumerable<T> entities)
+            where T : class
+        {
+            context.Set<T>().UpdateRange(entities);
+            context.SaveChanges();
+            return context;
+        }
+
+        /// <summary>
+        /// Add to the PimsContext 'context' with the specified data in 'entities'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static PimsContext AddAndSaveChanges<T>(this PimsContext context, params T[] entity)
             where T : class
         {
             context.Set<T>().AddRange(entity);
@@ -209,7 +239,7 @@ namespace Pims.Core.Test
         /// <param name="context"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static PimsContext SaveRange<T>(this PimsContext context, IEnumerable<T> entities)
+        public static PimsContext AddAndSaveRange<T>(this PimsContext context, IEnumerable<T> entities)
             where T : class
         {
             context.Set<T>().AddRange(entities);

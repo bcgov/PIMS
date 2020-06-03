@@ -84,5 +84,5 @@ export const POST_USERS = () => `/admin/users/my/agency`; // get paged list of u
 
 // Projects
 export const PROJECT_DISPOSE_ROOT = '/projects/disposal/';
-export const PROJECT_DISPOSE_WORKFLOW = `/projects/disposal/workflow`;
-export const PROJECT_DISPOSE_TASKS = `/projects/disposal/tasks`;
+export const PROJECT_DISPOSE_WORKFLOW = (code: string) => `/projects/workflows/${code}`;
+export const PROJECT_DISPOSE_TASKS = (code: string | number) => `/projects/workflows/tasks/${code}`;

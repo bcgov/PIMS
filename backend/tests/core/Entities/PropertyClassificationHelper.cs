@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of PropertyClassification.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.PropertyClassification> CreatePropertyClassifications()
+        public static List<Entity.PropertyClassification> CreateDefaultPropertyClassifications()
         {
             return new List<Entity.PropertyClassification>()
             {

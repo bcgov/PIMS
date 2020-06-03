@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of TierLevel.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.TierLevel> CreateTierLevels()
+        public static List<Entity.TierLevel> CreateDefaultTierLevels()
         {
             return new List<Entity.TierLevel>()
             {

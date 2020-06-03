@@ -12,7 +12,7 @@ namespace Pims.Dal.Entities
         /// get/set - The foreign key to the project - PRIMARY KEY.
         /// </summary>
         /// <value></value>
-        public string ProjectNumber { get; set; }
+        public int ProjectId { get; set; }
 
         /// <summary>
         /// get/set - The project.
@@ -31,11 +31,6 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <value></value>
         public Task Task { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign keyt to the task - PRIMARY KEY.
-        /// </summary>
-        public TaskTypes TaskType { get; set; }
 
         /// <summary>
         /// get/set - Whether the task was completed.
@@ -61,13 +56,12 @@ namespace Pims.Dal.Entities
         /// <param name="task"></param>
         public ProjectTask(Project project, Task task)
         {
-            this.ProjectNumber = project?.ProjectNumber ??
+            this.ProjectId = project?.Id ??
                 throw new ArgumentNullException(nameof(project));
             this.Project = project;
 
             this.TaskId = task?.Id ??
                 throw new ArgumentNullException(nameof(task));
-            this.TaskType = task.TaskType;
             this.Task = Task;
         }
         #endregion

@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
     /// ProjectStatus class, provides an entity for the datamodel to manage a list project statuses.
     /// </summary>
-    public class ProjectStatus : LookupEntity<int>
+    public class ProjectStatus : CodeEntity<int>
     {
         #region Properties
         /// <summary>
@@ -12,14 +15,39 @@ namespace Pims.Dal.Entities
         public string Description { get; set; }
 
         /// <summary>
+        /// get/set - Whether this status is a milestone and requires a special workflow transition to go to this status.
+        /// </summary>
+        public bool IsMilestone { get; set; }
+
+        /// <summary>
+        /// get/set - Whether this status represents an active project.
+        /// </summary>
+        public bool IsActive { get; set; } = true;
+
+        /// <summary>
         /// get/set - The route to the component/page that represents this status.
         /// </summary>
         public string Route { get; set; }
 
         /// <summary>
-        /// get/set - A way to identify related workflow statuses.
+        /// get - A collection of tasks associated to this project status.
         /// </summary>
-        public string Workflow { get; set; }
+        public ICollection<ProjectStatusTask> Tasks { get; } = new List<ProjectStatusTask>();
+
+        /// <summary>
+        /// get - A collection of valid projects status go to transitions.
+        /// </summary>
+        public ICollection<ProjectStatusTransition> ToStatus { get; } = new List<ProjectStatusTransition>();
+
+        /// <summary>
+        /// get - A collection of valid projects status come from transitions.
+        /// </summary>
+        public ICollection<ProjectStatusTransition> FromStatus { get; } = new List<ProjectStatusTransition>();
+
+        /// <summary>
+        /// get - A collection of workflows that contain this project status.
+        /// </summary>
+        public ICollection<WorkflowProjectStatus> Workflows { get; } = new List<WorkflowProjectStatus>();
         #endregion
 
         #region Constructors
@@ -31,10 +59,16 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a ProjectStatus class.
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="name"></param>
-        public ProjectStatus(int id, string name) : base(id, name)
+        /// <param name="code"></param>
+        /// <param name="isMilestone"></param>
+        public ProjectStatus(string name, string code, bool isMilestone = false)
         {
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(name));
+            if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(code));
+            this.Name = name;
+            this.Code = code;
+            this.IsMilestone = isMilestone;
         }
         #endregion
     }

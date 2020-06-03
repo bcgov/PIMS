@@ -37,30 +37,31 @@ Most objects will also include tracking columns to identify when it was created 
 
 The following are the primary objects;
 
-| Object    | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| Parcels   | Land inventory                                               |
-| Buildings | Building inventory                                           |
-| Projects  | Project inventory (disposal, aquisition)                     |
-| Users     | Users accounts within PIMS                                   |
-| Roles     | Roles that authorize abilities within PIMS                   |
-| Agencies  | A ministry, crown corporation or entity that owns properties |
-| Addresses | A physical address to a location                             |
+| Object    | Description                                                               |
+| --------- | ------------------------------------------------------------------------- |
+| Parcels   | Land inventory                                                            |
+| Buildings | Building inventory                                                        |
+| Projects  | Project inventory (disposal, aquisition)                                  |
+| Users     | Users accounts within PIMS                                                |
+| Roles     | Roles that authorize abilities within PIMS                                |
+| Agencies  | A ministry, crown corporation or entity that owns properties              |
+| Addresses | A physical address to a location                                          |
+| Workflows | Light workflow engine provide a way to control the lifecycle of projects. |
 
 ### Lists
 
 The following provide a way to manage lists of values within the solution;
 
-| Object                    | Description                                  |
-| ------------------------- | -------------------------------------------- |
-| PropertyTypes             | List of property types [land \| building]    |
-| PropertyClassifications   | List of property classifications             |
-| PropertyStatus            | List of property status                      |
-| Cities                    | List of cities                               |
-| Provinces                 | List of provinces                            |
-| BuildingConstructionTypes | List of building construction types          |
-| BuildingPredominateUses   | List of building predominate uses            |
-| BuildingOccupantTypes     | List of building occupant types              |
-| TierLevels                | List of project tier levels                  |
-| Project Status            | List of project status                       |
-| Tasks                     | List of tasks to complete a process or stage |
+| Object                    | Description                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------- |
+| PropertyTypes             | List of property types [land \| building]                                                          |
+| PropertyClassifications   | List of property classifications                                                                   |
+| PropertyStatus            | List of property status                                                                            |
+| Cities                    | List of cities                                                                                     |
+| Provinces                 | List of provinces                                                                                  |
+| BuildingConstructionTypes | List of building construction types                                                                |
+| BuildingPredominateUses   | List of building predominate uses                                                                  |
+| BuildingOccupantTypes     | List of building occupant types                                                                    |
+| TierLevels                | List of project tier levels for projects                                                           |
+| Project Status            | List of project status that represent stages a project will go through                             |
+| Tasks                     | List of tasks to complete a process or stage. These are associated to project status and workflows |

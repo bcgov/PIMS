@@ -15,17 +15,15 @@ namespace Pims.Dal.Configuration
             builder.ToTable("ProjectProperties");
 
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).IsRequired();
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
-            builder.Property(m => m.ProjectNumber).IsRequired();
-            builder.Property(m => m.ProjectNumber).HasMaxLength(25);
+            builder.Property(m => m.ProjectId).IsRequired();
 
-            builder.HasOne(m => m.Project).WithMany(m => m.Properties).HasForeignKey(m => m.ProjectNumber).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Project).WithMany(m => m.Properties).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Parcel).WithMany(m => m.Projects).HasForeignKey(m => m.ParcelId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Building).WithMany(m => m.Projects).HasForeignKey(m => m.BuildingId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(m => new { m.ProjectNumber, m.ParcelId, m.BuildingId }).IsUnique();
+            builder.HasIndex(m => new { m.ProjectId, m.ParcelId, m.BuildingId }).IsUnique();
 
             base.Configure(builder);
         }

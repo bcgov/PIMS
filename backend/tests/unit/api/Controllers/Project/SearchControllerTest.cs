@@ -71,13 +71,11 @@ namespace Pims.Api.Test.Controllers.Project
             var buildings1 = EntityHelper.CreateBuildings(parcels.Next(0), 1, 5);
             var buildings2 = EntityHelper.CreateBuildings(parcels.Next(1), 6, 5);
 
-            projects.Next(0)
-                .AddProperty(parcels.Next(0))
-                .AddProperty(buildings1.ToArray());
+            projects.Next(0).AddProperty(parcels.Next(0));
+            projects.Next(0).AddProperty(buildings1.ToArray());
 
-            projects.Next(1)
-                .AddProperty(parcels.Next(1))
-                .AddProperty(buildings2.ToArray());
+            projects.Next(1).AddProperty(parcels.Next(1));
+            projects.Next(1).AddProperty(buildings2.ToArray());
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -111,13 +109,11 @@ namespace Pims.Api.Test.Controllers.Project
             var buildings1 = EntityHelper.CreateBuildings(parcels.Next(0), 1, 5);
             var buildings2 = EntityHelper.CreateBuildings(parcels.Next(1), 6, 5);
 
-            projects.Next(0)
-                .AddProperty(parcels.Next(0))
-                .AddProperty(buildings1.ToArray());
+            projects.Next(0).AddProperty(parcels.Next(0));
+            projects.Next(0).AddProperty(buildings1.ToArray());
 
-            projects.Next(1)
-                .AddProperty(parcels.Next(1))
-                .AddProperty(buildings2.ToArray());
+            projects.Next(1).AddProperty(parcels.Next(1));
+            projects.Next(1).AddProperty(buildings2.ToArray());
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();

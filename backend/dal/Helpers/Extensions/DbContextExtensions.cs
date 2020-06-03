@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -28,6 +29,23 @@ namespace Pims.Dal.Helpers.Extensions
         public static void Detach<T>(this DbContext context, T entity) where T : BaseEntity
         {
             context.Entry(entity).State = EntityState.Detached;
+        }
+
+        /// <summary>
+        /// Update the project number for the specified 'project' with the specified 'projectNumber'.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="project"></param>
+        /// <param name="projectNumber"></param>
+        public static void UpdateProjectNumber(this PimsContext context, Project project, string projectNumber)
+        {
+            project.ProjectNumber = projectNumber;
+            context.Update(project);
+
+            project.Properties.ForEach(p =>
+            {
+                context.Update(p.UpdateProjectNumber(projectNumber));
+            });
         }
     }
 }

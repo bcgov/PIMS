@@ -27,7 +27,7 @@ namespace Pims.Core.Test
         /// Creates a default list of City.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.City> CreateCities()
+        public static List<Entity.City> CreateDefaultCities()
         {
             return new List<Entity.City>()
             {

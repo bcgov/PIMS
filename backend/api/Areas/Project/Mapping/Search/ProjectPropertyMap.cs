@@ -1,9 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Property.Models.Search;
-using Entity = Pims.Dal.Entities;
 using Pims.Dal.Entities;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using Pims.Api.Areas.Project.Models.Search;
 using Pims.Api.Models;

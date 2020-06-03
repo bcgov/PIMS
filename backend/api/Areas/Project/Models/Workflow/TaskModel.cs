@@ -1,6 +1,4 @@
-using Pims.Dal.Entities;
-
-namespace Pims.Api.Areas.Project.Models.Dispose
+namespace Pims.Api.Areas.Project.Models.Workflow
 {
     /// <summary>
     /// TaskModel class, provides a model to represent a task.
@@ -8,11 +6,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
     public class TaskModel : Api.Models.LookupModel<int>
     {
         #region Properties
-        /// <summary>
-        /// get/set - The foreign key to the task type.
-        /// </summary>
-        public TaskTypes TaskType { get; set; }
-
         /// <summary>
         /// get/set - The task description.
         /// </summary>

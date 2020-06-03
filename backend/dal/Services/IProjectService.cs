@@ -1,6 +1,5 @@
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
-using System.Collections.Generic;
 
 namespace Pims.Dal.Services
 {
@@ -10,10 +9,12 @@ namespace Pims.Dal.Services
     public interface IProjectService
     {
         Paged<Project> GetPage(ProjectFilter filter);
+        Project Get(int id);
         Project Get(string projectNumber);
         Project Add(Project project);
         Project Update(Project project);
         void Remove(Project project);
-        IEnumerable<ProjectStatus> GetWorkflow(string workflow);
+        Project SetStatus(Project project, Workflow workflow, ProjectStatus status);
+        Project SetStatus(Project project, string workflowCode, string statusCode);
     }
 }

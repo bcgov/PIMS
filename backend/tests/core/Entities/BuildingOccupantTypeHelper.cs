@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of BuildingOccupantType.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.BuildingOccupantType> CreateBuildingOccupantTypes()
+        public static List<Entity.BuildingOccupantType> CreateDefaultBuildingOccupantTypes()
         {
             return new List<Entity.BuildingOccupantType>()
             {

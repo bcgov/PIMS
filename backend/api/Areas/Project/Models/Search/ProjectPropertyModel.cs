@@ -1,4 +1,3 @@
-using System;
 using Pims.Api.Models;
 
 namespace Pims.Api.Areas.Project.Models.Search

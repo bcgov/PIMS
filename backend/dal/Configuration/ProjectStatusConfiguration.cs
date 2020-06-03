@@ -16,21 +16,25 @@ namespace Pims.Dal.Configuration
 
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).IsRequired();
-            builder.Property(m => m.Id).ValueGeneratedNever();
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
+
+            builder.Property(m => m.Code).IsRequired();
+            builder.Property(m => m.Code).HasMaxLength(10);
 
             builder.Property(m => m.Name).IsRequired();
             builder.Property(m => m.Name).HasMaxLength(150);
 
             builder.Property(m => m.Description).HasMaxLength(1000);
 
+            builder.Property(m => m.IsMilestone).HasDefaultValue(false);
+            builder.Property(m => m.IsActive).HasDefaultValue(true);
+
             builder.Property(m => m.Route).IsRequired();
             builder.Property(m => m.Route).HasMaxLength(150);
 
-            builder.Property(m => m.Workflow).IsRequired();
-            builder.Property(m => m.Workflow).HasMaxLength(200);
-
             builder.HasIndex(m => new { m.Name }).IsUnique();
-            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
+            builder.HasIndex(m => new { m.Code }).IsUnique();
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.Code, m.SortOrder });
 
             base.Configure(builder);
         }

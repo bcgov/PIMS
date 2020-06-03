@@ -34,10 +34,13 @@ namespace Pims.Dal
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectNumber> ProjectNumbers { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
+        public DbSet<ProjectStatusTask> ProjectStatusTasks { get; set; }
         public DbSet<ProjectProperty> ProjectProperties { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<TierLevel> TierLevels { get; set; }
         public DbSet<Task> Tasks { get; set; }
+        public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<WorkflowProjectStatus> WorkflowProjectStatus { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<User> Users { get; set; }
@@ -83,7 +86,6 @@ namespace Pims.Dal
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.EnableSensitiveDataLogging();
-                //optionsBuilder.UseInMemoryDatabase("Schedule", options => { });
             }
 
             base.OnConfiguring(optionsBuilder);
