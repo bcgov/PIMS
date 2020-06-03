@@ -8,7 +8,12 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ITask } from '../slices/projectTasksSlice';
-// import { render } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import { render } from '@testing-library/react';
+
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -48,11 +53,8 @@ it('renders correctly', () => {
   expect(tree).toMatchSnapshot();
 });
 
-// WIP - passes 90% of time but randomly get the error 'connect ECONNREFUSED 127.0.0.1:80'
-// xit('renders correct labels', () => {
-//   const { getByText } = render(uiElement);
-//   const labelOne = getByText('Task #1');
-//   const labelTwo = getByText('Task #2');
-//   expect(labelOne).toBeTruthy();
-//   expect(labelTwo).toBeTruthy();
-// });
+it('renders correct labels', () => {
+  const { getByText } = render(uiElement);
+  expect(getByText('Task #1')).toBeInTheDocument();
+  expect(getByText('Task #2')).toBeInTheDocument();
+});
