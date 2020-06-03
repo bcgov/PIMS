@@ -3,6 +3,7 @@ using Pims.Core.Extensions;
 using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Project.Controllers;
+using Pims.Dal.Entities.Models;
 using Model = Pims.Api.Areas.Project.Models.Search;
 
 namespace Pims.Api.Test.Routes.Project
@@ -57,7 +58,7 @@ namespace Pims.Api.Test.Routes.Project
         public void GetProjectsPage_Route()
         {
             // Arrange
-            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetProjectsPage), typeof(Model.ProjectFilterModel));
+            var endpoint = typeof(SearchController).FindMethod(nameof(SearchController.GetProjectsPage), typeof(ProjectFilter));
 
             // Act
             // Assert

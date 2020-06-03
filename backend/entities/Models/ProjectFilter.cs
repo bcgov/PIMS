@@ -33,6 +33,18 @@ namespace Pims.Dal.Entities.Models
         public int? TierLevelId { get; set; }
 
         /// <summary>
+        /// get/set - Only limit to projects created by current user.
+        /// </summary>
+        /// <value></value>
+        public bool? CreatedByMe { get; set; }
+
+        /// <summary>
+        /// get/set - Only limit to projects created by current user.
+        /// </summary>
+        /// <value></value>
+        public bool? Active { get; set; }
+
+        /// <summary>
         /// get/set - An array of agencies.
         /// </summary>
         /// <value></value>
@@ -58,6 +70,8 @@ namespace Pims.Dal.Entities.Models
             this.Name = filter.GetStringValue(nameof(this.Name));
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
+            this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
+            this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
         }
         #endregion

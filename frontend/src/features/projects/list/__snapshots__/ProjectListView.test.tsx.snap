@@ -1,0 +1,369 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Project list view Matches snapshot 1`] = `
+<div
+  className="ProjectListView container-fluid"
+>
+  <div
+    className="filter-container"
+  >
+    <form
+      className=""
+      noValidate={true}
+      onSubmit={[Function]}
+    >
+      <div
+        className="search-bar form-row"
+      >
+        <div
+          className="col"
+        >
+          <h4>
+            My Agency's Projects
+          </h4>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="form-group"
+          >
+            <label
+              className="form-label"
+            >
+              Active Projects: 
+            </label>
+            <input
+              checked={false}
+              label="Active Projects"
+              name="active"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="checkbox"
+            />
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="form-group"
+          >
+            <label
+              className="form-label"
+            >
+              My projects: 
+            </label>
+            <input
+              checked={false}
+              name="createdByMe"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="checkbox"
+            />
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="form-group"
+          >
+            <span>
+              <input
+                className="form-control"
+                id="input-name"
+                name="name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Search by project name"
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="bar-item flex-grow-0 col"
+        >
+          <button
+            className="Button Button--icon-only bg-warning btn btn-primary"
+            disabled={false}
+            type="submit"
+          >
+            <div
+              className="Button__icon"
+            >
+              <svg
+                fill="currentColor"
+                height={20}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 512 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+        <div
+          className="bar-item flex-grow-0 col"
+        >
+          <button
+            className="Button btn btn-outline-primary"
+            disabled={false}
+            onClick={[Function]}
+            type="reset"
+          >
+            <div
+              className="Button__icon"
+            >
+              <svg
+                fill="currentColor"
+                height={20}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 512 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                />
+              </svg>
+            </div>
+            <div
+              className="Button__value"
+            >
+              Reset
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="ScrollContainer"
+  >
+    <div
+      className="table"
+      role="table"
+      style={
+        Object {
+          "minWidth": undefined,
+        }
+      }
+    >
+      <div
+        className="thead thead-light"
+      >
+        <div
+          className="tr"
+          role="row"
+          style={
+            Object {
+              "display": "flex",
+              "flex": "1 0 auto",
+              "minWidth": "625px",
+            }
+          }
+        >
+          <div
+            className="th expander"
+            onClick={[Function]}
+          >
+            <svg
+              color="black"
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": "black",
+                }
+              }
+              viewBox="0 0 576 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"
+              />
+            </svg>
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "65 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "65px",
+                "textAlign": "left",
+                "width": "3.5%",
+              }
+            }
+            width="3.5%"
+          >
+            Project No.
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Name
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "160 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "160px",
+                "textAlign": "left",
+                "width": "14%",
+              }
+            }
+            width="14%"
+          >
+            Description
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Status
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "3.5%",
+              }
+            }
+            width="3.5%"
+          >
+            No. of properties
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Last Updated
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Last Updated By
+          </div>
+        </div>
+      </div>
+      <div
+        className="no-rows-message"
+      >
+        No rows to display
+      </div>
+    </div>
+    <div
+      className="table-toolbar"
+    />
+  </div>
+</div>
+`;

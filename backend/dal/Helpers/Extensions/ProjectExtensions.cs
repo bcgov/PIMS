@@ -32,10 +32,49 @@ namespace Pims.Dal.Helpers.Extensions
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Projects
+                .Include(p => p.CreatedBy)
+                .Include(p => p.UpdatedBy)
                 .Include(p => p.Status)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(p => p.Agency)
+                .ThenInclude(a => a.Parent)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(p => p.Classification)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(p => p.Evaluations)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(p => p.Fiscals)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(b => b.Address)
+                .ThenInclude(a => a.City)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Address)
+                .ThenInclude(a => a.City)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Agency)
+                .ThenInclude(a => a.Parent)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Classification)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Evaluations)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Fiscals)
                 .AsNoTracking();
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
@@ -46,6 +85,15 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.StatusId == filter.StatusId);
             if (filter.TierLevelId.HasValue)
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
+            if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
+            {
+                query = query.Where(p => p.CreatedById.Equals(user.GetUserId()));
+            }
+
+            if (filter.Active.HasValue && filter.Active.Value)
+            {
+                query = query.Where(p => p.Status.IsDenied());
+            }
 
             if (filter.Agencies?.Any() == true)
             {
@@ -108,7 +156,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="parcels"></param>
         /// <returns></returns>
         public static Entity.Project AddProperty(this Entity.Project project, params Entity.Parcel[] parcels)
-        { 
+        {
             parcels.ForEach(p =>
             {
                 project.Properties.Add(new Entity.ProjectProperty(project, p));

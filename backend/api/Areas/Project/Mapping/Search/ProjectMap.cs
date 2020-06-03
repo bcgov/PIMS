@@ -21,6 +21,13 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
+                .Map(dest => dest.Properties, src => src.Properties)
+                .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
+                .Map(dest => dest.UpdatedBy,
+                    src => src.UpdatedById != null ? src.UpdatedBy.DisplayName : null)
+                .Map(dest => dest.CreatedOn, src => src.CreatedOn)
+                .Map(dest => dest.CreatedBy,
+                    src => src.CreatedById != null ? src.CreatedBy.DisplayName : null)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
         }
     }

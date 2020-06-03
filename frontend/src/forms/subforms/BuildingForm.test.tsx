@@ -16,7 +16,7 @@ import { Button } from 'components/common/form';
 
 const mockBuilding: IFormBuilding = {
   address: {
-    cityId: 1,
+    cityId: '1',
     line1: 'line1',
     postal: 'v8x3P5',
     provinceId: '2',

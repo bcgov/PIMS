@@ -16,6 +16,12 @@ namespace Pims.Dal.Entities
         public Guid? CreatedById { get; set; }
 
         /// <summary>
+        /// get/set - The user who created this entity.
+        /// </summary>
+        /// <value></value>
+        public User CreatedBy { get; set; }
+
+        /// <summary>
         /// get/set - When this entity was created.
         /// </summary>
         /// <value></value>
@@ -26,6 +32,12 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <value></value>
         public Guid? UpdatedById { get; set; }
+
+        /// <summary>
+        /// get/set - The user updated this entity last.
+        /// </summary>
+        /// <value></value>
+        public User UpdatedBy { get; set; }
 
         /// <summary>
         /// get/set - When this entity was updated.

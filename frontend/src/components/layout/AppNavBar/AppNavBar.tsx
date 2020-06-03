@@ -96,7 +96,9 @@ function AdminDropdown() {
  */
 function ViewProjects() {
   const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? <Nav.Link>View Projects</Nav.Link> : null;
+  return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
+    <Nav.Link href="/projects/list">View Projects</Nav.Link>
+  ) : null;
 }
 
 /**

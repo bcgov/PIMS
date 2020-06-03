@@ -13,10 +13,10 @@ interface IProps {
 export const TablePageSizeSelector: React.FC<IProps> = ({ options, value, onChange, alignTop }) => {
   const [selected, setSelected] = React.useState(value);
 
-  const handleValueChange = (selected: number) => {
-    if (value !== selected) {
-      setSelected(selected);
-      onChange(selected);
+  const handleValueChange = (newSelection: number) => {
+    if (newSelection !== selected) {
+      setSelected(newSelection);
+      onChange(newSelection);
     }
   };
 
