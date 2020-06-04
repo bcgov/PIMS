@@ -682,6 +682,7 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
+            var updatedParcel = init.CreateParcel(2, project.Agency);
             project.AddProperty(parcel);
             init.SaveChanges(parcel);
 
@@ -690,7 +691,8 @@ namespace Pims.Dal.Test.Services
 
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.Properties.First().Parcel.Description = "updated";
+            updatedParcel.Description = "updated";
+            projectToUpdate.Properties.First().Parcel = updatedParcel;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -733,7 +735,7 @@ namespace Pims.Dal.Test.Services
             Assert.Single(result.Properties);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
             Assert.Equal(2, result.Properties.First().Parcel.ClassificationId);
-            Assert.Equal(1, result.Properties.First().Parcel.Evaluations.Count);
+            Assert.Equal(2, result.Properties.First().Parcel.Evaluations.Count);
         }
 
         [Fact]
@@ -785,6 +787,7 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
             var building = init.CreateBuilding(parcel, 20);
+            var newBuilding = init.CreateBuilding(parcel, 21);
             project.AddProperty(building);
             init.SaveChanges(building);
 
@@ -793,7 +796,8 @@ namespace Pims.Dal.Test.Services
 
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.Properties.First().Building.Description = "updated";
+            newBuilding.Description = "updated";
+            projectToUpdate.Properties.First().Building = newBuilding;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -839,7 +843,7 @@ namespace Pims.Dal.Test.Services
             Assert.Single(result.Properties);
             Assert.Equal(Entity.PropertyTypes.Building, result.Properties.First().PropertyType);
             Assert.Equal(2, result.Properties.First().Building.ClassificationId);
-            Assert.Equal(1, result.Properties.First().Building.Evaluations.Count);
+            Assert.Equal(2, result.Properties.First().Building.Evaluations.Count);
         }
 
         [Fact]
