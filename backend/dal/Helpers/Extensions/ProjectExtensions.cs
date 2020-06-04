@@ -248,5 +248,19 @@ namespace Pims.Dal.Helpers.Extensions
             });
             return project;
         }
+
+        /// <summary>
+        /// Throw an exception if the passed property is not in the same agency or sub agency as this project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static void ThrowIfPropertyNotInProjectAgency(this Entity.Project project, Entity.Property property)
+        {
+            //properties may be in the same agency or sub-agency of a project. A parcel in a parent agency may not be added to a sub-agency project.
+            if (property.AgencyId != project.AgencyId
+                && property.Agency?.ParentId != project.AgencyId)
+                throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
+        }
     }
 }

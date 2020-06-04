@@ -340,6 +340,20 @@ namespace Pims.Dal.Services
 
                 if (existingProperty == null)
                 {
+                    if (property.PropertyType == PropertyTypes.Land)
+                    {
+                        var existingParcel = this.Context.Parcels.Include(p => p.Agency).SingleOrDefault(p => p.Id == property.ParcelId);
+                        existingProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
+                        if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
+                        existingParcel.ProjectNumber = project.ProjectNumber;
+                    }
+                    else
+                    {
+                        var existingBuilding = this.Context.Buildings.FirstOrDefault(p => p.Id == property.BuildingId);
+                        existingProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
+                        if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
+                        existingBuilding.ProjectNumber = project.ProjectNumber;
+                    }
                     //Todo: Navigation properties on project object were causing concurrency exceptions.
                     var eproperty = property.PropertyType == PropertyTypes.Land ? this.Context.Parcels.Find(property.ParcelId) : this.Context.Buildings.Find(property.BuildingId) as Property;
                     // Ignore properties that don't exist.
