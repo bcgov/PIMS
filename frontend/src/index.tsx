@@ -1,5 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'leaflet/dist/leaflet.css';
+import 'react-leaflet-markercluster/dist/styles.min.css';
 import './index.scss'; // should be loaded last to allow for overrides without having to resort to "!important"
 
 import 'react-app-polyfill/ie11';

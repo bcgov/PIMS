@@ -29,6 +29,16 @@ BUILD_DIR ?= build
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+.PHONY: help
+
+##############################################################################
+# Local Development
+##############################################################################
+
+local: | build run ## Runs the steps for local development
+
+restart: | stop build run ## Recreates local environment
+
 test: | lint ## Runs frontend unit tests via Jest
 	@echo "$(P) Running the unit tests..."
 	@npm run test -- -u
@@ -58,4 +68,30 @@ run: ## Serves the frontend via webpack-dev-server
 	@echo "$(P) Running a development server..."
 	@npm run start
 
-.PHONY: help test format lint clean install build run
+.PHONY: local restart test format lint clean install build run
+
+##############################################################################
+# Docker Development
+##############################################################################
+
+docker: | docker-build docker-run ## Runs the local development containers
+
+docker-build: ## Builds the frontend docker container
+	@echo "$(P) Building images..."
+	@docker-compose build --no-cache frontend
+
+docker-run: ## Serves the frontend via webpack-dev-server
+	@echo "$(P) Running client and server..."
+	@docker-compose up -d
+
+docker-stop: ## Closes the local development containers
+	@echo "$(P) Stopping client and server..."
+	@docker-compose down
+
+docker-clean: ## Removes local containers, images, volumes, etc
+	@echo "$(P) Removing containers, images, volumes etc..."
+	@echo "$(P) Note: does not clear image cache."
+	@docker-compose rm -f -v -s frontend
+	@docker volume rm -f pims-frontend-node-cache
+
+.PHONY: docker docker-build docker-run

@@ -3,7 +3,15 @@ import './Map.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent, Icon } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
+import {
+  Map as LeafletMap,
+  TileLayer,
+  Marker,
+  Popup,
+  WMSTileLayer,
+  LayerGroup,
+} from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -214,6 +222,14 @@ const Map: React.FC<MapProps> = ({
     );
   };
 
+  const renderClusters = (properties: IProperty[]) => {
+    return (
+      <MarkerClusterGroup chunkedLoading>
+        <LayerGroup>{properties.map(renderMarker)}</LayerGroup>
+      </MarkerClusterGroup>
+    );
+  };
+
   return (
     <Container fluid className="px-0">
       {!disableMapFilterBar ? (
@@ -263,7 +279,7 @@ const Map: React.FC<MapProps> = ({
                 zIndex={10}
               />
             )}
-            {properties && properties.map(renderMarker)}
+            {properties && properties.length > 0 && renderClusters(properties)}
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>
         </Col>
