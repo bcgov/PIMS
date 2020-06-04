@@ -11,6 +11,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import SubmitProperty from './SubmitProperty';
 import { render, fireEvent, act } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
+import { Claims } from 'constants/claims';
 
 jest.mock('./MapView', () => () => <div id="mockMapView"></div>);
 jest.mock('@react-keycloak/web');
@@ -23,10 +24,12 @@ Enzyme.configure({ adapter: new Adapter() });
   keycloak: {
     userInfo: {
       agencies: [mockDetails[0]?.agencyId],
+      roles: [Claims.ADMIN_PROPERTIES],
     },
     subject: 'test',
   },
 });
+
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 const store = mockStore({
@@ -132,4 +135,19 @@ describe('SubmitProperty', () => {
     });
     expect(getByText('Unsaved Draft')).toBeVisible();
   });
+});
+
+it('Edit button available for sres even when they dont belong to agency', () => {
+  let store: any = mockStore({
+    [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+    [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 1, parcelDetail: mockDetails[1] } },
+    [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+    [reducerTypes.NETWORK]: {
+      parcel: {
+        status: 201,
+      },
+    },
+  });
+  const { getByText } = render(getSubmitProperty({ match: { params: { id: 2 } } }, store));
+  expect(getByText('Edit')).toBeInTheDocument();
 });

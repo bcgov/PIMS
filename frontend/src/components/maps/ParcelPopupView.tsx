@@ -7,6 +7,7 @@ import './ParcelPopupView.scss';
 import { Link } from 'react-router-dom';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import Claims from 'constants/claims';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -67,7 +68,8 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
           {parcelDetail?.id && !props?.disabled && (
             <Col>
               <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
-              {keycloak.hasAgency(parcelDetail?.agencyId as number) && (
+              {(keycloak.hasAgency(parcelDetail?.agencyId as number) ||
+                keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                 <Link style={{ paddingLeft: '5px' }} to={`/submitProperty/${parcelDetail?.id}`}>
                   Update
                 </Link>

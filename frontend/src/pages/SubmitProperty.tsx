@@ -65,7 +65,8 @@ const SubmitProperty = (props: any) => {
   if (
     cachedParcelDetail?.agencyId &&
     !formDisabled &&
-    !keycloak.hasAgency(cachedParcelDetail?.agencyId)
+    !keycloak.hasAgency(cachedParcelDetail?.agencyId) &&
+    !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
   ) {
     setFormDisabled(true); //if the user doesn't belong to this properties agency, display a read only view.
   }
@@ -240,7 +241,8 @@ const EditButton = ({
   formDisabled,
   setFormDisabled,
 }: any) => {
-  return keycloak.hasAgency(cachedParcelDetail?.agencyId) ? (
+  return keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
+    keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
     <Button disabled={!formDisabled || !parcelId} onClick={() => setFormDisabled(false)}>
       Edit
     </Button>
