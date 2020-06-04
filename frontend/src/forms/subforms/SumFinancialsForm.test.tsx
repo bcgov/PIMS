@@ -64,6 +64,6 @@ describe('sub-form SumFinancialsForm functionality', () => {
   it('displays no sums if passed no financial values', () => {
     const sumFinancialsForm = getSumFinancialsForm({});
     const { getAllByPlaceholderText } = render(sumFinancialsForm);
-    expect(getAllByPlaceholderText('$0.00')).toHaveLength(3);
+    expect(getAllByPlaceholderText('$0')).toHaveLength(3);
   });
 });

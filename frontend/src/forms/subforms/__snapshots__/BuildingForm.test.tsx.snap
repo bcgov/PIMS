@@ -608,7 +608,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>
@@ -633,7 +633,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>
@@ -681,7 +681,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>
@@ -706,7 +706,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>
@@ -754,7 +754,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>
@@ -779,7 +779,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
-                        placeholder="$0.00"
+                        placeholder="$0"
                         value=""
                       />
                     </div>

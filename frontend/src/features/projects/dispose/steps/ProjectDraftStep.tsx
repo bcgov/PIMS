@@ -38,7 +38,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
         onSubmit={onSubmit}
       >
         {() => (
-          <Form>
+          <Form className="ProjectDraftForm">
             <ProjectDraftForm isReadOnly={isReadOnly} />
             <StepErrorSummary />
           </Form>

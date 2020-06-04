@@ -18,7 +18,7 @@ export const UNAUTHORIZED_PAGE = 'You do not have permission to access this page
 
 export const EMPTY_FIELD = 'N/A';
 export const EMPTY = '';
-export const ZERO = '0.00';
+export const ZERO = '0';
 export const UNASSIGNED = 'Unassigned';
 
 // default coordinates for center of BC

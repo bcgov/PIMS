@@ -7,7 +7,7 @@ exports[`renders correctly 1`] = `
   <h3
     className="mr-auto"
   >
-    Select 1 or more Properties for the Project
+    Search and select 1 or more properties for the project
   </h3>
   <div
     className="filter-container border-bottom container-fluid"
@@ -29,41 +29,6 @@ exports[`renders correctly 1`] = `
             <div
               className="input-group"
             >
-              <div
-                className="input-group-prepend"
-              >
-                <div
-                  className="form-group"
-                >
-                  <select
-                    className="form-select form-control"
-                    id="input-searchBy"
-                    name="searchBy"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="address"
-                  >
-                    <option
-                      className="option"
-                      value="address"
-                    >
-                      Address
-                    </option>
-                    <option
-                      className="option"
-                      value="municipality"
-                    >
-                      Municipality
-                    </option>
-                    <option
-                      className="option"
-                      value="projectNumber"
-                    >
-                      RAEG or SPP No.
-                    </option>
-                  </select>
-                </div>
-              </div>
               <div
                 className="input-group-content"
               >
@@ -127,45 +92,6 @@ exports[`renders correctly 1`] = `
                   Classification
                 </option>
               </select>
-            </div>
-          </div>
-          <div
-            className="bar-item d-flex align-items-center col"
-          >
-            <div
-              className="form-group"
-            >
-              <span>
-                <input
-                  className="form-control"
-                  id="input-minLotSize"
-                  name="minLotSize"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="Min Lot Size"
-                  value=""
-                />
-              </span>
-            </div>
-            <span
-              className="mx-2"
-            >
-              -
-            </span>
-            <div
-              className="form-group"
-            >
-              <span>
-                <input
-                  className="form-control"
-                  id="input-maxLotSize"
-                  name="maxLotSize"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="Max Lot Size"
-                  value=""
-                />
-              </span>
             </div>
           </div>
           <div
@@ -250,7 +176,7 @@ exports[`renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="col-md-12 container"
+      className="col-md-12 PropertyListViewSelect container"
     >
       <div
         className="ScrollContainer"
@@ -258,11 +184,11 @@ exports[`renders correctly 1`] = `
         <div
           className="TableToolbar container-fluid"
         >
-          <h3
+          <h2
             className="mr-auto"
           >
             Available Properties
-          </h3>
+          </h2>
           <button
             className="btn btn-primary"
             disabled={false}
@@ -291,7 +217,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "390px",
+                  "minWidth": "330px",
                 }
               }
             >
@@ -425,7 +351,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                Street Address
+                Civic Address
               </div>
               <div
                 className="th"
@@ -445,7 +371,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                City
+                Current Zoning Code
               </div>
               <div
                 className="th"
@@ -465,27 +391,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                Municipality
-              </div>
-              <div
-                className="th"
-                colSpan={1}
-                onClick={[Function]}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
-              >
-                Assessed Value
+                Potential Zoning Code
               </div>
               <div
                 className="th"
@@ -547,26 +453,6 @@ exports[`renders correctly 1`] = `
               >
                 Type
               </div>
-              <div
-                className="th"
-                colSpan={1}
-                onClick={[Function]}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "80 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "80px",
-                  }
-                }
-              >
-                Lot Size (in ha)
-              </div>
             </div>
           </div>
           <div
@@ -585,11 +471,11 @@ exports[`renders correctly 1`] = `
         <div
           className="TableToolbar container-fluid"
         >
-          <h3
+          <h2
             className="mr-auto"
           >
             Properties in the Project
-          </h3>
+          </h2>
           <button
             className="btn btn-primary"
             disabled={false}
@@ -618,7 +504,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "390px",
+                  "minWidth": "360px",
                 }
               }
             >
@@ -653,6 +539,26 @@ exports[`renders correctly 1`] = `
                     type="checkbox"
                   />
                 </div>
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "40 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "40px",
+                  }
+                }
+              >
+                
               </div>
               <div
                 className="th"
@@ -752,7 +658,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                Street Address
+                Civic Address
               </div>
               <div
                 className="th"
@@ -772,7 +678,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                City
+                Current Zoning Code
               </div>
               <div
                 className="th"
@@ -792,27 +698,7 @@ exports[`renders correctly 1`] = `
                   }
                 }
               >
-                Municipality
-              </div>
-              <div
-                className="th"
-                colSpan={1}
-                onClick={[Function]}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
-              >
-                Assessed Value
+                Potential Zoning Code
               </div>
               <div
                 className="th"
@@ -874,26 +760,6 @@ exports[`renders correctly 1`] = `
               >
                 Type
               </div>
-              <div
-                className="th"
-                colSpan={1}
-                onClick={[Function]}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "80 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "80px",
-                  }
-                }
-              >
-                Lot Size (in ha)
-              </div>
             </div>
           </div>
           <div
@@ -908,18 +774,19 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="notes form-row"
+      className="ProjectNotes form-row"
     >
-      <label
-        className="col-md-12 form-label"
-      >
-        Notes:
-      </label>
       <div
-        className="col-md-8 form-group"
+        className="col-md-10 form-group"
       >
+        <label
+          className="form-label"
+          htmlFor="input-note"
+        >
+          Notes
+        </label>
         <span
-          className=""
+          className="col-md-5"
         >
           <textarea
             className="form-control"

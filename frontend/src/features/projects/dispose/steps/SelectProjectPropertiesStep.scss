@@ -1,11 +1,21 @@
 .SelectProjectProperties {
-  background-color: var(--light);
   display: flex;
   flex-direction: column;
 
+  .PropertyListViewSelect {
+    margin-bottom: 3rem;
+    padding: 0;
+    .btn {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .no-rows-message {
+    font-size: 14px;
+  }
+
   .filter-container {
     padding: 0;
-    background-color: var(--light);
 
     .map-filter-bar {
       align-items: center;
@@ -32,14 +42,12 @@
   .TableToolbar {
     display: flex;
     flex-direction: row;
-    padding-bottom: 2rem;
-    h3 {
-      padding: 0;
-    }
+    align-items: flex-end;
+    padding: 0.5rem 0;
   }
 
   .ScrollContainer {
-    padding: 1rem;
+    padding: 1rem 0;
     overflow-x: auto;
 
     table {

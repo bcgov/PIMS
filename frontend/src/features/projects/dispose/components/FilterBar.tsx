@@ -11,7 +11,6 @@ import {
   Button,
   ButtonProps,
   InputGroup,
-  Input,
 } from 'components/common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
 
@@ -28,37 +27,22 @@ const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
 };
 
 const SearchBar: React.FC = () => {
-  const state: { options: any[]; placeholders: Record<string, string> } = {
-    options: [
-      { label: 'Address', value: 'address' },
-      { label: 'Municipality', value: 'municipality' },
-      { label: 'RAEG or SPP No.', value: 'projectNumber' },
-    ],
+  const state: { placeholders: Record<string, string> } = {
     placeholders: {
       address: 'Enter an address or city',
-      municipality: 'Enter a municipality',
-      projectNumber: 'Enter an SPP/RAEG number',
     },
   };
 
   // access the form context values, no need to pass props
   const {
     values: { searchBy },
-    setFieldValue,
   } = useFormikContext<IFilterBarState>();
   const desc = state.placeholders[searchBy] || '';
-
-  const reset = () => {
-    setFieldValue('address', '');
-    setFieldValue('municipality', '');
-    setFieldValue('projectNumber', '');
-  };
 
   return (
     <InputGroup
       fast={false}
       formikProps={null as any}
-      prepend={<Select field="searchBy" options={state.options} onChange={reset} />}
       field={searchBy}
       placeholder={desc}
     ></InputGroup>
@@ -135,11 +119,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 placeholder="Classification"
                 options={classifications}
               />
-            </Col>
-            <Col className="bar-item d-flex align-items-center">
-              <Input field="minLotSize" placeholder="Min Lot Size" />
-              <span className="mx-2">-</span>
-              <Input field="maxLotSize" placeholder="Max Lot Size" />
             </Col>
             <Col className="bar-item flex-grow-0">
               <SearchButton disabled={isSubmitting} />

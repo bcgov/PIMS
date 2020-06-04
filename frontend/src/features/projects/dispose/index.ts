@@ -33,3 +33,4 @@ export * from './slices/projectTasksSlice';
 export * from './slices/projectWorkflowSlice';
 
 export * from './forms/disposalYupSchema';
+export * from './strings';

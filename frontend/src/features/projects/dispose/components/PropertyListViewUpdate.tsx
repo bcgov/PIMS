@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
 import { FormControlProps, Container } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
-import { IProperty } from '..';
+import { IProperty, clickableTooltip } from '..';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';
-import { getColumns } from './columns';
+import { getColumnsWithRemove } from './columns';
+import { useHistory } from 'react-router-dom';
 
 type RequiredAttributes = {
   /** The field name */
@@ -41,10 +42,18 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   disabled,
   setSelectedRows,
 }) => {
-  const { values } = useFormikContext<any>();
+  const history = useHistory();
+  const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
 
-  const columns = useMemo(() => getColumns(!disabled), [disabled]);
+  const columns = useMemo(
+    () =>
+      getColumnsWithRemove(
+        (properties: IProperty) => setFieldValue('properties', properties),
+        !disabled,
+      ),
+    [disabled, setFieldValue],
+  );
 
   return (
     <Container fluid>
@@ -54,8 +63,15 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
           columns={columns}
           data={existingProperties}
           pageSize={-1}
+          clickableTooltip={clickableTooltip}
           lockPageSize
           setSelectedRows={setSelectedRows}
+          footer
+          onRowClick={(row: IProperty) => {
+            history.push(
+              `/submitProperty/${row.propertyTypeId === 0 ? row.id : row.parcelId}?disabled=true`,
+            );
+          }}
         />
       </div>
       <DisplayError field={field} />

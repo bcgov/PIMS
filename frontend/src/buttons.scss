@@ -21,7 +21,7 @@
 
 .btn.btn-primary {
   background-color: $primary-color;
-  font-family: 'BCSans' Fallback, sans-serif;
+  font-family: 'BCSans', Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #ffffff;
   font-size: 16px;
@@ -39,11 +39,14 @@
 }
 
 .btn.btn-secondary {
+  border: 2px solid #428bca;
   background-color: #ffffff;
-  font-family: 'BCSans' Fallback, sans-serif;
-  text-decoration: none solid rgb(255, 255, 255);
-  color: #494949;
+  font-family: 'BCSans', Fallback, sans-serif;
   font-size: 16px;
+  color: #428bca;
+  text-decoration: none solid rgb(66, 139, 202);
+  text-align: center;
+  border-radius: 0;
 }
 
 .btn.btn-secondary:hover {
@@ -53,7 +56,7 @@
 
 .btn.btn-light {
   background-color: #606060;
-  font-family: 'BCSans' Fallback, sans-serif;
+  font-family: 'BCSans', Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #fff;
   font-size: 16px;
