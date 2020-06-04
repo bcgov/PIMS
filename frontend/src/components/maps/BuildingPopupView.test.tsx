@@ -6,6 +6,7 @@ import { createMemoryHistory } from 'history';
 import { IAddress, IBuilding } from 'actions/parcelsActions';
 import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
+import Claims from 'constants/claims';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -75,7 +76,7 @@ it('displays update option when user belongs to buildings agency', () => {
       <BuildingPopupView building={mockBuilding(1)} />
     </Router>,
   );
-  expect(getByText(/Update/i));
+  expect(getByText(/Update/i)).toBeInTheDocument();
 });
 
 it('displays view option', () => {
@@ -84,5 +85,23 @@ it('displays view option', () => {
       <BuildingPopupView building={mockBuilding(2)} />
     </Router>,
   );
-  expect(getByText(/View/i));
+  expect(getByText(/View/i)).toBeInTheDocument();
+});
+
+it('always displays update option for SRES', () => {
+  (useKeycloak as jest.Mock).mockReturnValue({
+    keycloak: {
+      userInfo: {
+        agencies: [1],
+        roles: [Claims.ADMIN_PROPERTIES],
+      },
+      subject: 'test',
+    },
+  });
+  const { getByText } = render(
+    <Router history={history}>
+      <BuildingPopupView building={mockBuilding(2)} />
+    </Router>,
+  );
+  expect(getByText(/Update/i)).toBeInTheDocument();
 });

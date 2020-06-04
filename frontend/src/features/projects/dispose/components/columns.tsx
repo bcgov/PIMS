@@ -32,12 +32,15 @@ const EditableMoneyCell = (cellInfo: any) => {
 
 const EditableClassificationCell = (cellInfo: any) => {
   const classifications = useCodeLookups().getOptionsByType('PropertyClassification');
+  const filteredClassifications = classifications.filter(
+    (x: any) => x?.label === 'Surplus Active' || x?.label === 'Surplus Encumbered',
+  );
   const context = useFormikContext();
   return (
     <FastSelect
       formikProps={context}
       type="number"
-      options={classifications}
+      options={filteredClassifications}
       field={`properties.${cellInfo.row.id}.classificationId`}
     ></FastSelect>
   );
