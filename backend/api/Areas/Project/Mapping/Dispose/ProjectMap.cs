@@ -10,6 +10,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Project, Model.ProjectModel>()
+                .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.StatusId, src => src.StatusId)
@@ -26,6 +27,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.ProjectModel, Entity.Project>()
+                .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.StatusId, src => src.StatusId)

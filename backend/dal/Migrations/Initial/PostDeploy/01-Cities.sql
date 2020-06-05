@@ -1,4 +1,5 @@
 PRINT 'Adding Cities'
+
 SET IDENTITY_INSERT dbo.[Cities] ON
 
 INSERT INTO dbo.[Cities] (

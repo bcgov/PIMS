@@ -121,7 +121,7 @@ namespace Pims.Api.Test.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsService>>();
-            var tierLevels = EntityHelper.CreateTierLevels().ToArray();
+            var tierLevels = EntityHelper.CreateDefaultTierLevels().ToArray();
             service.Setup(m => m.Lookup.GetTierLevels()).Returns(tierLevels);
 
             // Act

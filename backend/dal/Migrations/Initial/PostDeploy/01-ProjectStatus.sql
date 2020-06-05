@@ -1,99 +1,147 @@
 PRINT 'Adding ProjectStatus'
 
+SET IDENTITY_INSERT dbo.[ProjectStatus] ON
+
 INSERT INTO dbo.[ProjectStatus] (
     [Id]
     , [SortOrder]
     , [Name]
+    , [Code]
+    , [IsActive]
     , [IsDisabled]
     , [Description]
     , [Route]
-    , [Workflow]
+    , [IsMilestone]
 ) VALUES (
-    0
+    1
     , 0
     , 'Draft'
+    , 'DR'
+    , 1
     , 0
     , 'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.'
-    , '/project/draft'
-    , 'SubmitDisposal'
-), (
-    1
-    , 1
-    , 'Select Properties'
+    , '/projects/draft'
     , 0
-    , 'Add properties to the project.'
-    , '/project/properties'
-    , 'SubmitDisposal'
 ), (
     2
-    , 2
-    , 'Update Information'
+    , 1
+    , 'Select Properties'
+    , 'DR-P'
+    , 1
     , 0
-    , 'Assign tier level, classification and update current financial information.'
-    , '/project/information'
-    , 'SubmitDisposal'
+    , 'Add properties to the project.'
+    , '/projects/properties'
+    , 0
 ), (
     3
-    , 3
-    , 'Required Documentation'
+    , 2
+    , 'Update Information'
+    , 'DR-I'
+    , 1
     , 0
-    , 'Required documentation has been completed and sent (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
-    , '/project/documentation'
-    , 'SubmitDisposal'
+    , 'Assign tier level, classification and update current financial information.'
+    , '/projects/information'
+    , 0
 ), (
     4
-    , 4
-    , 'Approval'
+    , 3
+    , 'Required Documentation'
+    , 'DR-D'
+    , 1
     , 0
-    , 'The project is ready to be approved by owning agency.'
-    , '/project/approval'
-    , 'SubmitDisposal'
+    , 'Required documentation has been completed and sent (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
+    , '/projects/documentation'
+    , 0
 ), (
     5
-    , 5
-    , 'Submitted'
+    , 4
+    , 'Approval'
+    , 'DR-A'
+    , 1
     , 0
-    , 'The project has been submitted for review to be added to the Surplus Property Program.'
-    , '/project/submitted'
-    , 'SubmitDisposal,ReviewDisposal'
+    , 'The project is ready to be approved by owning agency.'
+    , '/projects/approval'
+    , 0
 ), (
     6
-    , 6
-    , 'Property Review'
+    , 5
+    , 'Submitted'
+    , 'SU'
+    , 1
     , 0
-    , 'Property information review.'
-    , '/project/property/review'
-    , 'ReviewDisposal'
+    , 'The project has been submitted for review to be added to the Surplus Property Program.'
+    , '/projects/submitted'
+    , 1
 ), (
     7
-    , 7
-    , 'Document Review'
+    , 6
+    , 'Property Review'
+    , 'AS-I'
+    , 1
     , 0
-    , 'Documentation reviewed (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
-    , '/project/documentation'
-    , 'ReviewDisposal'
+    , 'Property information review.'
+    , '/projects/assess/properties'
+    , 0
 ), (
     8
-    , 8
-    , 'First Nation Consultation'
+    , 7
+    , 'Document Review'
+    , 'AS-D'
+    , 1
     , 0
-    , 'First Nation Consultation process.'
-    , '/project/fist/nation/consultation'
-    , 'ReviewDisposal'
+    , 'Documentation reviewed (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
+    , '/projects/assess/documentation'
+    , 0
 ), (
     9
-    , 9
-    , 'Approved'
+    , 8
+    , 'Appraisal Review'
+    , 'AS-AP'
+    , 1
     , 0
-    , 'The project has been approved to be added to the Surplus Property Program.'
-    , '/project/approved'
-    , 'ReviewDisposal'
+    , 'Appraisal review process.'
+    , '/projects/assess/appraisal'
+    , 0
 ), (
     10
+    , 9
+    , 'First Nation Consultation'
+    , 'AS-FNC'
+    , 1
+    , 0
+    , 'First Nation Consultation process.'
+    , '/projects/assess/first/nation/consultation'
+    , 0
+), (
+    11
     , 10
+    , 'Approved for ERP'
+    , 'AP-ERP'
+    , 1
+    , 0
+    , 'The project has been approved to be added to the Surplus Property Program - Enhanced Referral Program.  This begins the 90 day internal marketing process.'
+    , '/projects/approved'
+    , 1
+), (
+    12
+    , 11
+    , 'Approved for SPL'
+    , 'AP-SPL'
+    , 1
+    , 0
+    , 'The project has been approved to be added to the Surplus Property Program - Surplus Property List.  This begins the external marketing process.'
+    , '/projects/approved'
+    , 1
+), (
+    13
+    , 12
     , 'Denied'
+    , 'DE'
+    , 0
     , 0
     , 'The project has been denied to be added to the Surplus Property Program.'
-    , '/project/denied'
-    , 'ReviewDisposal'
+    , '/projects/denied'
+    , 1
 )
+
+SET IDENTITY_INSERT dbo.[ProjectStatus] OFF

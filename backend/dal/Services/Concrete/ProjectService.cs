@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
@@ -20,7 +21,7 @@ namespace Pims.Dal.Services
     public class ProjectService : BaseService<Project>, IProjectService
     {
         #region Variables
-        private readonly ProjectOptions _options;
+        private readonly PimsOptions _options;
         #endregion
 
         #region Constructors
@@ -30,29 +31,13 @@ namespace Pims.Dal.Services
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IOptions<ProjectOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, logger)
+        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, logger)
         {
             _options = options.Value;
         }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Get an array of project status for the specified 'workflow'.
-        /// </summary>
-        /// <param name="workflow"></param>
-        /// <returns></returns>
-        public IEnumerable<ProjectStatus> GetWorkflow(string workflow)
-        {
-            var status = this.Context.ProjectStatus
-                .AsNoTracking()
-                .OrderBy(s => s.SortOrder)
-                .ThenBy(s => s.Name)
-                .Where(s => EF.Functions.Like(s.Workflow, $"%{workflow}%"));
-
-            return status.ToArray();
-        }
-
         /// <summary>
         /// Get a page with an array of projects within the specified filters.
         /// </summary>
@@ -72,6 +57,66 @@ namespace Pims.Dal.Services
                 .ToArray();
 
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
+        }
+
+        /// <summary>
+        /// Get the project for the specified 'id'.
+        /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Project Get(int id)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            var project = this.Context.Projects
+                .Include(p => p.Status)
+                .Include(p => p.TierLevel)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency.Parent)
+                .Include(p => p.Tasks)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task)
+                .Include(p => p.Properties)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Status)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Evaluations)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Fiscals)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Classification)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address).ThenInclude(a => a.City)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency).ThenInclude(a => a.Parent)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Status)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Classification)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address).ThenInclude(a => a.City)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingConstructionType)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingOccupantType)
+                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == id &&
+                    (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
+
+            // Remove any sensitive properties from the results if the user is not allowed to view them.
+            if (!viewSensitive)
+            {
+                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
+                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
+            }
+            return project;
         }
 
         /// <summary>
@@ -154,6 +199,7 @@ namespace Pims.Dal.Services
 
         /// <summary>
         /// Add the specified project to the datasource.
+        /// All projects start with the default status (i.e. 1:DRAFT).
         /// </summary>
         /// <param name="project"></param>
         /// <returns></returns>
@@ -165,24 +211,49 @@ namespace Pims.Dal.Services
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding projects.");
 
-            project.ProjectNumber = this.Context.GenerateProjectNumber(_options.NumberFormat); // Auto-generate the project number.  // TODO: Handle subsequent failure and orphaned project number.
+            if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
+
+            var status = this.Context.ProjectStatus
+                .Include(s => s.Tasks)
+                .ThenInclude(t => t.Task)
+                .FirstOrDefault(s => s.Id == 1) ?? throw new KeyNotFoundException("The default project status could not be found.");
+
+            project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
             project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
             project.Agency = agency;
             project.StatusId = 0; // Always start a project as a Draft.
-            project.Status = this.Context.ProjectStatus.Find(project.StatusId);
+            project.Status = status;
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
 
             // If the tasks haven't been specified, generate them.
-            if (!project.Tasks.Any())
+            var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
+            // Add the tasks for project status.
+            foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
             {
-                var tasks = this.Context.Tasks.Where(t => t.TaskType == TaskTypes.DisposalProjectDocuments);
-                foreach (var task in tasks)
-                {
-                    project.Tasks.Add(new ProjectTask(project, task));
-                }
+                project.Tasks.Add(new ProjectTask(project, task.Task));
             }
 
             this.Context.Projects.Add(project);
+            this.Context.CommitTransaction();
+
+            // Update the project number with the identity.
+            project.ProjectNumber = String.Format(_options.Project.DraftFormat, project.Id);
+
+            // Update all properties with the new project number.
+            var parcelIds = project.Properties.Where(p => p.ParcelId != null).Select(p => p.ParcelId.Value).ToArray();
+            if (parcelIds.Any())
+            {
+                var parcels = this.Context.Parcels.Where(p => parcelIds.Contains(p.Id));
+                parcels.ForEach(p => p.ProjectNumber = project.ProjectNumber);
+            }
+            var buildingIds = project.Properties.Where(b => b.BuildingId != null).Select(b => b.BuildingId.Value).ToArray();
+            if (buildingIds.Any())
+            {
+                var buildings = this.Context.Buildings.Where(b => buildingIds.Contains(b.Id));
+                buildings.ForEach(b => b.ProjectNumber = project.ProjectNumber);
+            }
+
+            this.Context.Projects.Update(project);
             this.Context.CommitTransaction();
             return project;
         }
@@ -199,7 +270,9 @@ namespace Pims.Dal.Services
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var existingProject = this.Context.Projects
+            if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
+
+            var originalProject = this.Context.Projects
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Properties)
@@ -211,47 +284,58 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Parcel)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
-                .SingleOrDefault(p => p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!isAdmin && !userAgencies.Contains(existingProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
+            var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
+            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (existingProject.AgencyId != project.AgencyId) throw new NotAuthorizedException("Project cannot be transferred to the specified agency.");
+            if (originalAgencyId != project.AgencyId) throw new NotAuthorizedException("Project cannot be transferred to the specified agency.");
+
+            // Not allowed to change the project number.
+            var originalProjectNumber = (string)this.Context.Entry(originalProject).OriginalValues[nameof(Project.ProjectNumber)];
+            if (originalProjectNumber != project.ProjectNumber) throw new InvalidOperationException("Project number cannot be changed.");
+
+            // Only allow valid non-milestone project status transitions.
+            var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
+            if (fromStatusId != project.StatusId)
+            {
+                var fromStatus = this.Context.ProjectStatus
+                    .Include(s => s.ToStatus)
+                    .FirstOrDefault(s => s.Id == fromStatusId);
+                var toStatus = this.Context.ProjectStatus.Find(project.StatusId);
+                if (toStatus.IsMilestone) throw new InvalidOperationException($"Project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}' requires a milestone transition.");
+                if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+            }
 
             // Update a project
-            this.Context.Entry(existingProject).CurrentValues.SetValues(project); // TODO: Fix concurency issue.
+            this.Context.Entry(originalProject).CurrentValues.SetValues(project); // TODO: Fix concurency issue.
+            this.Context.SetOriginalRowVersion(originalProject);
 
             foreach (var property in project.Properties)
             {
-                var existingProperty = existingProject.Properties.FirstOrDefault(b => b.PropertyType == PropertyTypes.Land
+                var existingProperty = originalProject.Properties.FirstOrDefault(b => b.PropertyType == PropertyTypes.Land
                 && b.ParcelId == property.ParcelId
-                && b.ProjectNumber == project.ProjectNumber
+                && b.ProjectId == project.Id
                 ||
                 b.PropertyType == PropertyTypes.Building
-                && b.ProjectNumber == project.ProjectNumber
+                && b.ProjectId == project.Id
                 && b.BuildingId == property.BuildingId);
 
                 if (existingProperty == null)
                 {
                     //Todo: Navigation properties on project object were causing concurrency exceptions.
-                    ProjectProperty projectProperty = new ProjectProperty()
-                    {
-                        ProjectNumber = project.ProjectNumber,
-                        ParcelId = property.ParcelId,
-                        BuildingId = property.BuildingId,
-                        PropertyType = property.PropertyType
-                    };
-                    existingProject.Properties.Add(projectProperty);
+                    var eproperty = property.PropertyType == PropertyTypes.Land ? this.Context.Parcels.Find(property.ParcelId) : this.Context.Buildings.Find(property.BuildingId) as Property;
+                    // Ignore properties that don't exist.
+                    if (eproperty != null) originalProject.AddProperty(eproperty);
                 }
                 else
                 {
-                    property.Id = existingProperty.Id;
-                    //Todo: this is not required at this time, but was causing the property to be marked for removal.
-                    //this.Context.Entry(existingProperty).CurrentValues.SetValues(property);
                     if (property.PropertyType == PropertyTypes.Land)
                     {
-                        // Only allow editing the classification, zoning, zoningpotential and evaluations/fiscals for now
+                        // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Parcel.ProjectNumber = originalProjectNumber;
                         existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
                         existingProperty.Parcel.Zoning = property.Parcel.Zoning;
                         existingProperty.Parcel.ZoningPotential = property.Parcel.ZoningPotential;
@@ -287,6 +371,7 @@ namespace Pims.Dal.Services
                     else if (property.PropertyType == PropertyTypes.Building)
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Building.ProjectNumber = originalProjectNumber;
                         existingProperty.Building.ClassificationId = property.Building.ClassificationId;
                         foreach (var evaluation in property.Building.Evaluations)
                         {
@@ -321,21 +406,52 @@ namespace Pims.Dal.Services
             }
 
             // Remove any properties from this project that are no longer associated.
-            existingProject.Properties.RemoveAll(existingProperty =>
-                !project.Properties.Any(property => existingProperty.Id == property.Id && existingProperty.ProjectNumber == property.ProjectNumber));
+            var removePropertyIds = originalProject.Properties.Select(p => p.Id).Except(project.Properties.Select(p => p.Id));
+            var removeProperties = originalProject.Properties.Where(p => removePropertyIds.Contains(p.Id));
+
+            var removeParcelIds = removeProperties.Select(p => p.ParcelId.Value).ToArray();
+            var removeParcels = this.Context.Parcels.Where(p => removeParcelIds.Contains(p.Id));
+            removeParcels.ForEach(p =>
+            {
+                p.ProjectNumber = null;
+                this.Context.Parcels.Update(p);
+            });
+
+            var removeBuildingIds = removeProperties.Select(p => p.BuildingId.Value).ToArray();
+            var removeBuildings = this.Context.Buildings.Where(p => removeBuildingIds.Contains(p.Id));
+            removeBuildings.ForEach(b =>
+            {
+                b.ProjectNumber = null;
+                this.Context.Buildings.Update(b);
+            });
+
+            originalProject.Properties.RemoveAll(p => removePropertyIds.Contains(p.Id));
 
             foreach (var task in project.Tasks)
             {
-                var existingProjectTask = existingProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
+                var originalProjectTask = originalProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
 
-                if (existingProjectTask == null)
+                if (originalProjectTask == null)
                 {
-                    existingProject.Tasks.Add(task);
+                    originalProject.Tasks.Add(task);
                 }
                 else
                 {
-                    this.Context.Entry(existingProjectTask).CurrentValues.SetValues(task);
+                    this.Context.Entry(originalProjectTask).CurrentValues.SetValues(task);
                 }
+            }
+
+            var status = this.Context.ProjectStatus
+                .Include(s => s.Tasks)
+                .ThenInclude(t => t.Task)
+                .FirstOrDefault(s => s.Id == project.StatusId);
+
+            // If the tasks haven't been specified, generate them.
+            var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
+            // Add the tasks for project status if they are not already added.
+            foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
+            {
+                project.Tasks.Add(new ProjectTask(project, task.Task));
             }
 
             this.Context.SaveChanges();
@@ -355,23 +471,123 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
-            var existingProject = this.Context.Projects
-                .SingleOrDefault(p => p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
+            var originalProject = this.Context.Projects
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .Include(p => p.Tasks)
+                .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
-            if (!isAdmin && (!userAgencies.Contains(existingProject.AgencyId)))
+            if (!isAdmin && (!userAgencies.Contains(originalProject.AgencyId)))
                 throw new NotAuthorizedException("User does not have permission to delete.");
 
-            this.Context.Entry(existingProject).CurrentValues.SetValues(project);
-            existingProject.Tasks.ForEach(task =>
+            this.Context.Entry(originalProject).CurrentValues.SetValues(project);
+            this.Context.SetOriginalRowVersion(originalProject);
+
+            originalProject.Tasks.ForEach(t =>
             {
-                this.Context.ProjectTasks.Remove(task);
+                this.Context.ProjectTasks.Remove(t);
             });
-            existingProject.Properties.ForEach(property =>
+            originalProject.Properties.ForEach(p =>
             {
-                this.Context.ProjectProperties.Remove(property);
+                this.Context.Update(p.UpdateProjectNumber(null));
+
+                this.Context.ProjectProperties.Remove(p);
             });
-            this.Context.Projects.Remove(existingProject); // TODO: Shouldn't be allowed to permanently delete projects entirely.
+            this.Context.Projects.Remove(originalProject); // TODO: Shouldn't be allowed to permanently delete projects entirely.
             this.Context.CommitTransaction();
+        }
+
+        /// <summary>
+        /// Change the status of the project.
+        /// Only valid transitions are allowed.
+        /// Use this method to transition to milestone project statuses.
+        /// Peforms additional logic on milestone transitions.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="workflowCode"></param>
+        /// <param name="statusCode"></param>
+        /// <returns></returns>
+        public Project SetStatus(Project project, string workflowCode, string statusCode)
+        {
+            var workflow = this.Context.Workflows
+                .Include(w => w.Status)
+                .ThenInclude(s => s.Status)
+                .FirstOrDefault(w => w.Code == workflowCode) ?? throw new KeyNotFoundException();
+            var status = workflow.Status.FirstOrDefault(s => s.Status.Code == statusCode)?.Status ?? throw new KeyNotFoundException();
+
+            return SetStatus(project, workflow, status);
+        }
+
+        /// <summary>
+        /// Change the status of the project.
+        /// Only valid transitions are allowed.
+        /// Use this method to transition to milestone project statuses.
+        /// Peforms additional logic on milestone transitions.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="workflow"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public Project SetStatus(Project project, Workflow workflow, ProjectStatus status)
+        {
+            if (project == null) throw new ArgumentNullException(nameof(project));
+            if (workflow == null) throw new ArgumentNullException(nameof(workflow));
+            if (status == null) throw new ArgumentNullException(nameof(status));
+
+            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            var originalProject = this.Context.Projects
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+
+            var userAgencies = this.User.GetAgencies();
+            if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
+
+            // Only allow valid project status transitions.
+            var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
+            var fromStatus = this.Context.ProjectStatus
+                .Include(s => s.ToStatus)
+                .FirstOrDefault(s => s.Id == fromStatusId);
+            var toStatus = this.Context.ProjectStatus.Find(status.Id);
+            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+
+            // Hardcoded logic to handle milestone project status transitions.
+            // This could be extracted at some point to a configurable layer, but not required presently.
+            switch (toStatus.Code)
+            {
+                case ("SU"): // Submit
+                    // This must be done first because it requires its own transaction.
+                    var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
+                    this.Context.UpdateProjectNumber(originalProject, projectNumber);
+                    originalProject.SubmittedOn = DateTime.UtcNow;
+                    break;
+                case ("AP-ERP"): // Approve for ERP
+                case ("AP-SPL"): // Approve for SPL
+                    originalProject.ApprovedOn = DateTime.UtcNow;
+                    break;
+                case ("DE"): // Deny
+                    // Remove ProjectNumber from properties.
+                    originalProject.Properties.ForEach(p =>
+                    {
+                        this.Context.Update(p.UpdateProjectNumber(null));
+                    });
+                    originalProject.DeniedOn = DateTime.UtcNow;
+                    break;
+            }
+
+            // Update a project
+            originalProject.StatusId = status.Id;
+            originalProject.Status = status;
+            project.CopyRowVersionTo(originalProject);
+            this.Context.CommitTransaction();
+
+            return originalProject;
         }
         #endregion
     }

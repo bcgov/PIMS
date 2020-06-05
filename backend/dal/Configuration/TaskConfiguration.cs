@@ -14,18 +14,15 @@ namespace Pims.Dal.Configuration
         {
             builder.ToTable("Tasks");
 
-            builder.HasKey(m => new { m.TaskType, m.Id });
-            builder.Property(m => m.Id).IsRequired();
+            builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
-            builder.Property(m => m.TaskType).IsRequired();
-            builder.Property(m => m.TaskType).ValueGeneratedNever();
 
             builder.Property(m => m.Name).IsRequired();
             builder.Property(m => m.Name).HasMaxLength(150);
 
             builder.Property(m => m.Description).HasMaxLength(1000);
 
-            builder.HasIndex(m => new { m.IsDisabled, m.TaskType, m.Name, m.SortOrder });
+            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

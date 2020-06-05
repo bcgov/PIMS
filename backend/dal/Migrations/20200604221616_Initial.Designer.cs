@@ -10,14 +10,14 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200522153222_Initial")]
+    [Migration("20200604221616_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -844,12 +844,12 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2");
 
                     b.Property<string>("Zoning")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ZoningPotential")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -972,15 +972,19 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Project", b =>
                 {
-                    b.Property<string>("ProjectNumber")
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AgencyId")
                         .HasColumnType("int");
 
                     b.Property<int?>("AgencyId1")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ApprovedOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -989,6 +993,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("DeniedOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(1000)")
@@ -1003,6 +1010,19 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("PrivateNote")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("ProjectNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("PublicNote")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -1010,6 +1030,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("SubmittedOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<int>("TierLevelId")
                         .HasColumnType("int");
@@ -1020,13 +1043,16 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.HasKey("ProjectNumber");
+                    b.HasKey("Id");
 
                     b.HasIndex("AgencyId");
 
                     b.HasIndex("AgencyId1");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("ProjectNumber")
+                        .IsUnique();
 
                     b.HasIndex("StatusId");
 
@@ -1095,10 +1121,8 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("ParcelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProjectNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PropertyType")
                         .HasColumnType("int");
@@ -1124,7 +1148,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("ProjectNumber", "ParcelId", "BuildingId")
+                    b.HasIndex("ProjectId", "ParcelId", "BuildingId")
                         .IsUnique()
                         .HasFilter("[ParcelId] IS NOT NULL AND [BuildingId] IS NOT NULL");
 
@@ -1134,7 +1158,14 @@ namespace Pims.Dal.Migrations
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatus", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -1148,7 +1179,17 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("IsDisabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsMilestone")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
@@ -1179,12 +1220,10 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<string>("Workflow")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.HasIndex("CreatedById");
 
@@ -1193,16 +1232,91 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("IsDisabled", "Name", "SortOrder");
+                    b.HasIndex("IsDisabled", "Name", "Code", "SortOrder");
 
                     b.ToTable("ProjectStatus");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTask", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("StatusId", "TaskId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("ProjectStatusTasks");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTransition", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("StatusId", "ToStatusId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ToStatusId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("ProjectStatusTransitions");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.ProjectTask", b =>
                 {
-                    b.Property<string>("ProjectNumber")
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
@@ -1226,24 +1340,21 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("TaskType")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.HasKey("ProjectNumber", "TaskId");
+                    b.HasKey("ProjectId", "TaskId");
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("TaskId");
+
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("TaskType", "TaskId");
-
-                    b.HasIndex("ProjectNumber", "TaskId", "IsCompleted", "CompletedOn");
+                    b.HasIndex("ProjectId", "TaskId", "IsCompleted", "CompletedOn");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -1548,9 +1659,6 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Task", b =>
                 {
-                    b.Property<int>("TaskType")
-                        .HasColumnType("int");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -1597,13 +1705,13 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.HasKey("TaskType", "Id");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("IsDisabled", "TaskType", "Name", "SortOrder");
+                    b.HasIndex("IsDisabled", "Name", "SortOrder");
 
                     b.ToTable("Tasks");
                 });
@@ -1834,13 +1942,119 @@ namespace Pims.Dal.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.Workflow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDisabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Name", "SortOrder");
+
+                    b.ToTable("Workflows");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.WorkflowProjectStatus", b =>
+                {
+                    b.Property<int>("WorkflowId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("WorkflowId", "StatusId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("WorkflowProjectStatus");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.AccessRequest", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
@@ -1864,11 +2078,11 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -1881,7 +2095,7 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1891,7 +2105,7 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -1903,7 +2117,7 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("CityId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1912,14 +2126,14 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("ProvinceId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Agency", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1927,7 +2141,7 @@ namespace Pims.Dal.Migrations
                         .WithMany("Children")
                         .HasForeignKey("ParentId");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -1964,7 +2178,7 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("ClassificationId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1978,18 +2192,18 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("StatusId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingConstructionType", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2002,11 +2216,11 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2019,55 +2233,55 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingOccupantType", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingPredominateUse", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.City", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Claim", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2089,7 +2303,7 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("ClassificationId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2098,14 +2312,14 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("StatusId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ParcelEvaluation", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2115,14 +2329,14 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ParcelFiscal", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2132,7 +2346,7 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2148,7 +2362,7 @@ namespace Pims.Dal.Migrations
                         .WithMany("Projects")
                         .HasForeignKey("AgencyId1");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2163,18 +2377,18 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("TierLevelId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectNumber", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2186,7 +2400,7 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("BuildingId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2197,100 +2411,146 @@ namespace Pims.Dal.Migrations
 
                     b.HasOne("Pims.Dal.Entities.Project", "Project")
                         .WithMany("Properties")
-                        .HasForeignKey("ProjectNumber")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatus", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTask", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
+                        .WithMany("Tasks")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.Task", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTransition", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
+                        .WithMany("ToStatus")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "ToStatus")
+                        .WithMany("FromStatus")
+                        .HasForeignKey("ToStatusId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectTask", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("Pims.Dal.Entities.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectNumber")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Pims.Dal.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedById");
 
                     b.HasOne("Pims.Dal.Entities.Task", "Task")
                         .WithMany()
-                        .HasForeignKey("TaskType", "TaskId")
+                        .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyClassification", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyStatus", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyType", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Province", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Role", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2303,7 +2563,7 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2313,40 +2573,40 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Task", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.TierLevel", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.User", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
@@ -2359,11 +2619,11 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
@@ -2376,7 +2636,7 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.UserRole", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2386,7 +2646,7 @@ namespace Pims.Dal.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.User", null)
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
@@ -2394,6 +2654,40 @@ namespace Pims.Dal.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.Workflow", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.WorkflowProjectStatus", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
+                        .WithMany("Workflows")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Workflow", "Workflow")
+                        .WithMany("Status")
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

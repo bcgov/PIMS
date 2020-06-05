@@ -1,3 +1,4 @@
+using Pims.Core.Helpers;
 using System.Collections.Generic;
 using Entity = Pims.Dal.Entities;
 
@@ -11,38 +12,59 @@ namespace Pims.Core.Test
         /// <summary>
         /// Create a new instance of a ProjectStatus.
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        public static Entity.ProjectStatus CreateProjectStatus(int id, string name)
+        public static Entity.ProjectStatus CreateProjectStatus(string name, string code)
         {
-            return new Entity.ProjectStatus(id, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            return CreateProjectStatus(1, name, code);
         }
 
         /// <summary>
         /// Create a new instance of a ProjectStatus.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        public static Entity.ProjectStatus CreateProjectStatus(string name)
+        public static Entity.ProjectStatus CreateProjectStatus(int id, string name, string code)
         {
-            return new Entity.ProjectStatus(1, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            return new Entity.ProjectStatus(name, code) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
+        }
+
+        /// <summary>
+        /// Creates a random list of ProjectStatus.
+        /// </summary>
+        /// <param name="startId"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public static List<Entity.ProjectStatus> CreateProjectStatuses(int startId, int quantity)
+        {
+            var status = new List<Entity.ProjectStatus>();
+
+            for (var i = startId; i < quantity; i++)
+            {
+                var name = StringHelper.Generate(10);
+                status.Add(new Entity.ProjectStatus(name, name) { Id = i, SortOrder = 0, RowVersion = new byte[] { 12, 13, 14 } });
+            }
+
+            return status;
         }
 
         /// <summary>
         /// Creates a default list of ProjectStatus.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.ProjectStatus> CreateProjectStatuses()
+        public static List<Entity.ProjectStatus> CreateDefaultProjectStatuses()
         {
             return new List<Entity.ProjectStatus>()
             {
-                new Entity.ProjectStatus(0, "Draft") { SortOrder = 0, Workflow = "SubmitDisposal", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus(1, "Select Properties") { SortOrder = 1, Workflow = "SubmitDisposal", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus(2, "Update Information") { SortOrder = 2, Workflow = "SubmitDisposal", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus(3, "Required Documentation") { SortOrder = 3, Workflow = "SubmitDisposal", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus(4, "Approval") { SortOrder = 4, Workflow = "SubmitDisposal", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus(5, "Submitted") { SortOrder = 5, Workflow = "SubmitDisposal,ReviewDisposal", RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.ProjectStatus("Draft", "DR") { Id = 1, SortOrder = 0, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Select Properties", "DR-P") { Id = 2, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Update Information", "DR-I") { Id = 3, SortOrder = 2, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Required Documentation", "DR-D") { Id = 4, SortOrder = 3, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Approval", "DR-A") { Id = 5, SortOrder = 4, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Submitted", "SU") { Id = 6, SortOrder = 5, RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
     }

@@ -1,4 +1,3 @@
-using Pims.Dal.Entities;
 using System;
 
 namespace Pims.Api.Areas.Project.Models.Dispose
@@ -12,17 +11,12 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The foreign key to the project.
         /// </summary>
-        public string ProjectNumber { get; set; }
+        public string ProjectId { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the task.
         /// </summary>
         public int TaskId { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the task type.
-        /// </summary>
-        public TaskTypes TaskType { get; set; }
 
         /// <summary>
         /// get/set - Whether the task is complete.

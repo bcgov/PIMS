@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of BuildingConstructionType.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.BuildingConstructionType> CreateBuildingConstructionTypes()
+        public static List<Entity.BuildingConstructionType> CreateDefaultBuildingConstructionTypes()
         {
             return new List<Entity.BuildingConstructionType>()
             {

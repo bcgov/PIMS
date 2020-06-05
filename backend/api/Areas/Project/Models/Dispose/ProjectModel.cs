@@ -11,6 +11,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The primary key to identify the project.
         /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// get/set - A unique project number to identify the project.
+        /// </summary>
         public string ProjectNumber { get; set; }
 
         /// <summary>

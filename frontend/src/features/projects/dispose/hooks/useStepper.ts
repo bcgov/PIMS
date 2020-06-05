@@ -104,9 +104,9 @@ const useStepper = () => {
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
 
   useEffect(() => {
-    dispatch(fetchProjectTasks());
+    dispatch(fetchProjectTasks(project.statusId));
     dispatch(fetchProjectWorkflow());
-  }, [dispatch]);
+  }, [dispatch, project.statusId]);
 
   return {
     currentStatus,

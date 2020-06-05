@@ -1,5 +1,4 @@
 using Pims.Dal.Entities;
-using System;
 
 namespace Pims.Api.Areas.Project.Models.Dispose
 {
@@ -17,7 +16,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The foreign key to identify the project.
         /// </summary>
-        public string ProjectNumber { get; set; }
+        public string ProjectId { get; set; }
 
         /// <summary>
         /// get/set - The type of proeprty [Land, Building].

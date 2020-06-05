@@ -42,30 +42,6 @@ namespace Pims.Api.Test.Routes.Project
         }
 
         [Fact]
-        public void GetWorkflow_Route()
-        {
-            // Arrange
-            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.GetWorkflow));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("workflow");
-        }
-
-        [Fact]
-        public void GetTasks_Route()
-        {
-            // Arrange
-            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.GetTasks));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("tasks");
-        }
-
-        [Fact]
         public void GetProject_Route()
         {
             // Arrange

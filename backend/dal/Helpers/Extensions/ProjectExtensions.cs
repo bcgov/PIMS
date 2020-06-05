@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
@@ -14,7 +16,7 @@ namespace Pims.Dal.Helpers.Extensions
     public static class ProjectExtensions
     {
         /// <summary>
-        /// Generate a query for the specified 'filter'.
+        /// Generate a project query for the specified 'filter'.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="user"></param>
@@ -92,7 +94,7 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Active.HasValue && filter.Active.Value)
             {
-                query = query.Where(p => p.Status.IsDenied());
+                query = query.Where(p => p.Status.IsActive);
             }
 
             if (filter.Agencies?.Any() == true)
@@ -100,6 +102,12 @@ namespace Pims.Dal.Helpers.Extensions
                 // Get list of sub-agencies for any agency selected in the filter.
                 var agencies = filter.Agencies.Concat(context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+
+            // Only admins can view all agency projects.
+            if (!isAdmin)
+            {
+                query = query.Where(p => userAgencies.Contains(p.AgencyId));
             }
 
             if (filter.Sort?.Any() == true)
@@ -153,15 +161,36 @@ namespace Pims.Dal.Helpers.Extensions
         /// Add a parcel(s) to the project.
         /// </summary>
         /// <param name="project"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public static IEnumerable<Entity.ProjectProperty> AddProperty(this Entity.Project project, params Entity.Property[] properties)
+        {
+            var result = new List<Entity.ProjectProperty>();
+            foreach (var p in properties)
+            {
+                var pp = new Entity.ProjectProperty(project, p);
+                project.Properties.Add(pp);
+                result.Add(pp);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add a parcel(s) to the project.
+        /// </summary>
+        /// <param name="project"></param>
         /// <param name="parcels"></param>
         /// <returns></returns>
-        public static Entity.Project AddProperty(this Entity.Project project, params Entity.Parcel[] parcels)
+        public static IEnumerable<Entity.ProjectProperty> AddProperty(this Entity.Project project, params Entity.Parcel[] parcels)
         {
-            parcels.ForEach(p =>
+            var result = new List<Entity.ProjectProperty>();
+            foreach (var p in parcels)
             {
-                project.Properties.Add(new Entity.ProjectProperty(project, p));
-            });
-            return project;
+                var pp = new Entity.ProjectProperty(project, p);
+                project.Properties.Add(pp);
+                result.Add(pp);
+            }
+            return result;
         }
 
         /// <summary>
@@ -170,13 +199,39 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="project"></param>
         /// <param name="buildings"></param>
         /// <returns></returns>
-        public static Entity.Project AddProperty(this Entity.Project project, params Entity.Building[] buildings)
+        public static IEnumerable<Entity.ProjectProperty> AddProperty(this Entity.Project project, params Entity.Building[] buildings)
         {
-            buildings.ForEach(b =>
+            var result = new List<Entity.ProjectProperty>();
+            foreach (var b in buildings)
             {
-                project.Properties.Add(new Entity.ProjectProperty(project, b));
-            });
-            return project;
+                var pp = new Entity.ProjectProperty(project, b);
+                project.Properties.Add(pp);
+                result.Add(pp);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Update the property.ProjectNumber with the specified 'projectNumber'.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="projectNumber"></param>
+        /// <returns></returns>
+        public static Entity.Property UpdateProjectNumber(this Entity.ProjectProperty property, string projectNumber)
+        {
+            switch (property.PropertyType)
+            {
+                case (Entity.PropertyTypes.Land):
+                    if (property.Parcel == null) throw new InvalidOperationException("Unable to update parcel project number.");
+                    property.Parcel.ProjectNumber = projectNumber;
+                    return property.Parcel;
+                case (Entity.PropertyTypes.Building):
+                    if (property.Building == null) throw new InvalidOperationException("Unable to update building project number.");
+                    property.Building.ProjectNumber = projectNumber;
+                    return property.Building;
+            }
+
+            return null;
         }
 
         /// <summary>

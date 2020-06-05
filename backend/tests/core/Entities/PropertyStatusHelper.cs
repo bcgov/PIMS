@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of PropertyStatus.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.PropertyStatus> CreatePropertyStatuses()
+        public static List<Entity.PropertyStatus> CreateDefaultPropertyStatuses()
         {
             return new List<Entity.PropertyStatus>()
             {

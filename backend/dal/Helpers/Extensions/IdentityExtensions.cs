@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +32,20 @@ namespace Pims.Dal.Helpers.Extensions
         /// Return 'null' if no agencies are found.
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="delimiter"></param>
         /// <returns></returns>
-        public static int[] GetAgencies(this ClaimsPrincipal user)
+        public static int[] GetAgencies(this ClaimsPrincipal user, string delimiter = ",")
         {
             var agencies = user?.FindAll("agencies");
-            return agencies?.Select(c => Int32.Parse(c.Value)).ToArray();
+            var results = new List<int>();
+
+            agencies?.ForEach(c =>
+            {
+                var split = c.Value.Split(delimiter);
+                results.AddRange(split.Select(v => Int32.Parse(v)));
+            });
+
+            return results.ToArray();
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         /// Creates a default list of BuildingPredominateUse.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.BuildingPredominateUse> CreateBuildingPredominateUses()
+        public static List<Entity.BuildingPredominateUse> CreateDefaultBuildingPredominateUses()
         {
             return new List<Entity.BuildingPredominateUse>()
             {

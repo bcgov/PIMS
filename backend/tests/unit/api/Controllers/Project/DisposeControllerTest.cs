@@ -53,56 +53,6 @@ namespace Pims.Api.Test.Controllers
         #endregion
 
         #region Tests
-        #region GetWorkflow
-        [Fact]
-        public void GetWorkflow_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyView);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var status = EntityHelper.CreateProjectStatuses();
-            service.Setup(m => m.Project.GetWorkflow(It.IsAny<string>())).Returns(status);
-
-            // Act
-            var result = controller.GetWorkflow();
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.ProjectStatusModel[]>(actionResult.Value);
-            Assert.Null(actionResult.StatusCode);
-            Assert.Equal(mapper.Map<Model.ProjectStatusModel[]>(status), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Project.GetWorkflow("SubmitDisposal"), Times.Once());
-        }
-        #endregion
-
-        #region GetTasks
-        [Fact]
-        public void GetTasks_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyView);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var tasks = EntityHelper.CreateTasks();
-            service.Setup(m => m.Task.Get(It.IsAny<Entity.TaskTypes>())).Returns(tasks);
-
-            // Act
-            var result = controller.GetTasks();
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.TaskModel[]>(actionResult.Value);
-            Assert.Null(actionResult.StatusCode);
-            Assert.Equal(mapper.Map<Model.TaskModel[]>(tasks), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Task.Get(Entity.TaskTypes.DisposalProjectDocuments), Times.Once());
-        }
-        #endregion
-
         #region GetProject
         [Fact]
         public void GetProject_Success()
@@ -146,7 +96,8 @@ namespace Pims.Api.Test.Controllers
 
             var parcel = EntityHelper.CreateParcel(1, 1, 1, project.Agency);
             var building = EntityHelper.CreateBuilding(parcel, 1, project.ProjectNumber, "local", 1, 1, project.Agency);
-            project.AddProperty(parcel).AddProperty(building);
+            project.AddProperty(parcel);
+            project.AddProperty(building);
 
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
 
