@@ -17,7 +17,7 @@ export function ProjectDisposalSubmitted() {
   const keycloak = useKeycloakWrapper();
   return (
     <Container className="ProjectDisposalSubmitted">
-      <ColoredWrapper style={{ color: '#2e8540' }}>
+      <ColoredWrapper>
         <h5>Thank you, {keycloak.displayName ?? 'Pims User'}</h5>
         <FaRegCheckCircle size={64} />
         <h5>Application Successfully Submitted</h5>

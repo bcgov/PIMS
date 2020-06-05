@@ -37,6 +37,7 @@ interface IKeycloak {
   hasRole(role?: string | Array<string>): boolean;
   hasClaim(claim?: string | Array<string>): boolean;
   hasAgency(agency?: number): boolean;
+  agencyIds: number[];
 }
 
 /**
@@ -137,6 +138,7 @@ function useKeycloakWrapper(): IKeycloak {
     hasRole: hasRole,
     hasClaim: hasClaim,
     hasAgency: hasAgency,
+    agencyIds: userInfo?.agencies,
   };
 }
 

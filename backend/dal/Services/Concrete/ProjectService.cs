@@ -289,6 +289,7 @@ namespace Pims.Dal.Services
 
             var originalProject = this.Context.Projects
                 .Include(p => p.Tasks)
+                .Include(p => p.Agency)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Properties)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel)
@@ -349,7 +350,7 @@ namespace Pims.Dal.Services
                     }
                     else
                     {
-                        var existingBuilding = this.Context.Buildings.FirstOrDefault(p => p.Id == property.BuildingId);
+                        var existingBuilding = this.Context.Buildings.Include(b => b.Agency).FirstOrDefault(p => p.Id == property.BuildingId);
                         existingProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
                         if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
                         existingBuilding.ProjectNumber = project.ProjectNumber;

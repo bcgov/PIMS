@@ -5,8 +5,9 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { IProperty } from 'actions/parcelsActions';
-import { IProperty as IRowProperty } from 'features/properties/list/interfaces';
+import { IProperty as IRowProperty } from '../.';
 import queryString from 'query-string';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 const initialQuery: IPropertyFilter = {
   page: 1,
@@ -45,6 +46,7 @@ const getServerQuery = (state: {
     address,
     municipality,
     projectNumber,
+    ignorePropertiesInProjects: true,
     classificationId: decimalOrUndefined(classificationId),
     agencies: parsedAgencies,
     minLandArea: decimalOrUndefined(minLotSize),
@@ -73,6 +75,7 @@ function transformData(data: IRowProperty[]) {
 }
 
 function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
+  const keycloak = useKeycloakWrapper();
   const fetchData = useCallback(
     async ({
       pageIndex,
@@ -90,10 +93,12 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
 
       // TODO: Set the loading state
       // setLoading(true);
+      // Agencies must be part of the user's agency.
+      agencyIds = keycloak.agencyIds;
 
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
-        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds: agencyIds });
         const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
 
         // The server could send back total page count.
@@ -104,7 +109,7 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
         // setLoading(false);
       }
     },
-    [fetchIdRef, setData, setPageCount],
+    [fetchIdRef, keycloak.agencyIds, setData, setPageCount],
   );
 
   return fetchData;
