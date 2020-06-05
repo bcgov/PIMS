@@ -19,8 +19,8 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.PID).IsRequired();
             builder.Property(m => m.Municipality).HasMaxLength(250);
-            builder.Property(m => m.Zoning).HasMaxLength(250);
-            builder.Property(m => m.ZoningPotential).HasMaxLength(250);
+            builder.Property(m => m.Zoning).HasMaxLength(50);
+            builder.Property(m => m.ZoningPotential).HasMaxLength(50);
             builder.Property(m => m.LandLegalDescription).HasMaxLength(500);
 
             builder.HasOne(m => m.Agency).WithMany(m => m.Parcels).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);

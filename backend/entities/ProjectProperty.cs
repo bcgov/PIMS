@@ -18,7 +18,7 @@ namespace Pims.Dal.Entities
         /// get/set - The foreign key to the project - PRIMARY KEY.
         /// </summary>
         /// <value></value>
-        public string ProjectNumber { get; set; }
+        public int ProjectId { get; set; }
 
         /// <summary>
         /// get/set - The project.
@@ -69,16 +69,8 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="project"></param>
         /// <param name="parcel"></param>
-        public ProjectProperty(Project project, Parcel parcel)
+        public ProjectProperty(Project project, Parcel parcel) : this(project, (Property)parcel)
         {
-            this.ProjectNumber = project?.ProjectNumber ??
-                throw new ArgumentNullException(nameof(project));
-            this.Project = project;
-
-            this.PropertyType = PropertyTypes.Land;
-            this.ParcelId = parcel?.Id ??
-                throw new ArgumentNullException(nameof(parcel));
-            this.Parcel = parcel;
         }
 
         /// <summary>
@@ -86,16 +78,41 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="project"></param>
         /// <param name="building"></param>
-        public ProjectProperty(Project project, Building building)
+        public ProjectProperty(Project project, Building building) : this(project, (Property)building)
         {
-            this.ProjectNumber = project?.ProjectNumber ??
+        }
+
+        /// <summary>
+        /// Create a new instance of a ProjectProperty class, initialize it with link to specified property.
+        /// Also updates the property.ProjectNumber to match the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="property"></param>
+        public ProjectProperty(Project project, Property property)
+        {
+            this.ProjectId = project?.Id ??
                 throw new ArgumentNullException(nameof(project));
             this.Project = project;
 
-            this.PropertyType = PropertyTypes.Building;
-            this.BuildingId = building?.Id ??
-                throw new ArgumentNullException(nameof(building));
-            this.Building = building;
+            this.PropertyType = property.GetType() == typeof(Parcel) ? PropertyTypes.Land : PropertyTypes.Building;
+
+            switch (this.PropertyType)
+            {
+                case (PropertyTypes.Land):
+                    this.ParcelId = property?.Id ??
+                        throw new ArgumentNullException(nameof(property));
+                    this.Parcel = property as Parcel;
+                    this.Parcel.ProjectNumber = project.ProjectNumber;
+                    break;
+                case (PropertyTypes.Building):
+                    this.BuildingId = property?.Id ??
+                        throw new ArgumentNullException(nameof(property));
+                    this.Building = property as Building;
+                    this.Building.ProjectNumber = project.ProjectNumber;
+                    break;
+                default:
+                    throw new ArgumentException("A property must be a parcel or a building.", nameof(property));
+            }
         }
         #endregion
     }

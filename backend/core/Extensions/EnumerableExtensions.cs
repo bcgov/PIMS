@@ -24,6 +24,23 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Iterates through the enumerable collection and performs the specified action.
+        /// Increments the index and passes it to the action.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="index"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void ForEach<T>(this IEnumerable<T> items, int index, Action<T, int> action)
+        {
+            var i = index;
+            foreach (var item in items)
+            {
+                action.Invoke(item, i++);
+            }
+        }
+
+        /// <summary>
         /// Recursively flatten a tree structure of IEnumerables.
         /// </summary>
         /// <typeparam name="T"></typeparam>

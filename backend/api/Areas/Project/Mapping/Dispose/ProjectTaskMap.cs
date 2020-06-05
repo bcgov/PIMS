@@ -9,9 +9,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.ProjectTask, Model.ProjectTaskModel>()
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectId, src => src.ProjectId)
                 .Map(dest => dest.TaskId, src => src.TaskId)
-                .Map(dest => dest.TaskType, src => src.TaskType)
                 .Map(dest => dest.Name, src => src.Task == null ? null : src.Task.Name)
                 .Map(dest => dest.Description, src => src.Task == null ? null : src.Task.Description)
                 .Map(dest => dest.IsOptional, src => src.Task == null ? true : src.Task.IsOptional)
@@ -22,9 +21,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.ProjectTaskModel, Entity.ProjectTask>()
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectId, src => src.ProjectId)
                 .Map(dest => dest.TaskId, src => src.TaskId)
-                .Map(dest => dest.TaskType, src => src.TaskType)
                 .Map(dest => dest.IsCompleted, src => src.IsCompleted)
                 .Map(dest => dest.CompletedOn, src => src.CompletedOn)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();

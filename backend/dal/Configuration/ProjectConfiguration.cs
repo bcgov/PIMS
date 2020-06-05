@@ -14,9 +14,11 @@ namespace Pims.Dal.Configuration
         {
             builder.ToTable("Projects");
 
-            builder.HasKey(m => m.ProjectNumber);
+            builder.HasKey(m => m.Id);
+            builder.Property(m => m.Id).IsRequired();
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
+
             builder.Property(m => m.ProjectNumber).IsRequired();
-            builder.Property(m => m.ProjectNumber).ValueGeneratedNever();
             builder.Property(m => m.ProjectNumber).HasMaxLength(25);
 
             builder.Property(m => m.Name).IsRequired();
@@ -24,11 +26,18 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Description).HasMaxLength(1000);
             builder.Property(m => m.Note).HasMaxLength(2000);
+            builder.Property(m => m.PublicNote).HasMaxLength(2000);
+            builder.Property(m => m.PrivateNote).HasMaxLength(2000);
+
+            builder.Property(m => m.SubmittedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.DeniedOn).HasColumnType("DATETIME2");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.TierLevel).WithMany().HasForeignKey(m => m.TierLevelId).OnDelete(DeleteBehavior.ClientSetNull);
 
+            builder.HasIndex(m => m.ProjectNumber).IsUnique();
             builder.HasIndex(m => new { m.Name, m.StatusId, m.TierLevelId, m.AgencyId });
 
             base.Configure(builder);

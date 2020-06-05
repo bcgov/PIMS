@@ -12,6 +12,11 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The primary key provides a unique identity for the project.
         /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// get/set - A unique identity for the project.
+        /// </summary>
         public string ProjectNumber { get; set; }
 
         /// <summary>
@@ -22,7 +27,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
-        public int AgencyId { get; set;  }
+        public int AgencyId { get; set; }
 
         /// <summary>
         /// get/set - The owning agency.
@@ -58,6 +63,31 @@ namespace Pims.Dal.Entities
         /// get/set - The tier level.
         /// </summary>
         public TierLevel TierLevel { get; set; }
+
+        /// <summary>
+        /// get/set - A shared note between SRES and agency.
+        /// </summary>
+        public string PublicNote { get; set; }
+
+        /// <summary>
+        /// get/set - A private note for SRES only.
+        /// </summary>
+        public string PrivateNote { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was submitted.
+        /// </summary>
+        public DateTime? SubmittedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was approved.
+        /// </summary>
+        public DateTime? ApprovedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was denied.
+        /// </summary>
+        public DateTime? DeniedOn { get; set; }
 
         /// <summary>
         /// get - A collection of properties associated to this project.

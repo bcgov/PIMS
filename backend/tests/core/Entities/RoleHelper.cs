@@ -37,7 +37,7 @@ namespace Pims.Core.Test
         /// Creates a default list of Role.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.Role> CreateRoles()
+        public static List<Entity.Role> CreateDefaultRoles()
         {
             return new List<Entity.Role>()
             {

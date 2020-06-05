@@ -23,7 +23,9 @@ The PIMS technical architecture stack continues to grow as features and enhancem
 
 ## SRES Process Documentation
 
-- [Disposal Projects](./sres/DISPOSAL-PROJECTS.md)
+- [Workflows](./WORKFLOWS.md)
+- [Submit Surplus Property Process Project](./sres/SUBMIT-DISPOSAL.md)
+- [Assess Surplus Property Process Project Request](./sres/ACCESS-DISPOSAL.md)
 
 ### Components
 

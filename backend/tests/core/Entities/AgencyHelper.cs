@@ -30,7 +30,7 @@ namespace Pims.Core.Test
         /// Creates a default list of Agency.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.Agency> CreateAgencies()
+        public static List<Entity.Agency> CreateDefaultAgencies()
         {
             return new List<Entity.Agency>()
             {

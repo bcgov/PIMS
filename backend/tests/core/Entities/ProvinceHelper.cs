@@ -23,7 +23,7 @@ namespace Pims.Core.Test
         /// Creates a default list of Province.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.Province> CreateProvinces()
+        public static List<Entity.Province> CreateDefaultProvinces()
         {
             return new List<Entity.Province>()
             {

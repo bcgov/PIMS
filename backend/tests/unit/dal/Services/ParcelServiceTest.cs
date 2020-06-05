@@ -257,7 +257,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -278,7 +278,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -298,7 +298,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -319,7 +319,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -339,7 +339,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
             
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -374,7 +374,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -443,7 +443,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -505,7 +505,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties, Permissions.PropertyView);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -533,7 +533,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
             var find = EntityHelper.CreateParcel(1);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -553,7 +553,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -574,7 +574,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -595,7 +595,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -617,7 +617,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -637,7 +637,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -660,7 +660,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.SensitiveView).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -682,7 +682,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).SaveChanges(parcel);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();

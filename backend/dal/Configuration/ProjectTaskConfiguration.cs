@@ -14,19 +14,18 @@ namespace Pims.Dal.Configuration
         {
             builder.ToTable("ProjectTasks");
 
-            builder.HasKey(m => new { m.ProjectNumber, m.TaskId });
-            builder.Property(m => m.ProjectNumber).IsRequired();
-            builder.Property(m => m.ProjectNumber).ValueGeneratedNever();
-            builder.Property(m => m.ProjectNumber).HasMaxLength(25);
+            builder.HasKey(m => new { m.ProjectId, m.TaskId });
+            builder.Property(m => m.ProjectId).IsRequired();
+            builder.Property(m => m.ProjectId).ValueGeneratedNever();
             builder.Property(m => m.TaskId).IsRequired();
             builder.Property(m => m.TaskId).ValueGeneratedNever();
 
             builder.Property(m => m.CompletedOn).HasColumnType("DATETIME2");
 
-            builder.HasOne(m => m.Project).WithMany(m => m.Tasks).HasForeignKey(m => m.ProjectNumber).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(m => m.Task).WithMany().HasForeignKey(m => new { m.TaskType, m.TaskId }).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Project).WithMany(m => m.Tasks).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Task).WithMany().HasForeignKey(m => m.TaskId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(m => new { m.ProjectNumber, m.TaskId, m.IsCompleted, m.CompletedOn });
+            builder.HasIndex(m => new { m.ProjectId, m.TaskId, m.IsCompleted, m.CompletedOn });
 
             base.Configure(builder);
         }

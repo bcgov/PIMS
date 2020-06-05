@@ -6,6 +6,7 @@ using MapsterMapper;
 using Mapster;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
+using Pims.Dal.Configuration.Generators;
 
 namespace Pims.Core.Test
 {
@@ -53,6 +54,7 @@ namespace Pims.Core.Test
                 member.Type.IsGenericType &&
                 member.Type.GetGenericTypeDefinition() == typeof(ICollection<>));
 
+            _services.AddSingleton<IntIdentityGenerator>();
             _services.AddSingleton(config);
             _services.AddSingleton<IMapper, ServiceMapper>();
         }

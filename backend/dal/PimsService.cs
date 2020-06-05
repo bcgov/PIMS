@@ -55,6 +55,11 @@ namespace Pims.Dal
         /// </summary>
         public ITaskService Task { get { return _serviceProvider.GetService<ITaskService>(); } }
 
+        /// <summary>
+        /// get - The workflow services.
+        /// </summary>
+        public IWorkflowService Workflow { get { return _serviceProvider.GetService<IWorkflowService>(); } }
+
         #endregion
 
         #region Constructors
