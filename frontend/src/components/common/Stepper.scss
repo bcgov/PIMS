@@ -3,7 +3,6 @@
  * Copyright 2018 - 2019 Johann-S <johann.servoire@gmail.com>
  * Licensed under MIT (https://github.com/Johann-S/bs-stepper/blob/master/LICENSE)
  */
-
 .bs-stepper .step-trigger {
   min-width: 80px;
   display: -ms-inline-flexbox;
@@ -16,7 +15,7 @@
   -ms-flex-pack: center;
   justify-content: center;
   padding: 20px 0px;
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.5;
   color: #6c757d;
@@ -32,6 +31,10 @@
   border: none;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease-out, color 0.15s ease-out;
+}
+
+h6 {
+  font-size: 14px;
 }
 
 .bs-stepper .step-trigger:not(:disabled):not(.disabled) {
@@ -54,8 +57,8 @@
   background-color: rgba(0, 0, 0, 0.06);
 }
 
-@media (max-width: 520px) {
-  .bs-stepper .step-trigger {
+@media (max-width: 1400px) {
+  .bs-stepper .bs-stepper-header {
     -ms-flex-direction: column;
     flex-direction: column;
     padding: 10px;

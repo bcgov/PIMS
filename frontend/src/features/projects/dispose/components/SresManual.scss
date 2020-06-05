@@ -1,0 +1,13 @@
+.SresManual {
+  text-align: center;
+  cursor: pointer;
+  div {
+    border: solid 2px #fcba19;
+    border-radius: 2rem;
+    display: inline-block;
+  }
+  svg {
+    margin: 0.5rem;
+  }
+  font-size: 10px;
+}

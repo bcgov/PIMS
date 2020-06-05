@@ -7,6 +7,7 @@ import {
   ApprovalConfirmationForm,
   ProjectNotes,
 } from '..';
+import { Form } from 'react-bootstrap';
 
 /**
  * Form component of ReviewProjectForm.
@@ -20,6 +21,7 @@ const ReviewProjectForm = () => {
       <DocumentationForm isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
       <ProjectNotes />
+      <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>
     </Fragment>
   );
 };

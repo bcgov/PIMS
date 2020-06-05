@@ -672,7 +672,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>
@@ -697,7 +697,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>
@@ -745,7 +745,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>
@@ -770,7 +770,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>
@@ -818,7 +818,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>
@@ -843,7 +843,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
-                            placeholder="$0.00"
+                            placeholder="$0"
                             value=""
                           />
                         </div>

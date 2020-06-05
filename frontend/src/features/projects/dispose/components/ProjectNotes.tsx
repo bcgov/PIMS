@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form } from 'react-bootstrap';
 import { TextArea } from 'components/common/form';
-import classNames from 'classnames';
+import './ProjectNotes.scss';
 
 export interface IProjectNotesProps {
   /** The formik field name by default this is notes */
@@ -18,12 +18,12 @@ export interface IProjectNotesProps {
  */
 export default function ProjectNotes({ field, className, outerClassName }: IProjectNotesProps) {
   return (
-    <Form.Row className="notes">
-      <Form.Label className="col-md-12">Notes:</Form.Label>
+    <Form.Row className="ProjectNotes">
       <TextArea
+        label="Notes"
         field={field ?? 'note'}
-        className={classNames(className)}
-        outerClassName={outerClassName ?? 'col-md-8'}
+        className={className ?? 'col-md-5'}
+        outerClassName={outerClassName ?? 'col-md-10'}
       />
     </Form.Row>
   );

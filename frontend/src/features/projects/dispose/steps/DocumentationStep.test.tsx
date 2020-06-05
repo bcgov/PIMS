@@ -36,7 +36,7 @@ const tasks: ITask[] = [
 ];
 
 const store = mockStore({
-  [reducerTypes.ProjectReducers.PROJECT]: {},
+  [reducerTypes.ProjectReducers.PROJECT]: { project: { tasks: tasks } },
   [reducerTypes.ProjectReducers.TASKS]: tasks,
 });
 

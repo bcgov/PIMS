@@ -1,19 +1,27 @@
 .ProjectDraftForm {
+  &.container-fluid {
+    padding: 0;
+  }
   .form-group {
     display: flex;
     flex-wrap: wrap;
   }
 
-  .form-label:not(.col-md-12) {
+  .form-label {
     flex: 0 0 16.7%;
     max-width: 16.7%;
   }
 
-  .form-row .form-group {
-    display: flex;
+  .form-row {
+    margin: 0;
+    padding: 0;
   }
 
-  span.col-md-12 {
+  span {
+    padding: 0;
+  }
+
+  div.form-group {
     padding: 0;
   }
 }

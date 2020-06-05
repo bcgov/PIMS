@@ -44,7 +44,7 @@ export const StepActions: React.FC<IStepActionsProps> = ({
       <Button disabled={nextDisabled} style={{ marginLeft: 10 }} onClick={onNext}>
         {nextLabel}
       </Button>
-      <Button disabled={saveDisabled} onClick={onSave}>
+      <Button variant="secondary" disabled={saveDisabled} onClick={onSave}>
         Save
       </Button>
     </StepActionsWrapper>

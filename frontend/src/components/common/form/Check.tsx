@@ -61,7 +61,12 @@ export const Check: React.FC<CheckProps> = ({
       className={classNames(!!required ? 'required' : '', outerClassName)}
     >
       <div className="check-field">
-        {!!label && <Form.Label>{label}</Form.Label>}
+        {!!label && (
+          <Form.Label>
+            {label}
+            {!!required && <span className="required">*</span>}
+          </Form.Label>
+        )}
         <Form.Check
           as={asElement}
           name={field}
@@ -76,7 +81,13 @@ export const Check: React.FC<CheckProps> = ({
           placeholder={placeholder}
           onChange={handleChange}
         />
-        {!!postLabel && <Form.Label>{postLabel}</Form.Label>}
+        {!!postLabel && !!required && (
+          <>
+            <span className="required">*</span>
+            <Form.Label>{postLabel}</Form.Label>
+          </>
+        )}
+        {!!postLabel && !required && <Form.Label>{postLabel}</Form.Label>}
       </div>
       <DisplayError field={field} />
     </Form.Group>

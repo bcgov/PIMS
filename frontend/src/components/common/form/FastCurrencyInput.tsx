@@ -13,7 +13,7 @@ const defaultMaskOptions = {
   thousandsSeparatorSymbol: ',',
   allowDecimal: true,
   decimalSymbol: '.',
-  decimalLimit: 2, // how many digits allowed after the decimal
+  decimalLimit: 0, // how many digits allowed after the decimal
   integerLimit: undefined, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
@@ -89,7 +89,7 @@ const CurrencyInput = ({
         onBlur={handleBlur}
         className={classNames('form-control', className, isInvalid, isValid)}
         disabled={disabled}
-        placeholder="$0.00"
+        placeholder="$0"
       />
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
     </Form.Group>

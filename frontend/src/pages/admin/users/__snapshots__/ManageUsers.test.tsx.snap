@@ -477,6 +477,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               <a
                 href="/admin/user/1"
@@ -485,7 +486,7 @@ exports[`component functionality Snapshot matches 1`] = `
               </a>
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -500,11 +501,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               testUserFirst1
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -519,11 +521,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               testUserLast1
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -538,11 +541,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -557,11 +561,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               tester position
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -576,6 +581,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               <svg
                 fill="currentColor"
@@ -597,7 +603,7 @@ exports[`component functionality Snapshot matches 1`] = `
               </svg>
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -612,11 +618,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               HLTH
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -631,6 +638,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               admin
             </div>
@@ -650,6 +658,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "75px",
                 }
               }
+              title=""
             >
               <div>
                 <div
@@ -765,6 +774,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               <a
                 href="/admin/user/2"
@@ -773,7 +783,7 @@ exports[`component functionality Snapshot matches 1`] = `
               </a>
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -788,11 +798,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               testUser
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -807,11 +818,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               testUser
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -826,11 +838,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -845,11 +858,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               tester
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -864,6 +878,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               <svg
                 fill="currentColor"
@@ -885,7 +900,7 @@ exports[`component functionality Snapshot matches 1`] = `
               </svg>
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -900,11 +915,12 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               HLTH
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -919,6 +935,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               admin
             </div>
@@ -938,6 +955,7 @@ exports[`component functionality Snapshot matches 1`] = `
                   "width": "75px",
                 }
               }
+              title=""
             >
               <div>
                 <div

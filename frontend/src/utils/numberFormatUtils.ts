@@ -2,13 +2,13 @@ export const formatMoney = (value: number): string => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
   return formatter.format(value);
 };
 
-export const formatNumber = (value: number, fractionDigits = 2): string => {
+export const formatNumber = (value: number, fractionDigits = 0): string => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'decimal',
     minimumFractionDigits: fractionDigits,

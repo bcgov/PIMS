@@ -1,22 +1,71 @@
 @import '../../../variables';
+@import '../../../fonts.scss';
 .ProjectDisposeView {
+  font-family: 'BCSans', Fallback, sans-serif;
   text-align: left;
-  padding: 2rem 5rem;
+  padding: 0rem 15rem;
   margin-bottom: #{$footer-height};
+  height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   max-height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   overflow-y: auto;
+  background-color: #d9d9d9;
+  color: #494949;
 
-  .table .td .form-group .form-control {
+  .ProjectDisposeLayout {
+    .container-fluid {
+      padding: 0;
+    }
+    padding: 1rem 1.5rem;
+    background-color: white;
+    min-height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
+  }
+
+  h3 {
+    font-family: 'BCSans-Bold', Fallback, sans-serif;
+    color: #003366;
     font-size: 14px;
-    &.is-valid {
-      padding-right: 0.25rem;
-      background-image: none;
+    padding-left: 0;
+    margin: 2rem 0;
+  }
+
+  h2 {
+    padding: 0 !important;
+    font-size: 20px;
+    font-family: 'BCSans', Fallback, sans-serif;
+    color: #494949;
+  }
+
+  h1 {
+    color: #38598a;
+    font-size: 20px;
+    font-family: 'BCSans-Bold', Fallback, sans-serif;
+  }
+
+  .table .td {
+    &.clickable {
+      cursor: pointer;
+    }
+    .form-group .form-control {
+      font-size: 14px;
+      &.is-valid {
+        padding-right: 0.25rem;
+        background-image: none;
+      }
     }
   }
 
+  .form-control {
+    font-size: 14px;
+  }
+
+  label.form-label {
+    font-size: 12px;
+    margin-top: 10px;
+    font-family: 'BCSans-Bold', Fallback, sans-serif;
+  }
+
   .step-content {
-    padding: 20px;
-    background-color: var(--light);
+    padding: 0;
     overflow-x: auto;
   }
 
@@ -24,23 +73,51 @@
     display: none;
   }
 
-  h3 {
-    padding: 2rem 0 1rem;
+  .SresManual {
+    float: right;
   }
 
   .form-row {
     align-items: baseline;
+    margin: 0;
+  }
+
+  .form-row > .col,
+  .form-row > [class*='col-'] {
+    padding: 0;
   }
 
   .invalid-feedback {
     display: block;
   }
 
-  .check-field .form-check {
-    margin-right: 20px;
+  .check-field .form-label {
+    margin-left: 20px;
   }
 
   #input-tierLevelId {
     max-width: 100px;
+  }
+
+  #input-note {
+    height: 8rem;
+  }
+
+  input:disabled {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  span.required {
+    font-size: 10px;
+  }
+
+  .check-field {
+    .form-label {
+      margin-top: 0;
+      font-size: 14px;
+      font-family: 'BCSans', Fallback, sans-serif;
+    }
   }
 }

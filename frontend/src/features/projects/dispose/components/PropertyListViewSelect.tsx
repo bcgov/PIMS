@@ -6,12 +6,13 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { IFilterBarState, IProperty } from '..';
+import { IFilterBarState, IProperty, clickableTooltip } from '..';
 import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
-import { getColumns } from './columns';
+import { getColumns, getColumnsWithRemove } from './columns';
 import { Table } from 'components/Table';
 import useTable from '../hooks/useTable';
+import { useHistory } from 'react-router-dom';
 
 type RequiredAttributes = {
   /** The field name */
@@ -64,6 +65,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [lookupCodes],
   );
 
+  const history = useHistory();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => getColumns(), []);
 
@@ -75,6 +77,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
   const [projectProperties, setProjectProperties] = useState(existingProperties);
+  const columnsWithRemove = useMemo(() => getColumnsWithRemove(setProjectProperties), []);
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -99,11 +102,11 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   }, [projectProperties, setFieldValue, field]);
 
   return (
-    <Container className="col-md-12">
+    <Container className="col-md-12 PropertyListViewSelect">
       {!disabled && (
         <div className="ScrollContainer">
           <Container fluid className="TableToolbar">
-            <h3 className="mr-auto">Available Properties</h3>
+            <h2 className="mr-auto">Available Properties</h2>
             <Button
               onClick={() => {
                 setProjectProperties(
@@ -126,12 +129,18 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             onRequestData={handleRequestData}
             pageCount={pageCount}
             setSelectedRows={setSelectedProperties}
+            clickableTooltip={clickableTooltip}
+            onRowClick={(row: IProperty) => {
+              history.push(
+                `/submitProperty/${row.propertyTypeId === 0 ? row.id : row.parcelId}?disabled=true`,
+              );
+            }}
           />
         </div>
       )}
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h3 className="mr-auto">Properties in the Project</h3>
+          <h2 className="mr-auto">Properties in the Project</h2>
           <Button
             onClick={() => {
               setRemovedProperties([]);
@@ -143,11 +152,13 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
         </Container>
         <Table<IProperty>
           name="propertiesTable"
-          columns={columns}
+          columns={columnsWithRemove}
           data={projectProperties}
           lockPageSize
           pageSize={-1}
           setSelectedRows={setRemovedProperties}
+          clickableTooltip={clickableTooltip}
+          footer
         />
       </div>
       <DisplayError field={field} />

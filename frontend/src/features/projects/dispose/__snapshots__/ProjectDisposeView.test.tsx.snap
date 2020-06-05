@@ -4,66 +4,108 @@ exports[`renders 1`] = `
 <div
   className="ProjectDisposeView container-fluid"
 >
-  <h1>
-    Dispose Project
-  </h1>
   <div
-    className="bs-stepper"
+    className="ProjectDisposeLayout container-fluid"
   >
-    <h6 />
     <div
-      className="bs-stepper-header"
+      className="SresManual"
+      onClick={[Function]}
     >
-      <div
-        className="step active"
-        data-target="stepper-0"
-      >
-        <button
-          className="step-trigger"
-          disabled={false}
-          onClick={[Function]}
+      <div>
+        <svg
+          fill="none"
+          height={28}
+          size={28}
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 24 24"
+          width={28}
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <span
-            className="bs-stepper-circle"
+          <path
+            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+          />
+          <path
+            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+          />
+        </svg>
+      </div>
+      <p>
+        SRES 
+        <br />
+        Policy Manual
+      </p>
+    </div>
+    <h1>
+      Surplus Property Program Project
+    </h1>
+    <div
+      className="bs-stepper"
+    >
+      <h6>
+        Complete this form to apply to Enhanced Referral Process or Request Exemption
+      </h6>
+      <div
+        className="bs-stepper-header"
+      >
+        <div
+          className="step active"
+          data-target="stepper-0"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
           >
-            1
-          </span>
-          <span
-            className="bs-stepper-label"
-          >
-            Draft
-          </span>
-        </button>
+            <span
+              className="bs-stepper-circle"
+            >
+              1
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Draft
+            </span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    className="step-content container-fluid"
-  >
     <div
-      className="sc-AxjAm jGlSVf"
+      className="step-content container-fluid"
     >
-      <button
-        className="btn btn-primary"
-        disabled={false}
-        onClick={[Function]}
-        style={
-          Object {
-            "marginLeft": 10,
+      <div
+        className="sc-AxjAm jGlSVf"
+      >
+        <button
+          className="btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          style={
+            Object {
+              "marginLeft": 10,
+            }
           }
-        }
-        type="button"
-      >
-        Next
-      </button>
-      <button
-        className="btn btn-primary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        Save
-      </button>
+          type="button"
+        >
+          Next
+        </button>
+        <button
+          className="btn btn-secondary"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Save
+        </button>
+      </div>
     </div>
   </div>
 </div>
