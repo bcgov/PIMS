@@ -50,9 +50,10 @@ namespace Pims.Api.Areas.Project.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("page")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetProjectsPage()
         {
@@ -67,9 +68,10 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("page/filter")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetProjectsPage([FromBody]ProjectFilter filter)
         {

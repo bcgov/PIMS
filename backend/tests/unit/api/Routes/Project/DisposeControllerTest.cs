@@ -4,6 +4,7 @@ using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Project.Controllers;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
+using Pims.Dal.Security;
 
 namespace Pims.Api.Test.Routes.Project
 {
@@ -51,6 +52,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("{projectNumber}");
+            endpoint.HasPermissions(Permissions.ProjectView);
         }
 
         [Fact]
@@ -63,6 +65,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPost();
+            endpoint.HasPermissions(Permissions.ProjectAdd);
         }
 
         [Fact]
@@ -75,6 +78,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPut("{projectNumber}");
+            endpoint.HasPermissions(Permissions.ProjectEdit);
         }
 
         [Fact]
@@ -87,6 +91,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{projectNumber}");
+            endpoint.HasPermissions(Permissions.ProjectDelete);
         }
         #endregion
     }

@@ -32,7 +32,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<WorkflowController>(Permissions.PropertyView);
+            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -62,7 +62,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<WorkflowController>(Permissions.PropertyView);
+            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -86,7 +86,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<WorkflowController>(Permissions.PropertyView);
+            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();

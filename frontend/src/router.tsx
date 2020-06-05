@@ -94,7 +94,7 @@ const AppRouter: React.FC = () => {
         path="/dispose"
         component={ProjectDisposeView}
         layout={AuthLayout}
-        claim={Claims.DISPOSE_REQUEST}
+        claim={Claims.PROJECT_ADD}
         title={getTitle('Dispose Property')}
       />
       <AppRoute
@@ -102,7 +102,7 @@ const AppRouter: React.FC = () => {
         path="/project/completed"
         component={ProjectDisposalSubmitted}
         layout={AuthLayout}
-        claim={Claims.DISPOSE_REQUEST}
+        claim={Claims.PROJECT_VIEW}
         title={getTitle('Dispose Property Complete')}
       />
       <AppRoute
@@ -110,7 +110,7 @@ const AppRouter: React.FC = () => {
         path="/projects/list"
         component={ProjectListView}
         layout={AuthLayout}
-        claim={Claims.PROPERTY_VIEW}
+        claim={Claims.PROJECT_VIEW}
         title={getTitle('View Projects')}
       />
       <AppRoute

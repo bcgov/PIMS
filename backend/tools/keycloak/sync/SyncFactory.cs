@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -87,6 +88,12 @@ namespace Pims.Tools.Keycloak.Sync
 
                 // Sync user agencies.
                 if (kuser.Attributes == null) kuser.Attributes = new Dictionary<string, string[]>();
+                kuser.Enabled = !user.IsDisabled;
+                kuser.FirstName = user.FirstName;
+                kuser.LastName = user.LastName;
+                kuser.EmailVerified = user.EmailVerified;
+                kuser.Attributes["displayName"] = new[] { user.DisplayName };
+                kuser.Attributes["position"] = new[] { user.Position };
                 kuser.Attributes["agencies"] = user.Agencies.Select(a => a.Id.ToString()).ToArray();
 
                 _logger.LogInformation($"Updating User in Keycloak '{user.Username}'.");
@@ -107,6 +114,12 @@ namespace Pims.Tools.Keycloak.Sync
             // Only add users who don't exist.
             foreach (var kuser in kusers.Where(u => !users.Items.Any(pu => pu.Username == u.Username)))
             {
+                if (String.IsNullOrWhiteSpace(kuser.Email) || String.IsNullOrWhiteSpace(kuser.FirstName) || String.IsNullOrWhiteSpace(kuser.LastName))
+                {
+                    _logger.LogInformation($"Unable to add user to PIMS '{kuser.Username}'.");
+                    continue;
+                }
+
                 _logger.LogInformation($"Adding User to PIMS '{kuser.Username}'.");
                 var user = new UserModel(kuser);
                 var uRoles = user.Roles as List<RoleModel>;
