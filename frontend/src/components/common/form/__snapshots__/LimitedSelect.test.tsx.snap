@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`limited fast select renders correctly 1`] = `
+<div
+  className="form-group"
+>
+  <select
+    className="form-control"
+    id="input-TestField"
+    name="TestField"
+    onBlur={[Function]}
+    type="number"
+    value={0}
+  >
+    <option
+      hidden={true}
+      value={0}
+    >
+      zero
+    </option>
+    <option
+      value="1"
+    >
+      one
+    </option>
+  </select>
+</div>
+`;
