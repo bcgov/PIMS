@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './ProjectDisposeView.scss';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Container } from 'react-bootstrap';
 import { match as Match, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProject, createProject } from 'features/projects/dispose/projectsActionCreator';
@@ -46,7 +46,9 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
 
   return projectNumber ? (
     <StepContextProvider>
-      <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>
+      <Container fluid className="ProjectDisposeView">
+        <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>
+      </Container>
     </StepContextProvider>
   ) : (
     <Spinner animation="border"></Spinner>

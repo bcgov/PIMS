@@ -5,369 +5,454 @@ exports[`Update Info Form Matches Snapshot 1`] = `
   className=""
 >
   <div
-    className="form-row"
+    className="UpdateInfoForm container-fluid"
   >
-    <h3
-      className="col-md-10"
-    >
-      Properties in the Project
-    </h3>
-    <span
-      className="col-md-2"
-    >
-      <button
-        className="edit btn btn-primary"
-        disabled={true}
-        onClick={[Function]}
-        type="button"
-      >
-        Edit
-      </button>
-    </span>
-  </div>
-  <div
-    className="form-row"
-  >
-    <label
-      className="form-label col-form-label col-md-1"
-    >
-      Tier
-    </label>
     <div
-      className="col-md-2 form-group"
+      className="form-row"
     >
-      <select
-        className="form-select form-control"
-        id="input-tierLevelId"
-        name="tierLevelId"
-        onBlur={[Function]}
-        onChange={[Function]}
-        value={1}
+      <h3
+        className="col-md-8"
       >
-        <option
-          value=""
+        Update Info
+      </h3>
+      <span
+        className="col-md-4"
+      >
+        <button
+          className="edit btn btn-primary"
+          disabled={true}
+          onClick={[Function]}
+          type="button"
         >
-          Must Select One
-        </option>
-        <option
-          className="option"
-          value="1"
-        >
-          Tier 1
-        </option>
-        <option
-          className="option"
-          value="2"
-        >
-          Tier 2
-        </option>
-      </select>
+          Edit
+        </button>
+      </span>
     </div>
-  </div>
-  <div
-    className="container-fluid"
-  >
     <div
-      className="ScrollContainer"
+      className="form-row"
     >
+      <label
+        className="form-label col-form-label col-md-2"
+      >
+        Assign Tier 
+        <span
+          className="required"
+        >
+          *
+        </span>
+        <svg
+          className="tooltip-icon"
+          fill="currentColor"
+          height={14}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
+          size={14}
+          stroke="currentColor"
+          strokeWidth="0"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 512 512"
+          width={14}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+          />
+        </svg>
+      </label>
       <div
-        className="table"
-        role="table"
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-select form-control"
+          id="input-tierLevelId"
+          name="tierLevelId"
+          onBlur={[Function]}
+          onChange={[Function]}
+          value={1}
+        >
+          <option
+            value=""
+          >
+            Must Select One
+          </option>
+          <option
+            className="option"
+            value="1"
+          >
+            Tier 1
+          </option>
+          <option
+            className="option"
+            value="2"
+          >
+            Tier 2
+          </option>
+        </select>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <h6
+        className="col-md-12"
         style={
           Object {
-            "minWidth": undefined,
+            "margin": "1rem 0",
           }
         }
       >
+        Please make any necessary updates to the valuation information and the classification
+      </h6>
+      <h2
+        className="col-md-5"
+      >
+        Properties in the Project
+      </h2>
+      <div
+        className="review-buttons col-md-7"
+      >
+        <button
+          className="btn btn-secondary"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Add More Properties
+        </button>
+        <button
+          className="btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Remove Properties
+        </button>
+      </div>
+    </div>
+    <div
+      className="container-fluid"
+    >
+      <div
+        className="ScrollContainer"
+      >
         <div
-          className="thead thead-light"
+          className="table"
+          role="table"
+          style={
+            Object {
+              "minWidth": undefined,
+            }
+          }
         >
           <div
-            className="tr"
-            role="row"
-            style={
-              Object {
-                "display": "flex",
-                "flex": "1 0 auto",
-                "minWidth": "360px",
-              }
-            }
+            className="thead thead-light"
           >
             <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
+              className="tr"
+              role="row"
               style={
                 Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
                   "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+                  "flex": "1 0 auto",
+                  "minWidth": "360px",
                 }
               }
             >
-              Agency
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Sub Agency
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                <div>
+                  <input
+                    checked={false}
+                    onChange={[Function]}
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                      }
+                    }
+                    title="Toggle All Rows Selected"
+                    type="checkbox"
+                  />
+                </div>
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "40 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "40px",
+                  }
                 }
-              }
-            >
-              Property Name
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "140 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "140px",
+              >
+                
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Classification
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Agency
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Street Address
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Sub Agency
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              City
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Property Name
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "140 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "140px",
+                  }
                 }
-              }
-            >
-              Municipality
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Classification
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Assessed Value
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Civic Address
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Netbook Value
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
+              >
+                Current Zoning Code
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Estimated Value
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "60 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "60px",
+              >
+                Potential Zoning Code
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Type
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "80 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "80px",
+              >
+                Netbook Value
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "100px",
+                  }
                 }
-              }
-            >
-              Lot Size (in ha)
+              >
+                Estimated Value
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "60 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "30px",
+                    "textAlign": "left",
+                    "width": "60px",
+                  }
+                }
+              >
+                Type
+              </div>
             </div>
+          </div>
+          <div
+            className="no-rows-message"
+          >
+            No rows to display
           </div>
         </div>
         <div
-          className="no-rows-message"
-        >
-          No rows to display
-        </div>
-      </div>
-      <div
-        className="table-toolbar"
-      />
-    </div>
-  </div>
-  <div
-    className="notes form-row"
-  >
-    <label
-      className="col-md-12 form-label"
-    >
-      Notes:
-    </label>
-    <div
-      className="col-md-8 form-group"
-    >
-      <span
-        className=""
-      >
-        <textarea
-          className="form-control"
-          id="input-note"
-          name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
+          className="table-toolbar"
         />
-      </span>
+      </div>
+    </div>
+    <div
+      className="ProjectNotes form-row"
+    >
+      <div
+        className="col-md-10 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="input-note"
+        >
+          Notes
+        </label>
+        <span
+          className="col-md-5"
+        >
+          <textarea
+            className="form-control"
+            id="input-note"
+            name="note"
+            onBlur={[Function]}
+            onChange={[Function]}
+          />
+        </span>
+      </div>
     </div>
   </div>
 </form>

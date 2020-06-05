@@ -24,7 +24,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
   }
 
   return (
-    <Container fluid className="UpdateInfoStep">
+    <Container fluid>
       <Formik
         initialValues={project}
         validationSchema={UpdateInfoStepYupSchema}

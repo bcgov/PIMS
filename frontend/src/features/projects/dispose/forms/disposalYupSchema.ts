@@ -21,12 +21,12 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
       classification: Yup.string().required('Required'),
       netBook: Yup.number()
         .required()
-        .min(0.01, 'Minimum value is $0.01')
+        .min(0.01, 'Minimum value is $1')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
       estimated: Yup.number()
         .required()
-        .min(0.01, 'Minimum value is $0.01')
+        .min(0.01, 'Minimum value is $1')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
     }),

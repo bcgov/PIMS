@@ -76,6 +76,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   pageSize?: number;
   pageSizeOptions?: number[];
   onRowClick?: (data: T) => void;
+  clickableTooltip?: string;
   onSortChange?: (field: IdType<T>, directions: SortDirection) => void;
   onPageSizeChange?: (size: number) => void;
   sort?: TableSort<T>;
@@ -83,6 +84,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   setSelectedRows?: Function;
   lockPageSize?: boolean;
   detailsPanel?: DetailsOptions<T>;
+  footer?: boolean;
   hideToolbar?: boolean;
 }
 
@@ -91,7 +93,9 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
   const resolvedRef: any = ref || defaultRef;
 
   React.useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
+    if (resolvedRef.current) {
+      resolvedRef.current.indeterminate = indeterminate;
+    }
   }, [resolvedRef, indeterminate]);
 
   return (
@@ -116,7 +120,15 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     [],
   );
 
-  const { columns, data, onRequestData, pageCount: controlledPageCount, setSelectedRows } = props;
+  const {
+    clickableTooltip,
+    columns,
+    data,
+    onRequestData,
+    pageCount: controlledPageCount,
+    setSelectedRows,
+    footer,
+  } = props;
 
   // Use the useTable hook to create your table configuration
   const instance = useTable(
@@ -170,6 +182,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    footerGroups,
     prepareRow,
     page, // Instead of using 'rows', we'll use page,
     // which has only the rows for the active page
@@ -257,7 +270,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               return (
                 <div
                   {...cell.getCellProps(cellProps)}
-                  className="td"
+                  title={cell.column.clickable && clickableTooltip ? clickableTooltip : ''}
+                  className={classnames('td', cell.column.clickable ? 'clickable' : '')}
                   onClick={() =>
                     props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
                   }
@@ -318,6 +332,30 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     }
   };
 
+  const renderFooter = () => {
+    if (!footer || !page?.length) {
+      return null;
+    }
+    if (props.loading) {
+      return renderLoading();
+    }
+    return (
+      <div className="tfoot tfoot-light">
+        {footerGroups.map(footerGroup => (
+          <div {...footerGroup.getHeaderGroupProps()} className="tr">
+            {footerGroup.headers.map(
+              (column: ColumnInstanceWithProps<T> & { Footer?: Function }) => (
+                <div {...column.getHeaderProps(headerProps)} className="th">
+                  {column.Footer ? <column.Footer properties={_.map(page, 'original')} /> : null}
+                </div>
+              ),
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   // Render the UI for your table
   return (
     <>
@@ -350,6 +388,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
           ))}
         </div>
         {renderBody()}
+        {renderFooter()}
       </div>
       {!props.hideToolbar && (
         <div className="table-toolbar">

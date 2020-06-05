@@ -37,6 +37,10 @@ namespace Pims.Api.Areas.Project.Models.Dispose
 
         public float LandArea { get; set; }
 
+        public string Zoning { get; set; }
+
+        public string ZoningPotential { get; set; }
+
         public override string SubAgency { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();

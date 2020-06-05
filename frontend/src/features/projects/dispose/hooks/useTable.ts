@@ -5,6 +5,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { IProperty } from 'actions/parcelsActions';
+import { IProperty as IRowProperty } from 'features/properties/list/interfaces';
 import queryString from 'query-string';
 
 const initialQuery: IPropertyFilter = {
@@ -64,6 +65,13 @@ interface UseTableProps {
   setPageCount: Function;
 }
 
+function transformData(data: IRowProperty[]) {
+  data.forEach(property => {
+    property.address = `${property.address}, ${property.city}`;
+  });
+  return data;
+}
+
 function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
   const fetchData = useCallback(
     async ({
@@ -90,7 +98,7 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
 
         // The server could send back total page count.
         // For now we'll just calculate it.
-        setData(response.data.items);
+        setData(transformData(response.data.items as IRowProperty[]));
         setPageCount(Math.ceil(response.data.total / pageSize));
 
         // setLoading(false);

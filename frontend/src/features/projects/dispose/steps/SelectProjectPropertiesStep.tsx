@@ -67,7 +67,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
 
   return isReadOnly ? null : (
     <Container fluid className="SelectProjectProperties">
-      <h3 className="mr-auto">Select 1 or more Properties for the Project</h3>
+      <h3 className="mr-auto">Search and select 1 or more properties for the project</h3>
       {!isReadOnly && (
         <Container fluid className="filter-container border-bottom">
           <Container className="px-0">

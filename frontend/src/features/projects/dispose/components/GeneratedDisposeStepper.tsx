@@ -16,7 +16,7 @@ interface GeneratedDisposeStepperProps {
  */
 const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepperProps) => {
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
-  const { projectStatusCompleted, canGoToStatus, currentStatus, project } = useStepper();
+  const { projectStatusCompleted, canGoToStatus, project } = useStepper();
   const steps = workflowStatuses.map(wfs => ({
     title: wfs.name,
     route: `${basePath}${wfs.route}?projectNumber=${project.projectNumber}`,
@@ -27,7 +27,7 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
     <Stepper
       activeStep={activeStep}
       steps={steps}
-      activeStepMessage={currentStatus?.description}
+      activeStepMessage="Complete this form to apply to Enhanced Referral Process or Request Exemption"
     ></Stepper>
   );
 };

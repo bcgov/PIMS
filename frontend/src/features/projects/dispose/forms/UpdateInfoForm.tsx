@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from 'react';
+import './UpdateInfoForm.scss';
+import React, { useState } from 'react';
 import { mapLookupCode } from 'utils';
 import { useFormikContext, getIn } from 'formik';
 import { Form, Select } from 'components/common/form';
@@ -7,6 +8,9 @@ import Button from 'react-bootstrap/Button';
 import _ from 'lodash';
 import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus } from '..';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { updateInfoMessage, tierTooltip } from '../strings';
+import { Container } from 'react-bootstrap';
 
 /**
  * Form component of UpdateInfoForm.
@@ -19,19 +23,22 @@ const UpdateInfoForm = ({ isReadOnly }: IStepProps) => {
   const [selectedProperties, setSelectedProperties] = useState([]);
 
   return (
-    <Fragment>
+    <Container fluid className="UpdateInfoForm">
       <Form.Row>
-        <h3 className="col-md-10">Properties in the Project</h3>
-        <span className="col-md-2">
+        <h3 className="col-md-8">Update Info</h3>
+        <span className="col-md-4">
           <Button className="edit" disabled={!disabled} onClick={() => setDisabled(false)}>
             Edit
           </Button>
         </span>
       </Form.Row>
       <Form.Row>
-        <Form.Label column md={1}>
-          Tier
+        <Form.Label column md={2}>
+          Assign Tier&nbsp;
+          <span className="required">*</span>
+          <TooltipIcon toolTipId="tier-info" toolTip={tierTooltip} placement="right" />
         </Form.Label>
+
         <Select
           disabled={disabled}
           outerClassName="col-md-2"
@@ -40,16 +47,23 @@ const UpdateInfoForm = ({ isReadOnly }: IStepProps) => {
           type="number"
           options={tierCodes}
         />
+      </Form.Row>
+
+      <Form.Row>
+        <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
+          {updateInfoMessage}
+        </h6>
+        <h2 className="col-md-5">Properties in the Project</h2>
         <ReviewButtons {...{ disabled, isReadOnly, selectedProperties, setSelectedProperties }} />
       </Form.Row>
 
       <PropertyListViewUpdate
         field="properties"
         disabled={disabled}
-        setSelectedRows={isReadOnly && !disabled ? setSelectedProperties : undefined}
+        setSelectedRows={!disabled ? setSelectedProperties : undefined}
       ></PropertyListViewUpdate>
       {!isReadOnly && <ProjectNotes />}
-    </Fragment>
+    </Container>
   );
 };
 
@@ -65,10 +79,10 @@ const ReviewButtons = ({
   const { goToStep } = useStepper();
   const { setFieldValue, values } = useFormikContext();
 
-  return isReadOnly && !disabled ? (
-    <div className="review-buttons col-md-9">
-      <Button onClick={() => goToStep(DisposeWorkflowStatus.SelectProperties)}>
-        Add Properties
+  return !disabled ? (
+    <div className="review-buttons col-md-7">
+      <Button variant="secondary" onClick={() => goToStep(DisposeWorkflowStatus.SelectProperties)}>
+        Add More Properties
       </Button>
       <Button
         onClick={() => {

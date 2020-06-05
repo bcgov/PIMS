@@ -16,7 +16,7 @@
 
   h1 {
     padding-bottom: 18px;
-    font-family: 'BCSans' Fallback, sans-serif;
+    font-family: 'BCSans', Fallback, sans-serif;
     font-weight: 700;
     font-size: 24px;
     color: #494949;
@@ -25,7 +25,7 @@
   p {
     font-size: 16px;
     color: #494949;
-    font-family: 'BCSans' Fallback, sans-serif;
+    font-family: 'BCSans', Fallback, sans-serif;
     line-height: 130%;
     width: 75%;
   }
@@ -40,5 +40,6 @@
 
   .border-dark {
     border-color: $primary-color !important;
+    color: #494949 !important;
   }
 }

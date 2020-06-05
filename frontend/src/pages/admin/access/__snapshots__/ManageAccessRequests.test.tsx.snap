@@ -483,13 +483,14 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               <a
                 href="/admin/user/userid"
               />
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -504,11 +505,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               firstName
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -523,11 +525,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               lastName
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -542,11 +545,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               user@email.com
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -561,11 +565,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               position 1
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -580,11 +585,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
+              title=""
             >
               On Hold
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -599,11 +605,12 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               agency 1
             </div>
             <div
-              className="td"
+              className="td clickable"
               onClick={[Function]}
               role="cell"
               style={
@@ -618,6 +625,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
+              title=""
             >
               role1
             </div>
@@ -637,6 +645,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "75px",
                 }
               }
+              title=""
             >
               <div>
                 <div

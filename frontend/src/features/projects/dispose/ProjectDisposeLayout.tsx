@@ -17,6 +17,7 @@ import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
+import SresManual from './components/SresManual';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -56,8 +57,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
-        <Container fluid className="ProjectDisposeView">
-          <h1>Dispose Project</h1>
+        <Container fluid className="ProjectDisposeLayout">
+          <SresManual />
+          <h1>Surplus Property Program Project</h1>
           <GeneratedDisposeStepper
             activeStep={currentStatus?.sortOrder ?? 0}
             basePath={match.url}
