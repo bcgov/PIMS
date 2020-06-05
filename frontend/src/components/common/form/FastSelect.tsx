@@ -20,6 +20,8 @@ type RequiredAttributes = {
 type OptionalAttributes = {
   /** The label used above the input element. */
   label?: string;
+  /** Names of the labels so the component knows what to filter by */
+  limitLabels?: string[];
   /** The underlying HTML element to use when rendering the FormControl */
   as?: React.ElementType;
   /** Short hint that describes the expected value of an <input> element */
@@ -52,6 +54,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     options,
     className,
     required,
+    limitLabels,
     disabled,
     multiple,
     outerClassName,
@@ -89,12 +92,39 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       return <option value="">{`${placeholder}${!label && required ? ' *' : ''}`}</option>;
     };
 
-    const renderOptions = () => {
-      return options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label}
+    const PreviousValue = () => {
+      let prevLabel;
+      if (!limitLabels) {
+        return null;
+      }
+      options.forEach((x: any) => {
+        if (x.value === value.toString()) {
+          prevLabel = x.label;
+        }
+      });
+      return (
+        <option key={value} value={value} hidden>
+          {prevLabel}
         </option>
-      ));
+      );
+    };
+
+    const limitedOptions = options.filter((x: any) => limitLabels?.includes(x?.label));
+
+    const renderOptions = () => {
+      if (!limitLabels) {
+        return options.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ));
+      } else {
+        return limitedOptions.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ));
+      }
     };
 
     useEffect(() => {
@@ -132,6 +162,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           {...rest}
         >
           <Placeholder />
+          <PreviousValue />
           {renderOptions()}
         </Form.Control>
         <DisplayError field={field} />
