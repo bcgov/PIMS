@@ -103,6 +103,15 @@ const useStepper = () => {
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
 
+  const route = currentStatus?.route;
+  const historyReplace = history.replace;
+  //The project number may be updated during the workflow, so update the URL in this case.
+  useEffect(() => {
+    if (currentStatus?.route !== undefined && project.projectNumber !== undefined) {
+      historyReplace(`/dispose${route}?projectNumber=${project.projectNumber}`);
+    }
+  }, [currentStatus, route, dispatch, historyReplace, project.projectNumber]);
+
   useEffect(() => {
     if (!workflowStatuses?.length) {
       dispatch(fetchProjectWorkflow());
