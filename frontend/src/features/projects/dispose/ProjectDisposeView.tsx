@@ -25,26 +25,30 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
   );
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
-  if (!projectNumber && workflowStatuses) {
-    (dispatch(createProject(initialValues)) as any).then((project: IProject) => {
-      dispatch(saveProject(project));
-      history.replace(
-        `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
-      );
-    });
-  }
+  const historyReplace = history.replace;
 
-  if (projectNumber?.includes('SPP') && getProjectRequest?.error) {
+  useEffect(() => {
+    if (!projectNumber && workflowStatuses) {
+      (dispatch(createProject(initialValues)) as any).then((project: IProject) => {
+        dispatch(saveProject(project));
+        historyReplace(
+          `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
+        );
+      });
+    }
+  }, [dispatch, historyReplace, match.url, projectNumber, workflowStatuses]);
+
+  if (projectNumber !== null && projectNumber !== undefined && getProjectRequest?.error) {
     throw Error(`Unable to load project number ${projectNumber}`);
   }
   useEffect(() => {
     //fetch project by number if match url param valid
-    if (projectNumber?.includes('SPP')) {
+    if (projectNumber !== null && projectNumber !== undefined) {
       dispatch(fetchProject(projectNumber as string));
     }
   }, [dispatch, projectNumber]);
 
-  return projectNumber ? (
+  return projectNumber !== null && projectNumber !== undefined ? (
     <StepContextProvider>
       <Container fluid className="ProjectDisposeView">
         <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>

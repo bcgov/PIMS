@@ -1,4 +1,9 @@
-import { createProject, updateProject, fetchProject } from '../projectsActionCreator';
+import {
+  createProject,
+  updateProject,
+  fetchProject,
+  updateWorkflowStatus,
+} from '../projectsActionCreator';
 import { ProjectActions } from 'constants/actionTypes';
 import { useDispatch } from 'react-redux';
 import { IProject } from '..';
@@ -9,20 +14,25 @@ import useStepper from './useStepper';
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useDispatch();
-  const { getLastCompletedStatusId } = useStepper();
+  const { getNextStep } = useStepper();
 
   const onSubmit = (values: IProject, actions: any) => {
     const apiValues = _.cloneDeep(values);
     let response: any;
-    apiValues.statusId = getLastCompletedStatusId();
-    if (!apiValues.projectNumber) {
+    const nextStep = getNextStep();
+    if (nextStep !== undefined) {
+      apiValues.statusId = nextStep.id;
+    }
+    if (nextStep?.isMilestone === true) {
+      response = dispatch(updateWorkflowStatus(apiValues, nextStep.code));
+    } else if (!apiValues.projectNumber) {
       response = dispatch(createProject(apiValues));
     } else {
       response = dispatch(updateProject(apiValues));
     }
     response
-      .then(() => {
-        dispatch(fetchProject(apiValues.projectNumber));
+      .then((values: any) => {
+        return dispatch(fetchProject(values.projectNumber));
       })
       .catch((error: any) => {
         actions.setStatus({ msg: error.toString() });

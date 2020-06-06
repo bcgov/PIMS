@@ -238,6 +238,7 @@ namespace Pims.Dal.Services
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
             // Add the tasks for project status.
+
             foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
             {
                 project.Tasks.Add(new ProjectTask(project, task.Task));
@@ -344,14 +345,14 @@ namespace Pims.Dal.Services
                     if (property.PropertyType == PropertyTypes.Land)
                     {
                         var existingParcel = this.Context.Parcels.Include(p => p.Agency).SingleOrDefault(p => p.Id == property.ParcelId);
-                        existingProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
+                        originalProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
                         if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
                         existingParcel.ProjectNumber = project.ProjectNumber;
                     }
                     else
                     {
                         var existingBuilding = this.Context.Buildings.Include(b => b.Agency).FirstOrDefault(p => p.Id == property.BuildingId);
-                        existingProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
+                        originalProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
                         if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
                         existingBuilding.ProjectNumber = project.ProjectNumber;
                     }
@@ -439,7 +440,7 @@ namespace Pims.Dal.Services
             var removePropertyIds = originalProject.Properties.Select(p => p.Id).Except(project.Properties.Select(p => p.Id));
             var removeProperties = originalProject.Properties.Where(p => removePropertyIds.Contains(p.Id));
 
-            var removeParcelIds = removeProperties.Select(p => p.ParcelId.Value).ToArray();
+            var removeParcelIds = removeProperties.Where(p => p.ParcelId.HasValue).Select(p => p.ParcelId.Value).ToArray();
             var removeParcels = this.Context.Parcels.Where(p => removeParcelIds.Contains(p.Id));
             removeParcels.ForEach(p =>
             {
@@ -447,7 +448,7 @@ namespace Pims.Dal.Services
                 this.Context.Parcels.Update(p);
             });
 
-            var removeBuildingIds = removeProperties.Select(p => p.BuildingId.Value).ToArray();
+            var removeBuildingIds = removeProperties.Where(b => b.BuildingId.HasValue).Select(p => p.BuildingId.Value).ToArray();
             var removeBuildings = this.Context.Buildings.Where(p => removeBuildingIds.Contains(p.Id));
             removeBuildings.ForEach(b =>
             {
@@ -481,7 +482,7 @@ namespace Pims.Dal.Services
             // Add the tasks for project status if they are not already added.
             foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
             {
-                project.Tasks.Add(new ProjectTask(project, task.Task));
+                originalProject.Tasks.Add(new ProjectTask(project, task.Task));
             }
 
             this.Context.SaveChanges();
@@ -607,7 +608,7 @@ namespace Pims.Dal.Services
                 .Include(s => s.ToStatus)
                 .FirstOrDefault(s => s.Id == fromStatusId);
             var toStatus = this.Context.ProjectStatus.Find(status.Id);
-            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == status.Id) && toStatus.Id != project.StatusId) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
             // Hardcoded logic to handle milestone project status transitions.
             // This could be extracted at some point to a configurable layer, but not required presently.

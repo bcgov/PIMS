@@ -5,6 +5,7 @@ import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsAction
  */
 export interface IProperty {
   id: number;
+  projectPropertyId?: number;
   propertyTypeId: number;
   propertyType: string;
   pid: string;
@@ -102,6 +103,7 @@ export interface IProjectTask {
   completedOn: Date;
 }
 export interface IProject {
+  id: number;
   projectNumber: string;
   name: string;
   description: string;
@@ -144,9 +146,8 @@ export interface IProjectProperty {
   building?: IApiProperty;
 }
 
-export const initialValues: IProject = {
-  projectNumber: '',
-  name: '',
+export const initialValues: any = {
+  name: 'Temp',
   note: '',
   description: '',
   properties: [],
@@ -157,6 +158,7 @@ export const initialValues: IProject = {
 };
 
 export interface IApiProject {
+  id: number;
   projectNumber: string;
   name: string;
   description: string;

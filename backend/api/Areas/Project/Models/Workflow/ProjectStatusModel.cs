@@ -15,6 +15,11 @@ namespace Pims.Api.Areas.Project.Models.Workflow
         /// get/set - The route to go to for this status.
         /// </summary>
         public string Route { get; set; }
+
+        /// <summary>
+        /// get/set - whether or not this status is a milestone, requiring special transition logic.
+        /// </summary>
+        public bool IsMilestone { get; set; }
         #endregion
     }
 }

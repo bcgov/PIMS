@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import { fetchProjectTasks, fetchProjectWorkflow } from '../projectsActionCreator';
+import { fetchProjectWorkflow } from '../projectsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IProject, initialValues, IStatus, StepperContext, IProjectWrapper } from '..';
@@ -96,23 +96,35 @@ const getLastCompletedStatusId = (
  * Used to synchronize stepper UI with step UI.
  */
 const useStepper = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
+  const dispatch = useDispatch();
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
 
+  const route = currentStatus?.route;
+  const historyReplace = history.replace;
+  //The project number may be updated during the workflow, so update the URL in this case.
   useEffect(() => {
-    dispatch(fetchProjectTasks(project.statusId));
-    dispatch(fetchProjectWorkflow());
-  }, [dispatch, project.statusId]);
+    if (currentStatus?.route !== undefined && project.projectNumber !== undefined) {
+      historyReplace(`/dispose${route}?projectNumber=${project.projectNumber}`);
+    }
+  }, [currentStatus, route, dispatch, historyReplace, project.projectNumber]);
+
+  useEffect(() => {
+    if (!workflowStatuses?.length) {
+      dispatch(fetchProjectWorkflow());
+    }
+  }, [dispatch, workflowStatuses]);
 
   return {
     currentStatus,
     setCurrentStatus,
     project,
     workflowStatuses,
+    getStatusById: (statusId: number): IStatus | undefined =>
+      _.find(workflowStatuses, { id: statusId }),
     getNextStep: () => getNextWorkflowStatus(workflowStatuses, currentStatus),
     nextStep: (): boolean => {
       const nextStatus = getNextWorkflowStatus(workflowStatuses, currentStatus);

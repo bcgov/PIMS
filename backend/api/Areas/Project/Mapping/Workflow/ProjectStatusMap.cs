@@ -10,6 +10,7 @@ namespace Pims.Api.Areas.Project.Mapping.Workflow
         {
             config.NewConfig<Entity.ProjectStatus, Model.ProjectStatusModel>()
                 .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.IsMilestone, src => src.IsMilestone)
                 .Map(dest => dest.Route, src => src.Route)
                 .Inherits<Entity.CodeEntity<int>, Api.Models.CodeModel<int>>();
         }

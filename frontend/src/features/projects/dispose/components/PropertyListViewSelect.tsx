@@ -121,7 +121,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             </Button>
           </Container>
           <Table<IProperty>
-            name="propertiesTable"
+            name="SelectPropertiesTable"
             columns={columns}
             data={data}
             lockPageSize
@@ -151,9 +151,9 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
           </Button>
         </Container>
         <Table<IProperty>
-          name="propertiesTable"
+          name="ProjectPropertiesTable"
           columns={columnsWithRemove}
-          data={projectProperties}
+          data={projectProperties ?? []}
           lockPageSize
           pageSize={-1}
           setSelectedRows={setRemovedProperties}

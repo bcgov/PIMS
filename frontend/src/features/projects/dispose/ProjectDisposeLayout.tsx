@@ -45,7 +45,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     });
 
   const getComponentPath = (wfc: ProjectWorkflowComponent) => {
-    return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
+    return `${match.url}${_.find(workflowStatuses, { sortOrder: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
             activeStep={currentStatus?.sortOrder ?? 0}
             basePath={match.url}
           />
-          {getProjectRequest && !getProjectRequest.isFetching ? (
+          {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
               {projectWorkflowComponents.map(wfc => (
                 <Route
