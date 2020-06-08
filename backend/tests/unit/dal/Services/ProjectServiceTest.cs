@@ -934,7 +934,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -958,7 +958,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -983,7 +983,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -1009,7 +1009,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
