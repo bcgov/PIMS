@@ -19,7 +19,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.Id, src => src.BuildingId ?? src.ParcelId)
                 .Map(dest => dest.Classification,
                     src => src.Building != null ? src.Building.Classification.Name : src.Parcel.Classification.Name)
-                .Map(dest => dest.Name, src => src.Building != null ? src.Building.Description : src.Parcel.Description)
+                .Map(dest => dest.Name, src => src.Building != null ? src.Building.Name : src.Parcel.Name)
                 .Map(dest => dest.Address,
                     src => src.Building != null
                         ? src.Building.Address.FormatAddress()

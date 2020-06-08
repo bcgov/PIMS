@@ -41,33 +41,7 @@ namespace Pims.Api.Test.Routes
         }
 
         [Fact]
-        public void GetBuildings_Query_Route()
-        {
-            // Arrange
-            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildings));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet();
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetBuildings_Filter_Route()
-        {
-            // Arrange
-            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildings), typeof(Dal.Entities.Models.BuildingFilter));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasPost("filter");
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetBuildingL_Route()
+        public void GetBuilding_Route()
         {
             // Arrange
             var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuilding), typeof(int));
@@ -76,32 +50,6 @@ namespace Pims.Api.Test.Routes
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("{id}");
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetBuildingsPage_Query_Route()
-        {
-            // Arrange
-            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildingsPage));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("page");
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetBuildingsPage_Filter_Route()
-        {
-            // Arrange
-            var endpoint = typeof(BuildingController).FindMethod(nameof(BuildingController.GetBuildingsPage), typeof(Dal.Entities.Models.BuildingFilter));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasPost("page/filter");
             endpoint.HasPermissions(Permissions.PropertyView);
         }
         #endregion

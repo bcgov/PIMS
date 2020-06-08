@@ -27,10 +27,12 @@ SELECT
     , [Province] = ap.[Name]
     , adr.[Postal]
     , p.[ProjectNumber]
+    , p.[Name]
     , p.[Description]
     , p.[Latitude]
     , p.[Longitude]
     , p.[IsSensitive]
+    , p.[IsVisibleToOtherAgencies]
 
     -- Parcel Properties
     , p.[PID]
@@ -136,10 +138,12 @@ SELECT
     , [Province] = ap.[Name]
     , adr.[Postal]
     , b.[ProjectNumber]
+    , b.[Name]
     , b.[Description]
     , b.[Latitude]
     , b.[Longitude]
     , b.[IsSensitive]
+    , b.[IsVisibleToOtherAgencies]
 
     -- Parcel Properties
     , [PID] = p.[PID]

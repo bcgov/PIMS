@@ -31,6 +31,8 @@ First login to Keycloak, create the `pims-service-account` Client and apply the 
    - Client Roles = `realm-management`
    - Assigned Roles = `realm-admin`
 
+   ![keycloak console](./pims-service-account-config.png)
+
 3. Copy the Client Secret and place it in your `.env` file. And update the environment value to the appropiate one _[Local, Development, Test, Production]_.\_
 
    ```conf

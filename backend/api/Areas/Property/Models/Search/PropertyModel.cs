@@ -59,6 +59,11 @@ namespace Pims.Api.Areas.Property.Models.Search
         public double Longitude { get; set; }
 
         /// <summary>
+        /// get/set - The property name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - The property description.
         /// </summary>
         public string Description { get; set; }

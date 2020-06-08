@@ -86,5 +86,16 @@ namespace Pims.Core.Test
             var agencies = String.Join(",", agencyId);
             return user.AddClaim("agencies", agencies);
         }
+
+        /// <summary>
+        /// Add the claim 'agencies' to the specified 'user'.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="agencyIds"></param>
+        /// <returns></returns>
+        public static ClaimsPrincipal AddAgency(this ClaimsPrincipal user, IEnumerable<int> agencyIds)
+        {
+            return user.AddClaim("agencies", String.Join(",", agencyIds));
+        }
     }
 }

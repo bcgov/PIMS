@@ -253,6 +253,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 p_e.AgencyId = agency?.Id ??
                     throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
+                p_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 p_e.Description = property.Description;
                 p_e.Latitude = latitude != 0 ? latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
                 p_e.Longitude = longitude != 0 ? longitude : p_e.Longitude;
@@ -362,6 +363,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.ParcelId = parcel?.Id ??
                     throw new InvalidOperationException($"Parcel '{property.ParcelId}' does not exist.");
                 b_e.LocalId = property.LocalId;
+                b_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 b_e.Description = property.Description;
                 b_e.Latitude = latitude;
                 b_e.Longitude = longitude;

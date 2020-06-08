@@ -179,34 +179,41 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// Update the specified building in the datasource.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="building"></param>
         /// <returns></returns>
-        public override Building Update(Building entity)
+        public override Building Update(Building building)
         {
-            entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var building = this.Context.Buildings.Find(entity.Id);
-            if (building == null) throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(building).CurrentValues.SetValues(entity);
-            return base.Update(building);
+            var userAgencies = this.User.GetAgencies();
+            var originalAgencyId = (int)this.Context.Entry(existingBuilding).OriginalValues[nameof(Building.AgencyId)];
+            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
+
+            // Do not allow switching agencies through this method.
+            if (originalAgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
+
+            // Do not allow making property visible through this service.
+            if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
+
+            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+            return base.Update(existingBuilding);
         }
 
         /// <summary>
         /// Remove the specified building from the datasource.
         /// </summary>
-        /// <param name="entity"></param>
-        public override void Remove(Building entity)
+        /// <param name="building"></param>
+        public override void Remove(Building building)
         {
-            entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
-            var building = this.Context.Buildings.Find(entity.Id);
-            if (building == null) throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(building).CurrentValues.SetValues(entity);
-            base.Remove(building);
+            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+            base.Remove(existingBuilding);
         }
         #endregion
     }

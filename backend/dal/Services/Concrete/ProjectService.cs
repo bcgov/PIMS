@@ -324,6 +324,9 @@ namespace Pims.Dal.Services
                 var toStatus = this.Context.ProjectStatus.Find(project.StatusId);
                 if (toStatus.IsMilestone) throw new InvalidOperationException($"Project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}' requires a milestone transition.");
                 if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+
+                // Validate that all required tasks have been completed before allowing transition from one status to another.
+                if (originalProject.Tasks.Any(t => !t.IsCompleted && !t.Task.IsOptional)) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
 
             // Update a project
@@ -610,6 +613,13 @@ namespace Pims.Dal.Services
             var toStatus = this.Context.ProjectStatus.Find(status.Id);
             if (!fromStatus.ToStatus.Any(s => s.ToStatusId == status.Id) && toStatus.Id != project.StatusId) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
+            // Validate that all required tasks have been completed before allowing transition from one status to another.
+            var tasks = this.Context.Entry(originalProject)
+                .Collection(p => p.Tasks)
+                .Query()
+                .Include(t => t.Task);
+            if (tasks.Any(t => !t.IsCompleted && !t.Task.IsOptional)) throw new InvalidOperationException("Not all required tasks have been completed.");
+
             // Hardcoded logic to handle milestone project status transitions.
             // This could be extracted at some point to a configurable layer, but not required presently.
             switch (toStatus.Code)
@@ -622,9 +632,38 @@ namespace Pims.Dal.Services
                     originalProject.SubmittedOn = DateTime.UtcNow;
                     break;
                 case ("AP-ERP"): // Approve for ERP
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    originalProject.ApprovedOn = DateTime.UtcNow;
+                    originalProject.Properties.ForEach(p =>
+                    {
+                        if (p.BuildingId.HasValue)
+                        {
+                            p.Building.IsVisibleToOtherAgencies = true;
+                            this.Context.Buildings.Update(p.Building);
+                        }
+                        else if (p.ParcelId.HasValue)
+                        {
+                            p.Parcel.IsVisibleToOtherAgencies = true;
+                            this.Context.Parcels.Update(p.Parcel);
+                        }
+                    });
+                    break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
+                    originalProject.Properties.ForEach(p =>
+                    {
+                        if (p.BuildingId.HasValue)
+                        {
+                            p.Building.IsVisibleToOtherAgencies = false;
+                            this.Context.Buildings.Update(p.Building);
+                        }
+                        else if (p.ParcelId.HasValue)
+                        {
+                            p.Parcel.IsVisibleToOtherAgencies = false;
+                            this.Context.Parcels.Update(p.Parcel);
+                        }
+                    });
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
