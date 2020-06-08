@@ -7,6 +7,8 @@ export interface IStatus {
   description: string;
   route: string;
   workflow: string;
+  code: string;
+  isMilestone: boolean;
 }
 export const saveProjectStatus = createAction<IStatus>('saveProjectStatus');
 export const clearProjectStatus = createAction('clearProjectStatus');

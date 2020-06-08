@@ -41,7 +41,6 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               placeholder="SPP-XXXXXX"
-              value=""
             />
           </span>
         </div>
@@ -74,7 +73,7 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               required={true}
-              value=""
+              value="Temp"
             />
           </span>
         </div>

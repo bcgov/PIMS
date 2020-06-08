@@ -79,8 +79,9 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency)
+        public static Entity.Project CreateProject(this PimsContext context, int id, int agencyId)
         {
+            var agency = context.Agencies.Find(agencyId) ?? EntityHelper.CreateAgency(agencyId);
             return context.CreateProject(id, agency);
         }
 

@@ -41,6 +41,12 @@ namespace Pims.Dal.Entities.Models
         public string ProjectNumber { get; set; }
 
         /// <summary>
+        /// get/set - Flag indicating properties in projects should be ignored.
+        /// </summary>
+        /// <value></value>
+        public bool? IgnorePropertiesInProjects { get; set; }
+
+        /// <summary>
         /// get/set - Building classification Id.
         /// </summary>
         /// <value></value>
@@ -157,6 +163,7 @@ namespace Pims.Dal.Entities.Models
             this.SWLongitude = filter.GetDoubleNullValue(nameof(this.SWLongitude));
 
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
+            this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
@@ -183,6 +190,7 @@ namespace Pims.Dal.Entities.Models
                 || this.SWLatitude.HasValue
                 || this.SWLongitude.HasValue
                 || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                || this.IgnorePropertiesInProjects == true
                 || !String.IsNullOrWhiteSpace(this.Address)
                 || !String.IsNullOrWhiteSpace(this.Description)
                 || this.MaxAssessedValue.HasValue

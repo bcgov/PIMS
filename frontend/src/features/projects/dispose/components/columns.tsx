@@ -131,7 +131,6 @@ export const getColumns = (editable?: boolean): any => [
     accessor: 'netBook',
     Cell: editable ? EditableMoneyCell : MoneyCell,
     align: 'left',
-    clickable: true,
     Footer: ({ properties }: { properties: IProperty[] }) => (
       <span>{sumFinancialRows(properties, 'netBook')}</span>
     ),
@@ -141,7 +140,6 @@ export const getColumns = (editable?: boolean): any => [
     accessor: 'estimated',
     Cell: editable ? EditableMoneyCell : MoneyCell,
     align: 'left',
-    clickable: true,
     Footer: ({ properties }: { properties: IProperty[] }) => (
       <span>{sumFinancialRows(properties, 'estimated')}</span>
     ),

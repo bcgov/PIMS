@@ -93,7 +93,6 @@ namespace Pims.Core.Test
         public static Entity.Building CreateBuilding(this PimsContext context, Entity.Parcel parcel, int id, string projectNumber = null, string localId = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
             localId ??= $"l{id}";
-            projectNumber ??= $"p{id}";
             agency ??= parcel.Agency;
             var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
