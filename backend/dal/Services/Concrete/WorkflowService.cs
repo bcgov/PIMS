@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Entities;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -30,6 +32,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<Workflow> Get()
         {
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
             var workflows = this.Context.Workflows
                 .AsNoTracking()
                 .OrderBy(t => t.SortOrder)
@@ -46,6 +49,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Workflow Get(int id)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
             var workflow = this.Context.Workflows
                 .AsNoTracking()
                 .Include(w => w.Status)
@@ -63,6 +67,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Workflow Get(string code)
         {
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
             var workflow = this.Context.Workflows
                 .AsNoTracking()
                 .Include(w => w.Status)

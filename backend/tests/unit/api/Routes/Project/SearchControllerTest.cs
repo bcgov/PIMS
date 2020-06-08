@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Project.Controllers;
 using Pims.Dal.Entities.Models;
 using Model = Pims.Api.Areas.Project.Models.Search;
+using Pims.Dal.Security;
 
 namespace Pims.Api.Test.Routes.Project
 {
@@ -52,6 +53,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("page");
+            endpoint.HasPermissions(Permissions.ProjectView);
         }
 
         [Fact]
@@ -64,6 +66,7 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPost("page/filter");
+            endpoint.HasPermissions(Permissions.ProjectView);
         }
         #endregion
     }

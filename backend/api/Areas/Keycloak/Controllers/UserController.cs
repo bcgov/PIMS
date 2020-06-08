@@ -58,6 +58,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
+        [HasPermission(Permissions.AdminUsers)]
         public async Task<IActionResult> SyncUserAsync(Guid id)
         {
             var user = await _keycloakService.SyncUserAsync(id);
@@ -80,6 +81,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
+        [HasPermission(Permissions.AdminUsers)]
         public async Task<IActionResult> GetUsersAsync(int page = 1, int quantity = 10, string search = null)
         {
             var users = await _keycloakService.GetUsersAsync(page, quantity, search);
@@ -99,6 +101,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
+        [HasPermission(Permissions.AdminUsers)]
         public async Task<IActionResult> GetUserAsync(Guid id)
         {
             var user = await _keycloakService.GetUserAsync(id);
@@ -118,6 +121,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(AdminModels.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
+        [HasPermission(Permissions.AdminUsers)]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Parameter 'id' is required for route.")]
         public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] AdminModels.UserModel model)
         {
@@ -137,6 +141,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
+        [HasPermission(Permissions.AdminUsers)]
         public async Task<IActionResult> UpdateAccessRequestAsync(Model.AccessRequestModel updateModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(updateModel);

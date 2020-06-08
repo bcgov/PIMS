@@ -42,11 +42,13 @@ namespace Pims.Dal.Services
         /// Get a page with an array of projects within the specified filters.
         /// </summary>
         /// <param name="filter"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to view projects.</exception>
         /// <returns></returns>
         public Paged<Project> GetPage(ProjectFilter filter)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             filter.ThrowIfNull(nameof(filter));
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
             if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
 
             var query = this.Context.GenerateQuery(this.User, filter);
@@ -64,16 +66,18 @@ namespace Pims.Dal.Services
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="id"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist in the datasource.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to view project.</exception>
         /// <returns></returns>
         public Project Get(int id)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             var project = this.Context.Projects
                 .Include(p => p.Status)
@@ -124,17 +128,19 @@ namespace Pims.Dal.Services
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
         /// <param name="id"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist in the datasource.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to view project.</exception>
         /// <returns></returns>
         public Project Get(string projectNumber)
         {
             if (String.IsNullOrWhiteSpace(projectNumber)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(projectNumber));
-            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             var project = this.Context.Projects
                 .Include(p => p.Status)
@@ -202,11 +208,15 @@ namespace Pims.Dal.Services
         /// All projects start with the default status (i.e. 1:DRAFT).
         /// </summary>
         /// <param name="project"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="ArgumentException">Argument 'project.Name' is required.</exception>
+        /// <exception cref="KeyNotFoundException">Default status does not exist.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to add project.</exception>
         /// <returns></returns>
         public Project Add(Project project)
         {
             project.ThrowIfNull(nameof(project));
-            this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectAdd);
 
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding projects.");
@@ -262,13 +272,18 @@ namespace Pims.Dal.Services
         /// Update the specified project in the datasource.
         /// </summary>
         /// <param name="project"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="ArgumentException">Argument 'project.Name' is required.</exception>
+        /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
+        /// <exception cref="InvalidOperationException">Project number cannot be changed.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
+        /// <exception cref="NotAuthorizedException">Project cannot be transfered to another agency.</exception>
         /// <returns></returns>
         public Project Update(Project project)
         {
-            project.ThrowIfNull(nameof(project));
-            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
 
@@ -463,14 +478,17 @@ namespace Pims.Dal.Services
         /// Remove the specified project from the datasource.
         /// </summary>
         /// <param name="project"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to delete project.</exception>
         /// <returns></returns>
         public void Remove(Project project)
         {
-            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
+            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectDelete, Permissions.AdminProjects });
 
             var userAgencies = this.User.GetAgencies();
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
             var originalProject = this.Context.Projects
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Parcel)
@@ -495,7 +513,7 @@ namespace Pims.Dal.Services
 
                 this.Context.ProjectProperties.Remove(p);
             });
-            this.Context.Projects.Remove(originalProject); // TODO: Shouldn't be allowed to permanently delete projects entirely.
+            this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
         }
 
@@ -508,6 +526,16 @@ namespace Pims.Dal.Services
         /// <param name="project"></param>
         /// <param name="workflowCode"></param>
         /// <param name="statusCode"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'workflow' is required.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
+        /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to submit request.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to approve request.</exception>
+        /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
+        /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
         public Project SetStatus(Project project, string workflowCode, string statusCode)
         {
@@ -529,15 +557,24 @@ namespace Pims.Dal.Services
         /// <param name="project"></param>
         /// <param name="workflow"></param>
         /// <param name="status"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'workflow' is required.</exception>
+        /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
+        /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
+        /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to submit request.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to approve request.</exception>
+        /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
+        /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
         public Project SetStatus(Project project, Workflow workflow, ProjectStatus status)
         {
-            if (project == null) throw new ArgumentNullException(nameof(project));
-            if (workflow == null) throw new ArgumentNullException(nameof(workflow));
-            if (status == null) throw new ArgumentNullException(nameof(status));
+            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
+            workflow.ThrowIfNull(nameof(workflow));
+            status.ThrowIfNull(nameof(status));
 
-            project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             var originalProject = this.Context.Projects
                 .Include(p => p.Properties)
@@ -562,6 +599,7 @@ namespace Pims.Dal.Services
             switch (toStatus.Code)
             {
                 case ("SU"): // Submit
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeRequest, "User does not have permission to submit project.");
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
                     this.Context.UpdateProjectNumber(originalProject, projectNumber);
@@ -569,9 +607,12 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-ERP"): // Approve for ERP
                 case ("AP-SPL"): // Approve for SPL
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     break;
                 case ("DE"): // Deny
+                    // Must have shared note with a reason.
+                    if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
                     originalProject.Properties.ForEach(p =>
                     {

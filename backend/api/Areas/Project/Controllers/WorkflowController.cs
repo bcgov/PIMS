@@ -49,7 +49,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="workflowCode"></param>
         /// <returns></returns>
         [HttpGet("{workflowCode}")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -68,9 +68,10 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="workflowCode"></param>
         /// <returns></returns>
         [HttpGet("{workflowCode}/tasks")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetTasksForWorkflow(string workflowCode)
         {
@@ -84,9 +85,10 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="statusCode"></param>
         /// <returns></returns>
         [HttpGet("tasks/{statusCode}")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetTasksForStatus(string statusCode)
         {
@@ -100,9 +102,10 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="statusId"></param>
         /// <returns></returns>
         [HttpGet("tasks/{statusId:int}")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetTasksForStatus(int statusId)
         {

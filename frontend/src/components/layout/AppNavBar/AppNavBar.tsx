@@ -96,7 +96,7 @@ function AdminDropdown() {
  */
 function ViewProjects() {
   const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
+  return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
     <Nav.Link href="/projects/list">View Projects</Nav.Link>
   ) : null;
 }
@@ -107,7 +107,7 @@ function ViewProjects() {
 function DisposeRequest() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  return keycloak.hasClaim(Claims.DISPOSE_REQUEST) ? (
+  return keycloak.hasClaim(Claims.PROJECT_ADD) ? (
     <Nav.Link onClick={() => history.push('/dispose')}>Dispose Properties</Nav.Link>
   ) : null;
 }

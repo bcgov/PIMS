@@ -59,7 +59,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyView);
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -82,7 +82,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyView);
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -124,7 +124,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyAdd);
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectAdd);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -149,7 +149,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyEdit);
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectEdit);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
@@ -174,7 +174,7 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<DisposeController>(Permissions.PropertyDelete);
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();

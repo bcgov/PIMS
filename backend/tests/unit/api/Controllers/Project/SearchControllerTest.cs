@@ -64,7 +64,7 @@ namespace Pims.Api.Test.Controllers.Project
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.ProjectView);
 
             var projects = EntityHelper.CreateProjects(1, 20);
             var parcels = EntityHelper.CreateParcels(1, 2);
@@ -102,7 +102,7 @@ namespace Pims.Api.Test.Controllers.Project
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<SearchController>(Permissions.PropertyView, uri);
+            var controller = helper.CreateController<SearchController>(Permissions.ProjectView, uri);
 
             var projects = EntityHelper.CreateProjects(1, 20);
             var parcels = EntityHelper.CreateParcels(1, 2);
@@ -139,7 +139,7 @@ namespace Pims.Api.Test.Controllers.Project
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.ProjectView);
             var request = helper.GetService<Mock<HttpRequest>>();
             request.Setup(m => m.QueryString).Returns(new QueryString("?page=0"));
 
@@ -159,7 +159,7 @@ namespace Pims.Api.Test.Controllers.Project
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
+            var controller = helper.CreateController<SearchController>(Permissions.ProjectView);
 
             var service = helper.GetService<Mock<IPimsService>>();
 

@@ -57,7 +57,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
             var service = helper.CreateService<ProjectService>(user);
 
             // Act
@@ -91,7 +91,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1, 3);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1, 3);
 
             using var init = helper.InitializeDatabase(user);
             var projects = init.CreateProjects(1, 20);
@@ -124,7 +124,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.AdminProjects);
 
             using var init = helper.InitializeDatabase(user);
             var projects = init.CreateProjects(1, 20);
@@ -181,7 +181,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -201,7 +201,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.SensitiveView);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -221,7 +221,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -250,7 +250,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.AdminProjects);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -275,7 +275,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -309,7 +309,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.SensitiveView).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -343,7 +343,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties, Permissions.PropertyView, Permissions.SensitiveView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.AdminProjects, Permissions.ProjectView, Permissions.SensitiveView);
 
             using var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -380,7 +380,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
 
             project.ProjectNumber = "test-generation-override";
@@ -403,7 +403,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
@@ -425,7 +425,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
             var init = helper.CreatePimsContext(user);
             var project = EntityHelper.CreateProject(1);
             init.AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
@@ -457,7 +457,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
             var init = helper.CreatePimsContext(user);
             var project = EntityHelper.CreateProject(1);
 
@@ -484,7 +484,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -498,7 +498,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency);
@@ -516,7 +516,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency);
@@ -534,7 +534,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyAdd).AddAgency(2);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(2);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency);
@@ -554,7 +554,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.CreatePimsContext(user);
             var project = init.CreateProject(1);
@@ -579,7 +579,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.AdminProjects).AddAgency(1);
 
             var init = helper.CreatePimsContext(user);
             var project = init.CreateProject(1);
@@ -605,7 +605,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -631,7 +631,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -667,7 +667,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -701,7 +701,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -733,7 +733,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -771,7 +771,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -806,7 +806,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
@@ -841,7 +841,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -855,7 +855,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency);
@@ -873,7 +873,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
@@ -891,7 +891,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit).AddAgency(2);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(2);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
@@ -909,7 +909,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
@@ -935,7 +935,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete);
             var find = EntityHelper.CreateProject(1);
             var project = EntityHelper.CreateProject(2);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
@@ -976,7 +976,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -996,7 +996,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete, Permissions.AdminProjects);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
@@ -1018,7 +1018,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 

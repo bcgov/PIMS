@@ -51,6 +51,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.RoleModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-role" })]
+        [HasPermission(Permissions.AdminRoles)]
         public async Task<IActionResult> SyncRolesAsync()
         {
             var roles = await _keycloakService.SyncRolesAsync();
@@ -71,6 +72,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.RoleModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-role" })]
+        [HasPermission(Permissions.AdminRoles)]
         public async Task<IActionResult> GetRolesAsync(int page = 1, int quantity = 10, string search = null)
         {
             var roles = await _keycloakService.GetRolesAsync(page, quantity, search);
@@ -91,6 +93,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-role" })]
+        [HasPermission(Permissions.AdminRoles)]
         public async Task<IActionResult> GetRoleAsync(Guid id)
         {
             var role = await _keycloakService.GetRoleAsync(id);
@@ -111,6 +114,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-role" })]
+        [HasPermission(Permissions.AdminRoles)]
         public async Task<IActionResult> UpdateRoleAsync(Guid id, [FromBody] Model.Update.RoleModel model)
         {
             var role = _mapper.Map<Entity.Role>(model);
