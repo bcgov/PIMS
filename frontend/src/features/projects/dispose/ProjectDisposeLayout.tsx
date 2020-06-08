@@ -28,7 +28,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const { nextStep } = useStepper();
+  const { nextStep, project } = useStepper();
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
@@ -52,7 +52,17 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
     statusAtRoute = statusAtRoute ?? workflowStatuses[0];
     if (setCurrentStatus) setCurrentStatus(statusAtRoute);
-  }, [location.pathname, setCurrentStatus, workflowStatuses]);
+    if (statusAtRoute?.route !== undefined && project.projectNumber !== undefined) {
+      history.replace(`/dispose${statusAtRoute?.route}?projectNumber=${project.projectNumber}`);
+    }
+  }, [
+    location.pathname,
+    history.replace,
+    project.projectNumber,
+    setCurrentStatus,
+    workflowStatuses,
+    history,
+  ]);
 
   return (
     <>

@@ -81,7 +81,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.Project CreateProject(this PimsContext context, int id, int agencyId)
         {
-            var agency = EntityHelper.CreateAgency(agencyId);
+            var agency = context.Agencies.Find(agencyId) ?? EntityHelper.CreateAgency(agencyId);
             return context.CreateProject(id, agency);
         }
 
