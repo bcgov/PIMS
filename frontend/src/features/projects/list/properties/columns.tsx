@@ -141,7 +141,7 @@ export const columns: ColumnWithProps<IProjectProperty>[] = [
     width: spacing.small,
     minWidth: 65,
     Cell: (props: CellProps<IProjectProperty, number>) => {
-      return <Link to={`/submitProperty/${props.row.original.id}?disabled=true`}>View</Link>;
+      return <Link to={`/submitProperty/${props.row.original.parcelId}?disabled=true`}>View</Link>;
     },
   },
 ];

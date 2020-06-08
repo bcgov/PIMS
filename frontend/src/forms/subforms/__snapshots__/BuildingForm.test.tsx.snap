@@ -30,6 +30,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-address.line1"
             name="address.line1"
             onBlur={[Function]}
@@ -55,6 +56,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             <input
               autoComplete="new-password"
               className="form-control"
+              disabled={false}
               id="input-address.cityId"
               name="address.cityId"
               onChange={[Function]}
@@ -111,6 +113,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-address.postal"
             name="address.postal"
             onBlur={[Function]}
@@ -136,6 +139,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <select
             className="form-control"
+            disabled={false}
             id="input-buildingConstructionTypeId"
             name="buildingConstructionTypeId"
             onBlur={[Function]}
@@ -175,6 +179,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-rentableArea"
                 name="rentableArea"
                 onBlur={[Function]}
@@ -208,6 +213,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-buildingFloorCount"
             name="buildingFloorCount"
             onBlur={[Function]}
@@ -230,6 +236,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <select
             className="form-control"
+            disabled={false}
             id="input-buildingPredominateUseId"
             name="buildingPredominateUseId"
             onBlur={[Function]}
@@ -271,6 +278,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-latitude"
             name="latitude"
             onBlur={[Function]}
@@ -293,6 +301,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-longitude"
             name="longitude"
             onBlur={[Function]}
@@ -343,6 +352,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <select
             className="form-control"
+            disabled={false}
             id="input-classificationId"
             name="classificationId"
             onBlur={[Function]}
@@ -387,6 +397,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <select
             className="form-control"
+            disabled={false}
             id="input-buildingOccupantTypeId"
             name="buildingOccupantTypeId"
             onBlur={[Function]}
@@ -494,6 +505,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-buildingTenancy"
             name="buildingTenancy"
             onBlur={[Function]}
@@ -515,6 +527,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         >
           <input
             className="form-control"
+            disabled={false}
             id="input-occupantName"
             name="occupantName"
             onBlur={[Function]}
@@ -605,6 +618,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -630,6 +644,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -678,6 +693,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -703,6 +719,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -751,6 +768,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -776,6 +794,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     >
                       <input
                         className="form-control"
+                        disabled={false}
                         name="financials.-1.value"
                         onBlur={[Function]}
                         onChange={[Function]}

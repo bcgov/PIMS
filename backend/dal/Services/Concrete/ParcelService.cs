@@ -164,7 +164,7 @@ namespace Pims.Dal.Services
                 b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Find(b.BuildingConstructionTypeId);
                 b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Find(b.BuildingOccupantTypeId);
                 b.BuildingPredominateUse = this.Context.BuildingPredominateUses.Find(b.BuildingPredominateUseId);
-                
+
             });
 
             this.Context.Parcels.Add(parcel);
@@ -210,6 +210,8 @@ namespace Pims.Dal.Services
             {
                 this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel); // TODO: Fix concurrency issue
                 this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
+                this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
+
                 foreach (var building in parcel.Buildings)
                 {
                     var existingBuilding = existingParcel.Buildings
@@ -222,6 +224,8 @@ namespace Pims.Dal.Services
                     else
                     {
                         this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+                        this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, existingBuilding);
+
                         this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
 
                         foreach (var buildingEvaluation in building.Evaluations)
@@ -291,6 +295,8 @@ namespace Pims.Dal.Services
                 if (matchingBuilding == null)
                 {
                     this.Context.Buildings.Remove(building);
+                    this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, building);
+
                     continue;
                 }
                 foreach (var buildingEvaluation in building.Evaluations)
@@ -309,6 +315,7 @@ namespace Pims.Dal.Services
                 }
             }
 
+            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return parcel;
@@ -341,11 +348,14 @@ namespace Pims.Dal.Services
                 throw new NotAuthorizedException("User does not have permission to delete.");
 
             this.Context.Entry(entity).CurrentValues.SetValues(parcel);
+            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, entity);
+
             entity.Buildings.ForEach((building) =>
             {
                 this.Context.BuildingEvaluations.RemoveRange(building.Evaluations);
                 this.Context.BuildingFiscals.RemoveRange(building.Fiscals);
                 this.Context.Buildings.Remove(building);
+                this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, building);
             });
             this.Context.ParcelEvaluations.RemoveRange(entity.Evaluations);
             this.Context.ParcelFiscals.RemoveRange(entity.Fiscals);

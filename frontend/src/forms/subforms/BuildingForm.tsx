@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { FormikProps, getIn } from 'formik';
 import React from 'react';
@@ -62,6 +62,8 @@ interface BuildingProps {
   disabled?: boolean;
 }
 const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
+  const keycloak = useKeycloakWrapper();
+
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
@@ -80,7 +82,18 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const withNameSpace: Function = (name?: string) => {
     return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
   };
+  const [readonly, setReadonly] = useState(false);
 
+  React.useEffect(() => {
+    if (props.nameSpace && props.index !== undefined) {
+      setReadonly(
+        !!props.values[props.nameSpace as string][props.index].projectNumber &&
+          !keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+      );
+    } else {
+      setReadonly(false);
+    }
+  }, [keycloak, props.values, props.nameSpace, props.index]);
   //set the lat/lon of this building, but only if the building lat/lon has no value.
   if (!getIn(props.values, withNameSpace('latitude')) && props.values.latitude) {
     props.setFieldValue(withNameSpace('latitude'), props.values.latitude);
@@ -89,14 +102,16 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
     props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
   }
 
-  const keycloak = useKeycloakWrapper();
-
   const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
 
   return (
     <Fragment>
       <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
-        <AddressForm {...props} nameSpace={withNameSpace('address')} />
+        <AddressForm
+          {...props}
+          nameSpace={withNameSpace('address')}
+          disabled={props.disabled || readonly}
+        />
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
@@ -104,7 +119,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastSelect
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingConstructionTypeId')}
@@ -119,7 +134,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             <InputGroup
               fast={true}
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               type="number"
               outerClassName="col-md-7"
               field={withNameSpace('rentableArea')}
@@ -132,7 +147,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastInput
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               type="number"
               outerClassName="col-md-10"
               field={withNameSpace('buildingFloorCount')}
@@ -144,7 +159,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastSelect
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingPredominateUseId')}
@@ -162,7 +177,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastInput
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               type="number"
               outerClassName="col-md-10"
               field={withNameSpace('latitude')}
@@ -174,7 +189,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastInput
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               type="number"
               outerClassName="col-md-10"
               field={withNameSpace('longitude')}
@@ -198,7 +213,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastSelect
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               outerClassName="col-md-10"
               placeholder="Must Select One"
               field={withNameSpace('classificationId')}
@@ -217,7 +232,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastSelect
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               placeholder="Must Select One"
               outerClassName="col-md-10"
               field={withNameSpace('buildingOccupantTypeId')}
@@ -230,7 +245,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               Lease to be transferred with land
             </Form.Label>
             <Check
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               outerClassName="col-md-10"
               field={withNameSpace('transferLeaseOnSale')}
             />
@@ -242,7 +257,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             <FastDatePicker
               outerClassName="col-md-10"
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               field={withNameSpace('leaseExpiry')}
             />
           </Form.Row>
@@ -254,7 +269,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastInput
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               outerClassName="col-md-10"
               field={withNameSpace('buildingTenancy')}
             />
@@ -265,7 +280,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
             </Form.Label>
             <FastInput
               formikProps={props}
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               outerClassName="col-md-10"
               field={withNameSpace('occupantName')}
             />
@@ -275,7 +290,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               Sensitive Building
             </Form.Label>
             <Check
-              disabled={props.disabled}
+              disabled={props.disabled || readonly}
               className="col-md-10"
               field={withNameSpace('sensitiveBuilding')}
             />
@@ -285,7 +300,11 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
       <Row noGutters>
         <Col>
           <h4>Building Valuation Information</h4>
-          <EvaluationForm {...props} nameSpace={withNameSpace('financials')} />
+          <EvaluationForm
+            {...props}
+            nameSpace={withNameSpace('financials')}
+            disabled={props.disabled || readonly}
+          />
         </Col>
       </Row>
     </Fragment>

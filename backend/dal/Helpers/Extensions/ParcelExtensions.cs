@@ -141,5 +141,15 @@ namespace Pims.Dal.Helpers.Extensions
 
             return query;
         }
+
+        /// <summary>
+        /// Get a parcel id
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <returns></returns>
+        public static int? GetId(this Entity.Parcel parcel)
+        {
+            return parcel?.Id;
+        }
     }
 }

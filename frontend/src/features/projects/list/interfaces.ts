@@ -15,6 +15,7 @@ export interface IProjectProperty {
   netBook: number;
   assessed: number;
   landArea: number;
+  parcelId: number;
 }
 
 /**

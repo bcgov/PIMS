@@ -46,6 +46,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                     src => src.Building != null ? GetAgencyName(src.Building.Agency) : GetAgencyName(src.Parcel.Agency))
 
                 .Map(dest => dest.LandArea, src => src.Building != null ? GetLandArea(src.Building.Parcel) : GetLandArea(src.Parcel))
+                .Map(dest => dest.ParcelId, src => src.Building != null ? src.Building.Parcel.GetId() : src.Parcel.GetId())
                 .Inherits<BaseEntity, BaseModel>();
 
         }
