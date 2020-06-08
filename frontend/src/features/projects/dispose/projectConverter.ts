@@ -27,6 +27,7 @@ export const toFlatProject = (project?: IApiProject) => {
     const estimated = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Estimated);
     const property: IProperty = {
       id: apiProperty.id,
+      projectPropertyId: pp.id,
       parcelId: pp.parcelId,
       pid: apiProperty.pid ?? '',
       statusId: apiProperty.statusId,
@@ -149,6 +150,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
 export const toApiProject = (project: IProject) => {
   const projectProperties = project.properties.map(property => {
     const projectProperty: IProjectProperty = {
+      id: property.projectPropertyId,
       projectNumber: project.projectNumber,
       propertyType: property.propertyTypeId === 0 ? 'Land' : 'Building',
       parcelId: property.propertyTypeId === 0 ? property.id : undefined,
@@ -160,6 +162,7 @@ export const toApiProject = (project: IProject) => {
   });
 
   const flatProject: IApiProject = {
+    id: project.id,
     projectNumber: project.projectNumber,
     name: project.name,
     description: project.description,

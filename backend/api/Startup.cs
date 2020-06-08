@@ -37,6 +37,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Pims.Api.Helpers.Mapping;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Pims.Api
 {
@@ -157,9 +158,10 @@ namespace Pims.Api
             {
                 builder.Password = pwd;
             }
+            ILoggerFactory debugLoggerFactory = LoggerFactory.Create(builder => { builder.AddDebug(); });
             services.AddDbContext<PimsContext>(options =>
             {
-                options.UseSqlServer(builder.ConnectionString);
+                options.UseSqlServer(builder.ConnectionString).UseLoggerFactory(debugLoggerFactory);
             });
 
             services.AddHttpClient();

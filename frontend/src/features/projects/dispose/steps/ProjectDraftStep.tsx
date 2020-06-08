@@ -20,7 +20,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit } = useStepForm();
   const { project } = useStepper();
   const keycloak = useKeycloakWrapper();
-  let draftFormValues = initialValues;
+  let draftFormValues = undefined;
   if (project) {
     draftFormValues = { ...project };
   } else {

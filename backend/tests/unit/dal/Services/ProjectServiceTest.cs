@@ -645,6 +645,7 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(parcel);
+            parcel.ProjectNumber = null;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -656,6 +657,7 @@ namespace Pims.Dal.Test.Services
             .Excluding(x => x.SelectedMemberPath == "Properties[0].Parcel.Projects")
             .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
             .Excluding(x => x.SelectedMemberPath.Contains("Created")));
+            Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumber);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
         }
 
@@ -747,6 +749,7 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(building);
+            building.ProjectNumber = null;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -760,6 +763,7 @@ namespace Pims.Dal.Test.Services
             .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Agency.Parcels")
             .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
             .Excluding(x => x.SelectedMemberPath.Contains("Created")));
+            Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Building.ProjectNumber);
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
         }
 
@@ -924,6 +928,109 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.Throws<NotAuthorizedException>(() => service.Update(projectToUpdate));
         }
+
+        [Fact]
+        public void Update_ProjectParcelAgencyMismatch_Throws_BusinessException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            using var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            parcel.AgencyId = 2;
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AddProperty(parcel);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+        }
+
+        [Fact]
+        public void Update_ProjectBuildingAgencyMismatch_Throws_BusinessException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            using var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var parcel = init.CreateParcel(1);
+            var building = init.CreateBuilding(parcel, 2);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            building.AgencyId = 2;
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.AddProperty(building);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+        }
+
+        [Fact]
+        public void Update_ParcelInProject_Throws_BusinessException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            using var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var newProject = init.CreateProject(2, project.Agency);
+            var parcel = init.CreateParcel(1, project.Agency);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(newProject.ProjectNumber);
+            projectToUpdate.AddProperty(parcel);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+        }
+
+        [Fact]
+        public void Update_BuildingInProject_Throws_BusinessException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            using var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var newProject = init.CreateProject(2, project.Agency);
+            var parcel = init.CreateParcel(1, project.Agency);
+            var building = init.CreateBuilding(parcel, 2, agency: project.Agency);
+            building.ProjectNumber = project.ProjectNumber;
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(newProject.ProjectNumber);
+            projectToUpdate.AddProperty(building);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+        }
+
         #endregion
 
         #region Remove

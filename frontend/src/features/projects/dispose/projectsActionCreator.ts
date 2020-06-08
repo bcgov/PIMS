@@ -42,3 +42,13 @@ export const updateProject = (body: IProject) => (dispatch: Function) => {
   );
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_PROJECT, axiosResponse);
 };
+
+export const updateWorkflowStatus = (body: IProject, statusCode: string | undefined) => (
+  dispatch: Function,
+) => {
+  const axiosResponse = CustomAxios().put(
+    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS('SUBMIT-DISPOSAL', statusCode ?? ''),
+    toApiProject(body),
+  );
+  return handleAxiosResponse(dispatch, ProjectActions.UPDATE_WORKFLOW_STATUS, axiosResponse);
+};
