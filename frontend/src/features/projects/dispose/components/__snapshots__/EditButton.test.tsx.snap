@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Form Edit Button Matches Snapshot 1`] = `
+<button
+  className="edit btn btn-primary"
+  disabled={false}
+  onClick={[Function]}
+  type="button"
+>
+  Edit
+</button>
+`;
+
 exports[`Project Dispose Form Edit Button Matches Snapshot 1`] = `
 <button
   className="edit btn btn-primary"
