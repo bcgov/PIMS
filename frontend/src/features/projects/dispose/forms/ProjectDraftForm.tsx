@@ -1,8 +1,8 @@
 import './ProjectDraftForm.scss';
 import React, { useState } from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Form, Input } from 'components/common/form';
-import { IStepProps, ProjectNotes, projectNoDescription } from '..';
+import { IStepProps, ProjectNotes, projectNoDescription, EditButton } from '..';
 import styled from 'styled-components';
 
 const ItalicText = styled.div`
@@ -14,13 +14,11 @@ const ItalicText = styled.div`
  * Form component of ProjectDraftForm.
  * @param param0 isReadOnly disable editing
  */
-const ProjectDraftForm = ({ isReadOnly }: IStepProps) => {
+const ProjectDraftForm = ({ isReadOnly, canEdit }: IStepProps) => {
   const [disabled, setDisabled] = useState(isReadOnly);
   return (
     <Container fluid className="ProjectDraftForm">
-      <Button disabled={!disabled} className="edit" onClick={() => setDisabled(false)}>
-        Edit
-      </Button>
+      <EditButton {...{ formDisabled: disabled, setFormDisabled: setDisabled, canEdit }} />
       {isReadOnly && <h3>Review</h3>}
       <Form.Row className="col-md-10">
         <Form.Label className="col-md-2">Project No.</Form.Label>

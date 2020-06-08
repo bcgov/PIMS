@@ -13,7 +13,7 @@ import {
  */
 const ReviewProjectStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
-  const { onSubmit } = useStepForm();
+  const { onSubmit, canUserEditForm } = useStepForm();
   const initialValues = { ...project, confirmation: true };
   return (
     <Container fluid className="ReviewProjectStep">
@@ -27,7 +27,7 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         )}
       >
         <Form>
-          <ReviewProjectForm />
+          <ReviewProjectForm canEdit={canUserEditForm(project.agencyId)} />
         </Form>
       </Formik>
     </Container>

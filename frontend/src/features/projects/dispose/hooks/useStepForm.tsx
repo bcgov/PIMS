@@ -10,10 +10,13 @@ import { IProject } from '..';
 import { clear } from 'actions/genericActions';
 import _ from 'lodash';
 import useStepper from './useStepper';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import Claims from 'constants/claims';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useDispatch();
+  const keycloak = useKeycloakWrapper();
   const { getNextStep } = useStepper();
 
   const onSubmit = (values: IProject, actions: any) => {
@@ -44,7 +47,10 @@ const useStepForm = () => {
       });
     return response;
   };
-  return { onSubmit };
+  const canUserEditForm = (projectAgencyId: number) =>
+    (keycloak.hasAgency(projectAgencyId) && keycloak.hasClaim(Claims.PROJECT_EDIT)) ||
+    keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
+  return { onSubmit, canUserEditForm };
 };
 
 export default useStepForm;

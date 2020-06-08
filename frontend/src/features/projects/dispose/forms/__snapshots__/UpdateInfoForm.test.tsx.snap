@@ -17,16 +17,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </h3>
       <span
         className="col-md-4"
-      >
-        <button
-          className="edit btn btn-primary"
-          disabled={true}
-          onClick={[Function]}
-          type="button"
-        >
-          Edit
-        </button>
-      </span>
+      />
     </div>
     <div
       className="form-row"

@@ -6,7 +6,7 @@ import { Form, Select } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import Button from 'react-bootstrap/Button';
 import _ from 'lodash';
-import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus } from '..';
+import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus, EditButton } from '..';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { updateInfoMessage, tierTooltip } from '../strings';
@@ -16,7 +16,7 @@ import { Container } from 'react-bootstrap';
  * Form component of UpdateInfoForm.
  * @param param0 isReadOnly disable editing
  */
-const UpdateInfoForm = ({ isReadOnly }: IStepProps) => {
+const UpdateInfoForm = ({ isReadOnly, canEdit }: IStepProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
   const [disabled, setDisabled] = useState(isReadOnly);
@@ -27,9 +27,7 @@ const UpdateInfoForm = ({ isReadOnly }: IStepProps) => {
       <Form.Row>
         <h3 className="col-md-8">Update Info</h3>
         <span className="col-md-4">
-          <Button className="edit" disabled={!disabled} onClick={() => setDisabled(false)}>
-            Edit
-          </Button>
+          <EditButton {...{ formDisabled: disabled, setFormDisabled: setDisabled, canEdit }} />
         </span>
       </Form.Row>
       <Form.Row>

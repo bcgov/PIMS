@@ -28,7 +28,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const { nextStep, project } = useStepper();
+  const { nextStep, project, getNextStep } = useStepper();
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
@@ -84,7 +84,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                 />
               ))}
 
-              <StepActions onSave={() => formikRef.current?.handleSubmit()} onNext={onNext} />
+              <StepActions
+                getNextStep={getNextStep}
+                onSave={() => formikRef.current?.handleSubmit()}
+                onNext={onNext}
+              />
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>

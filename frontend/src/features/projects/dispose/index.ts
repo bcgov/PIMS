@@ -5,6 +5,7 @@ export { default as FilterBar } from './components/FilterBar';
 export { default as ProjectDisposeView } from './ProjectDisposeView';
 export * from './components/StepActions';
 export { default as ProjectNotes } from './components/ProjectNotes';
+export { default as EditButton } from './components/EditButton';
 
 export { default as projectSlice } from './slices/projectSlice';
 export { default as projectTasksSlice } from './slices/projectTasksSlice';
