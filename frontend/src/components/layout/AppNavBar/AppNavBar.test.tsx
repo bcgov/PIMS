@@ -47,7 +47,7 @@ describe('AppNavBar', () => {
       keycloak: {
         subject: 'test',
         userInfo: {
-          roles: ['property-view'],
+          roles: ['project-view'],
         },
       },
     });
@@ -226,7 +226,7 @@ describe('AppNavBar', () => {
         keycloak: {
           subject: 'test',
           userInfo: {
-            roles: ['property-view'],
+            roles: ['project-view'],
           },
         },
       });
@@ -247,7 +247,7 @@ describe('AppNavBar', () => {
         keycloak: {
           subject: 'test',
           userInfo: {
-            roles: ['dispose-request'],
+            roles: ['project-add'],
           },
         },
       });

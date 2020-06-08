@@ -13,39 +13,54 @@ namespace Pims.Dal.Security
     public enum Permissions
     {
         [Display(GroupName = "admin", Name = "system-administrator", Description = "Can administer application settings.")]
-        SystemAdmin,
+        SystemAdmin = 1,
 
         [Display(GroupName = "admin", Name = "agency-administrator", Description = "Can administer agencies.")]
-        AgencyAdmin,
+        AgencyAdmin = 2,
 
         [Display(GroupName = "admin", Name = "admin-users", Description = "Can administer user accounts.")]
-        AdminUsers,
+        AdminUsers = 3,
 
         [Display(GroupName = "admin", Name = "admin-roles", Description = "Can administer application roles.")]
-        AdminRoles,
+        AdminRoles = 4,
 
         [Display(GroupName = "admin", Name = "admin-properties", Description = "Can administer properties.")]
-        AdminProperties,
+        AdminProperties = 5,
+
+        [Display(GroupName = "admin", Name = "admin-projects", Description = "Can administer projects.")]
+        AdminProjects = 6,
 
         [Display(GroupName = "property", Name = "property-view", Description = "Can view properties from inventory.")]
-        PropertyView,
+        PropertyView = 10,
 
         [Display(GroupName = "property", Name = "property-add", Description = "Can add new properties to inventory.")]
-        PropertyAdd,
+        PropertyAdd = 11,
 
         [Display(GroupName = "property", Name = "property-edit", Description = "Can edit properties in inventory.")]
-        PropertyEdit,
+        PropertyEdit = 12,
 
         [Display(GroupName = "property", Name = "property-delete", Description = "Can delete properties in inventory.")]
-        PropertyDelete,
+        PropertyDelete = 13,
 
         [Display(GroupName = "property", Name = "sensitive-view", Description = "Can view sensitive properties in inventory.")]
-        SensitiveView,
+        SensitiveView = 14,
 
         [Display(GroupName = "dispose", Name = "dispose-request", Description = "Can request to dispose properties in inventory.")]
-        DisposeRequest,
+        DisposeRequest = 20,
 
         [Display(GroupName = "dispose", Name = "dispose-approve", Description = "Can approve requests to dispose properties in inventory.")]
-        DisposeApprove
+        DisposeApprove = 21,
+
+        [Display(GroupName = "project", Name = "project-view", Description = "Can view projects.")]
+        ProjectView = 30,
+
+        [Display(GroupName = "project", Name = "project-add", Description = "Can add new projects.")]
+        ProjectAdd = 31,
+
+        [Display(GroupName = "project", Name = "project-edit", Description = "Can edit projects.")]
+        ProjectEdit = 32,
+
+        [Display(GroupName = "project", Name = "project-delete", Description = "Can delete projects.")]
+        ProjectDelete = 33
     }
 }

@@ -99,7 +99,7 @@ namespace Pims.Tools.Keycloak.Sync.Models
             this.LastName = user.LastName;
             this.DisplayName = user.Attributes?.ContainsKey("displayName") ?? false ? user.Attributes["displayName"].FirstOrDefault() : $"{this.LastName}, {this.FirstName}";
             this.Email = user.Email;
-            this.IsDisabled = user.Enabled;
+            this.IsDisabled = !user.Enabled;
             this.EmailVerified = user.EmailVerified;
             this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a => new AgencyModel() { Id = Int32.Parse(a) }).ToArray() : null;
         }

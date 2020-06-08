@@ -30,7 +30,7 @@ namespace Pims.Dal.Helpers.Extensions
             // Check if user has the ability to view sensitive properties.
             var userAgencies = user.GetAgencies();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
-            var isAdmin = user.HasPermission(Permissions.AdminProperties);
+            var isAdmin = user.HasPermission(Permissions.AdminProjects);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Projects

@@ -29,18 +29,23 @@ Claims are applied in both the API and the APP to ensure a consistent and secure
 
 | Claim                | Description                                                         |
 | -------------------- | ------------------------------------------------------------------- |
-| property-view        | View property information                                           |
-| property-add         | Add properties to inventory                                         |
-| property-edit        | Edit property information within user's agency                      |
-| property-delete      | Delete properties from inventory within user's agency               |
-| sensitive-view       | View sensitive properties within user's agency                      |
-| admin-users          | Manage user accounts within PIMS                                    |
-| admin-roles          | Manager roles within PIMS                                           |
-| admin-properties     | View, Add, Edit, Delete all properties in inventory                 |
 | system-administrator | Manage all users within PIMS                                        |
 | agency-administrator | Manage only users within user's agency within PIMS                  |
+| admin-users          | Manage user accounts within PIMS                                    |
+| admin-roles          | Manager roles within PIMS                                           |
+| admin-properties     | Access to properties in other agencies                              |
+| admin-projects       | Access to projects in other agencies                                |
+| property-view        | View property in user's agency or sub-agencies                      |
+| property-add         | Add properties to inventory in user's agency or sub-agencies        |
+| property-edit        | Edit properties in user's agency or sub-agencies                    |
+| property-delete      | Delete properties from inventory in user's agency or sub-agencies   |
+| sensitive-view       | View sensitive properties within user's agency or sub-agencies      |
 | dispose-request      | Provides the ability to request disposal of properties              |
 | dispose-approve      | Provides the aiblity to approve requests for disposal of properties |
+| project-view         | View projects in user's agency or sub-agencies                      |
+| project-add          | Add projects in user's agency or sub-agencies                       |
+| project-edit         | Edit projects in user's agency or sub-agencies                      |
+| project-delete       | Delete projects in user's agency or sub-agencies                    |
 
 #### Technology
 

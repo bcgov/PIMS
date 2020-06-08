@@ -55,6 +55,7 @@ namespace Pims.Api.Test.Routes.Keycloak
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPost("sync/{id}");
+            endpoint.HasPermissions(Permissions.AdminUsers);
         }
 
         [Fact]
@@ -67,6 +68,7 @@ namespace Pims.Api.Test.Routes.Keycloak
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet();
+            endpoint.HasPermissions(Permissions.AdminUsers);
         }
 
         [Fact]
@@ -79,6 +81,7 @@ namespace Pims.Api.Test.Routes.Keycloak
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("{id}");
+            endpoint.HasPermissions(Permissions.AdminUsers);
         }
 
         [Fact]
@@ -91,6 +94,7 @@ namespace Pims.Api.Test.Routes.Keycloak
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPut("{id}");
+            endpoint.HasPermissions(Permissions.AdminUsers);
         }
 
         [Fact]
@@ -103,6 +107,7 @@ namespace Pims.Api.Test.Routes.Keycloak
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasPut("access/request");
+            endpoint.HasPermissions(Permissions.AdminUsers);
         }
         #endregion
     }

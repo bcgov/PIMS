@@ -53,7 +53,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id:int}")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -70,7 +70,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="projectNumber"></param>
         /// <returns></returns>
         [HttpGet("{projectNumber}")]
-        [HasPermission(Permissions.PropertyView)]
+        [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -87,7 +87,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [HasPermission(Permissions.PropertyAdd)]
+        [HasPermission(Permissions.ProjectAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 201)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{projectNumber}")]
-        [HasPermission(Permissions.PropertyEdit)]
+        [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -124,7 +124,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{projectNumber}")]
-        [HasPermission(Permissions.PropertyDelete)]
+        [HasPermission(Permissions.ProjectDelete)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
@@ -144,7 +144,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("workflow/{workflowCode}/{statusCode}")]
-        [HasPermission(Permissions.PropertyEdit)]
+        [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]

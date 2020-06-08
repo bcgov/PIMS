@@ -11,6 +11,11 @@ export enum Claims {
   ADMIN_USERS = 'admin-users',
   ADMIN_ROLES = 'admin-roles',
   ADMIN_PROPERTIES = 'admin-properties',
+  ADMIN_PROJECTS = 'admin-projects',
+  PROJECT_VIEW = 'project-view',
+  PROJECT_EDIT = 'project-edit',
+  PROJECT_ADD = 'project-add',
+  PROJECT_DELETE = 'project-delete',
 }
 
 export default Claims;
