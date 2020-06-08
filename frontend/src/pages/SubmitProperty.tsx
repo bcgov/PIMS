@@ -44,6 +44,7 @@ const SubmitProperty = (props: any) => {
   const loadDraft = parsedQuery.loadDraft;
 
   const mode = formDisabled ? Mode.View : parcelId ? Mode.Update : Mode.Create;
+  const [readonly, setReadonly] = useState(true);
   const formTitle = mode === Mode.Create ? 'Submit a Property' : 'Property Detail';
 
   const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
@@ -62,6 +63,13 @@ const SubmitProperty = (props: any) => {
     activePropertyDetail?.propertyTypeId === 0 ? activePropertyDetail?.parcelDetail : null,
   );
 
+  React.useEffect(() => {
+    setReadonly(
+      !!activePropertyDetail?.parcelDetail?.projectNumber &&
+        !keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+    );
+  }, [keycloak, activePropertyDetail]);
+
   if (
     cachedParcelDetail?.agencyId &&
     !formDisabled &&
@@ -78,6 +86,7 @@ const SubmitProperty = (props: any) => {
   ) {
     setFormDisabled(false);
   }
+
   if (!keycloak.agencyId && !formDisabled) {
     throw Error('You must belong to an agency to submit properties');
   } else if (!keycloak.obj?.subject) {
@@ -109,18 +118,16 @@ const SubmitProperty = (props: any) => {
   React.useEffect(() => {
     //If we click on the map, create a new pin at the click location.
     if (leafletMouseEvent) {
-      if (!parcelId) {
-        dispatch(
-          storeParcelAction({
-            id: 0,
-            latitude: leafletMouseEvent.latlng.lat,
-            longitude: leafletMouseEvent.latlng.lng,
-            propertyTypeId: 0,
-          }),
-        );
-      }
+      dispatch(
+        storeParcelAction({
+          id: Number(parcelId || 0),
+          latitude: leafletMouseEvent.latlng.lat,
+          longitude: leafletMouseEvent.latlng.lng,
+          propertyTypeId: activePropertyDetail?.propertyTypeId || 0,
+        }),
+      );
     }
-  }, [leafletMouseEvent, dispatch, parcelId]);
+  }, [leafletMouseEvent, dispatch, parcelId, activePropertyDetail]);
 
   return (
     <Row className="submitProperty" noGutters>
@@ -131,9 +138,24 @@ const SubmitProperty = (props: any) => {
           </Col>
           <Col style={{ textAlign: 'right' }}>
             <span className="propertyButtons">
-              <DeleteButton {...{ keycloak, cachedParcelDetail, dispatch, setShowDeleteDialog }} />
+              <DeleteButton
+                {...{
+                  keycloak,
+                  cachedParcelDetail,
+                  dispatch,
+                  setShowDeleteDialog,
+                  disabled: readonly,
+                }}
+              />
               <EditButton
-                {...{ keycloak, formDisabled, setFormDisabled, parcelId, cachedParcelDetail }}
+                {...{
+                  keycloak,
+                  formDisabled,
+                  setFormDisabled,
+                  parcelId,
+                  cachedParcelDetail,
+                  readonly,
+                }}
               />
               <CloseButton {...{ history, setShowSaveDraftDialog, formDisabled }} />
             </span>
@@ -148,7 +170,7 @@ const SubmitProperty = (props: any) => {
                 agencyId={keycloak.agencyId}
                 clickLatLng={leafletMouseEvent?.latlng}
                 parcelDetail={parcelId ? (cachedParcelDetail as IParcel) : null}
-                disabled={formDisabled}
+                disabled={formDisabled || readonly}
                 secret={keycloak.obj.subject}
                 loadDraft={!!loadDraft}
               />
@@ -162,7 +184,7 @@ const SubmitProperty = (props: any) => {
         ) : (
           <MapView
             disableMapFilterBar={true}
-            disabled={formDisabled}
+            disabled={formDisabled || readonly}
             showParcelBoundaries={false}
             onMarkerClick={() => {}}
             onMarkerPopupClosed={() => {}}
@@ -239,22 +261,34 @@ const EditButton = ({
   cachedParcelDetail,
   parcelId,
   formDisabled,
+  readonly,
   setFormDisabled,
 }: any) => {
   return keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
     keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
-    <Button disabled={!formDisabled || !parcelId} onClick={() => setFormDisabled(false)}>
+    <Button
+      disabled={!formDisabled || !parcelId || readonly}
+      onClick={() => setFormDisabled(false)}
+    >
       Edit
     </Button>
   ) : null;
 };
 
-const DeleteButton = ({ cachedParcelDetail, keycloak, dispatch, setShowDeleteDialog }: any) => {
+const DeleteButton = ({
+  cachedParcelDetail,
+  keycloak,
+  dispatch,
+  setShowDeleteDialog,
+  disabled,
+}: any) => {
   return (keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
     keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) &&
     keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
     cachedParcelDetail ? (
-    <Button onClick={() => setShowDeleteDialog(true)}>Delete</Button>
+    <Button onClick={() => setShowDeleteDialog(true)} disabled={disabled}>
+      Delete
+    </Button>
   ) : null;
 };
 

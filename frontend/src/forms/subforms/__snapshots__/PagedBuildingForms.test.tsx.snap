@@ -94,6 +94,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.address.line1"
                 name="buildings.0.address.line1"
                 onBlur={[Function]}
@@ -119,6 +120,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 <input
                   autoComplete="new-password"
                   className="form-control"
+                  disabled={false}
                   id="input-buildings.0.address.cityId"
                   name="buildings.0.address.cityId"
                   onChange={[Function]}
@@ -175,6 +177,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.address.postal"
                 name="buildings.0.address.postal"
                 onBlur={[Function]}
@@ -200,6 +203,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <select
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.buildingConstructionTypeId"
                 name="buildings.0.buildingConstructionTypeId"
                 onBlur={[Function]}
@@ -239,6 +243,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 >
                   <input
                     className="form-control"
+                    disabled={false}
                     id="input-buildings.0.rentableArea"
                     name="buildings.0.rentableArea"
                     onBlur={[Function]}
@@ -272,6 +277,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.buildingFloorCount"
                 name="buildings.0.buildingFloorCount"
                 onBlur={[Function]}
@@ -294,6 +300,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <select
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.buildingPredominateUseId"
                 name="buildings.0.buildingPredominateUseId"
                 onBlur={[Function]}
@@ -335,6 +342,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.latitude"
                 name="buildings.0.latitude"
                 onBlur={[Function]}
@@ -357,6 +365,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.longitude"
                 name="buildings.0.longitude"
                 onBlur={[Function]}
@@ -407,6 +416,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <select
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.classificationId"
                 name="buildings.0.classificationId"
                 onBlur={[Function]}
@@ -451,6 +461,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <select
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.buildingOccupantTypeId"
                 name="buildings.0.buildingOccupantTypeId"
                 onBlur={[Function]}
@@ -558,6 +569,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.buildingTenancy"
                 name="buildings.0.buildingTenancy"
                 onBlur={[Function]}
@@ -579,6 +591,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             >
               <input
                 className="form-control"
+                disabled={false}
                 id="input-buildings.0.occupantName"
                 name="buildings.0.occupantName"
                 onBlur={[Function]}
@@ -669,6 +682,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -694,6 +708,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -742,6 +757,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -767,6 +783,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -815,6 +832,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -840,6 +858,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         >
                           <input
                             className="form-control"
+                            disabled={false}
                             name="buildings.0.financials.-1.value"
                             onBlur={[Function]}
                             onChange={[Function]}

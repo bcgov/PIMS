@@ -75,6 +75,12 @@ namespace Pims.Api.Areas.Project.Models.Search
         /// </summary>
         public float LandArea { get; set; }
 
+
+        /// <summary>
+        /// get/set - The id of the parcel.
+        /// </summary>
+        public float ParcelId { get; set; }
+
         /// <summary>
         /// get/set - The property municipality name.
         /// </summary>
