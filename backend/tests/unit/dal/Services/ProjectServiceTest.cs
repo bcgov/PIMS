@@ -645,6 +645,7 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(parcel);
+            parcel.ProjectNumber = null;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -748,6 +749,7 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(building);
+            building.ProjectNumber = null;
             service.Update(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
