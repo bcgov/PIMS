@@ -49,7 +49,7 @@ const useStepForm = () => {
   };
   const canUserEditForm = (projectAgencyId: number) =>
     (keycloak.hasAgency(projectAgencyId) && keycloak.hasClaim(Claims.PROJECT_EDIT)) ||
-    keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
+    keycloak.hasClaim(Claims.ADMIN_PROJECTS);
   return { onSubmit, canUserEditForm };
 };
 

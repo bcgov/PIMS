@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Project.Models.Dispose
@@ -54,6 +55,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string Note { get; set; }
 
         /// <summary>
+        /// get/set - A shared note between SRES and agency.
+        /// </summary>
+        public string PublicNote { get; set; }
+
+        /// <summary>
+        /// get/set - A private note for SRES only.
+        /// </summary>
+        public string PrivateNote { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
         public int AgencyId { get; set; }
@@ -77,6 +88,21 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The owning subagency code.
         /// </summary>
         public string SubAgencyCode { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was submitted.
+        /// </summary>
+        public DateTime? SubmittedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was approved.
+        /// </summary>
+        public DateTime? ApprovedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was denied.
+        /// </summary>
+        public DateTime? DeniedOn { get; set; }
 
         /// <summary>
         /// get/set - An array of properties associated with this project.

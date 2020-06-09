@@ -236,6 +236,11 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(project, result, new ShallowPropertyCompare());
             Assert.NotNull(project.ProjectNumber);
+            Assert.NotNull(project.PrivateNote);
+            Assert.NotNull(project.PublicNote);
+            Assert.NotNull(project.SubmittedOn);
+            Assert.NotNull(project.ApprovedOn);
+            Assert.NotNull(project.DeniedOn);
             Assert.NotNull(project.Name);
             Assert.NotNull(project.Agency);
             Assert.NotNull(project.Status);
@@ -396,6 +401,40 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.NotNull(result.ProjectNumber);
             Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
+        }
+
+        [Fact]
+        public void Add_Project_SimpleFields()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd, Permissions.ProjectView).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+
+            project.ProjectNumber = "test-generation-override";
+            project.PrivateNote = "private note";
+            project.PublicNote = "public note";
+            project.SubmittedOn = DateTime.Now;
+            project.DeniedOn = DateTime.Now.AddDays(1);
+            project.ApprovedOn = DateTime.Now.AddDays(2);
+
+            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
+            helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status).AddAndSaveChanges(project.TierLevel);
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            service.Add(project);
+            var result = service.Get(project.Id);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.ProjectNumber);
+            Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
+            Assert.Matches("private note", result.PrivateNote);
+            Assert.Matches("public note", result.PublicNote);
+            Assert.Equal(project.SubmittedOn, result.SubmittedOn);
+            Assert.Equal(project.DeniedOn, result.DeniedOn);
+            Assert.Equal(project.ApprovedOn, result.ApprovedOn);
         }
 
         [Fact]
@@ -572,6 +611,43 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
+        }
+
+        [Fact]
+        public void Update_SimpleFields()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.CreatePimsContext(user);
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
+            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.Description = "A new description";
+            projectToUpdate.PrivateNote = "private Note";
+            projectToUpdate.PublicNote = "public Note";
+            projectToUpdate.SubmittedOn = new DateTime();
+            projectToUpdate.ApprovedOn = new DateTime().AddDays(1);
+            projectToUpdate.DeniedOn = new DateTime().AddDays(2);
+
+            service.Update(projectToUpdate);
+            var result = service.Get(projectToUpdate.Id);
+
+            // Assert
+            Assert.NotNull(result);
+            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
+            Assert.Equal("A new description", result.Description);
+            Assert.Equal("private Note", result.PrivateNote);
+            Assert.Equal("public Note", result.PublicNote);
+            Assert.Equal(projectToUpdate.SubmittedOn, result.SubmittedOn);
+            Assert.Equal(projectToUpdate.ApprovedOn, result.ApprovedOn);
+            Assert.Equal(projectToUpdate.DeniedOn, result.DeniedOn);
         }
 
         [Fact]
