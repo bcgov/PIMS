@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { CLASSIFICATIONS } from 'constants/classifications';
 
 export const ApprovalConfirmationStepSchema = Yup.object().shape({
   confirmation: Yup.boolean()
@@ -18,7 +19,12 @@ export const DocumentationStepSchema = Yup.object().shape({
 export const UpdateInfoStepYupSchema = Yup.object().shape({
   properties: Yup.array().of(
     Yup.object().shape({
-      classification: Yup.string().required('Required'),
+      classificationId: Yup.number().test(
+        'is-valid',
+        'Must select Surplus Active or Surplus Encumbered',
+        (val: any) =>
+          val === CLASSIFICATIONS.SurplusActive || val === CLASSIFICATIONS.SurplusEncumbered,
+      ),
       netBook: Yup.number()
         .required()
         .min(0.01, 'Minimum value is $1')
