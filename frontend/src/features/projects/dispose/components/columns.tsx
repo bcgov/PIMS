@@ -6,7 +6,7 @@ import { CellProps } from 'react-table';
 import { formatMoney, formatNumber } from 'utils';
 import { IProperty } from '../interfaces';
 import { useFormikContext } from 'formik';
-import { FastCurrencyInput, FastSelect, Input } from 'components/common/form';
+import { FastCurrencyInput, Input, FastSelect } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import _ from 'lodash';
@@ -30,17 +30,15 @@ const EditableMoneyCell = (cellInfo: any) => {
 
 const EditableClassificationCell = (cellInfo: any) => {
   const classifications = useCodeLookups().getOptionsByType('PropertyClassification');
-  const filteredClassifications = classifications.filter(
-    (x: any) => x?.label === 'Surplus Active' || x?.label === 'Surplus Encumbered',
-  );
   const context = useFormikContext();
   return (
     <FastSelect
+      limitLabels={['Surplus Active', 'Surplus Encumbered']}
       formikProps={context}
       type="number"
-      options={filteredClassifications}
+      options={classifications}
       field={`properties.${cellInfo.row.id}.classificationId`}
-    ></FastSelect>
+    />
   );
 };
 
