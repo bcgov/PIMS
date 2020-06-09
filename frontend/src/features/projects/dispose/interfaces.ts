@@ -134,6 +134,7 @@ export interface ProjectWorkflowComponent {
 export interface IStepProps {
   isReadOnly?: boolean;
   formikRef?: any;
+  canEdit?: boolean;
 }
 
 export interface IProjectProperty {

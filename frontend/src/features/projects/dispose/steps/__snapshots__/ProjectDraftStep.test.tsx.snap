@@ -12,14 +12,6 @@ exports[`renders correctly 1`] = `
     <div
       className="ProjectDraftForm container-fluid"
     >
-      <button
-        className="edit btn btn-primary"
-        disabled={true}
-        onClick={[Function]}
-        type="button"
-      >
-        Edit
-      </button>
       <div
         className="col-md-10 form-row"
       >
