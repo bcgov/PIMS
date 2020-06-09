@@ -10,14 +10,6 @@ exports[`renders correctly 1`] = `
     <div
       className="ProjectDraftForm container-fluid"
     >
-      <button
-        className="edit btn btn-primary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        Edit
-      </button>
       <h3>
         Review
       </h3>
@@ -119,16 +111,7 @@ exports[`renders correctly 1`] = `
         </h3>
         <span
           className="col-md-4"
-        >
-          <button
-            className="edit btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
-            type="button"
-          >
-            Edit
-          </button>
-        </span>
+        />
       </div>
       <div
         className="form-row"
