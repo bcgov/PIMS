@@ -81,11 +81,19 @@ export const columns: ColumnWithProps<IProjectProperty>[] = [
     minWidth: 80,
   },
   {
-    Header: 'Municipality',
-    accessor: 'municipality',
+    Header: 'Zoning',
+    accessor: 'zoning',
     align: 'left',
     responsive: true,
-    width: spacing.medium,
+    width: spacing.small,
+    minWidth: 80,
+  },
+  {
+    Header: 'Zoning Potential',
+    accessor: 'zoningPotential',
+    align: 'left',
+    responsive: true,
+    width: spacing.small,
     minWidth: 80,
   },
   {
