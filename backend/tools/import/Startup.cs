@@ -1,5 +1,4 @@
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -38,6 +37,7 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <param name="args"></param>
         /// <return></return>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not implemented yet.")]
         public async Task<int> Run(string[] args)
         {
             _logger.LogInformation("Import Started");
@@ -45,27 +45,11 @@ namespace Pims.Tools.Import
             var file = new FileInfo(_config.Import.File);
             _logger.LogInformation($"Import file: {file}");
 
-            var result = await _importer.ImportAsync(file, GetMethod(_config.Api.HttpMethod), _config.Api.ImportUrl, _config.Api.AccessToken);
+            var result = await _importer.ImportAsync(file);
 
             _logger.LogInformation("Import Stopping");
 
             return result;
-        }
-
-        /// <summary>
-        /// Determine what HTTP method to use.
-        /// </summary>
-        /// <param name="method"></param>
-        /// <return></return>
-        private static HttpMethod GetMethod(string method)
-        {
-            return (method?.ToLower()) switch
-            {
-                ("get") => HttpMethod.Get,
-                ("delete") => HttpMethod.Delete,
-                ("put") => HttpMethod.Put,
-                _ => HttpMethod.Post,
-            };
         }
         #endregion
     }

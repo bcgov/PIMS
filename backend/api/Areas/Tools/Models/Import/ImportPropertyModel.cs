@@ -10,6 +10,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public string PropertyType { get; set; }
         public string ParcelId { get; set; }
         public string LocalId { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public string AssessedValue { get; set; }
         public string Classification { get; set; }

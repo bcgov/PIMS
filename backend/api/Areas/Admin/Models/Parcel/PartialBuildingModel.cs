@@ -9,6 +9,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public string LocalId { get; set; }
 
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
         public double Latitude { get; set; }

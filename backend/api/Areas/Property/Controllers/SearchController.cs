@@ -13,6 +13,7 @@ using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Areas.Property.Controllers
 {
@@ -78,13 +79,8 @@ namespace Pims.Api.Areas.Property.Controllers
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
-            var properties = new List<PropertyModel>();
-            var includeBoth = !filter.IncludeParcels && !filter.IncludeBuildings; // When a base filter is provided we make a request to both parcels and buildings.
-            if (includeBoth || filter.IncludeParcels)
-                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Parcel.Get((ParcelFilter)filter)));
-            if (includeBoth || filter.IncludeBuildings)
-                properties.AddRange(_mapper.Map<PropertyModel[]>(_pimsService.Building.Get((BuildingFilter)filter)));
-            return new JsonResult(properties.ToArray());
+            var properties = _pimsService.Property.Get((AllPropertyFilter)filter);
+            return new JsonResult(_mapper.Map<PropertyModel[]>(properties).ToArray());
         }
         #endregion
 

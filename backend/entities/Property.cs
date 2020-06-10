@@ -17,6 +17,16 @@ namespace Pims.Dal.Entities
         public string ProjectNumber { get; set; }
 
         /// <summary>
+        /// get/set - The property name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// get/set - The property description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the property status.
         /// </summary>
         public int StatusId { get; set; }
@@ -47,11 +57,6 @@ namespace Pims.Dal.Entities
         public Agency Agency { get; set; }
 
         /// <summary>
-        /// get/set - The property description.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
         /// get/set - The foreign key to the property address.
         /// </summary>
         public int AddressId { get; set; }
@@ -75,6 +80,11 @@ namespace Pims.Dal.Entities
         /// get/set - Whether this property is considered sensitive and should only be visible to users who are part of the owning agency.
         /// </summary>
         public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the property is visible to other agencies.  This is used to make properties visible during ERP, but can be used at other times too.
+        /// </summary>
+        public bool IsVisibleToOtherAgencies { get; set; }
         #endregion
 
         #region Constructors

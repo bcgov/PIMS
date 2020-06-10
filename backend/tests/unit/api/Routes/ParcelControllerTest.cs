@@ -42,32 +42,6 @@ namespace Pims.Api.Test.Routes
         }
 
         [Fact]
-        public void GetParcels_Query_Route()
-        {
-            // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet();
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetParcels_Filter_Route()
-        {
-            // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcels), typeof(Dal.Entities.Models.ParcelFilter));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasPost("filter");
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
         public void GetParcel_Route()
         {
             // Arrange
@@ -117,32 +91,6 @@ namespace Pims.Api.Test.Routes
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{id}");
             endpoint.HasPermissions(Permissions.PropertyDelete);
-        }
-
-        [Fact]
-        public void GetParcelsPage_Query_Route()
-        {
-            // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcelsPage));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("page");
-            endpoint.HasPermissions(Permissions.PropertyView);
-        }
-
-        [Fact]
-        public void GetParcelsPage_Filter_Route()
-        {
-            // Arrange
-            var endpoint = typeof(ParcelController).FindMethod(nameof(ParcelController.GetParcelsPage), typeof(Dal.Entities.Models.ParcelFilter));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasPost("page/filter");
-            endpoint.HasPermissions(Permissions.PropertyView);
         }
         #endregion
     }

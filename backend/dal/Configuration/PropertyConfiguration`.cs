@@ -14,10 +14,12 @@ namespace Pims.Dal.Configuration
         public override void Configure(EntityTypeBuilder<TBase> builder)
         {
             builder.Property(m => m.ProjectNumber).HasMaxLength(50);
+            builder.Property(m => m.Name).HasMaxLength(150);
             builder.Property(m => m.Description).HasMaxLength(2000);
             builder.Property(m => m.Latitude).IsRequired();
             builder.Property(m => m.Longitude).IsRequired();
             builder.Property(m => m.IsSensitive).HasDefaultValue(false);
+            builder.Property(m => m.IsVisibleToOtherAgencies).HasDefaultValue(false);
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Classification).WithMany().HasForeignKey(m => m.ClassificationId).IsRequired().OnDelete(DeleteBehavior.ClientSetNull);

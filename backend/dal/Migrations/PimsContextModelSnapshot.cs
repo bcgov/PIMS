@@ -326,6 +326,11 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVisibleToOtherAgencies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
@@ -338,6 +343,10 @@ namespace Pims.Dal.Migrations
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<string>("OccupantName")
                         .HasColumnType("nvarchar(100)")
@@ -800,6 +809,11 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVisibleToOtherAgencies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<float>("LandArea")
                         .HasColumnType("real");
 
@@ -816,6 +830,10 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("Municipality")
                         .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<int>("PID")
                         .HasColumnType("int");

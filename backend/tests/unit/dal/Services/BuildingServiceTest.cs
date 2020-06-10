@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
@@ -88,7 +89,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1, 3);
 
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
@@ -118,7 +119,45 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            Assert.Equal(expectedCount, result.Count());
+            result.Should().HaveCount(expectedCount);
+        }
+
+        [Fact]
+        public void Get_Buildings_OnlyAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(3);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 2, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(22);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 23, 5);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var result = service.Get(new BuildingFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            result.Should().HaveCount(1);
         }
 
         [Theory]
@@ -157,7 +196,45 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            Assert.Equal(expectedCount, result.Count());
+            result.Should().HaveCount(expectedCount);
+        }
+
+        [Fact]
+        public void Get_Buildings_AsAdmin_AllAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 2, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(22);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 23, 5);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var result = service.Get(new BuildingFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            result.Should().HaveCount(25);
         }
         #endregion
 
@@ -204,7 +281,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1, 3);
 
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
@@ -235,7 +312,46 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            result.Should().HaveCount(expectedCount);
+        }
+
+        [Fact]
+        public void Get_Page_OnlyAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(3);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 10, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(2);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 31, 5);
+
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var result = service.GetPage(new BuildingFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            result.Should().HaveCount(1);
         }
 
         [Theory]
@@ -275,7 +391,47 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            result.Should().HaveCount(expectedCount);
+        }
+
+        [Fact]
+        public void Get_Page_AsAdmin_AllAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel1 = init.CreateParcel(1);
+            var buildings = init.CreateBuildings(parcel1, 10, 20);
+            buildings.Next(0).Latitude = 50;
+            buildings.Next(0).Longitude = 25;
+            buildings.Next(1).Agency = init.Agencies.Find(3);
+            buildings.Next(1).AgencyId = 3;
+            buildings.Next(2).ClassificationId = 2;
+            buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(7).RentableArea = 100;
+            buildings.Next(8).RentableArea = 50;
+
+            var parcel2 = init.CreateParcel(2);
+            parcel2.Municipality = "-Municipality-";
+            init.CreateBuildings(parcel2, 31, 5);
+
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var result = service.GetPage(new BuildingFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
+            result.Should().HaveCount(10);
+            result.Total.Should().Be(25);
         }
         #endregion
 
@@ -417,7 +573,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
             using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);

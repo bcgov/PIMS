@@ -1,19 +1,13 @@
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Models.Parcel;
-using Pims.Api.Helpers.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal;
-using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
-using System;
-using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
-using Pims.Api.Helpers.Exceptions;
 
 namespace Pims.Api.Controllers
 {
@@ -49,42 +43,6 @@ namespace Pims.Api.Controllers
         #endregion
 
         #region Endpoints
-        /// <summary>
-        /// Get all the parcels that satisfy the filter parameters.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [HasPermission(Permissions.PropertyView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.PartialParcelModel>), 200)]
-        [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult GetParcels()
-        {
-            var uri = new Uri(this.Request.GetDisplayUrl());
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetParcels(new ParcelFilter(query));
-        }
-
-        /// <summary>
-        /// Get all the parcels that satisfy the filter parameters.
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        [HttpPost("filter")]
-        [HasPermission(Permissions.PropertyView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.PartialParcelModel>), 200)]
-        [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult GetParcels([FromBody]ParcelFilter filter)
-        {
-            filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
-
-            var parcels = _pimsService.Parcel.Get(filter);
-            var result = _mapper.Map<Model.PartialParcelModel[]>(parcels);
-            return new JsonResult(result);
-        }
-
         /// <summary>
         /// Get the parcel from the datasource if the user is allowed.
         /// </summary>
@@ -165,44 +123,6 @@ namespace Pims.Api.Controllers
 
             return new JsonResult(model);
         }
-
-        #region Page Endpoints
-        /// <summary>
-        /// Get a page of parcels that satisfy the filter parameters.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("page")]
-        [HasPermission(Permissions.PropertyView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialParcelModel>), 200)]
-        [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult GetParcelsPage()
-        {
-            var uri = new Uri(this.Request.GetDisplayUrl());
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetParcelsPage(new ParcelFilter(query));
-        }
-
-        /// <summary>
-        /// Get a page of parcels that satisfy the filter parameters.
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        [HttpPost("page/filter")]
-        [HasPermission(Permissions.PropertyView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.PartialParcelModel>), 200)]
-        [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult GetParcelsPage([FromBody]ParcelFilter filter)
-        {
-            filter.ThrowBadRequestIfNull($"The request must include a filter.");
-            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
-
-            var page = _pimsService.Parcel.GetPage(filter);
-            var result = _mapper.Map<Models.PageModel<Model.PartialParcelModel>>(page);
-            return new JsonResult(result);
-        }
-        #endregion
         #endregion
     }
 }

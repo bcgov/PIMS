@@ -3,10 +3,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Tools.Core.Exceptions;
+using Pims.Tools.Core.Keycloak;
 using Pims.Tools.Keycloak.Sync.Configuration;
 using Pims.Tools.Keycloak.Sync.Configuration.Realm;
-using Pims.Tools.Keycloak.Sync.Exceptions;
-using KModel = Pims.Tools.Keycloak.Sync.Models.Keycloak;
+using SKModel = Pims.Tools.Keycloak.Sync.Models.Keycloak;
+using KModel = Pims.Tools.Core.Keycloak.Models;
 
 namespace Pims.Tools.Keycloak.Sync
 {
@@ -17,7 +19,7 @@ namespace Pims.Tools.Keycloak.Sync
     {
         #region Variables
         private readonly ToolOptions _options;
-        private readonly IRequestClient _client;
+        private readonly IKeycloakRequestClient _client;
         private readonly ILogger _logger;
         #endregion
 
@@ -28,7 +30,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <param name="client"></param>
         /// <param name="options"></param>
         /// <param name="logger"></param>
-        public RealmFactory(IRequestClient client, IOptionsMonitor<ToolOptions> options, ILogger<SyncFactory> logger)
+        public RealmFactory(IKeycloakRequestClient client, IOptionsMonitor<ToolOptions> options, ILogger<SyncFactory> logger)
         {
             _options = options.CurrentValue;
             _client = client;
@@ -54,12 +56,12 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task UpdateRealmAsync()
         {
-            _logger.LogInformation($"Updating realm '{_options.Sync.Realm.Name}'");
+            _logger.LogInformation($"Updating realm '{_options.Realm.Name}'");
             // Determine if realm exists, it will throw an exception if it doesn't.
             var realm = await _client.HandleGetAsync<KModel.RealmModel>(_client.AdminRoute(""));
 
-            realm.DisplayName = _options.Sync.Realm.DisplayName;
-            realm.DisplayNameHtml = _options.Sync.Realm.DisplayNameHtml;
+            realm.DisplayName = _options.Realm.DisplayName;
+            realm.DisplayNameHtml = _options.Realm.DisplayNameHtml;
 
             var rRes = await _client.SendRequestAsync(HttpMethod.Put, _client.AdminRoute(""), realm);
             if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
@@ -75,7 +77,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task AddUpdateRealmRolesAsync()
         {
-            foreach (var cRole in _options.Sync.Realm.Roles?.OrderBy(r => r.Composite) ?? Enumerable.Empty<RoleOptions>())
+            foreach (var cRole in _options.Realm.Roles?.OrderBy(r => r.Composite) ?? Enumerable.Empty<RoleOptions>())
             {
                 await AddUpdateRealmRoleAsync(cRole);
             }
@@ -86,17 +88,17 @@ namespace Pims.Tools.Keycloak.Sync
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        private async Task<KModel.RoleModel> AddUpdateRealmRoleAsync(RoleOptions config)
+        private async Task<SKModel.RoleModel> AddUpdateRealmRoleAsync(RoleOptions config)
         {
             _logger.LogInformation($"Fetch realm role '{config.Name}'");
-            var role = await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{config.Name}"), r => true);
+            var role = await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{config.Name}"), r => true);
 
             if (role == null)
             {
                 _logger.LogInformation($"Add realm role '{config.Name}'");
-                role = new KModel.RoleModel(config)
+                role = new SKModel.RoleModel(config)
                 {
-                    ContainerId = _options.Sync.Realm.Name
+                    ContainerId = _options.Realm.Name
                 };
 
                 // Add the role to keycloak.
@@ -106,7 +108,7 @@ namespace Pims.Tools.Keycloak.Sync
                 if (config.Composite && config.RealmRoles.Any())
                 {
                     // Fetch all roles for the composite.  Any missing will throw exception.
-                    var roles = config.RealmRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
+                    var roles = config.RealmRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
 
                     // Link the roles to this composite role.
                     var rcRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"roles/{config.Name}/composites"), roles);
@@ -121,6 +123,8 @@ namespace Pims.Tools.Keycloak.Sync
                 role.ClientRole = config.ClientRole;
                 role.Description = config.Description;
 
+                // TODO: Clear existing realm roles so that the changes are correct in keycloak.
+
                 // Update role in keycloak.
                 var rRes = await _client.SendRequestAsync(HttpMethod.Put, _client.AdminRoute($"roles/{config.Name}"), role);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
@@ -128,7 +132,7 @@ namespace Pims.Tools.Keycloak.Sync
                 if (role.Composite && config.RealmRoles.Any())
                 {
                     // Fetch all roles for the composite.  Any missing will throw exception.
-                    var roles = config.RealmRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
+                    var roles = config.RealmRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
 
                     // Link the roles to this composite role.
                     var rcRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"roles/{config.Name}/composites"), roles);
@@ -136,7 +140,7 @@ namespace Pims.Tools.Keycloak.Sync
                 }
             }
 
-            return await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{config.Name}"));
+            return await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{config.Name}"));
         }
 
         /// <summary>
@@ -145,7 +149,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task AddUpdateGroupsAsync()
         {
-            foreach (var cGroup in _options.Sync.Realm.Groups ?? Enumerable.Empty<GroupOptions>())
+            foreach (var cGroup in _options.Realm.Groups ?? Enumerable.Empty<GroupOptions>())
             {
                 await AddUpdateGroupAsync(cGroup);
             }
@@ -156,23 +160,23 @@ namespace Pims.Tools.Keycloak.Sync
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        private async Task<KModel.GroupModel> AddUpdateGroupAsync(GroupOptions config)
+        private async Task<SKModel.GroupModel> AddUpdateGroupAsync(GroupOptions config)
         {
             _logger.LogInformation($"Fetch group '{config.Name}'");
-            var groups = await _client.HandleGetAsync<KModel.GroupModel[]>(_client.AdminRoute($"groups?search={config.Name}"), r => true);
+            var groups = await _client.HandleGetAsync<SKModel.GroupModel[]>(_client.AdminRoute($"groups?search={config.Name}"), r => true);
             var group = groups.FirstOrDefault();
 
             if (group == null)
             {
                 _logger.LogInformation($"Add group '{config.Name}'");
-                group = new KModel.GroupModel(config);
+                group = new SKModel.GroupModel(config);
 
                 // Add the group to keycloak.
                 var rRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute("groups"), group);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
 
                 // Have to look for it now that we've added it.
-                groups = await _client.HandleGetAsync<KModel.GroupModel[]>(_client.AdminRoute($"groups?search={config.Name}"), r => true);
+                groups = await _client.HandleGetAsync<SKModel.GroupModel[]>(_client.AdminRoute($"groups?search={config.Name}"), r => true);
                 group = groups.FirstOrDefault();
             }
             else
@@ -181,6 +185,8 @@ namespace Pims.Tools.Keycloak.Sync
                 group.Name = config.Name;
                 group.RealmRoles = config.RealmRoles.ToArray();
 
+                // TODO: Clear existing realm group so that the changes are correct in keycloak.
+
                 // Update group in keycloak.
                 var rRes = await _client.SendRequestAsync(HttpMethod.Put, _client.AdminRoute($"groups/{group.Id}"), group);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
@@ -188,7 +194,7 @@ namespace Pims.Tools.Keycloak.Sync
                 if (group.RealmRoles.Any())
                 {
                     // Fetch all roles for the group.  Any missing will throw exception.
-                    var roles = group.RealmRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
+                    var roles = group.RealmRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
 
                     // Update group realm roles in keycloak.
                     var grRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"groups/{group.Id}/role-mappings/realm"), roles);
@@ -196,7 +202,7 @@ namespace Pims.Tools.Keycloak.Sync
                 }
             }
 
-            return await _client.HandleGetAsync<KModel.GroupModel>(_client.AdminRoute($"groups/{group.Id}"));
+            return await _client.HandleGetAsync<SKModel.GroupModel>(_client.AdminRoute($"groups/{group.Id}"));
         }
 
         /// <summary>
@@ -205,7 +211,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task AddUpdateClientsAsync()
         {
-            foreach (var cClient in _options.Sync.Realm.Clients ?? Enumerable.Empty<ClientOptions>())
+            foreach (var cClient in _options.Realm.Clients ?? Enumerable.Empty<ClientOptions>())
             {
                 await AddUpdateClientAsync(cClient);
             }
@@ -216,26 +222,26 @@ namespace Pims.Tools.Keycloak.Sync
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        private async Task<KModel.ClientModel> AddUpdateClientAsync(ClientOptions config)
+        private async Task<SKModel.ClientModel> AddUpdateClientAsync(ClientOptions config)
         {
             _logger.LogInformation($"Fetch client '{config.ClientId}'");
-            var clients = await _client.HandleGetAsync<KModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={config.ClientId}"));
+            var clients = await _client.HandleGetAsync<SKModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={config.ClientId}"));
             var client = clients.FirstOrDefault();
 
             if (client == null)
             {
                 _logger.LogInformation($"Add client '{config.ClientId}'");
-                client = new KModel.ClientModel(config);
+                client = new SKModel.ClientModel(config);
 
                 // Add the client to keycloak.
                 var rRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute("clients"), client);
                 if (!rRes.IsSuccessStatusCode) throw new HttpResponseException(rRes);
 
-                clients = await _client.HandleGetAsync<KModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={config.ClientId}"));
+                clients = await _client.HandleGetAsync<SKModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={config.ClientId}"));
                 client = clients.FirstOrDefault();
 
                 // Add protocol mappers
-                var mappers = await _client.HandleGetAsync<KModel.ProtocolMapperModel[]>(_client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"));
+                var mappers = await _client.HandleGetAsync<SKModel.ProtocolMapperModel[]>(_client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"));
                 foreach (var cMapper in config.ProtocolMappers ?? Enumerable.Empty<ProtocolMapperOptions>())
                 {
                     // Check if it needs to be added or updated.
@@ -243,7 +249,7 @@ namespace Pims.Tools.Keycloak.Sync
 
                     if (mapper == null)
                     {
-                        mapper = new KModel.ProtocolMapperModel(cMapper);
+                        mapper = new SKModel.ProtocolMapperModel(cMapper);
 
                         var cpmRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"), mapper);
                         if (!cpmRes.IsSuccessStatusCode) throw new HttpResponseException(cpmRes);
@@ -268,7 +274,7 @@ namespace Pims.Tools.Keycloak.Sync
                     if (config.ServiceAccount?.RealmRoles?.Any() ?? false)
                     {
                         // Fetch all roles for the realm.  Any missing will throw exception.
-                        var roles = config.ServiceAccount.RealmRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
+                        var roles = config.ServiceAccount.RealmRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
 
                         // Link the realm roles to this service account.
                         var srRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"users/{serviceAccount.Id}/role-mappings/realm"), roles);
@@ -276,11 +282,11 @@ namespace Pims.Tools.Keycloak.Sync
 
                         foreach (var csClient in config.ServiceAccount.ClientRoles ?? Enumerable.Empty<ClientRoleOptions>())
                         {
-                            var sClients = await _client.HandleGetAsync<KModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={csClient.ClientId}"));
+                            var sClients = await _client.HandleGetAsync<SKModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={csClient.ClientId}"));
                             var sClient = sClients.First();
 
                             // Fetch all roles for the client.  Any missing will throw exception.
-                            var scRoles = csClient.ClientRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"clients/{sClient.Id}/roles/{r}"))).Select(r => r.Result).ToArray();
+                            var scRoles = csClient.ClientRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"clients/{sClient.Id}/roles/{r}"))).Select(r => r.Result).ToArray();
 
                             // Link the client roles to this service account.
                             var scrRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"users/{serviceAccount.Id}/role-mappings/clients/{sClient.Id}"), scRoles);
@@ -322,7 +328,7 @@ namespace Pims.Tools.Keycloak.Sync
                 if (!cRes.IsSuccessStatusCode) throw new HttpResponseException(cRes);
 
                 // Update protocol mappers
-                var mappers = await _client.HandleGetAsync<KModel.ProtocolMapperModel[]>(_client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"));
+                var mappers = await _client.HandleGetAsync<SKModel.ProtocolMapperModel[]>(_client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"));
                 foreach (var cMapper in config.ProtocolMappers ?? Enumerable.Empty<ProtocolMapperOptions>())
                 {
                     // Check if it needs to be added or updated.
@@ -330,7 +336,7 @@ namespace Pims.Tools.Keycloak.Sync
 
                     if (mapper == null)
                     {
-                        mapper = new KModel.ProtocolMapperModel(cMapper);
+                        mapper = new SKModel.ProtocolMapperModel(cMapper);
 
                         var cpmRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"clients/{client.Id}/protocol-mappers/models"), mapper);
                         if (!cpmRes.IsSuccessStatusCode) throw new HttpResponseException(cpmRes);
@@ -355,7 +361,7 @@ namespace Pims.Tools.Keycloak.Sync
                     if (config.ServiceAccount?.RealmRoles?.Any() ?? false)
                     {
                         // Fetch all roles for the realm.  Any missing will throw exception.
-                        var roles = config.ServiceAccount.RealmRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
+                        var roles = config.ServiceAccount.RealmRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"roles/{r}"))).Select(r => r.Result).ToArray();
 
                         // Link the realm roles to this service account.
                         var srRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"users/{serviceAccount.Id}/role-mappings/realm"), roles);
@@ -363,11 +369,11 @@ namespace Pims.Tools.Keycloak.Sync
 
                         foreach (var csClient in config.ServiceAccount.ClientRoles ?? Enumerable.Empty<ClientRoleOptions>())
                         {
-                            var sClients = await _client.HandleGetAsync<KModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={csClient.ClientId}"));
+                            var sClients = await _client.HandleGetAsync<SKModel.ClientModel[]>(_client.AdminRoute($"clients?clientId={csClient.ClientId}"));
                             var sClient = sClients.First();
 
                             // Fetch all roles for the client.  Any missing will throw exception.
-                            var scRoles = csClient.ClientRoles.Select(async r => await _client.HandleGetAsync<KModel.RoleModel>(_client.AdminRoute($"clients/{sClient.Id}/roles/{r}"))).Select(r => r.Result).ToArray();
+                            var scRoles = csClient.ClientRoles.Select(async r => await _client.HandleGetAsync<SKModel.RoleModel>(_client.AdminRoute($"clients/{sClient.Id}/roles/{r}"))).Select(r => r.Result).ToArray();
 
                             // Link the client roles to this service account.
                             var scrRes = await _client.SendRequestAsync(HttpMethod.Post, _client.AdminRoute($"users/{serviceAccount.Id}/role-mappings/clients/{sClient.Id}"), scRoles);
@@ -377,7 +383,7 @@ namespace Pims.Tools.Keycloak.Sync
                 }
             }
 
-            return await _client.HandleGetAsync<KModel.ClientModel>(_client.AdminRoute($"clients/{client.Id}"));
+            return await _client.HandleGetAsync<SKModel.ClientModel>(_client.AdminRoute($"clients/{client.Id}"));
         }
         #endregion
     }

@@ -89,7 +89,7 @@ namespace Pims.Tools.Keycloak.Sync.Models
         /// Creates a new instance of a UserModel class, initializes with specified arguments.
         /// </summary>
         /// <param name="user"></param>
-        public UserModel(Keycloak.UserModel user)
+        public UserModel(Core.Keycloak.Models.UserModel user)
         {
             this.Id = user.Id;
             this.Username = user.Username;

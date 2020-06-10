@@ -1,7 +1,7 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
-using Pims.Core.Helpers;
 using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
@@ -26,14 +26,14 @@ namespace Pims.Dal.Test.Services
         public static IEnumerable<object[]> ParcelFilters =>
             new List<object[]>
             {
-                new object[] { new ParcelFilter(50, 25, 50, 20), 1 },
-                new object[] { new ParcelFilter(50, 24, 50, 26), 0 },
-                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1 },
-                new object[] { new ParcelFilter() { ClassificationId = 2 }, 1 },
-                new object[] { new ParcelFilter() { Description = "DescriptionTest" }, 1 },
-                new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1 },
-                new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1 },
-                new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1 }
+                new object[] { new ParcelFilter(50, 25, 50, 20), new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter(50, 24, 50, 26), new[] { 1, 3 }, 0 },
+                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { Description = "DescriptionTest" }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { Municipality = "Municipality" }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { Zoning = "Zoning" }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1 }
             };
         #endregion
 
@@ -81,11 +81,11 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void Get_Parcels(ParcelFilter filter, int expectedCount)
+        public void Get_Parcels(ParcelFilter filter, int[] agencyIds, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(agencyIds);
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
@@ -111,9 +111,42 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(expectedCount, result.Count());
         }
 
+        [Fact]
+        public void Get_Parcels_OnlyAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(3);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.Get(new ParcelFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            result.Should().HaveCount(1);
+        }
+
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void Get_Parcels_AsAdmin(ParcelFilter filter, int expectedCount)
+        [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not required for administrators.")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not required for administrators.")]
+        public void Get_Parcels_AsAdmin(ParcelFilter filter, int[] agencyIds, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
@@ -141,6 +174,38 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
             Assert.Equal(expectedCount, result.Count());
+        }
+
+
+        [Fact]
+        public void Get_Parcels_AsAdmin_AllAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.Get(new ParcelFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(20, result.Count());
         }
         #endregion
 
@@ -183,11 +248,11 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void Get_Page(ParcelFilter filter, int expectedCount)
+        public void Get_Page(ParcelFilter filter, int[] agencyIds, int expectedTotal)
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(agencyIds);
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
@@ -210,12 +275,45 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            Assert.Equal(expectedTotal, result.Total);
+        }
+
+        [Fact]
+        public void Get_Page_OnlyAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(3);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.GetPage(new ParcelFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(1, result.Total);
         }
 
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void Get_Page_AsAdmin(ParcelFilter filter, int expectedCount)
+        [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not required for administrators.")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not required for administrators.")]
+        public void Get_Page_AsAdmin(ParcelFilter filter, int[] agencyIds, int expectedTotal)
         {
             // Arrange
             var helper = new TestHelper();
@@ -242,7 +340,38 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
-            Assert.Equal(expectedCount, result.Total);
+            Assert.Equal(expectedTotal, result.Total);
+        }
+
+        [Fact]
+        public void Get_Page_AsAdmin_AllAgencies()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcels = init.CreateParcels(1, 20);
+            parcels.Next(0).Latitude = 50;
+            parcels.Next(0).Longitude = 25;
+            parcels.Next(1).Agency = init.Agencies.Find(3);
+            parcels.Next(1).AgencyId = 3;
+            parcels.Next(2).ClassificationId = 2;
+            parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.GetPage(new ParcelFilter());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<Entity.Parcel>>(result);
+            Assert.Equal(20, result.Total);
         }
         #endregion
 
@@ -518,6 +647,106 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.True(result.IsSensitive);
+        }
+        #endregion
+
+        #region Update Parcel
+        [Fact]
+        public void Update_Parcel_NoPermission_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(parcel));
+        }
+
+        [Fact]
+        public void Update_Parcel_NotFound_KeyNotFound()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            var searchParcel = EntityHelper.CreateParcel(2);
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() =>
+                service.Update(searchParcel));
+        }
+
+        [Fact]
+        public void Update_Parcel_WrongAgency_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Act
+            parcel.Description = "a new description.";
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(parcel));
+        }
+
+        [Fact]
+        public void Update_Parcel_ChangeAgency_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Act
+            parcel.AgencyId = 5;
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(parcel));
+        }
+
+        [Fact]
+        public void Update_Parcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Act
+            parcel.Description = "a new description.";
+            var result = service.Update(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            result.Description.Should().Be("a new description.");
         }
         #endregion
 
