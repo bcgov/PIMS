@@ -118,7 +118,7 @@ const AppRouter: React.FC = () => {
         path="/projects/approval/requests"
         component={ProjectApprovalRequestListView}
         layout={AuthLayout}
-        claim={Claims.PROJECT_VIEW}
+        claim={Claims.DISPOSE_APPROVE}
         title={getTitle('Surplus Property Program Projects - Approval Requests')}
       />
       <AppRoute
