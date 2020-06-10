@@ -22,9 +22,8 @@ function AppNavBar() {
           <AdminDropdown />
           <PropertyDropdown />
           <ViewProjects />
-          <ViewProjectApprovalRequests />
           <DisposeRequest />
-          <DisposeApprove />
+          <ViewProjectApprovalRequests />
         </Nav>
       </Navbar.Collapse>
       <Nav className="profile align-items-center">
@@ -107,7 +106,7 @@ function ViewProjects() {
  */
 function ViewProjectApprovalRequests() {
   const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
+  return keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
     <Nav.Link href="/projects/approval/requests">Approval Requests</Nav.Link>
   ) : null;
 }
@@ -121,14 +120,6 @@ function DisposeRequest() {
   return keycloak.hasClaim(Claims.PROJECT_ADD) ? (
     <Nav.Link onClick={() => history.push('/dispose')}>Dispose Properties</Nav.Link>
   ) : null;
-}
-
-/**
- * Approval Requests navigation menu link.
- */
-function DisposeApprove() {
-  const keycloak = useKeycloakWrapper();
-  return keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? <Nav.Link>Approval Requests</Nav.Link> : null;
 }
 
 export default AppNavBar;
