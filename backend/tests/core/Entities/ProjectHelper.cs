@@ -49,7 +49,12 @@ namespace Pims.Core.Test
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = user.Id,
                 UpdatedBy = user,
+                PublicNote = $"publicNote-{id}",
+                PrivateNote = $"privateNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
+                SubmittedOn = DateTime.UtcNow,
+                ApprovedOn = DateTime.UtcNow,
+                DeniedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }
