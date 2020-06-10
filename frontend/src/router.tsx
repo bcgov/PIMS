@@ -17,7 +17,7 @@ import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import { ProjectDisposeView } from 'features/projects/dispose';
 import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
-import { ProjectListView } from 'features/projects/list';
+import { ProjectListView, ProjectApprovalRequestListView } from 'features/projects/list';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -112,6 +112,14 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.PROJECT_VIEW}
         title={getTitle('View Projects')}
+      />
+      <AppRoute
+        protected
+        path="/projects/approval/requests"
+        component={ProjectApprovalRequestListView}
+        layout={AuthLayout}
+        claim={Claims.PROJECT_VIEW}
+        title={getTitle('Surplus Property Program Projects - Approval Requests')}
       />
       <AppRoute
         protected

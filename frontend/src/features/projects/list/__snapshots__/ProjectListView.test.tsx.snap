@@ -178,7 +178,7 @@ exports[`Project list view Matches snapshot 1`] = `
             Object {
               "display": "flex",
               "flex": "1 0 auto",
-              "minWidth": "625px",
+              "minWidth": "835px",
             }
           }
         >
@@ -258,30 +258,9 @@ exports[`Project list view Matches snapshot 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
-                "flex": "160 0 auto",
+                "flex": "50 0 auto",
                 "justifyContent": "flex-start",
-                "minWidth": "160px",
-                "textAlign": "left",
-                "width": "14%",
-              }
-            }
-            width="14%"
-          >
-            Description
-          </div>
-          <div
-            className="th"
-            colSpan={1}
-            onClick={[Function]}
-            role="columnheader"
-            style={
-              Object {
-                "alignItems": "center",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "80 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "80px",
+                "minWidth": "50px",
                 "textAlign": "left",
                 "width": "7%",
               }
@@ -304,12 +283,117 @@ exports[`Project list view Matches snapshot 1`] = `
                 "justifyContent": "flex-start",
                 "minWidth": "80px",
                 "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Agency
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "7%",
+              }
+            }
+            width="7%"
+          >
+            Sub Agency
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
                 "width": "3.5%",
               }
             }
             width="3.5%"
           >
-            No. of properties
+            Zoning
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "3.5%",
+              }
+            }
+            width="3.5%"
+          >
+            Zoning Potential
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "3.5%",
+              }
+            }
+            width="3.5%"
+          >
+            Sum Netbook
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "80 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "80px",
+                "textAlign": "left",
+                "width": "3.5%",
+              }
+            }
+            width="3.5%"
+          >
+            Sum Estimated
           </div>
           <div
             className="th"

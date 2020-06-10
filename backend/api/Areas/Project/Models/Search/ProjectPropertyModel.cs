@@ -85,6 +85,16 @@ namespace Pims.Api.Areas.Project.Models.Search
         /// get/set - The property municipality name.
         /// </summary>
         public string Municipality { get; set; }
+
+        /// <summary>
+        /// get/set - The property zoning
+        /// </summary>
+        public string Zoning { get; set; }
+
+        /// <summary>
+        /// get/set - The property zoning potential
+        /// </summary>
+        public string ZoningPotential { get; set; }
         #endregion
     }
 }

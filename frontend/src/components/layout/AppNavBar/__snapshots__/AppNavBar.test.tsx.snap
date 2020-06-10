@@ -78,6 +78,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     <AdminDropdown />
                     <PropertyDropdown />
                     <ViewProjects />
+                    <ViewProjectApprovalRequests />
                     <DisposeRequest />
                     <DisposeApprove />
                   </div>
