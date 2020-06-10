@@ -326,11 +326,12 @@ namespace Pims.Dal.Services
                 if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
                 // Validate that all required tasks have been completed before allowing transition from one status to another.
-                if (originalProject.Tasks.Any(t => !t.IsCompleted && !t.Task.IsOptional)) throw new InvalidOperationException("Not all required tasks have been completed.");
+                var tasksCompleted = project.Tasks.ToDictionary(t => t.TaskId);
+                if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && !tasksCompleted[t.TaskId].IsCompleted)) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
 
             // Update a project
-            this.Context.Entry(originalProject).CurrentValues.SetValues(project); // TODO: Fix concurency issue.
+            this.Context.Entry(originalProject).CurrentValues.SetValues(project);
             this.Context.SetOriginalRowVersion(originalProject);
 
             foreach (var property in project.Properties)
