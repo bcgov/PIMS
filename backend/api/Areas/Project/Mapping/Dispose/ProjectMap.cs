@@ -23,6 +23,11 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
                 .Map(dest => dest.ProjectProperties, src => src.Properties)
+                .Map(dest => dest.PublicNote, src => src.PublicNote)
+                .Map(dest => dest.PrivateNote, src => src.PrivateNote)
+                .Map(dest => dest.SubmittedOn, src => src.SubmittedOn)
+                .Map(dest => dest.ApprovedOn, src => src.ApprovedOn)
+                .Map(dest => dest.DeniedOn, src => src.DeniedOn)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -35,6 +40,11 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
+                .Map(dest => dest.PublicNote, src => src.PublicNote)
+                .Map(dest => dest.PrivateNote, src => src.PrivateNote)
+                .Map(dest => dest.SubmittedOn, src => src.SubmittedOn)
+                .Map(dest => dest.ApprovedOn, src => src.ApprovedOn)
+                .Map(dest => dest.DeniedOn, src => src.DeniedOn)
                 .Map(dest => dest.Properties, src => src.ProjectProperties)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
