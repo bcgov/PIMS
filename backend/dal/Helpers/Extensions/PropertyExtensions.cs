@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
@@ -28,10 +29,19 @@ namespace Pims.Dal.Helpers.Extensions
             // Check if user has the ability to view sensitive properties.
             var userAgencies = user.GetAgencies();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = context.Properties.AsNoTracking().Where(b =>
-                !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)));
+            var query = context.Properties.AsNoTracking();
+
+            // Only allowed to see user's own agency properties.
+            if (!isAdmin)
+            {
+                query = query.Where(p =>
+                    p.IsVisibleToOtherAgencies
+                    || ((!p.IsSensitive || viewSensitive)
+                        && userAgencies.Contains(p.AgencyId))); // Only can view properties in user's agency.
+            }
 
             if (filter.PropertyType.HasValue)
                 query = query.Where(p => p.PropertyTypeId == filter.PropertyType);

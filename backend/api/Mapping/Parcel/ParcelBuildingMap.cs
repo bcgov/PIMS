@@ -17,6 +17,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
@@ -38,6 +39,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.OccupantName, src => src.OccupantName)
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
+                .Map(dest => dest.IsVisibleToOtherAgencies, src => src.IsVisibleToOtherAgencies)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
@@ -49,6 +51,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Latitude, src => src.Latitude)
@@ -65,6 +68,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.OccupantName, src => src.OccupantName)
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
+                .Map(dest => dest.IsVisibleToOtherAgencies, src => src.IsVisibleToOtherAgencies)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Models.BaseModel, Entity.BaseEntity>();

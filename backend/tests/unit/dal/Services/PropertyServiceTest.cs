@@ -23,52 +23,55 @@ namespace Pims.Dal.Test.Services
         public static IEnumerable<object[]> ParcelFilters =>
             new List<object[]>
             {
-                new object[] { new AllPropertyFilter(50, 25, 50, 20) { PropertyType = Entity.PropertyTypes.Land }, 1, 1 },
-                new object[] { new AllPropertyFilter(50, 24, 50, 26) { PropertyType = Entity.PropertyTypes.Land }, 0, 0 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Agencies = new int[] { 3 } }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Description = "DescriptionTest" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Municipality = "Municipality" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Zoning = "Zoning" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ZoningPotential = "ZoningPotential" }, 1, 1 }
+                new object[] { new AllPropertyFilter(50, 25, 50, 20) { PropertyType = Entity.PropertyTypes.Land }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter(50, 24, 50, 26) { PropertyType = Entity.PropertyTypes.Land }, new[] { 1, 3 }, 0, 0 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Municipality = "Municipality" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land }, new[] { 3 }, 1, 1 },
             };
 
         public static IEnumerable<object[]> BuildingFilters =>
             new List<object[]>
             {
-                new object[] { new AllPropertyFilter(50, 25, 50, 20) { PropertyType = Entity.PropertyTypes.Building }, 1, 1 },
-                new object[] { new AllPropertyFilter(50, 24, 50, 26) { PropertyType = Entity.PropertyTypes.Building }, 0, 0 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, 6, 6 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Description = "DescriptionTest" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Municipality = "Municipality" }, 10, 10 },
-                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1, 1 }
+                new object[] { new AllPropertyFilter(50, 25, 50, 20) { PropertyType = Entity.PropertyTypes.Building }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter(50, 24, 50, 26) { PropertyType = Entity.PropertyTypes.Building }, new[] { 1, 3 }, 0, 0 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 6, 6 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Municipality = "Municipality" }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building }, new[] { 3 }, 6, 6 },
             };
 
         public static IEnumerable<object[]> AllPropertyFilters =>
             new List<object[]>
             {
-                new object[] { new AllPropertyFilter(50, 25, 50, 20), 2, 2 },
-                new object[] { new AllPropertyFilter(50, 24, 50, 26), 0, 0 },
-                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, 7, 7 },
-                new object[] { new AllPropertyFilter() { ClassificationId = 2 }, 2, 2 },
-                new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "DescriptionTest" }, 2, 2 },
-                new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, 11, 10 },
-                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, 1, 1 },
-                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, StatusId = 1 }, 10, 10 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, StatusId = 1 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, 11, 5 },
-                new object[] { new AllPropertyFilter() { Quantity = 2, StatusId = 1 }, 11, 2 },
+                new object[] { new AllPropertyFilter(50, 25, 50, 20), new[] { 1, 3 }, 2, 2 },
+                new object[] { new AllPropertyFilter(50, 24, 50, 26), new[] { 1, 3 }, 0, 0 },
+                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 7, 7 },
+                new object[] { new AllPropertyFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 2, 2 },
+                new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "DescriptionTest" }, new[] { 1, 3 }, 2, 2 },
+                new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, new[] { 1, 3 }, 11, 10 },
+                new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, StatusId = 1 }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, StatusId = 1 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, new[] { 1, 3 }, 11, 5 },
+                new object[] { new AllPropertyFilter() { Quantity = 2, StatusId = 1 }, new[] { 1, 3 }, 11, 2 },
+                new object[] { new AllPropertyFilter(), new[] { 3 }, 7, 7 },
             };
         #endregion
 
@@ -116,11 +119,11 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(ParcelFilters))]
-        public void GetPage_ParcelProperties(AllPropertyFilter filter, int expectedTotal, int expectedCount)
+        public void GetPage_ParcelProperties(AllPropertyFilter filter, int[] agencyIds, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(agencyIds);
 
             using var init = helper.InitializeDatabase(user);
 
@@ -169,11 +172,11 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(BuildingFilters))]
-        public void GetPage_BuildingProperties(AllPropertyFilter filter, int expectedTotal, int expectedCount)
+        public void GetPage_BuildingProperties(AllPropertyFilter filter, int[] agencyIds, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(agencyIds);
 
             using var init = helper.InitializeDatabase(user);
 
@@ -222,11 +225,11 @@ namespace Pims.Dal.Test.Services
 
         [Theory]
         [MemberData(nameof(AllPropertyFilters))]
-        public void GetPage_Properties(AllPropertyFilter filter, int expectedTotal, int expectedCount)
+        public void GetPage_Properties(AllPropertyFilter filter, int[] agencyIds, int expectedTotal, int expectedCount)
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(agencyIds);
 
             using var init = helper.InitializeDatabase(user);
 

@@ -13,6 +13,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public string Status { get; set; }
 
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
         public int ClassificationId { get; set; }

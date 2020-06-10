@@ -51,14 +51,14 @@ namespace Pims.Dal.Services
             query = this.Context.Buildings
                 .Include(b => b.Parcel)
                 .AsNoTracking()
-                .Where(p =>
-                (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
-                p.Latitude != 0 &&
-                p.Longitude != 0 &&
-                p.Latitude <= neLat &&
-                p.Latitude >= swLat &&
-                p.Longitude <= neLong &&
-                p.Longitude >= swLong);
+                .Where(b =>
+                (isAdmin || b.IsVisibleToOtherAgencies || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId))) &&
+                b.Latitude != 0 &&
+                b.Longitude != 0 &&
+                b.Latitude <= neLat &&
+                b.Latitude >= swLat &&
+                b.Longitude <= neLong &&
+                b.Longitude >= swLong);
             return query.ToArray();
         }
 
@@ -119,8 +119,11 @@ namespace Pims.Dal.Services
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
                 .AsNoTracking()
-                .FirstOrDefault(b => b.Id == id &&
-                    (isAdmin || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
+                .FirstOrDefault(b => b.Id == id
+                    && (isAdmin
+                        || b.IsVisibleToOtherAgencies
+                        || ((!b.IsSensitive || viewSensitive)
+                            && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
 
             return building;
         }
@@ -142,6 +145,7 @@ namespace Pims.Dal.Services
 
             building.AgencyId = agency.Id;
             building.Agency = agency;
+            building.IsVisibleToOtherAgencies = false;
             this.Context.Buildings.Add(building);
             this.Context.CommitTransaction();
             return building;
@@ -158,21 +162,24 @@ namespace Pims.Dal.Services
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!isAdmin && !userAgencies.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
+            if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (entity.AgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
+            if (existingBuilding.AgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
+
+            // Do not allow making property visible through this service.
+            if (existingBuilding.IsVisibleToOtherAgencies != existingBuilding.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
             this.Context.Buildings.ThrowIfNotUnique(building);
 
-            this.Context.Entry(entity).CurrentValues.SetValues(building);
+            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 
-            this.Context.Buildings.Update(entity); // TODO: Must detach entity before returning it.
+            this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
-            return entity;
+            return existingBuilding;
         }
 
         /// <summary>

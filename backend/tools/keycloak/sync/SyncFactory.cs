@@ -6,10 +6,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Tools.Core.Exceptions;
+using Pims.Tools.Core.Keycloak;
 using Pims.Tools.Keycloak.Sync.Configuration;
-using Pims.Tools.Keycloak.Sync.Exceptions;
 using Pims.Tools.Keycloak.Sync.Models;
-using KModel = Pims.Tools.Keycloak.Sync.Models.Keycloak;
+using KModel = Pims.Tools.Core.Keycloak.Models;
 
 namespace Pims.Tools.Keycloak.Sync
 {
@@ -20,7 +21,7 @@ namespace Pims.Tools.Keycloak.Sync
     {
         #region Variables
         private readonly ToolOptions _options;
-        private readonly IRequestClient _client;
+        private readonly IKeycloakRequestClient _client;
         private readonly ILogger _logger;
         #endregion
 
@@ -31,7 +32,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <param name="client"></param>
         /// <param name="options"></param>
         /// <param name="logger"></param>
-        public SyncFactory(IRequestClient client, IOptionsMonitor<ToolOptions> options, ILogger<SyncFactory> logger)
+        public SyncFactory(IKeycloakRequestClient client, IOptionsMonitor<ToolOptions> options, ILogger<SyncFactory> logger)
         {
             _options = options.CurrentValue;
             _client = client;
@@ -136,6 +137,8 @@ namespace Pims.Tools.Keycloak.Sync
                         uRoles.Add(role);
                     }
                 }
+
+                user.Roles = uRoles;
 
                 // Add the user to PIMS.
                 user = await _client.HandleRequestAsync<UserModel, UserModel>(HttpMethod.Post, $"{_options.Api.Uri}/admin/users", user);

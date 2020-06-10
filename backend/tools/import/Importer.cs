@@ -5,11 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pims.Tools.Core.Exceptions;
+using Pims.Tools.Core.Extensions;
+using Pims.Tools.Core.Keycloak;
 
 namespace Pims.Tools.Import
 {
@@ -19,12 +21,9 @@ namespace Pims.Tools.Import
     public class Importer : IImporter
     {
         #region Variables
-        private readonly ImportOptions _options;
-        private readonly IOpenIdConnector _auth;
-        private readonly HttpClient _client;
-        private readonly JwtSecurityTokenHandler _tokenHandler;
+        private readonly ToolOptions _options;
+        private readonly IKeycloakRequestClient _client;
         private readonly ILogger _logger;
-        private string _refreshToken = null;
         #endregion
 
         #region Constructors
@@ -32,16 +31,12 @@ namespace Pims.Tools.Import
         /// Creates a new instance of an Importer class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="auth"></param>
-        /// <param name="clientFactory"></param>
-        /// <param name="tokenHandler"></param>
+        /// <param name="client"></param>
         /// <param name="logger"></param>
-        public Importer(IOptionsMonitor<ImportOptions> options, IOpenIdConnector auth, IHttpClientFactory clientFactory, JwtSecurityTokenHandler tokenHandler, ILogger<Importer> logger)
+        public Importer(IOptionsMonitor<ToolOptions> options, IKeycloakRequestClient client, ILogger<Importer> logger)
         {
             _options = options.CurrentValue;
-            _auth = auth;
-            _client = clientFactory.CreateClient("Pims.Tools.Import");
-            _tokenHandler = tokenHandler;
+            _client = client;
             _logger = logger;
         }
         #endregion
@@ -51,20 +46,22 @@ namespace Pims.Tools.Import
         /// Read the JSON package, iterate through it and send the items to the configured endpoint URL.
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="url"></param>
-        /// <param name="method"></param>
-        /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<int> ImportAsync(FileInfo file, HttpMethod method, string url, string token = null)
+        public async Task<int> ImportAsync(FileInfo file)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
             if (!file.Exists) throw new ArgumentException($"Argument '{nameof(file)}' must be an existing file.");
-            if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException($"Argument '{nameof(url)}' is required.");
+            if (String.IsNullOrWhiteSpace(_options.Api.Uri)) throw new InvalidOperationException($"Configuration 'Api:Uri' is required.");
+            if (String.IsNullOrWhiteSpace(_options.Api.ImportUrl)) throw new InvalidOperationException($"Configuration 'Api:ImportUrl' is required.");
 
-            _logger.LogInformation($"url: {url}, quantity: {_options.Quantity}");
+            // Activate the service account.
+            var aRes = await _client.SendRequestAsync(HttpMethod.Post, $"{_options.Api.Uri}/auth/activate");
+            if (!aRes.IsSuccessStatusCode) throw new HttpResponseException(aRes);
+
+            _logger.LogInformation($"url: {_options.Api.ImportUrl}, quantity: {_options.Import.Quantity}");
 
             var properties = await JsonSerializer.DeserializeAsync<IEnumerable<object>>(file.OpenRead());
-            var index = _options.Skip;
+            var index = _options.Import.Skip;
             var total = properties.Count();
             var failures = 0;
             var iteration = 0;
@@ -73,19 +70,11 @@ namespace Pims.Tools.Import
 
             while (total > index)
             {
-                var items = properties.Skip(index).Take(_options.Quantity);
+                var items = properties.Skip(index).Take(_options.Import.Quantity);
 
                 _logger.LogInformation($"Import iteration: {iteration}, Properties remaining: {total - index}");
 
-                // Check if token has expired.  If it has refresh it.
-                if (String.IsNullOrWhiteSpace(token) || _tokenHandler.ReadJwtToken(token).ValidTo <= DateTime.UtcNow)
-                {
-                    var tokenNew = await _auth.RequestTokenAsync(_refreshToken);
-                    token = tokenNew.access_token;
-                    _refreshToken = tokenNew.refresh_token;
-                }
-
-                var success = await RetryAsync(method, url, token, items);
+                var success = await RetryAsync(_options.Api.HttpMethod.GetHttpMethod(), $"{_options.Api.Uri}{_options.Api.ImportUrl}", items);
                 failures = success ? 0 : failures + 1;
 
                 // Failed request, abort the importer.
@@ -93,10 +82,10 @@ namespace Pims.Tools.Import
                     return 1;
 
                 // Exit the import, we're done.
-                if (_options.Iterations > 0 && ++iteration >= _options.Iterations)
+                if (_options.Import.Iterations > 0 && ++iteration >= _options.Import.Iterations)
                     break;
 
-                index += _options.Quantity;
+                index += _options.Import.Quantity;
             }
 
             return 0;
@@ -107,19 +96,18 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <param name="method"></param>
         /// <param name="url"></param>
-        /// <param name="token"></param>
         /// <param name="items"></param>
         /// <param name="attempt"></param>
         /// <returns></returns>
-        private async Task<bool> RetryAsync(HttpMethod method, string url, string token, IEnumerable<object> items, int attempt = 1)
+        private async Task<bool> RetryAsync(HttpMethod method, string url, IEnumerable<object> items, int attempt = 1)
         {
-            var success = await SendItemsAsync(method, url, token, items);
+            var success = await SendItemsAsync(method, url, items);
 
             // Make another attempt;
             if (!success && _options.RetryAfterFailure && attempt <= _options.RetryAttempts)
             {
                 _logger.LogInformation($"Retry attempt: {attempt} of {_options.RetryAttempts}");
-                return await RetryAsync(method, url, token, items, ++attempt);
+                return await RetryAsync(method, url, items, ++attempt);
             }
 
             return success;
@@ -130,15 +118,14 @@ namespace Pims.Tools.Import
         /// </summary>
         /// <param name="method"></param>
         /// <param name="url"></param>
-        /// <param name="token"></param>
         /// <param name="items"></param>
         /// <returns></returns>
-        private async Task<bool> SendItemsAsync(HttpMethod method, string url, string token, IEnumerable<object> items)
+        private async Task<bool> SendItemsAsync(HttpMethod method, string url, IEnumerable<object> items)
         {
-            if (_options.Delay > 0)
-                Task.Delay(new TimeSpan(0, 0, 0, 0, _options.Delay)).Wait();
+            if (_options.Import.Delay > 0)
+                Task.Delay(new TimeSpan(0, 0, 0, 0, _options.Import.Delay)).Wait();
 
-            var response = await SendAsync(method, url, token, items);
+            var response = await SendAsync(method, url, items);
             using var stream = await response.Content.ReadAsStreamAsync();
 
             if (response.IsSuccessStatusCode)
@@ -168,24 +155,14 @@ namespace Pims.Tools.Import
         /// Make an HTTP request to the configured endpoint URL.
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="token"></param>
         /// <param name="items"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string url, string token, IEnumerable<object> items)
+        private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string url, IEnumerable<object> items)
         {
-            var json = JsonSerializer.Serialize(items);
-
             _logger.LogInformation($"Sending {items.Count()} items to {url}");
 
-            var request = new HttpRequestMessage(method, url);
-            request.Headers.Add("Authorization", $"Bearer {token}");
-            request.Headers.Add("User-Agent", "Pims.Tools.Import");
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.SendAsync(request);
-
-            return response;
+            return await _client.SendRequestAsync(method, url, items);
         }
         #endregion
     }

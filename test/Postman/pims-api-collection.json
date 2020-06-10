@@ -2348,7 +2348,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search?agencies=43",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/properties/search",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2356,7 +2356,8 @@
                           "query": [
                             {
                               "key": "agencies",
-                              "value": "43"
+                              "value": "43",
+                              "disabled": true
                             }
                           ]
                         }
@@ -3222,151 +3223,6 @@
           "name": "parcel",
           "item": [
             {
-              "name": "parcels",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "parcels"],
-                  "query": [
-                    {
-                      "key": "neLatitude",
-                      "value": "48.46654767913532"
-                    },
-                    {
-                      "key": "neLongitude",
-                      "value": "-123.330717086792"
-                    },
-                    {
-                      "key": "swLatitude",
-                      "value": "48.398949765641426"
-                    },
-                    {
-                      "key": "swLongitude",
-                      "value": "-123.40882301330568"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "parcels - test",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?municipality=test&address=&agencies=&classificationId&maxLandArea&minLandArea&neLatitude=48.44198478906882&neLongitude=-123.33998680114746&swLatitude=48.40951964833088&swLongitude=-123.37976932525635",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "parcels"],
-                  "query": [
-                    {
-                      "key": "municipality",
-                      "value": "test"
-                    },
-                    {
-                      "key": "address",
-                      "value": ""
-                    },
-                    {
-                      "key": "agencies",
-                      "value": ""
-                    },
-                    {
-                      "key": "classificationId",
-                      "value": null
-                    },
-                    {
-                      "key": "maxLandArea",
-                      "value": null
-                    },
-                    {
-                      "key": "minLandArea",
-                      "value": null
-                    },
-                    {
-                      "key": "neLatitude",
-                      "value": "48.44198478906882"
-                    },
-                    {
-                      "key": "neLongitude",
-                      "value": "-123.33998680114746"
-                    },
-                    {
-                      "key": "swLatitude",
-                      "value": "48.40951964833088"
-                    },
-                    {
-                      "key": "swLongitude",
-                      "value": "-123.37976932525635"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "parcels - municipality",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/parcels?municipality=oak bay",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "parcels"],
-                  "query": [
-                    {
-                      "key": "municipality",
-                      "value": "oak bay"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "parcels/filter",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "01144697-2e2a-496c-a2ff-208d7c4205ad",
-                    "exec": [""],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"MinEstimatedValue\": 50000,\n\t\"MaxEstimatedValue\": 10000000\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/parcels/filter",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "parcels", "filter"]
-                }
-              },
-              "response": []
-            },
-            {
               "name": "parcels/{id}",
               "event": [
                 {
@@ -3499,63 +3355,6 @@
         {
           "name": "building",
           "item": [
-            {
-              "name": "buildings",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/buildings?neLatitude=48.46654767913532&neLongitude=-123.330717086792&swLatitude=48.398949765641426&swLongitude=-123.40882301330568",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "buildings"],
-                  "query": [
-                    {
-                      "key": "neLatitude",
-                      "value": "48.46654767913532"
-                    },
-                    {
-                      "key": "neLongitude",
-                      "value": "-123.330717086792"
-                    },
-                    {
-                      "key": "swLatitude",
-                      "value": "48.398949765641426"
-                    },
-                    {
-                      "key": "swLongitude",
-                      "value": "-123.40882301330568"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "buildings/filter",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"MinEstimatedValue\": 50000,\n\t\"MaxEstimatedValue\": 10000000\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{scheme}}://{{host}}:{{port}}/api/buildings/filter",
-                  "protocol": "{{scheme}}",
-                  "host": ["{{host}}"],
-                  "port": "{{port}}",
-                  "path": ["api", "buildings", "filter"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "building/{id}",
               "event": [

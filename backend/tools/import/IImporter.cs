@@ -1,5 +1,4 @@
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Pims.Tools.Import
@@ -13,10 +12,7 @@ namespace Pims.Tools.Import
         /// Read the JSON package, iterate through it and send the items to the specified endpoint URL.
         /// </summary>
         /// <param name="file">The JSON file containing an array of items.</param>
-        /// <param name="url">API endpoint to send HTTP requests to.</param>
-        /// <param name="method">HTTP method to use.</param>
-        /// <param name="token">The JWT token, if not provided a request will be made for one.</param>
         /// <returns></returns>
-        Task<int> ImportAsync(FileInfo file, HttpMethod method, string url, string token = null);
+        Task<int> ImportAsync(FileInfo file);
     }
 }

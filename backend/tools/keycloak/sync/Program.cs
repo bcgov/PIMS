@@ -5,8 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Pims.Tools.Core.Exceptions;
+using Pims.Tools.Core.Keycloak;
+using Pims.Tools.Core.Keycloak.Configuration;
+using Pims.Tools.Core.OpenIdConnect;
+using Pims.Tools.Core.OpenIdConnect.Configuration;
 using Pims.Tools.Keycloak.Sync.Configuration;
-using Pims.Tools.Keycloak.Sync.Exceptions;
+using Pims.Tools.Keycloak.Sync.Configuration.Realm;
 
 namespace Pims.Tools.Keycloak.Sync
 {
@@ -28,9 +33,11 @@ namespace Pims.Tools.Keycloak.Sync
 
             var services = new ServiceCollection()
                 .Configure<ToolOptions>(config)
+                .Configure<KeycloakRequestOptions>(config)
                 .Configure<ApiOptions>(config.GetSection("Api"))
                 .Configure<KeycloakOptions>(config.GetSection("Keycloak"))
-                .Configure<SyncOptions>(config.GetSection("Sync"))
+                .Configure<OpenIdConnectOptions>(config.GetSection("Keycloak"))
+                .Configure<RealmOptions>(config.GetSection("Realm"))
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging(options =>
                 {
@@ -43,7 +50,7 @@ namespace Pims.Tools.Keycloak.Sync
                 })
                 .AddTransient<Startup>()
                 .AddTransient<JwtSecurityTokenHandler>()
-                .AddScoped<IRequestClient, RequestClient>()
+                .AddScoped<IKeycloakRequestClient, KeycloakRequestClient>()
                 .AddTransient<IRealmFactory, RealmFactory>()
                 .AddTransient<ISyncFactory, SyncFactory>()
                 .AddSingleton<IOpenIdConnector, OpenIdConnector>();
@@ -87,6 +94,8 @@ namespace Pims.Tools.Keycloak.Sync
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddJsonFile("realm.json")
+                .AddJsonFile($"realm.{environment}.json", optional: true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(args ?? new string[0]);
         }

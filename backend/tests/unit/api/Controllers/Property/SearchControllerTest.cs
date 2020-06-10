@@ -105,8 +105,9 @@ namespace Pims.Api.Test.Controllers.Property
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
-            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+
+            var items = parcels.Select(p => new Entity.Views.Property(p)).Concat(buildings.Select(b => new Entity.Views.Property(b)));
+            service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -116,8 +117,7 @@ namespace Pims.Api.Test.Controllers.Property
             var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
             var expectedResult = mapper.Map<PropertyModel[]>(parcels).Concat(mapper.Map<PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
             Assert.Equal(includeParcels, filter.IncludeParcels);
             Assert.Equal(includeBuildings, filter.IncludeBuildings);
         }
@@ -139,7 +139,9 @@ namespace Pims.Api.Test.Controllers.Property
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(parcels);
+
+            var items = parcels.Select(p => new Entity.Views.Property(p));
+            service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -149,8 +151,7 @@ namespace Pims.Api.Test.Controllers.Property
             var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
             var expectedResult = mapper.Map<PropertyModel[]>(parcels);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Once());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Never());
+            service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -170,7 +171,9 @@ namespace Pims.Api.Test.Controllers.Property
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(buildings);
+
+            var items = buildings.Select(p => new Entity.Views.Property(p));
+            service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
             var result = controller.GetProperties(filter);
@@ -180,8 +183,7 @@ namespace Pims.Api.Test.Controllers.Property
             var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
             var expectedResult = mapper.Map<PropertyModel[]>(buildings);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), Times.Never());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), Times.Once());
+            service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -189,6 +191,8 @@ namespace Pims.Api.Test.Controllers.Property
         /// </summary>
         [Theory]
         [MemberData(nameof(PropertyQueryFilters))]
+        [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not required for this test.")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not required for this test.")]
         public void GetProperties_Query_Success(Uri uri, bool includeParcels, bool includeBuildings)
         {
             // Arrange
@@ -205,8 +209,9 @@ namespace Pims.Api.Test.Controllers.Property
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>())).Returns(includeParcels ? parcels : new Entity.Parcel[0]);
-            service.Setup(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>())).Returns(includeBuildings ? buildings : new Entity.Building[0]);
+
+            var items = parcels.Select(p => new Entity.Views.Property(p)).Concat(buildings.Select(b => new Entity.Views.Property(b)));
+            service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
             var result = controller.GetProperties();
@@ -214,12 +219,9 @@ namespace Pims.Api.Test.Controllers.Property
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = new List<PropertyModel>();
-            if (includeParcels) expectedResult.AddRange(mapper.Map<PropertyModel[]>(parcels));
-            if (includeBuildings) expectedResult.AddRange(mapper.Map<PropertyModel[]>(buildings));
+            var expectedResult = parcels.Select(p => mapper.Map<PropertyModel>(p)).Concat(buildings.Select(b => mapper.Map<PropertyModel>(b)));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Parcel.Get(It.IsAny<Entity.Models.ParcelFilter>()), includeParcels ? Times.Once() : Times.Never());
-            service.Verify(m => m.Building.Get(It.IsAny<Entity.Models.BuildingFilter>()), includeBuildings ? Times.Once() : Times.Never());
+            service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
 
         /// <summary>

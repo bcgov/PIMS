@@ -14,6 +14,8 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public string LocalId { get; set; }
 
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
         public AddressModel Address { get; set; }

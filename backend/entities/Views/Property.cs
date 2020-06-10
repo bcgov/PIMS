@@ -70,6 +70,11 @@ namespace Pims.Dal.Entities.Views
         public string SubAgencyCode { get; set; }
 
         /// <summary>
+        /// get/set - The property name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - The property description.
         /// </summary>
         public string Description { get; set; }
@@ -113,6 +118,11 @@ namespace Pims.Dal.Entities.Views
         /// get/set - Whether this property is considered sensitive and should only be visible to users who are part of the owning agency.
         /// </summary>
         public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the property is visible to other agencies.  This is used to make properties visible during ERP, but can be used at other times too.
+        /// </summary>
+        public bool IsVisibleToOtherAgencies { get; set; }
 
         #region Financials
         /// <summary>
@@ -306,7 +316,7 @@ namespace Pims.Dal.Entities.Views
 
             this.Description = property.Description;
             this.AddressId = property.AddressId;
-            this.Address = $"{property.Address?.Address1} {property.Address?.Address2}".Trim();
+            this.Address = property.Address != null ? $"{property.Address?.Address1} {property.Address?.Address2}".Trim() : null;
             this.City = property.Address?.City?.Name;
             this.Province = property.Address?.Province?.Name;
             this.Postal = property.Address?.Postal;

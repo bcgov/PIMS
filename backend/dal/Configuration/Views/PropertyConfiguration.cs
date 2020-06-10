@@ -49,7 +49,10 @@ namespace Pims.Dal.Configuration.Views
                             Status = b.Status.Name,
                             ClassificationId = b.ClassificationId,
                             Classification = b.Classification.Name,
+                            Name = b.Name,
                             Description = b.Description,
+                            IsSensitive = b.IsSensitive,
+                            IsVisibleToOtherAgencies = b.IsVisibleToOtherAgencies,
                             Latitude = b.Latitude,
                             Longitude = b.Longitude,
 
@@ -101,7 +104,10 @@ namespace Pims.Dal.Configuration.Views
                                 Status = p.Status.Name,
                                 ClassificationId = p.ClassificationId,
                                 Classification = p.Classification.Name,
+                                Name = p.Name,
                                 Description = p.Description,
+                                IsSensitive = p.IsSensitive,
+                                IsVisibleToOtherAgencies = p.IsVisibleToOtherAgencies,
                                 Latitude = p.Latitude,
                                 Longitude = p.Longitude,
 

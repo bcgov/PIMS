@@ -47,14 +47,17 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            IQueryable<Parcel> query = this.Context.Parcels.AsNoTracking().Where(p =>
-                (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId))) &&
-                p.Latitude != 0 &&
-                p.Longitude != 0 &&
-                p.Latitude <= neLat &&
-                p.Latitude >= swLat &&
-                p.Longitude <= neLong &&
-                p.Longitude >= swLong);
+            var query = this.Context.Parcels.AsNoTracking().Where(p =>
+                (isAdmin
+                    || p.IsVisibleToOtherAgencies
+                    || ((!p.IsSensitive || viewSensitive)
+                        && userAgencies.Contains(p.AgencyId)))
+                && p.Latitude != 0
+                && p.Longitude != 0
+                && p.Latitude <= neLat
+                && p.Latitude >= swLat
+                && p.Longitude <= neLong
+                && p.Longitude >= swLong);
             return query.ToArray();
         }
 
@@ -125,7 +128,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
                 .AsNoTracking()
                 .FirstOrDefault(p => p.Id == id &&
-                    (isAdmin || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
+                    (isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
             // Remove any sensitive buildings from the results if the user is not allowed to view them.
             parcel?.Buildings.RemoveAll(b => !isAdmin && b.IsSensitive && !userAgencies.Contains(b.AgencyId));
@@ -153,6 +156,7 @@ namespace Pims.Dal.Services
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Status = this.Context.PropertyStatus.Find(parcel.StatusId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
+            parcel.IsVisibleToOtherAgencies = false;
 
             parcel.Buildings.ForEach(b =>
             {
@@ -194,97 +198,96 @@ namespace Pims.Dal.Services
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
-            if (!isAdmin && !userAgencies.Contains(parcel.AgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+            var originalAgencyId = (int)this.Context.Entry(existingParcel).OriginalValues[nameof(Parcel.AgencyId)];
+            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (existingParcel.AgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+            if (originalAgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+
+            // Do not allow making property visible through this service.
+            if (existingParcel.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) throw new InvalidOperationException("Parcel cannot be made visible to other agencies through this service.");
 
             this.Context.Parcels.ThrowIfPidPinUpdated(parcel);
 
-            //Add/Update a parcel and all child collections
-            if (existingParcel == null)
+            // Update a parcel and all child collections
+            this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
+            this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
+            this.Context.SetOriginalRowVersion(existingParcel);
+            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
+            foreach (var building in parcel.Buildings)
             {
-                this.Context.Add(parcel); // TODO: This should not be here!  This does not follow design of single purpose functions.
-            }
-            else
-            {
-                this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel); // TODO: Fix concurrency issue
-                this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
-                this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
+                var existingBuilding = existingParcel.Buildings
+                    .FirstOrDefault(b => b.Id == building.Id);
 
-                foreach (var building in parcel.Buildings)
+                if (existingBuilding == null)
                 {
-                    var existingBuilding = existingParcel.Buildings
-                        .FirstOrDefault(b => b.Id == building.Id);
+                    existingParcel.Buildings.Add(building);
+                }
+                else
+                {
+                    this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+                    this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
 
-                    if (existingBuilding == null)
+                    foreach (var buildingEvaluation in building.Evaluations)
                     {
-                        existingParcel.Buildings.Add(building);
+                        var existingBuildingEvaluation = existingBuilding.Evaluations
+                            .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
+
+                        if (existingBuildingEvaluation == null)
+                        {
+                            existingBuilding.Evaluations.Add(buildingEvaluation);
+                        }
+                        else
+                        {
+                            this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                        }
                     }
-                    else
+                    foreach (var buildingFiscal in building.Fiscals)
                     {
-                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                         this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, existingBuilding);
 
+                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                         this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
 
-                        foreach (var buildingEvaluation in building.Evaluations)
+                        var existingBuildingFiscal = existingBuilding.Fiscals
+                            .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
+                        if (existingBuildingFiscal == null)
                         {
-                            var existingBuildingEvaluation = existingBuilding.Evaluations
-                                .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
-
-                            if (existingBuildingEvaluation == null)
-                            {
-                                existingBuilding.Evaluations.Add(buildingEvaluation);
-                            }
-                            else
-                            {
-                                this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
-                            }
+                            existingBuilding.Fiscals.Add(buildingFiscal);
                         }
-                        foreach (var buildingFiscal in building.Fiscals)
+                        else
                         {
-                            var existingBuildingFiscal = existingBuilding.Fiscals
-                                .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
-
-                            if (existingBuildingFiscal == null)
-                            {
-                                existingBuilding.Fiscals.Add(buildingFiscal);
-                            }
-                            else
-                            {
-                                this.Context.Entry(existingBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
-                            }
+                            this.Context.Entry(existingBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
                         }
                     }
                 }
-                foreach (var parcelEvaluation in parcel.Evaluations)
-                {
-                    var existingEvaluation = existingParcel.Evaluations
-                        .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
+            }
+            foreach (var parcelEvaluation in parcel.Evaluations)
+            {
+                var existingEvaluation = existingParcel.Evaluations
+                    .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
 
-                    if (existingEvaluation == null)
-                    {
-                        existingParcel.Evaluations.Add(parcelEvaluation);
-                    }
-                    else
-                    {
-                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
-                    }
+                if (existingEvaluation == null)
+                {
+                    existingParcel.Evaluations.Add(parcelEvaluation);
                 }
-                foreach (var parcelFiscal in parcel.Fiscals)
+                else
                 {
-                    var existingParcelFiscal = existingParcel.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
+                    this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
+                }
+            }
+            foreach (var parcelFiscal in parcel.Fiscals)
+            {
+                var existingParcelFiscal = existingParcel.Fiscals
+                    .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
 
-                    if (existingParcelFiscal == null)
-                    {
-                        existingParcel.Fiscals.Add(parcelFiscal);
-                    }
-                    else
-                    {
-                        this.Context.Entry(existingParcelFiscal).CurrentValues.SetValues(parcelFiscal);
-                    }
+                if (existingParcelFiscal == null)
+                {
+                    existingParcel.Fiscals.Add(parcelFiscal);
+                }
+                else
+                {
+                    this.Context.Entry(existingParcelFiscal).CurrentValues.SetValues(parcelFiscal);
                 }
             }
 

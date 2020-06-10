@@ -15,6 +15,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public double Longitude { get; set; }
 
+        public string Name { get; set; }
+
         public string Description { get; set; }
         #endregion
     }

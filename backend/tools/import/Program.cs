@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Pims.Tools.Core.Exceptions;
+using Pims.Tools.Core.Keycloak;
+using Pims.Tools.Core.Keycloak.Configuration;
+using Pims.Tools.Core.OpenIdConnect;
+using Pims.Tools.Core.OpenIdConnect.Configuration;
 
 namespace Pims.Tools.Import
 {
@@ -28,14 +32,15 @@ namespace Pims.Tools.Import
 
             var services = new ServiceCollection()
                 .Configure<ToolOptions>(config)
+                .Configure<KeycloakRequestOptions>(config)
                 .Configure<KeycloakOptions>(config.GetSection("Keycloak"))
+                .Configure<OpenIdConnectOptions>(config.GetSection("Keycloak"))
                 .Configure<ImportOptions>(config.GetSection("Import"))
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging(options =>
                 {
                     options.AddConfiguration(config.GetSection("Logging"));
                     options.AddConsole();
-                    // options.AddEventLog();
                 })
                 .Configure<LoggerFilterOptions>(options =>
                 {
@@ -43,6 +48,7 @@ namespace Pims.Tools.Import
                 })
                 .AddTransient<Startup>()
                 .AddTransient<JwtSecurityTokenHandler>()
+                .AddScoped<IKeycloakRequestClient, KeycloakRequestClient>()
                 .AddTransient<IImporter, Importer>()
                 .AddSingleton<IOpenIdConnector, OpenIdConnector>();
 
@@ -56,6 +62,11 @@ namespace Pims.Tools.Import
             try
             {
                 result = await provider.GetService<Startup>().Run(args);
+            }
+            catch (HttpResponseException ex)
+            {
+                logger.LogCritical(ex, $"An HTTP request failed - {ex.StatusCode}: {ex.Details}");
+                result = 1;
             }
             catch (Exception ex)
             {

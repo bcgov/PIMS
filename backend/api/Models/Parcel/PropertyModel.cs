@@ -11,6 +11,8 @@ namespace Pims.Api.Models.Parcel
 
         public string Status { get; set; }
 
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
         public int ClassificationId { get; set; }
@@ -30,6 +32,8 @@ namespace Pims.Api.Models.Parcel
         public double Longitude { get; set; }
         
         public bool IsSensitive { get; set; }
+
+        public bool IsVisibleToOtherAgencies { get; set; }
         #endregion
     }
 }
