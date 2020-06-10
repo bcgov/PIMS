@@ -347,8 +347,9 @@ namespace Pims.Dal.Services
                 if (toStatus.IsMilestone) throw new InvalidOperationException($"Project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}' requires a milestone transition.");
                 if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
-                // Validate that all required tasks have been completed before allowing transition from one status to another.
-                var tasksCompleted = project.Tasks.ToDictionary(t => t.TaskId);
+                // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
+                var statusTaskIds = fromStatus.Tasks.Select(t => t.TaskId);
+                var tasksCompleted = project.Tasks.Where(t => statusTaskIds.Contains(t.TaskId)).ToDictionary(t => t.TaskId);
                 if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && !tasksCompleted[t.TaskId].IsCompleted)) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
 
