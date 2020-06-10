@@ -39,6 +39,8 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                     src => src.Building != null
                         ? GetBuildingEstimatedValue(src.Building.Fiscals)
                         : GetParcelEstimatedValue(src.Parcel.Fiscals))
+                .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning() : src.Parcel.Zoning)
+                .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential() : src.Parcel.ZoningPotential)
 
                 .Map(dest => dest.AgencyCode,
                     src => src.Building != null ? GetAgencyCode(src.Building.Agency) : GetAgencyCode(src.Parcel.Agency))

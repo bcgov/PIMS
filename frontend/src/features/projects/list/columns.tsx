@@ -1,7 +1,6 @@
 import React from 'react';
 import { CellProps } from 'react-table';
-import { Link } from 'react-router-dom';
-import { formatDate } from 'utils';
+import { formatDate, formatMoney } from 'utils';
 import { IProject } from '.';
 import { ColumnWithProps } from 'components/Table';
 import { FaTrash } from 'react-icons/fa';
@@ -22,25 +21,26 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-export const columns = (onDelete: (id: string) => void): ColumnWithProps<IProject>[] => {
+export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProject>[] => {
   return [
     {
       Header: 'Project No.',
       accessor: 'projectNumber', // accessor is the "key" in the data
       align: 'left',
       responsive: true,
+      clickable: true,
       width: spacing.small,
       minWidth: 65,
       Cell: (props: CellProps<IProject>) => {
         return (
           <div>
-            <FaTrash
-              style={{ marginRight: 10, cursor: 'pointer' }}
-              onClick={() => onDelete(props.row.original.projectNumber)}
-            />
-            <Link to={`/projects/${props.row.original.projectNumber}?disabled=true`}>
-              {props.row.original.projectNumber}
-            </Link>
+            {!!onDelete && (
+              <FaTrash
+                style={{ marginRight: 10, cursor: 'pointer' }}
+                onClick={() => onDelete(props.row.original.projectNumber)}
+              />
+            )}
+            <span>{props.row.original.projectNumber}</span>
           </div>
         );
       },
@@ -50,34 +50,77 @@ export const columns = (onDelete: (id: string) => void): ColumnWithProps<IProjec
       accessor: 'name',
       align: 'left',
       responsive: true,
+      clickable: true,
       width: spacing.medium,
       minWidth: 80,
-    },
-    {
-      Header: 'Description',
-      accessor: 'description',
-      align: 'left',
-      responsive: true,
-      width: spacing.large,
-      minWidth: 160,
     },
     {
       Header: 'Status',
       accessor: 'status',
       align: 'left',
       responsive: true,
+      clickable: true,
+      width: spacing.medium,
+      minWidth: 50,
+    },
+    {
+      Header: 'Agency',
+      accessor: 'agency',
+      align: 'left',
+      responsive: true,
+      clickable: true,
       width: spacing.medium,
       minWidth: 80,
     },
     {
-      Header: 'No. of properties',
-      accessor: 'properties',
+      Header: 'Sub Agency',
+      accessor: 'subAgency',
       align: 'left',
+      responsive: true,
+      clickable: true,
+      width: spacing.medium,
+      minWidth: 80,
+    },
+    {
+      Header: 'Zoning',
+      accessor: 'zoning',
+      align: 'left',
+      responsive: true,
+      clickable: true,
+      width: spacing.small,
+      minWidth: 80,
+    },
+    {
+      Header: 'Zoning Potential',
+      accessor: 'zoningPotential',
+      align: 'left',
+      responsive: true,
+      clickable: true,
+      width: spacing.small,
+      minWidth: 80,
+    },
+    {
+      Header: 'Sum Netbook',
+      accessor: 'sumNetbook',
+      align: 'left',
+      clickable: true,
       responsive: true,
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return props.row.original.properties.length;
+        return formatMoney(props.row.original.sumNetbook);
+      },
+    },
+    {
+      Header: 'Sum Estimated',
+      accessor: 'sumEstimated',
+      align: 'left',
+      clickable: true,
+      responsive: true,
+      width: spacing.small,
+      minWidth: 80,
+      Cell: (props: CellProps<IProject>) => {
+        return formatMoney(props.row.original.sumEstimated);
       },
     },
     {
@@ -85,6 +128,7 @@ export const columns = (onDelete: (id: string) => void): ColumnWithProps<IProjec
       accessor: 'updatedOn',
       align: 'left',
       responsive: true,
+      clickable: true,
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
@@ -96,6 +140,7 @@ export const columns = (onDelete: (id: string) => void): ColumnWithProps<IProjec
       accessor: 'updatedById',
       align: 'left',
       responsive: true,
+      clickable: true,
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {

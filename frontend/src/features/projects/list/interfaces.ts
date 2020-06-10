@@ -16,6 +16,8 @@ export interface IProjectProperty {
   assessed: number;
   landArea: number;
   parcelId: number;
+  zoning: string;
+  zoningPotential: string;
 }
 
 /**
@@ -41,6 +43,10 @@ export interface IProject {
   createdOn: string;
   createdById: string;
   createdBy: string;
+  sumNetbook: number;
+  sumEstimated: number;
+  zoning: string;
+  zoningPotential: string;
 }
 
 /**

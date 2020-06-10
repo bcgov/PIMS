@@ -19,11 +19,13 @@ import { Col, Form } from 'react-bootstrap';
 import { Input } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
+import { useHistory } from 'react-router-dom';
 
 interface IProjectFilterState {
   active?: boolean;
   createdByMe?: boolean;
   name?: string;
+  statusId?: number;
 }
 
 const initialQuery: IProjectFilter = {
@@ -49,7 +51,18 @@ const getServerQuery = (state: {
   return query;
 };
 
-const ProjectListView: React.FC = () => {
+export enum PageMode {
+  DEFAULT,
+  APPROVAL,
+}
+
+interface IProps {
+  filterable?: boolean;
+  title: string;
+  mode?: PageMode;
+}
+
+const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -73,6 +86,7 @@ const ProjectListView: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const history = useHistory();
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -106,18 +120,34 @@ const ProjectListView: React.FC = () => {
 
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
-        const query = getServerQuery({ pageIndex, pageSize, filter });
+        const query = getServerQuery({
+          pageIndex,
+          pageSize,
+          filter: mode === PageMode.APPROVAL ? { ...filter, statusId: 5 } : filter,
+        });
         const data = await service.getProjectList(query);
 
         // The server could send back total page count.
         // For now we'll just calculate it.
-        setData(data.items);
+        setData(
+          data.items.map((project: IProject) => {
+            project.sumEstimated = project.properties.reduce(
+              (sum: number, property) => sum + property.estimated,
+              0,
+            );
+            project.sumNetbook = project.properties.reduce(
+              (sum: number, property) => sum + property.netBook,
+              0,
+            );
+            return project;
+          }),
+        );
         setPageCount(Math.ceil(data.total / pageSize));
 
         // setLoading(false);
       }
     },
-    [setData, setPageCount],
+    [setData, setPageCount, mode],
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
@@ -137,33 +167,48 @@ const ProjectListView: React.FC = () => {
     setDeleteId(projectNumber);
   };
 
+  const onRowClick = (row: IProject) => {
+    if (mode === PageMode.APPROVAL) {
+      history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
+    } else {
+      history.push(
+        `/dispose/projects/${row.status.toLowerCase()}?projectNumber=${row.projectNumber}`,
+      );
+    }
+  };
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
-        <FilterBar<IProjectFilterState>
-          initialValues={filter}
-          onSearch={values => setFilter(values)}
-          onReset={() => setFilter({})}
-        >
-          <Col>
-            <h4>My Agency's Projects</h4>
-          </Col>
-          <Col className="bar-item">
-            <Form.Group>
-              <Form.Label>Active Projects:&nbsp;</Form.Label>
-              <Field name="active" label="Active Projects" type="checkbox" />
-            </Form.Group>
-          </Col>
-          <Col className="bar-item">
-            <Form.Group>
-              <Form.Label>My projects:&nbsp;</Form.Label>
-              <Field name="createdByMe" type="checkbox" />
-            </Form.Group>
-          </Col>
-          <Col className="bar-item">
-            <Input field="name" placeholder="Search by project name" />
-          </Col>
-        </FilterBar>
+        {filterable ? (
+          <FilterBar<IProjectFilterState>
+            initialValues={filter}
+            onSearch={values => setFilter(values)}
+            onReset={() => setFilter({})}
+          >
+            <Col>
+              <h4>{title}</h4>
+            </Col>
+            <Col className="bar-item">
+              <Form.Group>
+                <Form.Label>Active Projects:&nbsp;</Form.Label>
+                <Field name="active" label="Active Projects" type="checkbox" />
+              </Form.Group>
+            </Col>
+            <Col className="bar-item">
+              <Form.Group>
+                <Form.Label>My projects:&nbsp;</Form.Label>
+                <Field name="createdByMe" type="checkbox" />
+              </Form.Group>
+            </Col>
+            <Col className="bar-item">
+              <Input field="name" placeholder="Search by project name" />
+            </Col>
+          </FilterBar>
+        ) : (
+          <div className="title">
+            <h4>{title}</h4>
+          </div>
+        )}
       </div>
       <div className="ScrollContainer">
         {!!deleteId && (
@@ -179,10 +224,11 @@ const ProjectListView: React.FC = () => {
         )}
         <Table<IProject>
           name="projectsTable"
-          columns={columns(initiateDelete)}
+          columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}
           data={data}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          onRowClick={onRowClick}
           detailsPanel={{
             render: project => <Properties data={project.properties} />,
             icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
@@ -197,4 +243,14 @@ const ProjectListView: React.FC = () => {
   );
 };
 
-export default ProjectListView;
+export const ProjectApprovalRequestListView = () => {
+  return (
+    <ProjectListView
+      filterable={false}
+      mode={PageMode.APPROVAL}
+      title="Surplus Property Program Projects - Approval Requests"
+    />
+  );
+};
+
+export default () => <ProjectListView filterable={true} title="My Agency's Projects" />;

@@ -22,6 +22,7 @@ function AppNavBar() {
           <AdminDropdown />
           <PropertyDropdown />
           <ViewProjects />
+          <ViewProjectApprovalRequests />
           <DisposeRequest />
           <DisposeApprove />
         </Nav>
@@ -98,6 +99,16 @@ function ViewProjects() {
   const keycloak = useKeycloakWrapper();
   return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
     <Nav.Link href="/projects/list">View Projects</Nav.Link>
+  ) : null;
+}
+
+/**
+ * View Projects Approval Requests navigation menu link.
+ */
+function ViewProjectApprovalRequests() {
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
+    <Nav.Link href="/projects/approval/requests">Approval Requests</Nav.Link>
   ) : null;
 }
 

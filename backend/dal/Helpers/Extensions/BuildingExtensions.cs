@@ -142,5 +142,25 @@ namespace Pims.Dal.Helpers.Extensions
 
             return query;
         }
+
+        /// <summary>
+        /// Get a building zoning
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static string GetZoning(this Entity.Building building)
+        {
+            return building.Parcel != null ? building.Parcel.Zoning : "";
+        }
+
+        /// <summary>
+        /// Get a building zoning potential
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static string GetZoningPotential(this Entity.Building building)
+        {
+            return building.Parcel != null ? building.Parcel.ZoningPotential : "";
+        }
     }
 }
