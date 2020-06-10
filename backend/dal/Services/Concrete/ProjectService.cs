@@ -98,6 +98,7 @@ namespace Pims.Dal.Services
 
             var project = this.Context.Projects
                 .Include(p => p.Status)
+                .Include(p => p.Status).ThenInclude(s => s.Tasks)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
@@ -166,6 +167,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses).ThenInclude(t => t.Task)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -255,10 +258,12 @@ namespace Pims.Dal.Services
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
             // Add the tasks for project status.
-
-            foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
+            foreach (var projectStatus in this.Context.ProjectStatus.Include(s => s.Tasks).ThenInclude(t => t.Task).ToArray())
             {
-                project.Tasks.Add(new ProjectTask(project, task.Task));
+                foreach (var task in projectStatus.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
+                {
+                    project.Tasks.Add(new ProjectTask(project, task.Task));
+                }
             }
 
             this.Context.Projects.Add(project);

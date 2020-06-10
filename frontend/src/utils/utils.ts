@@ -3,7 +3,7 @@ import { startCase } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
 import { SortDirection } from 'components/Table/TableSort';
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment';
@@ -75,15 +75,15 @@ export const formikFieldMemo = (
 export const handleAxiosResponse = (
   dispatch: Function,
   actionType: string,
-  axiosPromise: Promise<AxiosResponse<any>>,
+  axiosPromise: Promise<any>,
 ): Promise<any> => {
   dispatch(request(actionType));
   dispatch(showLoading());
   return axiosPromise
-    .then((response: AxiosResponse) => {
+    .then((response: any) => {
       dispatch(success(actionType));
       dispatch(hideLoading());
-      return response.data;
+      return response.data ?? response.payload;
     })
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionType, axiosError?.response?.status, axiosError));

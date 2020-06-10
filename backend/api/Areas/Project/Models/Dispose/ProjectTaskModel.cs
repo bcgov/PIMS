@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Project.Models.Dispose
 {
@@ -52,6 +53,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The sort order
         /// </summary>
         public int SortOrder { get; set; }
+
+        /// <summary>
+        /// get/set - The task status Id.
+        /// </summary>
+        public int? StatusId { get; set; }
         #endregion
     }
 }

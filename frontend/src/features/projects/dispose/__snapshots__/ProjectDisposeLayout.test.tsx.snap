@@ -58,7 +58,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
       >
         <button
           className="step-trigger"
-          disabled={false}
+          disabled={true}
           onClick={[Function]}
         >
           <span
@@ -92,7 +92,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
         }
         type="button"
       >
-        Next
+        Submit
       </button>
       <button
         className="btn btn-secondary"

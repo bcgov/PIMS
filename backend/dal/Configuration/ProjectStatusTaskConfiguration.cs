@@ -21,7 +21,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.TaskId).ValueGeneratedNever();
 
             builder.HasOne(m => m.Status).WithMany(m => m.Tasks).HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(m => m.Task).WithMany().HasForeignKey(m => m.TaskId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Task).WithMany(m => m.Statuses).HasForeignKey(m => m.TaskId).OnDelete(DeleteBehavior.Cascade);
 
             base.Configure(builder);
         }

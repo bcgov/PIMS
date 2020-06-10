@@ -5,7 +5,7 @@ interface IEditButtonProps {
   /** whether or not the form this button belongs to is disabled */
   formDisabled?: boolean;
   /** set the form to be editable */
-  setFormDisabled: Function;
+  setFormDisabled?: Function;
   /** true if the current user is allowed to edit this form */
   canEdit?: boolean;
 }
@@ -15,12 +15,11 @@ interface IEditButtonProps {
  * @param param0 IEditButtonPropts
  */
 const EditButton: React.FunctionComponent<IEditButtonProps> = ({
-  formDisabled: disabled,
-  setFormDisabled: setDisabled,
-  canEdit,
+  formDisabled,
+  setFormDisabled,
 }: IEditButtonProps) => {
-  return canEdit ? (
-    <Button disabled={!disabled} className="edit" onClick={() => setDisabled(false)}>
+  return setFormDisabled ? (
+    <Button disabled={!formDisabled} className="edit" onClick={() => setFormDisabled(false)}>
       Edit
     </Button>
   ) : null;

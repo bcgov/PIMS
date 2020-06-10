@@ -2,7 +2,14 @@ import { useEffect, useContext } from 'react';
 import { fetchProjectWorkflow } from '../projectsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IProject, initialValues, IStatus, StepperContext, IProjectWrapper } from '..';
+import {
+  IProject,
+  initialValues,
+  IStatus,
+  StepperContext,
+  IProjectWrapper,
+  IProjectTask,
+} from '..';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 
@@ -102,7 +109,8 @@ const useStepper = () => {
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
-
+  const workflowTasks: IProjectTask[] =
+    useSelector<RootState, IProjectTask[]>(state => state.tasks) || initialValues;
   useEffect(() => {
     if (!workflowStatuses?.length) {
       dispatch(fetchProjectWorkflow());
@@ -114,6 +122,7 @@ const useStepper = () => {
     setCurrentStatus,
     project,
     workflowStatuses,
+    workflowTasks,
     getStatusById: (statusId: number): IStatus | undefined =>
       _.find(workflowStatuses, { id: statusId }),
     getNextStep: () => getNextWorkflowStatus(workflowStatuses, currentStatus),

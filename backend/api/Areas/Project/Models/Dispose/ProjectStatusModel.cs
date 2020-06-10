@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Api.Areas.Project.Models.Dispose
 {
     /// <summary>
@@ -15,6 +17,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The route to go to for this status.
         /// </summary>
         public string Route { get; set; }
+
+        /// <summary>
+        /// get/set - The tasks associated with this status.
+        /// </summary>
+        public IEnumerable<ProjectTaskModel> Tasks { get; set; }
         #endregion
     }
 }

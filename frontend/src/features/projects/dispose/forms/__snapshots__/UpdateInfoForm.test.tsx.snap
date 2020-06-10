@@ -9,15 +9,17 @@ exports[`Update Info Form Matches Snapshot 1`] = `
   >
     <div
       className="form-row"
+      style={
+        Object {
+          "alignItems": "unset",
+        }
+      }
     >
       <h3
         className="col-md-8"
       >
         Update Info
       </h3>
-      <span
-        className="col-md-4"
-      />
     </div>
     <div
       className="form-row"

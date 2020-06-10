@@ -11,12 +11,22 @@ import * as actionTypes from 'constants/actionTypes';
 import { render } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import useStepper from './hooks/useStepper';
+import { noop } from 'lodash';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+
+jest.mock('./hooks/useStepper');
+(useStepper as jest.Mock).mockReturnValue({
+  currentStatus: {},
+  project: { projectNumber: '' },
+  projectStatusCompleted: noop,
+  canGoToStatus: noop,
+});
 
 const match: Match = {
   path: '/dispose',

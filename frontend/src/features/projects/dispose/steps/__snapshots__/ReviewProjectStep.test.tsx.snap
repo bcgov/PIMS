@@ -10,9 +10,18 @@ exports[`renders correctly 1`] = `
     <div
       className="ProjectDraftForm container-fluid"
     >
-      <h3>
-        Review
-      </h3>
+      <div
+        className="form-row"
+      >
+        <h3
+          className="col-md-8"
+        >
+          Review
+        </h3>
+        <span
+          className="col-md-3"
+        />
+      </div>
       <div
         className="col-md-10 form-row"
       >
@@ -103,15 +112,17 @@ exports[`renders correctly 1`] = `
     >
       <div
         className="form-row"
+        style={
+          Object {
+            "alignItems": "unset",
+          }
+        }
       >
         <h3
           className="col-md-8"
         >
           Update Info
         </h3>
-        <span
-          className="col-md-4"
-        />
       </div>
       <div
         className="form-row"

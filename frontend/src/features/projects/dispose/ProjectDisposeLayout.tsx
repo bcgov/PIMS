@@ -1,23 +1,23 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ProjectDisposeView.scss';
 import { Container, Spinner } from 'react-bootstrap';
 import { Route, match as Match, useHistory, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { IStatus } from './slices/projectWorkflowSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 import {
   ProjectWorkflowComponent,
   projectWorkflowComponents,
-  StepperContext,
   useStepper,
   StepActions,
+  IStatus,
 } from '.';
 import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
+import ReviewApproveStep from './steps/ReviewApproveStep';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -27,8 +27,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const history = useHistory();
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
-  const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const { nextStep, project, getNextStep } = useStepper();
+  const { nextStep, project, getNextStep, currentStatus, setCurrentStatus } = useStepper();
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
@@ -45,24 +44,31 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     });
 
   const getComponentPath = (wfc: ProjectWorkflowComponent) => {
-    return `${match.url}${_.find(workflowStatuses, { sortOrder: wfc.workflowStatus })?.route}`;
+    return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
   };
 
+  //Controls the route based on the current status.
+  const historyReplace = history.replace;
   useEffect(() => {
     let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
-    statusAtRoute = statusAtRoute ?? workflowStatuses[0];
     if (setCurrentStatus) setCurrentStatus(statusAtRoute);
     if (statusAtRoute?.route !== undefined && project.projectNumber !== undefined) {
-      history.replace(`/dispose${statusAtRoute?.route}?projectNumber=${project.projectNumber}`);
+      historyReplace(`/dispose${statusAtRoute?.route}?projectNumber=${project.projectNumber}`);
     }
   }, [
     location.pathname,
-    history.replace,
-    project.projectNumber,
-    setCurrentStatus,
+    historyReplace,
     workflowStatuses,
-    history,
+    setCurrentStatus,
+    project.projectNumber,
   ]);
+
+  //If the current route isn't set, set based on the project status.
+  useEffect(() => {
+    if (location.pathname === '/dispose' && project.status?.route !== undefined) {
+      historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
+    }
+  }, [historyReplace, project.status, project.projectNumber, location.pathname, match.url]);
 
   return (
     <>
@@ -70,12 +76,16 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         <Container fluid className="ProjectDisposeLayout">
           <SresManual />
           <h1>Surplus Property Program Project</h1>
-          <GeneratedDisposeStepper
-            activeStep={currentStatus?.sortOrder ?? 0}
-            basePath={match.url}
-          />
+          {currentStatus !== undefined ? (
+            <GeneratedDisposeStepper
+              activeStep={currentStatus?.sortOrder ?? 0}
+              basePath={match.url}
+            />
+          ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
+              {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
+              <Route path="/dispose/projects/assess/properties" component={ReviewApproveStep} />
               {projectWorkflowComponents.map(wfc => (
                 <Route
                   key={wfc.workflowStatus.toString()}
@@ -83,12 +93,13 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   render={() => <wfc.component formikRef={formikRef} />}
                 />
               ))}
-
-              <StepActions
-                getNextStep={getNextStep}
-                onSave={() => formikRef.current?.handleSubmit()}
-                onNext={onNext}
-              />
+              {currentStatus && (
+                <StepActions
+                  getNextStep={getNextStep}
+                  onSave={() => formikRef.current?.handleSubmit()}
+                  onNext={onNext}
+                />
+              )}
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>

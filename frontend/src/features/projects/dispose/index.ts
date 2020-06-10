@@ -4,6 +4,7 @@ export * from './components/FilterBar';
 export { default as FilterBar } from './components/FilterBar';
 export { default as ProjectDisposeView } from './ProjectDisposeView';
 export * from './components/StepActions';
+export * from './components/ReviewApproveActions';
 export { default as ProjectNotes } from './components/ProjectNotes';
 export { default as EditButton } from './components/EditButton';
 
@@ -24,6 +25,9 @@ export { default as UpdateInfoForm } from './forms/UpdateInfoForm';
 export { default as DocumentationForm } from './forms/DocumentationForm';
 export { default as ProjectDraftForm } from './forms/ProjectDraftForm';
 export { default as ReviewProjectForm } from './forms/ReviewProjectForm';
+export { default as ReviewApproveForm } from './forms/ReviewApproveForm';
+export { default as AppraisalCheckListForm } from './forms/AppraisalCheckListForm';
+export { default as FirstNationsCheckListForm } from './forms/FirstNationsCheckListForm';
 
 export { default as useStepper } from './hooks/useStepper';
 export { default as useStepForm } from './hooks/useStepForm';

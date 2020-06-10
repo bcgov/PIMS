@@ -91,16 +91,25 @@ export interface IPropertyFilter {
   maxLotArea?: number;
   all?: boolean;
 }
-export interface IProjectTask {
+
+export interface ITask {
+  taskId: number;
+  name: string;
+  description: string;
+  sortOrder: number;
+  taskType: number;
+}
+export interface IProjectTask extends ITask {
   projectNumber: number;
   taskId: number;
-  taskType: string;
+  taskType: number;
   isCompleted: boolean;
   name: string;
   description: string;
   isOptional: boolean;
   sortOrder: number;
   completedOn: Date;
+  statusId: number;
 }
 export interface IProject {
   id: number;
@@ -118,7 +127,7 @@ export interface IProject {
 }
 
 export enum DisposeWorkflowStatus {
-  Draft = 0,
+  Draft = 1,
   SelectProperties,
   UpdateInformation,
   RequiredDocumentation,
@@ -126,9 +135,31 @@ export enum DisposeWorkflowStatus {
   Submitted,
 }
 
+export enum ReviewWorkflowStatus {
+  PropertyReview = 7,
+  DocumentReview,
+  AppraisalReview,
+  FirstNationConsultation,
+  ApprovedForEpl,
+  ApprovedForSpl,
+  Denied,
+}
+
 export interface ProjectWorkflowComponent {
   component: React.ComponentType<any>;
   workflowStatus: DisposeWorkflowStatus;
+}
+
+export interface IStatus {
+  id: number;
+  name: string;
+  sortOrder: number;
+  description: string;
+  route: string;
+  workflow: string;
+  code: string;
+  isMilestone: boolean;
+  tasks: IProjectTask[];
 }
 
 export interface IStepProps {

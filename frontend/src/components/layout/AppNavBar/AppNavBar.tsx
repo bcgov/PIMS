@@ -117,7 +117,7 @@ function ViewProjectApprovalRequests() {
 function DisposeRequest() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  return keycloak.hasClaim(Claims.PROJECT_ADD) ? (
+  return keycloak.hasClaim(Claims.PROJECT_ADD) || keycloak.hasClaim(Claims.ADMIN_PROJECTS) ? (
     <Nav.Link onClick={() => history.push('/dispose')}>Dispose Properties</Nav.Link>
   ) : null;
 }

@@ -1,0 +1,15 @@
+.ReviewApproveStep {
+  button.edit {
+    display: block;
+    float: right;
+  }
+  .review-header {
+    display: flex;
+  }
+  .reviewRequired {
+    border: 2px solid #fcba19;
+  }
+  &.container-fluid form div.container-fluid {
+    padding-left: 0.5rem;
+  }
+}
