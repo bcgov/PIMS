@@ -21,7 +21,7 @@ import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
 import ReviewApproveStep from './steps/ReviewApproveStep';
 import ProjectDraftStep from './steps/ProjectDraftStep';
-import { createProject } from 'features/projects/dispose/projectsActionCreator';
+import { createProject, fetchProject } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 
 /**
@@ -110,6 +110,12 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
     }
   }, [historyReplace, project.status, project.projectNumber, location.pathname, match.url]);
+
+  useEffect(() => {
+    if (projectNumber !== null && projectNumber !== undefined) {
+      dispatch(fetchProject(projectNumber as string));
+    }
+  }, [dispatch, projectNumber]);
 
   if (projectNumber !== null && projectNumber !== undefined && getProjectRequest?.error) {
     throw Error(`Unable to load project number ${projectNumber}`);
