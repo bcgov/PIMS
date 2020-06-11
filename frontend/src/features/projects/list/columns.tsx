@@ -101,26 +101,26 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
     },
     {
       Header: 'Sum Netbook',
-      accessor: 'sumNetbook',
+      accessor: 'netBook',
       align: 'left',
       clickable: true,
       responsive: true,
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.sumNetbook);
+        return formatMoney(props.row.original.netBook);
       },
     },
     {
       Header: 'Sum Estimated',
-      accessor: 'sumEstimated',
+      accessor: 'estimated',
       align: 'left',
       clickable: true,
       responsive: true,
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.sumEstimated);
+        return formatMoney(props.row.original.estimated);
       },
     },
     {

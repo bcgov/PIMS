@@ -43,8 +43,8 @@ export interface IProject {
   createdOn: string;
   createdById: string;
   createdBy: string;
-  sumNetbook: number;
-  sumEstimated: number;
+  netBook: number;
+  estimated: number;
   zoning: string;
   zoningPotential: string;
 }

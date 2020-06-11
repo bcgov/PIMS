@@ -22,6 +22,8 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
+                .Map(dest => dest.NetBook, src => src.NetBook)
+                .Map(dest => dest.Estimated, src => src.Estimated)
                 .Map(dest => dest.Properties, src => src.Properties)
                 .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
                 .Map(dest => dest.UpdatedBy,
