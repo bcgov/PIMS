@@ -121,7 +121,6 @@
       {
         "Name": "Assistant Deputy Minister",
         "RealmRoles": [
-          "dispose-approve",
           "property-add",
           "property-edit",
           "property-view",
@@ -148,7 +147,6 @@
       {
         "Name": "Executive Director",
         "RealmRoles": [
-          "dispose-approve",
           "property-add",
           "property-edit",
           "property-view",
@@ -193,7 +191,12 @@
       },
       {
         "Name": "SRES",
-        "RealmRoles": ["admin-properties", "admin-projects", "property-delete"]
+        "RealmRoles": [
+          "admin-properties",
+          "admin-projects",
+          "property-delete",
+          "dispose-approve"
+        ]
       }
     ],
     "Clients": [
