@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import Claims from 'constants/claims';
 
 const StepActionsWrapper = styled.div`
   width: 100%;
@@ -38,13 +40,24 @@ export const StepActions: React.FC<IStepActionsProps> = ({
   saveDisabled,
   getNextStep,
 }) => {
-  const nextLabel = getNextStep && getNextStep() ? 'Next' : 'Submit';
+  const step = getNextStep && getNextStep();
+  const nextLabel = step !== undefined ? 'Next' : 'Submit';
+  const { hasClaim } = useKeycloakWrapper();
+  const missingDisposeMilestonePermission = !hasClaim(Claims.DISPOSE_REQUEST) && step?.isMilestone;
   return (
     <StepActionsWrapper>
-      <Button disabled={nextDisabled} style={{ marginLeft: 10 }} onClick={onNext}>
+      <Button
+        disabled={nextDisabled || missingDisposeMilestonePermission}
+        style={{ marginLeft: 10 }}
+        onClick={onNext}
+      >
         {nextLabel}
       </Button>
-      <Button variant="secondary" disabled={saveDisabled} onClick={onSave}>
+      <Button
+        variant="secondary"
+        disabled={saveDisabled || missingDisposeMilestonePermission}
+        onClick={onSave}
+      >
         Save
       </Button>
     </StepActionsWrapper>

@@ -12,6 +12,7 @@ import useStepper from './useStepper';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { IProject } from '..';
+import { AxiosError } from 'axios';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -37,8 +38,9 @@ const useStepForm = () => {
       .then((values: any) => {
         return dispatch(fetchProject(values.projectNumber));
       })
-      .catch((error: any) => {
-        actions.setStatus({ msg: error.toString() });
+      .catch((error: AxiosError) => {
+        const msg: string = error?.response?.data?.error ?? error.toString();
+        actions.setStatus({ msg });
       })
       .finally(() => {
         dispatch(clear(ProjectActions.ADD_PROJECT));
