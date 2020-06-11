@@ -26,7 +26,7 @@ const PointClusterer = <P extends GeoJsonProperties>(
   // get clusters
   // clusters are an array of GeoJSON Feature objects, but some of them
   // represent a cluster of points, and some represent individual points.
-  const { clusters } = useSupercluster({
+  const { clusters, supercluster } = useSupercluster({
     points,
     bounds,
     zoom,
@@ -42,18 +42,24 @@ const PointClusterer = <P extends GeoJsonProperties>(
     }
   }, [clusters]);
 
-  const onClick = (e: LeafletMouseEvent) => {
+  const onLayerClick = (e: LeafletMouseEvent) => {
     // the point may be either a cluster or a single map pin
     const cluster = (e?.layer as Marker)?.feature as ICluster;
     const isCluster = cluster?.properties?.cluster;
 
     // the user clicked on a cluster
     if (!!isCluster) {
-      onClusterClick?.(cluster);
+      handleClusterClick(cluster);
     } else {
       // the user clicked on a single map pin
       onMarkerClick?.(cluster);
     }
+  };
+
+  const handleClusterClick = (cluster: ICluster) => {
+    const clusterId = cluster.id as number;
+    const expansionZoom = Math.min(supercluster!.getClusterExpansionZoom(clusterId), 17);
+    onClusterClick?.(cluster, expansionZoom);
   };
 
   // TODO: improve typing
@@ -62,7 +68,7 @@ const PointClusterer = <P extends GeoJsonProperties>(
       ref={ref}
       data={clusters as any}
       pointToLayer={pointToLayer}
-      onclick={onClick}
+      onclick={onLayerClick}
     ></GeoJSON>
   );
 };

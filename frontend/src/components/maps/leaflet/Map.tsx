@@ -15,8 +15,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom, resetMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
-import { createPoints } from './mapUtils';
+import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
+import { ICluster } from 'hooks';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -158,9 +159,18 @@ const Map: React.FC<MapProps> = ({
     setActiveBasemap(current);
   };
 
-  const handleClusterClick = () => {};
+  const onSingleMarkerClick = (point: PointFeature) => {
+    onMarkerClick?.(asProperty(point));
+  };
 
-  const handleSingleMarkerClick = () => {};
+  const onClusterClick = (cluster: ICluster, expansionZoom: number) => {
+    // zoom to cluster
+    const [longitude, latitude] = cluster?.geometry?.coordinates;
+    const leafletMap = mapRef?.current?.leafletElement;
+    leafletMap?.setView([latitude, longitude], expansionZoom, {
+      animate: true,
+    });
+  };
 
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
@@ -268,8 +278,8 @@ const Map: React.FC<MapProps> = ({
               points={points}
               zoom={zoom}
               bounds={bounds}
-              onClusterClick={handleClusterClick}
-              onMarkerClick={handleSingleMarkerClick}
+              onMarkerClick={onSingleMarkerClick}
+              onClusterClick={onClusterClick}
             />
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>

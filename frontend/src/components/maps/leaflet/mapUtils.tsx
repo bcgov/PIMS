@@ -29,7 +29,22 @@ export const createPoints = (properties: IProperty[]) =>
     } as PointFeature;
   });
 
-// parcel icon
+/**
+ * This function defines how GeoJSON points spawn Leaflet layers on the map.
+ * It is called internally by the `GeoJSON` leaflet component.
+ * @param feature
+ * @param latlng
+ */
+export const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
+  const { cluster: isCluster } = feature?.properties as Supercluster.ClusterProperties;
+  if (!!isCluster) {
+    return createClusterMarker(feature, latlng);
+  }
+  // we have a single point (parcel or building) to render
+  return createSingleMarker(feature, latlng);
+};
+
+// parcel icon (green)
 export const parcelIcon = new Icon({
   iconUrl: require('assets/images/marker-icon-2x-green.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
@@ -39,7 +54,7 @@ export const parcelIcon = new Icon({
   shadowSize: [41, 41],
 });
 
-// building icon
+// building icon (blue)
 export const buildingIcon = new Icon({
   iconUrl: require('assets/images/marker-icon-2x-blue.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
@@ -49,6 +64,11 @@ export const buildingIcon = new Icon({
   shadowSize: [41, 41],
 });
 
+/**
+ * Creates a map pin for a single point; e.g. a parcel or a building
+ * @param feature the geojson object
+ * @param latlng the point position
+ */
 export const createSingleMarker = (feature: ICluster, latlng: LatLng): Layer => {
   // TODO: improve typing
   const { propertyTypeId } = feature?.properties;
@@ -56,14 +76,20 @@ export const createSingleMarker = (feature: ICluster, latlng: LatLng): Layer => 
   return new LeafletMarker(latlng, { icon });
 };
 
-// cache cluster icons to avoid re-creating the same icon over and over again.
+// Internal cache of cluster icons to avoid re-creating the same icon over and over again.
 const iconsCache: Record<number, DivIcon> = {};
+
+/**
+ * Creates a marker for clusters on the map
+ * @param feature the cluster geojson object
+ * @param latlng the cluster position
+ */
 export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer => {
   const {
     cluster: isCluster,
     point_count: count,
     point_count_abbreviated: displayValue,
-  } = feature?.properties;
+  } = feature?.properties as Supercluster.ClusterProperties;
 
   if (!isCluster) {
     // TODO: log an error?
@@ -71,8 +97,8 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer =>
   }
 
   const size = count < 100 ? 'small' : count < 1000 ? 'medium' : 'large';
-
   let icon: DivIcon;
+
   if (!iconsCache[count]) {
     iconsCache[count] = new DivIcon({
       html: `<div><span>${displayValue}</span></div>`,
@@ -80,19 +106,9 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer =>
       iconSize: [40, 40],
     });
   }
+
   icon = iconsCache[count];
-
   return new LeafletMarker(latlng, { icon });
-};
-
-// this function defines how GeoJSON points spawn Leaflet layers.
-export const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
-  const { cluster: isCluster } = feature?.properties;
-  if (!!isCluster) {
-    return createClusterMarker(feature, latlng);
-  }
-  // we have a single point (parcel or building) to render
-  return createSingleMarker(feature, latlng);
 };
 
 // we need to namespace the keys as IDs are not enough here.
@@ -101,12 +117,9 @@ export const generateKey = (p: IProperty) =>
   `${p.propertyTypeId === 0 ? 'parcel' : 'building'}-${p.id}`;
 
 /** Creates a IProperty object from a GeoJSON point */
-export const asProperty = (point: PointFeature): IProperty | null => {
-  if (!point) {
-    return null;
-  }
-  const { propertyId: id, propertyTypeId } = point.properties;
-  const [longitude, latitude] = point.geometry.coordinates;
+export const asProperty = (point: PointFeature): IProperty => {
+  const { propertyId: id, propertyTypeId } = point?.properties;
+  const [longitude, latitude] = point?.geometry?.coordinates;
   return {
     id,
     propertyTypeId,
