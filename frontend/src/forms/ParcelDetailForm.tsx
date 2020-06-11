@@ -190,7 +190,8 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 history.push('/');
               })
               .catch((error: any) => {
-                actions.setStatus({ msg: error.toString() });
+                const msg: string = error?.response?.data?.error ?? error.toString();
+                actions.setStatus({ msg });
               })
               .finally(() => {
                 actions.setSubmitting(false);
