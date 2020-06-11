@@ -35,63 +35,74 @@ help:
 # Local Development
 ##############################################################################
 
-local: | build run ## Runs the steps for local development
-
-restart: | stop build run ## Recreates local environment
+local: | local-build local-run ## Runs the steps for local (non-docker) development
 
 test: | lint ## Runs frontend unit tests via Jest
 	@echo "$(P) Running the unit tests..."
 	@npm run test -- -u
 
-format: ## Runs prettier
+format: ## Runs prettier on local filesystem
 	@echo "$(P) Formatting the codebase..."
 	@npm run format
 
-lint: | format ## Runs the linter
+lint: | format ## Runs the linter on local filesystem
 	@echo "$(P) Running the linter..."
 	@npm run lint
 
-clean: ## Purges node_modules
+local-clean: ## Purges node_modules on local filesystem
 	@echo "$(P) Cleaning..."
 	@rm -rf node_modules
 	@rm -rf $(BUILD_DIR)
 
-install: ## Installs NPM dependencies
+local-install: ## Installs NPM dependencies on local filesystem
 	@echo "$(P) Installing dependencies..."
 	@npm ci
 
-build: ## Builds the frontend
+local-build: ## Builds the frontend app on local filesystem
 	@echo "$(P) Building in release mode..."
 	@npm run build
 
-run: ## Serves the frontend via webpack-dev-server
-	@echo "$(P) Running a development server..."
+local-run: ## Serves the frontend via webpack-dev-server
+	@echo "$(P) Removing frontend docker container and building local dev version..."
+	@docker-compose rm -f -v -s frontend
 	@npm run start
 
-.PHONY: local restart test format lint clean install build run
+.PHONY: local test format lint local-clean local-install local-build local-run rebuild-all-local-friendly-message
 
 ##############################################################################
 # Docker Development
 ##############################################################################
 
-docker: | docker-build docker-run ## Runs the local development containers
+docker: | build run rebuild-all-local-friendly-message ## Builds and runs the docker containers
 
-docker-build: ## Builds the frontend docker container
+restart: | stop build run rebuild-all-local-friendly-message ## Rebuilds the docker containers
+
+build-all: ## Rebuilds all docker containers for this project
 	@echo "$(P) Building images..."
-	@docker-compose build --no-cache frontend
+	@docker-compose build --force-rm --no-cache
 
-docker-run: ## Serves the frontend via webpack-dev-server
+build: ## Builds the frontend container
+	@echo "$(P) Building images..."
+	@docker-compose build --force-rm --no-cache frontend
+
+run: ## Runs the frontend docker container
 	@echo "$(P) Running client and server..."
 	@docker-compose up -d
 
-docker-stop: ## Closes the local development containers
+stop: ## Tears down the docker development containers
 	@echo "$(P) Stopping client and server..."
 	@docker-compose down
 
-docker-clean: ## Removes local containers, images, volumes, etc
+clean: ## Removes local docker containers, images, volumes, etc
 	@echo "$(P) Removing containers, images, volumes etc..."
 	@echo "$(P) Note: does not clear image cache."
 	@docker-compose rm -f -v -s frontend
 	@docker volume rm -f pims-frontend-node-cache
 
-.PHONY: docker docker-build docker-run
+rebuild-all-local-friendly-message:
+	@echo "$(P) pims_frontend will be available at http://localhost:3000"
+	@echo "$(P) pims_backend will be available at http://localhost:5000"
+	@echo "$(P) pims_database will be available at http://localhost:5433"
+	@echo "$(P) pims_keycloak will be available at http://keycloak:8080"
+
+.PHONY: docker restart build run stop clean
