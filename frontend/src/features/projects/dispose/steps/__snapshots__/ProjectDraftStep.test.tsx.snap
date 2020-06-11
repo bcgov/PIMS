@@ -80,7 +80,7 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               required={true}
-              value="Temp"
+              value=""
             />
           </span>
         </div>
