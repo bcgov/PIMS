@@ -1,24 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  LatLngBounds,
-  LeafletMouseEvent,
-  LeafletEvent,
-  Icon,
-  DivIcon,
-  LatLng,
-  Layer,
-  Marker as LeafletMarker,
-} from 'leaflet';
-import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
-import { BBox, GeoJsonProperties } from 'geojson';
-import useSupercluster, { ICluster } from 'hooks/useSupercluster';
+import React from 'react';
+import { Icon, DivIcon, LatLng, Layer, Marker as LeafletMarker } from 'leaflet';
+import { ICluster } from 'hooks/useSupercluster';
 import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
 
 export type PointFeature = Supercluster.PointFeature<{
   propertyId: number;
-  propertyTypeId: number;
+  propertyTypeId: 0 | 1;
 }>;
+
 /**
  * Creates map points (in GeoJSON format) for further clustering by `supercluster`
  * @param properties
@@ -95,19 +85,32 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer =>
   return new LeafletMarker(latlng, { icon });
 };
 
+// this function defines how GeoJSON points spawn Leaflet layers.
+export const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
+  const { cluster: isCluster } = feature?.properties;
+  if (!!isCluster) {
+    return createClusterMarker(feature, latlng);
+  }
+  // we have a single point (parcel or building) to render
+  return createSingleMarker(feature, latlng);
+};
+
 // we need to namespace the keys as IDs are not enough here.
 // the same ID could be found on both the parcel collection and building collection
 export const generateKey = (p: IProperty) =>
   `${p.propertyTypeId === 0 ? 'parcel' : 'building'}-${p.id}`;
 
-export const renderMarker = (p: IProperty, onMarkerClick?: Function) => {
-  const icon = p.propertyTypeId === 0 ? parcelIcon : buildingIcon;
-  return (
-    <Marker
-      key={generateKey(p)}
-      position={[p.latitude, p.longitude]}
-      onClick={(e: any) => onMarkerClick?.(p)}
-      icon={icon}
-    />
-  );
+/** Creates a IProperty object from a GeoJSON point */
+export const asProperty = (point: PointFeature): IProperty | null => {
+  if (!point) {
+    return null;
+  }
+  const { propertyId: id, propertyTypeId } = point.properties;
+  const [longitude, latitude] = point.geometry.coordinates;
+  return {
+    id,
+    propertyTypeId,
+    latitude,
+    longitude,
+  } as IProperty;
 };

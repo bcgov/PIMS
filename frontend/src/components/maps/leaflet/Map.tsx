@@ -4,7 +4,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent, Icon, DivIcon } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -15,11 +14,9 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom, resetMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import Supercluster from 'supercluster';
-import { BBox, GeoJsonProperties } from 'geojson';
-import useSupercluster, { ICluster } from 'hooks/useSupercluster';
+import { BBox } from 'geojson';
 import { createPoints } from './mapUtils';
-import Clusterer from './Clusterer';
+import PointClusterer from './PointClusterer';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -161,6 +158,10 @@ const Map: React.FC<MapProps> = ({
     setActiveBasemap(current);
   };
 
+  const handleClusterClick = () => {};
+
+  const handleSingleMarkerClick = () => {};
+
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
     axios.get('/basemaps.json').then(result => {
@@ -190,14 +191,6 @@ const Map: React.FC<MapProps> = ({
   useEffect(() => {
     updateMap();
   }, []);
-
-  // const renderClusters = (properties: IProperty[]) => {
-  //   return (
-  //     <MarkerClusterGroup chunkedLoading>
-  //       <LayerGroup>{properties.map(renderMarker)}</LayerGroup>
-  //     </MarkerClusterGroup>
-  //   );
-  // };
 
   const renderPopup = (item: IPropertyDetail) => {
     const { propertyTypeId, parcelDetail } = item;
@@ -253,6 +246,7 @@ const Map: React.FC<MapProps> = ({
             onpreclick={onMapClick}
             closePopupOnClick={interactive}
             onzoomend={onZoomEnd}
+            onmoveend={updateMap}
           >
             {activeBasemap && (
               <TileLayer
@@ -270,8 +264,13 @@ const Map: React.FC<MapProps> = ({
                 zIndex={10}
               />
             )}
-            {/* {properties && properties.length > 0 && renderClusters(properties)} */}
-            <Clusterer points={points} zoom={zoom} bounds={bounds} />
+            <PointClusterer
+              points={points}
+              zoom={zoom}
+              bounds={bounds}
+              onClusterClick={handleClusterClick}
+              onMarkerClick={handleSingleMarkerClick}
+            />
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>
         </Col>

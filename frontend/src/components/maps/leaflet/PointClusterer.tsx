@@ -1,13 +1,14 @@
-import React, { PropsWithChildren } from 'react';
-import { LatLng, LeafletMouseEvent, Icon, DivIcon, Layer, Marker, GeoJSONEvent } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer, GeoJSON } from 'react-leaflet';
+import './PointClusterer.scss';
+
+import React, { PropsWithChildren, useRef, useEffect } from 'react';
+import { LeafletMouseEvent, Marker } from 'leaflet';
+import { GeoJSON } from 'react-leaflet';
 import { BBox, GeoJsonProperties } from 'geojson';
 import Supercluster from 'supercluster';
 import useSupercluster, { ICluster } from 'hooks/useSupercluster';
-import { createSingleMarker, createClusterMarker } from './mapUtils';
-import { uniqueId } from 'lodash';
+import { pointToLayer } from './mapUtils';
 
-export type ClustererProps<P> = {
+export type PointClustererProps<P> = {
   points: Supercluster.PointFeature<P>[];
   bounds?: BBox;
   zoom: number;
@@ -15,29 +16,31 @@ export type ClustererProps<P> = {
   onClusterClick?: Function;
 };
 
-const Clusterer = <P extends GeoJsonProperties>(props: PropsWithChildren<ClustererProps<P>>) => {
+const PointClusterer = <P extends GeoJsonProperties>(
+  props: PropsWithChildren<PointClustererProps<P>>,
+) => {
   // state and refs
   const { points, bounds, zoom, onMarkerClick, onClusterClick } = props;
+  const ref = useRef<GeoJSON>(null);
 
   // get clusters
   // clusters are an array of GeoJSON Feature objects, but some of them
   // represent a cluster of points, and some represent individual points.
-  const { clusters, supercluster } = useSupercluster({
+  const { clusters } = useSupercluster({
     points,
     bounds,
     zoom,
-    options: { radius: 75, maxZoom: 18 },
+    options: { radius: 60, extent: 256, maxZoom: 18 },
   });
 
-  const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
-    const { cluster: isCluster } = feature?.properties;
-    // we have a cluster to render
-    if (!!isCluster) {
-      return createClusterMarker(feature, latlng);
+  useEffect(() => {
+    // TODO: Improve typing
+    const geojsonLayer = ref.current?.leafletElement;
+    if (geojsonLayer) {
+      geojsonLayer.clearLayers();
+      geojsonLayer.addData(clusters as any);
     }
-    // we have a single point (parcel or building) to render
-    return createSingleMarker(feature, latlng);
-  };
+  }, [clusters]);
 
   const onClick = (e: LeafletMouseEvent) => {
     // the point may be either a cluster or a single map pin
@@ -45,7 +48,7 @@ const Clusterer = <P extends GeoJsonProperties>(props: PropsWithChildren<Cluster
     const isCluster = cluster?.properties?.cluster;
 
     // the user clicked on a cluster
-    if (isCluster) {
+    if (!!isCluster) {
       onClusterClick?.(cluster);
     } else {
       // the user clicked on a single map pin
@@ -54,14 +57,14 @@ const Clusterer = <P extends GeoJsonProperties>(props: PropsWithChildren<Cluster
   };
 
   // TODO: improve typing
-  return clusters && clusters?.length > 0 ? (
+  return (
     <GeoJSON
-      key={uniqueId('geojson_')}
+      ref={ref}
       data={clusters as any}
       pointToLayer={pointToLayer}
       onclick={onClick}
     ></GeoJSON>
-  ) : null;
+  );
 };
 
-export default Clusterer;
+export default PointClusterer;
