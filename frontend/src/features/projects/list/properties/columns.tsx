@@ -7,8 +7,7 @@ import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
-import { IProperty } from 'features/properties/list';
-import { IProjectProperty } from '../interfaces';
+import { IProperty } from '../../dispose/interfaces';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
@@ -31,7 +30,7 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-export const columns: ColumnWithProps<IProjectProperty>[] = [
+export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
@@ -50,7 +49,7 @@ export const columns: ColumnWithProps<IProjectProperty>[] = [
   },
   {
     Header: 'Property Name',
-    accessor: 'name',
+    accessor: 'description',
     align: 'left',
     responsive: true,
     width: spacing.medium,
@@ -148,7 +147,7 @@ export const columns: ColumnWithProps<IProjectProperty>[] = [
     responsive: true,
     width: spacing.small,
     minWidth: 65,
-    Cell: (props: CellProps<IProjectProperty, number>) => {
+    Cell: (props: CellProps<IProperty, number>) => {
       return <Link to={`/submitProperty/${props.row.original.parcelId}?disabled=true`}>View</Link>;
     },
   },

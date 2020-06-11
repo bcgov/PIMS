@@ -168,6 +168,28 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       );
     }
   };
+
+  const lazyLoadProperties = async (expandedRows: IProject[]) => {
+    if (expandedRows.length > 0) {
+      expandedRows = expandedRows.filter(x => x.properties.length === 0);
+      const projectProperties = await Promise.all(
+        expandedRows.map(async project => await service.loadProperties(project.projectNumber)),
+      );
+      const projectPropertiesMap = projectProperties.reduce((map: any, current: any) => {
+        const ids = Object.keys(current);
+        const projectId = ids[0];
+        return { ...map, [projectId]: current[projectId] };
+      }, {});
+      setData(
+        data.map(d => {
+          return !!projectPropertiesMap[d.projectNumber]
+            ? { ...d, properties: projectPropertiesMap[d.projectNumber] }
+            : d;
+        }),
+      );
+    }
+  };
+
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
@@ -225,6 +247,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             render: project => <Properties data={project.properties} />,
             icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
             checkExpanded: (row, state) => !!state.find(x => x.projectNumber === row.projectNumber),
+            onExpand: lazyLoadProperties,
+            getRowId: row => row.projectNumber,
           }}
           onPageSizeChange={size => {
             setPageSize(size);
