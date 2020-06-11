@@ -1,6 +1,7 @@
 using Mapster;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
 using Entity = Pims.Dal.Entities;
+using System.Linq;
 
 namespace Pims.Api.Areas.Project.Mapping.Dispose
 {
@@ -11,6 +12,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
             config.NewConfig<Entity.ProjectTask, Model.ProjectTaskModel>()
                 .Map(dest => dest.ProjectId, src => src.ProjectId)
                 .Map(dest => dest.TaskId, src => src.TaskId)
+                .Map(dest => dest.StatusId, src => src.Task == null ? 0 : src.Task.Statuses.Select(s => s.StatusId).FirstOrDefault())
                 .Map(dest => dest.Name, src => src.Task == null ? null : src.Task.Name)
                 .Map(dest => dest.Description, src => src.Task == null ? null : src.Task.Description)
                 .Map(dest => dest.IsOptional, src => src.Task == null ? true : src.Task.IsOptional)

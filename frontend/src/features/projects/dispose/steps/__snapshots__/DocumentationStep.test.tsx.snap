@@ -13,10 +13,10 @@ exports[`renders correctly 1`] = `
       Documentation
     </h3>
     <div
-      className="DocumentationForm form-row"
+      className="tasksForm form-row"
     >
       <div
-        className="required form-group"
+        className="form-group"
       >
         <div
           className="check-field"
@@ -26,19 +26,16 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-check-input position-static"
+              defaultChecked={true}
               disabled={false}
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
               onChange={[Function]}
-              required={true}
+              required={false}
               type="checkbox"
+              value={true}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.0.isCompleted"
@@ -49,10 +46,10 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="DocumentationForm form-row"
+      className="tasksForm form-row"
     >
       <div
-        className="required form-group"
+        className="form-group"
       >
         <div
           className="check-field"
@@ -62,19 +59,16 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-check-input position-static"
+              defaultChecked={true}
               disabled={false}
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
               onChange={[Function]}
-              required={true}
+              required={false}
               type="checkbox"
+              value={true}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.1.isCompleted"

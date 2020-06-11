@@ -54,11 +54,10 @@ export const Check: React.FC<CheckProps> = ({
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const asElement: any = is || 'input';
-
   return (
     <Form.Group
       controlId={`input-${field}`}
-      className={classNames(!!required ? 'required' : '', outerClassName)}
+      className={classNames(outerClassName, !!required ? 'required' : '')}
     >
       <div className="check-field">
         {!!label && (

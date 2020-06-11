@@ -2,12 +2,13 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik, setIn } from 'formik';
 import { Form } from 'components/common/form';
-import { IStepProps, IProjectTask, IProject } from '../interfaces';
+import { IStepProps, IProjectTask, IProject, DisposeWorkflowStatus } from '../interfaces';
 import { useStepForm, useStepper, DocumentationForm, StepErrorSummary } from '..';
+import _ from 'lodash';
 
-const handleValidate = (values: IProject) => {
-  return values.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
-    if (!task.isCompleted) {
+const handleValidate = (project: IProject) => {
+  return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
+    if (!task.isCompleted && task.statusId === DisposeWorkflowStatus.RequiredDocumentation) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
     return errors;
@@ -21,6 +22,7 @@ const handleValidate = (values: IProject) => {
 const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit } = useStepForm();
   const { project } = useStepper();
+  const tasks = _.filter(project.tasks, { statusId: DisposeWorkflowStatus.RequiredDocumentation });
   if (!project) {
     // Step does not allow creation of new properties
     throw Error('Unexpected error updating project. Please reload your project.');
@@ -48,7 +50,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
       >
         {() => (
           <Form>
-            <DocumentationForm isReadOnly={isReadOnly} />
+            <DocumentationForm isReadOnly={isReadOnly} tasks={tasks} />
             <StepErrorSummary />
           </Form>
         )}

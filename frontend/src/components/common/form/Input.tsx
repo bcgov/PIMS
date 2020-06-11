@@ -3,6 +3,7 @@ import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
+import TooltipIcon from '../TooltipIcon';
 
 type RequiredAttributes = {
   /** The field name */
@@ -26,8 +27,12 @@ type OptionalAttributes = {
   pattern?: RegExp;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
+  /** class to apply to entire form group */
   outerClassName?: string;
+  /** formatter to apply during input onblur */
   onBlurFormatter?: Function;
+  /** optional tooltip text to display after the label */
+  tooltip?: string;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -48,6 +53,7 @@ export const Input: React.FC<InputProps> = ({
   disabled,
   custom,
   onBlurFormatter,
+  tooltip,
   ...rest
 }) => {
   const { handleChange, handleBlur, errors, touched, values, setFieldValue } = useFormikContext<
@@ -72,6 +78,7 @@ export const Input: React.FC<InputProps> = ({
         <Form.Label>
           {label}
           {!!required && <span className="required">*</span>}
+          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
         </Form.Label>
       )}
       <span className={className}>

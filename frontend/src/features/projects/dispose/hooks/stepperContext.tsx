@@ -1,9 +1,8 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { IStatus } from '../slices/projectWorkflowSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjectTasks } from '../projectsActionCreator';
+import { fetchProjectTasks, fetchProjectWorkflow } from '../projectsActionCreator';
 import { RootState } from 'reducers/rootReducer';
-import { IProjectWrapper, initialValues } from '..';
+import { IProjectWrapper, initialValues, IStatus } from '..';
 
 export const StepperContext = createContext({} as any);
 
@@ -17,12 +16,22 @@ export const StepContextProvider = (props: { children?: any }) => {
   // Make the context object (or array)
   const stepContext = { currentStatus, setCurrentStatus };
   const dispatch = useDispatch();
+  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   //Load required redux context
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
   useEffect(() => {
-    dispatch(fetchProjectTasks(project.statusId));
+    if (project.statusId > 0) {
+      dispatch(fetchProjectTasks(project.statusId));
+    }
   }, [dispatch, project.statusId]);
+
+  const workflowStatusesLength = workflowStatuses?.length;
+  useEffect(() => {
+    if (!workflowStatusesLength) {
+      dispatch(fetchProjectWorkflow('SUBMIT-DISPOSAL'));
+    }
+  }, [dispatch, project.statusId, workflowStatusesLength]);
 
   // Pass the value in Provider and return
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;

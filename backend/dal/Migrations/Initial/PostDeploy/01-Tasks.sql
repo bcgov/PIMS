@@ -27,7 +27,7 @@ INSERT INTO dbo.[Tasks] (
     3
     , 'Review completed'
     , 0
-    , 'Properties have been reviewed and approved.'
+    , 'Project property information has been reviewed'
     , 0
     , 0
 ), (
@@ -48,7 +48,7 @@ INSERT INTO dbo.[Tasks] (
     6
     , 'Appraisal received'
     , 0
-    , 'An appraisal has been recieved.'
+    , 'An appraisal has been received.'
     , 1
     , 2
 ), (

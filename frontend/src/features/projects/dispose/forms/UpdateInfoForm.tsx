@@ -6,29 +6,35 @@ import { Form, Select } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import Button from 'react-bootstrap/Button';
 import _ from 'lodash';
-import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus, EditButton } from '..';
+import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus } from '..';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { updateInfoMessage, tierTooltip } from '../strings';
 import { Container } from 'react-bootstrap';
 
+interface IUpdateInfoFormProps {
+  setIsReadOnly?: Function;
+  title?: string;
+}
+
 /**
  * Form component of UpdateInfoForm.
  * @param param0 isReadOnly disable editing
  */
-const UpdateInfoForm = ({ isReadOnly, canEdit }: IStepProps) => {
+const UpdateInfoForm = ({
+  isReadOnly,
+  canEdit,
+  setIsReadOnly,
+  title,
+}: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
-  const [disabled, setDisabled] = useState(isReadOnly);
   const [selectedProperties, setSelectedProperties] = useState([]);
 
   return (
     <Container fluid className="UpdateInfoForm">
-      <Form.Row>
-        <h3 className="col-md-8">Update Info</h3>
-        <span className="col-md-4">
-          <EditButton {...{ formDisabled: disabled, setFormDisabled: setDisabled, canEdit }} />
-        </span>
+      <Form.Row style={{ alignItems: 'unset' }}>
+        <h3 className="col-md-8">{title ?? 'Update Info'}</h3>
       </Form.Row>
       <Form.Row>
         <Form.Label column md={2}>
@@ -38,7 +44,7 @@ const UpdateInfoForm = ({ isReadOnly, canEdit }: IStepProps) => {
         </Form.Label>
 
         <Select
-          disabled={disabled}
+          disabled={isReadOnly}
           outerClassName="col-md-2"
           placeholder="Must Select One"
           field="tierLevelId"
@@ -52,13 +58,13 @@ const UpdateInfoForm = ({ isReadOnly, canEdit }: IStepProps) => {
           {updateInfoMessage}
         </h6>
         <h2 className="col-md-5">Properties in the Project</h2>
-        <ReviewButtons {...{ disabled, isReadOnly, selectedProperties, setSelectedProperties }} />
+        <ReviewButtons {...{ isReadOnly, selectedProperties, setSelectedProperties }} />
       </Form.Row>
 
       <PropertyListViewUpdate
         field="properties"
-        disabled={disabled}
-        setSelectedRows={!disabled ? setSelectedProperties : undefined}
+        disabled={isReadOnly}
+        setSelectedRows={!isReadOnly ? setSelectedProperties : undefined}
       ></PropertyListViewUpdate>
       {!isReadOnly && <ProjectNotes />}
     </Container>
@@ -68,16 +74,11 @@ const UpdateInfoForm = ({ isReadOnly, canEdit }: IStepProps) => {
 /**
  * ReviewButtons subcomponent, optionally displayed buttons that allow a user to update read-only property information.
  */
-const ReviewButtons = ({
-  disabled,
-  isReadOnly,
-  selectedProperties,
-  setSelectedProperties,
-}: any) => {
+const ReviewButtons = ({ isReadOnly, selectedProperties, setSelectedProperties }: any) => {
   const { goToStep } = useStepper();
   const { setFieldValue, values } = useFormikContext();
 
-  return !disabled ? (
+  return !isReadOnly ? (
     <div className="review-buttons col-md-7">
       <Button variant="secondary" onClick={() => goToStep(DisposeWorkflowStatus.SelectProperties)}>
         Add More Properties

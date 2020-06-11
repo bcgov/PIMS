@@ -34,6 +34,7 @@ export const PUT_USER_DETAIL = 'PUT_USER_DETAIL';
 // Projects
 export enum ProjectReducers {
   WORKFLOW = 'projectWorkflow',
+  WORKFLOW_TASKS = 'projectWorkflowTasks',
   PROJECT = 'project',
   TASKS = 'tasks',
 }
