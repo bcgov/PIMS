@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
+import { ReviewWorkflowStatus } from '../interfaces';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -29,6 +30,7 @@ export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => 
           <Button
             style={{ marginLeft: 10 }}
             onClick={() => {
+              values.statusId = ReviewWorkflowStatus.ApprovedForErp;
               submitForm();
             }}
           >
@@ -38,6 +40,7 @@ export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => 
             variant="secondary"
             style={{ marginLeft: 10 }}
             onClick={() => {
+              values.statusId = ReviewWorkflowStatus.PropertyReview;
               submitForm();
             }}
           >
@@ -51,8 +54,7 @@ export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => 
           <Button
             variant="danger"
             onClick={() => {
-              values.statusCode = 'DE';
-              values.statusId = 13;
+              values.statusId = ReviewWorkflowStatus.Denied;
               submitForm();
             }}
           >

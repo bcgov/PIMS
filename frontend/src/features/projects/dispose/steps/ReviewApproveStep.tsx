@@ -7,31 +7,47 @@ import {
   IProject,
   ReviewApproveActions,
   ReviewApproveForm,
+  IProjectTask,
 } from '..';
-import { Formik } from 'formik';
+import { Formik, yupToFormErrors, setIn, validateYupSchema } from 'formik';
 import {
   UpdateInfoStepYupSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
 } from '../forms/disposalYupSchema';
 import { fetchProjectTasks } from '../projectsActionCreator';
+import _ from 'lodash';
 
-interface IReviewApproveFields {
-  appraisalOrdered: boolean;
-  appraisalReceived: boolean;
-  reviewCompleted: boolean;
-  strengthOfClaim: boolean;
-  inConsultation: boolean;
-  agreementReached: boolean;
-  draftReviewed: boolean;
-  infoReviewed: boolean;
-  documentationReviewed: boolean;
-  statusCode: string;
-}
+const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(ProjectDraftStepYupSchema).concat(
+  SelectProjectPropertiesStepYupSchema,
+);
+
+const validateTasks = (project: IProject) => {
+  return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
+    if (!task.isCompleted && !task.isOptional) {
+      errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
+    }
+    return errors;
+  }, {});
+};
+
+const handleValidate = (values: IProject) => {
+  let taskErrors = validateTasks(values);
+  const yupErrors: any = validateYupSchema(values, ReviewApproveStepSchema).then(
+    () => {
+      return taskErrors;
+    },
+    (err: any) => {
+      return _.merge(yupToFormErrors(err), taskErrors);
+    },
+  );
+  console.log(Promise.resolve(yupErrors));
+  return Promise.resolve(yupErrors);
+};
 
 /**
- * Expanded version of the ReviewProjectStep allowing for application review.
- * {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
+ * Expanded version of the ReviewApproveStep allowing for application review.
+ * {isReadOnly formikRef} formikRef allow remote formik access
  */
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
@@ -40,12 +56,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     fetchProjectTasks('ACCESS-DISPOSAL');
   }, []);
 
-  const initialValues: IProject & IReviewApproveFields = {
+  const initialValues: IProject & { confirmation: boolean } = {
     ...project,
+    statusCode: project.status?.code,
     confirmation: true,
-    draftReviewed: false,
-    infoReviewed: false,
-    documentationReviewed: false,
   };
   return (
     <Container fluid className="ReviewApproveStep">
@@ -54,17 +68,13 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={onSubmitReview}
-        validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema).concat(
-          SelectProjectPropertiesStepYupSchema,
-        )}
+        validate={handleValidate}
       >
-        {({ submitForm, values, setFieldValue }) => (
-          <Form>
-            <h1>Project Application Review</h1>
-            <ReviewApproveForm canEdit={canUserEditForm(project.agencyId)} />
-            <ReviewApproveActions />
-          </Form>
-        )}
+        <Form>
+          <h1>Project Application Review</h1>
+          <ReviewApproveForm canEdit={canUserEditForm(project.agencyId)} />
+          <ReviewApproveActions />
+        </Form>
       </Formik>
     </Container>
   );

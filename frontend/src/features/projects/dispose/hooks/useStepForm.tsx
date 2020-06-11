@@ -16,17 +16,17 @@ import Claims from 'constants/claims';
 const useStepForm = () => {
   const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
-  const { getNextStep } = useStepper();
+  const { getLastCompletedStatus, getNextStep } = useStepper();
 
   const onSubmit = (values: any, actions: any) => {
     const apiValues = _.cloneDeep(values);
     let response: any;
-    const nextStep = getNextStep();
+    const nextStep = getNextStep(getLastCompletedStatus());
     if (nextStep !== undefined) {
       apiValues.statusId = nextStep.id;
     }
     if (nextStep?.isMilestone === true) {
-      response = dispatch(updateWorkflowStatus(apiValues, nextStep.code));
+      response = dispatch(updateWorkflowStatus(apiValues, nextStep.id));
     } else if (!apiValues.projectNumber) {
       response = dispatch(createProject(apiValues));
     } else {

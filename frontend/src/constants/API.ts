@@ -87,5 +87,5 @@ export const PROJECT_DISPOSE_ROOT = '/projects/disposal/';
 export const PROJECT_DISPOSE_WORKFLOW = (code: string) => `/projects/workflows/${code}`;
 export const PROJECT_DISPOSE_TASKS = (code: string | number) => `/projects/workflows/tasks/${code}`;
 export const PROJECT_WORKFLOW_TASKS = (code: string) => `/projects/workflows/${code}/tasks`;
-export const PROJECT_UPDATE_WORKFLOW_STATUS = (workflowCode: string, statusCode: string) =>
-  `${PROJECT_DISPOSE_ROOT}workflow/${workflowCode}/${statusCode}`;
+export const PROJECT_UPDATE_WORKFLOW_STATUS = (workflowCode: string, statusId: number) =>
+  `${PROJECT_DISPOSE_ROOT}workflow/${workflowCode}/${statusId}`;

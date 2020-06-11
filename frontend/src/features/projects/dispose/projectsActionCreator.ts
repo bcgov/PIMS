@@ -60,11 +60,11 @@ export const updateProject = (body: IProject) => (dispatch: Function) => {
 
 export const updateWorkflowStatus = (
   body: IProject,
-  statusCode: string | undefined,
+  statusId: number,
   workflowCode: string = 'SUBMIT-DISPOSAL',
 ) => (dispatch: Function) => {
   const axiosResponse = CustomAxios().put(
-    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusCode ?? ''),
+    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusId),
     toApiProject(body),
   );
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_WORKFLOW_STATUS, axiosResponse);

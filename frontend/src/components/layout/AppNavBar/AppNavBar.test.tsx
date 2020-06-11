@@ -247,7 +247,7 @@ describe('AppNavBar', () => {
         keycloak: {
           subject: 'test',
           userInfo: {
-            roles: ['project-add'],
+            roles: ['dispose-approve'],
           },
         },
       });

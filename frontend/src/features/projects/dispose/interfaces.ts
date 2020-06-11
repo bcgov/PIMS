@@ -120,6 +120,8 @@ export interface IProject {
   note: string;
   agencyId: number;
   statusId: number;
+  status?: IStatus;
+  statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;
@@ -140,7 +142,7 @@ export enum ReviewWorkflowStatus {
   DocumentReview,
   AppraisalReview,
   FirstNationConsultation,
-  ApprovedForEpl,
+  ApprovedForErp,
   ApprovedForSpl,
   Denied,
 }

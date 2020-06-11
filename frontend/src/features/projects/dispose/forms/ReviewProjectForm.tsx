@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import './ReviewProjectForm.scss';
 import {
   ProjectDraftForm,
@@ -19,13 +19,14 @@ import _ from 'lodash';
  */
 const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
   const { values } = useFormikContext<IProject>();
+  const [isReadOnly, setIsReadOnly] = useState(true);
   const documentationTasks = _.filter(values.tasks, {
     statusId: DisposeWorkflowStatus.RequiredDocumentation,
   });
   return (
     <Fragment>
-      <ProjectDraftForm isReadOnly={true} canEdit={canEdit} />
-      <UpdateInfoForm isReadOnly={true} canEdit={canEdit} />
+      <ProjectDraftForm isReadOnly={isReadOnly} setIsReadOnly={setIsReadOnly} canEdit={canEdit} />
+      <UpdateInfoForm isReadOnly={isReadOnly} canEdit={canEdit} />
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
       <ProjectNotes />

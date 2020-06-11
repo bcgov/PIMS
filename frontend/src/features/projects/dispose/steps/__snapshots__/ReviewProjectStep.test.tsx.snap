@@ -20,7 +20,16 @@ exports[`renders correctly 1`] = `
         </h3>
         <span
           className="col-md-3"
-        />
+        >
+          <button
+            className="edit btn btn-primary"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            Edit
+          </button>
+        </span>
       </div>
       <div
         className="col-md-10 form-row"

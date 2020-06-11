@@ -80,22 +80,22 @@ export const isStatusNavigable = (
  * @param currentStatus The current status within the above list
  * @param project The project that is going through this workflow
  */
-const getLastCompletedStatusId = (
+const getLastCompletedStatus = (
   workflowStatuses: IStatus[],
   currentStatus: IStatus,
   project?: IProject,
 ) => {
   if (!project) {
-    return 0;
+    return undefined;
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
   if (
     currentStatus.sortOrder >= (furthestCompletedStep?.sortOrder ?? 0) ||
     furthestCompletedStep?.sortOrder === 0
   ) {
-    return currentStatus.sortOrder + 1;
+    return currentStatus;
   }
-  return project.statusId;
+  return furthestCompletedStep;
 };
 
 /**
@@ -125,7 +125,8 @@ const useStepper = () => {
     workflowTasks,
     getStatusById: (statusId: number): IStatus | undefined =>
       _.find(workflowStatuses, { id: statusId }),
-    getNextStep: () => getNextWorkflowStatus(workflowStatuses, currentStatus),
+    getNextStep: (status?: IStatus) =>
+      getNextWorkflowStatus(workflowStatuses, status ?? currentStatus),
     nextStep: (): boolean => {
       const nextStatus = getNextWorkflowStatus(workflowStatuses, currentStatus);
       if (!nextStatus) {
@@ -138,8 +139,7 @@ const useStepper = () => {
     projectStatusCompleted: (status: IStatus) =>
       isStatusCompleted(workflowStatuses, status, project),
     canGoToStatus: (status: IStatus) => isStatusNavigable(workflowStatuses, status, project),
-    getLastCompletedStatusId: () =>
-      getLastCompletedStatusId(workflowStatuses, currentStatus, project),
+    getLastCompletedStatus: () => getLastCompletedStatus(workflowStatuses, currentStatus, project),
     goToStep: (statusId: number) =>
       history.push(
         `/dispose${workflowStatuses[statusId].route}?projectNumber=${project.projectNumber}`,

@@ -157,6 +157,27 @@ namespace Pims.Api.Areas.Project.Controllers
             var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode, statusCode);
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
+
+        /// <summary>
+        /// Update the specified 'project' by submitting it to the specified 'workflowCode' and request to change the status to the specified 'statusId'
+        /// </summary>
+        /// <param name="workflowCode"></param>
+        /// <param name="statusId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("workflow/{workflowCode}/{statusId:int}")]
+        [HasPermission(Permissions.ProjectEdit)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ProjectModel), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "project" })]
+        public IActionResult SetStatus(string workflowCode, int statusId, ProjectModel model)
+        {
+            if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
+
+            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode, statusId);
+            return new JsonResult(_mapper.Map<ProjectModel>(project));
+        }
         #endregion
     }
 }
