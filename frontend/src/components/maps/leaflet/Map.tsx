@@ -2,8 +2,8 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent, Icon, DivIcon } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
+import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';

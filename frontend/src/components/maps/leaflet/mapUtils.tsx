@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon, DivIcon, LatLng, Layer, Marker as LeafletMarker } from 'leaflet';
 import { ICluster } from 'hooks/useSupercluster';
 import { IProperty } from 'actions/parcelsActions';
