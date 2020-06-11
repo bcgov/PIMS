@@ -1,12 +1,14 @@
+@import '../../../../colors.scss';
 .SresManual {
   text-align: center;
   cursor: pointer;
   div {
-    border: solid 2px #fcba19;
+    border: solid 2px $accent-color;
     border-radius: 2rem;
     display: inline-block;
   }
   svg {
+    color: $sres-icon-color;
     margin: 0.5rem;
   }
   font-size: 10px;

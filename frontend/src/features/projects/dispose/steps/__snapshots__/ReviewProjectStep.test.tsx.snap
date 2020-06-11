@@ -19,7 +19,7 @@ exports[`renders correctly 1`] = `
           Review
         </h3>
         <span
-          className="col-md-3"
+          className="col-md-4"
         >
           <button
             className="edit btn btn-primary"
@@ -119,20 +119,6 @@ exports[`renders correctly 1`] = `
     <div
       className="UpdateInfoForm container-fluid"
     >
-      <div
-        className="form-row"
-        style={
-          Object {
-            "alignItems": "unset",
-          }
-        }
-      >
-        <h3
-          className="col-md-8"
-        >
-          Update Info
-        </h3>
-      </div>
       <div
         className="form-row"
       >

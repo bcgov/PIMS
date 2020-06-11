@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus } from '../interfaces';
+import { ReviewWorkflowStatus, DisposeWorkflowStatus } from '../interfaces';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -11,16 +11,11 @@ const FlexRight = styled.div`
   margin: 0.5rem 0;
 `;
 
-interface IReviewApproveActionsProps {
-  //onSave: () => void; TODO
-  //onNext: () => void; TODO
-}
-
 /**
  * A component for project review actions
  * @component
  */
-export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => {
+export const ReviewApproveActions: React.FC = () => {
   const { values, submitForm } = useFormikContext<any>();
   return (
     <>
@@ -28,19 +23,25 @@ export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => 
       <FlexRight>
         <span>
           <Button
+            disabled={
+              values.statusId === ReviewWorkflowStatus.Denied ||
+              values.statusId === ReviewWorkflowStatus.ApprovedForErp
+            }
             style={{ marginLeft: 10 }}
             onClick={() => {
               values.statusId = ReviewWorkflowStatus.ApprovedForErp;
               submitForm();
             }}
           >
-            Approve for ERP
+            Approve
           </Button>
           <Button
+            disabled={values.statusId === ReviewWorkflowStatus.Denied}
             variant="secondary"
             style={{ marginLeft: 10 }}
             onClick={() => {
-              values.statusId = ReviewWorkflowStatus.PropertyReview;
+              if (values.statusId === DisposeWorkflowStatus.Submitted)
+                values.statusId = ReviewWorkflowStatus.PropertyReview;
               submitForm();
             }}
           >
@@ -52,6 +53,7 @@ export const ReviewApproveActions: React.FC<IReviewApproveActionsProps> = () => 
       <FlexRight>
         <span>
           <Button
+            disabled={values.statusId === ReviewWorkflowStatus.ApprovedForErp}
             variant="danger"
             onClick={() => {
               values.statusId = ReviewWorkflowStatus.Denied;

@@ -28,7 +28,7 @@ const ProjectDraftForm = ({
     <Container fluid className="ProjectDraftForm">
       <Form.Row>
         <h3 className="col-md-8">{title ?? 'Review'}</h3>
-        <span className="col-md-3">
+        <span className="col-md-4">
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
       </Form.Row>

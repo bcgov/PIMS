@@ -1,4 +1,5 @@
 @import '../../../variables';
+@import '../../../colors.scss';
 $filter-height: 76px;
 $table-fontSize: 13px;
 
@@ -68,7 +69,7 @@ $table-fontSize: 13px;
 .td,
 .th {
   font-size: $table-fontSize !important;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid $table-color;
   border-top: none !important;
 }
 
