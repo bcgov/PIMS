@@ -32,7 +32,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
         onSubmit={onSubmit}
       >
         <Form>
-          <UpdateInfoForm isReadOnly={isReadOnly} />
+          <UpdateInfoForm isReadOnly={isReadOnly} title="Update Info" />
           <StepErrorSummary />
         </Form>
       </Formik>

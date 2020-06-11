@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import classNames from 'classnames';
-import { useStepper } from '..';
+import { useStepper, reviewFirstNationsTooltip } from '..';
 import TasksForm from './TasksForm';
 import { ReviewWorkflowStatus } from '../interfaces';
 import _ from 'lodash';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IFirstNationsCheckListFormProps {
   className?: string;
@@ -18,7 +19,14 @@ const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListF
   const tasks = _.filter(project.tasks, { statusId: ReviewWorkflowStatus.FirstNationConsultation });
   return (
     <Container fluid className={classNames(props.className)}>
-      <h3>First Nations Consultation</h3>
+      <h3>
+        First Nations Consultation
+        <TooltipIcon
+          toolTipId="review-firstNations"
+          toolTip={reviewFirstNationsTooltip}
+        ></TooltipIcon>
+      </h3>
+
       <TasksForm tasks={tasks} />
     </Container>
   );

@@ -41,7 +41,6 @@ const handleValidate = (values: IProject) => {
       return _.merge(yupToFormErrors(err), taskErrors);
     },
   );
-  console.log(Promise.resolve(yupErrors));
   return Promise.resolve(yupErrors);
 };
 

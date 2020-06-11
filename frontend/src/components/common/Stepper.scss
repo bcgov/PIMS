@@ -1,3 +1,4 @@
+@import '../../colors.scss';
 /*!
  * bsStepper v1.7.0 (https://github.com/Johann-S/bs-stepper)
  * Copyright 2018 - 2019 Johann-S <johann.servoire@gmail.com>
@@ -18,7 +19,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.5;
-  color: #6c757d;
+  color: $light-variant-color;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
@@ -48,7 +49,7 @@ h6 {
 }
 
 .bs-stepper .step-trigger:focus {
-  color: #007bff;
+  color: $icon-light-color;
   outline: none;
 }
 
@@ -114,16 +115,16 @@ h6 {
   margin: 0.25rem;
   line-height: 1em;
   color: #fff;
-  background-color: #6c757d;
+  background-color: $light-variant-color;
   border-radius: 1em;
 }
 
 .bs-stepper-circle.completed {
-  background-color: #20a74d;
+  background-color: $completed-color;
 }
 
 .active .bs-stepper-circle {
-  background-color: #007bff;
+  background-color: $active-color;
   width: 2.5em;
   height: 2.5em;
   border-radius: 2.5em;

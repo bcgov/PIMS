@@ -39,23 +39,23 @@
 }
 
 .btn.btn-secondary {
-  border: 2px solid #428bca;
+  border: 2px solid $secondary-variant-color;
   background-color: #ffffff;
   font-family: 'BCSans', Fallback, sans-serif;
   font-size: 16px;
-  color: #428bca;
-  text-decoration: none solid rgb(66, 139, 202);
+  color: $secondary-variant-color;
+  text-decoration: none solid $secondary-variant-color;
   text-align: center;
   border-radius: 0;
 }
 
 .btn.btn-secondary:hover {
   background-color: #ffffff;
-  color: #494949;
+  color: $text-color;
 }
 
 .btn.btn-light {
-  background-color: #606060;
+  background-color: $light-variant-color;
   font-family: 'BCSans', Fallback, sans-serif;
   text-decoration: none solid rgb(255, 255, 255);
   color: #fff;
@@ -64,18 +64,18 @@
 }
 
 .btn.btn-light:hover {
-  background-color: #606060;
+  background-color: $light-variant-color;
   color: #fff;
 }
 
 .btn.btn-light:disabled {
-  background-color: #606060;
+  background-color: $light-variant-color;
   color: #fff;
 }
 
 .btn.btn-dark {
   color: #fff;
-  background-color: #121212;
+  background-color: $dark-variant-color;
   vertical-align: middle;
   height: 24px;
   padding: 1px;
@@ -85,7 +85,7 @@
 }
 
 .btn.btn-danger {
-  background-color: #d8292f;
+  background-color: $danger-color;
   font-family: 'BCSans', Fallback, sans-serif;
   font-size: 16px;
   color: #ffffff;
@@ -95,12 +95,12 @@
 }
 
 .btn.btn-danger:hover {
-  background-color: #d8292f;
+  background-color: $danger-color;
   color: #ffffff;
 }
 
 .btn:focus,
 .btn:active,
 .btn.active {
-  background-color: #3b99fc !important;
+  background-color: $icon-light-color !important;
 }

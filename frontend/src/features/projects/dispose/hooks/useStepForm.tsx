@@ -11,6 +11,7 @@ import _ from 'lodash';
 import useStepper from './useStepper';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import { IProject } from '..';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -50,10 +51,13 @@ const useStepForm = () => {
   const onSubmitReview = (values: any, actions: any) => {
     const apiValues = _.cloneDeep(values);
     let response: any = dispatch(
-      updateWorkflowStatus(apiValues, values.statusCode, 'ACCESS-DISPOSAL'),
+      updateWorkflowStatus(apiValues, values.statusId, 'ACCESS-DISPOSAL'),
     );
     response
-      .then((values: any) => {
+      .then((values: IProject) => {
+        return dispatch(updateProject({ ...apiValues, rowVersion: values.rowVersion }));
+      })
+      .then(() => {
         return dispatch(fetchProject(values.projectNumber));
       })
       .catch((error: any) => {
