@@ -1,8 +1,8 @@
 FROM node:10-slim as node
 
-# install build toolchain (for node-gyp)
+# install build toolchain
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y dumb-init python build-essential \
+    && apt-get install --no-install-recommends -y dumb-init \
     && rm -rf /var/lib/apt/lists/*
 
 # set entrypoint to `dumb-init` as it handles being pid 1 and forwarding signals
