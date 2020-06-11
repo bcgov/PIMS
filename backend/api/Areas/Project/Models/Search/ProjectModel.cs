@@ -79,6 +79,16 @@ namespace Pims.Api.Areas.Project.Models.Search
         public string SubAgencyCode { get; set; }
 
         /// <summary>
+        /// get/set - The netbook value which is the sum of the properties.
+        /// </summary>
+        public decimal NetBook { get; set; }
+
+        /// <summary>
+        /// get/set - The estimated value which is the sum of the properties.
+        /// </summary>
+        public decimal Estimated { get; set; }
+
+        /// <summary>
         /// get/set - Project properties
         /// </summary>
         public IEnumerable<ProjectPropertyModel> Properties { get; set; } = new List<ProjectPropertyModel>();
