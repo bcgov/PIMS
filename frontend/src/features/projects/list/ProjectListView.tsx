@@ -26,6 +26,7 @@ interface IProjectFilterState {
   createdByMe?: boolean;
   name?: string;
   statusId?: number;
+  accessDisposal?: boolean;
 }
 
 const initialQuery: IProjectFilter = {
@@ -123,7 +124,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         const query = getServerQuery({
           pageIndex,
           pageSize,
-          filter: mode === PageMode.APPROVAL ? { ...filter, statusId: 5 } : filter,
+          filter: mode === PageMode.APPROVAL ? { ...filter, accessDisposal: true } : filter,
         });
         const data = await service.getProjectList(query);
 
@@ -160,13 +161,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const onRowClick = (row: IProject) => {
-    if (mode === PageMode.APPROVAL) {
-      history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
-    } else {
-      history.push(
-        `/dispose/projects/${row.status.toLowerCase()}?projectNumber=${row.projectNumber}`,
-      );
-    }
+    history.push(`/dispose/${row.statusRoute}?projectNumber=${row.projectNumber}`);
   };
 
   const lazyLoadProperties = async (expandedRows: IProject[]) => {

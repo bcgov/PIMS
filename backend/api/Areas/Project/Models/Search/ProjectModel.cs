@@ -34,6 +34,11 @@ namespace Pims.Api.Areas.Project.Models.Search
         public string Status { get; set; }
 
         /// <summary>
+        /// get/set - The project status page route.
+        /// </summary>
+        public string StatusRoute { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the tier level.
         /// </summary>
         public int TierLevelId { get; set; }

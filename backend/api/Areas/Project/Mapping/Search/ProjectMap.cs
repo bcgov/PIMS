@@ -15,6 +15,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.Status, src => src.Status == null ? null : src.Status.Name)
+                .Map(dest => dest.StatusRoute, src => src.Status == null ? null : src.Status.Route)
                 .Map(dest => dest.TierLevelId, src => src.TierLevelId)
                 .Map(dest => dest.TierLevel, src => src.TierLevel == null ? null : src.TierLevel.Name)
                 .Map(dest => dest.Description, src => src.Description)
