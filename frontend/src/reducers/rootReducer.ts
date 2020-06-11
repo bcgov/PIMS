@@ -15,6 +15,7 @@ import projectWorkflowSlice from 'features/projects/dispose/slices/projectWorkfl
 import { ProjectReducers } from 'constants/reducerTypes';
 import projectSlice from 'features/projects/dispose/slices/projectSlice';
 import projectTasksSlice from 'features/projects/dispose/slices/projectTasksSlice';
+import ProjectWorkflowTasksSlice from 'features/projects/dispose/slices/projectWorkflowTasksSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -27,6 +28,7 @@ export const reducerObject = {
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
   [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,
+  [ProjectReducers.WORKFLOW_TASKS]: ProjectWorkflowTasksSlice.reducer,
   [ProjectReducers.TASKS]: projectTasksSlice.reducer,
   [ProjectReducers.PROJECT]: projectSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,

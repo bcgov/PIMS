@@ -61,7 +61,7 @@ exports[`renders 1`] = `
         >
           <button
             className="step-trigger"
-            disabled={false}
+            disabled={true}
             onClick={[Function]}
           >
             <span
@@ -95,7 +95,7 @@ exports[`renders 1`] = `
           }
           type="button"
         >
-          Next
+          Submit
         </button>
         <button
           className="btn btn-secondary"

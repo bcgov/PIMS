@@ -84,6 +84,21 @@
   }
 }
 
+.btn.btn-danger {
+  background-color: #d8292f;
+  font-family: 'BCSans', Fallback, sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none solid rgb(255, 255, 255);
+  text-align: center;
+  border-radius: 0;
+}
+
+.btn.btn-danger:hover {
+  background-color: #d8292f;
+  color: #ffffff;
+}
+
 .btn:focus,
 .btn:active,
 .btn.active {

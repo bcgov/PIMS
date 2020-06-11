@@ -32,7 +32,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The status of the project.
         /// </summary>
-        public string Status { get; set; }
+        public ProjectStatusModel Status { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the tier level.

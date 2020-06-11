@@ -6,9 +6,11 @@ import CustomAxios from 'customAxios';
 import { toApiProject } from './projectConverter';
 import { saveProjectStatus, saveProjectTasks, saveProject, IProject } from '.';
 
-export const fetchProjectWorkflow = () => (dispatch: Function) => {
+export const fetchProjectWorkflow = (workflowCode: string = 'SUBMIT-DISPOSAL') => (
+  dispatch: Function,
+) => {
   const axiosResponse = CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_WORKFLOW('SUBMIT-DISPOSAL'))
+    .get(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_WORKFLOW(workflowCode))
     .then(response => dispatch(saveProjectStatus(response.data)));
   return handleAxiosResponse(dispatch, ProjectActions.GET_PROJECT_WORKFLOW, axiosResponse);
 };
@@ -16,6 +18,19 @@ export const fetchProjectWorkflow = () => (dispatch: Function) => {
 export const fetchProjectTasks = (statusCode: string | number) => (dispatch: Function) => {
   const axiosResponse = CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_TASKS(statusCode))
+    .then(response => dispatch(saveProjectTasks(response.data)));
+  return handleAxiosResponse(dispatch, ProjectActions.GET_PROJECT_TASKS, axiosResponse);
+};
+
+export const getProjectTasks = (statusCode: string | number) => (dispatch: Function) => {
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_TASKS(statusCode))
+    .then(response => response.data);
+};
+
+export const fetchWorkflowTasks = (workflowCode: string) => (dispatch: Function) => {
+  const axiosResponse = CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.PROJECT_WORKFLOW_TASKS(workflowCode))
     .then(response => dispatch(saveProjectTasks(response.data)));
   return handleAxiosResponse(dispatch, ProjectActions.GET_PROJECT_TASKS, axiosResponse);
 };
@@ -43,11 +58,13 @@ export const updateProject = (body: IProject) => (dispatch: Function) => {
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_PROJECT, axiosResponse);
 };
 
-export const updateWorkflowStatus = (body: IProject, statusCode: string | undefined) => (
-  dispatch: Function,
-) => {
+export const updateWorkflowStatus = (
+  body: IProject,
+  statusId: number,
+  workflowCode: string = 'SUBMIT-DISPOSAL',
+) => (dispatch: Function) => {
   const axiosResponse = CustomAxios().put(
-    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS('SUBMIT-DISPOSAL', statusCode ?? ''),
+    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusId),
     toApiProject(body),
   );
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_WORKFLOW_STATUS, axiosResponse);

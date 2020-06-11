@@ -13,6 +13,18 @@ exports[`renders correctly 1`] = `
       className="ProjectDraftForm container-fluid"
     >
       <div
+        className="form-row"
+      >
+        <h3
+          className="col-md-8"
+        >
+          Review
+        </h3>
+        <span
+          className="col-md-3"
+        />
+      </div>
+      <div
         className="col-md-10 form-row"
       >
         <label
@@ -36,7 +48,7 @@ exports[`renders correctly 1`] = `
           </span>
         </div>
         <div
-          className="sc-AxiKw gAzGpE col-md-7"
+          className="sc-AxhCb MerHY col-md-7"
         >
           This is a temporary number during draft state. A project number will be assigned when you submit this application.
         </div>

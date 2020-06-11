@@ -7,8 +7,8 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReviewProjectStep from './ReviewProjectStep';
-import { ITask } from '../slices/projectTasksSlice';
 import { IProject, IProjectTask } from '..';
+import { DisposeWorkflowStatus, ITask } from '../interfaces';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -21,9 +21,10 @@ const mockTasks: IProjectTask[] = [
     isCompleted: true,
     name: 'task-0',
     description: 'one',
-    taskType: '1',
+    taskType: 1,
     sortOrder: 0,
     completedOn: new Date(),
+    statusId: DisposeWorkflowStatus.RequiredDocumentation,
   },
   {
     projectNumber: 123,
@@ -32,9 +33,10 @@ const mockTasks: IProjectTask[] = [
     isCompleted: true,
     name: 'task-1',
     description: 'two',
-    taskType: '1',
+    taskType: 1,
     sortOrder: 0,
     completedOn: new Date(),
+    statusId: DisposeWorkflowStatus.RequiredDocumentation,
   },
 ];
 
@@ -48,18 +50,19 @@ const mockProject: IProject = {
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',
+  id: 1,
 };
 
 export const tasks: ITask[] = [
   {
-    id: 1,
+    taskId: 1,
     name: 'task-0',
     sortOrder: 0,
     description: 'test',
     taskType: 1,
   },
   {
-    id: 2,
+    taskId: 2,
     name: 'task-1',
     sortOrder: 0,
     description: 'test',

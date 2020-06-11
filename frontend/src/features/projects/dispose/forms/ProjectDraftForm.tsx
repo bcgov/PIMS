@@ -1,5 +1,5 @@
 import './ProjectDraftForm.scss';
-import React, { useState } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Form, Input } from 'components/common/form';
 import { IStepProps, ProjectNotes, projectNoDescription, EditButton } from '..';
@@ -10,16 +10,28 @@ const ItalicText = styled.div`
   font-size: 12px;
 `;
 
+interface IProjectDraftFormProps {
+  setIsReadOnly?: Function;
+  title?: string;
+}
+
 /**
  * Form component of ProjectDraftForm.
  * @param param0 isReadOnly disable editing
  */
-const ProjectDraftForm = ({ isReadOnly, canEdit }: IStepProps) => {
-  const [disabled, setDisabled] = useState(isReadOnly);
+const ProjectDraftForm = ({
+  isReadOnly,
+  title,
+  setIsReadOnly,
+}: IStepProps & IProjectDraftFormProps) => {
   return (
     <Container fluid className="ProjectDraftForm">
-      <EditButton {...{ formDisabled: disabled, setFormDisabled: setDisabled, canEdit }} />
-      {isReadOnly && <h3>Review</h3>}
+      <Form.Row>
+        <h3 className="col-md-8">{title ?? 'Review'}</h3>
+        <span className="col-md-3">
+          <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
+        </span>
+      </Form.Row>
       <Form.Row className="col-md-10">
         <Form.Label className="col-md-2">Project No.</Form.Label>
         <Input
@@ -28,11 +40,13 @@ const ProjectDraftForm = ({ isReadOnly, canEdit }: IStepProps) => {
           field="projectNumber"
           outerClassName="col-md-2"
         />
-        {!isReadOnly && <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>}
+        {isReadOnly === undefined && (
+          <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
+        )}
       </Form.Row>
       <Form.Row>
         <Input
-          disabled={disabled}
+          disabled={isReadOnly}
           field="name"
           label="Name"
           className="col-md-5"
@@ -42,14 +56,14 @@ const ProjectDraftForm = ({ isReadOnly, canEdit }: IStepProps) => {
       </Form.Row>
       <Form.Row>
         <Input
-          disabled={disabled}
+          disabled={isReadOnly}
           field="description"
           label="Description"
           className="col-md-5"
           outerClassName="col-md-10"
         />
       </Form.Row>
-      {!isReadOnly && <ProjectNotes />}
+      {isReadOnly === undefined && <ProjectNotes />}
     </Container>
   );
 };

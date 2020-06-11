@@ -1,32 +1,17 @@
 import React, { Fragment } from 'react';
-import { Form, Check } from 'components/common/form';
-import { IStepProps } from '../interfaces';
-import { useStepper, ProjectNotes } from '..';
+import { IStepProps, IProjectTask } from '../interfaces';
+import { ProjectNotes } from '..';
+import TasksForm from './TasksForm';
 
 /**
  * Form component of DocumentationForm.
  * @param param0 isReadOnly disable editing
  */
-const DocumentationForm = ({ isReadOnly }: IStepProps) => {
-  const { project } = useStepper();
-  if (!project) {
-    // Step does not allow creation of new properties
-    throw Error('Unexpected error updating project. Please reload your project.');
-  }
-
+const DocumentationForm = ({ isReadOnly, tasks }: IStepProps & { tasks: IProjectTask[] }) => {
   return (
     <Fragment>
       <h3>Documentation</h3>
-      {project.tasks.map((task: any, index: number) => (
-        <Form.Row key={task.name} className="DocumentationForm">
-          <Check
-            field={`tasks.${index}.isCompleted`}
-            postLabel={task.description}
-            required={!task.isOptional}
-            disabled={isReadOnly}
-          />
-        </Form.Row>
-      ))}
+      <TasksForm tasks={tasks ?? []} isReadOnly={isReadOnly} />
 
       {!isReadOnly && <ProjectNotes />}
     </Fragment>

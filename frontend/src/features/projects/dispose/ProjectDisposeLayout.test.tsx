@@ -8,9 +8,18 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router, match as Match } from 'react-router-dom';
 import * as actionTypes from 'constants/actionTypes';
+import useStepper from './hooks/useStepper';
+import { noop } from 'lodash';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+jest.mock('./hooks/useStepper');
+(useStepper as jest.Mock).mockReturnValue({
+  currentStatus: {},
+  project: { projectNumber: '' },
+  projectStatusCompleted: noop,
+  canGoToStatus: noop,
+});
 
 const match: Match = {
   path: '/dispose',

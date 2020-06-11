@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Dal.Entities
 {
@@ -17,6 +18,11 @@ namespace Pims.Dal.Entities
         /// get/set - Whether this task is required before a process can be completed.
         /// </summary>
         public bool IsOptional { get; set; }
+
+        /// <summary>
+        /// get - A collection of statuses associated to this project task.
+        /// </summary>
+        public ICollection<ProjectStatusTask> Statuses { get; } = new List<ProjectStatusTask>();
         #endregion
 
         #region Constructors

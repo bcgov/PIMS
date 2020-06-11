@@ -13,6 +13,7 @@
 
   .ProjectDisposeLayout {
     .container-fluid {
+      margin: 0.5rem 0;
       padding: 0;
     }
     padding: 1rem 1.5rem;
@@ -24,8 +25,9 @@
     font-family: 'BCSans-Bold', Fallback, sans-serif;
     color: #003366;
     font-size: 14px;
-    padding-left: 0;
-    margin: 2rem 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
   }
 
   h2 {
@@ -52,6 +54,10 @@
         background-image: none;
       }
     }
+  }
+
+  .form-group {
+    margin: 0.5rem 0;
   }
 
   .form-control {
@@ -91,15 +97,18 @@
     display: block;
   }
 
-  .check-field .form-label {
-    margin-left: 20px;
+  .check-field {
+    padding: 0 0.5rem;
+    .form-label {
+      margin-left: 20px;
+    }
   }
 
   #input-tierLevelId {
     max-width: 100px;
   }
 
-  #input-note {
+  textarea {
     height: 8rem;
   }
 
@@ -109,8 +118,8 @@
     padding: 0;
   }
 
-  span.required {
-    font-size: 10px;
+  .tooltip-icon {
+    margin-left: 0.5rem;
   }
 
   .check-field {
