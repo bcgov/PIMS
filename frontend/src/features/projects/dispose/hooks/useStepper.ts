@@ -133,7 +133,8 @@ const useStepper = () => {
         return false;
       }
       setCurrentStatus(nextStatus);
-      history.push(`/dispose${nextStatus.route}?projectNumber=${project.projectNumber}`);
+      project.projectNumber !== undefined &&
+        history.push(`/dispose${nextStatus.route}?projectNumber=${project.projectNumber}`);
       return true;
     },
     projectStatusCompleted: (status: IStatus) =>

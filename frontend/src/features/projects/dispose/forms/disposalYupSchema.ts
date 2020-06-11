@@ -46,7 +46,6 @@ export const SelectProjectPropertiesStepYupSchema = Yup.object().shape({
 });
 
 export const ProjectDraftStepYupSchema = Yup.object().shape({
-  projectNumber: Yup.string().required('Required'),
   name: Yup.string().required('Required'),
   description: Yup.string(),
 });
