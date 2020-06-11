@@ -1,3 +1,4 @@
+@import './colors.scss';
 .error {
   color: red;
 }
@@ -10,8 +11,8 @@ div.bootstrap-table {
   .col {
     border-bottom-width: 2px;
     vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-    border: 1px solid #dee2e6;
+    border-bottom: 2px solid $table-color;
+    border: 1px solid $table-color;
     padding: 0.75rem;
   }
   .row {

@@ -1,3 +1,5 @@
+@import '../../colors.scss';
+
 .basemap-container {
   position: absolute;
   bottom: 0;
@@ -6,7 +8,7 @@
   border: 2px solid white;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
   background-color: #ccc;
-  color: #646464;
+  color: $light-variant-color;
   width: 75px;
   height: 75px;
   margin: 1em;

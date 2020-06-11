@@ -1,4 +1,10 @@
+@import '../../../../colors.scss';
 .ReviewApproveStep {
+  .ProjectNotes {
+    .form-group {
+      padding: 0.5rem;
+    }
+  }
   button.edit {
     display: block;
     float: right;
@@ -7,7 +13,7 @@
     display: flex;
   }
   .reviewRequired {
-    border: 2px solid #fcba19;
+    border: 2px solid $accent-color;
   }
   &.container-fluid form div.container-fluid {
     padding-left: 0.5rem;

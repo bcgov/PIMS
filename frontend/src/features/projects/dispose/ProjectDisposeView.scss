@@ -1,5 +1,7 @@
 @import '../../../variables';
 @import '../../../fonts.scss';
+@import '../../../colors.scss';
+
 .ProjectDisposeView {
   font-family: 'BCSans', Fallback, sans-serif;
   text-align: left;
@@ -8,8 +10,8 @@
   height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   max-height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   overflow-y: auto;
-  background-color: #d9d9d9;
-  color: #494949;
+  background-color: $form-background-color;
+  color: $text-color;
 
   .ProjectDisposeLayout {
     .container-fluid {
@@ -23,22 +25,28 @@
 
   h3 {
     font-family: 'BCSans-Bold', Fallback, sans-serif;
-    color: #003366;
+    color: $primary-color;
     font-size: 14px;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 0;
   }
 
+  .UpdateInfoForm.container-fluid,
+  .ProjectDraftForm.container-fluid {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   h2 {
     padding: 0 !important;
     font-size: 20px;
     font-family: 'BCSans', Fallback, sans-serif;
-    color: #494949;
+    color: $text-color;
   }
 
   h1 {
-    color: #38598a;
+    color: $primary-light-color;
     font-size: 20px;
     font-family: 'BCSans-Bold', Fallback, sans-serif;
   }

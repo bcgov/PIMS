@@ -11,8 +11,8 @@ const SresManual: React.FunctionComponent = () => {
         <FiBookOpen size={28} />
       </div>
       <p>
-        SRES <br />
-        Policy Manual
+        <b>Process Manual</b> <br />
+        for the Surplus <br /> Properties Program
       </p>
     </div>
   );
