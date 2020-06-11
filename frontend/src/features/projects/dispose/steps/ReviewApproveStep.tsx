@@ -49,7 +49,7 @@ const handleValidate = (values: IProject) => {
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
-  const { project } = useStepper();
+  const { project, goToDisposePath } = useStepper();
   const { onSubmitReview, canUserEditForm } = useStepForm();
   useEffect(() => {
     fetchProjectTasks('ACCESS-DISPOSAL');
@@ -71,7 +71,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       >
         <Form>
           <h1>Project Application Review</h1>
-          <ReviewApproveForm canEdit={canUserEditForm(project.agencyId)} />
+          <ReviewApproveForm
+            goToAddProperties={() => goToDisposePath('properties/update')}
+            canEdit={canUserEditForm(project.agencyId)}
+          />
           <ReviewApproveActions />
         </Form>
       </Formik>

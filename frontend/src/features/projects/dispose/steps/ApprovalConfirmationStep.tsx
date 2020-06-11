@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Form, Container } from 'react-bootstrap';
-import { IStepProps } from '../interfaces';
+import { IStepProps, DisposeWorkflowStatus } from '../interfaces';
 import {
   useStepForm,
   useStepper,
@@ -15,10 +15,10 @@ import {
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
-  const { onSubmit } = useStepForm();
-  const { project, projectStatusCompleted, currentStatus } = useStepper();
+  const { onSubmit, canUserEditForm } = useStepForm();
+  const { project, projectStatusCompleted, getStatusById, currentStatus } = useStepper();
   let confirmation = false;
-  if (currentStatus && projectStatusCompleted(currentStatus)) {
+  if (currentStatus && projectStatusCompleted(getStatusById(DisposeWorkflowStatus.Approval))) {
     confirmation = true;
   }
   const initialValues = { ...project, confirmation };
@@ -29,10 +29,9 @@ const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validationSchema={ApprovalConfirmationStepSchema}
         innerRef={formikRef}
         onSubmit={onSubmit}
-        enableReinitialize={true}
       >
         <Form>
-          <ApprovalConfirmationForm isReadOnly={isReadOnly} />
+          <ApprovalConfirmationForm isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)} />
           <StepErrorSummary />
         </Form>
       </Formik>

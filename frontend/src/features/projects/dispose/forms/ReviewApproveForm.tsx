@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewApproveForm.scss';
 import {
   ProjectDraftForm,
@@ -15,14 +15,29 @@ import {
 
 import TasksForm from './TasksForm';
 import _ from 'lodash';
+import { useFormikContext } from 'formik';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).
  * @param param0 isReadOnly disable editing
  */
-const ReviewApproveForm = ({ canEdit }: { canEdit: boolean }) => {
+const ReviewApproveForm = ({
+  canEdit,
+  goToAddProperties,
+}: {
+  canEdit: boolean;
+  goToAddProperties: Function;
+}) => {
   const { project } = useStepper();
+  const { errors } = useFormikContext();
   const [isReadOnly, setIsReadOnly] = useState(true);
+  /** Enter edit mode if allowed and there are errors to display */
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      setIsReadOnly(canEdit !== true);
+    }
+  }, [canEdit, errors]);
+
   const infoReviewTasks = _.filter(project.tasks, {
     statusId: ReviewWorkflowStatus.PropertyReview,
   });
@@ -35,15 +50,13 @@ const ReviewApproveForm = ({ canEdit }: { canEdit: boolean }) => {
   return (
     <Fragment>
       <ProjectDraftForm
-        isReadOnly={isReadOnly}
-        setIsReadOnly={setIsReadOnly}
-        canEdit={canEdit}
+        isReadOnly={isReadOnly || !canEdit}
+        setIsReadOnly={canEdit ? setIsReadOnly : undefined}
         title="Project Property Information"
       />
       <UpdateInfoForm
-        isReadOnly={isReadOnly}
-        setIsReadOnly={setIsReadOnly}
-        canEdit={canEdit}
+        isReadOnly={isReadOnly || !canEdit}
+        goToAddProperties={goToAddProperties}
         title=""
       />
       <TasksForm tasks={infoReviewTasks} className="reviewRequired" />

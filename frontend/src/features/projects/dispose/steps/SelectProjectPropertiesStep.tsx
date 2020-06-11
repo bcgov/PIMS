@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import { RootState } from 'reducers/rootReducer';
 import { Formik } from 'formik';
-import { Form } from 'components/common/form';
 import {
   FilterBar,
   IFilterBarState,
@@ -13,14 +12,12 @@ import {
   useStepForm,
   useStepper,
   SelectProjectPropertiesStepYupSchema,
-  StepErrorSummary,
-  ProjectNotes,
+  SelectProjectPropertiesForm,
 } from '..';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import _ from 'lodash';
-import { PropertyListViewSelect } from '../components/PropertyListViewSelect';
 
 /**
  * Form to display two property list views, one for searching/selecting and one to show
@@ -40,7 +37,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
     maxLotSize: '',
   });
   const [pageIndex, setPageIndex] = useState(0);
-  const { onSubmit } = useStepForm();
+  const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -87,18 +84,14 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validateOnBlur={true}
         validationSchema={SelectProjectPropertiesStepYupSchema}
       >
-        {() => (
-          <Form>
-            <PropertyListViewSelect
-              filter={filter}
-              pageIndex={pageIndex}
-              setPageIndex={setPageIndex}
-              field="properties"
-            />
-            <ProjectNotes />
-            <StepErrorSummary />
-          </Form>
-        )}
+        <SelectProjectPropertiesForm
+          {...{
+            pageIndex,
+            setPageIndex,
+            filter,
+            isReadOnly: isReadOnly || !canUserEditForm(project.agencyId),
+          }}
+        />
       </Formik>
     </Container>
   );
