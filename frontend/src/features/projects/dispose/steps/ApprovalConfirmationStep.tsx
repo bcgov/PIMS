@@ -29,7 +29,7 @@ const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validationSchema={ApprovalConfirmationStepSchema}
         innerRef={formikRef}
         onSubmit={onSubmit}
-        enableReinitialize={true}
+        enableReinitialize={false}
       >
         <Form>
           <ApprovalConfirmationForm isReadOnly={isReadOnly} />
