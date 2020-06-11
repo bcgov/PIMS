@@ -66,6 +66,7 @@ interface DetailsOptions<T extends object> {
   icons?: { open: ReactNode; closed: ReactNode };
   onExpand?: (data: T[]) => void;
   checkExpanded: (row: T, state: T[]) => boolean;
+  getRowId: (row: T) => any;
 }
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
@@ -250,10 +251,20 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     }
 
     const handleExpandClick = (data: T) => {
-      if (expandedRows.find(x => x === data)) {
-        setExpandedRows(expandedRows.filter(x => x !== data));
+      let expanded = expandedRows;
+      if (
+        props.detailsPanel !== undefined &&
+        props.detailsPanel.checkExpanded(data, expandedRows)
+      ) {
+        expanded = expandedRows.filter(
+          x => props.detailsPanel?.getRowId(x) !== props.detailsPanel?.getRowId(data),
+        );
       } else {
-        setExpandedRows([...expandedRows, data]);
+        expanded = [...expandedRows, data];
+      }
+      setExpandedRows(expanded);
+      if (props.detailsPanel && props.detailsPanel.onExpand && expanded.length > 0) {
+        props.detailsPanel.onExpand(expanded);
       }
     };
 
@@ -325,10 +336,10 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   };
 
   const handleExpandAll = () => {
-    if (expandedRows.length !== props.data.length) {
-      setExpandedRows(props.data);
-    } else {
-      setExpandedRows([]);
+    let expanded = expandedRows.length !== props.data.length ? props.data : [];
+    setExpandedRows(expanded);
+    if (props.detailsPanel && props.detailsPanel.onExpand && expanded.length > 0) {
+      props.detailsPanel.onExpand(expanded);
     }
   };
 

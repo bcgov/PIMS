@@ -30,7 +30,7 @@ const testData = {
         {
           id: 1,
           propertyTypeId: 1,
-          name:
+          description:
             'Gym, teaching kitchen, energy lab, greenhouse. Building full name: Center for Excellence in Sustainability',
           classification: 'Core Operational',
           agencyId: 0,
