@@ -131,14 +131,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         // For now we'll just calculate it.
         setData(
           data.items.map((project: IProject) => {
-            project.sumEstimated = project.properties.reduce(
-              (sum: number, property) => sum + property.estimated,
-              0,
-            );
-            project.sumNetbook = project.properties.reduce(
-              (sum: number, property) => sum + property.netBook,
-              0,
-            );
             return project;
           }),
         );

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Dal.Entities
 {
@@ -88,6 +89,18 @@ namespace Pims.Dal.Entities
         /// get/set - When the project was denied.
         /// </summary>
         public DateTime? DeniedOn { get; set; }
+
+        /// <summary>
+        /// get/set - The netbook value which is the sum of the properties.
+        /// </summary>
+        [NotMapped]
+        public decimal NetBook { get; set; }
+
+        /// <summary>
+        /// get/set - The estimated value which is the sum of the properties.
+        /// </summary>
+        [NotMapped]
+        public decimal Estimated { get; set; }
 
         /// <summary>
         /// get - A collection of properties associated to this project.

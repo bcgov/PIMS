@@ -58,6 +58,23 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
+            // TODO: Update the View to include the Project.Id so that we can do a group by on that value instead of multiple separate requests.
+            foreach (var project in items)
+            {
+                var propertyIds = this.Context.ProjectProperties.Where(pp => pp.ProjectId == project.Id).Select(pp => new { pp.PropertyType, pp.ParcelId, pp.BuildingId });
+                var parcelIds = propertyIds.Where(p => p.PropertyType == PropertyTypes.Land).Select(p => p.ParcelId);
+                var buildingIds = propertyIds.Where(p => p.PropertyType == PropertyTypes.Building).Select(p => p.BuildingId);
+                var sums = from p in this.Context.Properties
+                              where (p.PropertyTypeId == PropertyTypes.Land
+                                && parcelIds.Contains(p.Id))
+                                || (p.PropertyTypeId == PropertyTypes.Building
+                                && buildingIds.Contains(p.Id))
+                              group p by 1 into g
+                              select new { SumNetBook = g.Sum(x => x.NetBook), SumEstimated = g.Sum(x => x.Estimated) };
+                project.NetBook = sums.FirstOrDefault()?.SumNetBook ?? 0;
+                project.Estimated = sums.FirstOrDefault()?.SumEstimated ?? 0;
+            }
+
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
