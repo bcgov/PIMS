@@ -181,7 +181,7 @@ export interface IProjectProperty {
 }
 
 export const initialValues: any = {
-  name: 'Temp',
+  name: '',
   note: '',
   description: '',
   properties: [],

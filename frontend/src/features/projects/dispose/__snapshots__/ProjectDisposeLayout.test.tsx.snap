@@ -84,7 +84,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
     className="step-content container-fluid"
   >
     <div
-      className="sc-AxirZ jzzwlA"
+      className="sc-AxjAm jGlSVf"
     >
       <button
         className="btn btn-primary"
