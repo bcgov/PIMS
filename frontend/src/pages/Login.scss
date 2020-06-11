@@ -1,4 +1,5 @@
 @import '../styles.scss';
+@import '../colors.scss';
 
 .unauth {
   font-size: 24px;
@@ -19,12 +20,12 @@
     font-family: 'BCSans', Fallback, sans-serif;
     font-weight: 700;
     font-size: 24px;
-    color: #494949;
+    color: $text-color;
   }
 
   p {
     font-size: 16px;
-    color: #494949;
+    color: $text-color;
     font-family: 'BCSans', Fallback, sans-serif;
     line-height: 130%;
     width: 75%;
@@ -40,6 +41,6 @@
 
   .border-dark {
     border-color: $primary-color !important;
-    color: #494949 !important;
+    color: $text-color !important;
   }
 }

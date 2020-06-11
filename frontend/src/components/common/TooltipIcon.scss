@@ -1,6 +1,12 @@
+@import '../../colors.scss';
 .tooltip-icon {
-  color: #3b99fc;
+  color: $icon-light-color;
 }
-.tooltip-inner {
-  max-width: 25rem;
+
+.tooltip {
+  white-space: pre-wrap;
+  .tooltip-inner {
+    text-align: left;
+    max-width: 25rem;
+  }
 }

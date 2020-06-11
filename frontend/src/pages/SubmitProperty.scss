@@ -1,4 +1,5 @@
 @import '../variables';
+@import '../colors';
 
 .submitProperty {
   position: relative;
@@ -33,12 +34,12 @@
       margin-left: 0.5rem;
       width: 75px;
       height: 38px;
-      border: 2px solid #428bca;
+      border: 2px solid $secondary-variant-color;
       background-color: #ffffff;
       font-family: Arial;
       font-size: 16px;
-      color: #428bca;
-      text-decoration: none solid rgb(66, 139, 202);
+      color: $secondary-variant-color;
+      text-decoration: none solid $secondary-variant-color;
       text-align: center;
     }
     :disabled {

@@ -33,9 +33,11 @@ const UpdateInfoForm = ({
 
   return (
     <Container fluid className="UpdateInfoForm">
-      <Form.Row style={{ alignItems: 'unset' }}>
-        <h3 className="col-md-8">{title ?? 'Update Info'}</h3>
-      </Form.Row>
+      {title && (
+        <Form.Row style={{ alignItems: 'unset' }}>
+          <h3 className="col-md-8">{title}</h3>
+        </Form.Row>
+      )}
       <Form.Row>
         <Form.Label column md={2}>
           Assign Tier&nbsp;
