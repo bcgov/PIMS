@@ -14,8 +14,7 @@ namespace Pims.Dal.Services
         Project Add(Project project);
         Project Update(Project project);
         void Remove(Project project);
-        Project SetStatus(Project project, Workflow workflow, ProjectStatus status);
-        Project SetStatus(Project project, string workflowCode, string statusCode);
-        Project SetStatus(Project project, string workflowCode, int statusId);
+        Project SetStatus(Project project, Workflow workflow);
+        Project SetStatus(Project project, string workflowCode);
     }
 }

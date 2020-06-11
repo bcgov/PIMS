@@ -10,6 +10,8 @@ using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Project.Controllers
 {
@@ -154,7 +156,10 @@ namespace Pims.Api.Areas.Project.Controllers
             if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
             if (String.IsNullOrWhiteSpace(statusCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(statusCode));
 
-            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode, statusCode);
+            var workflow = _pimsService.Workflow.Get(workflowCode);
+            var status = workflow.Status.FirstOrDefault(s => s.Status.Code == statusCode) ?? throw new KeyNotFoundException();
+            model.StatusId = status.StatusId;
+            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
 
@@ -175,7 +180,8 @@ namespace Pims.Api.Areas.Project.Controllers
         {
             if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
 
-            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode, statusId);
+            model.StatusId = statusId;
+            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
         #endregion

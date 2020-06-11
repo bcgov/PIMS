@@ -1215,6 +1215,506 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
         }
         #endregion
+
+        #region SetStatus
+        [Fact]
+        public void SetStatus_WithCode_InvalidWorkflow_KeyNotFoundException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = "code";
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_WithCode_InvalidStatus_KeyNotFoundException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_WithCode_NullProject_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            var statusCode = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => service.SetStatus(null, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_NoProject_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => service.SetStatus(null, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_NoRowVersion_RowVersionMissingException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            project.RowVersion = null;
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<RowVersionMissingException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_NoPermission_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_NullWorkflow_ArgumentNullException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var statusCode = init.ProjectStatus.Find(6); // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => service.SetStatus(project, (Entity.Workflow)null));
+        }
+
+        [Fact]
+        public void SetStatus_InvalidProject_KeyNotFoundException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+
+            var find = init.CreateProject(2, 1);
+            find.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(find, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_WrongAgency_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(2);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_InvalidTransition_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+
+            // Act
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_IncompleteTasks_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            var approval = init.ProjectStatus.Find(5);
+            project.StatusId = approval.Id; // Approval Status
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var deny = init.ProjectStatus.First(s => s.Code == "DE");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
+            var task = init.CreateTask(1, "Documentation", approval);
+            task.IsOptional = false;
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = deny.Id; // Deny Status
+
+            // Act
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_Deny_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var deny = init.ProjectStatus.First(s => s.Code == "DE");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = deny.Id; // Deny Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(deny.Id);
+            result.Status.Should().Be(deny);
+            result.DeniedOn.Should().NotBeNull();
+            parcel.ProjectNumber.Should().BeNull();
+        }
+
+        [Fact]
+        public void SetStatus_Submit_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var submit = init.ProjectStatus.First(s => s.Code == "SU");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = submit.Id; // Submit Status
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_Submit_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeRequest).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.ProjectNumber = "TEST";
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var submit = init.ProjectStatus.First(s => s.Code == "SU");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
+            init.SaveChanges();
+
+            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}", NumberFormat = "SPP-{0:00000}" } });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = submit.Id; // Submit Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(submit.Id);
+            result.Status.Should().Be(submit);
+            result.DeniedOn.Should().BeNull();
+            result.SubmittedOn.Should().NotBeNull();
+            result.ProjectNumber.Should().StartWith("SPP-");
+            parcel.ProjectNumber.Should().Be(project.ProjectNumber);
+        }
+
+        [Fact]
+        public void SetStatus_ApproveERP_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = approve.Id; // Submit Status
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_ApproveERP_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = false;
+            project.AddProperty(parcel);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = approve.Id; // Submit Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+        }
+
+        [Fact]
+        public void SetStatus_ApproveSPL_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = approve.Id; // Submit Status
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
+        public void SetStatus_ApproveSPL_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = true;
+            project.AddProperty(parcel);
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = approve.Id; // Submit Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+        #endregion
         #endregion
     }
 }
