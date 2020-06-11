@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { columns } from './columns';
 import { Table } from 'components/Table';
-import { IProjectProperty } from '../interfaces';
+import { IProperty } from '../../dispose';
 
 interface IProps {
-  data: IProjectProperty[];
+  data: IProperty[];
 }
 
 export const Properties: React.FC<IProps> = ({ data }) => {
   return (
-    <Table<IProjectProperty>
+    <Table<IProperty>
       name="nestedPropertiesTable"
       columns={columns}
       data={data}

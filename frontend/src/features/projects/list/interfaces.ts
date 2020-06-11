@@ -1,24 +1,4 @@
-export interface IProjectProperty {
-  id: number;
-  propertyTypeId: number;
-  classification: string;
-  name: string;
-  agencyId: number;
-  agency: string;
-  agencyCode: string;
-  subAgency?: string;
-  subAgencyCode?: string;
-  municipality: string;
-  address: string;
-  city: string;
-  estimated: number;
-  netBook: number;
-  assessed: number;
-  landArea: number;
-  parcelId: number;
-  zoning: string;
-  zoningPotential: string;
-}
+import { IProperty } from '../dispose';
 
 /**
  * IProject interface represents the model used for searching projects.
@@ -36,7 +16,7 @@ export interface IProject {
   agencyId: string;
   agency: string;
   subAgency: string;
-  properties: IProjectProperty[];
+  properties: IProperty[];
   updatedOn: string;
   updatedById: string;
   updatedBy: string;
