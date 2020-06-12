@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
+using System.Runtime.Serialization;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -44,6 +45,32 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new Uri("http://host/api/projects?StatusId=1") },
                 new object[] { new Uri("http://host/api/projects?TierLevelId=1") }
             };
+
+        public static IEnumerable<object[]> WorkflowCodes =>
+            new List<object[]>
+            {
+                new object[] { "", "" },
+                new object[] { null, "" },
+                new object[] { null, null },
+                new object[] { "", null },
+                new object[] { " ", "" },
+                new object[] { " ", " " },
+                new object[] { "", " " },
+                new object[] { "code", "" },
+                new object[] { "code", " " },
+                new object[] { "code", null },
+                new object[] { "", "code" },
+                new object[] { " ", "code" },
+                new object[] { null, "code" }
+            };
+
+        public static IEnumerable<object[]> WorkflowIds =>
+            new List<object[]>
+            {
+                new object[] { "", 1 },
+                new object[] { " ", 1 },
+                new object[] { null, 1 }
+            };
         #endregion
 
         #region Constructors
@@ -55,7 +82,7 @@ namespace Pims.Api.Test.Controllers
         #region Tests
         #region GetProject
         [Fact]
-        public void GetProject_Success()
+        public void GetProject_ByNumber_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -75,6 +102,29 @@ namespace Pims.Api.Test.Controllers
             Assert.Null(actionResult.StatusCode);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Project.Get(project.ProjectNumber), Times.Once());
+        }
+
+        [Fact]
+        public void GetProject_ById_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1, 1);
+            service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
+
+            // Act
+            var result = controller.GetProject(project.Id);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            Assert.Null(actionResult.StatusCode);
+            Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Project.Get(project.Id), Times.Once());
         }
 
         [Fact]
@@ -191,6 +241,126 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Project.Remove(It.IsAny<Entity.Project>()), Times.Once());
+        }
+        #endregion
+
+        #region SetStatus
+        [Fact]
+        public void SetStatus_WithId_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1);
+            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            var model = mapper.Map<Model.ProjectModel>(project);
+            var workflowCode = "code";
+            var statusId = 1;
+
+            // Act
+            var result = controller.SetStatus(workflowCode, statusId, model);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), workflowCode), Times.Once());
+        }
+
+        [Theory]
+        [MemberData(nameof(WorkflowIds))]
+        public void SetStatus_WithId_ArgumentException(string workflowCode, int statusId)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1);
+            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            var model = mapper.Map<Model.ProjectModel>(project);
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => controller.SetStatus(workflowCode, statusId, model));
+        }
+
+        [Fact]
+        public void SetStatus_InvalidStatus_KeyNotFoundException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1);
+            var workflow = EntityHelper.CreateWorkflow(1, "DRAFT", "code");
+            var status = EntityHelper.CreateProjectStatus("DRAFT", "code");
+            workflow.Status.Add(new Entity.WorkflowProjectStatus(workflow, status));
+            service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
+            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            var model = mapper.Map<Model.ProjectModel>(project);
+            var workflowCode = "code";
+            var statusCode = "test";
+
+            // Act
+            // Assert
+            Assert.Throws<KeyNotFoundException>(() => controller.SetStatus(workflowCode, statusCode, model));
+        }
+
+        [Fact]
+        public void SetStatus_WithCode_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1);
+            var workflow = EntityHelper.CreateWorkflow(1, "DRAFT", "code");
+            var status = EntityHelper.CreateProjectStatus("DRAFT", "code");
+            workflow.Status.Add(new Entity.WorkflowProjectStatus(workflow, status));
+            service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
+            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            var model = mapper.Map<Model.ProjectModel>(project);
+            var workflowCode = "code";
+            var statusCode = "code";
+
+            // Act
+            var result = controller.SetStatus(workflowCode, statusCode, model);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), workflowCode), Times.Once());
+        }
+
+        [Theory]
+        [MemberData(nameof(WorkflowCodes))]
+        public void SetStatus_WithCode_ArgumentException(string workflowCode, string statusCode)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<DisposeController>(Permissions.ProjectDelete);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var project = EntityHelper.CreateProject(1);
+            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            var model = mapper.Map<Model.ProjectModel>(project);
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => controller.SetStatus(workflowCode, statusCode, model));
         }
         #endregion
         #endregion

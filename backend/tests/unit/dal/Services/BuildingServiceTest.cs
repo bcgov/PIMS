@@ -2,7 +2,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
-using Pims.Core.Helpers;
 using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
@@ -11,7 +10,6 @@ using Pims.Dal.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 
