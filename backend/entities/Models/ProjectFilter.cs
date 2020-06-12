@@ -39,6 +39,12 @@ namespace Pims.Dal.Entities.Models
         public bool? CreatedByMe { get; set; }
 
         /// <summary>
+        /// get/set - Filter by workflow - ACCESS-DISPOSAL.
+        /// </summary>
+        /// <value></value>
+        public bool? AccessDisposal { get; set; }
+
+        /// <summary>
         /// get/set - Only limit to projects created by current user.
         /// </summary>
         /// <value></value>
@@ -71,6 +77,7 @@ namespace Pims.Dal.Entities.Models
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
             this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
+            this.AccessDisposal = filter.GetBoolNullValue(nameof(this.AccessDisposal));
             this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
         }
