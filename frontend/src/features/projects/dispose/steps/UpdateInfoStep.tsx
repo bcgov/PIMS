@@ -16,7 +16,7 @@ import {
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
-  const { onSubmit } = useStepForm();
+  const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
   if (!project) {
     // Step does not allow creation of new properties
@@ -32,7 +32,10 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
         onSubmit={onSubmit}
       >
         <Form>
-          <UpdateInfoForm isReadOnly={isReadOnly} title="Update Info" />
+          <UpdateInfoForm
+            isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
+            title="Update Info"
+          />
           <StepErrorSummary />
         </Form>
       </Formik>

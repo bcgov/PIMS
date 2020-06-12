@@ -41,10 +41,10 @@ export const getNextWorkflowStatus = (
  */
 export const isStatusCompleted = (
   workflowStatuses: IStatus[],
-  status: IStatus,
+  status?: IStatus,
   project?: IProject,
 ): boolean => {
-  if (!project) {
+  if (project === undefined || status === undefined) {
     return false;
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
@@ -90,7 +90,8 @@ const getLastCompletedStatus = (
   }
   const furthestCompletedStep = _.findLast(workflowStatuses, { id: project?.statusId });
   if (
-    currentStatus.sortOrder >= (furthestCompletedStep?.sortOrder ?? 0) ||
+    (currentStatus?.sortOrder !== undefined &&
+      currentStatus.sortOrder >= (furthestCompletedStep?.sortOrder ?? 0)) ||
     furthestCompletedStep?.sortOrder === 0
   ) {
     return currentStatus;
@@ -137,14 +138,16 @@ const useStepper = () => {
         history.push(`/dispose${nextStatus.route}?projectNumber=${project.projectNumber}`);
       return true;
     },
-    projectStatusCompleted: (status: IStatus) =>
+    projectStatusCompleted: (status?: IStatus) =>
       isStatusCompleted(workflowStatuses, status, project),
     canGoToStatus: (status: IStatus) => isStatusNavigable(workflowStatuses, status, project),
     getLastCompletedStatus: () => getLastCompletedStatus(workflowStatuses, currentStatus, project),
-    goToStep: (statusId: number) =>
-      history.push(
-        `/dispose${workflowStatuses[statusId].route}?projectNumber=${project.projectNumber}`,
-      ),
+    goToStep: (statusId: number) => {
+      const status: IStatus | undefined = _.find(workflowStatuses, { id: statusId });
+      history.push(`/dispose${status?.route}?projectNumber=${project.projectNumber}`);
+    },
+    goToDisposePath: (path: string) =>
+      history.push(`./${path}?projectNumber=${project.projectNumber}`),
   };
 };
 export default useStepper;

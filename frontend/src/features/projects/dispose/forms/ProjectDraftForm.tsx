@@ -63,7 +63,7 @@ const ProjectDraftForm = ({
           outerClassName="col-md-10"
         />
       </Form.Row>
-      {isReadOnly === undefined && <ProjectNotes />}
+      <ProjectNotes />
     </Container>
   );
 };

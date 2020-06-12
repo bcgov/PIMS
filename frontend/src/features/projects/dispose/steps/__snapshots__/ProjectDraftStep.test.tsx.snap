@@ -47,11 +47,6 @@ exports[`renders correctly 1`] = `
             />
           </span>
         </div>
-        <div
-          className="sc-AxhCb MerHY col-md-7"
-        >
-          This is a temporary number during draft state. A project number will be assigned when you submit this application.
-        </div>
       </div>
       <div
         className="form-row"
@@ -75,6 +70,7 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-control"
+              disabled={true}
               id="input-name"
               name="name"
               onBlur={[Function]}
@@ -102,6 +98,7 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-control"
+              disabled={true}
               id="input-description"
               name="description"
               onBlur={[Function]}
