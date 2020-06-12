@@ -2,8 +2,8 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent, Icon } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Marker, Popup, WMSTileLayer } from 'react-leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
+import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -14,6 +14,10 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom, resetMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
+import { BBox } from 'geojson';
+import { createPoints, PointFeature, asProperty } from './mapUtils';
+import PointClusterer from './PointClusterer';
+import { ICluster } from 'hooks/useSupercluster';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -29,7 +33,7 @@ export type MapViewportChangeEvent = {
   };
 };
 
-type MapProps = {
+export type MapProps = {
   lat: number;
   lng: number;
   zoom?: number;
@@ -50,7 +54,7 @@ type MapProps = {
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
-  zoom,
+  zoom: zoomProp,
   properties,
   agencies,
   propertyClassifications,
@@ -64,6 +68,7 @@ const Map: React.FC<MapProps> = ({
   interactive = true,
   showParcelBoundaries = true,
 }) => {
+  // state and refs
   const dispatch = useDispatch();
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
@@ -79,34 +84,19 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
 
-  // different markers for building and parcel
-  var greenIcon = new Icon({
-    iconUrl: require('assets/images/marker-icon-2x-green.png'),
-    shadowUrl: require('assets/images/marker-shadow.png'),
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  var blueIcon = new Icon({
-    iconUrl: require('assets/images/marker-icon-2x-blue.png'),
-    shadowUrl: require('assets/images/marker-shadow.png'),
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoom;
+  const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
     dispatch(resetMapViewZoom());
   }, [dispatch]);
+
+  // TODO: refactor various zoom settings
+  const [bounds, setBounds] = useState<BBox>();
+  const [zoom, setZoom] = useState(lastZoom);
 
   if (!interactive) {
     const map = mapRef.current?.leafletElement;
@@ -169,6 +159,19 @@ const Map: React.FC<MapProps> = ({
     setActiveBasemap(current);
   };
 
+  const onSingleMarkerClick = (point: PointFeature) => {
+    onMarkerClick?.(asProperty(point));
+  };
+
+  const onClusterClick = (cluster: ICluster, expansionZoom: number) => {
+    // zoom to cluster
+    const [longitude, latitude] = cluster?.geometry?.coordinates;
+    const leafletMap = mapRef?.current?.leafletElement;
+    leafletMap?.setView([latitude, longitude], expansionZoom, {
+      animate: true,
+    });
+  };
+
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
     axios.get('/basemaps.json').then(result => {
@@ -177,21 +180,27 @@ const Map: React.FC<MapProps> = ({
     });
   }, []);
 
-  // we need to namespace the keys as IDs are not enough here.
-  // the same ID could be found on both the parcel collection and building collection
-  const generateKey = (p: IProperty) => `${p.propertyTypeId === 0 ? 'parcel' : 'building'}-${p.id}`;
+  // load and prepare data
+  const points = createPoints(properties);
 
-  const renderMarker = (p: IProperty) => {
-    const icon = p.propertyTypeId === 0 ? greenIcon : blueIcon;
-    return (
-      <Marker
-        key={generateKey(p)}
-        position={[p.latitude, p.longitude]}
-        onClick={(e: any) => onMarkerClick?.(p)}
-        icon={icon}
-      />
-    );
+  // get map bounds
+  const updateMap = () => {
+    if (!mapRef?.current) {
+      return;
+    }
+    const b = mapRef.current.leafletElement.getBounds();
+    setBounds([
+      b.getSouthWest().lng,
+      b.getSouthWest().lat,
+      b.getNorthEast().lng,
+      b.getNorthEast().lat,
+    ]);
+    setZoom(mapRef.current.leafletElement.getZoom());
   };
+
+  useEffect(() => {
+    updateMap();
+  }, []);
 
   const renderPopup = (item: IPropertyDetail) => {
     const { propertyTypeId, parcelDetail } = item;
@@ -214,6 +223,7 @@ const Map: React.FC<MapProps> = ({
     );
   };
 
+  // return map
   return (
     <Container fluid className="px-0">
       {!disableMapFilterBar ? (
@@ -246,6 +256,7 @@ const Map: React.FC<MapProps> = ({
             onpreclick={onMapClick}
             closePopupOnClick={interactive}
             onzoomend={onZoomEnd}
+            onmoveend={updateMap}
           >
             {activeBasemap && (
               <TileLayer
@@ -263,7 +274,13 @@ const Map: React.FC<MapProps> = ({
                 zIndex={10}
               />
             )}
-            {properties && properties.map(renderMarker)}
+            <PointClusterer
+              points={points}
+              zoom={zoom}
+              bounds={bounds}
+              onMarkerClick={onSingleMarkerClick}
+              onClusterClick={onClusterClick}
+            />
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>
         </Col>
