@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { render } from '@testing-library/react';
+import { render, wait, fireEvent } from '@testing-library/react';
 import { DisposeWorkflowStatus, IProjectTask } from '../interfaces';
 
 const mockAxios = new MockAdapter(axios);
@@ -21,8 +21,8 @@ const history = createMemoryHistory();
 const tasks: IProjectTask[] = [
   {
     projectNumber: 1,
-    isCompleted: true,
-    isOptional: true,
+    isCompleted: false,
+    isOptional: false,
     completedOn: new Date(),
     taskId: 1,
     name: 'task-0',
@@ -33,8 +33,8 @@ const tasks: IProjectTask[] = [
   },
   {
     projectNumber: 1,
-    isCompleted: true,
-    isOptional: true,
+    isCompleted: false,
+    isOptional: false,
     completedOn: new Date(),
     taskId: 2,
     name: 'task-1',
@@ -67,4 +67,13 @@ it('renders correct labels', () => {
   const { getByText } = render(uiElement);
   expect(getByText('Task #1')).toBeInTheDocument();
   expect(getByText('Task #2')).toBeInTheDocument();
+});
+
+it('documentation validation works', async () => {
+  const { getAllByText, container } = render(uiElement);
+  const form = container.querySelector('form');
+  await wait(() => {
+    fireEvent.submit(form!);
+  });
+  expect(getAllByText('Required')).toHaveLength(2);
 });
