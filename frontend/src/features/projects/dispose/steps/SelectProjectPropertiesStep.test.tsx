@@ -7,6 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+import { ProjectActions } from 'constants/actionTypes';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -14,6 +15,9 @@ const history = createMemoryHistory();
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+  [reducerTypes.NETWORK]: {
+    [ProjectActions.GET_PROJECT]: {},
+  },
 });
 
 const uiElement = (

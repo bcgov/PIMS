@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from '../interfaces';
+import { ReviewWorkflowStatus } from '../interfaces';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -40,8 +40,6 @@ export const ReviewApproveActions: React.FC = () => {
             variant="secondary"
             style={{ marginLeft: 10 }}
             onClick={() => {
-              if (values.statusId === DisposeWorkflowStatus.Submitted)
-                values.statusId = ReviewWorkflowStatus.PropertyReview;
               submitForm();
             }}
           >

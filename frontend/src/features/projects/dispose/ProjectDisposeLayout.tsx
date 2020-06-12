@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './ProjectDisposeView.scss';
 import { Container, Spinner } from 'react-bootstrap';
-import { Route, match as Match, useHistory, Redirect } from 'react-router-dom';
+import { Route, match as Match, useHistory, Redirect, Switch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
@@ -11,8 +11,9 @@ import {
   useStepper,
   StepActions,
   IStatus,
+  clearProject,
   IProject,
-  SelectProjectPropertiesPage,
+  useStepForm,
 } from '.';
 import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -20,9 +21,13 @@ import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
 import ReviewApproveStep from './steps/ReviewApproveStep';
-import { createProject, fetchProject } from 'features/projects/dispose/projectsActionCreator';
+import {
+  fetchProject,
+  updateWorkflowStatus,
+} from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
-import { clearProject } from './slices/projectSlice';
+import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
+import SelectProjectPropertiesPage from './components/SelectProjectPropertiesPage';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -32,7 +37,8 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const history = useHistory();
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
-  const { nextStep, project, getNextStep, currentStatus, setCurrentStatus } = useStepper();
+  const { goToNextStep, project, getNextStep, currentStatus, setCurrentStatus } = useStepper();
+  const { onSave, addOrUpdateProject } = useStepForm();
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
@@ -41,16 +47,16 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const projectNumber = queryString.parse(query).projectNumber;
   const historyReplace = history.replace;
 
-  const preDraftValues: any = (formikRef: any) => {
-    return {
-      name: formikRef.current?.values.name,
-      note: formikRef.current?.values.note,
-      description: formikRef.current?.values.description,
-      properties: [],
-      tierLevelId: 1,
-      statusId: 2,
-      agencyId: 0,
-      tasks: [],
+  const updateProjectStatus = (
+    project: IProject,
+    nextStepId: number,
+    workflowStatusCode?: string,
+  ) => {
+    if (project.statusId === currentStatus.id) {
+      return dispatch(updateWorkflowStatus(project, nextStepId, workflowStatusCode) as any).then(
+        (project: IProject) => {
+          goToNextStep(project);
+          if (nextStepId === ReviewWorkflowStatus.PropertyReview) {
     };
   };
 
@@ -64,20 +70,40 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
             );
           },
         );
-      }
     });
   };
 
   const onNext = () => {
     // will only call when no project no. present
     !projectNumber && createSPP(1);
-    formikRef.current?.submitForm().then((value: any) => {
-      if (!formikRef?.current?.errors || !Object.keys(formikRef?.current?.errors).length) {
-        // do not go to the next step if the form has validation errors.
-        const hasNextStep = nextStep();
-        if (!hasNextStep) {
-          history.push('/project/completed');
+            history.push('/project/completed');
+          }
+          return project;
+        },
+      );
+    }
+    goToNextStep(project);
+    return Promise.resolve(project);
+  };
+
+  const onNext = () => {
+    formikRef.current?.submitForm().then(() => {
+      const values = formikRef?.current?.values;
+      const errors = formikRef?.current?.errors;
+      // do not go to the next step if the form has validation errors.
+      if (errors === undefined || !Object.keys(errors).length) {
+        let nextStepId = getNextStep(currentStatus)?.id;
+        let workflowStatusCode: string | undefined = undefined;
+        if (nextStepId === undefined) {
+          nextStepId = ReviewWorkflowStatus.PropertyReview;
+          workflowStatusCode = 'ACCESS-DISPOSAL';
         }
+
+        addOrUpdateProject(values, formikRef).then((project: IProject) =>
+          updateProjectStatus(project, nextStepId!, workflowStatusCode).then((project: IProject) =>
+            dispatch(fetchProject(project.projectNumber)),
+          ),
+        );
       }
     });
   };
@@ -86,20 +112,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
   };
 
-  const handleSubmit = () => {
-    if (!projectNumber) {
-      createSPP(0);
-    } else {
-      formikRef.current?.handleSubmit();
-    }
-  };
-
   useEffect(() => {
     let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
     if (setCurrentStatus) setCurrentStatus(statusAtRoute);
-    if (statusAtRoute?.route !== undefined && project.projectNumber !== undefined) {
-      historyReplace(`/dispose${statusAtRoute?.route}?projectNumber=${project.projectNumber}`);
-    }
   }, [
     location.pathname,
     historyReplace,
@@ -108,17 +123,14 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     project.projectNumber,
   ]);
 
-  //If the current route isn't set, set based on the project status.
+  //If the current route isn't set, set based on the query project status.
   useEffect(() => {
-    if (
-      location.pathname === '/dispose' &&
-      project.status?.route !== undefined &&
-      projectNumber !== undefined
-    ) {
-      historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
-    } else if (location.pathname === '/dispose') {
-      historyReplace('/dispose/projects/draft');
-      dispatch(clearProject());
+    if (location.pathname === '/dispose') {
+      if (project.status?.route !== undefined && projectNumber !== undefined) {
+        historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
+      } else {
+        dispatch(clearProject());
+      }
     }
   }, [
     historyReplace,
@@ -126,8 +138,8 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     project.projectNumber,
     location.pathname,
     match.url,
-    projectNumber,
     dispatch,
+    projectNumber,
   ]);
 
   useEffect(() => {
@@ -139,7 +151,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   if (projectNumber !== null && projectNumber !== undefined && getProjectRequest?.error) {
     throw Error(`Unable to load project number ${projectNumber}`);
   }
-
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
@@ -154,27 +165,37 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              <Route
-                exact
-                path="/dispose/projects/assess/properties"
-                component={ReviewApproveStep}
-              />
-              <Route
-                path="/dispose/projects/assess/properties/update"
-                component={SelectProjectPropertiesPage}
-              />
-              {projectWorkflowComponents.map(wfc => (
+              <Switch>
+                {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
                 <Route
-                  key={wfc.workflowStatus.toString()}
-                  path={getComponentPath(wfc)}
-                  render={() => <wfc.component formikRef={formikRef} />}
+                  exact
+                  path="/dispose/projects/assess/properties"
+                  component={ReviewApproveStep}
                 />
-              ))}
-              {currentStatus && (
+                <Route
+                  path="/dispose/projects/assess/properties/update"
+                  component={SelectProjectPropertiesPage}
+                />
+                {projectWorkflowComponents.map(wfc => (
+                  <Route
+                    key={wfc.workflowStatus.toString()}
+                    path={getComponentPath(wfc)}
+                    render={() => <wfc.component formikRef={formikRef} />}
+                  />
+                ))}
+                <Route
+                  exact
+                  path="/dispose"
+                  component={() => <Redirect to="/dispose/projects/draft" />}
+                />
+                <Route exact path="/dispose/*" component={() => <Redirect to="page-not-found" />} />
+              </Switch>
+              {currentStatus !== undefined && (
                 <StepActions
                   getNextStep={getNextStep}
-                  onSave={() => handleSubmit()}
+                  onSave={() => onSave(formikRef)}
                   onNext={onNext}
+                  saveDisabled={currentStatus.id === DisposeWorkflowStatus.Approval}
                 />
               )}
             </Container>
@@ -183,7 +204,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
               <Spinner animation="border"></Spinner>
             </Container>
           )}
-          <Route title="*" path="dispose/*" component={() => <Redirect to="/page-not-found" />} />
         </Container>
       ) : null}
     </>

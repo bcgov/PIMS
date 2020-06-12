@@ -148,7 +148,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
 };
 
 export const toApiProject = (project: IProject) => {
-  const projectProperties = project.properties.map(property => {
+  const projectProperties = project.properties?.map(property => {
     const projectProperty: IProjectProperty = {
       id: property.projectPropertyId,
       projectNumber: project.projectNumber,
