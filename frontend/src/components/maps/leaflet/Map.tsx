@@ -17,7 +17,7 @@ import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
-import { ICluster } from 'hooks';
+import { ICluster } from 'hooks/useSupercluster';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
