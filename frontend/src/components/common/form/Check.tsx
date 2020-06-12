@@ -53,6 +53,7 @@ export const Check: React.FC<CheckProps> = ({
   const { values, handleChange, errors, touched } = useFormikContext();
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
+  const checked = getIn(values, field);
   const asElement: any = is || 'input';
   return (
     <Form.Group
@@ -73,10 +74,10 @@ export const Check: React.FC<CheckProps> = ({
           required={required}
           disabled={disabled}
           custom={custom}
-          defaultChecked={getIn(values, field)}
+          defaultChecked={checked}
           isInvalid={!!touch && !!error}
           {...rest}
-          value={getIn(values, field)}
+          value={checked}
           placeholder={placeholder}
           onChange={handleChange}
         />

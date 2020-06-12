@@ -12,6 +12,7 @@ import {
   StepActions,
   IStatus,
   IProject,
+  SelectProjectPropertiesPage,
   saveProject,
 } from '.';
 import { FormikValues } from 'formik';
@@ -23,6 +24,7 @@ import ReviewApproveStep from './steps/ReviewApproveStep';
 import ProjectDraftStep from './steps/ProjectDraftStep';
 import { createProject, fetchProject } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
+import { clearProject } from './slices/projectSlice';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -75,11 +77,15 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       tasks: [],
     };
     if (!projectNumber) {
-      await (dispatch(createProject(preDraftValues)) as any).then((project: IProject) => {
-        dispatch(saveProject(project));
-        historyReplace(
-          `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
-        );
+      await formikRef.current?.validateForm().then(async (errors: any) => {
+        if (Object.keys(errors).length === 0) {
+          await (dispatch(createProject(preDraftValues)) as any).then((project: IProject) => {
+            dispatch(saveProject(project));
+            historyReplace(
+              `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
+            );
+          });
+        }
       });
     } else {
       formikRef.current?.handleSubmit();
@@ -105,11 +111,22 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     if (
       location.pathname === '/dispose' &&
       project.status?.route !== undefined &&
-      project.projectNumber !== undefined
+      projectNumber !== undefined
     ) {
       historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
+    } else if (location.pathname === '/dispose') {
+      setPreDraft(true);
+      dispatch(clearProject());
     }
-  }, [historyReplace, project.status, project.projectNumber, location.pathname, match.url]);
+  }, [
+    historyReplace,
+    project.status,
+    project.projectNumber,
+    location.pathname,
+    match.url,
+    projectNumber,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {
@@ -138,8 +155,16 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
               {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
-              <Route path="/dispose/projects/assess/properties" component={ReviewApproveStep} />
               {preDraft ? <ProjectDraftStep formikRef={formikRef} /> : null}
+              <Route
+                exact
+                path="/dispose/projects/assess/properties"
+                component={ReviewApproveStep}
+              />
+              <Route
+                path="/dispose/projects/assess/properties/update"
+                component={SelectProjectPropertiesPage}
+              />
               {projectWorkflowComponents.map(wfc => (
                 <Route
                   key={wfc.workflowStatus.toString()}

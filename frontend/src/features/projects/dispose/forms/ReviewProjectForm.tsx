@@ -25,8 +25,8 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
   });
   return (
     <Fragment>
-      <ProjectDraftForm isReadOnly={isReadOnly} setIsReadOnly={setIsReadOnly} canEdit={canEdit} />
-      <UpdateInfoForm isReadOnly={isReadOnly} canEdit={canEdit} />
+      <ProjectDraftForm isReadOnly={isReadOnly || !canEdit} setIsReadOnly={setIsReadOnly} />
+      <UpdateInfoForm isReadOnly={isReadOnly || !canEdit} />
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
       <ProjectNotes />

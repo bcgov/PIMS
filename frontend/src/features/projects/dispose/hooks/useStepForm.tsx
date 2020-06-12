@@ -18,13 +18,18 @@ import { AxiosError } from 'axios';
 const useStepForm = () => {
   const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
-  const { getLastCompletedStatus, getNextStep } = useStepper();
+  const { getLastCompletedStatus, currentStatus, getNextStep } = useStepper();
 
   const onSubmit = (values: any, actions: any) => {
     const apiValues = _.cloneDeep(values);
     let response: any;
-    const nextStep = getNextStep(getLastCompletedStatus());
-    if (nextStep !== undefined) {
+    const lastCompletedStep = getLastCompletedStatus();
+    const nextStep = getNextStep(currentStatus);
+    if (
+      nextStep !== undefined &&
+      currentStatus !== undefined &&
+      lastCompletedStep?.id === currentStatus?.id
+    ) {
       apiValues.statusId = nextStep.id;
     }
     if (nextStep?.isMilestone === true) {

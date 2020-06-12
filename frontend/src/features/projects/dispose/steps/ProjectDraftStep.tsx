@@ -17,7 +17,7 @@ import {
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
-  const { onSubmit } = useStepForm();
+  const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
   const keycloak = useKeycloakWrapper();
   let draftFormValues = undefined;
@@ -39,7 +39,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
       >
         {() => (
           <Form className="ProjectDraftForm">
-            <ProjectDraftForm isReadOnly={isReadOnly} />
+            <ProjectDraftForm isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)} />
             <StepErrorSummary />
           </Form>
         )}

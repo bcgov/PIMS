@@ -13,8 +13,8 @@ import { updateInfoMessage, tierTooltip } from '../strings';
 import { Container } from 'react-bootstrap';
 
 interface IUpdateInfoFormProps {
-  setIsReadOnly?: Function;
   title?: string;
+  goToAddProperties?: Function;
 }
 
 /**
@@ -23,8 +23,7 @@ interface IUpdateInfoFormProps {
  */
 const UpdateInfoForm = ({
   isReadOnly,
-  canEdit,
-  setIsReadOnly,
+  goToAddProperties,
   title,
 }: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
@@ -60,7 +59,9 @@ const UpdateInfoForm = ({
           {updateInfoMessage}
         </h6>
         <h2 className="col-md-5">Properties in the Project</h2>
-        <ReviewButtons {...{ isReadOnly, selectedProperties, setSelectedProperties }} />
+        <ReviewButtons
+          {...{ isReadOnly, selectedProperties, setSelectedProperties, goToAddProperties }}
+        />
       </Form.Row>
 
       <PropertyListViewUpdate
@@ -76,13 +77,25 @@ const UpdateInfoForm = ({
 /**
  * ReviewButtons subcomponent, optionally displayed buttons that allow a user to update read-only property information.
  */
-const ReviewButtons = ({ isReadOnly, selectedProperties, setSelectedProperties }: any) => {
+const ReviewButtons = ({
+  isReadOnly,
+  selectedProperties,
+  setSelectedProperties,
+  goToAddProperties,
+}: any) => {
   const { goToStep } = useStepper();
   const { setFieldValue, values } = useFormikContext();
 
   return !isReadOnly ? (
     <div className="review-buttons col-md-7">
-      <Button variant="secondary" onClick={() => goToStep(DisposeWorkflowStatus.SelectProperties)}>
+      <Button
+        variant="secondary"
+        onClick={() => {
+          goToAddProperties
+            ? goToAddProperties()
+            : goToStep(DisposeWorkflowStatus.SelectProperties);
+        }}
+      >
         Add More Properties
       </Button>
       <Button

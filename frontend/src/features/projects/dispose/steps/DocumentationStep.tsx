@@ -20,7 +20,7 @@ const handleValidate = (project: IProject) => {
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
-  const { onSubmit } = useStepForm();
+  const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
   const tasks = _.filter(project.tasks, { statusId: DisposeWorkflowStatus.RequiredDocumentation });
   if (!project) {
@@ -50,7 +50,10 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
       >
         {() => (
           <Form>
-            <DocumentationForm isReadOnly={isReadOnly} tasks={tasks} />
+            <DocumentationForm
+              isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
+              tasks={tasks}
+            />
             <StepErrorSummary />
           </Form>
         )}

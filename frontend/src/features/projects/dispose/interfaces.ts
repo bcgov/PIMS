@@ -167,7 +167,6 @@ export interface IStatus {
 export interface IStepProps {
   isReadOnly?: boolean;
   formikRef?: any;
-  canEdit?: boolean;
 }
 
 export interface IProjectProperty {
