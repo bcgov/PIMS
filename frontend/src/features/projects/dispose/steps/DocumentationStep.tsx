@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 const handleValidate = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
-    if (!task.isCompleted && task.statusId === DisposeWorkflowStatus.RequiredDocumentation) {
+    if (!task.isCompleted && !task.isOptional) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
     return errors;
