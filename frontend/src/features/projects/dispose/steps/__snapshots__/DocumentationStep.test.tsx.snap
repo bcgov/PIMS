@@ -16,7 +16,7 @@ exports[`renders correctly 1`] = `
       className="tasksForm form-row"
     >
       <div
-        className="form-group"
+        className="required form-group"
       >
         <div
           className="check-field"
@@ -26,16 +26,21 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-check-input position-static"
-              defaultChecked={true}
+              defaultChecked={false}
               disabled={true}
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
               onChange={[Function]}
-              required={false}
+              required={true}
               type="checkbox"
-              value={true}
+              value={false}
             />
           </div>
+          <span
+            className="required"
+          >
+            *
+          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.0.isCompleted"
@@ -49,7 +54,7 @@ exports[`renders correctly 1`] = `
       className="tasksForm form-row"
     >
       <div
-        className="form-group"
+        className="required form-group"
       >
         <div
           className="check-field"
@@ -59,16 +64,21 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-check-input position-static"
-              defaultChecked={true}
+              defaultChecked={false}
               disabled={true}
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
               onChange={[Function]}
-              required={false}
+              required={true}
               type="checkbox"
-              value={true}
+              value={false}
             />
           </div>
+          <span
+            className="required"
+          >
+            *
+          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.1.isCompleted"
