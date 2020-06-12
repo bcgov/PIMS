@@ -13,12 +13,26 @@ To assist agencies to follow policy when submitting a Surplus Property Process P
 5. Approval
 6. Submit
 
-### Required Documentation
+## Project Status
 
-The following documents are required by policy.
+|   # | Name                   | Code | Description                   | Valid Transition |
+| --: | ---------------------- | ---- | ----------------------------- | ---------------- |
+|   1 | Draft                  | DR   | Create a new Disposal Project | DR-P             |
+|   2 | Select Properties      | DR-P | Select Properties             | DR-I             |
+|   3 | Update Information     | DR-I | Update Information            | DR-D             |
+|   4 | Required Documentation | DR-D | Required Documentation        | DR-A             |
+|   5 | Approval               | DR-A | Approval                      | SU               |
+|   6 | Submit                 | SU   | Submit                        | AS-I             |
 
-- Surplus Declaration & Readiness Checklist
-- Triple Bottom Line
+## Tasks
+
+Tasks provide a way to add check-lists to each project status.
+Each task can be optional or required, making it a way to ensure all steps are performed before transitioning to another project status.
+
+| Status Code | Name                                      | Required | Description            |
+| ----------- | ----------------------------------------- | :------: | ---------------------- |
+| DR-D        | Surplus Declaration & Readiness Checklist |   yes    | Required Documentation |
+| DR-D        | Triple Bottom Line                        |   yes    | Required Documentation |
 
 ### Workflow
 

@@ -34,7 +34,6 @@ namespace Pims.Dal
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectNumber> ProjectNumbers { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
-        public DbSet<ProjectStatusTask> ProjectStatusTasks { get; set; }
         public DbSet<ProjectProperty> ProjectProperties { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<TierLevel> TierLevels { get; set; }

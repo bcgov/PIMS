@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
-using System.Runtime.Serialization;
 
 namespace Pims.Api.Test.Controllers
 {

@@ -22,7 +22,9 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Description).HasMaxLength(1000);
 
-            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
+            builder.HasOne(m => m.Status).WithMany(m => m.Tasks).HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.HasIndex(m => new { m.IsDisabled, m.IsOptional, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

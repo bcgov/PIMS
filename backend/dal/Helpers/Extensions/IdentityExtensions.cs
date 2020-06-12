@@ -298,39 +298,5 @@ namespace Pims.Dal.Helpers.Extensions
             // Assume the first agency is their primary
             return agencies.FirstOrDefault();
         }
-
-        /// <summary>
-        /// A parcel can only be updated or removed if not within an active project or user has admin-properties permission
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="context"></param>
-        /// <param name="parcel"></param>
-        /// <returns></returns>
-        public static void CanUpdateOrRemoveParcelOrThrow(this ClaimsPrincipal user, PimsContext context, Parcel parcel)
-        {
-            var changed = context.Entry(parcel).State == EntityState.Modified ||
-                          context.Entry(parcel).State == EntityState.Deleted;
-            if (parcel.ProjectNumber != null && !user.HasPermission(Permissions.AdminProperties))
-            {
-                throw new NotAuthorizedException("Cannot update or delete a parcel that is within an active project.");
-            }
-        }
-
-        /// <summary>
-        /// A building can only be updated or removed if not within an active project or user has admin-properties permission
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="context"></param>
-        /// <param name="building"></param>
-        /// <returns></returns>
-        public static void CanUpdateOrRemoveBuildingOrThrow(this ClaimsPrincipal user, PimsContext context, Building building)
-        {
-            var changed = context.Entry(building).State == EntityState.Modified ||
-                          context.Entry(building).State == EntityState.Deleted;
-            if (building.ProjectNumber != null && !user.HasPermission(Permissions.AdminProperties) && changed)
-            {
-                throw new NotAuthorizedException("Cannot update or delete a building that is within an active project.");
-            }
-        }
     }
 }

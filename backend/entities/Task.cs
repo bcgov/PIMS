@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Pims.Dal.Entities
 {
@@ -20,9 +19,14 @@ namespace Pims.Dal.Entities
         public bool IsOptional { get; set; }
 
         /// <summary>
-        /// get - A collection of statuses associated to this project task.
+        /// get/set - Foreign key to the project status.
         /// </summary>
-        public ICollection<ProjectStatusTask> Statuses { get; } = new List<ProjectStatusTask>();
+        public int? StatusId { get; set; }
+
+        /// <summary>
+        /// get/set - The project status this task is associated with.
+        /// </summary>
+        public ProjectStatus Status { get; set; }
         #endregion
 
         #region Constructors
@@ -32,14 +36,27 @@ namespace Pims.Dal.Entities
         public Task() { }
 
         /// <summary>
-        /// Create a new instance of a Task class.
+        /// Create a new instance of a Task class, initializes with specified arguments.
         /// </summary>
-        /// <param name="status"></param>
         /// <param name="name"></param>
-        public Task(string name)
+        /// <param name="isOptional"></param>
+        public Task(string name, bool isOptional = true)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(name));
             this.Name = name;
+            this.IsOptional = isOptional;
+        }
+
+        /// <summary>
+        /// Create a new instance of a Task class, initializes with specified arguments.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="status"></param>
+        /// <param name="isOptional"></param>
+        public Task(string name, ProjectStatus status, bool isOptional = true) : this(name, isOptional)
+        {
+            this.StatusId = status?.Id;
+            this.Status = status;
         }
         #endregion
     }

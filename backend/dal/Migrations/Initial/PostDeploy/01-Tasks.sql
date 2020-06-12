@@ -7,6 +7,7 @@ INSERT INTO dbo.[Tasks] (
     , [Name]
     , [IsDisabled]
     , [Description]
+    , [StatusId]
     , [IsOptional]
     , [SortOrder]
 ) VALUES (
@@ -14,6 +15,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Surplus Declaration & Readiness Checklist completed and sent'
     , 0
     , 'Surplus Declaration & Readiness Checklist document emailed to SRES.'
+    , 4
     , 0
     , 1
 ), (
@@ -21,6 +23,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Triple Bottom Line completed and sent'
     , 0
     , 'Triple Bottom Line document emailed to SRES.'
+    , 4
     , 0
     , 2
 ), (
@@ -28,6 +31,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Review completed'
     , 0
     , 'Project property information has been reviewed'
+    , 7
     , 0
     , 0
 ), (
@@ -35,6 +39,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Documents received and review completed'
     , 0
     , 'Documents have been received, reviewed and approved.'
+    , 8
     , 0
     , 0
 ), (
@@ -42,6 +47,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal ordered'
     , 0
     , 'An appraisal has been ordered.'
+    , 9
     , 1
     , 1
 ), (
@@ -49,6 +55,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal received'
     , 0
     , 'An appraisal has been received.'
+    , 9
     , 1
     , 2
 ), (
@@ -56,6 +63,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal completed'
     , 0
     , 'An appraisal has been reviewed and completed.'
+    , 9
     , 1
     , 3
 ), (
@@ -63,6 +71,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Strength of Claim'
     , 0
     , 'First Nation Strength of Claim has been created.'
+    , 10
     , 1
     , 1
 ), (
@@ -70,6 +79,7 @@ INSERT INTO dbo.[Tasks] (
     , 'In consultation'
     , 0
     , 'First Nation consulation is in progress.'
+    , 10
     , 1
     , 2
 ), (
@@ -77,6 +87,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Agreement received'
     , 0
     , 'First Nation agreement has been received.'
+    , 10
     , 1
     , 3
 )
