@@ -98,39 +98,57 @@ namespace Pims.Dal.Services
 
             var project = this.Context.Projects
                 .Include(p => p.Status)
-                .Include(p => p.Status).ThenInclude(s => s.Tasks)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
-                .Include(p => p.Properties)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Status)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Evaluations)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Fiscals)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Classification)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address).ThenInclude(a => a.City)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Address).ThenInclude(a => a.Province)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Agency).ThenInclude(a => a.Parent)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Status)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Fiscals)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Classification)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Address).ThenInclude(a => a.City)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(p => p.Address).ThenInclude(a => a.Province)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingPredominateUse)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.BuildingOccupantType)
-                .Include(p => p.Properties).ThenInclude(p => p.Building).ThenInclude(b => b.Agency).ThenInclude(a => a.Parent)
-                .AsNoTracking()
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses).ThenInclude(t => t.Task)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
+
+            //The following reduces the load on the database compared to eager loading all parcel/building props.
+            this.Context.Entry(project)
+                .Collection(p => p.Properties)
+                .Load();
+            foreach (ProjectProperty pp in project.Properties)
+            {
+                if (pp.PropertyType == PropertyTypes.Land)
+                {
+                    this.Context.Entry(pp)
+                    .Reference(p => p.Parcel).Query()
+                    .Include(p => p.Status)
+                    .Include(p => p.Evaluations)
+                    .Include(p => p.Fiscals)
+                    .Include(p => p.Classification)
+                    .Include(p => p.Address)
+                    .Include(p => p.Address).ThenInclude(a => a.City)
+                    .Include(p => p.Address).ThenInclude(a => a.Province)
+                    .Include(p => p.Agency)
+                    .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                    .Load();
+                }
+                else
+                {
+                    this.Context.Entry(pp)
+                    .Reference(p => p.Building).Query()
+                    .Include(b => b.Parcel)
+                    .Include(b => b.Status)
+                    .Include(b => b.Evaluations)
+                    .Include(p => p.Fiscals)
+                    .Include(b => b.Classification)
+                    .Include(b => b.Address)
+                    .Include(b => b.Address).ThenInclude(a => a.City)
+                    .Include(b => b.Address).ThenInclude(a => a.Province)
+                    .Include(b => b.Agency)
+                    .Include(b => b.Agency).ThenInclude(a => a.Parent)
+                    .Include(b => b.BuildingConstructionType)
+                    .Include(b => b.BuildingOccupantType)
+                    .Include(b => b.BuildingPredominateUse)
+                    .Load();
+                }
+            }
 
             // Remove any sensitive properties from the results if the user is not allowed to view them.
             if (!viewSensitive)
@@ -568,10 +586,10 @@ namespace Pims.Dal.Services
         /// Only valid transitions are allowed.
         /// Use this method to transition to milestone project statuses.
         /// Peforms additional logic on milestone transitions.
+        /// Make sure you set the specified 'project' status to the destination status you want.
         /// </summary>
         /// <param name="project"></param>
         /// <param name="workflowCode"></param>
-        /// <param name="statusCode"></param>
         /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
         /// <exception cref="ArgumentNullException">Argument 'workflow' is required.</exception>
         /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
@@ -583,46 +601,14 @@ namespace Pims.Dal.Services
         /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
         /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
-        public Project SetStatus(Project project, string workflowCode, string statusCode)
+        public Project SetStatus(Project project, string workflowCode)
         {
             var workflow = this.Context.Workflows
                 .Include(w => w.Status)
                 .ThenInclude(s => s.Status)
                 .FirstOrDefault(w => w.Code == workflowCode) ?? throw new KeyNotFoundException();
-            var status = workflow.Status.FirstOrDefault(s => s.Status.Code == statusCode)?.Status ?? throw new KeyNotFoundException();
 
-            return SetStatus(project, workflow, status);
-        }
-
-        /// <summary>
-        /// Change the status of the project.
-        /// Only valid transitions are allowed.
-        /// Use this method to transition to milestone project statuses.
-        /// Peforms additional logic on milestone transitions.
-        /// </summary>
-        /// <param name="project"></param>
-        /// <param name="workflowCode"></param>
-        /// <param name="statusId"></param>
-        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
-        /// <exception cref="ArgumentNullException">Argument 'workflow' is required.</exception>
-        /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
-        /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
-        /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
-        /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
-        /// <exception cref="NotAuthorizedException">User does not have permission to submit request.</exception>
-        /// <exception cref="NotAuthorizedException">User does not have permission to approve request.</exception>
-        /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
-        /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
-        /// <returns></returns>
-        public Project SetStatus(Project project, string workflowCode, int statusId)
-        {
-            var workflow = this.Context.Workflows
-                .Include(w => w.Status)
-                .ThenInclude(s => s.Status)
-                .FirstOrDefault(w => w.Code == workflowCode) ?? throw new KeyNotFoundException();
-            var status = workflow.Status.FirstOrDefault(s => s.Status.Id == statusId)?.Status ?? throw new KeyNotFoundException();
-
-            return SetStatus(project, workflow, status);
+            return SetStatus(project, workflow);
         }
 
         /// <summary>
@@ -633,7 +619,6 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="project"></param>
         /// <param name="workflow"></param>
-        /// <param name="status"></param>
         /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
         /// <exception cref="ArgumentNullException">Argument 'workflow' is required.</exception>
         /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
@@ -645,11 +630,10 @@ namespace Pims.Dal.Services
         /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
         /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
-        public Project SetStatus(Project project, Workflow workflow, ProjectStatus status)
+        public Project SetStatus(Project project, Workflow workflow)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
             workflow.ThrowIfNull(nameof(workflow));
-            status.ThrowIfNull(nameof(status));
 
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
@@ -658,6 +642,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
+                .Include(p => p.Tasks)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
@@ -667,17 +652,19 @@ namespace Pims.Dal.Services
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
             var fromStatus = this.Context.ProjectStatus
                 .Include(s => s.ToStatus)
+                .Include(s => s.Tasks)
+                .ThenInclude(t => t.Task)
                 .FirstOrDefault(s => s.Id == fromStatusId);
             var toStatus = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId);
-            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == status.Id) && toStatus.Id != project.StatusId) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
             // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
-            var incompleteTaskIds = project.Tasks.Where(t => t.IsCompleted == false).Select(t => t.TaskId);
-            var statusTaskIds = fromStatus.Tasks.Select(t => t.TaskId);
-            var incompleteStatusTaskIds = incompleteTaskIds.Intersect(statusTaskIds);
-            if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && incompleteStatusTaskIds.Contains(t.TaskId))) throw new InvalidOperationException("Not all required tasks have been completed.");
+            var incompleteTaskIds = project.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId).Union(originalProject.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId)).Distinct();
+            var statusTaskIds = fromStatus.Tasks.Where(t => !t.Task.IsOptional).Select(t => t.TaskId);
+            var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
+            if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
 
             // Hardcoded logic to handle milestone project status transitions.
             // This could be extracted at some point to a configurable layer, but not required presently.
@@ -726,7 +713,7 @@ namespace Pims.Dal.Services
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
-                    if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
+                    // if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
                     originalProject.Properties.ForEach(p =>
                     {
@@ -737,8 +724,8 @@ namespace Pims.Dal.Services
             }
 
             // Update a project
-            originalProject.StatusId = status.Id;
-            originalProject.Status = status;
+            originalProject.StatusId = toStatus.Id;
+            originalProject.Status = toStatus;
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 

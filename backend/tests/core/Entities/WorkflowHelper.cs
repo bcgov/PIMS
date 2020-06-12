@@ -1,4 +1,5 @@
 using Pims.Core.Extensions;
+using Pims.Dal;
 using System.Collections.Generic;
 using System.Linq;
 using Entity = Pims.Dal.Entities;
@@ -32,13 +33,25 @@ namespace Pims.Core.Test
         /// Creates a default list of Workflow.
         /// </summary>
         /// <returns></returns>
-        public static List<Entity.Workflow> CreateWorkflows()
+        public static List<Entity.Workflow> CreateDefaultWorkflows()
         {
             return new List<Entity.Workflow>()
             {
-                new Entity.Workflow("Draft", "Draft") { Id = 1, SortOrder = 0, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Workflow("Select Properties", "Select") { Id = 2, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.Workflow("Submit", "DISPOSE-SUBMIT") { Id = 1, SortOrder = 0, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Access", "DISPOSE-ACCESS") { Id = 2, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } }
             };
+        }
+
+        /// <summary>
+        /// Creates a default list of workflows and adds them to the specified 'context'.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static List<Entity.Workflow> CreateDefaultWorkflows(this PimsContext context)
+        {
+            var workflows = CreateDefaultWorkflows();
+            context.Workflows.AddRange(workflows);
+            return workflows;
         }
     }
 }
