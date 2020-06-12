@@ -42,6 +42,13 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking();
 
+            if (filter.AccessDisposal.HasValue && filter.AccessDisposal.Value)
+            {
+                var statuses = context.Workflows.Where(w => w.Code == "ACCESS-DISPOSAL")
+                    .SelectMany(w => w.Status).Select(x => x.StatusId).ToArray();
+                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("SU"));
+            }
+
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"%{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
