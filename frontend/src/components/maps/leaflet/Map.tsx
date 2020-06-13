@@ -17,7 +17,6 @@ import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
-import { ICluster } from 'hooks/useSupercluster';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -163,15 +162,6 @@ const Map: React.FC<MapProps> = ({
     onMarkerClick?.(asProperty(point));
   };
 
-  const onClusterClick = (cluster: ICluster, expansionZoom: number) => {
-    // zoom to cluster
-    const [longitude, latitude] = cluster?.geometry?.coordinates;
-    const leafletMap = mapRef?.current?.leafletElement;
-    leafletMap?.setView([latitude, longitude], expansionZoom, {
-      animate: true,
-    });
-  };
-
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
     axios.get('/basemaps.json').then(result => {
@@ -279,7 +269,6 @@ const Map: React.FC<MapProps> = ({
               zoom={zoom}
               bounds={bounds}
               onMarkerClick={onSingleMarkerClick}
-              onClusterClick={onClusterClick}
             />
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>
