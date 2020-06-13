@@ -66,7 +66,7 @@ INSERT INTO dbo.[ProjectStatus] (
     6
     , 5
     , 'Review'
-    , 'Re'
+    , 'RE'
     , 1
     , 0
     , 'The project has been submitted for review to be added to the Surplus Property Program.'

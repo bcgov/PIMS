@@ -1528,7 +1528,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var submit = init.ProjectStatus.First(s => s.Code == "SU");
+            var submit = init.ProjectStatus.First(s => s.Code == "RE");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
@@ -1558,7 +1558,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var submit = init.ProjectStatus.First(s => s.Code == "SU");
+            var submit = init.ProjectStatus.First(s => s.Code == "RE");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 

@@ -673,7 +673,7 @@ namespace Pims.Dal.Services
             // This could be extracted at some point to a configurable layer, but not required presently.
             switch (toStatus.Code)
             {
-                case ("Re"): // Submit
+                case ("RE"): // Review
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeRequest, "User does not have permission to submit project.");
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
