@@ -12,6 +12,8 @@ import {
 } from '..';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { IGenericNetworkAction } from 'actions/genericActions';
+import { ProjectActions } from 'constants/actionTypes';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -107,44 +109,72 @@ const useStepper = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
+  const diposeWorkflowStatuses = useSelector<RootState, IStatus[]>(
+    state => state.projectWorkflow as any,
+  );
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
   const workflowTasks: IProjectTask[] =
     useSelector<RootState, IProjectTask[]>(state => state.tasks) || initialValues;
+  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  );
   useEffect(() => {
-    if (!workflowStatuses?.length) {
+    if (!diposeWorkflowStatuses?.length) {
       dispatch(fetchProjectWorkflow());
     }
-  }, [dispatch, workflowStatuses]);
+  }, [dispatch, diposeWorkflowStatuses]);
+
+  useEffect(() => {
+    const lastCompletedStatus = _.findLast(diposeWorkflowStatuses, { id: project?.statusId });
+    if (
+      lastCompletedStatus?.sortOrder !== undefined &&
+      currentStatus?.sortOrder !== undefined &&
+      getProjectRequest?.isFetching === false &&
+      currentStatus.sortOrder > lastCompletedStatus.sortOrder
+    ) {
+      throw Error('You must complete all project disposal steps in order');
+    }
+    if (
+      project?.statusId !== undefined &&
+      project.statusId > 0 &&
+      diposeWorkflowStatuses?.length > 0 &&
+      currentStatus?.id !== undefined &&
+      _.find(diposeWorkflowStatuses, { id: project.statusId }) === undefined &&
+      _.find(diposeWorkflowStatuses, { id: currentStatus.id })?.sortOrder !== undefined
+    ) {
+      throw Error('You cannot edit a project disposal form after it has been submitted');
+    }
+  }, [currentStatus, getProjectRequest, project, diposeWorkflowStatuses]);
 
   return {
     currentStatus,
     setCurrentStatus,
     project,
-    workflowStatuses,
+    workflowStatuses: diposeWorkflowStatuses,
     workflowTasks,
     getStatusById: (statusId: number): IStatus | undefined =>
-      _.find(workflowStatuses, { id: statusId }),
+      _.find(diposeWorkflowStatuses, { id: statusId }),
     getNextStep: (status?: IStatus) =>
-      getNextWorkflowStatus(workflowStatuses, status ?? currentStatus),
-    nextStep: (): boolean => {
-      const nextStatus = getNextWorkflowStatus(workflowStatuses, currentStatus);
+      getNextWorkflowStatus(diposeWorkflowStatuses, status ?? currentStatus),
+    goToNextStep: (overrideProject?: IProject): number | undefined => {
+      const currentProject = overrideProject ?? project;
+      const nextStatus = getNextWorkflowStatus(diposeWorkflowStatuses, currentStatus);
       if (!nextStatus) {
-        return false;
+        return undefined;
       }
-      setCurrentStatus(nextStatus);
-      project.projectNumber !== undefined &&
-        history.push(`/dispose${nextStatus.route}?projectNumber=${project.projectNumber}`);
-      return true;
+      currentProject.projectNumber !== undefined &&
+        history.push(`/dispose${nextStatus.route}?projectNumber=${currentProject.projectNumber}`);
+      return nextStatus.id;
     },
     projectStatusCompleted: (status?: IStatus) =>
-      isStatusCompleted(workflowStatuses, status, project),
-    canGoToStatus: (status: IStatus) => isStatusNavigable(workflowStatuses, status, project),
-    getLastCompletedStatus: () => getLastCompletedStatus(workflowStatuses, currentStatus, project),
+      isStatusCompleted(diposeWorkflowStatuses, status, project),
+    canGoToStatus: (status: IStatus) => isStatusNavigable(diposeWorkflowStatuses, status, project),
+    getLastCompletedStatus: () =>
+      getLastCompletedStatus(diposeWorkflowStatuses, currentStatus, project),
     goToStep: (statusId: number) => {
-      const status: IStatus | undefined = _.find(workflowStatuses, { id: statusId });
-      history.push(`/dispose${status?.route}?projectNumber=${project.projectNumber}`);
+      const status: IStatus | undefined = _.find(diposeWorkflowStatuses, { id: statusId });
+      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToDisposePath: (path: string) =>
       history.push(`./${path}?projectNumber=${project.projectNumber}`),

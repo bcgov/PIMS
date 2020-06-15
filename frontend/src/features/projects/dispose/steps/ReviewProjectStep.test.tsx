@@ -9,6 +9,7 @@ import { Router } from 'react-router-dom';
 import ReviewProjectStep from './ReviewProjectStep';
 import { IProject, IProjectTask } from '..';
 import { DisposeWorkflowStatus, ITask } from '../interfaces';
+import { ProjectActions } from 'constants/actionTypes';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -74,6 +75,9 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.ProjectReducers.PROJECT]: mockProject,
   [reducerTypes.ProjectReducers.TASKS]: tasks,
+  [reducerTypes.NETWORK]: {
+    [ProjectActions.GET_PROJECT]: {},
+  },
 });
 
 const uiElement = (

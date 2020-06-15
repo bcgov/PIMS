@@ -17,16 +17,24 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
     , 5 -- Approval
 ), (
     5 -- Approval
-    , 6  -- Submitted
+    , 6  -- Review
 ), (
-    6 -- Submitted
-    , 7 -- Property Review
+    6 -- Review
+    , 7 -- Submitted
 ), (
-    7 -- Property Review
+    7 -- Submitted
     , 8 -- Document Review
+),
+-- TODO: the following three rows are present because the simple review form is a single page not broken out into steps.
+(
+    7 -- Submitted
+    , 12 -- Approved for SPL
 ), (
-    7 -- Property Review
-    , 12 -- Denied
+    7 -- Submitted
+    , 11 -- Approved for ERP
+), (
+    7 -- Submitted
+    , 13 -- Denied
 ), (
     8 -- Document Review
     , 9 -- Appraisal Review

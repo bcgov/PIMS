@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from '../interfaces';
+import { ReviewWorkflowStatus } from '../interfaces';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -15,7 +15,13 @@ const FlexRight = styled.div`
  * A component for project review actions
  * @component
  */
-export const ReviewApproveActions: React.FC = () => {
+export const ReviewApproveActions = ({
+  submitStatusId,
+  setSubmitStatusId,
+}: {
+  submitStatusId: number | undefined;
+  setSubmitStatusId: Function;
+}) => {
   const { values, submitForm } = useFormikContext<any>();
   return (
     <>
@@ -29,7 +35,7 @@ export const ReviewApproveActions: React.FC = () => {
             }
             style={{ marginLeft: 10 }}
             onClick={() => {
-              values.statusId = ReviewWorkflowStatus.ApprovedForErp;
+              setSubmitStatusId(ReviewWorkflowStatus.ApprovedForErp);
               submitForm();
             }}
           >
@@ -40,8 +46,6 @@ export const ReviewApproveActions: React.FC = () => {
             variant="secondary"
             style={{ marginLeft: 10 }}
             onClick={() => {
-              if (values.statusId === DisposeWorkflowStatus.Submitted)
-                values.statusId = ReviewWorkflowStatus.PropertyReview;
               submitForm();
             }}
           >
@@ -53,10 +57,13 @@ export const ReviewApproveActions: React.FC = () => {
       <FlexRight>
         <span>
           <Button
-            disabled={values.statusId === ReviewWorkflowStatus.ApprovedForErp}
+            disabled={
+              values.statusId === ReviewWorkflowStatus.ApprovedForErp ||
+              values.statusId === ReviewWorkflowStatus.Denied
+            }
             variant="danger"
             onClick={() => {
-              values.statusId = ReviewWorkflowStatus.Denied;
+              setSubmitStatusId(ReviewWorkflowStatus.Denied);
               submitForm();
             }}
           >

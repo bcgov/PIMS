@@ -134,7 +134,7 @@ export enum DisposeWorkflowStatus {
   UpdateInformation,
   RequiredDocumentation,
   Approval,
-  Submitted,
+  Review,
 }
 
 export enum ReviewWorkflowStatus {
@@ -185,7 +185,7 @@ export const initialValues: any = {
   description: '',
   properties: [],
   tierLevelId: 1,
-  statusId: 0,
+  statusId: 1,
   agencyId: 0,
   tasks: [],
 };

@@ -11,6 +11,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { render, wait, fireEvent } from '@testing-library/react';
 import { DisposeWorkflowStatus, IProjectTask } from '../interfaces';
+import { ProjectActions } from 'constants/actionTypes';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -48,6 +49,9 @@ const tasks: IProjectTask[] = [
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { project: { tasks: tasks } },
   [reducerTypes.ProjectReducers.TASKS]: tasks,
+  [reducerTypes.NETWORK]: {
+    [ProjectActions.GET_PROJECT]: {},
+  },
 });
 
 const uiElement = (

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewProjectForm.scss';
 import {
   ProjectDraftForm,
@@ -23,6 +23,14 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
   const documentationTasks = _.filter(values.tasks, {
     statusId: DisposeWorkflowStatus.RequiredDocumentation,
   });
+  const { errors } = useFormikContext();
+  /** Enter edit mode if allowed and there are errors to display */
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      setIsReadOnly(canEdit !== true);
+    }
+  }, [canEdit, errors]);
+
   return (
     <Fragment>
       <ProjectDraftForm isReadOnly={isReadOnly || !canEdit} setIsReadOnly={setIsReadOnly} />

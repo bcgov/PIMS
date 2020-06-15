@@ -16,7 +16,7 @@ const projectWorkflowSlice = createSlice({
       return action.payload;
     });
     builder.addCase(clearProjectStatus, (state: any) => {
-      return '';
+      return {};
     });
   },
 });
