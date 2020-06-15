@@ -20,6 +20,7 @@ import { Input } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
+import { ReviewWorkflowStatus } from '../dispose';
 
 interface IProjectFilterState {
   active?: boolean;
@@ -161,7 +162,12 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const onRowClick = (row: IProject) => {
-    history.push(`/dispose/${row.statusRoute}?projectNumber=${row.projectNumber}`);
+    if (row.statusId >= ReviewWorkflowStatus.PropertyReview) {
+      history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
+    } else {
+      debugger;
+      history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
+    }
   };
 
   const lazyLoadProperties = async (expandedRows: IProject[]) => {
