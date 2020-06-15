@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ProjectDisposeView.scss';
 import { Container, Spinner } from 'react-bootstrap';
 import { Route, match as Match, useHistory, Redirect } from 'react-router-dom';
@@ -13,7 +13,6 @@ import {
   IStatus,
   IProject,
   SelectProjectPropertiesPage,
-  saveProject,
 } from '.';
 import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -21,7 +20,6 @@ import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
 import ReviewApproveStep from './steps/ReviewApproveStep';
-import ProjectDraftStep from './steps/ProjectDraftStep';
 import { createProject, fetchProject } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 import { clearProject } from './slices/projectSlice';
@@ -31,7 +29,6 @@ import { clearProject } from './slices/projectSlice';
  * @param param0 default react router props
  */
 const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Location }) => {
-  const [preDraft, setPreDraft] = useState(true);
   const history = useHistory();
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
@@ -44,12 +41,36 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const projectNumber = queryString.parse(query).projectNumber;
   const historyReplace = history.replace;
 
-  // TODO: UX flow - since this is a pre draft state hitting next does not step through the stepper as once they create the project then they are in 'Draft'
-  // May be something we want to change
-  const onNext = async () => {
-    if (!projectNumber) {
-      await handleSubmit();
-    }
+  const preDraftValues: any = (formikRef: any) => {
+    return {
+      name: formikRef.current?.values.name,
+      note: formikRef.current?.values.note,
+      description: formikRef.current?.values.description,
+      properties: [],
+      tierLevelId: 1,
+      statusId: 2,
+      agencyId: 0,
+      tasks: [],
+    };
+  };
+
+  const createSPP = async (stepId: number) => {
+    await formikRef.current?.validateForm().then(async (errors: any) => {
+      if (Object.keys(errors).length === 0) {
+        await (dispatch(createProject(preDraftValues(formikRef))) as any).then(
+          (project: IProject) => {
+            historyReplace(
+              `${match.url}${workflowStatuses[stepId].route}?projectNumber=${project.projectNumber}`,
+            );
+          },
+        );
+      }
+    });
+  };
+
+  const onNext = () => {
+    // will only call when no project no. present
+    !projectNumber && createSPP(1);
     formikRef.current?.submitForm().then((value: any) => {
       if (!formikRef?.current?.errors || !Object.keys(formikRef?.current?.errors).length) {
         // do not go to the next step if the form has validation errors.
@@ -65,28 +86,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
   };
 
-  const handleSubmit = async () => {
-    const preDraftValues: any = {
-      name: formikRef.current?.values.name,
-      note: formikRef.current?.values.note,
-      description: formikRef.current?.values.description,
-      properties: [],
-      tierLevelId: 1,
-      statusId: 0,
-      agencyId: 0,
-      tasks: [],
-    };
+  const handleSubmit = () => {
     if (!projectNumber) {
-      await formikRef.current?.validateForm().then(async (errors: any) => {
-        if (Object.keys(errors).length === 0) {
-          await (dispatch(createProject(preDraftValues)) as any).then((project: IProject) => {
-            dispatch(saveProject(project));
-            historyReplace(
-              `${match.url}${workflowStatuses[0].route}?projectNumber=${project.projectNumber}`,
-            );
-          });
-        }
-      });
+      createSPP(0);
     } else {
       formikRef.current?.handleSubmit();
     }
@@ -115,7 +117,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     ) {
       historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
     } else if (location.pathname === '/dispose') {
-      setPreDraft(true);
+      historyReplace('/dispose/projects/draft');
       dispatch(clearProject());
     }
   }, [
@@ -138,15 +140,13 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     throw Error(`Unable to load project number ${projectNumber}`);
   }
 
-  projectNumber && preDraft && setPreDraft(false);
-
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
         <Container fluid className="ProjectDisposeLayout">
           <SresManual />
           <h1>Surplus Property Program Project</h1>
-          {currentStatus !== undefined || preDraft ? (
+          {currentStatus !== undefined ? (
             <GeneratedDisposeStepper
               activeStep={currentStatus?.sortOrder ?? 0}
               basePath={match.url}
@@ -154,8 +154,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
-              {preDraft ? <ProjectDraftStep formikRef={formikRef} /> : null}
               <Route
                 exact
                 path="/dispose/projects/assess/properties"
@@ -172,7 +170,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   render={() => <wfc.component formikRef={formikRef} />}
                 />
               ))}
-              {(currentStatus || preDraft) && (
+              {currentStatus && (
                 <StepActions
                   getNextStep={getNextStep}
                   onSave={() => handleSubmit()}

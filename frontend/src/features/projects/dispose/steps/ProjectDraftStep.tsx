@@ -27,7 +27,9 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
     //This appears to be a new project, set up some defaults.
     draftFormValues = { ...initialValues, agencyId: keycloak.agencyId! };
   }
-
+  const isPreDraft = () => {
+    return project.agencyId === 0;
+  };
   return (
     <Container fluid>
       <Formik
@@ -39,7 +41,9 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
       >
         {() => (
           <Form className="ProjectDraftForm">
-            <ProjectDraftForm isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)} />
+            <ProjectDraftForm
+              isReadOnly={isPreDraft() ? false : isReadOnly || !canUserEditForm(project.agencyId)}
+            />
             <StepErrorSummary />
           </Form>
         )}
