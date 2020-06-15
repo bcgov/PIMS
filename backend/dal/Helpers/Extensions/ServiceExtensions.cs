@@ -14,7 +14,7 @@ namespace Pims.Dal.Helpers.Extensions
     public static class ServiceExtensions
     {
         #region Variables
-        public static readonly string[] EDITABLE_STATUS_CODES = new[] { "DR", "DR-P", "DR-I", "DR-D", "DR-A" };
+        public static readonly string[] EDITABLE_STATUS_CODES = new[] { "DR", "DR-P", "DR-I", "DR-D", "DR-A", "RE" };
         #endregion
 
         /// <summary>
