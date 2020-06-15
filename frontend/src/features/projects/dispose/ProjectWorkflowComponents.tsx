@@ -37,6 +37,6 @@ export const projectWorkflowComponents: ProjectWorkflowComponent[] = [
   },
   {
     component: props => <ReviewProjectStep {...props} />,
-    workflowStatus: DisposeWorkflowStatus.Submitted,
+    workflowStatus: DisposeWorkflowStatus.Review,
   },
 ];

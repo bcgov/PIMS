@@ -24,7 +24,7 @@ const projectSlice = createSlice({
       return { project: toFlatProject(project) };
     });
     builder.addCase(clearProject, () => {
-      return '';
+      return {};
     });
   },
 });

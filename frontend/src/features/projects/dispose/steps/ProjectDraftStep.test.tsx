@@ -7,12 +7,13 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, wait, fireEvent, screen } from '@testing-library/react';
+import { ProjectActions } from 'constants/actionTypes';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
+import { render, wait, fireEvent, screen } from '@testing-library/react';
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('../hooks/useStepper');
@@ -31,6 +32,9 @@ const history = createMemoryHistory();
 
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { agencyId: 1 },
+  [reducerTypes.NETWORK]: {
+    [ProjectActions.GET_PROJECT]: {},
+  },
 });
 
 const uiElement = (

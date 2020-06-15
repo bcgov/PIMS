@@ -9,9 +9,9 @@ import _ from 'lodash';
 const handleValidate = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
     if (
-      task.statusId === DisposeWorkflowStatus.RequiredDocumentation &&
+      !task.isCompleted &&
       !task.isOptional &&
-      !task.isCompleted
+      task.statusId === DisposeWorkflowStatus.RequiredDocumentation
     ) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
@@ -49,7 +49,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
               task.completedOn = new Date();
             }
           });
-          onSubmit(values, actions);
+          return onSubmit(values, actions);
         }}
       >
         {() => (

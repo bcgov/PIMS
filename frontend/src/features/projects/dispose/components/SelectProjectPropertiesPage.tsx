@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import { FormikValues } from 'formik';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useStepForm } from '..';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -19,6 +20,7 @@ const FlexRight = styled.div`
 const SelectProjectPropertiesPage = () => {
   const formikRef = useRef<FormikValues>();
   const history = useHistory();
+  const { onSave } = useStepForm();
 
   return (
     <>
@@ -26,9 +28,7 @@ const SelectProjectPropertiesPage = () => {
       <FlexRight>
         <Button
           onClick={() => {
-            formikRef.current?.submitForm().then(() => {
-              history.goBack();
-            });
+            onSave(formikRef).then(() => history.goBack());
           }}
         >
           Update

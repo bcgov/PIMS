@@ -12,9 +12,10 @@ import { createMemoryHistory } from 'history';
 import { render, wait, fireEvent } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { UpdateInfoStepYupSchema } from '..';
+import { ProjectActions } from 'constants/actionTypes';
 import { fillInput } from 'utils/testUtils';
 import { CLASSIFICATIONS } from 'constants/classifications';
+import { UpdateInfoStepYupSchema } from '..';
 
 const mockStore = configureMockStore([thunk]);
 const mockProject = {
@@ -71,6 +72,9 @@ const store = mockStore({
       { type: 'TierLevel', name: 'Tier 1', id: 1 },
       { type: 'TierLevel', name: 'Tier 2', id: 2 },
     ],
+  },
+  [reducerTypes.NETWORK]: {
+    [ProjectActions.GET_PROJECT]: {},
   },
 });
 

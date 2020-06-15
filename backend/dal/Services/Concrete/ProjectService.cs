@@ -657,10 +657,12 @@ namespace Pims.Dal.Services
             var toStatus = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId);
+
             if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
             // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
-            var incompleteTaskIds = project.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId).Union(originalProject.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId)).Distinct();
+            var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
+            var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
             var statusTaskIds = fromStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
             var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
             if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
@@ -669,7 +671,7 @@ namespace Pims.Dal.Services
             // This could be extracted at some point to a configurable layer, but not required presently.
             switch (toStatus.Code)
             {
-                case ("SU"): // Submit
+                case ("AS-I"): // Review
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeRequest, "User does not have permission to submit project.");
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
