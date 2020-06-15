@@ -36,9 +36,6 @@ const useStepForm = () => {
       .then((values: IProject) => {
         return dispatch(updateProject({ ...apiValues, rowVersion: values.rowVersion }));
       })
-      .then(() => {
-        return dispatch(fetchProject(values.projectNumber));
-      })
       .catch((error: any) => {
         actions.setStatus({ msg: error.toString() });
       })

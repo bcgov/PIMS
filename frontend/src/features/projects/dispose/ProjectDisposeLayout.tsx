@@ -42,6 +42,20 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
+  const addProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.ADD_PROJECT] as any,
+  );
+  const updateProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_PROJECT] as any,
+  );
+  const updateWorflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  );
+  const noFetchingProjectRequests =
+    getProjectRequest?.isFetching !== true &&
+    addProjectRequest?.isFetching !== true &&
+    updateProjectRequest?.isFetching !== true &&
+    updateWorflowStatusRequest?.isFetching !== true;
   const dispatch = useDispatch();
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
@@ -52,32 +66,13 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     nextStepId: number,
     workflowStatusCode?: string,
   ) => {
-    if (project.statusId === currentStatus.id) {
+    if (project?.statusId === currentStatus.id) {
+      if (nextStepId === ReviewWorkflowStatus.PropertyReview) {
+        history.push('/project/completed');
+      }
       return dispatch(updateWorkflowStatus(project, nextStepId, workflowStatusCode) as any).then(
         (project: IProject) => {
           goToNextStep(project);
-          if (nextStepId === ReviewWorkflowStatus.PropertyReview) {
-    };
-  };
-
-  const createSPP = async (stepId: number) => {
-    await formikRef.current?.validateForm().then(async (errors: any) => {
-      if (Object.keys(errors).length === 0) {
-        await (dispatch(createProject(preDraftValues(formikRef))) as any).then(
-          (project: IProject) => {
-            historyReplace(
-              `${match.url}${workflowStatuses[stepId].route}?projectNumber=${project.projectNumber}`,
-            );
-          },
-        );
-    });
-  };
-
-  const onNext = () => {
-    // will only call when no project no. present
-    !projectNumber && createSPP(1);
-            history.push('/project/completed');
-          }
           return project;
         },
       );
@@ -100,9 +95,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         }
 
         addOrUpdateProject(values, formikRef).then((project: IProject) =>
-          updateProjectStatus(project, nextStepId!, workflowStatusCode).then((project: IProject) =>
-            dispatch(fetchProject(project.projectNumber)),
-          ),
+          updateProjectStatus(project, nextStepId!, workflowStatusCode),
         );
       }
     });
@@ -114,13 +107,14 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
 
   useEffect(() => {
     let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
-    if (setCurrentStatus) setCurrentStatus(statusAtRoute);
+    if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
     location.pathname,
     historyReplace,
     workflowStatuses,
     setCurrentStatus,
     project.projectNumber,
+    noFetchingProjectRequests,
   ]);
 
   //If the current route isn't set, set based on the query project status.
@@ -163,7 +157,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
               basePath={match.url}
             />
           ) : null}
-          {getProjectRequest?.isFetching !== true ? (
+          {noFetchingProjectRequests ? (
             <Container fluid className="step-content">
               <Switch>
                 {/*TODO: this will probably need to be update to a map of routes/components as well.*/}

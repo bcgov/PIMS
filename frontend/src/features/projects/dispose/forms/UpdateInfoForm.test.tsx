@@ -15,6 +15,7 @@ import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
 import { fillInput } from 'utils/testUtils';
 import { CLASSIFICATIONS } from 'constants/classifications';
+import { UpdateInfoStepYupSchema } from '..';
 
 const mockStore = configureMockStore([thunk]);
 const mockProject = {

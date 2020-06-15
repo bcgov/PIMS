@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
 import {
   IStepProps,
@@ -51,6 +51,7 @@ const handleValidate = (values: IProject) => {
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { project, goToDisposePath } = useStepper();
   const { onSubmitReview, canUserEditForm } = useStepForm();
+  const [submitStatusId, setSubmitStatusId] = useState<number | undefined>(undefined);
   useEffect(() => {
     fetchProjectTasks('ACCESS-DISPOSAL');
   }, []);
@@ -66,7 +67,11 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         initialValues={initialValues}
         enableReinitialize={true}
         innerRef={formikRef}
-        onSubmit={onSubmitReview}
+        onSubmit={(values: IProject, actions: any) => {
+          const tempValues = _.cloneDeep(values);
+          tempValues.statusId = submitStatusId ?? values.statusId;
+          onSubmitReview(tempValues, actions);
+        }}
         validate={handleValidate}
       >
         <Form>
@@ -75,7 +80,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
             goToAddProperties={() => goToDisposePath('properties/update')}
             canEdit={canUserEditForm(project.agencyId)}
           />
-          <ReviewApproveActions />
+          <ReviewApproveActions {...{ submitStatusId, setSubmitStatusId }} />
         </Form>
       </Formik>
     </Container>

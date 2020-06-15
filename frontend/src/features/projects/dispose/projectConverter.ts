@@ -46,7 +46,7 @@ export const toFlatProject = (project?: IApiProject) => {
       classification: apiProperty.classification ?? '',
       classificationId: apiProperty.classificationId,
       addressId: apiProperty.address?.id as number,
-      address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.city}`,
+      address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.city ?? ''}`,
       cityId: apiProperty.address?.cityId as number,
       city: apiProperty.address?.city ?? '',
       province: apiProperty.address?.province ?? '',

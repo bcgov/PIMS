@@ -15,7 +15,13 @@ const FlexRight = styled.div`
  * A component for project review actions
  * @component
  */
-export const ReviewApproveActions: React.FC = () => {
+export const ReviewApproveActions = ({
+  submitStatusId,
+  setSubmitStatusId,
+}: {
+  submitStatusId: number | undefined;
+  setSubmitStatusId: Function;
+}) => {
   const { values, submitForm } = useFormikContext<any>();
   return (
     <>
@@ -29,7 +35,7 @@ export const ReviewApproveActions: React.FC = () => {
             }
             style={{ marginLeft: 10 }}
             onClick={() => {
-              values.statusId = ReviewWorkflowStatus.ApprovedForErp;
+              setSubmitStatusId(ReviewWorkflowStatus.ApprovedForErp);
               submitForm();
             }}
           >
@@ -54,7 +60,7 @@ export const ReviewApproveActions: React.FC = () => {
             disabled={values.statusId === ReviewWorkflowStatus.ApprovedForErp}
             variant="danger"
             onClick={() => {
-              values.statusId = ReviewWorkflowStatus.Denied;
+              setSubmitStatusId(ReviewWorkflowStatus.Denied);
               submitForm();
             }}
           >

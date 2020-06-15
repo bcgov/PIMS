@@ -71,7 +71,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 0
     , 'The project has been submitted for review to be added to the Surplus Property Program.'
     , '/projects/review'
-    , 1
+    , 0
 ), (
     7
     , 6
@@ -81,7 +81,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 0
     , 'Submitted project property information review.'
     , '/projects/assess/properties'
-    , 0
+    , 1
 ), (
     8
     , 7

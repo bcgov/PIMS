@@ -43,18 +43,16 @@ export const fetchProject = (projectNumber: string) => (dispatch: Function) => {
 };
 
 export const createProject = (body: IProject) => (dispatch: Function) => {
-  const axiosResponse = CustomAxios().post(
-    ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_ROOT,
-    toApiProject(body),
-  );
+  const axiosResponse = CustomAxios()
+    .post(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_ROOT, toApiProject(body))
+    .then(response => dispatch(saveProject(response.data)));
   return handleAxiosResponse(dispatch, ProjectActions.ADD_PROJECT, axiosResponse);
 };
 
 export const updateProject = (body: IProject) => (dispatch: Function) => {
-  const axiosResponse = CustomAxios().put(
-    ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_ROOT + body.projectNumber,
-    toApiProject(body),
-  );
+  const axiosResponse = CustomAxios()
+    .put(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_ROOT + body.projectNumber, toApiProject(body))
+    .then(response => dispatch(saveProject(response.data)));
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_PROJECT, axiosResponse);
 };
 
@@ -63,9 +61,11 @@ export const updateWorkflowStatus = (
   statusId: number,
   workflowCode: string = 'SUBMIT-DISPOSAL',
 ) => (dispatch: Function) => {
-  const axiosResponse = CustomAxios().put(
-    ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusId),
-    toApiProject(body),
-  );
+  const axiosResponse = CustomAxios()
+    .put(
+      ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusId),
+      toApiProject(body),
+    )
+    .then(response => dispatch(saveProject(response.data)));
   return handleAxiosResponse(dispatch, ProjectActions.UPDATE_WORKFLOW_STATUS, axiosResponse);
 };
