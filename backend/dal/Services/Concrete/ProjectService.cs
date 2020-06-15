@@ -58,21 +58,18 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
+            var projectNumbers = items.Select(p => p.ProjectNumber).ToArray();
+            var sums = from p in this.Context.Properties
+                       where projectNumbers.Contains(p.ProjectNumber)
+                       group p by p.ProjectNumber into gp
+                       select new { ProjectNumber = gp.Key, NetBook = gp.Sum(x => x.NetBook), Estimated = gp.Sum(x => x.Estimated) };
+            var projectSums = sums.ToDictionary(p => p.ProjectNumber);
+
             // TODO: Update the View to include the Project.Id so that we can do a group by on that value instead of multiple separate requests.
             foreach (var project in items)
             {
-                var propertyIds = this.Context.ProjectProperties.Where(pp => pp.ProjectId == project.Id).Select(pp => new { pp.PropertyType, pp.ParcelId, pp.BuildingId });
-                var parcelIds = propertyIds.Where(p => p.PropertyType == PropertyTypes.Land).Select(p => p.ParcelId);
-                var buildingIds = propertyIds.Where(p => p.PropertyType == PropertyTypes.Building).Select(p => p.BuildingId);
-                var sums = from p in this.Context.Properties
-                              where (p.PropertyTypeId == PropertyTypes.Land
-                                && parcelIds.Contains(p.Id))
-                                || (p.PropertyTypeId == PropertyTypes.Building
-                                && buildingIds.Contains(p.Id))
-                              group p by 1 into g
-                              select new { SumNetBook = g.Sum(x => x.NetBook), SumEstimated = g.Sum(x => x.Estimated) };
-                project.NetBook = sums.FirstOrDefault()?.SumNetBook ?? 0;
-                project.Estimated = sums.FirstOrDefault()?.SumEstimated ?? 0;
+                project.NetBook = projectSums.GetValueOrDefault(project.ProjectNumber)?.NetBook ?? 0;
+                project.Estimated = projectSums.GetValueOrDefault(project.ProjectNumber)?.Estimated ?? 0;
             }
 
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
@@ -103,8 +100,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
-                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses)
-                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses).ThenInclude(t => t.Task)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -185,8 +181,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
-                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses)
-                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Statuses).ThenInclude(t => t.Task)
+                .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -263,7 +258,6 @@ namespace Pims.Dal.Services
 
             var status = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
-                .ThenInclude(t => t.Task)
                 .FirstOrDefault(s => s.Id == 1) ?? throw new KeyNotFoundException("The default project status could not be found.");
 
             project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
@@ -275,12 +269,13 @@ namespace Pims.Dal.Services
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
+
             // Add the tasks for project status.
-            foreach (var projectStatus in this.Context.ProjectStatus.Include(s => s.Tasks).ThenInclude(t => t.Task).ToArray())
+            foreach (var projectStatus in this.Context.ProjectStatus.Include(s => s.Tasks).ToArray())
             {
-                foreach (var task in projectStatus.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
+                foreach (var task in projectStatus.Tasks.Where(t => !taskIds.Contains(t.Id)))
                 {
-                    project.Tasks.Add(new ProjectTask(project, task.Task));
+                    project.Tasks.Add(new ProjectTask(project, task));
                 }
             }
 
@@ -329,6 +324,7 @@ namespace Pims.Dal.Services
             if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
 
             var originalProject = this.Context.Projects
+                .Include(p => p.Status)
                 .Include(p => p.Tasks)
                 .Include(p => p.Agency)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
@@ -342,6 +338,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(originalProject);
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
@@ -369,7 +366,7 @@ namespace Pims.Dal.Services
 
                 // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
                 var incompleteTaskIds = project.Tasks.Where(t => t.IsCompleted == false).Select(t => t.TaskId);
-                var statusTaskIds = fromStatus.Tasks.Select(t => t.TaskId);
+                var statusTaskIds = fromStatus.Tasks.Select(t => t.Id);
                 var incompleteStatusTaskIds = incompleteTaskIds.Intersect(statusTaskIds);
                 if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && incompleteStatusTaskIds.Contains(t.TaskId))) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
@@ -522,15 +519,14 @@ namespace Pims.Dal.Services
 
             var status = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
-                .ThenInclude(t => t.Task)
                 .FirstOrDefault(s => s.Id == project.StatusId);
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
             // Add the tasks for project status if they are not already added.
-            foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.TaskId)))
+            foreach (var task in status.Tasks.Where(t => !taskIds.Contains(t.Id)))
             {
-                originalProject.Tasks.Add(new ProjectTask(project, task.Task));
+                originalProject.Tasks.Add(new ProjectTask(project, task));
             }
 
             this.Context.SaveChanges();
@@ -554,12 +550,14 @@ namespace Pims.Dal.Services
             var userAgencies = this.User.GetAgencies();
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
             var originalProject = this.Context.Projects
+                .Include(p => p.Status)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(originalProject);
 
             if (!isAdmin && (!userAgencies.Contains(originalProject.AgencyId)))
                 throw new NotAuthorizedException("User does not have permission to delete.");
@@ -638,12 +636,14 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             var originalProject = this.Context.Projects
+                .Include(p => p.Status)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(originalProject);
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
@@ -653,7 +653,6 @@ namespace Pims.Dal.Services
             var fromStatus = this.Context.ProjectStatus
                 .Include(s => s.ToStatus)
                 .Include(s => s.Tasks)
-                .ThenInclude(t => t.Task)
                 .FirstOrDefault(s => s.Id == fromStatusId);
             var toStatus = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
@@ -662,7 +661,7 @@ namespace Pims.Dal.Services
 
             // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
             var incompleteTaskIds = project.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId).Union(originalProject.Tasks.Where(t => !t.IsCompleted).Select(t => t.TaskId)).Distinct();
-            var statusTaskIds = fromStatus.Tasks.Where(t => !t.Task.IsOptional).Select(t => t.TaskId);
+            var statusTaskIds = fromStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
             var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
             if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
 

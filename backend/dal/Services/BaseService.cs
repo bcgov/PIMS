@@ -44,6 +44,23 @@ namespace Pims.Dal.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Provides a way to fetch the context within the assembly.
+        /// </summary>
+        /// <returns></returns>
+        internal PimsContext GetContext()
+        {
+            return this.Context;
+        }
+
+        /// <summary>
+        /// Provides a way to fetch the user within the assembly.
+        /// </summary>
+        /// <returns></returns>
+        internal ClaimsPrincipal GetUser()
+        {
+            return this.User;
+        }
         #endregion
     }
 }

@@ -1253,44 +1253,6 @@ namespace Pims.Dal.Migrations
                     b.ToTable("ProjectStatus");
                 });
 
-            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTask", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME2");
-
-                    b.HasKey("StatusId", "TaskId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("TaskId");
-
-                    b.HasIndex("UpdatedById");
-
-                    b.ToTable("ProjectStatusTasks");
-                });
-
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTransition", b =>
                 {
                     b.Property<int>("StatusId")
@@ -1715,6 +1677,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1725,9 +1690,11 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("StatusId");
+
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("IsDisabled", "Name", "SortOrder");
+                    b.HasIndex("IsDisabled", "IsOptional", "Name", "SortOrder");
 
                     b.ToTable("Tasks");
                 });
@@ -2447,29 +2414,6 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("UpdatedById");
                 });
 
-            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTask", b =>
-                {
-                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
-                        .WithMany("Tasks")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Pims.Dal.Entities.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById");
-                });
-
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTransition", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
@@ -2599,6 +2543,10 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
+                        .WithMany("Tasks")
+                        .HasForeignKey("StatusId");
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()

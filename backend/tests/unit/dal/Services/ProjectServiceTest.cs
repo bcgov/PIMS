@@ -473,7 +473,7 @@ namespace Pims.Dal.Test.Services
             var task = EntityHelper.CreateTask(20, "test tasks");
             init.AddAndSaveRange(tasks).AddAndSaveChanges(task);
 
-            project.Status.Tasks.Add(new Entity.ProjectStatusTask(project.Status, task));
+            project.Status.Tasks.Add(task);
             init.UpdateAndSaveChanges(project.Status);
 
             project.Tasks.Add(new Entity.ProjectTask(project, task));

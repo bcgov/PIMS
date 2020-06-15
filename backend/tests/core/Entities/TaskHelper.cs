@@ -19,14 +19,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.Task CreateTask(int id, string name, Entity.ProjectStatus status = null)
         {
-            var task = new Entity.Task(name) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
-
-            if (status != null)
-            {
-                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
-            }
-
-            return task;
+            return new Entity.Task(name, status) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
@@ -37,14 +30,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.Task CreateTask(string name, Entity.ProjectStatus status = null)
         {
-            var task = new Entity.Task(name) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } };
-
-            if (status != null)
-            {
-                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
-            }
-
-            return task;
+            return new Entity.Task(name, status) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
@@ -54,21 +40,11 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static List<Entity.Task> CreateDefaultTasks(Entity.ProjectStatus status = null)
         {
-            var tasks = new List<Entity.Task>()
+            return new List<Entity.Task>()
             {
-                new Entity.Task("Task 1") { Id = 1, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Task("Task 2") { Id = 2, RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.Task("Task 1", status) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Task("Task 2", status) { Id = 2, RowVersion = new byte[] { 12, 13, 14 } }
             };
-
-            if (status != null)
-            {
-                foreach (var task in tasks)
-                {
-                    status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
-                }
-            }
-
-            return tasks;
         }
 
         /// <summary>
@@ -81,7 +57,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.Task CreateTask(this PimsContext context, int id, string name, Entity.ProjectStatus status)
         {
-            var task = new Entity.Task(name)
+            var task = new Entity.Task(name, status)
             {
                 Id = id,
                 CreatedById = Guid.NewGuid(),
@@ -93,7 +69,6 @@ namespace Pims.Core.Test
 
             if (status != null)
             {
-                status.Tasks.Add(new Entity.ProjectStatusTask(status, task));
                 context.ProjectStatus.Update(status);
             }
 
