@@ -25,8 +25,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public ClaimService(PimsContext dbContext, System.Security.Claims.ClaimsPrincipal user, ILogger<ClaimService> logger) : base(dbContext, user, logger) { }
+        public ClaimService(PimsContext dbContext, System.Security.Claims.ClaimsPrincipal user, IPimsService service, ILogger<ClaimService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

@@ -1,0 +1,19 @@
+using Pims.Dal.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Pims.Dal.Services
+{
+    /// <summary>
+    /// INotificationTemplateService interface, provides functions to interact with notification templates within the datasource.
+    /// </summary>
+    public interface INotificationTemplateService : IService
+    {
+        IEnumerable<NotificationTemplate> Get();
+        NotificationTemplate Get(int id);
+        NotificationTemplate Add(NotificationTemplate template);
+        NotificationTemplate Update(NotificationTemplate template);
+        void Remove(NotificationTemplate template);
+        Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model = null) where T : class;
+    }
+}

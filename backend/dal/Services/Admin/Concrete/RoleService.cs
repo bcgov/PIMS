@@ -26,8 +26,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public RoleService(PimsContext dbContext, ClaimsPrincipal user, ILogger<RoleService> logger) : base(dbContext, user, logger) { }
+        public RoleService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<RoleService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

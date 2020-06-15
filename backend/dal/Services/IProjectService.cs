@@ -6,7 +6,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// IProjectService interface, provides functions to interact with projects within the datasource.
     /// </summary>
-    public interface IProjectService
+    public interface IProjectService : IService
     {
         Paged<Project> GetPage(ProjectFilter filter);
         Project Get(int id);

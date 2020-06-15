@@ -22,17 +22,17 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The status of the notification [accepted, pending, cancelled, failed, completed].
         /// </summary>
-        public NotificationStatus Status { get; set; }
+        public NotificationStatus Status { get; set; } = NotificationStatus.Pending;
 
         /// <summary>
         /// get/set - The priority of the notification [low, normal, high].
         /// </summary>
-        public NotificationPriorities Priority { get; set; }
+        public NotificationPriorities Priority { get; set; } = NotificationPriorities.Normal;
 
         /// <summary>
         /// get/set - The notification encoding [base64, binary, hex, utf-8].
         /// </summary>
-        public string Encoding { get; set; }
+        public NotificationEncodings Encoding { get; set; } = NotificationEncodings.Utf8;
 
         /// <summary>
         /// get/set - The date the notification should be sent on.
@@ -52,7 +52,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The body type of the notification [html, text].
         /// </summary>
-        public string BodyType { get; set; }
+        public NotificationBodyTypes BodyType { get; set; } = NotificationBodyTypes.Html;
 
         /// <summary>
         /// get/set - The notification body message.
@@ -95,6 +95,16 @@ namespace Pims.Dal.Entities
         public Agency ToAgency { get; set; }
 
         /// <summary>
+        /// get/set - Foreign key to the template that generated this notification.
+        /// </summary>
+        public int? TemplateId { get; set; }
+
+        /// <summary>
+        /// get/set - The notification template that generated this notification.
+        /// </summary>
+        public NotificationTemplate Template { get; set; }
+
+        /// <summary>
         /// get/set - CHES message Id.
         /// </summary>
         public Guid? ChesMessageId { get; set; }
@@ -117,28 +127,88 @@ namespace Pims.Dal.Entities
         public NotificationQueue() { }
 
         /// <summary>
-        /// Create a new instance of a NotificationQueue class.
+        /// Create a new instance of a NotificationQueue class, initializes with specified parameters.
         /// </summary>
         /// <param name="template"></param>
         /// <param name="project"></param>
-        /// <param name="agency"></param>
+        /// <param name="to"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
-        public NotificationQueue(NotificationTemplate template, Project project, Agency agency, string subject, string body)
+        public NotificationQueue(NotificationTemplate template, Project project, string to, string subject, string body)
         {
+            if (String.IsNullOrWhiteSpace(to)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(to));
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(subject));
             if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(body));
 
+            this.Key = Guid.NewGuid();
+            this.TemplateId = template?.Id ?? throw new ArgumentNullException(nameof(template));
+            this.Template = template;
             this.Subject = subject;
             this.Body = body;
-            this.BodyType = template?.BodyType ?? throw new ArgumentNullException(nameof(template));
+            this.BodyType = template.BodyType;
             this.Encoding = template.Encoding;
             this.Priority = template.Priority;
             this.ProjectId = project?.Id;
             this.Project = project;
-            this.ToAgencyId = agency?.Id ?? throw new ArgumentNullException(nameof(agency));
-            this.ToAgency = agency;
-            this.To = agency.Email;
+            this.To = to;
+            this.SendOn = DateTime.UtcNow;
+            this.Tag = template.Tag;
+        }
+
+        /// <summary>
+        /// Create a new instance of a NotificationQueue class, initializes with specified parameters.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="project"></param>
+        /// <param name="toAgency"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        public NotificationQueue(NotificationTemplate template, Project project, Agency toAgency, string subject, string body)
+        {
+            if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(subject));
+            if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(body));
+
+            this.Key = Guid.NewGuid();
+            this.TemplateId = template?.Id ?? throw new ArgumentNullException(nameof(template));
+            this.Template = template;
+            this.Subject = subject;
+            this.Body = body;
+            this.BodyType = template.BodyType;
+            this.Encoding = template.Encoding;
+            this.Priority = template.Priority;
+            this.ProjectId = project?.Id;
+            this.Project = project;
+            this.ToAgencyId = toAgency?.Id;
+            this.ToAgency = toAgency;
+            this.To = toAgency?.Email;
+            this.SendOn = DateTime.UtcNow;
+            this.Tag = template.Tag;
+        }
+
+        /// <summary>
+        /// Create a new instance of a NotificationQueue class, initializes with specified parameters.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="to"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        public NotificationQueue(NotificationTemplate template, string to, string subject, string body)
+        {
+            if (String.IsNullOrWhiteSpace(to)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(to));
+            if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(subject));
+            if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(body));
+
+            this.Key = Guid.NewGuid();
+            this.TemplateId = template?.Id ?? throw new ArgumentNullException(nameof(template));
+            this.Template = template;
+            this.To = to;
+            this.Subject = subject;
+            this.Body = body;
+            this.BodyType = template.BodyType;
+            this.Encoding = template.Encoding;
+            this.Priority = template.Priority;
+            this.SendOn = DateTime.UtcNow;
+            this.Tag = template.Tag;
         }
         #endregion
     }

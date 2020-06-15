@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -24,8 +23,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public PropertyTypeService(PimsContext dbContext, ClaimsPrincipal user, ILogger<PropertyTypeService> logger) : base(dbContext, user, logger) { }
+        public PropertyTypeService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<PropertyTypeService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

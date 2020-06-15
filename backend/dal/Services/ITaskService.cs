@@ -6,7 +6,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// ITaskService interface, provides functions to interact with tasks within the datasource.
     /// </summary>
-    public interface ITaskService
+    public interface ITaskService : IService
     {
         IEnumerable<Task> GetForStatus(int statusId);
         IEnumerable<Task> GetForStatus(string statusCode);

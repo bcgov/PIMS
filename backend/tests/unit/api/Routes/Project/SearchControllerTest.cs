@@ -41,6 +41,7 @@ namespace Pims.Api.Test.Routes.Project
             type.HasRoute("[area]/search");
             type.HasRoute("v{version:apiVersion}/[area]/search");
             type.HasApiVersion("1.0");
+            type.HasAuthorize();
         }
 
         [Fact]

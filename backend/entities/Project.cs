@@ -178,6 +178,11 @@ namespace Pims.Dal.Entities
         /// get - A collection of responses from notifications for this project.
         /// </summary>
         public ICollection<ProjectAgencyResponse> Responses { get; } = new List<ProjectAgencyResponse>();
+
+        /// <summary>
+        /// get - A collection of notifications sent for this project.
+        /// </summary>
+        public ICollection<NotificationQueue> Notifications { get; } = new List<NotificationQueue>();
         #endregion
 
         #region Constructors

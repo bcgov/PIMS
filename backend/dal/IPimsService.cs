@@ -18,6 +18,9 @@ namespace Pims.Dal
         IUserService User { get; }
         ITaskService Task { get; }
         IWorkflowService Workflow { get; }
+        INotificationTemplateService NotificationTemplate { get; }
+        IProjectNotificationService ProjectNotification { get; }
+        INotificationQueueService NotificationQueue { get; }
         #endregion
 
         #region Methods

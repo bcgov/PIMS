@@ -24,8 +24,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public BuildingConstructionTypeService(PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingConstructionTypeService> logger) : base(dbContext, user, logger) { }
+        public BuildingConstructionTypeService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<BuildingConstructionTypeService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

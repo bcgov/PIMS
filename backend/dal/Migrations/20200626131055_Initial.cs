@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -9,7 +9,7 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreDeploy(migrationBuilder);
-            
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -303,9 +303,13 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
-                    Encoding = table.Column<string>(maxLength: 50, nullable: true),
-                    BodyType = table.Column<string>(maxLength: 50, nullable: true),
-                    Priority = table.Column<int>(nullable: false),
+                    To = table.Column<string>(maxLength: 500, nullable: true),
+                    Cc = table.Column<string>(maxLength: 500, nullable: true),
+                    Bcc = table.Column<string>(maxLength: 500, nullable: true),
+                    Audience = table.Column<int>(nullable: false),
+                    Encoding = table.Column<string>(maxLength: 50, nullable: false),
+                    BodyType = table.Column<string>(maxLength: 50, nullable: false),
+                    Priority = table.Column<string>(maxLength: 50, nullable: false),
                     Subject = table.Column<string>(maxLength: 200, nullable: false),
                     Body = table.Column<string>(nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false),
@@ -1211,18 +1215,19 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Key = table.Column<Guid>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    Priority = table.Column<int>(nullable: false),
-                    Encoding = table.Column<string>(maxLength: 50, nullable: true),
+                    Priority = table.Column<string>(maxLength: 50, nullable: false),
+                    Encoding = table.Column<string>(maxLength: 50, nullable: false),
                     SendOn = table.Column<DateTime>(type: "DATETIME2", nullable: false),
                     To = table.Column<string>(maxLength: 100, nullable: true),
                     Subject = table.Column<string>(maxLength: 200, nullable: false),
-                    BodyType = table.Column<string>(maxLength: 50, nullable: true),
+                    BodyType = table.Column<string>(maxLength: 50, nullable: false),
                     Body = table.Column<string>(nullable: false),
                     Bcc = table.Column<string>(maxLength: 100, nullable: true),
                     Cc = table.Column<string>(maxLength: 100, nullable: true),
                     Tag = table.Column<string>(maxLength: 50, nullable: true),
                     ProjectId = table.Column<int>(nullable: true),
                     ToAgencyId = table.Column<int>(nullable: true),
+                    TemplateId = table.Column<int>(nullable: true),
                     ChesMessageId = table.Column<Guid>(nullable: true),
                     ChesTransactionId = table.Column<Guid>(nullable: true)
                 },
@@ -1239,6 +1244,12 @@ namespace Pims.Dal.Migrations
                         name: "FK_NotificationQueue_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_NotificationQueue_NotificationTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "NotificationTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1901,9 +1912,9 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_StatusId_ClassificationId_BuildingConstructionTypeId_BuildingPredo~",
+                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_StatusId_ClassificationId_ProjectNumber_BuildingConstructionTypeId~",
                 table: "Buildings",
-                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
+                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",
@@ -1953,9 +1964,15 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationQueue_ProjectId",
+                name: "IX_NotificationQueue_Key",
                 table: "NotificationQueue",
-                column: "ProjectId");
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationQueue_TemplateId",
+                table: "NotificationQueue",
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationQueue_ToAgencyId",
@@ -1968,9 +1985,14 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationQueue_Key_Status_SendOn_Subject_ProjectId_ToAgencyId",
+                name: "IX_NotificationQueue_ProjectId_TemplateId_ToAgencyId",
                 table: "NotificationQueue",
-                columns: new[] { "Key", "Status", "SendOn", "Subject", "ProjectId", "ToAgencyId" });
+                columns: new[] { "ProjectId", "TemplateId", "ToAgencyId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationQueue_Status_SendOn_Subject",
+                table: "NotificationQueue",
+                columns: new[] { "Status", "SendOn", "Subject" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationTemplates_CreatedById",
@@ -2061,9 +2083,9 @@ namespace Pims.Dal.Migrations
                 filter: "[PIN] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_LandArea_Municipality_Zoning_ZoningPotential_Descr~",
+                name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_ProjectNumber_LandArea_Municipality_Zoning_ZoningP~",
                 table: "Parcels",
-                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
+                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectAgencyResponses_AgencyId",
@@ -2169,6 +2191,11 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Name", "StatusId", "TierLevelId", "AgencyId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_Assessed_NetBook_Estimated_FiscalYear_ExemptionRequested",
+                table: "Projects",
+                columns: new[] { "Assessed", "NetBook", "Estimated", "FiscalYear", "ExemptionRequested" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatus_Code",
                 table: "ProjectStatus",
                 column: "Code",
@@ -2201,11 +2228,6 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectStatusNotifications_FromStatusId",
-                table: "ProjectStatusNotifications",
-                column: "FromStatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatusNotifications_TemplateId",
                 table: "ProjectStatusNotifications",
                 column: "TemplateId");
@@ -2219,6 +2241,11 @@ namespace Pims.Dal.Migrations
                 name: "IX_ProjectStatusNotifications_UpdatedById",
                 table: "ProjectStatusNotifications",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatusNotifications_FromStatusId_ToStatusId",
+                table: "ProjectStatusNotifications",
+                columns: new[] { "FromStatusId", "ToStatusId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatusTransitions_CreatedById",
@@ -2509,7 +2536,7 @@ namespace Pims.Dal.Migrations
                 name: "IX_Workflows_IsDisabled_Name_SortOrder",
                 table: "Workflows",
                 columns: new[] { "IsDisabled", "Name", "SortOrder" });
-                
+
             PostDeploy(migrationBuilder);
         }
 
@@ -2576,9 +2603,6 @@ namespace Pims.Dal.Migrations
                 name: "Buildings");
 
             migrationBuilder.DropTable(
-                name: "NotificationTemplates");
-
-            migrationBuilder.DropTable(
                 name: "Tasks");
 
             migrationBuilder.DropTable(
@@ -2592,6 +2616,9 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "NotificationTemplates");
 
             migrationBuilder.DropTable(
                 name: "BuildingConstructionTypes");

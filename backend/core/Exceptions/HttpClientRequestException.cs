@@ -44,6 +44,10 @@ namespace Pims.Core.Exceptions
         /// <returns></returns>
         public HttpClientRequestException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, innerException)
         {
+            if (innerException is HttpClientRequestException)
+            {
+                this.Response = ((HttpClientRequestException)innerException).Response;
+            }
             this.StatusCode = statusCode;
         }
 

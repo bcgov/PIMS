@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -16,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
+using ChesModel = Pims.Ches.Models;
 
 namespace Pims.Api.Helpers.Middleware
 {
@@ -164,6 +166,13 @@ namespace Pims.Api.Helpers.Middleware
                     // Ignore for now.
                     _logger.LogError(streamEx, $"Failed to read the {nameof(ApiHttpRequestException)} error stream.");
                 }
+            }
+            else if (ex is ChesException)
+            {
+                var exception = ex as ChesException;
+                code = exception.StatusCode;
+                message = exception.Message;
+                details = exception.Detail;
             }
             else if (ex is HttpClientRequestException || ex is ProxyRequestException)
             {

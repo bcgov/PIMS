@@ -18,8 +18,9 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public LookupService(PimsContext dbContext, ClaimsPrincipal user, ILogger<LookupService> logger) : base(dbContext, user, logger) { }
+        public LookupService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<LookupService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

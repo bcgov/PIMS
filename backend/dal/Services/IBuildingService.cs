@@ -7,7 +7,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// IBuildingService interface, provides functions to interact with buildings within the datasource.
     /// </summary>
-    public interface IBuildingService
+    public interface IBuildingService : IService
     {
         IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong);
         IEnumerable<Building> Get(BuildingFilter filter);

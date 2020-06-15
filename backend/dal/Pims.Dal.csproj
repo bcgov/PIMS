@@ -46,6 +46,7 @@
   <ItemGroup>
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />
     <ProjectReference Include="..\core\Pims.Core.csproj" />
+    <ProjectReference Include="..\notifications\Pims.Notifications.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20200618164721_Initial.cs" />

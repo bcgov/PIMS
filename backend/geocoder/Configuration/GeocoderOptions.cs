@@ -9,7 +9,7 @@ namespace Pims.Geocoder.Configuration
         /// <summary>
         /// get/set - The URI to the Geocoder API service.
         /// </summary>
-        public string Host { get; set; } = "https://geocoder.api.gov.bc.ca";
+        public string HostUri { get; set; } = "https://geocoder.api.gov.bc.ca";
 
         /// <summary>
         /// get/set - The API Key to include when making requests to the Geocoder API.

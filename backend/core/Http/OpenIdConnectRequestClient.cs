@@ -84,7 +84,7 @@ namespace Pims.Core.Http
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
                 var tokenResult = await responseStream.DeserializeAsync<Models.TokenModel>();
-                return $"Bearer {tokenResult.Access_token}";
+                return $"Bearer {tokenResult.AccessToken}";
             }
             else
             {
