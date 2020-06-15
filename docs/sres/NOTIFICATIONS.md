@@ -36,7 +36,7 @@ To support delayed notifications, the project status trigger will also include a
 | Days       | Send notification `x` days from the current date, using the `DelayDays` value |
 | SetDay     | Prompt the user to select a date that the notification will be sent on        |
 
-![Workflow](notifications-workflow.png)
+![Workflow](notification-workflow.png)
 
 ### API Notication Response
 
