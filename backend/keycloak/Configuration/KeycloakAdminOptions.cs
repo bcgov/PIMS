@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Pims.Keycloak.Exceptions;
+using Pims.Core.Exceptions;
 
 namespace Pims.Keycloak.Configuration
 {

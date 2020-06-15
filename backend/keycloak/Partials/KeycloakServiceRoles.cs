@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using keycloak.Extensions;
+using Pims.Core.Extensions;
 using Pims.Keycloak.Extensions;
 
 namespace Pims.Keycloak
@@ -22,7 +22,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel> GetRoleAsync(Guid id)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles-by-id/{id}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles-by-id/{id}");
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -36,7 +36,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/roles-by-id/{role.Id}", content);
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/roles-by-id/{role.Id}", content);
 
             return response.HandleResponse(role);
         }
@@ -48,7 +48,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Guid> DeleteRoleAsync(Guid id)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/roles-by-id/{id}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/roles-by-id/{id}");
 
             return response.HandleResponse(id);
         }
@@ -63,7 +63,7 @@ namespace Pims.Keycloak
         {
             var json = roles.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/roles-by-id/{parentId}/composites", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/roles-by-id/{parentId}/composites", content);
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -75,7 +75,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetCompositeRolesAsync(Guid parentId)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles-by-id/{parentId}/composites");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles-by-id/{parentId}/composites");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -90,7 +90,7 @@ namespace Pims.Keycloak
         {
             var json = roles.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/roles-by-id/{parentId}/composites", content);
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/roles-by-id/{parentId}/composites", content);
 
             return response.HandleResponse(roles);
         }
@@ -103,7 +103,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetClientCompositeRolesAsync(Guid parentId, string clientName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles-by-id/{parentId}/composites/clients/{clientName}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles-by-id/{parentId}/composites/clients/{clientName}");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -115,7 +115,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetRealmCompositeRolesAsync(Guid parentId)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles-by-id/{parentId}/composites/realm");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles-by-id/{parentId}/composites/realm");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -128,7 +128,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetRolesAsync()
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -140,7 +140,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel> GetRoleAsync(string name)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles/{name}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles/{name}");
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -154,7 +154,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/roles", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/roles", content);
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -169,7 +169,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/roles/{name}", content);
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/roles/{name}", content);
 
             return response.HandleResponse(role);
         }
@@ -181,7 +181,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<string> DeleteRoleAsync(string name)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/roles/{name}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/roles/{name}");
 
             return response.HandleResponse(name);
         }
@@ -196,7 +196,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/roles/{parentName}/composites", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/roles/{parentName}/composites", content);
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -208,7 +208,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetCompositeRolesAsync(string parentName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles/{parentName}/composites");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles/{parentName}/composites");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -223,7 +223,7 @@ namespace Pims.Keycloak
         {
             var json = roles.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/roles/{parentName}/composites", content);
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/roles/{parentName}/composites", content);
 
             return response.HandleResponse(roles);
         }
@@ -236,7 +236,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetClientCompositeRolesAsync(string parentName, string clientName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles/{parentName}/composites/clients/{clientName}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles/{parentName}/composites/clients/{clientName}");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -248,7 +248,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetRealmCompositeRolesAsync(string parentName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles/{parentName}/composites/realm");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles/{parentName}/composites/realm");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -263,7 +263,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.UserModel[]> GetRoleMembersAsync(string name, int first = 0, int max = 10)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/roles/{name}/users?first={first}&max={max}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/roles/{name}/users?first={first}&max={max}");
 
             return await response.HandleResponseAsync<Models.UserModel[]>();
         }
@@ -277,7 +277,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetRolesAsync(Guid clientId)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -290,7 +290,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel> GetRoleAsync(Guid clientId, string name)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{name}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{name}");
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -305,7 +305,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles", content);
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -320,7 +320,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{role.Name}", content);
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{role.Name}", content);
 
             return response.HandleResponse(role);
         }
@@ -333,7 +333,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<string> DeleteRoleAsync(Guid clientId, string name)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{name}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{name}");
 
             return response.HandleResponse(name);
         }
@@ -349,7 +349,7 @@ namespace Pims.Keycloak
         {
             var json = role.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites", content);
 
             return await response.HandleResponseAsync<Models.RoleModel>();
         }
@@ -362,7 +362,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetCompositeRolesAsync(Guid clientId, string parentName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -378,7 +378,7 @@ namespace Pims.Keycloak
         {
             var json = roles.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites", content);
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites", content);
 
             return response.HandleResponse(roles);
         }
@@ -392,7 +392,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetClientCompositeRolesAsync(Guid clientId, string parentName, string clientName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites/clients/{clientName}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites/clients/{clientName}");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -405,7 +405,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.RoleModel[]> GetRealmCompositeRolesAsync(Guid clientId, string parentName)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites/realm");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/composites/realm");
 
             return await response.HandleResponseAsync<Models.RoleModel[]>();
         }
@@ -420,7 +420,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.UserModel[]> GetRoleMembersAsync(Guid clientId, string parentName, int first = 0, int max = 10)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/users?first={first}&max={max}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/clients/{clientId}/roles/{parentName}/users?first={first}&max={max}");
 
             return await response.HandleResponseAsync<Models.UserModel[]>();
         }

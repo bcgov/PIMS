@@ -13,6 +13,11 @@ namespace Pims.Api.Policies
     {
         #region Constructors
         /// <summary>
+        /// Creates a new instance of a HasPermissionAttribute.
+        /// </summary>
+        public HasPermissionAttribute() : base(typeof(PermissionFilter)) { }
+
+        /// <summary>
         /// Creates a new instance of a HasPermissionAttribute, initializes it with the specified permission.
         /// </summary>
         /// <param name="permission"></param>

@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace keycloak.Extensions
+namespace Pims.Core.Extensions
 {
     /// <summary>
     /// JsonSerializerExtensions static class, provides extension methods for JSON serialization and deserialization.

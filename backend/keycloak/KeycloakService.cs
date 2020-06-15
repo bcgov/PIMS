@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Options;
+using Pims.Core.Http;
+
 namespace Pims.Keycloak
 {
     /// <summary>
@@ -7,7 +10,15 @@ namespace Pims.Keycloak
     public partial class KeycloakService : IKeycloakService
     {
         #region Variables
-        private readonly IKeycloakRequestClient _client;
+        private readonly IOpenIdConnectRequestClient _client;
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// get - The configuration options for keycloak.
+        /// </summary>
+        /// <value></value>
+        public Configuration.KeycloakOptions Options { get; }
         #endregion
 
         #region Constructors
@@ -15,13 +26,19 @@ namespace Pims.Keycloak
         /// Creates a new instance of a KeycloakAdmin class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="client"></param>
-        public KeycloakService(IKeycloakRequestClient client)
+        /// <param name="options"></param>
+        public KeycloakService(IOpenIdConnectRequestClient client, IOptions<Configuration.KeycloakOptions> options)
         {
-            client.Options.Validate(); // TODO: Figure out how to automatically validate.
-            client.Options.Admin.Validate();
-            client.Options.OpenIdConnect.Validate();
-            client.Options.ServiceAccount.Validate();
+            this.Options = options.Value;
+            this.Options.Validate(); // TODO: Figure out how to automatically validate.
+            this.Options.Admin.Validate();
+            this.Options.OpenIdConnect.Validate();
+            this.Options.ServiceAccount.Validate();
             _client = client;
+            _client.AuthClientOptions.Audience = this.Options.ServiceAccount.Audience ?? this.Options.Audience;
+            _client.AuthClientOptions.Authority = this.Options.ServiceAccount.Authority ?? this.Options.Authority;
+            _client.AuthClientOptions.Client = this.Options.ServiceAccount.Client ?? this.Options.Client;
+            _client.AuthClientOptions.Secret = this.Options.ServiceAccount.Secret ?? this.Options.Secret;
         }
         #endregion
 

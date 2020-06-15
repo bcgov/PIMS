@@ -1,10 +1,9 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-using keycloak.Extensions;
-using Pims.Keycloak.Exceptions;
+using Pims.Core.Exceptions;
+using Pims.Core.Extensions;
 
 namespace Pims.Keycloak.Extensions
 {
@@ -18,7 +17,7 @@ namespace Pims.Keycloak.Extensions
         /// </summary>
         /// <param name="response"></param>
         /// <typeparam name="T"></typeparam>
-        /// <exception type="KeycloakRequestException">The request failed.</exception>
+        /// <exception type="HttpClientRequestException">The request failed.</exception>
         /// <returns></returns>
         public static async Task<T> HandleResponseAsync<T>(this HttpResponseMessage response)
         {
@@ -33,7 +32,7 @@ namespace Pims.Keycloak.Extensions
                     }
                     catch (Exception ex)
                     {
-                        throw new KeycloakRequestException(response, ex);
+                        throw new HttpClientRequestException(response, ex);
                     }
                 }
 
@@ -48,7 +47,7 @@ namespace Pims.Keycloak.Extensions
                     // We will then return 'null'.
                     return default;
                 }
-                throw new KeycloakRequestException(response);
+                throw new HttpClientRequestException(response);
             }
         }
 
@@ -59,7 +58,7 @@ namespace Pims.Keycloak.Extensions
         /// <param name="response"></param>
         /// <param name="result"></param>
         /// <typeparam name="T"></typeparam>
-        /// <exception type="KeycloakRequestException">The request failed.</exception>
+        /// <exception type="HttpClientRequestException">The request failed.</exception>
         /// <returns></returns>
         public static T HandleResponse<T>(this HttpResponseMessage response, T result)
         {
@@ -69,7 +68,7 @@ namespace Pims.Keycloak.Extensions
             }
             else
             {
-                throw new KeycloakRequestException(response);
+                throw new HttpClientRequestException(response);
             }
         }
     }

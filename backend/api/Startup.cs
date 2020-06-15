@@ -22,7 +22,6 @@ using Pims.Api.Helpers.Routes.Constraints;
 using Pims.Dal;
 using Pims.Dal.Keycloak;
 using Pims.Dal.Helpers.Extensions;
-using Pims.Keycloak;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Data.SqlClient;
@@ -37,9 +36,9 @@ using System.Threading.Tasks;
 using Mapster;
 using Pims.Api.Helpers.Mapping;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml.EMMA;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Pims.Core.Http;
 
 namespace Pims.Api
 {
@@ -93,17 +92,32 @@ namespace Pims.Api
                     member.Type.IsGenericType &&
                     member.Type.GetGenericTypeDefinition() == typeof(ICollection<>));
             });
+            services.Configure<JsonSerializerOptions>(this.Configuration.GetSection("Serialization:Json"));
+            services.Configure<Core.Http.Configuration.AuthClientOptions>(this.Configuration.GetSection("Keycloak"));
+            services.Configure<Core.Http.Configuration.OpenIdConnectOptions>(this.Configuration.GetSection("Keycloak:OpenIdConnect"));
             services.Configure<Keycloak.Configuration.KeycloakOptions>(this.Configuration.GetSection("Keycloak"));
             services.Configure<Pims.Dal.PimsOptions>(this.Configuration.GetSection("Pims"));
+            services.AddOptions();
 
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddOptions();
+            services.AddMvcCore()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             services.AddRouting(options =>
             {
@@ -170,28 +184,17 @@ namespace Pims.Api
 
             services.AddPimsServices();
             services.AddPimsKeycloakService();
+            services.AddGeocoderService(this.Configuration.GetSection("Geocoder"));
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
             services.AddTransient<IClaimsTransformation, KeycloakClaimTransformer>();
             services.AddHttpContextAccessor();
             services.AddTransient<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);
-            services.AddScoped<IKeycloakRequestClient, KeycloakRequestClient>();
+            services.AddScoped<IProxyRequestClient, ProxyRequestClient>();
+            services.AddScoped<IOpenIdConnectRequestClient, OpenIdConnectRequestClient>();
 
             services.AddHealthChecks()
                 .AddCheck("liveliness", () => HealthCheckResult.Healthy())
                 .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
-
-            //TODO: Add a health check for keycloak connectivity.
-            // services.AddHealthChecksUI();
-
-            services.AddMvcCore()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.WriteIndented = true;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
 
             services.AddApiVersioning(options =>
             {
