@@ -44,6 +44,7 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               placeholder="SPP-XXXXXX"
+              value="TEST-NUMBER"
             />
           </span>
         </div>
@@ -76,7 +77,6 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               required={true}
-              value=""
             />
           </span>
         </div>
@@ -103,7 +103,6 @@ exports[`renders correctly 1`] = `
               name="description"
               onBlur={[Function]}
               onChange={[Function]}
-              value=""
             />
           </span>
         </div>
@@ -129,7 +128,6 @@ exports[`renders correctly 1`] = `
               name="note"
               onBlur={[Function]}
               onChange={[Function]}
-              value=""
             />
           </span>
         </div>
