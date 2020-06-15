@@ -77,7 +77,7 @@ namespace Pims.Dal.Test.Services
             init.AddAndSaveChanges(status1, status2);
             var tasks = EntityHelper.CreateDefaultTasks();
             init.AddAndSaveRange(tasks);
-            tasks.ForEach(t => status2.Tasks.Add(new Entity.ProjectStatusTask(status2, t)));
+            tasks.ForEach(t => status2.Tasks.Add(t));
             init.UpdateAndSaveChanges(status2);
 
             var service = helper.CreateService<TaskService>(user);

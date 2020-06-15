@@ -31,10 +31,10 @@ namespace Pims.Dal.Services
         public IEnumerable<Task> GetForStatus(int statusId)
         {
             var tasks = from s in this.Context.ProjectStatus.AsNoTracking()
-                        join st in this.Context.ProjectStatusTasks on s.Id equals st.StatusId
+                        join t in this.Context.Tasks on s.Id equals t.StatusId
                         where s.Id == statusId
-                        orderby st.Task.SortOrder, st.Task.Name
-                        select st.Task;
+                        orderby t.SortOrder, t.Name
+                        select t;
 
             return tasks.ToArray();
         }
@@ -47,10 +47,10 @@ namespace Pims.Dal.Services
         public IEnumerable<Task> GetForStatus(string statusCode)
         {
             var tasks = from s in this.Context.ProjectStatus.AsNoTracking()
-                        join st in this.Context.ProjectStatusTasks on s.Id equals st.StatusId
+                        join t in this.Context.Tasks on s.Id equals t.StatusId
                         where s.Code == statusCode
-                        orderby st.Task.SortOrder, st.Task.Name
-                        select st.Task;
+                        orderby t.SortOrder, t.Name
+                        select t;
 
             return tasks.ToArray();
         }
@@ -65,10 +65,11 @@ namespace Pims.Dal.Services
             var tasks = from w in this.Context.Workflows.AsNoTracking()
                         join ws in this.Context.WorkflowProjectStatus on w.Id equals ws.WorkflowId
                         join s in this.Context.ProjectStatus on ws.StatusId equals s.Id
-                        join st in this.Context.ProjectStatusTasks on s.Id equals st.StatusId
+                        join t in this.Context.Tasks on s.Id equals t.StatusId into gt
+                        from at in gt.DefaultIfEmpty()
                         where w.Code == workflowCode
-                        orderby st.StatusId, st.Task.SortOrder, st.Task.Name
-                        select st.Task;
+                        orderby at.StatusId, at.SortOrder, at.Name
+                        select at;
 
             return tasks.ToArray();
         }

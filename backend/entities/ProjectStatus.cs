@@ -32,7 +32,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get - A collection of tasks associated to this project status.
         /// </summary>
-        public ICollection<ProjectStatusTask> Tasks { get; } = new List<ProjectStatusTask>();
+        public ICollection<Task> Tasks { get; } = new List<Task>();
 
         /// <summary>
         /// get - A collection of valid projects status go to transitions.

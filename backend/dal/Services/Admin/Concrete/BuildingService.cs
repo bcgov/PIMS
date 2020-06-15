@@ -186,7 +186,10 @@ namespace Pims.Dal.Services.Admin
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings
+                .Include(b => b.Status)
+                .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(existingBuilding);
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(existingBuilding).OriginalValues[nameof(Building.AgencyId)];

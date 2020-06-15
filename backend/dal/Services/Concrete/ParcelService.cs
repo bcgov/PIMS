@@ -188,6 +188,7 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingParcel = this.Context.Parcels
+                .Include(p => p.Status)
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
@@ -210,10 +211,10 @@ namespace Pims.Dal.Services
             this.Context.Parcels.ThrowIfPidPinUpdated(parcel);
 
             // Update a parcel and all child collections
+            this.ThrowIfNotAllowedToUpdate(existingParcel);
             this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
             this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
             this.Context.SetOriginalRowVersion(existingParcel);
-            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
             foreach (var building in parcel.Buildings)
             {
                 var existingBuilding = existingParcel.Buildings
@@ -225,6 +226,8 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
+                    this.ThrowIfNotAllowedToUpdate(existingBuilding);
+
                     this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                     this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
 
@@ -244,8 +247,6 @@ namespace Pims.Dal.Services
                     }
                     foreach (var buildingFiscal in building.Fiscals)
                     {
-                        this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, existingBuilding);
-
                         this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                         this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
 
@@ -291,14 +292,14 @@ namespace Pims.Dal.Services
                 }
             }
 
-            //Delete any missing records in child collections.
+            // Delete any missing records in child collections.
             foreach (var building in existingParcel.Buildings)
             {
                 var matchingBuilding = parcel.Buildings.FirstOrDefault(b => b.Id == building.Id);
                 if (matchingBuilding == null)
                 {
+                    this.ThrowIfNotAllowedToUpdate(building);
                     this.Context.Buildings.Remove(building);
-                    this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, building);
 
                     continue;
                 }
@@ -317,8 +318,14 @@ namespace Pims.Dal.Services
                     this.Context.ParcelEvaluations.Remove(parcelEvaluation);
                 }
             }
+            foreach (var parcelFiscals in existingParcel.Fiscals)
+            {
+                if (!parcel.Fiscals.Any(e => (e.ParcelId == parcelFiscals.ParcelId && e.FiscalYear == parcelFiscals.FiscalYear && e.Key == parcelFiscals.Key)))
+                {
+                    this.Context.ParcelFiscals.Remove(parcelFiscals);
+                }
+            }
 
-            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, existingParcel);
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return parcel;
@@ -337,7 +344,8 @@ namespace Pims.Dal.Services
             var userAgencies = this.User.GetAgencies();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
-            var entity = this.Context.Parcels
+            var existingParcel = this.Context.Parcels
+                .Include(p => p.Status)
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
@@ -347,22 +355,23 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            if (!isAdmin && (!userAgencies.Contains(entity.AgencyId) || entity.IsSensitive && !viewSensitive))
+            if (!isAdmin && (!userAgencies.Contains(existingParcel.AgencyId) || existingParcel.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
 
-            this.Context.Entry(entity).CurrentValues.SetValues(parcel);
-            this.User.CanUpdateOrRemoveParcelOrThrow(this.Context, entity);
+            this.ThrowIfNotAllowedToUpdate(existingParcel);
+            this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
+            this.Context.SetOriginalRowVersion(existingParcel);
 
-            entity.Buildings.ForEach((building) =>
+            existingParcel.Buildings.ForEach((building) =>
             {
+                this.ThrowIfNotAllowedToUpdate(building);
                 this.Context.BuildingEvaluations.RemoveRange(building.Evaluations);
                 this.Context.BuildingFiscals.RemoveRange(building.Fiscals);
                 this.Context.Buildings.Remove(building);
-                this.User.CanUpdateOrRemoveBuildingOrThrow(this.Context, building);
             });
-            this.Context.ParcelEvaluations.RemoveRange(entity.Evaluations);
-            this.Context.ParcelFiscals.RemoveRange(entity.Fiscals);
-            this.Context.Parcels.Remove(entity); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
+            this.Context.ParcelEvaluations.RemoveRange(existingParcel.Evaluations);
+            this.Context.ParcelFiscals.RemoveRange(existingParcel.Fiscals);
+            this.Context.Parcels.Remove(existingParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
             this.Context.CommitTransaction();
         }
         #endregion

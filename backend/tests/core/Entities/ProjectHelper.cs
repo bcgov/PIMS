@@ -33,7 +33,7 @@ namespace Pims.Core.Test
         public static Entity.Project CreateProject(int id, Entity.Agency agency = null, Entity.ProjectStatus status = null)
         {
             agency ??= EntityHelper.CreateAgency(id);
-            status ??= EntityHelper.CreateProjectStatus("status", "status");
+            status ??= EntityHelper.CreateProjectStatus("Draft", "DR");
             var tierLevel = EntityHelper.CreateTierLevel("tierLevel");
 
             var user = CreateUser(Guid.NewGuid(), "project tester", "asasa", "asasa", null, agency);
@@ -101,7 +101,7 @@ namespace Pims.Core.Test
         public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency = null, Entity.ProjectStatus status = null)
         {
             agency ??= context.Agencies.OrderBy(a => a.Id).FirstOrDefault() ?? EntityHelper.CreateAgency(1);
-            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("status", "status");
+            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("Draft", "DR");
             var tierLevel = context.TierLevels.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateTierLevel("tierLevel");
 
             var project = new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
@@ -133,7 +133,7 @@ namespace Pims.Core.Test
         public static List<Entity.Project> CreateProjects(this PimsContext context, int startId, int count, Entity.Agency agency = null, Entity.ProjectStatus status = null)
         {
             agency ??= context.Agencies.FirstOrDefault(a => a.Id == 1) ?? EntityHelper.CreateAgency(startId);
-            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("status", "status");
+            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("Draft", "DR");
 
             var projects = new List<Entity.Project>(count);
             for (var i = startId; i < (startId + count); i++)
