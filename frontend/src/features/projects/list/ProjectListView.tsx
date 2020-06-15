@@ -165,7 +165,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     if (row.statusId >= ReviewWorkflowStatus.PropertyReview) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
     } else {
-      debugger;
       history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
     }
   };
