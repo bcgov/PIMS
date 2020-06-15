@@ -21,10 +21,7 @@ import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
 import ReviewApproveStep from './steps/ReviewApproveStep';
-import {
-  fetchProject,
-  updateWorkflowStatus,
-} from 'features/projects/dispose/projectsActionCreator';
+import { updateWorkflowStatus } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
 import SelectProjectPropertiesPage from './components/SelectProjectPropertiesPage';
@@ -135,16 +132,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     dispatch,
     projectNumber,
   ]);
-
-  useEffect(() => {
-    if (projectNumber !== null && projectNumber !== undefined) {
-      dispatch(fetchProject(projectNumber as string));
-    }
-  }, [dispatch, projectNumber]);
-
-  if (projectNumber !== null && projectNumber !== undefined && getProjectRequest?.error) {
-    throw Error(`Unable to load project number ${projectNumber}`);
-  }
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
