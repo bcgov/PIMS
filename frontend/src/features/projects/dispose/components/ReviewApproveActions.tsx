@@ -57,7 +57,10 @@ export const ReviewApproveActions = ({
       <FlexRight>
         <span>
           <Button
-            disabled={values.statusId === ReviewWorkflowStatus.ApprovedForErp}
+            disabled={
+              values.statusId === ReviewWorkflowStatus.ApprovedForErp ||
+              values.statusId === ReviewWorkflowStatus.Denied
+            }
             variant="danger"
             onClick={() => {
               setSubmitStatusId(ReviewWorkflowStatus.Denied);
