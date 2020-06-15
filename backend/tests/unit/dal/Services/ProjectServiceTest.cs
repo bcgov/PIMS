@@ -1481,7 +1481,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1, 1);
@@ -1547,7 +1547,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeRequest).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeRequest).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1, 1);
@@ -1616,7 +1616,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1, 1);
@@ -1683,7 +1683,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1, 1);

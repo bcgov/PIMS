@@ -531,7 +531,7 @@ namespace Pims.Dal.Services
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
-            return project;
+            return Get(originalProject.Id);
         }
 
         /// <summary>
@@ -728,7 +728,7 @@ namespace Pims.Dal.Services
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 
-            return originalProject;
+            return Get(originalProject.Id);
         }
         #endregion
     }
