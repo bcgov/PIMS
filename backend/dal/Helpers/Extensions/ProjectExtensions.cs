@@ -46,7 +46,7 @@ namespace Pims.Dal.Helpers.Extensions
             {
                 var statuses = context.Workflows.Where(w => w.Code == "ACCESS-DISPOSAL")
                     .SelectMany(w => w.Status).Select(x => x.StatusId).ToArray();
-                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("RE"));
+                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I"));
             }
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
