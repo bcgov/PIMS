@@ -80,7 +80,9 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
             goToAddProperties={() => goToDisposePath('properties/update')}
             canEdit={canUserApproveForm()}
           />
-          <ReviewApproveActions {...{ submitStatusId, setSubmitStatusId }} />
+          {canUserApproveForm() ? (
+            <ReviewApproveActions {...{ submitStatusId, setSubmitStatusId }} />
+          ) : null}
         </Form>
       </Formik>
     </Container>
