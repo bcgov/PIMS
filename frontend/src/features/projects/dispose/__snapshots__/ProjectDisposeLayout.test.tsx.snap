@@ -87,8 +87,8 @@ exports[`stepper renders correctly based off of workflow 1`] = `
       className="sc-AxirZ jzzwlA"
     >
       <button
-        className="btn btn-primary"
-        disabled={false}
+        className="btn btn-warning"
+        disabled={true}
         onClick={[Function]}
         style={
           Object {
@@ -101,7 +101,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
       </button>
       <button
         className="btn btn-secondary"
-        disabled={false}
+        disabled={true}
         onClick={[Function]}
         type="button"
       >
