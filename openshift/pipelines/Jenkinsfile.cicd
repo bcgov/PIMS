@@ -162,7 +162,7 @@ pipeline {
     stage("Build FRONTEND") {
       environment {
         COMP_NAME = "app"
-        WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
+        WAIT_TIMEOUT = 30 // increase the timeout for this stage as it takes longer to build
       }
       when {
         anyOf {
