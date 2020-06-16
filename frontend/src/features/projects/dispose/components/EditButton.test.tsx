@@ -2,13 +2,16 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { noop } from 'lodash';
 import EditButton from './EditButton';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 
 const getEditButton = (setFormDisabled?: Function, formDisabled?: boolean) => {
   return <EditButton {...{ formDisabled, setFormDisabled }} />;
 };
 
 describe('Project Dispose Form Edit Button', () => {
+  afterEach(() => {
+    cleanup();
+  });
   it('Matches Snapshot', () => {
     const component = renderer.create(getEditButton(noop, true));
     expect(component.toJSON()).toMatchSnapshot();

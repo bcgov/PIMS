@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import BuildingForm, { defaultBuildingValues } from './BuildingForm';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { render, fireEvent, wait, cleanup } from '@testing-library/react';
 import { fillInput } from 'utils/testUtils';
 import { Formik, Form } from 'formik';
 import { IFormBuilding } from './BuildingForm';
@@ -16,13 +16,14 @@ import { Button } from 'components/common/form';
 
 const mockBuilding: IFormBuilding = {
   address: {
-    cityId: '1',
+    cityId: 1,
     line1: 'line1',
     postal: 'v8x3P5',
     provinceId: '2',
     city: 'city',
     province: 'province',
   },
+  classification: 'class',
   agencyId: 3,
   buildingConstructionTypeId: 4,
   buildingFloorCount: 5,
@@ -91,6 +92,9 @@ const store = mockStore({
 });
 
 describe('sub-form BuildingForm functionality', () => {
+  afterEach(() => {
+    cleanup();
+  });
   const getBuildingForm = (initialValues: IFormBuilding, onSubmit: any) => {
     return (
       <Provider store={store}>

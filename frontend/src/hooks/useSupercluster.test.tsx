@@ -1,10 +1,13 @@
 import React from 'react';
 import { BBox, GeoJsonProperties } from 'geojson';
 import Supercluster from 'supercluster';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import useSupercluster from './useSupercluster';
 
 describe('useSupercluster hook', () => {
+  afterEach(() => {
+    cleanup();
+  });
   it('renders clusters', async () => {
     // Arrange
     const points: Array<Supercluster.PointFeature<GeoJsonProperties>> = [

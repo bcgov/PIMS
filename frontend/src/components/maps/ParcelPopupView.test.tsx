@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { ParcelPopupView } from './ParcelPopupView';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { IAddress, IParcel } from 'actions/parcelsActions';
 import { Claims } from 'constants/claims';
@@ -61,49 +61,54 @@ const mockParcel = (agencyId: number) => {
   return parcel;
 };
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
+describe('Parcel popup view', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(1)} />
+        </Router>,
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('displays update option when user belongs to buildings agency', () => {
+    const { getByText } = render(
       <Router history={history}>
         <ParcelPopupView parcel={mockParcel(1)} />
       </Router>,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-});
-
-it('displays update option when user belongs to buildings agency', () => {
-  const { getByText } = render(
-    <Router history={history}>
-      <ParcelPopupView parcel={mockParcel(1)} />
-    </Router>,
-  );
-  expect(getByText(/Update/i)).toBeInTheDocument();
-});
-
-it('displays view option', () => {
-  const { getByText } = render(
-    <Router history={history}>
-      <ParcelPopupView parcel={mockParcel(2)} />
-    </Router>,
-  );
-  expect(getByText(/View/i)).toBeInTheDocument();
-});
-
-it('always displays update option for sres', () => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: [Claims.ADMIN_PROPERTIES],
-      },
-      subject: 'test',
-    },
+    );
+    expect(getByText(/Update/i)).toBeInTheDocument();
   });
-  const { getByText } = render(
-    <Router history={history}>
-      <ParcelPopupView parcel={mockParcel(2)} />
-    </Router>,
-  );
-  expect(getByText(/Update/i)).toBeInTheDocument();
+
+  it('displays view option', () => {
+    const { getByText } = render(
+      <Router history={history}>
+        <ParcelPopupView parcel={mockParcel(2)} />
+      </Router>,
+    );
+    expect(getByText(/View/i)).toBeInTheDocument();
+  });
+
+  it('always displays update option for sres', () => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: [1],
+          roles: [Claims.ADMIN_PROPERTIES],
+        },
+        subject: 'test',
+      },
+    });
+    const { getByText } = render(
+      <Router history={history}>
+        <ParcelPopupView parcel={mockParcel(2)} />
+      </Router>,
+    );
+    expect(getByText(/Update/i)).toBeInTheDocument();
+  });
 });

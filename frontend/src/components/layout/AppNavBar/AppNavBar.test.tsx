@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, cleanup } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { mount } from 'enzyme';
@@ -31,6 +31,10 @@ const store = mockStore({
 });
 
 describe('AppNavBar', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('AppNavBar snapshot test.', () => {
     const tree = mount(
       <Provider store={store}>

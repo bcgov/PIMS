@@ -13,7 +13,7 @@ import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
-import { render, wait, fireEvent, screen } from '@testing-library/react';
+import { render, wait, fireEvent, screen, cleanup } from '@testing-library/react';
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('../hooks/useStepper');
@@ -45,31 +45,36 @@ const uiElement = (
   </Provider>
 );
 
-it('renders correctly', () => {
-  const tree = renderer.create(uiElement).toJSON();
-  expect(tree).toMatchSnapshot();
-});
-
-it('requires name', async () => {
-  const { container, getByText } = render(uiElement);
-  const form = container.querySelector('form');
-  await wait(() => {
-    fireEvent.submit(form!);
+describe('Project Draft Step', () => {
+  afterEach(() => {
+    cleanup();
   });
-  expect(getByText('Required')).toBeInTheDocument();
-});
-
-it('submits after required filled', async () => {
-  const { container } = render(uiElement);
-  const form = container.querySelector('form');
-  await fillInput(container, 'name', 'Tester');
-  await wait(() => {
-    fireEvent.submit(form!);
+  it('renders correctly', () => {
+    const tree = renderer.create(uiElement).toJSON();
+    expect(tree).toMatchSnapshot();
   });
-  expect(screen.getByDisplayValue('Tester')).toBeInTheDocument();
-});
 
-it('loads the projectNumber', () => {
-  render(uiElement);
-  expect(screen.getByDisplayValue('TEST-NUMBER')).toBeInTheDocument();
+  it('requires name', async () => {
+    const { container, getByText } = render(uiElement);
+    const form = container.querySelector('form');
+    await wait(() => {
+      fireEvent.submit(form!);
+    });
+    expect(getByText('Required')).toBeInTheDocument();
+  });
+
+  it('submits after required filled', async () => {
+    const { container } = render(uiElement);
+    const form = container.querySelector('form');
+    await fillInput(container, 'name', 'Tester');
+    await wait(() => {
+      fireEvent.submit(form!);
+    });
+    expect(screen.getByDisplayValue('Tester')).toBeInTheDocument();
+  });
+
+  it('loads the projectNumber', () => {
+    render(uiElement);
+    expect(screen.getByDisplayValue('TEST-NUMBER')).toBeInTheDocument();
+  });
 });

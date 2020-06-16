@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Property List View Select renders correctly 1`] = `
 <div
   className="col-md-12 PropertyListViewSelect container"
 >
