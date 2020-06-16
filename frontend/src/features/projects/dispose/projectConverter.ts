@@ -168,6 +168,7 @@ export const toApiProject = (project: IProject) => {
     description: project.description,
     projectProperties: projectProperties,
     note: project.note,
+    privateNote: project.privateNote,
     agencyId: project.agencyId,
     tierLevelId: project.tierLevelId,
     tasks: project.tasks,
