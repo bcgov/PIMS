@@ -13,6 +13,8 @@ import ReviewApproveStep from './ReviewApproveStep';
 import { render } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -109,6 +111,8 @@ describe('Review Approve Step', () => {
     jest.clearAllMocks();
   });
   beforeEach(() => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onAny().reply(200, {});
     mockKeycloak([]);
   });
   it('renders correctly', () => {
