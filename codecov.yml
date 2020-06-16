@@ -21,4 +21,4 @@ comment:
   require_changes: no
 
 ignore:
-  - "*.ignore*.ts*"
+  - "*.ignore.*"
