@@ -90,8 +90,8 @@ exports[`Project Dispose View renders 1`] = `
         className="sc-AxjAm jGlSVf"
       >
         <button
-          className="btn btn-primary"
-          disabled={false}
+          className="btn btn-warning"
+          disabled={true}
           onClick={[Function]}
           style={
             Object {
@@ -104,7 +104,7 @@ exports[`Project Dispose View renders 1`] = `
         </button>
         <button
           className="btn btn-secondary"
-          disabled={false}
+          disabled={true}
           onClick={[Function]}
           type="button"
         >

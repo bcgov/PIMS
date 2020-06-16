@@ -5,7 +5,7 @@ exports[`Approval Confirmation Matches Snapshot 1`] = `
   className="sc-AxjAm jGlSVf"
 >
   <button
-    className="btn btn-primary"
+    className="btn btn-warning"
     disabled={false}
     onClick={[Function]}
     style={

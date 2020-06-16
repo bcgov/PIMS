@@ -50,7 +50,7 @@ const handleValidate = (values: IProject) => {
  */
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { project, goToDisposePath } = useStepper();
-  const { onSubmitReview, canUserEditForm } = useStepForm();
+  const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusId, setSubmitStatusId] = useState<number | undefined>(undefined);
   useEffect(() => {
     fetchProjectTasks('ACCESS-DISPOSAL');
@@ -78,7 +78,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           <h1>Project Application Review</h1>
           <ReviewApproveForm
             goToAddProperties={() => goToDisposePath('properties/update')}
-            canEdit={canUserEditForm(project.agencyId)}
+            canEdit={canUserApproveForm()}
           />
           <ReviewApproveActions {...{ submitStatusId, setSubmitStatusId }} />
         </Form>

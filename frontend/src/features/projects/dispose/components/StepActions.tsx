@@ -43,13 +43,15 @@ export const StepActions: React.FC<IStepActionsProps> = ({
   const step = getNextStep && getNextStep();
   const nextLabel = step !== undefined ? 'Next' : 'Submit';
   const { hasClaim } = useKeycloakWrapper();
-  const missingDisposeMilestonePermission = !hasClaim(Claims.DISPOSE_REQUEST) && step?.isMilestone;
+  const missingDisposeMilestonePermission =
+    !hasClaim(Claims.DISPOSE_REQUEST) && (step?.isMilestone || step === undefined);
   return (
     <StepActionsWrapper>
       <Button
         disabled={nextDisabled || missingDisposeMilestonePermission}
         style={{ marginLeft: 10 }}
         onClick={onNext}
+        variant={nextLabel === 'Submit' ? 'warning' : 'primary'}
       >
         {nextLabel}
       </Button>

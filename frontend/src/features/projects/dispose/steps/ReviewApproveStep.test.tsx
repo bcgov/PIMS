@@ -119,8 +119,8 @@ describe('Review Approve Step', () => {
     const tree = renderer.create(getReviewApproveStep()).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  it('edit button is visible when agency matches and user has correct claims', () => {
-    mockKeycloak([Claims.PROJECT_EDIT]);
+  it('edit button is visible when user has correct claims', () => {
+    mockKeycloak([Claims.ADMIN_PROJECTS]);
     const { getByText } = render(getReviewApproveStep());
     const editButton = getByText(/Edit/);
     expect(editButton).toBeTruthy();

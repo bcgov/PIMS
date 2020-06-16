@@ -99,6 +99,16 @@
   color: #ffffff;
 }
 
+.btn.btn-warning {
+  background-color: $accent-color;
+  font-family: 'BCSans', Fallback, sans-serif;
+  text-decoration: none solid rgb(255, 255, 255);
+  color: #ffffff;
+  font-size: 16px;
+  border-color: transparent;
+  border-radius: 0;
+}
+
 .btn:focus,
 .btn:active,
 .btn.active {
