@@ -1,102 +1,174 @@
 import React from 'react';
-import { noop } from 'lodash';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { useFormikContext } from 'formik';
 import { ReviewApproveActions } from './ReviewApproveActions';
-import { Formik } from 'formik';
-import { IProject } from '..';
-import { render, fireEvent, act, cleanup } from '@testing-library/react';
-import { ReviewWorkflowStatus, initialValues } from '../interfaces';
+import { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+import { Button } from 'react-bootstrap';
+import GenericModal from 'components/common/GenericModal';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
+import { ReviewWorkflowStatus } from '../interfaces';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
+Enzyme.configure({ adapter: new Adapter() });
+const history = createMemoryHistory();
+
+jest.mock('formik');
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock).mockReturnValue({ hasClaim: () => true });
 
-const renderComponent = (values?: IProject, setSubmitStatusId?: Function) => {
-  return render(
-    <Formik onSubmit={noop} initialValues={values ?? {}}>
-      <ReviewApproveActions submitStatusId={0} setSubmitStatusId={setSubmitStatusId ?? noop} />
-    </Formik>,
-  );
-};
+const mockSubmit = jest.fn();
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-describe('Review Approve Actions', () => {
-  afterEach(() => {
-    cleanup();
+const element = (
+  <Router history={history}>
+    <ReviewApproveActions submitStatusId={1} setSubmitStatusId={mockSubmit} />
+  </Router>
+);
+
+describe('approval button', () => {
+  (useFormikContext as jest.Mock).mockReturnValue({
+    values: {
+      statusId: ReviewWorkflowStatus.PropertyReview,
+    },
+    submitForm: jest.fn(),
   });
+  const component = mount(element);
 
-  it('submits deny status id when deny clicked', done => {
-    const project = initialValues;
-    const setStatusId = (val: number) => {
-      expect(val).toBe(ReviewWorkflowStatus.Denied);
-      done();
-    };
-    const { getByText } = renderComponent(project, setStatusId);
-    const deny = getByText('Deny');
-
-    act(() => {
-      fireEvent.click(deny);
+  it('displays confirmation when clicking approve', () => {
+    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+      return node.type() === Button && node.text() === 'Approve';
     });
+    button.simulate('click');
+    expect(component.find(GenericModal)).toHaveLength(1);
   });
 
-  it('submits approve status id when approve clicked', done => {
-    const project = initialValues;
-    const setStatusId = (val: number) => {
-      expect(val).toBe(ReviewWorkflowStatus.ApprovedForErp);
-      done();
-    };
-    const { getByText } = renderComponent(project, setStatusId);
-    const approve = getByText('Approve');
-    act(() => {
-      fireEvent.click(approve);
+  it('calls the function to change the status id', () => {
+    const confirm = component
+      .find(GenericModal)
+      .findWhere((node: { type: () => any; text: () => string }) => {
+        return node.type() === Button && node.text() === 'Confirm Approval';
+      });
+    confirm.simulate('click');
+    expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.ApprovedForErp);
+    expect(mockSubmit).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('denial button', () => {
+  (useFormikContext as jest.Mock).mockReturnValue({
+    values: {
+      statusId: ReviewWorkflowStatus.PropertyReview,
+    },
+    submitForm: jest.fn(),
+  });
+  const component = mount(element);
+
+  it('displays confirmation when clicking deny', () => {
+    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+      return node.type() === Button && node.text() === 'Deny';
     });
+    button.simulate('click');
+    expect(component.find(GenericModal)).toHaveLength(1);
   });
 
-  it('all buttons are enabled by default', () => {
-    const project = initialValues;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Deny')).not.toBeDisabled();
-    expect(getByText('Approve')).not.toBeDisabled();
-    expect(getByText('Save')).not.toBeDisabled();
+  it('calls the function to change the status id', () => {
+    const confirm = component
+      .find(GenericModal)
+      .findWhere((node: { type: () => any; text: () => string }) => {
+        return node.type() === Button && node.text() === 'Deny';
+      });
+    confirm.simulate('click');
+    expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.Denied);
+    expect(mockSubmit).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('buttons state when project pending approval', () => {
+  (useFormikContext as jest.Mock).mockReturnValue({
+    values: {
+      statusId: ReviewWorkflowStatus.PropertyReview,
+    },
+    submitForm: jest.fn(),
+  });
+  const component = mount(element);
+  const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Approve';
+  });
+  const save = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Save';
+  });
+  const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Deny';
   });
 
-  it('disables Deny button if already denied', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.Denied;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Deny')).toBeDisabled();
+  it('Deny button enabled', () => {
+    expect(deny.prop('disabled')).toBe(false);
   });
 
-  it('disables Deny button if already approved for ERP', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.ApprovedForErp;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Deny')).toBeDisabled();
+  it('Save button enabled', () => {
+    expect(save.prop('disabled')).toBe(false);
+  });
+
+  it('Approve button enabled', () => {
+    expect(approve.prop('disabled')).toBe(false);
+  });
+});
+
+describe('buttons state when project denied', () => {
+  (useFormikContext as jest.Mock).mockReturnValue({
+    values: {
+      statusId: ReviewWorkflowStatus.Denied,
+    },
+    submitForm: jest.fn(),
+  });
+  const component = mount(element);
+  const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Approve';
+  });
+  const save = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Save';
+  });
+  const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Deny';
+  });
+
+  it('disables Approve button if already denied', () => {
+    expect(deny.prop('disabled')).toBe(true);
   });
 
   it('disables Save button if already denied', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.Denied;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Deny')).toBeDisabled();
+    expect(save.prop('disabled')).toBe(true);
   });
 
-  it('disables Approve button if already Denied', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.Denied;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Approve')).toBeDisabled();
+  it('disables Approve button if already denied', () => {
+    expect(approve.prop('disabled')).toBe(true);
+  });
+});
+
+describe('buttons state when project approved', () => {
+  (useFormikContext as jest.Mock).mockReturnValue({
+    values: {
+      statusId: ReviewWorkflowStatus.ApprovedForErp,
+    },
+    submitForm: jest.fn(),
+  });
+  const component = mount(element);
+  const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Approve';
+  });
+  const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
+    return node.type() === Button && node.text() === 'Deny';
   });
 
   it('disables Approve button if already approved', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.ApprovedForErp;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Approve')).toBeDisabled();
+    expect(deny.prop('disabled')).toBe(true);
   });
 
   it('disables Approve button if already approved', () => {
-    const project = initialValues;
-    project.statusId = ReviewWorkflowStatus.ApprovedForErp;
-    const { getByText } = renderComponent(project);
-    expect(getByText('Approve')).toBeDisabled();
+    expect(approve.prop('disabled')).toBe(true);
   });
 });
