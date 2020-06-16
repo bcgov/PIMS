@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, ButtonGroup, Container } from 'react-bootstrap';
 import { ENVIRONMENT } from 'constants/environment';
-import download from './../utils/download';
+import download from '../utils/download';
 import { useDispatch } from 'react-redux';
 
 /**

@@ -12,7 +12,7 @@ import { Claims } from 'constants/claims';
 import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';
 import AuthLayout from 'layouts/AuthLayout';
-import Test from 'pages/Test';
+import Test from 'pages/Test.ignore';
 import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import { ProjectDisposeView } from 'features/projects/dispose';
