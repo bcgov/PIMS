@@ -53,6 +53,10 @@ const useStepForm = () => {
     );
   };
 
+  const canUserApproveForm = () => {
+    return keycloak.hasClaim(Claims.ADMIN_PROJECTS);
+  };
+
   const addOrUpdateProject = (
     project: IProject,
     formikRef: MutableRefObject<FormikValues | undefined>,
@@ -88,7 +92,14 @@ const useStepForm = () => {
       }
     });
   };
-  return { onSubmit, canUserEditForm, onSubmitReview, addOrUpdateProject, onSave };
+  return {
+    onSubmit,
+    canUserEditForm,
+    canUserApproveForm,
+    onSubmitReview,
+    addOrUpdateProject,
+    onSave,
+  };
 };
 
 export default useStepForm;
