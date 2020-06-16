@@ -50,6 +50,7 @@ export const StepActions: React.FC<IStepActionsProps> = ({
         disabled={nextDisabled || missingDisposeMilestonePermission}
         style={{ marginLeft: 10 }}
         onClick={onNext}
+        variant={nextLabel === 'Submit' ? 'warning' : 'primary'}
       >
         {nextLabel}
       </Button>
