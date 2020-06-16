@@ -11,7 +11,9 @@ import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -43,46 +45,56 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-it('EditUserPage renders', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <Router history={history}>
-          <EditUserPage id="TEST-ID" />,
-        </Router>
-      </Provider>,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-});
+describe('Edit user page', () => {
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
+  beforeEach(() => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onAny().reply(200, {});
+  });
+  it('EditUserPage renders', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <Router history={history}>
+            <EditUserPage id="TEST-ID" />,
+          </Router>
+        </Provider>,
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
-it('contains role options from lookup code + please select disabled option', () => {
-  const { getAllByText, getByTestId } = render(
-    <Provider store={store}>
-      <Router history={history}>
-        <EditUserPage id="TEST-ID" />,
-      </Router>
-    </Provider>,
-  );
-  expect(getAllByText(/Roles/i));
-  expect(getAllByText(/roleVal/i));
-  expect(getAllByText(/agencyVal/i));
-  expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
-});
-
-describe('appropriate fields are autofilled', () => {
-  it('autofills  email, username, first and last name', () => {
-    const { getByTestId } = render(
+  it('contains role options from lookup code + please select disabled option', () => {
+    const { getAllByText, getByTestId } = render(
       <Provider store={store}>
         <Router history={history}>
           <EditUserPage id="TEST-ID" />,
         </Router>
       </Provider>,
     );
-    expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
-    expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
-    expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
-    expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
-    expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+    expect(getAllByText(/Roles/i));
+    expect(getAllByText(/roleVal/i));
+    expect(getAllByText(/agencyVal/i));
+    expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
+  });
+
+  describe('appropriate fields are autofilled', () => {
+    it('autofills  email, username, first and last name', () => {
+      const { getByTestId } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <EditUserPage id="TEST-ID" />,
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
+      expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
+      expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
+      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+    });
   });
 });

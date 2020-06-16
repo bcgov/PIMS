@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EditUserPage renders 1`] = `
+exports[`Edit user page EditUserPage renders 1`] = `
 Array [
   <div>
     <nav

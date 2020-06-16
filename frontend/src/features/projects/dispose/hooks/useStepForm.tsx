@@ -46,9 +46,12 @@ const useStepForm = () => {
     return response;
   };
 
-  const canUserEditForm = (projectAgencyId: number) =>
-    (keycloak.hasAgency(projectAgencyId) && keycloak.hasClaim(Claims.PROJECT_EDIT)) ||
-    keycloak.hasClaim(Claims.ADMIN_PROJECTS);
+  const canUserEditForm = (projectAgencyId: number) => {
+    return (
+      (keycloak.hasAgency(projectAgencyId) && keycloak.hasClaim(Claims.PROJECT_EDIT)) ||
+      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
+    );
+  };
 
   const addOrUpdateProject = (
     project: IProject,

@@ -2,7 +2,7 @@ import PropertyListView from './PropertyListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -41,6 +41,9 @@ describe('Property list view', () => {
   beforeEach(() => {
     mockedService.getPropertyList.mockClear();
     mockedService.getPropertyReport.mockClear();
+  });
+  afterEach(() => {
+    cleanup();
   });
 
   it('Matches snapshot', () => {
