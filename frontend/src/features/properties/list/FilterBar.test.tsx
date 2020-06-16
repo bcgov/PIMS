@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import FilterBar, { IFilterBarState } from './FilterBar';
 import * as MOCK from 'mocks/filterDataMock';
 import Axios from 'axios';
@@ -11,6 +11,9 @@ jest.mock('axios');
 const mockedAxios = Axios as jest.Mocked<typeof Axios>;
 
 describe('FilterBar', () => {
+  afterEach(() => {
+    cleanup();
+  });
   it('renders correctly', () => {
     // Capture any changes
     const tree = renderer

@@ -2,7 +2,7 @@ import { ProjectApprovalRequestListView } from './ProjectListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, wait } from '@testing-library/react';
+import { render, wait, cleanup } from '@testing-library/react';
 import { create } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -86,6 +86,10 @@ describe('Project Approval Request list view', () => {
   beforeEach(() => {
     mockedService.getProjectList.mockClear();
     mockedService.deleteProject.mockClear();
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('Matches snapshot', async () => {

@@ -9,7 +9,7 @@ import { Formik } from 'formik';
 import { Form } from 'react-bootstrap';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
@@ -104,6 +104,9 @@ const getUpdateInfoForm = () => {
 };
 
 describe('Update Info Form', () => {
+  afterEach(() => {
+    cleanup();
+  });
   it('Matches Snapshot', () => {
     const component = renderComponent();
     expect(component.toJSON()).toMatchSnapshot();

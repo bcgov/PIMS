@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, cleanup } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
 import { Formik } from 'formik';
 import PagedBuildingForms from './PagedBuildingForms';
@@ -86,6 +86,9 @@ const store = mockStore({
 });
 
 describe('PagedBuildingForms functionality', () => {
+  afterEach(() => {
+    cleanup();
+  });
   const getPagedBuildingForms = (initialValues: IFormParcel, onSubmit: any) => {
     return (
       <Provider store={store}>

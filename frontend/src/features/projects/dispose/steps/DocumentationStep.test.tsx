@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import { DisposeWorkflowStatus, IProjectTask } from '../interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 
@@ -62,22 +62,27 @@ const uiElement = (
   </Provider>
 );
 
-it('renders correctly', () => {
-  const tree = renderer.create(uiElement).toJSON();
-  expect(tree).toMatchSnapshot();
-});
-
-it('renders correct labels', () => {
-  const { getByText } = render(uiElement);
-  expect(getByText('Task #1')).toBeInTheDocument();
-  expect(getByText('Task #2')).toBeInTheDocument();
-});
-
-it('documentation validation works', async () => {
-  const { getAllByText, container } = render(uiElement);
-  const form = container.querySelector('form');
-  await wait(() => {
-    fireEvent.submit(form!);
+describe('Documentation Step', () => {
+  afterEach(() => {
+    cleanup();
   });
-  expect(getAllByText('Required')).toHaveLength(2);
+  it('renders correctly', () => {
+    const tree = renderer.create(uiElement).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders correct labels', () => {
+    const { getByText } = render(uiElement);
+    expect(getByText('Task #1')).toBeInTheDocument();
+    expect(getByText('Task #2')).toBeInTheDocument();
+  });
+
+  it('documentation validation works', async () => {
+    const { getAllByText, container } = render(uiElement);
+    const form = container.querySelector('form');
+    await wait(() => {
+      fireEvent.submit(form!);
+    });
+    expect(getAllByText('Required')).toHaveLength(2);
+  });
 });

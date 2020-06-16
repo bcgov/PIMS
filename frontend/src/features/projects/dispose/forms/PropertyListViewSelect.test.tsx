@@ -14,7 +14,7 @@ import { IFilterBarState } from '../components/FilterBar';
 import { useFormikContext, getIn } from 'formik';
 import { PropertyListViewSelect } from '../components/PropertyListViewSelect';
 import { useKeycloak } from '@react-keycloak/web';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
@@ -123,21 +123,26 @@ const getComponent = () => {
   );
 };
 
-it('renders correctly', () => {
-  const tree = renderer.create(getComponent()).toJSON();
-  expect(tree).toMatchSnapshot();
-});
+describe('Property List View Select', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  it('renders correctly', () => {
+    const tree = renderer.create(getComponent()).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
-it('removes property from project', async () => {
-  const { container, queryByText, getByText } = render(getComponent());
-  expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
-  const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
-  const remove = getByText('Remove Selected');
-  await wait(() => {
-    fireEvent.click(checkbox!);
+  it('removes property from project', async () => {
+    const { container, queryByText, getByText } = render(getComponent());
+    expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+    const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
+    const remove = getByText('Remove Selected');
+    await wait(() => {
+      fireEvent.click(checkbox!);
+    });
+    await wait(() => {
+      fireEvent.click(remove!);
+    });
+    expect(queryByText('Test, Alert Bay')).toBeNull();
   });
-  await wait(() => {
-    fireEvent.click(remove!);
-  });
-  expect(queryByText('Test, Alert Bay')).toBeNull();
 });

@@ -17,7 +17,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import AddressForm from './subforms/AddressForm';
 import BuildingForm from './subforms/BuildingForm';
 import PidPinForm from './subforms/PidPinForm';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { render, fireEvent, wait, cleanup } from '@testing-library/react';
 import { act as domAct } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -102,6 +102,9 @@ const parcelDetailForm = (
   </Provider>
 );
 describe('ParcelDetailForm', () => {
+  afterEach(() => {
+    cleanup();
+  });
   describe('field validation', () => {
     const exampleData = {
       projectNumber: '',

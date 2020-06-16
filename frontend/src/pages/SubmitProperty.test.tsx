@@ -9,7 +9,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { useKeycloak } from '@react-keycloak/web';
 import SubmitProperty from './SubmitProperty';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent, act, cleanup } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
 import { Claims } from 'constants/claims';
 
@@ -52,6 +52,9 @@ const getSubmitProperty = (props: any, reduxStore: any = store) => (
 );
 
 describe('SubmitProperty', () => {
+  afterEach(() => {
+    cleanup();
+  });
   it('SubmitProperty loads building data in update mode', () => {
     const store = mockStore({
       [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
@@ -135,19 +138,19 @@ describe('SubmitProperty', () => {
     });
     expect(getByText('Unsaved Draft')).toBeVisible();
   });
-});
 
-it('Edit button available for sres even when they dont belong to agency', () => {
-  let store: any = mockStore({
-    [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-    [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 1, parcelDetail: mockDetails[1] } },
-    [reducerTypes.LEAFLET_CLICK_EVENT]: {},
-    [reducerTypes.NETWORK]: {
-      parcel: {
-        status: 201,
+  it('Edit button available for sres even when they dont belong to agency', () => {
+    let store: any = mockStore({
+      [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+      [reducerTypes.PARCEL]: { parcelDetail: { parcelTypeId: 1, parcelDetail: mockDetails[1] } },
+      [reducerTypes.LEAFLET_CLICK_EVENT]: {},
+      [reducerTypes.NETWORK]: {
+        parcel: {
+          status: 201,
+        },
       },
-    },
+    });
+    const { getByText } = render(getSubmitProperty({ match: { params: { id: 2 } } }, store));
+    expect(getByText('Edit')).toBeInTheDocument();
   });
-  const { getByText } = render(getSubmitProperty({ match: { params: { id: 2 } } }, store));
-  expect(getByText('Edit')).toBeInTheDocument();
 });

@@ -8,14 +8,11 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router, match as Match } from 'react-router-dom';
 import * as actionTypes from 'constants/actionTypes';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import useStepper from './hooks/useStepper';
 import { noop } from 'lodash';
-
-const mockAxios = new MockAdapter(axios);
-mockAxios.onAny().reply(200, {});
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -84,13 +81,23 @@ const renderElement = (store: any) => (
   </Provider>
 );
 
-it('renders', () => {
-  const tree = renderer.create(renderElement(store)).toJSON();
-  expect(tree).toMatchSnapshot();
-});
+describe('Project Dispose View', () => {
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
+  beforeEach(() => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onAny().reply(200, {});
+  });
+  it('renders', () => {
+    const tree = renderer.create(renderElement(store)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
-it('throws error with correct project # when unable to fetch project', () => {
-  expect(() => {
-    render(renderElement(errorStore));
-  }).toThrow('Unable to load project number SPP-10001');
+  it('throws error with correct project # when unable to fetch project', () => {
+    expect(() => {
+      render(renderElement(errorStore));
+    }).toThrow('Unable to load project number SPP-10001');
+  });
 });

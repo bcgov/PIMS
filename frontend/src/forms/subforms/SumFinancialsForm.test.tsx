@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { Formik, Form } from 'formik';
 import SumFinancialsForm from './SumFinancialsForm';
 import { IFinancial } from './EvaluationForm';
@@ -7,6 +7,9 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 
 describe('sub-form SumFinancialsForm functionality', () => {
+  afterEach(() => {
+    cleanup();
+  });
   const getSumFinancialsForm = (initialValues: any) => {
     return (
       <Formik initialValues={initialValues} onSubmit={() => {}}>
