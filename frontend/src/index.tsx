@@ -8,7 +8,7 @@ import 'react-app-polyfill/stable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App, { store } from './App';
-import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from './serviceWorker.ignore';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
 import { KeycloakProvider } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
