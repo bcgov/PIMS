@@ -57,8 +57,8 @@ objects:
           name: ${APP_NAME}-${COMP_NAME}-base:${OUTPUT_IMAGE_TAG}
       resources:
         requests:
-          cpu: 10m
-          memory: 10Mi
+          cpu: 20m
+          memory: 20Mi
         limits:
           cpu: ${CPU_LIMIT}
           memory: ${MEMORY_LIMIT}
