@@ -36,7 +36,7 @@ namespace Pims.Api.Helpers.Swagger
         /// <param name="context"></param>
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            swaggerDoc.Servers.Add(new OpenApiServer() { Url = $"{_context.HttpContext.Request.Host}{_basePath}" });
+            swaggerDoc.Servers.Add(new OpenApiServer() { Url = $"{_context.HttpContext.Request.Scheme}://{_context.HttpContext.Request.Host}{_basePath}" });
         }
         #endregion
     }
