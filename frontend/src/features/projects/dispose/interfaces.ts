@@ -118,6 +118,7 @@ export interface IProject {
   description: string;
   properties: IProperty[];
   note: string;
+  privateNote: string;
   agencyId: number;
   statusId: number;
   status?: IStatus;
@@ -197,6 +198,7 @@ export interface IApiProject {
   description: string;
   projectProperties: IProjectProperty[];
   note: string;
+  privateNote: string;
   agencyId: number;
   statusId: number;
   tierLevelId: number;
