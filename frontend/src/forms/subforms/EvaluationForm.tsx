@@ -18,7 +18,7 @@ interface EvaluationProps {
   nameSpace: string;
   /** whether this form is enabled for editing */
   disabled?: boolean;
-  /** only want to show appraisal when the property belongs to a project */
+  /** whether to show the appraisal value on the form or not*/
   showAppraisal?: boolean;
 }
 
