@@ -23,6 +23,7 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Name).IsRequired();
             builder.Property(m => m.Name).HasMaxLength(150);
+            builder.Property(m => m.GroupName).HasMaxLength(150);
 
             builder.Property(m => m.Description).HasMaxLength(1000);
 

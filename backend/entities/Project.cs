@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Dal.Entities
 {
@@ -24,6 +23,11 @@ namespace Pims.Dal.Entities
         /// get/set - A display name to identify the project.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// get/set - The fiscal year this project is relevant to.
+        /// </summary>
+        public int FiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the owning agency.
@@ -91,16 +95,29 @@ namespace Pims.Dal.Entities
         public DateTime? DeniedOn { get; set; }
 
         /// <summary>
+        /// get/set - Whether an exemption was requested for the ERP.
+        /// </summary>
+        public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The rational for the exemption from ERP.
+        /// </summary>
+        public string ExemptionRational { get; set; }
+
+        /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
-        [NotMapped]
         public decimal NetBook { get; set; }
 
         /// <summary>
         /// get/set - The estimated value which is the sum of the properties.
         /// </summary>
-        [NotMapped]
         public decimal Estimated { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value which is the sum of the properties.
+        /// </summary>
+        public decimal Assessed { get; set; }
 
         /// <summary>
         /// get - A collection of properties associated to this project.
@@ -111,6 +128,11 @@ namespace Pims.Dal.Entities
         /// get - A collection of tasks associated to this project.
         /// </summary>
         public ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
+
+        /// <summary>
+        /// get - A collection of responses from notifications for this project.
+        /// </summary>
+        public ICollection<ProjectAgencyResponse> Responses { get; } = new List<ProjectAgencyResponse>();
         #endregion
 
         #region Constructors

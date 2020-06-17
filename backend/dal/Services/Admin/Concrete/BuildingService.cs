@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -18,14 +19,22 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public class BuildingService : BaseService<Building>, IBuildingService
     {
+        #region Variables
+        private readonly PimsOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a BuildingService class, and initializes it with the specified arguments.
         /// </summary>
+        /// <param name="options"></param>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public BuildingService(PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger) { }
+        public BuildingService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger)
+        {
+            _options = options.Value;
+        }
         #endregion
 
         #region Methods
@@ -189,7 +198,7 @@ namespace Pims.Dal.Services.Admin
             var existingBuilding = this.Context.Buildings
                 .Include(b => b.Status)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(existingBuilding);
+            this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(existingBuilding).OriginalValues[nameof(Building.AgencyId)];

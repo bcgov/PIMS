@@ -196,7 +196,7 @@ export interface IApiProject {
   projectNumber: string;
   name: string;
   description: string;
-  projectProperties: IProjectProperty[];
+  properties: IProjectProperty[];
   note: string;
   privateNote: string;
   agencyId: number;

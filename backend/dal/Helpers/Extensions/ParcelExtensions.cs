@@ -55,7 +55,7 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgencies();
+            var userAgencies = user.GetAgenciesAsNullable();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -82,7 +82,8 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.Agencies?.Any() == true)
             {
                 // Get list of sub-agencies for any agency selected in the filter.
-                var agencies = filter.Agencies.Concat(context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
+                var filterAgencies = filter.Agencies.Select(a => (int?)a);
+                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
             if (filter.ClassificationId.HasValue)

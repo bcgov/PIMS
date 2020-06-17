@@ -211,6 +211,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AddressTo")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(6)")
@@ -227,6 +231,10 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
 
                     b.Property<bool>("IsDisabled")
                         .ValueGeneratedOnAdd()
@@ -245,6 +253,11 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<bool>("SendEmail")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("SortOrder")
                         .ValueGeneratedOnAdd()
@@ -287,7 +300,7 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AgencyId")
+                    b.Property<int?>("AgencyId")
                         .HasColumnType("int");
 
                     b.Property<int>("BuildingConstructionTypeId")
@@ -776,6 +789,179 @@ namespace Pims.Dal.Migrations
                     b.ToTable("Claims");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.NotificationQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Bcc")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BodyType")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Cc")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<Guid?>("ChesMessageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ChesTransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Encoding")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<Guid>("Key")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTime>("SendOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("To")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("ToAgencyId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("ToAgencyId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("Key", "Status", "SendOn", "Subject", "ProjectId", "ToAgencyId");
+
+                    b.ToTable("NotificationQueue");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.NotificationTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BodyType")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<string>("Encoding")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Tag");
+
+                    b.ToTable("NotificationTemplates");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.Parcel", b =>
                 {
                     b.Property<int>("Id")
@@ -786,7 +972,7 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AgencyId")
+                    b.Property<int?>("AgencyId")
                         .HasColumnType("int");
 
                     b.Property<int>("ClassificationId")
@@ -834,6 +1020,11 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
+
+                    b.Property<bool>("NotOwned")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("PID")
                         .HasColumnType("int");
@@ -1002,6 +1193,9 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<decimal>("Assessed")
+                        .HasColumnType("MONEY");
+
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1017,10 +1211,28 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
+                    b.Property<decimal>("Estimated")
+                        .HasColumnType("MONEY");
+
+                    b.Property<string>("ExemptionRational")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
+                    b.Property<bool>("ExemptionRequested")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("FiscalYear")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
+
+                    b.Property<decimal>("NetBook")
+                        .HasColumnType("MONEY");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(2000)")
@@ -1079,6 +1291,54 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("Name", "StatusId", "TierLevelId", "AgencyId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectAgencyResponse", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Response")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("ProjectId", "AgencyId");
+
+                    b.HasIndex("AgencyId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("ProjectId", "AgencyId", "Response");
+
+                    b.ToTable("ProjectAgencyResponses");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectNumber", b =>
@@ -1195,6 +1455,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
+                    b.Property<string>("GroupName")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1251,6 +1515,65 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("IsDisabled", "Name", "Code", "SortOrder");
 
                     b.ToTable("ProjectStatus");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("Delay")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DelayDays")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FromStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("FromStatusId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("ToStatusId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("ProjectStatusNotifications");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusTransition", b =>
@@ -2138,8 +2461,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasOne("Pims.Dal.Entities.Agency", "Agency")
                         .WithMany("Buildings")
-                        .HasForeignKey("AgencyId")
-                        .IsRequired();
+                        .HasForeignKey("AgencyId");
 
                     b.HasOne("Pims.Dal.Entities.BuildingConstructionType", "BuildingConstructionType")
                         .WithMany()
@@ -2269,6 +2591,36 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("UpdatedById");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.NotificationQueue", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+
+                    b.HasOne("Pims.Dal.Entities.Agency", "ToAgency")
+                        .WithMany()
+                        .HasForeignKey("ToAgencyId");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.NotificationTemplate", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.Parcel", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.Address", "Address")
@@ -2278,8 +2630,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasOne("Pims.Dal.Entities.Agency", "Agency")
                         .WithMany("Parcels")
-                        .HasForeignKey("AgencyId")
-                        .IsRequired();
+                        .HasForeignKey("AgencyId");
 
                     b.HasOne("Pims.Dal.Entities.PropertyClassification", "Classification")
                         .WithMany()
@@ -2365,6 +2716,35 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("UpdatedById");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectAgencyResponse", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.Agency", "Agency")
+                        .WithMany("ProjectResponses")
+                        .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.NotificationQueue", "Notification")
+                        .WithMany("Responses")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.Project", "Project")
+                        .WithMany("Responses")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.ProjectNumber", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
@@ -2408,6 +2788,33 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectStatusNotification", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "FromStatus")
+                        .WithMany()
+                        .HasForeignKey("FromStatusId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.HasOne("Pims.Dal.Entities.NotificationTemplate", "Template")
+                        .WithMany("Status")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.ProjectStatus", "ToStatus")
+                        .WithMany()
+                        .HasForeignKey("ToStatusId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()

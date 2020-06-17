@@ -8,7 +8,6 @@ namespace Pims.Dal.Entities
     public class Agency : CodeEntity<int>
     {
         #region Properties
-
         /// <summary>
         /// get/set - A description of the code.
         /// </summary>
@@ -26,6 +25,21 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <value></value>
         public Agency Parent { get; set; }
+
+        /// <summary>
+        /// get/set - An email address for the agency.
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// get/set - Whether notifications should be sent to this agency.
+        /// </summary>
+        public bool SendEmail { get; set; }
+
+        /// <summary>
+        /// get/set - The name or title of whom the notification should be addressed to.
+        /// </summary>
+        public string AddressTo { get; set; }
 
         /// <summary>
         /// get - A collection of child agencies.
@@ -56,9 +70,14 @@ namespace Pims.Dal.Entities
         public ICollection<UserAgency> Users { get; } = new List<UserAgency>();
 
         /// <summary>
-        /// get - A collectino of projects that belong to this agency.
+        /// get - A collection of projects that belong to this agency.
         /// </summary>
         public ICollection<Project> Projects { get; } = new List<Project>();
+
+        /// <summary>
+        /// get - A collection of responses to project notifications.
+        /// </summary>
+        public ICollection<ProjectAgencyResponse> ProjectResponses { get; } = new List<ProjectAgencyResponse>();
         #endregion
 
         #region Constructors

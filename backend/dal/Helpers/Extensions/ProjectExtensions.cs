@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
@@ -231,6 +230,99 @@ namespace Pims.Dal.Helpers.Extensions
             if (property.AgencyId != project.AgencyId
                 && property.Agency?.ParentId != project.AgencyId)
                 throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
+        }
+
+        /// <summary>
+        /// Determine the financial year the project is based on.
+        /// Scans properties and gets the most recent evaluation date.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static DateTime GetProjectFinancialDate(this Entity.Project project)
+        {
+            return project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).Select(p => p.Parcel).SelectMany(p => p.Evaluations).OrderByDescending(e => e.Date).FirstOrDefault()?.Date
+                ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Evaluations).OrderByDescending(e => e.Date).FirstOrDefault()?.Date
+                ?? DateTime.Now;
+        }
+
+        /// <summary>
+        /// Update the project financial values for the specified 'projectNumber'.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="projectNumber"></param>
+        public static void UpdateProjectFinancials(this PimsContext context, string projectNumber)
+        {
+            var project = context.Projects
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Evaluations)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Parcel)
+                .ThenInclude(p => p.Fiscals)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(b => b.Evaluations)
+                .Include(p => p.Properties)
+                .ThenInclude(p => p.Building)
+                .ThenInclude(b => b.Fiscals)
+                .FirstOrDefault(p => p.ProjectNumber == projectNumber);
+
+            project.UpdateProjectFinancials();
+        }
+
+        /// <summary>
+        /// Update the project financial values for the specified 'project'.
+        /// Note - This requires that the referenced project includes all properties and their evaluations and fiscals.
+        /// </summary>
+        /// <param name="project"></param>
+        public static void UpdateProjectFinancials(this Entity.Project project)
+        {
+            var date = project.GetProjectFinancialDate();
+            var year = date.Year;
+            var fiscalYear = project.FiscalYear;
+
+            // Sum up parcel values for the project year.
+            project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
+            project.Estimated = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
+            project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
+
+            // Sum up building values for the project year.
+            project.NetBook += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
+            project.Estimated += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
+            project.Assessed += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
+        }
+
+        /// <summary>
+        /// Determine if the project is editable to the specified 'user'.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static bool IsProjectEditable(this Entity.Project project, ClaimsPrincipal user, ProjectOptions options)
+        {
+            return user.HasPermission(Permissions.AdminProjects) || (user.HasPermission(Permissions.ProjectEdit) && project.IsProjectInDraft(options));
+        }
+
+        /// <summary>
+        /// Determine if the project is in draft.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static bool IsProjectInDraft(this Entity.Project project, ProjectOptions options)
+        {
+            return options.DraftStatus.Contains(project.Status.Code);
+        }
+
+        /// <summary>
+        /// Determine if the project is closed or complete.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static bool IsProjectClosed(this Entity.Project project, ProjectOptions options)
+        {
+            return options.ClosedStatus.Contains(project.Status.Code);
         }
     }
 }

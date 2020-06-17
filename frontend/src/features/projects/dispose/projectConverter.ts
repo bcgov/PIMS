@@ -19,7 +19,7 @@ export const toFlatProject = (project?: IApiProject) => {
   if (!project) {
     return undefined;
   }
-  const flatProperties = project.projectProperties.map(pp => {
+  const flatProperties = project.properties.map(pp => {
     const apiProperty: IApiProperty = (pp.parcel ?? pp.building) as IApiProperty;
     const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
     const appraised = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Appraised);
@@ -148,7 +148,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
 };
 
 export const toApiProject = (project: IProject) => {
-  const projectProperties = project.properties?.map(property => {
+  const properties = project.properties?.map(property => {
     const projectProperty: IProjectProperty = {
       id: property.projectPropertyId,
       projectNumber: project.projectNumber,
@@ -166,7 +166,7 @@ export const toApiProject = (project: IProject) => {
     projectNumber: project.projectNumber,
     name: project.name,
     description: project.description,
-    projectProperties: projectProperties,
+    properties: properties,
     note: project.note,
     privateNote: project.privateNote,
     agencyId: project.agencyId,

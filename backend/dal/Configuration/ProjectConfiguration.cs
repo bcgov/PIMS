@@ -29,9 +29,16 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.PublicNote).HasMaxLength(2000);
             builder.Property(m => m.PrivateNote).HasMaxLength(2000);
 
+            builder.Property(m => m.ExemptionRequested).HasDefaultValue(false);
+            builder.Property(m => m.ExemptionRational).HasMaxLength(2000);
+
             builder.Property(m => m.SubmittedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.DeniedOn).HasColumnType("DATETIME2");
+
+            builder.Property(m => m.NetBook).HasColumnType("MONEY");
+            builder.Property(m => m.Estimated).HasColumnType("MONEY");
+            builder.Property(m => m.Assessed).HasColumnType("MONEY");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);

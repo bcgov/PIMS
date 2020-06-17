@@ -66,7 +66,7 @@ namespace Pims.Core.Test
                 new Entity.ProjectStatus("Update Information", "DR-I") { Id = 3, SortOrder = 2, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Required Documentation", "DR-D") { Id = 4, SortOrder = 3, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Approval", "DR-A") { Id = 5, SortOrder = 4, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus("Review", "RE") { Id = 6, SortOrder = 5, IsMilestone = false, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Review", "DR-RE") { Id = 6, SortOrder = 5, IsMilestone = false, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Submitted", "AS-I") { Id = 7, SortOrder = 6, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Document Review", "AS-D") { Id = 8, SortOrder = 7, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Appraisal Review", "AS-AP") { Id = 9, SortOrder = 7, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
