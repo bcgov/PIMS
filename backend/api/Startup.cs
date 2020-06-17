@@ -37,7 +37,9 @@ using System.Threading.Tasks;
 using Mapster;
 using Pims.Api.Helpers.Mapping;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml.EMMA;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace Pims.Api
 {
@@ -217,6 +219,32 @@ namespace Pims.Api
                 options.CustomSchemaIds(o => o.FullName);
                 options.OperationFilter<Helpers.Swagger.SwaggerDefaultValues>();
                 options.DocumentFilter<Helpers.Swagger.SwaggerDocumentFilter>();
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Description =  "Please enter into field the word 'Bearer' following by space and JWT",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
+                });
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
