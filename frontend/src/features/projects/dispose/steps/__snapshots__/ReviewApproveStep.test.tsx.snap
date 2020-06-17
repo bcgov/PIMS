@@ -729,67 +729,6 @@ exports[`Review Approve Step renders correctly 1`] = `
         </span>
       </div>
     </div>
-    <div
-      className="sc-AxhCb cAiYPw"
-    >
-      Approve for Enhanced Referral Process
-    </div>
-    <div
-      className="sc-AxhCb cAiYPw"
-    >
-      <span>
-        <button
-          className="btn btn-primary"
-          disabled={false}
-          onClick={[Function]}
-          style={
-            Object {
-              "marginLeft": 10,
-            }
-          }
-          type="button"
-        >
-          Approve
-        </button>
-        <button
-          className="btn btn-secondary"
-          disabled={false}
-          onClick={[Function]}
-          style={
-            Object {
-              "marginLeft": 10,
-            }
-          }
-          type="button"
-        >
-          Save
-        </button>
-      </span>
-    </div>
-    <div
-      className="sc-AxhCb cAiYPw"
-      style={
-        Object {
-          "marginTop": "2rem",
-        }
-      }
-    >
-      Deny and Release Properties
-    </div>
-    <div
-      className="sc-AxhCb cAiYPw"
-    >
-      <span>
-        <button
-          className="btn btn-danger"
-          disabled={false}
-          onClick={[Function]}
-          type="button"
-        >
-          Deny
-        </button>
-      </span>
-    </div>
   </form>
 </div>
 `;
