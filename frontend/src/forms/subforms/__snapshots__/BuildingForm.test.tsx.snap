@@ -583,7 +583,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           className="row no-gutters"
         >
           <div
-            className="col-md-3"
+            className="col-3"
           >
             <h6>
               Assessed
@@ -593,12 +593,12 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <thead>
                 <tr>
-                  <td>
+                  <th>
                     Year
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     Value
-                  </td>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -658,7 +658,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             </table>
           </div>
           <div
-            className="col-md-3"
+            className="col-3"
           >
             <h6>
               NetBook
@@ -668,12 +668,12 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <thead>
                 <tr>
-                  <td>
+                  <th>
                     Fiscal Year
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     Value
-                  </td>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -733,7 +733,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             </table>
           </div>
           <div
-            className="col-md-3"
+            className="col-3"
           >
             <h6>
               Estimated
@@ -743,12 +743,12 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <thead>
                 <tr>
-                  <td>
+                  <th>
                     Fiscal Year
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     Value
-                  </td>
+                  </th>
                 </tr>
               </thead>
               <tbody>

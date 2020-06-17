@@ -119,6 +119,11 @@ describe('sub-form BuildingForm functionality', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('renders EvaluationForm as expected', () => {
+    const { getAllByText } = render(getBuildingForm(defaultBuildingValues, () => {}));
+    expect(getAllByText('Value')).toHaveLength(3);
+  });
+
   it('validates all required fields', async () => {
     const { getByText, getAllByText } = render(getBuildingForm(defaultBuildingValues, () => {}));
     const submit = getByText('Submit');
