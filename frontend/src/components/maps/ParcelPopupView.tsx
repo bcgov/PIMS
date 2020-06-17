@@ -47,11 +47,18 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
               <ListGroup.Item>
                 <Label>PID: </Label> {parcelDetail?.pid}
               </ListGroup.Item>
-              {parcelDetail?.projectNumber && (
-                <ListGroup.Item>
-                  <Label>RAEG or SPP:</Label> {parcelDetail?.projectNumber}
-                </ListGroup.Item>
-              )}
+              {parcelDetail?.projectNumber &&
+                (keycloak.hasAgency(parcelDetail?.agencyId as number) ||
+                  keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
+                  <ListGroup.Item>
+                    <Label>Project Number: </Label>
+                    <Link
+                      to={`/dispose/projects/assess/properties?projectNumber=${parcelDetail?.projectNumber}`}
+                    >
+                      {parcelDetail?.projectNumber}
+                    </Link>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
             <ListGroup>
               <ListGroup.Item>
