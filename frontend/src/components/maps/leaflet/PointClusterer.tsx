@@ -88,8 +88,10 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         },
         // the user clicked on a single map pin
         onMarkerClick: (e: LeafletMouseEvent) => {
+          const marker = e?.target as Marker;
+          const newPos = marker.getLatLng();
           const geojson = (e?.target as Marker)?.feature;
-          onMarkerClick?.(geojson);
+          onMarkerClick?.(geojson, [newPos.lat, newPos.lng]);
         },
       });
     }
@@ -116,7 +118,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       maxZoom as number,
     );
     // already at maxZoom, need to spiderfy child markers
-    if (map.getZoom() === expansionZoom && spiderfyOnMaxZoom) {
+    if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
       spiderfierRef.current?.spiderfy(cluster);
     } else if (zoomToBoundsOnClick) {
       zoomToCluster(cluster, expansionZoom, map);
