@@ -12,3 +12,4 @@ export * from './TextArea';
 export * from './FastCurrencyInput';
 export * from './AutoCompleteText';
 export * from './Check';
+export * from './DisplayCurrency';

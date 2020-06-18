@@ -171,6 +171,14 @@ describe('ParcelDetailForm', () => {
       });
     });
 
+    it('properly renders EvalutationForm', () => {
+      const { getByText, getAllByText } = render(parcelDetailForm());
+      expect(getByText('Land')).toBeInTheDocument();
+      expect(getByText('Improvements')).toBeInTheDocument();
+      expect(getByText('Total')).toBeInTheDocument();
+      expect(getAllByText('Value')).toHaveLength(2);
+    });
+
     it('validates all required fields correctly', async () => {
       const { getByText, getAllByText } = render(parcelDetailForm());
       const submit = getByText('Submit');

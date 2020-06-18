@@ -230,6 +230,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   <h4>Valuation Information</h4>
                   <EvaluationForm
                     {...formikProps}
+                    isParcel={true}
                     showAppraisal={false}
                     disabled={props.disabled}
                     nameSpace="financials"
