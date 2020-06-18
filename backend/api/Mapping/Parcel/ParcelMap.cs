@@ -48,6 +48,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
+                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber == "" ? null : src.ProjectNumber)
                 .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Name, src => src.Name)
