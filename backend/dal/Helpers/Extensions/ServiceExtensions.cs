@@ -25,7 +25,7 @@ namespace Pims.Dal.Helpers.Extensions
                 var project = service.GetContext().Projects
                     .Include(p => p.Status)
                     .FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber);
-                if (project != null && project.IsProjectEditable(service.GetUser(), options))
+                if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a parcel that is within an active project.");
                 }
@@ -49,7 +49,7 @@ namespace Pims.Dal.Helpers.Extensions
                 var project = context.Projects
                     .Include(p => p.Status)
                     .FirstOrDefault(p => p.ProjectNumber == building.ProjectNumber);
-                if (project != null && project.IsProjectEditable(service.GetUser(), options))
+                if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a building that is within an active project.");
                 }
