@@ -58,20 +58,6 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
-            var projectNumbers = items.Select(p => p.ProjectNumber).ToArray();
-            var sums = from p in this.Context.Properties
-                       where projectNumbers.Contains(p.ProjectNumber)
-                       group p by p.ProjectNumber into gp
-                       select new { ProjectNumber = gp.Key, NetBook = gp.Sum(x => x.NetBook), Estimated = gp.Sum(x => x.Estimated) };
-            var projectSums = sums.ToDictionary(p => p.ProjectNumber);
-
-            // TODO: Update the View to include the Project.Id so that we can do a group by on that value instead of multiple separate requests.
-            foreach (var project in items)
-            {
-                project.NetBook = projectSums.GetValueOrDefault(project.ProjectNumber)?.NetBook ?? 0;
-                project.Estimated = projectSums.GetValueOrDefault(project.ProjectNumber)?.Estimated ?? 0;
-            }
-
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
@@ -266,6 +252,7 @@ namespace Pims.Dal.Services
             project.StatusId = 0; // Always start a project as a Draft.
             project.Status = status;
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
+            project.FiscalYear = project.FiscalYear <= 0 ? DateTime.Now.Year : project.FiscalYear;
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
@@ -298,6 +285,9 @@ namespace Pims.Dal.Services
                 var buildings = this.Context.Buildings.Where(b => buildingIds.Contains(b.Id));
                 buildings.ForEach(b => b.ProjectNumber = project.ProjectNumber);
             }
+
+            // Update project financials.
+            project.UpdateProjectFinancials();
 
             this.Context.Projects.Update(project);
             this.Context.CommitTransaction();
@@ -338,7 +328,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(originalProject);
+            this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
@@ -387,24 +377,35 @@ namespace Pims.Dal.Services
 
                 if (existingProperty == null)
                 {
-                    if (property.PropertyType == PropertyTypes.Land)
-                    {
-                        var existingParcel = this.Context.Parcels.Include(p => p.Agency).SingleOrDefault(p => p.Id == property.ParcelId);
-                        originalProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
-                        if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
-                        existingParcel.ProjectNumber = project.ProjectNumber;
-                    }
-                    else
-                    {
-                        var existingBuilding = this.Context.Buildings.Include(b => b.Agency).FirstOrDefault(p => p.Id == property.BuildingId);
-                        originalProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
-                        if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
-                        existingBuilding.ProjectNumber = project.ProjectNumber;
-                    }
                     //Todo: Navigation properties on project object were causing concurrency exceptions.
                     var eproperty = property.PropertyType == PropertyTypes.Land ? this.Context.Parcels.Find(property.ParcelId) : this.Context.Buildings.Find(property.BuildingId) as Property;
                     // Ignore properties that don't exist.
-                    if (eproperty != null) originalProject.AddProperty(eproperty);
+                    if (eproperty != null)
+                    {
+                        if (property.PropertyType == PropertyTypes.Land)
+                        {
+                            var existingParcel = this.Context.Parcels
+                                .Include(p => p.Agency)
+                                .Include(p => p.Evaluations)
+                                .Include(p => p.Fiscals)
+                                .FirstOrDefault(p => p.Id == property.ParcelId);
+                            originalProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
+                            if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
+                            existingParcel.ProjectNumber = project.ProjectNumber;
+                        }
+                        else
+                        {
+                            var existingBuilding = this.Context.Buildings
+                                .Include(b => b.Agency)
+                                .Include(p => p.Evaluations)
+                                .Include(p => p.Fiscals)
+                                .FirstOrDefault(p => p.Id == property.BuildingId);
+                            originalProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
+                            if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
+                            existingBuilding.ProjectNumber = project.ProjectNumber;
+                        }
+                        originalProject.AddProperty(eproperty);
+                    }
                 }
                 else
                 {
@@ -529,6 +530,12 @@ namespace Pims.Dal.Services
                 originalProject.Tasks.Add(new ProjectTask(project, task));
             }
 
+            // Update project financials if the project is still active.
+            if (!project.IsProjectClosed(_options.Project))
+            {
+                originalProject.UpdateProjectFinancials();
+            }
+
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return Get(originalProject.Id);
@@ -557,7 +564,11 @@ namespace Pims.Dal.Services
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(originalProject);
+
+            if (!project.IsProjectInDraft(_options.Project))
+            {
+                this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
+            }
 
             if (!isAdmin && (!userAgencies.Contains(originalProject.AgencyId)))
                 throw new NotAuthorizedException("User does not have permission to delete.");
@@ -643,7 +654,6 @@ namespace Pims.Dal.Services
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(originalProject);
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
@@ -721,6 +731,10 @@ namespace Pims.Dal.Services
                         this.Context.Update(p.UpdateProjectNumber(null));
                     });
                     originalProject.DeniedOn = DateTime.UtcNow;
+                    break;
+                default:
+                    // All other status changes can only be done by `admin-projects` or when the project is in draft mode.
+                    this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
                     break;
             }
 

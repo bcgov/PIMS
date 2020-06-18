@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -18,14 +19,22 @@ namespace Pims.Dal.Services
     /// </summary>
     public class ParcelService : BaseService<Parcel>, IParcelService
     {
+        #region Variables
+        private readonly PimsOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a ParcelService, and initializes it with the specified arguments.
         /// </summary>
+        /// <param name="options"></param>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public ParcelService(PimsContext dbContext, ClaimsPrincipal user, ILogger<ParcelService> logger) : base(dbContext, user, logger) { }
+        public ParcelService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, ILogger<ParcelService> logger) : base(dbContext, user, logger)
+        {
+            _options = options.Value;
+        }
         #endregion
 
         #region Methods
@@ -42,7 +51,7 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -103,7 +112,7 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -211,7 +220,7 @@ namespace Pims.Dal.Services
             this.Context.Parcels.ThrowIfPidPinUpdated(parcel);
 
             // Update a parcel and all child collections
-            this.ThrowIfNotAllowedToUpdate(existingParcel);
+            this.ThrowIfNotAllowedToUpdate(existingParcel, _options.Project);
             this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
             this.Context.Entry(existingParcel.Address).CurrentValues.SetValues(parcel.Address);
             this.Context.SetOriginalRowVersion(existingParcel);
@@ -226,7 +235,7 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
-                    this.ThrowIfNotAllowedToUpdate(existingBuilding);
+                    this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
                     this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                     this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
@@ -298,7 +307,7 @@ namespace Pims.Dal.Services
                 var matchingBuilding = parcel.Buildings.FirstOrDefault(b => b.Id == building.Id);
                 if (matchingBuilding == null)
                 {
-                    this.ThrowIfNotAllowedToUpdate(building);
+                    this.ThrowIfNotAllowedToUpdate(building, _options.Project);
                     this.Context.Buildings.Remove(building);
 
                     continue;
@@ -326,6 +335,12 @@ namespace Pims.Dal.Services
                 }
             }
 
+            // update only an active project with any financial value changes.
+            if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed(_options.Project) ?? false))
+            {
+                this.Context.UpdateProjectFinancials(parcel.ProjectNumber);
+            }
+
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return parcel;
@@ -341,7 +356,7 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
 
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
             var existingParcel = this.Context.Parcels
@@ -358,13 +373,13 @@ namespace Pims.Dal.Services
             if (!isAdmin && (!userAgencies.Contains(existingParcel.AgencyId) || existingParcel.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
 
-            this.ThrowIfNotAllowedToUpdate(existingParcel);
+            this.ThrowIfNotAllowedToUpdate(existingParcel, _options.Project);
             this.Context.Entry(existingParcel).CurrentValues.SetValues(parcel);
             this.Context.SetOriginalRowVersion(existingParcel);
 
             existingParcel.Buildings.ForEach((building) =>
             {
-                this.ThrowIfNotAllowedToUpdate(building);
+                this.ThrowIfNotAllowedToUpdate(building, _options.Project);
                 this.Context.BuildingEvaluations.RemoveRange(building.Evaluations);
                 this.Context.BuildingFiscals.RemoveRange(building.Fiscals);
                 this.Context.Buildings.Remove(building);

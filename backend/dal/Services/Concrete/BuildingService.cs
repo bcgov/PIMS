@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -18,14 +19,22 @@ namespace Pims.Dal.Services
     /// </summary>
     public class BuildingService : BaseService<Building>, IBuildingService
     {
+        #region Variables
+        private readonly PimsOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a BuildingService, and initializes it with the specified arguments.
         /// </summary>
+        /// <param name="options"></param>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="logger"></param>
-        public BuildingService(PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger) { }
+        public BuildingService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger)
+        {
+            _options = options.Value;
+        }
         #endregion
 
         #region Methods
@@ -42,7 +51,7 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -102,7 +111,7 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable(); ;
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -164,7 +173,7 @@ namespace Pims.Dal.Services
 
             var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable(); ;
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             // Do not allow switching agencies through this method.
@@ -176,6 +185,12 @@ namespace Pims.Dal.Services
             this.Context.Buildings.ThrowIfNotUnique(building);
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+
+            // update only an active project with any financial value changes.
+            if (!String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed(_options.Project) ?? false))
+            {
+                this.Context.UpdateProjectFinancials(existingBuilding.ProjectNumber);
+            }
 
             this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
@@ -193,14 +208,14 @@ namespace Pims.Dal.Services
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var entity = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
-            var agency_ids = this.User.GetAgencies();
-            if (!isAdmin && !agency_ids.Contains(entity.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
+            var agency_ids = this.User.GetAgenciesAsNullable(); ;
+            if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
-            this.Context.Entry(entity).CurrentValues.SetValues(building);
+            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 
-            this.Context.Buildings.Remove(entity); // TODO: Shouldn't be allowed to permanently delete buildings entirely.
+            this.Context.Buildings.Remove(existingBuilding); // TODO: Shouldn't be allowed to permanently delete buildings entirely.
             this.Context.CommitTransaction();
         }
         #endregion

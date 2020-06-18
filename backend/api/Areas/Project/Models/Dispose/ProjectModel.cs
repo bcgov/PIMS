@@ -25,6 +25,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string Name { get; set; }
 
         /// <summary>
+        /// get/set - The fiscal year this project is relevant to.
+        /// </summary>
+        public int FiscalYear { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the project status.
         /// </summary>
         public int StatusId { get; set; }
@@ -105,9 +110,34 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? DeniedOn { get; set; }
 
         /// <summary>
+        /// get/set - Whether an exemption was requested for the ERP.
+        /// </summary>
+        public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The rational for the exemption from ERP.
+        /// </summary>
+        public string ExemptionRational { get; set; }
+
+        /// <summary>
+        /// get/set - The netbook value which is the sum of the properties.
+        /// </summary>
+        public decimal NetBook { get; set; }
+
+        /// <summary>
+        /// get/set - The estimated value which is the sum of the properties.
+        /// </summary>
+        public decimal Estimated { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value which is the sum of the properties.
+        /// </summary>
+        public decimal Assessed { get; set; }
+
+        /// <summary>
         /// get/set - An array of properties associated with this project.
         /// </summary>
-        public IEnumerable<ProjectPropertyModel> ProjectProperties { get; set; } = new List<ProjectPropertyModel>();
+        public IEnumerable<ProjectPropertyModel> Properties { get; set; } = new List<ProjectPropertyModel>();
 
         /// <summary>
         /// get/set - An array of tasks associated with this project.

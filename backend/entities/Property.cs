@@ -49,7 +49,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The foreign key to the agency that owns this property.
         /// </summary>
-        public int AgencyId { get; set; }
+        public int? AgencyId { get; set; }
 
         /// <summary>
         /// get/set - The agency this property belongs to.

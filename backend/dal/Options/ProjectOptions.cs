@@ -15,6 +15,16 @@ namespace Pims.Dal
         /// get/set - The format for submitted project numbers.
         /// </summary>
         public string NumberFormat { get; set; } = "SPP-{0:00000}";
+
+        /// <summary>
+        /// get/set - An array of project status codes for when the project is in draft.
+        /// </summary>
+        public string[] DraftStatus { get; set; }
+
+        /// <summary>
+        /// get/set - An array of project status codes for when the project is closed.
+        /// </summary>
+        public string[] ClosedStatus { get; set; }
         #endregion
     }
 }

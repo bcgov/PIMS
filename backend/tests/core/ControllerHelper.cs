@@ -3,6 +3,8 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Pims.Dal.Security;
 using System.Diagnostics.CodeAnalysis;
+using Pims.Dal;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Core.Test
 {
@@ -97,6 +99,33 @@ namespace Pims.Core.Test
             {
                 HttpContext = helper.CreateHttpContext(user, uri)
             };
+        }
+
+        /// <summary>
+        /// Creates a default pims configuration options.
+        /// </summary>
+        /// <returns></returns>
+        public static IOptions<PimsOptions> CreateDefaultPimsOptions()
+        {
+            return Options.Create(new PimsOptions()
+            {
+                Project = CreateDefaultProjectOptions().Value
+            });
+        }
+
+        /// <summary>
+        /// Creates a default project configuration options.
+        /// </summary>
+        /// <returns></returns>
+        public static IOptions<ProjectOptions> CreateDefaultProjectOptions()
+        {
+            return Options.Create(new ProjectOptions()
+            {
+                DraftFormat = "DRAFT-{0:00000}",
+                NumberFormat = "SPP-{0:00000}",
+                DraftStatus = new[] { "DR", "DR-P", "DR-I", "DR-D", "DR-A", "DR-RE" },
+                ClosedStatus = new[] { "DE", "CA" }
+            });
         }
         #endregion
     }

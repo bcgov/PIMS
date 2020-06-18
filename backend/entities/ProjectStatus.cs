@@ -10,6 +10,11 @@ namespace Pims.Dal.Entities
     {
         #region Properties
         /// <summary>
+        /// get/set - A group name is used instead of the name when a group of status are related and should be presented as one.
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
         /// get/set - A description of the tier.
         /// </summary>
         public string Description { get; set; }

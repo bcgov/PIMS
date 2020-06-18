@@ -738,7 +738,8 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             init.SaveChanges();
 
-            var service = helper.CreateService<ParcelService>();
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
 
             // Act
             parcel.Description = "a new description.";
@@ -826,7 +827,8 @@ namespace Pims.Dal.Test.Services
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -868,7 +870,8 @@ namespace Pims.Dal.Test.Services
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -890,8 +893,9 @@ namespace Pims.Dal.Test.Services
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
-
-            var service = helper.CreateService<ParcelService>(user);
+            
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -913,7 +917,8 @@ namespace Pims.Dal.Test.Services
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
-            var service = helper.CreateService<ParcelService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act

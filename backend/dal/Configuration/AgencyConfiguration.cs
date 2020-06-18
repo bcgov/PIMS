@@ -23,6 +23,10 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(150);
             builder.Property(m => m.Name).IsRequired();
 
+            builder.Property(m => m.Email).HasMaxLength(250);
+            builder.Property(m => m.AddressTo).HasMaxLength(100);
+            builder.Property(m => m.SendEmail).HasDefaultValue(true);
+
             builder.Property(m => m.Description).HasMaxLength(500);
 
             builder.HasOne(m => m.Parent).WithMany(m => m.Children).HasForeignKey(m => m.ParentId).OnDelete(DeleteBehavior.ClientSetNull);

@@ -64,17 +64,18 @@ To support template the following variable contexts will be supported;
 
 The `NotificationTemplate` entity will need to include the following properties;
 
-| Name        | Type          | Required | Constraint                    | Description                                        |
-| ----------- | ------------- | :------: | ----------------------------- | -------------------------------------------------- |
-| Id          | int           | PRIMARY  | IDENTITY                      | Unique identity within PIMS                        |
-| Name        | nvarchar(100) |   yes    |                               | A unique name to identify the template             |
-| Description | nvarchar(500) |          |                               | A description of the template and its purpose      |
-| Encoding    | nvarchar(50)  |   yes    | [base64, bindary, hex, utf-8] | Notification encoding                              |
-| BodyType    | nvarchar(50)  |   yes    | [html, text]                  | Notification message body type                     |
-| Priority    | int           |   yes    | [normal, low, high]           | Notification default priority                      |
-| Subject     | nvarchar(200) |   yes    |                               | Notification subject line (supports variables)     |
-| Body        | nvarchar(max) |   yes    |                               | Notification message template (supports variables) |
-| IsDisabled  | bit           |   yes    |                               | Whether the template is disabled                   |
+| Name        | Type          | Required | Constraint                   | Description                                        |
+| ----------- | ------------- | :------: | ---------------------------- | -------------------------------------------------- |
+| Id          | int           | PRIMARY  | IDENTITY                     | Unique identity within PIMS                        |
+| Name        | nvarchar(100) |   yes    |                              | A unique name to identify the template             |
+| Description | nvarchar(500) |          |                              | A description of the template and its purpose      |
+| Encoding    | nvarchar(50)  |   yes    | [base64, binary, hex, utf-8] | Notification encoding                              |
+| BodyType    | nvarchar(50)  |   yes    | [html, text]                 | Notification message body type                     |
+| Priority    | int           |   yes    | [normal, low, high]          | Notification default priority                      |
+| Subject     | nvarchar(200) |   yes    |                              | Notification subject line (supports variables)     |
+| Body        | nvarchar(max) |   yes    |                              | Notification message template (supports variables) |
+| IsDisabled  | bit           |   yes    |                              | Whether the template is disabled                   |
+| Tag         | nvarchar(50)  |          |                              | A Tag passed to CHES to filter notifications       |
 
 ## Agencies
 
@@ -92,15 +93,15 @@ To automate the sending of emails and associating them to a workflow project sta
 
 Notifications will be triggered when the `FromStatus` and/or `ToStatus` conditions are met during the workflow project lifecycle.
 
-| Name         | Type | Required | Constraint                                 | Description                                                                     |
-| ------------ | ---- | :------: | ------------------------------------------ | ------------------------------------------------------------------------------- |
-| Id           | int  | PRIMARY  | IDENTITY                                   | Unique identity within PIMS                                                     |
-| TemplateId   | int  |   yes    | FOREIGN                                    | Link to the template that this trigger will use when generating an notification |
-| FromStatusId | int  |          | FOREIGN                                    | Link to the project status that will trigger this notification                  |
-| ToStatusId   | int  |          | FOREIGN                                    | Link to the project status that will trigger this notification                  |
-| Priority     | int  |   yes    | [normal, low, high]                        | The priority of the notification that will be sent                              |
-| Delay        | int  |   yes    | [none, endOfDay, endOfMonth, days, setDay] | Controls when a notification will be sent                                       |
-| DelayDays    | int  |   yes    |                                            | Number of days to delay sending notification                                    |
+| Name         | Type | Required | Constraint                                  | Description                                                                     |
+| ------------ | ---- | :------: | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| Id           | int  | PRIMARY  | IDENTITY                                    | Unique identity within PIMS                                                     |
+| TemplateId   | int  |   yes    | FOREIGN                                     | Link to the template that this trigger will use when generating an notification |
+| FromStatusId | int  |          | FOREIGN                                     | Link to the project status that will trigger this notification                  |
+| ToStatusId   | int  |          | FOREIGN                                     | Link to the project status that will trigger this notification                  |
+| Priority     | int  |   yes    | [normal, low, high]                         | The priority of the notification that will be sent                              |
+| Delay        | int  |   yes    | [none, endOfDay, endOfMonth, days, setDate] | Controls when a notification will be sent                                       |
+| DelayDays    | int  |   yes    |                                             | Number of days to delay sending notification                                    |
 
 ## Project Agency Response
 
@@ -119,33 +120,25 @@ These responses will be stored and used to determine future notification decisio
 A notification queue will be maintained to capture all generated notifications and their current status.
 Additionally this will provide a future ability to resend or cancel notifications.
 
-| Name      | Type             | Required | Constraint                                        | Description                                                             |
-| --------- | ---------------- | :------: | ------------------------------------------------- | ----------------------------------------------------------------------- |
-| Id        | int              | PRIMARY  | IDENTITY                                          | Unique identifier within PIMS                                           |
-| Key       | uniqueidentifier |   yes    |                                                   | Unique key to identify the messages when agencies respond               |
-| Status    | int              |   yes    | [accepted, cancelled, completed, failed, pending] | The currently known status of the notification within CHES              |
-| Priority  | int              |   yes    | [normal, low, high]                               | The email priority                                                      |
-| Encoding  | nvarchar(50)     |   yes    | [base64, bindary, hex, utf-8]                     | The email encoding                                                      |
-| SendOn    | datetime2        |   yes    |                                                   | Desired UTC time for sending the message. 0 = Queue to send immediately |
-| To        | nvarchar(100)    |   yes    |                                                   | Email address sent to                                                   |
-| Subject   | nvarchar(200)    |   yes    |                                                   | Email subject line                                                      |
-| BodyType  | nvarchar(50)     |   yes    | [html, text]                                      | Email body type                                                         |
-| Body      | nvarchar(max)    |   yes    |                                                   | Email message                                                           |
-| Bcc       | nvarchar(100)    |   yes    |                                                   | Email blind carbon copy                                                 |
-| Cc        | nvarchar(100)    |   yes    |                                                   | Email carbon copy                                                       |
-| Tag       | nvarchar(50)     |          |                                                   | Notification tag to identify related notifications                      |
-| ProjectId | int              |          | FORIEGN                                           | Link to the project that this notification is related to                |
-| AgencyId  | int              |          | FORIEGN                                           | Link to the agency that this notification was sent to                   |
-
-## CHES Queue
-
-To manage the relationship with **CHES** a queue will be maintained with a link to the appropriate `MessageId` and `TransactionId`.
-
-| Name          | Type             | Required | Constraint | Description                        |
-| ------------- | ---------------- | :------: | ---------- | ---------------------------------- |
-| MessageId     | uniqueidentifier | PRIMARY  |            | Message identifier within CHES     |
-| TransactionId | uniqueidentifier | PRIMARY  |            | Transaction identifier within CHES |
-| QueueId       | int              |   yes    | FORIEGN    | Link to the notification queue     |
+| Name          | Type             | Required | Constraint                                        | Description                                                             |
+| ------------- | ---------------- | :------: | ------------------------------------------------- | ----------------------------------------------------------------------- |
+| Id            | int              | PRIMARY  | IDENTITY                                          | Unique identifier within PIMS                                           |
+| Key           | uniqueidentifier |   yes    |                                                   | Unique key to identify the messages when agencies respond               |
+| Status        | int              |   yes    | [accepted, cancelled, completed, failed, pending] | The currently known status of the notification within CHES              |
+| Priority      | int              |   yes    | [normal, low, high]                               | The email priority                                                      |
+| Encoding      | nvarchar(50)     |   yes    | [base64, binary, hex, utf-8]                      | The email encoding                                                      |
+| SendOn        | datetime2        |   yes    |                                                   | Desired UTC time for sending the message. 0 = Queue to send immediately |
+| To            | nvarchar(100)    |   yes    |                                                   | Email address sent to                                                   |
+| Subject       | nvarchar(200)    |   yes    |                                                   | Email subject line                                                      |
+| BodyType      | nvarchar(50)     |   yes    | [html, text]                                      | Email body type                                                         |
+| Body          | nvarchar(max)    |   yes    |                                                   | Email message                                                           |
+| Bcc           | nvarchar(100)    |   yes    |                                                   | Email blind carbon copy                                                 |
+| Cc            | nvarchar(100)    |   yes    |                                                   | Email carbon copy                                                       |
+| Tag           | nvarchar(50)     |          |                                                   | Notification tag to identify related notifications                      |
+| ProjectId     | int              |          | FORIEGN                                           | Link to the project that this notification is related to                |
+| ToAgencyId    | int              |          | FORIEGN                                           | Link to the agency that this notification was sent to                   |
+| MessageId     | uniqueidentifier | PRIMARY  |                                                   | Message identifier within CHES                                          |
+| TransactionId | uniqueidentifier | PRIMARY  |                                                   | Transaction identifier within CHES                                      |
 
 ## Entity Relational Diagram
 
