@@ -10,7 +10,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import { IPaginate } from 'utils/CommonFunctions';
-import { formikFieldMemo } from 'utils';
+import { formikFieldMemo, getCurrentFiscalYear } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import SumFinancialsForm from './SumFinancialsForm';
 
@@ -105,7 +105,7 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
   financials.forEach((financial, index) => {
     //All financials are required for the current year except appraised.
     if (
-      financial.year === moment().year() &&
+      financial.fiscalYear === getCurrentFiscalYear() &&
       !financial.value &&
       financial.key !== EvaluationKeys.Appraised &&
       financial.key !== FiscalKeys.Estimated

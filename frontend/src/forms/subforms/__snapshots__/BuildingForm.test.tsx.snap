@@ -609,7 +609,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2020"
+                      value="2021"
                     />
                   </td>
                   <td>
@@ -635,7 +635,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2019"
+                      value="2020"
                     />
                   </td>
                   <td>
@@ -684,7 +684,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2019/2020"
+                      value="2020/2021"
                     />
                   </td>
                   <td>
@@ -710,7 +710,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2018/2019"
+                      value="2019/2020"
                     />
                   </td>
                   <td>
@@ -759,7 +759,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2019/2020"
+                      value="2020/2021"
                     />
                   </td>
                   <td>
@@ -785,7 +785,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                       disabled={true}
                       readOnly={true}
                       type="string"
-                      value="2018/2019"
+                      value="2019/2020"
                     />
                   </td>
                   <td>
