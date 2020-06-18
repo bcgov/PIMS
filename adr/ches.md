@@ -2,9 +2,9 @@
 
 ## Status
 
-> Proposed
+> Accepted
 
-> June 9, 2020
+> June 16, 2020
 
 ## Context
 

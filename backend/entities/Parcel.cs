@@ -52,6 +52,11 @@ namespace Pims.Dal.Entities
         public string ZoningPotential { get; set; }
 
         /// <summary>
+        /// get/set - Provides a way to identify parcels that are not owned by the agency.
+        /// </summary>
+        public bool NotOwned { get; set; }
+
+        /// <summary>
         /// get/set - A collection of buildings on this parcel.
         /// </summary>
         /// <typeparam name="Building"></typeparam>

@@ -43,7 +43,7 @@ namespace Pims.Dal.Services.Admin
             if (filter.Quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(filter.Quantity));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -59,7 +59,10 @@ namespace Pims.Dal.Services.Admin
                     p.Longitude >= filter.SWLongitude);
 
             if (filter.Agencies?.Any() == true)
-                query = query.Where(p => filter.Agencies.Contains(p.AgencyId));
+            {
+                var filterAgencies = filter.Agencies.Select(a => (int?)a);
+                query = query.Where(p => filterAgencies.Contains(p.AgencyId));
+            }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (filter.StatusId.HasValue)

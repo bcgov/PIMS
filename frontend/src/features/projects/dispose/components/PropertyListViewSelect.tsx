@@ -76,7 +76,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const [pageCount, setPageCount] = useState(0);
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
-  const [projectProperties, setProjectProperties] = useState(existingProperties);
+  const [properties, setProjectProperties] = useState(existingProperties);
   const columnsWithRemove = useMemo(() => getColumnsWithRemove(setProjectProperties), []);
 
   // const [loading, setLoading] = useState(false);
@@ -98,8 +98,8 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   }, [agencyIds, fetchData, filter, pageIndex, pageSize]);
 
   useEffect(() => {
-    setFieldValue(field, projectProperties);
-  }, [projectProperties, setFieldValue, field]);
+    setFieldValue(field, properties);
+  }, [properties, setFieldValue, field]);
 
   return (
     <Container className="col-md-12 PropertyListViewSelect">
@@ -111,7 +111,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
               onClick={() => {
                 setProjectProperties(
                   _.uniqWith(
-                    _.concat(selectedProperties, projectProperties),
+                    _.concat(selectedProperties, properties),
                     (p1, p2) => p1.id === p2.id && p1.propertyTypeId === p2.propertyTypeId,
                   ),
                 );
@@ -144,7 +144,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
           <Button
             onClick={() => {
               setRemovedProperties([]);
-              setProjectProperties(_.difference(projectProperties, removedProperties));
+              setProjectProperties(_.difference(properties, removedProperties));
             }}
           >
             Remove Selected
@@ -153,7 +153,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
         <Table<IProperty>
           name="ProjectPropertiesTable"
           columns={columnsWithRemove}
-          data={projectProperties ?? []}
+          data={properties ?? []}
           lockPageSize
           pageSize={-1}
           setSelectedRows={setRemovedProperties}

@@ -599,7 +599,8 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
             init.SaveChanges();
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -624,7 +625,8 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
             init.SaveChanges();
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -661,7 +663,8 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
             init.SaveChanges();
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -688,7 +691,8 @@ namespace Pims.Dal.Test.Services
             var task = init.CreateTask(20, "testing", project.Status);
             init.AddAndSaveChanges(task);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -715,7 +719,8 @@ namespace Pims.Dal.Test.Services
 
             init.AddAndSaveChanges(parcel);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -754,7 +759,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(parcel);
             init.AddAndSaveChanges(parcel);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -788,7 +794,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(parcel);
             init.AddAndSaveChanges(parcel);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -819,7 +826,8 @@ namespace Pims.Dal.Test.Services
             var building = init.CreateBuilding(parcel, 20);
             init.AddAndSaveChanges(building);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -861,7 +869,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(building);
             init.AddAndSaveChanges(building);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -897,7 +906,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(building);
             init.AddAndSaveChanges(building);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -940,7 +950,8 @@ namespace Pims.Dal.Test.Services
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -958,7 +969,8 @@ namespace Pims.Dal.Test.Services
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -976,7 +988,8 @@ namespace Pims.Dal.Test.Services
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -994,7 +1007,8 @@ namespace Pims.Dal.Test.Services
 
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -1017,7 +1031,8 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             init.SaveChanges();
 
-            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -1042,7 +1057,8 @@ namespace Pims.Dal.Test.Services
             var building = init.CreateBuilding(parcel, 2);
             init.SaveChanges();
 
-            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -1069,7 +1085,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(parcel);
             init.SaveChanges();
 
-            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -1096,7 +1113,8 @@ namespace Pims.Dal.Test.Services
             project.AddProperty(parcel);
             init.SaveChanges();
 
-            var options = Options.Create(new ProjectOptions() { NumberFormat = "TEST-{0:00000}" });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -1163,7 +1181,8 @@ namespace Pims.Dal.Test.Services
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
             // Assert
@@ -1183,7 +1202,8 @@ namespace Pims.Dal.Test.Services
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -1191,6 +1211,27 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
+        }
+
+        /// <summary>
+        /// Project found.
+        /// </summary>
+        [Fact]
+        public void Remove_ActiveProject_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete).AddAgency(1);
+            var project = EntityHelper.CreateProject(1);
+            project.Status.Code = "TEST";
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+            var context = helper.GetService<PimsContext>();
+
+            // Act
+            Assert.Throws<NotAuthorizedException>(() => service.Remove(project));
         }
 
         /// <summary>
@@ -1205,7 +1246,8 @@ namespace Pims.Dal.Test.Services
             var project = EntityHelper.CreateProject(1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
 
             // Act
@@ -1528,11 +1570,12 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var submit = init.ProjectStatus.First(s => s.Code == "RE");
+            var submit = init.ProjectStatus.First(s => s.Code == "DR-RE");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = submit.Id; // Submit Status

@@ -172,10 +172,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const lazyLoadProperties = async (expandedRows: IProject[]) => {
     if (expandedRows.length > 0) {
       expandedRows = expandedRows.filter(x => x.properties.length === 0);
-      const projectProperties = await Promise.all(
+      const properties = await Promise.all(
         expandedRows.map(async project => await service.loadProperties(project.projectNumber)),
       );
-      const projectPropertiesMap = projectProperties.reduce((map: any, current: any) => {
+      const projectPropertiesMap = properties.reduce((map: any, current: any) => {
         const ids = Object.keys(current);
         const projectId = ids[0];
         return { ...map, [projectId]: current[projectId] };

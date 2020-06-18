@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Pims.Dal.Exceptions;
-using Pims.Dal.Security;
 using Pims.Dal.Services;
-using System;
 using System.Linq;
 using Entity = Pims.Dal.Entities;
 
@@ -13,24 +11,21 @@ namespace Pims.Dal.Helpers.Extensions
     /// </summary>
     public static class ServiceExtensions
     {
-        #region Variables
-        public static readonly string[] EDITABLE_STATUS_CODES = new[] { "DR", "DR-P", "DR-I", "DR-D", "DR-A", "RE" };
-        #endregion
-
         /// <summary>
         /// A parcel can only be updated or removed if not within an active project or user has admin-properties permission
         /// </summary>
         /// <param name="service"></param>
         /// <param name="parcel"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Parcel parcel)
+        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Parcel parcel, ProjectOptions options)
         {
             if (parcel.ProjectNumber != null)
             {
                 var project = service.GetContext().Projects
                     .Include(p => p.Status)
                     .FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber);
-                if (project != null && !service.GetUser().HasPermission(Permissions.AdminProperties) && !EDITABLE_STATUS_CODES.Contains(project.Status.Code))
+                if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a parcel that is within an active project.");
                 }
@@ -42,8 +37,9 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="service"></param>
         /// <param name="building"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Building building)
+        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Building building, ProjectOptions options)
         {
             var context = service.GetContext();
             bool changed() => context.Entry(building).State == EntityState.Modified ||
@@ -53,7 +49,7 @@ namespace Pims.Dal.Helpers.Extensions
                 var project = context.Projects
                     .Include(p => p.Status)
                     .FirstOrDefault(p => p.ProjectNumber == building.ProjectNumber);
-                if (project != null && !service.GetUser().HasPermission(Permissions.AdminProperties) && !EDITABLE_STATUS_CODES.Contains(project.Status.Code))
+                if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a building that is within an active project.");
                 }
@@ -65,10 +61,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="service"></param>
         /// <param name="project"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Project project)
+        public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Project project, ProjectOptions options)
         {
-            if (project != null && !service.GetUser().HasPermission(Permissions.AdminProjects) && !EDITABLE_STATUS_CODES.Contains(project.Status.Code))
+            if (project != null && !project.IsProjectEditable(service.GetUser(), options))
             {
                 throw new NotAuthorizedException("Cannot update or delete an active project.");
             }
