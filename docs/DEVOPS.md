@@ -153,3 +153,50 @@ During the production release a full database backup will occur of the productio
 If a failure occurs during the deployment phase it will be necessary to rollback the release images that were deployed and restore the database backup. During this time the redirect to the maintenance pod will remain until the rollback has successfully been implemented.
 
 To support `after-the-fact` rollbacks it will be required to generate full migration scripts that allow for this <span style="color:red">**[out-of-scope]**</span>.
+
+### Jenkins and Openshift (CI/CD Pods control)
+
+We have installed a plugin OpenShift Jenkins Pipeline (DSL) Plugin which allows us to execute oc commands in the Jenkins master node and the agents/slave nodes. We will have to elevate the role binding of the user “system:serviceaccount:jcxjin-tools:jenkins” to be able to interact with the pods.
+
+Examples:
+
+- Turning the proxy caddy on/off
+
+```
+stage("Turn maintenance mode ON/OFF") {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject('projectName') { // Change project name
+              openshift.raw('scale pod proxy-caddy-pod --replicas=1') // ON
+              openshift.raw('scale pod proxy-caddy-pod --replicas=0') // OFF
+            }
+          }
+        }
+      }
+    }
+```
+
+- Running shell commands in a pod
+
+```
+stage("Database backup") {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject('projectName') { // Change project name
+              openshift.raw('rsh <pod_name> <command>')
+            }
+          }
+        }
+      }
+    }
+```
+
+#### Resources:
+
+https://docs.openshift.com/enterprise/3.2/dev_guide/migrating_applications/database_applications.html
+
+https://www.howtogeek.com/50295/backup-your-sql-server-database-from-the-command-line/
+
+https://docs.openshift.com/enterprise/3.1/dev_guide/ssh_environment.html
