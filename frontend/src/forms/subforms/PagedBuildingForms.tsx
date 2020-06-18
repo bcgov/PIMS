@@ -64,7 +64,13 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                     variant="link"
                     disabled={props.disabled}
                     title="Add Building"
-                    onClick={() => arrayHelpers.push(defaultBuildingValues)}
+                    onClick={() =>
+                      arrayHelpers.push({
+                        ...defaultBuildingValues,
+                        latitude: formikProps.values.latitude,
+                        longitude: formikProps.values.longitude,
+                      })
+                    }
                   >
                     <FaPlus size={14} />
                   </Button>
