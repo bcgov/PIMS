@@ -38,7 +38,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
 
   const keycloak = useKeycloakWrapper();
 
-  const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
+  const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled;
 
   return (
     <Fragment>
