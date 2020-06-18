@@ -10,7 +10,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import { IPaginate } from 'utils/CommonFunctions';
-import { formikFieldMemo } from 'utils';
+import { formikFieldMemo, getCurrentFiscalYear } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import SumFinancialsForm from './SumFinancialsForm';
 
@@ -37,7 +37,12 @@ export interface IFinancial extends IFiscal, IEvaluation {
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
 const NUMBER_OF_GENERATED_EVALUATIONS = 20;
 const currentYear = moment().year();
-const yearsArray = _.range(currentYear, currentYear - NUMBER_OF_GENERATED_EVALUATIONS, -1);
+const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
+const yearsArray = _.range(
+  adjustedFiscalYear,
+  adjustedFiscalYear - NUMBER_OF_GENERATED_EVALUATIONS,
+  -1,
+);
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
 //configures the react paginate control on this page.
 const pagedFinancials: IPaginate = {
@@ -49,14 +54,13 @@ const pagedFinancials: IPaginate = {
 };
 
 const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials?.find(
-    financial =>
-      (financial.year === year ||
-        moment(financial.date).year() === year ||
-        financial.year === year ||
+  return financials?.find(financial => {
+    return (
+      ((financial.date !== undefined && moment(financial.date).year() === year) ||
         financial.fiscalYear === year) &&
-      financial.key === type,
-  );
+      financial.key === type
+    );
+  });
 };
 const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
   _.indexOf(financials, findMatchingFinancial(financials, type, year));
@@ -101,7 +105,7 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
   financials.forEach((financial, index) => {
     //All financials are required for the current year except appraised.
     if (
-      financial.year === moment().year() &&
+      financial.fiscalYear === getCurrentFiscalYear() &&
       !financial.value &&
       financial.key !== EvaluationKeys.Appraised &&
       financial.key !== FiscalKeys.Estimated
