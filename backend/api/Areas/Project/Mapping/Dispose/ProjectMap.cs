@@ -15,6 +15,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.FiscalYear, src => src.FiscalYear)
                 .Map(dest => dest.StatusId, src => src.StatusId)
+                .Map(dest => dest.StatusCode, src => src.Status.Code)
                 .Map(dest => dest.Status, src => src.Status)
                 .Map(dest => dest.TierLevelId, src => src.TierLevelId)
                 .Map(dest => dest.TierLevel, src => src.TierLevel == null ? null : src.TierLevel.Name)

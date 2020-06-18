@@ -18,11 +18,11 @@ const FlexRight = styled.div`
  * @component
  */
 export const ReviewApproveActions = ({
-  submitStatusId,
-  setSubmitStatusId,
+  submitStatusCode,
+  setSubmitStatusCode,
 }: {
-  submitStatusId: number | undefined;
-  setSubmitStatusId: Function;
+  submitStatusCode: string | undefined;
+  setSubmitStatusCode: Function;
 }) => {
   const { values, submitForm } = useFormikContext<any>();
   const [approveERP, setApproveERP] = useState(false);
@@ -34,8 +34,8 @@ export const ReviewApproveActions = ({
         <span>
           <Button
             disabled={
-              values.statusId === ReviewWorkflowStatus.Denied ||
-              values.statusId === ReviewWorkflowStatus.ApprovedForErp
+              values.statusCode === ReviewWorkflowStatus.Denied ||
+              values.statusCode === ReviewWorkflowStatus.ApprovedForErp
             }
             style={{ marginLeft: 10 }}
             onClick={() => {
@@ -50,7 +50,7 @@ export const ReviewApproveActions = ({
               cancelButtonText="Cancel"
               okButtonText="Confirm Approval"
               handleOk={() => {
-                setSubmitStatusId(ReviewWorkflowStatus.ApprovedForErp);
+                setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
                 submitForm();
                 setApproveERP(false);
               }}
@@ -60,7 +60,7 @@ export const ReviewApproveActions = ({
             />
           )}
           <Button
-            disabled={values.statusId === ReviewWorkflowStatus.Denied}
+            disabled={values.statusCode === ReviewWorkflowStatus.Denied}
             variant="secondary"
             style={{ marginLeft: 10 }}
             onClick={() => {
@@ -76,8 +76,8 @@ export const ReviewApproveActions = ({
         <span>
           <Button
             disabled={
-              values.statusId === ReviewWorkflowStatus.ApprovedForErp ||
-              values.statusId === ReviewWorkflowStatus.Denied
+              values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+              values.statusCode === ReviewWorkflowStatus.Denied
             }
             variant="danger"
             onClick={() => {
@@ -92,7 +92,7 @@ export const ReviewApproveActions = ({
               cancelButtonText="Cancel"
               okButtonText="Deny"
               handleOk={() => {
-                setSubmitStatusId(ReviewWorkflowStatus.Denied);
+                setSubmitStatusCode(ReviewWorkflowStatus.Denied);
                 submitForm();
                 setDenyERP(false);
               }}

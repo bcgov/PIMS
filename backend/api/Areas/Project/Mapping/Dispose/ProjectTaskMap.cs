@@ -12,6 +12,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.ProjectId, src => src.ProjectId)
                 .Map(dest => dest.TaskId, src => src.TaskId)
                 .Map(dest => dest.StatusId, src => src.Task == null ? 0 : src.Task.StatusId)
+                .Map(dest => dest.StatusCode, src => src.Task == null ? "" : src.Task.Status.Code)
                 .Map(dest => dest.Name, src => src.Task == null ? null : src.Task.Name)
                 .Map(dest => dest.Description, src => src.Task == null ? null : src.Task.Description)
                 .Map(dest => dest.IsOptional, src => src.Task == null ? true : src.Task.IsOptional)

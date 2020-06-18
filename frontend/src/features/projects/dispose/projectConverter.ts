@@ -161,11 +161,12 @@ export const toApiProject = (project: IProject) => {
     return projectProperty;
   });
 
-  const flatProject: IApiProject = {
+  const apiProject: IApiProject = {
     id: project.id,
     projectNumber: project.projectNumber,
     name: project.name,
     description: project.description,
+    fiscalYear: project.fiscalYear,
     properties: properties,
     note: project.note,
     privateNote: project.privateNote,
@@ -173,7 +174,8 @@ export const toApiProject = (project: IProject) => {
     tierLevelId: project.tierLevelId,
     tasks: project.tasks,
     statusId: project.statusId,
+    statusCode: project.statusCode,
     rowVersion: project.rowVersion,
   };
-  return flatProject;
+  return apiProject;
 };

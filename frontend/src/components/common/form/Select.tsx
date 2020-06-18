@@ -121,7 +121,12 @@ export const Select: React.FC<SelectProps> = ({
         multiple={multiple}
         onChange={onSelectChange}
         onBlur={(e: any) => {
-          if (type === 'number' && !isNaN(parseInt(value))) {
+          if (type === 'number' && multiple) {
+            setFieldValue(
+              field,
+              value.map((x: any) => +x),
+            );
+          } else if (type === 'number' && !isNaN(parseInt(value))) {
             setFieldValue(field, parseInt(value));
           }
           handleBlur(e);

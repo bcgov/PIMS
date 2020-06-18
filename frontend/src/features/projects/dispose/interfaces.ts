@@ -1,3 +1,4 @@
+import { getCurrentFiscalYear } from './../../../utils/utils';
 import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
 
 /**
@@ -110,19 +111,21 @@ export interface IProjectTask extends ITask {
   sortOrder: number;
   completedOn: Date;
   statusId: number;
+  statusCode: string;
 }
 export interface IProject {
   id: number;
   projectNumber: string;
   name: string;
   description: string;
+  fiscalYear: number;
   properties: IProperty[];
   note: string;
   privateNote: string;
   agencyId: number;
   statusId: number;
   status?: IStatus;
-  statusCode?: string;
+  statusCode: string;
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;
@@ -130,22 +133,22 @@ export interface IProject {
 }
 
 export enum DisposeWorkflowStatus {
-  Draft = 1,
-  SelectProperties,
-  UpdateInformation,
-  RequiredDocumentation,
-  Approval,
-  Review,
+  Draft = 'DR',
+  SelectProperties = 'DR-P',
+  UpdateInformation = 'DR-I',
+  RequiredDocumentation = 'DR-D',
+  Approval = 'DR-A',
+  Review = 'DR-RE',
 }
 
 export enum ReviewWorkflowStatus {
-  PropertyReview = 7,
-  DocumentReview,
-  AppraisalReview,
-  FirstNationConsultation,
-  ApprovedForErp,
-  ApprovedForSpl,
-  Denied,
+  PropertyReview = 'AS-I',
+  DocumentReview = 'AS-D',
+  AppraisalReview = 'AS-AP',
+  FirstNationConsultation = 'AS-FNC',
+  ApprovedForErp = 'AP-ERP',
+  ApprovedForSpl = 'AP-SPL',
+  Denied = 'DE',
 }
 
 export interface ProjectWorkflowComponent {
@@ -189,11 +192,13 @@ export const initialValues: any = {
   statusId: 1,
   agencyId: 0,
   tasks: [],
+  fiscalYear: getCurrentFiscalYear(),
 };
 
 export interface IApiProject {
   id: number;
   projectNumber: string;
+  fiscalYear: number;
   name: string;
   description: string;
   properties: IProjectProperty[];
@@ -201,6 +206,7 @@ export interface IApiProject {
   privateNote: string;
   agencyId: number;
   statusId: number;
+  statusCode: string;
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;

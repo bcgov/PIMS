@@ -43,7 +43,8 @@ const mockTasks: IProjectTask[] = [
     taskType: 1,
     sortOrder: 0,
     completedOn: new Date(),
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    statusId: 0,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   },
   {
     projectNumber: 123,
@@ -55,7 +56,8 @@ const mockTasks: IProjectTask[] = [
     taskType: 1,
     sortOrder: 0,
     completedOn: new Date(),
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    statusId: 0,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   },
 ];
 
@@ -66,6 +68,7 @@ const mockProject: IProject = {
   properties: [],
   agencyId: 1,
   statusId: 0,
+  statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',

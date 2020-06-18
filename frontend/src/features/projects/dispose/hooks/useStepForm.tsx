@@ -29,8 +29,8 @@ const useStepForm = () => {
   const onSubmitReview = (values: any, actions: any) => {
     const apiValues = _.cloneDeep(values);
     let response: any =
-      values.statusId !== ReviewWorkflowStatus.PropertyReview
-        ? dispatch(updateWorkflowStatus(apiValues, values.statusId, 'ACCESS-DISPOSAL'))
+      values.statusCode !== ReviewWorkflowStatus.PropertyReview
+        ? dispatch(updateWorkflowStatus(apiValues, values.statusCode, 'ACCESS-DISPOSAL'))
         : Promise.resolve(apiValues);
     response
       .then((values: IProject) => {
@@ -71,6 +71,7 @@ const useStepForm = () => {
       .catch((error: AxiosError) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
         formikRef?.current?.setStatus({ msg });
+        throw Error('axios request failed');
       })
       .finally(() => {
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
