@@ -51,7 +51,7 @@ const handleValidate = (values: IProject) => {
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { project, goToDisposePath } = useStepper();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
-  const [submitStatusId, setSubmitStatusId] = useState<number | undefined>(undefined);
+  const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
   useEffect(() => {
     fetchProjectTasks('ACCESS-DISPOSAL');
   }, []);
@@ -69,7 +69,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         innerRef={formikRef}
         onSubmit={(values: IProject, actions: any) => {
           const tempValues = _.cloneDeep(values);
-          tempValues.statusId = submitStatusId ?? values.statusId;
+          tempValues.statusCode = submitStatusCode ?? values.statusCode;
           onSubmitReview(tempValues, actions);
         }}
         validate={handleValidate}
@@ -81,7 +81,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
             canEdit={canUserApproveForm()}
           />
           {canUserApproveForm() ? (
-            <ReviewApproveActions {...{ submitStatusId, setSubmitStatusId }} />
+            <ReviewApproveActions {...{ submitStatusCode, setSubmitStatusCode }} />
           ) : null}
         </Form>
       </Formik>

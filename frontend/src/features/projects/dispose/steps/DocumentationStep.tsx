@@ -11,7 +11,7 @@ const handleValidate = (project: IProject) => {
     if (
       !task.isCompleted &&
       !task.isOptional &&
-      task.statusId === DisposeWorkflowStatus.RequiredDocumentation
+      task.statusCode === DisposeWorkflowStatus.RequiredDocumentation
     ) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
@@ -26,7 +26,9 @@ const handleValidate = (project: IProject) => {
 const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
-  const tasks = _.filter(project.tasks, { statusId: DisposeWorkflowStatus.RequiredDocumentation });
+  const tasks = _.filter(project.tasks, {
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+  });
   if (!project) {
     // Step does not allow creation of new properties
     throw Error('Unexpected error updating project. Please reload your project.');

@@ -39,13 +39,13 @@ const ReviewApproveForm = ({
   }, [canEdit, errors]);
 
   const infoReviewTasks = _.filter(project.tasks, {
-    statusId: ReviewWorkflowStatus.PropertyReview,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
   });
   const documentationReviewTasks = _.filter(project.tasks, {
-    statusId: ReviewWorkflowStatus.DocumentReview,
+    statusCode: ReviewWorkflowStatus.DocumentReview,
   });
   const documentationTasks = _.filter(project.tasks, {
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   });
   return (
     <Fragment>

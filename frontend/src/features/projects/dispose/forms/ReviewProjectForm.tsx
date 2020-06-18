@@ -12,6 +12,7 @@ import {
 import { Form } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
+import { IProjectTask } from '../interfaces';
 
 /**
  * Form component of ReviewProjectForm.
@@ -21,7 +22,7 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
   const { values } = useFormikContext<IProject>();
   const [isReadOnly, setIsReadOnly] = useState(true);
   const documentationTasks = _.filter(values.tasks, {
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    code: DisposeWorkflowStatus.RequiredDocumentation,
   });
   const { errors } = useFormikContext();
   /** Enter edit mode if allowed and there are errors to display */
@@ -35,7 +36,7 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
     <Fragment>
       <ProjectDraftForm isReadOnly={isReadOnly || !canEdit} setIsReadOnly={setIsReadOnly} />
       <UpdateInfoForm isReadOnly={isReadOnly || !canEdit} />
-      <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
+      <DocumentationForm tasks={documentationTasks as IProjectTask[]} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
       <ProjectNotes />
       <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>

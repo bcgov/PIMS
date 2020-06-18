@@ -16,7 +16,7 @@ interface IAppraisalCheckListFormProps {
  */
 const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormProps> = props => {
   const { project } = useStepper();
-  const tasks = _.filter(project.tasks, { statusId: ReviewWorkflowStatus.AppraisalReview });
+  const tasks = _.filter(project.tasks, { statusCode: ReviewWorkflowStatus.AppraisalReview });
   return (
     <Container fluid className={classNames(props.className)}>
       <h3>

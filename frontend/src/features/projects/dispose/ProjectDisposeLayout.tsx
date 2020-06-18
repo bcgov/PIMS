@@ -60,14 +60,14 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
 
   const updateProjectStatus = (
     project: IProject,
-    nextStepId: number,
+    nextStepCode: string,
     workflowStatusCode?: string,
   ) => {
     if (project?.statusId === currentStatus.id) {
-      if (nextStepId === ReviewWorkflowStatus.PropertyReview) {
+      if (nextStepCode === ReviewWorkflowStatus.PropertyReview) {
         history.push('/project/completed');
       }
-      return dispatch(updateWorkflowStatus(project, nextStepId, workflowStatusCode) as any).then(
+      return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any).then(
         (project: IProject) => {
           goToNextStep(project);
           return project;
@@ -84,22 +84,22 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       const errors = formikRef?.current?.errors;
       // do not go to the next step if the form has validation errors.
       if (errors === undefined || !Object.keys(errors).length) {
-        let nextStepId = getNextStep(currentStatus)?.id;
+        let nextStepCode = getNextStep(currentStatus)?.code;
         let workflowStatusCode: string | undefined = undefined;
-        if (nextStepId === undefined) {
-          nextStepId = ReviewWorkflowStatus.PropertyReview;
+        if (nextStepCode === undefined) {
+          nextStepCode = ReviewWorkflowStatus.PropertyReview;
           workflowStatusCode = 'ACCESS-DISPOSAL';
         }
 
         addOrUpdateProject(values, formikRef).then((project: IProject) =>
-          updateProjectStatus(project, nextStepId!, workflowStatusCode),
+          updateProjectStatus(project, nextStepCode!, workflowStatusCode),
         );
       }
     });
   };
 
   const getComponentPath = (wfc: ProjectWorkflowComponent) => {
-    return `${match.url}${_.find(workflowStatuses, { id: wfc.workflowStatus })?.route}`;
+    return `${match.url}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -176,7 +176,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   getNextStep={getNextStep}
                   onSave={() => onSave(formikRef)}
                   onNext={onNext}
-                  saveDisabled={currentStatus.id === DisposeWorkflowStatus.Approval}
+                  saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
                 />
               )}
             </Container>

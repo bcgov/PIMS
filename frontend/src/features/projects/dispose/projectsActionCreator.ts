@@ -58,12 +58,12 @@ export const updateProject = (body: IProject) => (dispatch: Function) => {
 
 export const updateWorkflowStatus = (
   body: IProject,
-  statusId: number,
+  statusCode: string,
   workflowCode: string = 'SUBMIT-DISPOSAL',
 ) => (dispatch: Function) => {
   const axiosResponse = CustomAxios()
     .put(
-      ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusId),
+      ENVIRONMENT.apiUrl + API.PROJECT_UPDATE_WORKFLOW_STATUS(workflowCode, statusCode),
       toApiProject(body),
     )
     .then(response => dispatch(saveProject(response.data)));

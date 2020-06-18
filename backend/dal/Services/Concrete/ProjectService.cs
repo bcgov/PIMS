@@ -521,6 +521,7 @@ namespace Pims.Dal.Services
             var status = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId);
+            project.Status = status;
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();

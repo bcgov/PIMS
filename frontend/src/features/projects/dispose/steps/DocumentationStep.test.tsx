@@ -30,7 +30,8 @@ const tasks: IProjectTask[] = [
     sortOrder: 0,
     description: 'Task #1',
     taskType: 1,
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    statusId: 0,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   },
   {
     projectNumber: 1,
@@ -42,7 +43,8 @@ const tasks: IProjectTask[] = [
     sortOrder: 0,
     description: 'Task #2',
     taskType: 1,
-    statusId: DisposeWorkflowStatus.RequiredDocumentation,
+    statusId: 0,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   },
 ];
 

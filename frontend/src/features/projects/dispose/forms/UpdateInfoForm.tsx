@@ -83,7 +83,7 @@ const ReviewButtons = ({
   setSelectedProperties,
   goToAddProperties,
 }: any) => {
-  const { goToStep } = useStepper();
+  const { goToStepByCode } = useStepper();
   const { setFieldValue, values } = useFormikContext();
 
   return !isReadOnly ? (
@@ -93,7 +93,7 @@ const ReviewButtons = ({
         onClick={() => {
           goToAddProperties
             ? goToAddProperties()
-            : goToStep(DisposeWorkflowStatus.SelectProperties);
+            : goToStepByCode(DisposeWorkflowStatus.SelectProperties);
         }}
       >
         Add More Properties

@@ -58,6 +58,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The task status Id.
         /// </summary>
         public int? StatusId { get; set; }
+
+        /// <summary>
+        /// get/set - The task status code.
+        /// </summary>
+        public string StatusCode { get; set; }
         #endregion
     }
 }

@@ -155,6 +155,8 @@ const useStepper = () => {
     workflowTasks,
     getStatusById: (statusId: number): IStatus | undefined =>
       _.find(diposeWorkflowStatuses, { id: statusId }),
+    getStatusByCode: (statusCode: string): IStatus | undefined =>
+      _.find(diposeWorkflowStatuses, { code: statusCode }),
     getNextStep: (status?: IStatus) =>
       getNextWorkflowStatus(diposeWorkflowStatuses, status ?? currentStatus),
     goToNextStep: (overrideProject?: IProject): number | undefined => {
@@ -172,8 +174,12 @@ const useStepper = () => {
     canGoToStatus: (status: IStatus) => isStatusNavigable(diposeWorkflowStatuses, status, project),
     getLastCompletedStatus: () =>
       getLastCompletedStatus(diposeWorkflowStatuses, currentStatus, project),
-    goToStep: (statusId: number) => {
+    goToStepById: (statusId: number) => {
       const status: IStatus | undefined = _.find(diposeWorkflowStatuses, { id: statusId });
+      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
+    },
+    goToStepByCode: (statusCode: string) => {
+      const status: IStatus | undefined = _.find(diposeWorkflowStatuses, { code: statusCode });
       history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToDisposePath: (path: string) =>
