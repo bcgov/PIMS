@@ -16,7 +16,9 @@ interface IFirstNationsCheckListFormProps {
  */
 const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListFormProps> = props => {
   const { project } = useStepper();
-  const tasks = _.filter(project.tasks, { statusId: ReviewWorkflowStatus.FirstNationConsultation });
+  const tasks = _.filter(project.tasks, {
+    statusCode: ReviewWorkflowStatus.FirstNationConsultation,
+  });
   return (
     <Container fluid className={classNames(props.className)}>
       <h3>

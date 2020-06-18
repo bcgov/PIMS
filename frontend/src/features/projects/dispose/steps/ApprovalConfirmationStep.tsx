@@ -16,9 +16,9 @@ import {
  */
 const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const { onSubmit, canUserEditForm } = useStepForm();
-  const { project, projectStatusCompleted, getStatusById, currentStatus } = useStepper();
+  const { project, projectStatusCompleted, getStatusByCode, currentStatus } = useStepper();
   let confirmation = false;
-  if (currentStatus && projectStatusCompleted(getStatusById(DisposeWorkflowStatus.Approval))) {
+  if (currentStatus && projectStatusCompleted(getStatusByCode(DisposeWorkflowStatus.Approval))) {
     confirmation = true;
   }
   const initialValues = { ...project, confirmation };

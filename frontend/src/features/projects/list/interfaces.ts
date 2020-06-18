@@ -8,6 +8,7 @@ export interface IProject {
   projectNumber: string;
   name: string;
   statusId: number;
+  statusCode: string;
   status: string;
   statusRoute: string;
   tierLevelId: number;

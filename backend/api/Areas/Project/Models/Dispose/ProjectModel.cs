@@ -35,6 +35,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public int StatusId { get; set; }
 
         /// <summary>
+        /// get/set - The code of the project status.
+        /// </summary>
+        public string StatusCode { get; set; }
+
+        /// <summary>
         /// get/set - The status of the project.
         /// </summary>
         public ProjectStatusModel Status { get; set; }
