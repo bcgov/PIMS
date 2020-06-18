@@ -37,7 +37,12 @@ export interface IFinancial extends IFiscal, IEvaluation {
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
 const NUMBER_OF_GENERATED_EVALUATIONS = 20;
 const currentYear = moment().year();
-const yearsArray = _.range(currentYear, currentYear - NUMBER_OF_GENERATED_EVALUATIONS, -1);
+const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
+const yearsArray = _.range(
+  adjustedFiscalYear,
+  adjustedFiscalYear - NUMBER_OF_GENERATED_EVALUATIONS,
+  -1,
+);
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
 //configures the react paginate control on this page.
 const pagedFinancials: IPaginate = {
@@ -49,14 +54,13 @@ const pagedFinancials: IPaginate = {
 };
 
 const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials?.find(
-    financial =>
-      (financial.year === year ||
-        moment(financial.date).year() === year ||
-        financial.year === year ||
+  return financials?.find(financial => {
+    return (
+      ((financial.date !== undefined && moment(financial.date).year() === year) ||
         financial.fiscalYear === year) &&
-      financial.key === type,
-  );
+      financial.key === type
+    );
+  });
 };
 const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
   _.indexOf(financials, findMatchingFinancial(financials, type, year));
