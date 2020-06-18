@@ -1,7 +1,7 @@
 import './SubmitProperty.scss';
 
 import React, { useState } from 'react';
-import { Row, Col, Spinner, Button } from 'react-bootstrap';
+import { Row, Col, Spinner, Button, Container, Modal, Form } from 'react-bootstrap';
 import ParcelDetailForm from 'forms/ParcelDetailForm';
 import MapView from './MapView';
 import {
@@ -21,9 +21,15 @@ import { IGenericNetworkAction } from 'actions/genericActions';
 import { clearClickLatLng } from 'reducers/LeafletMouseSlice';
 import { useHistory } from 'react-router-dom';
 import GenericModal from 'components/common/GenericModal';
-import { isStorageInUse, PARCEL_STORAGE_NAME, clearStorage } from 'utils/storageUtils';
+import {
+  isStorageInUse,
+  PARCEL_STORAGE_NAME,
+  clearStorage,
+  PIN_MOVEMENT_CONFIRM,
+} from 'utils/storageUtils';
 import { Claims } from 'constants/claims';
 import { ReactComponent as CloseSquare } from 'assets/images/close-square.svg';
+import moment from 'moment';
 
 /** Form mode */
 enum Mode {
@@ -37,6 +43,7 @@ const SubmitProperty = (props: any) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const [showPinMovementConfirm, setShowPinMovementConfirm] = React.useState(false);
   const query = props?.location?.search ?? {};
   const parcelId = props?.match?.params?.id;
   const parsedQuery = queryString.parse(query);
@@ -126,6 +133,12 @@ const SubmitProperty = (props: any) => {
           propertyTypeId: activePropertyDetail?.propertyTypeId || 0,
         }),
       );
+
+      const timeStamp = localStorage.getItem(PIN_MOVEMENT_CONFIRM);
+      const diff = moment().diff(moment(timeStamp), 'minute');
+      const durationPassed = !timeStamp || diff >= 30; // check time elapse popup disabled is 30 minutes
+      const showPinMoveConfirm = !!parcelId && durationPassed;
+      setShowPinMovementConfirm(showPinMoveConfirm);
     }
   }, [leafletMouseEvent, dispatch, parcelId, activePropertyDetail]);
 
@@ -194,6 +207,10 @@ const SubmitProperty = (props: any) => {
       <UnsavedDraftModal {...{ showSaveDraftDialog, setShowSaveDraftDialog, history }} />
       <DeleteModal
         {...{ showDeleteDialog, setShowDeleteDialog, history, dispatch, cachedParcelDetail }}
+      />
+      <PinMovementModal
+        show={showPinMovementConfirm}
+        close={() => setShowPinMovementConfirm(false)}
       />
     </Row>
   );
@@ -290,6 +307,30 @@ const DeleteButton = ({
       Delete
     </Button>
   ) : null;
+};
+
+const PinMovementModal = ({ show, close }: { show: boolean; close: () => void }) => {
+  const dontShow = () => {
+    localStorage.setItem(PIN_MOVEMENT_CONFIRM, moment().format());
+  };
+
+  return (
+    <Container>
+      <Modal show={show} onHide={close}>
+        <Modal.Body style={{ maxHeight: '500px' }}>
+          Moving the pin will change the <b>Parcel</b> latitude and longitude values. You may need
+          to <b>manually</b> update the <b>Building</b> latitude and longitude values.
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Form.Check onChange={dontShow} type="checkbox" label="Hide temporarily" />
+          <Button size="sm" variant="warning" onClick={close}>
+            Ok
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
+  );
 };
 
 export default SubmitProperty;
