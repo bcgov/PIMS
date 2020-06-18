@@ -12,14 +12,17 @@ import WrappedPaginate from 'components/common/WrappedPaginate';
 import { IPaginate } from 'utils/CommonFunctions';
 import { formikFieldMemo } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
+import SumFinancialsForm from './SumFinancialsForm';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
   nameSpace: string;
   /** whether this form is enabled for editing */
   disabled?: boolean;
-  /** only want to show appraisal when the property belongs to a project */
+  /** whether to show the appraisal value on the form or not*/
   showAppraisal?: boolean;
+  /** whether the form is being used on parcel or building */
+  isParcel?: boolean;
 }
 
 /**
@@ -172,18 +175,26 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
               return null;
             } else {
               return (
-                <Col md={3} key={type}>
+                <Col xs={EvaluationKeys.Assessed === type && props.isParcel ? 5 : 3} key={type}>
                   <h6>{type}</h6>
                   <Table bordered>
                     <thead>
                       <tr>
-                        <td>
+                        <th>
                           {EvaluationKeys.Appraised === type && 'Date'}
                           {EvaluationKeys.Assessed === type && 'Year'}
                           {(FiscalKeys.Estimated === type || FiscalKeys.NetBook === type) &&
                             'Fiscal Year'}
-                        </td>
-                        <td>Value</td>
+                        </th>
+                        <th>
+                          {EvaluationKeys.Assessed === type && props.isParcel ? 'Land' : 'Value'}
+                        </th>
+                        {EvaluationKeys.Assessed === type && props.isParcel && (
+                          <>
+                            <th>Improvements</th>
+                            <th>Total</th>
+                          </>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -228,6 +239,15 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
                                 field={withNameSpace('value', type, year)}
                               />
                             </td>
+                            {EvaluationKeys.Assessed === type && props.isParcel && (
+                              <>
+                                <SumFinancialsForm
+                                  formikProps={props}
+                                  onlyAssesedSums={true}
+                                  year={year}
+                                />
+                              </>
+                            )}
                           </tr>
                         );
                       })}

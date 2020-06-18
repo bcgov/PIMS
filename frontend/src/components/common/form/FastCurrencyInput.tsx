@@ -6,7 +6,7 @@ import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import Form from 'react-bootstrap/Form';
 
-const defaultMaskOptions = {
+export const defaultMaskOptions = {
   prefix: '$',
   suffix: '',
   includeThousandsSeparator: true,

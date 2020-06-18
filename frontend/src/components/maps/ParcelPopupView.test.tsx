@@ -20,7 +20,7 @@ jest.mock('@react-keycloak/web');
   },
 });
 
-const mockParcel = (agencyId: number) => {
+const mockParcel = (agencyId: number, projectNumber?: string) => {
   var parcel: IParcel = {
     id: 1,
     pid: '1',
@@ -30,7 +30,7 @@ const mockParcel = (agencyId: number) => {
     statusId: 1,
     propertyStatus: 'Test Property Status',
     municipality: 'Test Municipality',
-    projectNumber: 'Test-Project-Number',
+    projectNumber: projectNumber,
     classification: 'Test Classification',
     description: 'Test Description',
     landArea: 100,
@@ -85,13 +85,14 @@ describe('Parcel popup view', () => {
     expect(getByText(/Update/i)).toBeInTheDocument();
   });
 
-  it('displays view option', () => {
-    const { getByText } = render(
+  it('displays only view option when user not in properties agency', () => {
+    const { getByText, queryByText } = render(
       <Router history={history}>
         <ParcelPopupView parcel={mockParcel(2)} />
       </Router>,
     );
     expect(getByText(/View/i)).toBeInTheDocument();
+    expect(queryByText(/Update/i)).toBeNull();
   });
 
   it('always displays update option for sres', () => {
@@ -110,5 +111,25 @@ describe('Parcel popup view', () => {
       </Router>,
     );
     expect(getByText(/Update/i)).toBeInTheDocument();
+  });
+
+  it('displays clickable project number when the property belongs to a project', () => {
+    const { getByText } = render(
+      <Router history={history}>
+        <ParcelPopupView parcel={mockParcel(1, 'Test-Project-Number')} />
+      </Router>,
+    );
+    const projectNum = getByText(/Test-Project-Number/);
+    expect(getByText(/Project Number/)).toBeInTheDocument();
+    expect(projectNum).toBeInTheDocument();
+  });
+
+  it('does not display project number field when none present', () => {
+    const { queryByText } = render(
+      <Router history={history}>
+        <ParcelPopupView parcel={mockParcel(1)} />
+      </Router>,
+    );
+    expect(queryByText(/Project Number/)).toBeNull();
   });
 });

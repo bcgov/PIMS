@@ -675,7 +675,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
               className="row no-gutters"
             >
               <div
-                className="col-md-3"
+                className="col-5"
               >
                 <h6>
                   Assessed
@@ -685,12 +685,18 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Year
-                      </td>
-                      <td>
-                        Value
-                      </td>
+                      </th>
+                      <th>
+                        Land
+                      </th>
+                      <th>
+                        Improvements
+                      </th>
+                      <th>
+                        Total
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -719,6 +725,22 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           />
                         </div>
                       </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={0}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={10000}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>
@@ -745,12 +767,28 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           />
                         </div>
                       </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={0}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={0}
+                        />
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div
-                className="col-md-3"
+                className="col-3"
               >
                 <h6>
                   NetBook
@@ -760,12 +798,12 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Fiscal Year
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Value
-                      </td>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -825,7 +863,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 </table>
               </div>
               <div
-                className="col-md-3"
+                className="col-3"
               >
                 <h6>
                   Estimated
@@ -835,12 +873,12 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Fiscal Year
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Value
-                      </td>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>

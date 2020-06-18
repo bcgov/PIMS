@@ -647,7 +647,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               className="row no-gutters"
             >
               <div
-                className="col-md-3"
+                className="col-3"
               >
                 <h6>
                   Assessed
@@ -657,12 +657,12 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Year
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Value
-                      </td>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -722,7 +722,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 </table>
               </div>
               <div
-                className="col-md-3"
+                className="col-3"
               >
                 <h6>
                   NetBook
@@ -732,12 +732,12 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Fiscal Year
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Value
-                      </td>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -797,7 +797,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 </table>
               </div>
               <div
-                className="col-md-3"
+                className="col-3"
               >
                 <h6>
                   Estimated
@@ -807,12 +807,12 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 >
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Fiscal Year
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Value
-                      </td>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
