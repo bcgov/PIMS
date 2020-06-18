@@ -707,7 +707,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           readOnly={true}
                           type="string"
-                          value="2020"
+                          value="2021"
                         />
                       </td>
                       <td>
@@ -718,48 +718,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             className="form-control"
                             disabled={true}
                             name="financials.0.value"
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            placeholder="$0"
-                            value={10000}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <input
-                          className="displayCurrency"
-                          disabled={true}
-                          placeholder="$0"
-                          value={0}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="displayCurrency"
-                          disabled={true}
-                          placeholder="$0"
-                          value={10000}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          className="form-control"
-                          disabled={true}
-                          readOnly={true}
-                          type="string"
-                          value="2019"
-                        />
-                      </td>
-                      <td>
-                        <div
-                          className="form-group"
-                        >
-                          <input
-                            className="form-control"
-                            disabled={true}
-                            name="financials.4.value"
                             onBlur={[Function]}
                             onChange={[Function]}
                             placeholder="$0"
@@ -781,6 +739,48 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           placeholder="$0"
                           value={0}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input
+                          className="form-control"
+                          disabled={true}
+                          readOnly={true}
+                          type="string"
+                          value="2020"
+                        />
+                      </td>
+                      <td>
+                        <div
+                          className="form-group"
+                        >
+                          <input
+                            className="form-control"
+                            disabled={true}
+                            name="financials.4.value"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            placeholder="$0"
+                            value={10000}
+                          />
+                        </div>
+                      </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={0}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className="displayCurrency"
+                          disabled={true}
+                          placeholder="$0"
+                          value={10000}
                         />
                       </td>
                     </tr>
@@ -814,7 +814,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           readOnly={true}
                           type="string"
-                          value="2019/2020"
+                          value="2020/2021"
                         />
                       </td>
                       <td>
@@ -828,7 +828,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             onBlur={[Function]}
                             onChange={[Function]}
                             placeholder="$0"
-                            value={10000}
+                            value=""
                           />
                         </div>
                       </td>
@@ -840,7 +840,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           readOnly={true}
                           type="string"
-                          value="2018/2019"
+                          value="2019/2020"
                         />
                       </td>
                       <td>
@@ -854,7 +854,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                             onBlur={[Function]}
                             onChange={[Function]}
                             placeholder="$0"
-                            value=""
+                            value={10000}
                           />
                         </div>
                       </td>
@@ -889,7 +889,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           readOnly={true}
                           type="string"
-                          value="2019/2020"
+                          value="2020/2021"
                         />
                       </td>
                       <td>
@@ -915,7 +915,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           disabled={true}
                           readOnly={true}
                           type="string"
-                          value="2018/2019"
+                          value="2019/2020"
                         />
                       </td>
                       <td>
