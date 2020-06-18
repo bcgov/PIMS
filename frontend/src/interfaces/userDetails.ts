@@ -12,4 +12,5 @@ export interface IUserDetails {
   createdOn?: string;
   rowVersion?: string;
   note?: string;
+  lastLogin?: string;
 }

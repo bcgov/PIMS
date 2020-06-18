@@ -82,6 +82,11 @@ namespace Pims.Dal.Entities
         public bool IsSystem { get; set; }
 
         /// <summary>
+        /// get/set - Last Login date time
+        /// </summary>
+        /// <value></value>
+        public DateTime? LastLogin { get; set; }
+        /// <summary>
         /// get - A collection of agencies this user belongs to.
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>

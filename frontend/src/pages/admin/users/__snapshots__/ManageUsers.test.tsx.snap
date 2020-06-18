@@ -257,7 +257,7 @@ exports[`component functionality Snapshot matches 1`] = `
             Object {
               "display": "flex",
               "flex": "1 0 auto",
-              "minWidth": "780px",
+              "minWidth": "880px",
             }
           }
         >
@@ -431,6 +431,26 @@ exports[`component functionality Snapshot matches 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "100px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Last Login
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
                 "flex": "75 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
@@ -457,7 +477,7 @@ exports[`component functionality Snapshot matches 1`] = `
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "780px",
+                "minWidth": "880px",
               }
             }
           >
@@ -643,6 +663,26 @@ exports[`component functionality Snapshot matches 1`] = `
               admin
             </div>
             <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "100px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              
+            </div>
+            <div
               className="td"
               onClick={[Function]}
               role="cell"
@@ -754,7 +794,7 @@ exports[`component functionality Snapshot matches 1`] = `
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "780px",
+                "minWidth": "880px",
               }
             }
           >
@@ -938,6 +978,26 @@ exports[`component functionality Snapshot matches 1`] = `
               title=""
             >
               admin
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "100px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              
             </div>
             <div
               className="td"

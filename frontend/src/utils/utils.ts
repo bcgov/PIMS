@@ -111,3 +111,7 @@ export const getCurrentFiscalYear = (): number => {
 export const formatDate = (date: string) => {
   return !!date ? moment(date).format('YYYY-MM-DD') : '';
 };
+
+export const formatDateTime = (date: string | undefined) => {
+  return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
+};

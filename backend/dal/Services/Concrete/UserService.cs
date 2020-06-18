@@ -62,24 +62,31 @@ namespace Pims.Dal.Services
             var id = this.User.GetUserId();
 
             var entity = this.Context.Users.Find(id);
-            if (entity != null) return entity;
+            var exists = entity != null;
+            if (!exists)
+            {
+                var username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
+                    throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
+                var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
+                    throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
+                var surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
+                    throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
+                var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
+                    throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
 
-            var username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
-                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
-            var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
-                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
-            var surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
-                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
-            var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
-                throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
+                this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
 
-            this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
+                entity = new User(id, username, email, givenName, surname);
+                this.Context.Users.Add(entity);
+            }
+            else
+            {
+                entity.LastLogin = DateTime.UtcNow;
+                this.Context.Entry(entity).State = EntityState.Modified;
+            }
 
-            entity = new User(id, username, email, givenName, surname);
-            this.Context.Users.Add(entity);
             this.Context.CommitTransaction();
-
-            this.Logger.LogInformation($"User Activated: '{id}' - '{username}'.");
+            if (!exists) this.Logger.LogInformation($"User Activated: '{id}' - '{entity.Username}'.");
             return entity;
         }
 
