@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import {
   Layer,
   Marker,
@@ -10,8 +11,9 @@ import {
   GeoJSON,
   LeafletMouseEvent,
 } from 'leaflet';
-import { AnyProps, PointFeature } from 'supercluster';
-import { ICluster } from 'hooks/useSupercluster';
+import { AnyProps } from 'supercluster';
+import { ICluster, PointFeature } from '../types';
+import { cloneDeep } from 'lodash';
 
 export interface SpiderfierOptions {
   /** Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default: 1). */
@@ -21,26 +23,20 @@ export interface SpiderfierOptions {
   /** A function that returns the cluster ID */
   getClusterId(cluster: ICluster): number;
   /** A function that returns all the points of a cluster */
-  getClusterPoints(cluster: ICluster): Array<PointFeature<AnyProps>>;
+  getClusterPoints(clusterId: number): Array<PointFeature>;
   /** Adds a GeoJSON object to the layer. */
-  pointToLayer(geoJsonPoint: PointFeature<AnyProps>, latlng: LatLngExpression): Marker;
-  /** Map pin click handler */
-  onMarkerClick?: (event: LeafletMouseEvent) => void;
+  pointToLayer(geoJsonPoint: PointFeature, latlng: LatLngExpression): Layer;
+  /** What happens when a cluster child pin is clicked */
+  onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
 }
 
-const _defaults: SpiderfierOptions = {
+const defaultOptions: SpiderfierOptions = {
   spiderfyDistanceMultiplier: 1,
   spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 0.5 },
-  getClusterId: () => {
-    throw new Error('Must supply getClusterId callback');
-  },
-  getClusterPoints: () => {
-    throw new Error('Must supply getClusterPoints callback');
-  },
-  pointToLayer: () => {
-    throw new Error('Must supply pointToLayer callback');
-  },
-  onMarkerClick: () => {},
+  getClusterId: null as any,
+  getClusterPoints: null as any,
+  pointToLayer: null as any,
+  onMarkerClick: null as any,
 };
 
 /** Deals with overlapping markers in the Leaflet maps API, Google Earth-style */
@@ -59,63 +55,66 @@ export class Spiderfier {
 
   // internal state - the currently spiderfied cluster (if any)
   private cluster: ICluster | null = null;
-  private markers: Marker[] = [];
-  private legs: LeafletPolyline[] = [];
 
   options: SpiderfierOptions;
 
   constructor(public map: Map, options: Partial<SpiderfierOptions> = {}) {
-    this.options = { ..._defaults, ...options };
+    this.options = { ...defaultOptions, ...options };
+
+    // check required values - throws an error if callbacks are null
+    const { getClusterId, getClusterPoints, pointToLayer } = this.options;
+    invariant(getClusterId, 'Must supply getClusterId callback');
+    invariant(getClusterPoints, 'Must supply getClusterPoints callback');
+    invariant(pointToLayer, 'Must supply pointToLayer callback');
   }
 
   // expand a cluster (spiderfy)
   spiderfy(cluster: ICluster) {
+    const { getClusterId, getClusterPoints } = this.options;
+
+    // only one cluster expanded at a time
     if (this.cluster === cluster || cluster == null) {
       return;
     }
-
-    // shrink expanded clusters (if any) - only one cluster expanded at a time
     this.unspiderfy();
     this.cluster = cluster;
-
-    let positions: LeafletPoint[];
     const centerLatlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
     const centerXY = this.map.latLngToLayerPoint(centerLatlng); // screen coordinates
-    const clusterPoints = this.options.getClusterPoints(cluster);
+    const clusterId = getClusterId(cluster);
+    const children = getClusterPoints(clusterId).map(p => cloneDeep(p)); // work with a copy of the data
 
-    if (clusterPoints.length >= this.circleSpiralSwitchover) {
-      positions = this.generatePointsSpiral(clusterPoints.length, centerXY);
+    let positions: LeafletPoint[];
+    if (children.length >= this.circleSpiralSwitchover) {
+      positions = this.generatePointsSpiral(children.length, centerXY);
     } else {
-      positions = this.generatePointsCircle(clusterPoints.length, centerXY);
+      positions = this.generatePointsCircle(children.length, centerXY);
     }
 
     // add expanded cluster points to map
-    this.addToMap(centerXY, clusterPoints, positions);
+    this.addToMap(centerXY, children, positions);
   }
 
   private addToMap(
     centerXY: LeafletPoint,
-    geojsonPoints: PointFeature<AnyProps>[],
-    positions: LeafletPoint[],
+    points: Array<PointFeature>,
+    positions: Array<LeafletPoint>,
   ) {
-    const { spiderLegPolylineOptions: legOptions, pointToLayer, onMarkerClick } = this.options;
+    const { spiderLegPolylineOptions: legOptions, pointToLayer } = this.options;
     const centerLatLng = this.map.layerPointToLatLng(centerXY);
 
     let newPos: LatLng;
     let leg: LeafletPolyline & AnyProps;
-    let geojson: PointFeature<AnyProps>;
+    let geojson: PointFeature;
     let m: Marker & AnyProps; // the pins within an expanded cluster
 
-    for (let i = 0; i < geojsonPoints.length; i++) {
+    for (let i = 0; i < points.length; i++) {
       newPos = this.map.layerPointToLatLng(positions[i]);
-      geojson = geojsonPoints[i];
-      m = pointToLayer(geojson, newPos);
-      m.feature = GeoJSON.asFeature(geojson) as PointFeature<AnyProps>;
-      m._spiderfied = true; // "mark" the pins and spider legs so they can be removed later
+      geojson = points[i];
 
-      if (onMarkerClick) {
-        m.on('click', onMarkerClick);
-      }
+      m = pointToLayer(geojson, newPos) as Marker;
+      m.feature = GeoJSON.asFeature(geojson) as PointFeature;
+      m._spiderfied = true; // "mark" the pins and spider legs so they can be removed later
+      m.on('click', this.handleChildMarkerClick, this);
 
       // add the leg before the marker, so that in case the latter is a circleMarker, the leg is behind it.
       leg = new LeafletPolyline([centerLatLng, newPos], legOptions);
@@ -128,6 +127,16 @@ export class Spiderfier {
       }
 
       this.map.addLayer(m);
+    }
+  }
+
+  private handleChildMarkerClick(e: LeafletMouseEvent) {
+    const marker = e?.target as Marker;
+    const geojson = marker?.feature;
+    const newPos = marker?.getLatLng();
+    const { onMarkerClick } = this.options;
+    if (onMarkerClick && geojson && newPos) {
+      onMarkerClick(geojson, [newPos.lat, newPos.lng]);
     }
   }
 

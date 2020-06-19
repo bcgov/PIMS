@@ -1,5 +1,5 @@
 import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
-import { ICluster } from 'hooks/useSupercluster';
+import { ICluster } from '../types';
 import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
 
@@ -69,7 +69,6 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * @param latlng the point position
  */
 export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
-  // TODO: improve typing
   const { propertyTypeId } = feature?.properties;
   const icon = propertyTypeId === 0 ? parcelIcon : buildingIcon;
   return new Marker(latlng, { icon });
@@ -91,7 +90,6 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLngExpression)
   } = feature?.properties as Supercluster.ClusterProperties;
 
   if (!isCluster) {
-    // TODO: log an error?
     return (null as unknown) as Layer;
   }
 

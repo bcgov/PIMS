@@ -1,17 +1,16 @@
 import './PointClusterer.scss';
 
 import React, { useRef, useEffect } from 'react';
-import { LeafletMouseEvent, Marker, LatLngExpression } from 'leaflet';
-import { GeoJSON, useLeaflet } from 'react-leaflet';
+import { LeafletMouseEvent, Marker } from 'leaflet';
+import { GeoJSON as GeoJsonLayer, useLeaflet } from 'react-leaflet';
 import { BBox } from 'geojson';
-import Supercluster, { AnyProps } from 'supercluster';
-import useSupercluster, { ICluster } from 'hooks/useSupercluster';
-import { pointToLayer, zoomToCluster } from './mapUtils';
 import { Spiderfier } from './Spiderfier';
-import { cloneDeep } from 'lodash';
+import { ICluster, PointFeature } from '../types';
+import { pointToLayer, zoomToCluster } from './mapUtils';
+import useSupercluster from '../hooks/useSupercluster';
 
 export type PointClustererProps = {
-  points: Supercluster.PointFeature<AnyProps>[];
+  points: Array<PointFeature>;
   bounds?: BBox;
   zoom: number;
   minZoom?: number;
@@ -20,7 +19,7 @@ export type PointClustererProps = {
   zoomToBoundsOnClick?: boolean;
   /** When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. Default: true */
   spiderfyOnMaxZoom?: boolean;
-  onMarkerClick?: Function;
+  onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
 };
 
 export const PointClusterer: React.FC<PointClustererProps> = ({
@@ -34,7 +33,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   spiderfyOnMaxZoom = true,
 }) => {
   // state and refs
-  const ref = useRef<GeoJSON>(null);
+  const ref = useRef<GeoJsonLayer>(null);
   const spiderfierRef = useRef<Spiderfier>();
   const leaflet = useLeaflet();
 
@@ -56,43 +55,24 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     options: { radius: 60, extent: 256, minZoom, maxZoom },
   });
 
-  // trigger a refresh on the geojson layer when clusters change (usually due to zoom changes)
-  const reloadGeoJson = () => {
+  // reload the geojson layer when clusters change (usually due to zoom changes)
+  const reload = () => {
     const geojsonLayer = ref.current?.leafletElement;
     if (geojsonLayer) {
       geojsonLayer.clearLayers();
       geojsonLayer.addData(clusters as any);
     }
   };
-  useEffect(reloadGeoJson, [clusters]);
+  useEffect(reload, [clusters]);
 
   // Register event handlers to shrink and expand clusters when map is interacted with
   const componentDidMount = () => {
     if (!spiderfierRef.current) {
       spiderfierRef.current = new Spiderfier(map, {
-        getClusterId: (cluster: ICluster) => {
-          return cluster.properties.cluster_id as number;
-        },
-        getClusterPoints: (cluster: ICluster) => {
-          const clusterId = cluster.properties.cluster_id as number;
-          const count = cluster.properties.point_count as number;
-          const points = supercluster?.getLeaves(clusterId, count) || [];
-          const copy = points.map(p => cloneDeep(p));
-          return copy;
-        },
-        pointToLayer: (
-          geoJsonPoint: Supercluster.PointFeature<AnyProps>,
-          latlng: LatLngExpression,
-        ) => {
-          return pointToLayer(geoJsonPoint, latlng) as Marker;
-        },
-        // the user clicked on a single map pin
-        onMarkerClick: (e: LeafletMouseEvent) => {
-          const marker = e?.target as Marker;
-          const newPos = marker.getLatLng();
-          const geojson = (e?.target as Marker)?.feature;
-          onMarkerClick?.(geojson, [newPos.lat, newPos.lng]);
-        },
+        getClusterId: cluster => cluster.properties.cluster_id as number,
+        getClusterPoints: clusterId => supercluster?.getLeaves(clusterId, Infinity) ?? [],
+        pointToLayer: pointToLayer,
+        onMarkerClick: onMarkerClick,
       });
     }
 
@@ -112,14 +92,17 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   // on-click handler
   const zoomOrSpiderfy = (cluster: ICluster) => {
+    if (!supercluster || !spiderfierRef.current || !cluster) {
+      return;
+    }
     const { cluster_id } = cluster.properties;
     const expansionZoom = Math.min(
-      supercluster!.getClusterExpansionZoom(cluster_id as number),
+      supercluster.getClusterExpansionZoom(cluster_id as number),
       maxZoom as number,
     );
     // already at maxZoom, need to spiderfy child markers
     if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
-      spiderfierRef.current?.spiderfy(cluster);
+      spiderfierRef.current.spiderfy(cluster);
     } else if (zoomToBoundsOnClick) {
       zoomToCluster(cluster, expansionZoom, map);
     }
@@ -127,26 +110,24 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   const onLayerClick = (e: LeafletMouseEvent) => {
     // the point may be either a cluster or a single map pin
-    const cluster = (e?.propagatedFrom as Marker)?.feature as ICluster;
-    const isCluster = cluster?.properties?.cluster;
+    const clusterOrPin = (e?.propagatedFrom as Marker)?.feature as ICluster;
+    const isCluster = clusterOrPin?.properties?.cluster;
 
     // the user clicked on a cluster
     if (!!isCluster) {
-      zoomOrSpiderfy(cluster);
+      zoomOrSpiderfy(clusterOrPin);
     } else {
-      // the user clicked on a single map pin
-      onMarkerClick?.(cluster);
+      onMarkerClick?.(clusterOrPin as PointFeature); // single pin
     }
   };
 
-  // TODO: improve typing
   return (
-    <GeoJSON
+    <GeoJsonLayer
       ref={ref}
       data={clusters as any}
       pointToLayer={pointToLayer}
       onclick={onLayerClick}
-    ></GeoJSON>
+    ></GeoJsonLayer>
   );
 };
 
