@@ -23,7 +23,7 @@ import {
   getUsersPageIndexAction,
   setUsersPageSize,
 } from 'actions/adminActions';
-import { generateSortCriteria } from 'utils';
+import { generateSortCriteria, formatDateTime } from 'utils';
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
@@ -98,6 +98,7 @@ export const ManageUsersPage = () => {
       roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position,
+      lastLogin: formatDateTime(u.lastLogin),
     }),
   );
 

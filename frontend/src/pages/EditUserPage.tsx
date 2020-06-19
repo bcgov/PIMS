@@ -16,6 +16,7 @@ import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
 import { useHistory } from 'react-router-dom';
 import TooltipIcon from 'components/common/TooltipIcon';
+import { formatDateTime } from 'utils';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -96,6 +97,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
     position: user.position,
+    lastLogin: formatDateTime(user.lastLogin),
   };
 
   return (
@@ -151,6 +153,14 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   data-testid="username"
                   field="username"
                   value={props.values.username}
+                  readOnly={true}
+                  type="text"
+                />
+                <Label>Last Login</Label>
+                <Input
+                  data-testid="lastLogin"
+                  field="lastLogin"
+                  value={props.values.lastLogin}
                   readOnly={true}
                   type="text"
                 />
