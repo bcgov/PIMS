@@ -69,7 +69,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const componentDidMount = () => {
     if (!spiderfierRef.current) {
       spiderfierRef.current = new Spiderfier(map, {
-        getClusterId: cluster => cluster.properties.cluster_id as number,
+        getClusterId: cluster => cluster?.properties?.cluster_id as number,
         getClusterPoints: clusterId => supercluster?.getLeaves(clusterId, Infinity) ?? [],
         pointToLayer: pointToLayer,
         onMarkerClick: onMarkerClick,

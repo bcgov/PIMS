@@ -92,6 +92,16 @@ export class Spiderfier {
 
     // add expanded cluster points to map
     this.addToMap(centerXY, children, positions);
+
+    // dim cluster icon
+    this.map.eachLayer(layer => {
+      if (this.layerMatchesCluster(layer, this.cluster)) {
+        const clusterMarker = layer as Marker;
+        if (clusterMarker.setOpacity) {
+          clusterMarker.setOpacity(0.75);
+        }
+      }
+    });
   }
 
   private addToMap(
@@ -147,9 +157,28 @@ export class Spiderfier {
         layer.remove();
         delete layer._spiderfied;
       }
+
+      // restore cluster opacity
+      if (this.layerMatchesCluster(layer, this.cluster)) {
+        const clusterMarker = layer as Marker;
+        if (clusterMarker.setOpacity) {
+          clusterMarker.setOpacity(1);
+        }
+      }
     });
 
     this.cluster = null;
+  }
+
+  private layerMatchesCluster(layer: Layer, cluster: ICluster | null): boolean {
+    if (!layer || !cluster) {
+      return false;
+    }
+    const { getClusterId } = this.options;
+    const geojsonObj = (layer as Marker)?.feature;
+    const id = geojsonObj ? getClusterId(geojsonObj) : null;
+    const targetId = getClusterId(cluster);
+    return id !== null && id !== undefined && id === targetId;
   }
 
   private generatePointsCircle(count: number, center: LeafletPoint): LeafletPoint[] {
