@@ -123,11 +123,13 @@ export interface IAddress {
 export interface IParcelDetail {
   propertyTypeId: 0;
   parcelDetail: IParcel | null;
+  position?: [number, number]; // (optional) a way to override the positioning of the map popup
 }
 
 export interface IBuildingDetail {
   propertyTypeId: 1;
   parcelDetail: IBuilding | null;
+  position?: [number, number]; // (optional) a way to override the positioning of the map popup
 }
 
 export type IPropertyDetail = IParcelDetail | IBuildingDetail;
@@ -137,11 +139,15 @@ export interface IStoreParcelDetail {
   parcelDetail: IParcelDetail;
 }
 
-export const storeParcelDetail = (parcel: IParcel | null): IStoreParcelDetail => ({
+export const storeParcelDetail = (
+  parcel: IParcel | null,
+  position?: [number, number],
+): IStoreParcelDetail => ({
   type: ActionTypes.STORE_PARCEL_DETAIL,
   parcelDetail: {
     propertyTypeId: 0,
     parcelDetail: parcel,
+    position,
   },
 });
 
@@ -150,10 +156,14 @@ export interface IStoreBuildingDetail {
   parcelDetail: IBuildingDetail;
 }
 
-export const storeBuildingDetail = (building: IBuilding | null): IStoreBuildingDetail => ({
+export const storeBuildingDetail = (
+  building: IBuilding | null,
+  position?: [number, number],
+): IStoreBuildingDetail => ({
   type: ActionTypes.STORE_BUILDING_DETAIL,
   parcelDetail: {
     propertyTypeId: 1,
     parcelDetail: building,
+    position,
   },
 });

@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
-import Supercluster from 'supercluster';
 import { BBox, GeoJsonProperties } from 'geojson';
-import useDeepCompareEffect from './useDeepCompareEffect';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import deepEqual from 'dequal';
+import Supercluster from 'supercluster';
+import { ICluster } from '../types';
 
 export interface UseSuperclusterProps<P, C> {
   points: Array<Supercluster.PointFeature<P>>;
@@ -10,11 +11,6 @@ export interface UseSuperclusterProps<P, C> {
   zoom: number;
   options?: Supercluster.Options<P, C>;
 }
-
-export type ICluster<
-  P extends GeoJsonProperties = Supercluster.AnyProps,
-  C extends GeoJsonProperties = Supercluster.AnyProps
-> = Supercluster.ClusterFeature<C> | Supercluster.PointFeature<P>;
 
 const useSupercluster = <
   P extends GeoJsonProperties = Supercluster.AnyProps,

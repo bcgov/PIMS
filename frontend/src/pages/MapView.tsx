@@ -116,7 +116,8 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       propertyClassifications={propertyClassifications}
       lotSizes={lotSizes}
       onMarkerClick={
-        props.onMarkerClick ?? (p => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId)))
+        props.onMarkerClick ??
+        ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
       }
       onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {

@@ -34,14 +34,16 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
   return Promise.resolve();
 };
 
-export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch: Function) => {
+export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [number, number]) => (
+  dispatch: Function,
+) => {
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
-      dispatch(parcelsActions.storeParcelDetail(response.data));
+      dispatch(parcelsActions.storeParcelDetail(response.data, position));
       dispatch(hideLoading());
     })
     .catch((axiosError: AxiosError) =>
@@ -50,14 +52,17 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams) => (dispatch:
     .finally(() => dispatch(hideLoading()));
 };
 
-export const fetchBuildingDetail = (params: API.IBuildingDetailParams) => (dispatch: Function) => {
+export const fetchBuildingDetail = (
+  params: API.IBuildingDetailParams,
+  position?: [number, number],
+) => (dispatch: Function) => {
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
-      dispatch(parcelsActions.storeBuildingDetail(response.data));
+      dispatch(parcelsActions.storeBuildingDetail(response.data, position));
       dispatch(hideLoading());
     })
     .catch((axiosError: AxiosError) =>
@@ -66,10 +71,14 @@ export const fetchBuildingDetail = (params: API.IBuildingDetailParams) => (dispa
     .finally(() => dispatch(hideLoading()));
 };
 
-export const fetchPropertyDetail = (id: number, propertyTypeId: 0 | 1) => (dispatch: Function) => {
+export const fetchPropertyDetail = (
+  id: number,
+  propertyTypeId: 0 | 1,
+  position?: [number, number],
+) => (dispatch: Function) => {
   return propertyTypeId === 0
-    ? dispatch(fetchParcelDetail({ id }))
-    : dispatch(fetchBuildingDetail({ id }));
+    ? dispatch(fetchParcelDetail({ id }, position))
+    : dispatch(fetchBuildingDetail({ id }, position));
 };
 
 export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
