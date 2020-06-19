@@ -1214,7 +1214,7 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("Estimated")
                         .HasColumnType("MONEY");
 
-                    b.Property<string>("ExemptionRational")
+                    b.Property<string>("ExemptionRationale")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
