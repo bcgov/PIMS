@@ -206,6 +206,7 @@ const Map: React.FC<MapProps> = ({
         offset={[0, -25]}
         onClose={() => onMarkerPopupClose?.(item)}
         closeButton={interactive}
+        autoPan={false} // fix for PIMS-2591: infinite loop crash
       >
         <PopupView
           propertyTypeId={propertyTypeId}
