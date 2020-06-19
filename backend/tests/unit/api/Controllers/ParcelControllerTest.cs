@@ -210,6 +210,32 @@ namespace Pims.Api.Test.Controllers
             service.Verify(m => m.Parcel.Remove(It.IsAny<Entity.Parcel>()), Times.Once());
         }
         #endregion
+
+        #region Check if PID is available
+        [Fact]
+        public void IsPidAvailable_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var expectedResults = new Model.CheckPidAvailabilityResponseModel {Available = true};
+            service.Setup(m => m.Parcel.IsPidAvailable(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(true);
+
+            // Act
+            var result = controller.IsPidAvailable(1, 1);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.CheckPidAvailabilityResponseModel>(actionResult.Value);
+            Assert.Equal(expectedResults, actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.IsPidAvailable(1, 1), Times.Once());
+        }
+        #endregion
+
         #endregion
     }
 }
