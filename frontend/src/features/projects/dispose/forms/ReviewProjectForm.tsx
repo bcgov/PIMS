@@ -22,7 +22,7 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
   const { values } = useFormikContext<IProject>();
   const [isReadOnly, setIsReadOnly] = useState(true);
   const documentationTasks = _.filter(values.tasks, {
-    code: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   });
   const { errors } = useFormikContext();
   /** Enter edit mode if allowed and there are errors to display */
