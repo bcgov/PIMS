@@ -6,6 +6,7 @@ export { default as ProjectDisposeView } from './ProjectDisposeView';
 export * from './components/StepActions';
 export * from './components/ReviewApproveActions';
 export { default as ProjectNotes } from './components/ProjectNotes';
+export { default as ExemptionRequest } from './components/ExemptionRequest';
 export { default as EditButton } from './components/EditButton';
 export { default as SelectProjectPropertiesPage } from './components/SelectProjectPropertiesPage';
 

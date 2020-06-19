@@ -3,6 +3,7 @@ import './ReviewProjectForm.scss';
 import {
   ProjectDraftForm,
   UpdateInfoForm,
+  ExemptionRequest,
   DocumentationForm,
   ApprovalConfirmationForm,
   ProjectNotes,
@@ -38,6 +39,14 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
       <UpdateInfoForm isReadOnly={isReadOnly || !canEdit} />
       <DocumentationForm tasks={documentationTasks as IProjectTask[]} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
+      <ExemptionRequest
+        sectionHeader="Enhanced Referal Process Exemption"
+        exemptionField="exemptionRequested"
+        rationaleField="exemptionRationale"
+        exemptionLabel="Apply for Enhanced Referal Process exemption"
+        tooltip="To fill later"
+        rationaleInstruction="Please provide your rationale below for exemption request"
+      />
       <ProjectNotes />
       <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>
     </Fragment>

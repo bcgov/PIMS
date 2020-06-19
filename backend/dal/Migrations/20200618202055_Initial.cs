@@ -1028,7 +1028,7 @@ namespace Pims.Dal.Migrations
                     ApprovedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DeniedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ExemptionRequested = table.Column<bool>(nullable: false, defaultValue: false),
-                    ExemptionRational = table.Column<string>(maxLength: 2000, nullable: true),
+                    ExemptionRationale = table.Column<string>(maxLength: 2000, nullable: true),
                     NetBook = table.Column<decimal>(type: "MONEY", nullable: false),
                     Estimated = table.Column<decimal>(type: "MONEY", nullable: false),
                     Assessed = table.Column<decimal>(type: "MONEY", nullable: false),

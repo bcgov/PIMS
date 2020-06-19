@@ -6,6 +6,7 @@ import {
   UpdateInfoStepYupSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
+  EnhancedReferalExemptionSchema,
 } from '../forms/disposalYupSchema';
 /**
  * Read only version of all step components. TODO: provide ability to update fields on this form.
@@ -22,9 +23,9 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={onSubmit}
-        validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema).concat(
-          SelectProjectPropertiesStepYupSchema,
-        )}
+        validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)
+          .concat(SelectProjectPropertiesStepYupSchema)
+          .concat(EnhancedReferalExemptionSchema)}
       >
         <Form>
           <ReviewProjectForm canEdit={canUserEditForm(project.agencyId)} />
