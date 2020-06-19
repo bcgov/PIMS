@@ -46,6 +46,28 @@ Array [
               />
             </span>
           </div>
+          <p
+            className="label"
+          >
+            Last Login
+          </p>
+          <div
+            className="form-group"
+          >
+            <span>
+              <input
+                className="form-control"
+                data-testid="lastLogin"
+                id="input-lastLogin"
+                name="lastLogin"
+                onBlur={[Function]}
+                onChange={[Function]}
+                readOnly={true}
+                type="text"
+                value=""
+              />
+            </span>
+          </div>
           <div
             className="row"
           >

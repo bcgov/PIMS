@@ -69,6 +69,13 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     minWidth: 200,
   },
   {
+    Header: 'Last Login',
+    accessor: 'lastLogin',
+    align: 'left',
+    clickable: true,
+    minWidth: 100,
+  },
+  {
     Header: ' ',
     Cell: RowActions,
     width: 75,

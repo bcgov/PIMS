@@ -54,18 +54,16 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
-            var user_id = this.User.GetUserId();
-            var exists = _pimsService.User.UserExists(user_id);
+            var userId = this.User.GetUserId();
+            var exists = _pimsService.User.UserExists(userId);
 
+            var user = _pimsService.User.Activate();
             if (!exists)
             {
-                var user = _pimsService.User.Activate();
                 return new CreatedResult($"{user.Id}", new Model.UserModel(user));
             }
-            else
-            {
-                return new JsonResult(new Model.UserModel(user_id));
-            }
+
+            return new JsonResult(new Model.UserModel(userId));
         }
 
         /// <summary>

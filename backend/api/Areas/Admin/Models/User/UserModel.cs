@@ -67,6 +67,11 @@ namespace Pims.Api.Areas.Admin.Models.User
         public string Note { get; set; }
 
         /// <summary>
+        /// get/set - User's last login timestamp
+        /// </summary>
+        public DateTime? LastLogin { get; set; }
+
+        /// <summary>
         /// get/set - An array of agencies the user belongs to.
         /// </summary>
         public IEnumerable<AgencyModel> Agencies { get; set; } = new List<AgencyModel>();

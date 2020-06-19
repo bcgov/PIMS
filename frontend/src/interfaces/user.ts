@@ -14,4 +14,5 @@ export interface IUser {
   roles?: IRole[];
   agencies?: IAgency[];
   isDisabled?: boolean;
+  lastLogin?: string;
 }
