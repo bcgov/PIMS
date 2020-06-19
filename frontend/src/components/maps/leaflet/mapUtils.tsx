@@ -1,7 +1,27 @@
-import { Icon, DivIcon, LatLng, Layer, Marker as LeafletMarker } from 'leaflet';
-import { ICluster } from 'hooks/useSupercluster';
+import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
+import { ICluster } from '../types';
 import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
+
+// parcel icon (green)
+export const parcelIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-green.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// building icon (blue)
+export const buildingIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-blue.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 export type PointFeature = Supercluster.PointFeature<{
   propertyId: number;
@@ -34,7 +54,7 @@ export const createPoints = (properties: IProperty[]) =>
  * @param feature
  * @param latlng
  */
-export const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
+export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer => {
   const { cluster: isCluster } = feature?.properties as Supercluster.ClusterProperties;
   if (!!isCluster) {
     return createClusterMarker(feature, latlng);
@@ -43,36 +63,15 @@ export const pointToLayer = (feature: ICluster, latlng: LatLng): Layer => {
   return createSingleMarker(feature, latlng);
 };
 
-// parcel icon (green)
-export const parcelIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-green.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-// building icon (blue)
-export const buildingIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-blue.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
 /**
  * Creates a map pin for a single point; e.g. a parcel or a building
  * @param feature the geojson object
  * @param latlng the point position
  */
-export const createSingleMarker = (feature: ICluster, latlng: LatLng): Layer => {
-  // TODO: improve typing
+export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
   const { propertyTypeId } = feature?.properties;
   const icon = propertyTypeId === 0 ? parcelIcon : buildingIcon;
-  return new LeafletMarker(latlng, { icon });
+  return new Marker(latlng, { icon });
 };
 
 // Internal cache of cluster icons to avoid re-creating the same icon over and over again.
@@ -83,7 +82,7 @@ const iconsCache: Record<number, DivIcon> = {};
  * @param feature the cluster geojson object
  * @param latlng the cluster position
  */
-export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer => {
+export const createClusterMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
   const {
     cluster: isCluster,
     point_count: count,
@@ -91,7 +90,6 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer =>
   } = feature?.properties as Supercluster.ClusterProperties;
 
   if (!isCluster) {
-    // TODO: log an error?
     return (null as unknown) as Layer;
   }
 
@@ -107,7 +105,13 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLng): Layer =>
   }
 
   icon = iconsCache[count];
-  return new LeafletMarker(latlng, { icon });
+  return new Marker(latlng, { icon });
+};
+
+/** Zooms to a cluster */
+export const zoomToCluster = (cluster: ICluster, expansionZoom: number, map: Map) => {
+  const latlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
+  map?.setView(latlng, expansionZoom, { animate: true });
 };
 
 // we need to namespace the keys as IDs are not enough here.
@@ -118,11 +122,11 @@ export const generateKey = (p: IProperty) =>
 /** Creates a IProperty object from a GeoJSON point */
 export const asProperty = (point: PointFeature): IProperty => {
   const { propertyId: id, propertyTypeId } = point?.properties;
-  const [longitude, latitude] = point?.geometry?.coordinates;
+  const latlng = GeoJSON.coordsToLatLng(point?.geometry?.coordinates as [number, number]);
   return {
     id,
     propertyTypeId,
-    latitude,
-    longitude,
+    latitude: latlng.lat,
+    longitude: latlng.lng,
   } as IProperty;
 };

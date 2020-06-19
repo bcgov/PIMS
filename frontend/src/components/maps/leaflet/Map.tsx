@@ -17,7 +17,6 @@ import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
-import { ICluster } from 'hooks/useSupercluster';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -42,7 +41,7 @@ export type MapProps = {
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
   selectedProperty?: IPropertyDetail | null;
-  onMarkerClick?: (obj: IProperty) => void;
+  onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
   onMapClick?: (e: LeafletMouseEvent) => void;
@@ -159,17 +158,8 @@ const Map: React.FC<MapProps> = ({
     setActiveBasemap(current);
   };
 
-  const onSingleMarkerClick = (point: PointFeature) => {
-    onMarkerClick?.(asProperty(point));
-  };
-
-  const onClusterClick = (cluster: ICluster, expansionZoom: number) => {
-    // zoom to cluster
-    const [longitude, latitude] = cluster?.geometry?.coordinates;
-    const leafletMap = mapRef?.current?.leafletElement;
-    leafletMap?.setView([latitude, longitude], expansionZoom, {
-      animate: true,
-    });
+  const onSingleMarkerClick = (point: PointFeature, position?: [number, number]) => {
+    onMarkerClick?.(asProperty(point), position);
   };
 
   useEffect(() => {
@@ -203,16 +193,20 @@ const Map: React.FC<MapProps> = ({
   }, []);
 
   const renderPopup = (item: IPropertyDetail) => {
-    const { propertyTypeId, parcelDetail } = item;
+    const { propertyTypeId, parcelDetail, position } = item;
     if (!parcelDetail) {
       return null;
     }
+    // allow the caller to override the popup location on the map
+    // this is useful when showing "spiderfied" markers belonging to a cluster
+    const latlng = position ?? [parcelDetail.latitude as number, parcelDetail.longitude as number];
     return (
       <Popup
-        position={[parcelDetail.latitude as number, parcelDetail.longitude as number]}
+        position={latlng}
         offset={[0, -25]}
         onClose={() => onMarkerPopupClose?.(item)}
         closeButton={interactive}
+        autoPan={false} // fix for PIMS-2591: infinite loop crash
       >
         <PopupView
           propertyTypeId={propertyTypeId}
@@ -279,7 +273,6 @@ const Map: React.FC<MapProps> = ({
               zoom={zoom}
               bounds={bounds}
               onMarkerClick={onSingleMarkerClick}
-              onClusterClick={onClusterClick}
             />
             {selectedProperty && renderPopup(selectedProperty)}
           </LeafletMap>

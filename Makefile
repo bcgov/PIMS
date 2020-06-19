@@ -79,14 +79,14 @@ database-run:
 	@echo "$(P) Starting database container..."
 	@docker-compose up -d database
 
-database-clean: | database-run pause-30 ## Re-creates an empty docker database - ready for seeding
+database-clean: ## Re-creates an empty docker database - ready for seeding
 	@echo "$(P) Refreshing the database..."
 	@cd backend/dal; dotnet ef database drop --force; dotnet ef database update
 
-database-seed: | server-run pause-30
+database-seed:
 	@echo "$(P) Seeding docker database..."
 	@cd backend/tools/import; make run
 
-database-refresh: | database-clean database-seed ## Refreshes the docker database
+database-refresh: | server-run pause-30 database-clean database-seed ## Refreshes the docker database
 
 .PHONY: local restart run stop build clean client-test server-test pause-30 server-run database-run database-clean database-seed database-refresh
