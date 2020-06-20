@@ -1,0 +1,119 @@
+#!groovy
+
+// ------------------
+// Pipeline Variables
+// ------------------
+def cli
+def notify
+
+// --------------------
+// Declarative Pipeline
+// --------------------
+pipeline {
+  agent any
+  options {
+    disableResume()
+    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+  }
+  environment {
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = "false"
+
+    CI = "true"
+    PATHFINDER_URL = "pathfinder.gov.bc.ca"
+    VANITY_URL="https://pims-test.pathfinder.gov.bc.ca/"
+
+    // The name of your application
+    APP_NAME = "pims"
+
+    // The name of the project namespace(s).
+    NAME_SPACE = "jcxjin"
+
+    // This should match your monorepo folder structure
+    API_DIRECTORY = "backend"
+    FRONTEND_DIRECTORY = "frontend"
+    MAINTENANCE_DIRECTORY = "maintenance"
+  }
+  stages {
+    stage("Initialize") {
+      steps {
+        script {
+          // load supporting functions from external script files
+          cli = load "openshift/pipelines/scripts/common.groovy"
+          notify = load "openshift/pipelines/scripts/notify.groovy"
+
+          // ensure required secrets and credentials are available in the CI environment
+          // [add more secrets here if needed...]
+          sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+
+          // initialize CI environment values
+          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
+
+          if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
+            // Force OpenShift Plugin directives to be verbose
+            openshift.logLevel(1)
+
+            // Print all environment variables
+            echo 'DEBUG - All pipeline environment variables:'
+            echo sh(returnStdout: true, script: 'env')
+          }
+        }
+      }
+    }
+    stage("Maintenance Page UP") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      environment {
+        COMP_NAME = "api"
+      }
+      steps {
+        script {
+          try {
+            dir(MAINTENANCE_DIRECTORY) {
+              sh "APPLICATION_NAME=asr-pims-app ./maintenance.sh dev on"
+            }
+          } catch (e) {
+            echo 'Maintenance Page FAILED'
+            throw e
+          }
+        }
+      }
+    }
+    stage("Backup DB, etc") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        // pretend we are doing stuff - db backups etc
+        sleep(60)
+      }
+    }
+    stage("Maintenance Page DOWN") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        script {
+          try {
+            dir(MAINTENANCE_DIRECTORY) {
+              sh "APPLICATION_NAME=asr-pims-app ./maintenance.sh dev off"
+            }
+          } catch (e) {
+            echo 'Maintenance Page FAILED'
+            throw e
+          }
+        }
+
+      }
+    }
+    stage("DONE") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        echo "[ci/cd]  PRODUCTION deployment complete!"
+      }
+    }
+  }
+}
