@@ -469,7 +469,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
-            
+
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
 
@@ -893,7 +893,7 @@ namespace Pims.Dal.Test.Services
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
-            
+
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ParcelService>(user, options);
             var context = helper.GetService<PimsContext>();
@@ -926,6 +926,49 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
+        }
+        #endregion
+
+        #region Check PID available
+
+        /// <summary>
+        /// Pid is Available for use.
+        /// </summary>
+        [Fact]
+        public void IsPidAvailable_UsedByCurrentParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.IsPidAvailable(parcel.Id, 1);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        /// <summary>
+        /// Pid is not Available for use.
+        /// </summary>
+        [Fact]
+        public void IsPidAvailable_UsedAnotherParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.IsPidAvailable(10, 1);
+
+            // Assert
+            Assert.False(result);
         }
         #endregion
         #endregion

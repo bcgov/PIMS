@@ -389,6 +389,12 @@ namespace Pims.Dal.Services
             this.Context.Parcels.Remove(existingParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
             this.Context.CommitTransaction();
         }
+
+        public bool IsPidAvailable(int parcelId, int PID)
+        {
+            return !Context.Parcels.Any(parcel => parcel.PID == PID && parcel.Id != parcelId);
+        }
+
         #endregion
     }
 }
