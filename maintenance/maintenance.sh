@@ -17,11 +17,12 @@ VERBOSE=${VERBOSE:-}
 # App and build settings
 #
 APPLICATION_NAME=${APPLICATION_NAME:-pims-app}
+INSTANCE_ID=${INSTANCE_ID:-}
 ENVIRONMENT_NAME=${1:-}
 APPLICATION_PORT=${APPLICATION_PORT:-8080-tcp}
 STATIC_PAGE_NAME=${STATIC_PAGE_NAME:-proxy-caddy}
 STATIC_PAGE_PORT=${STATIC_PAGE_PORT:-2015-tcp}
-STATIC_PAGE_HOSTNAME=${STATIC_PAGE_HOSTNAME:-proxy-caddy-pims-${ENVIRONMENT_NAME}.pathfinder.gov.bc.ca}
+STATIC_PAGE_HOSTNAME=${STATIC_PAGE_HOSTNAME:-proxy-caddy-pims-${ENVIRONMENT_NAME}${INSTANCE_ID}.pathfinder.gov.bc.ca}
 #
 IMG_SRC=${IMG_SRC:-bcgov-s2i-caddy}
 GIT_REPO=${GIT_REPO:-https://github.com/bcgov/pims.git}
@@ -70,16 +71,16 @@ fi
 #
 if [ "${COMMAND}" == "on" ]
 then
-  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}" -n ${PROJECT} -p \
+  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" -n ${PROJECT} -p \
     '{ "spec": { "to": { "name": "'$( echo ${STATIC_PAGE_NAME} )'" },
     "port": { "targetPort": "'$( echo ${STATIC_PAGE_PORT} )'" }}}'
   oc patch route ${STATIC_PAGE_NAME} -n ${PROJECT} -p \
-    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}" )'" },
+    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" )'" },
     "port": { "targetPort": "'$( echo ${APPLICATION_PORT} )'" }}}'
 elif [ "${COMMAND}" == "off" ]
 then
-  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}" -n ${PROJECT} -p \
-    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}" )'" },
+  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" -n ${PROJECT} -p \
+    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" )'" },
     "port": { "targetPort": "'$( echo ${APPLICATION_PORT} )'" }}}'
   oc patch route ${STATIC_PAGE_NAME} -n ${PROJECT} -p \
     '{ "spec": { "to": { "name": "'$( echo ${STATIC_PAGE_NAME} )'" },

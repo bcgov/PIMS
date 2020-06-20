@@ -17,7 +17,7 @@ pipeline {
   }
   environment {
     // To enable pipeline verbose debug output set to "true"
-    DEBUG_OUTPUT = "false"
+    DEBUG_OUTPUT = "true"
 
     CI = "true"
     PATHFINDER_URL = "pathfinder.gov.bc.ca"
@@ -33,6 +33,22 @@ pipeline {
     API_DIRECTORY = "backend"
     FRONTEND_DIRECTORY = "frontend"
     MAINTENANCE_DIRECTORY = "maintenance"
+
+    // Environment Variables that should be set in OpenShift
+    // -----------------------------------------------------
+
+    // The tag used to identify the image we want to deploy.
+    // IMAGE_TAG = "test"
+
+    // Which environment to deploy to.
+    // DESTINATION = "prod"
+
+    // Which instance ID to deploy to (if using multiple instances per environment)
+    // Leave empty for the default instance
+    // INSTANCE_ID = ""
+
+    // The URI to the application being deployed.
+    // VANITY_URL = "https://pims-prod.pathfinder.gov.bc.ca/"
   }
   stages {
     stage("Initialize") {
@@ -60,7 +76,24 @@ pipeline {
         }
       }
     }
-    stage("Maintenance Page UP") {
+    stage("Approval") {
+      options {
+        timeout(time: 1, unit: "HOURS")
+      }
+      input {
+        message "Deploy to PROD?"
+        ok "Yes, go ahead"
+      }
+      steps {
+        echo "[ci/cd] Promotion from TEST to PROD was approved. Proceeding..."
+      }
+    }
+    stage("Version check") {
+      steps {
+        echo "TODO: ask for a version to deploy"
+      }
+    }
+    stage("Maintenance mode ON") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -71,7 +104,7 @@ pipeline {
         script {
           try {
             dir(MAINTENANCE_DIRECTORY) {
-              sh "APPLICATION_NAME=asr-pims-app ./maintenance.sh dev on"
+              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} on"
             }
           } catch (e) {
             echo 'Maintenance Page FAILED'
@@ -80,16 +113,35 @@ pipeline {
         }
       }
     }
-    stage("Backup DB, etc") {
+    stage("Database backup") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
       steps {
         // pretend we are doing stuff - db backups etc
-        sleep(60)
+        sleep(30)
       }
     }
-    stage("Maintenance Page DOWN") {
+    stage("Database migration") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        // pretend we are doing stuff - db backups etc
+        sleep(30)
+      }
+    }
+    stage("PROD deploy (API)") {
+      steps {
+        echo "TODO: ... "
+      }
+    }
+    stage("PROD deploy (APP)") {
+      steps {
+        echo "TODO: ... "
+      }
+    }
+    stage("Maintenance mode OFF") {
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -97,7 +149,7 @@ pipeline {
         script {
           try {
             dir(MAINTENANCE_DIRECTORY) {
-              sh "APPLICATION_NAME=asr-pims-app ./maintenance.sh dev off"
+              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} off"
             }
           } catch (e) {
             echo 'Maintenance Page FAILED'
