@@ -19,13 +19,12 @@ parameters:
     description: The name for this environment [dev, test, prod]
     required: true
     value: dev
-
   - name: APP_DOMAIN
     displayName: Application Hostname
     description:
       The exposed hostname that will route to the the React frontend, if left blank a
       value will be defaulted.
-    value: proxy-caddy-dev.pathfinder.gov.bc.ca
+    value: proxy-caddy-pims-dev.pathfinder.gov.bc.ca
   - name: APP_PORT
     displayName: Application Port
     description: The port used to communicate with the Pod

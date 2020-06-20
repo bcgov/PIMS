@@ -21,6 +21,7 @@ ENVIRONMENT_NAME=${1:-}
 APPLICATION_PORT=${APPLICATION_PORT:-8080-tcp}
 STATIC_PAGE_NAME=${STATIC_PAGE_NAME:-proxy-caddy}
 STATIC_PAGE_PORT=${STATIC_PAGE_PORT:-2015-tcp}
+STATIC_PAGE_HOSTNAME=${STATIC_PAGE_HOSTNAME:-proxy-caddy-pims-${ENVIRONMENT_NAME}.pathfinder.gov.bc.ca}
 #
 IMG_SRC=${IMG_SRC:-bcgov-s2i-caddy}
 GIT_REPO=${GIT_REPO:-https://github.com/bcgov/pims.git}
@@ -90,7 +91,7 @@ then
     | oc apply -f -
 elif [ "${COMMAND}" == "deploy" ]
 then
-  oc process -f ${OC_DEPLOY} -n ${PROJECT} -p NAME=${STATIC_PAGE_NAME} BUILD_PROJECT=${BUILD_PROJECT} \
+  oc process -f ${OC_DEPLOY} -n ${PROJECT} -p NAME=${STATIC_PAGE_NAME} APP_DOMAIN=${STATIC_PAGE_HOSTNAME} \
     | oc apply -f -
   oc get route ${STATIC_PAGE_NAME} || \
     oc expose svc ${STATIC_PAGE_NAME}
