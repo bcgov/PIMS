@@ -1,3 +1,4 @@
+using System.Linq;
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -62,6 +63,22 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// Check if PID is available
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("check/pid-available")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.CheckPidAvailabilityResponseModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult IsPidAvailable(int parcelId, int pid)
+        {
+            var result = new Model.CheckPidAvailabilityResponseModel
+                {Available = _pimsService.Parcel.IsPidAvailable(parcelId, pid)};
+            return new JsonResult(result);
+        }
+
+        /// <summary>
         /// Add a new parcel to the datasource for the current user.
         /// </summary>
         /// <param name="model"></param>
@@ -74,7 +91,7 @@ namespace Pims.Api.Controllers
         public IActionResult AddParcel([FromBody] Model.ParcelModel model)
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
-            
+
             _pimsService.Parcel.Add(entity);
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 

@@ -34,6 +34,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { useApi } from 'hooks/useApi';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -61,6 +62,8 @@ export interface IFormParcel extends IParcel {
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const api = useApi();
+
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -149,8 +152,9 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
-  const handleValidate = (values: IFormParcel) => {
+  const handleValidate = async (values: IFormParcel) => {
     let financialErrors = validateFinancials(values.financials, 'financials');
+
     values.buildings.forEach((building, index) => {
       financialErrors = {
         ...financialErrors,
@@ -165,7 +169,22 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         return _.merge(yupToFormErrors(err), financialErrors);
       },
     );
-    return Promise.resolve(yupErrors);
+
+    let pidDuplicated = false;
+    if (values.pid) {
+      pidDuplicated = !(await isPidAvailable(values));
+    }
+
+    let errors = await yupErrors;
+    if (pidDuplicated) {
+      errors = { ...errors, pid: 'This PID is already in use.' };
+    }
+    return Promise.resolve(errors);
+  };
+
+  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const { available } = await api.isPidAvailable(values.id, values.pid);
+    return available;
   };
 
   return (
@@ -176,10 +195,9 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           validateOnChange={false}
           validate={handleValidate}
           enableReinitialize={true}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, actions) => {
             let response: any;
             const apiValues = valuesToApiFormat(_.cloneDeep(values));
-
             if (!values.id) {
               response = dispatch(createParcel(apiValues));
             } else {
