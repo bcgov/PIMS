@@ -59,6 +59,8 @@ export interface IFormParcel extends IParcel {
   buildings: IFormBuilding[];
 }
 
+const showAppraisal = false;
+
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -153,12 +155,12 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: IFormParcel) => {
-    let financialErrors = validateFinancials(values.financials, 'financials');
+    let financialErrors = validateFinancials(values.financials, 'financials', showAppraisal);
 
     values.buildings.forEach((building, index) => {
       financialErrors = {
         ...financialErrors,
-        ...validateFinancials(building.financials, `buildings.${index}.financials`),
+        ...validateFinancials(building.financials, `buildings.${index}.financials`, showAppraisal),
       };
     });
     const yupErrors: any = validateYupSchema(values, ParcelSchema).then(
@@ -243,13 +245,13 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   {<LandForm {...formikProps} disabled={props.disabled}></LandForm>}
                   <h4>Total values for parcel inclusive of existing building(s)</h4>
                   <Form.Row className="sumFinancialsForm">
-                    <SumFinancialsForm formikProps={formikProps} showAppraisal={false} />
+                    <SumFinancialsForm formikProps={formikProps} showAppraisal={showAppraisal} />
                   </Form.Row>
                   <h4>Valuation Information</h4>
                   <EvaluationForm
                     {...formikProps}
                     isParcel={true}
-                    showAppraisal={false}
+                    showAppraisal={showAppraisal}
                     disabled={props.disabled}
                     nameSpace="financials"
                   />

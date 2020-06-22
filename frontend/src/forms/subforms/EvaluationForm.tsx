@@ -98,7 +98,11 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
   return placeholderFinancials;
 };
 
-export const validateFinancials = (financials: IFinancial[], nameSpace: string) => {
+export const validateFinancials = (
+  financials: IFinancial[],
+  nameSpace: string,
+  showAppraisal?: boolean,
+) => {
   // Yup has major performance issues with the validation of large arrays.
   // As a result, handle the validation manually here.
   let errors = {};
@@ -114,9 +118,19 @@ export const validateFinancials = (financials: IFinancial[], nameSpace: string) 
     }
 
     //if one of date/value for the Appraised field is filled in the other field is required as well.
-    if (financial.date && financial.key === EvaluationKeys.Appraised && !financial.value) {
+    if (
+      showAppraisal &&
+      financial.date &&
+      financial.key === EvaluationKeys.Appraised &&
+      !financial.value
+    ) {
       errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
-    } else if (financial.value && financial.key === EvaluationKeys.Appraised && !financial.date) {
+    } else if (
+      showAppraisal &&
+      financial.value &&
+      financial.key === EvaluationKeys.Appraised &&
+      !financial.date
+    ) {
       errors = setIn(errors, `${nameSpace}.${index}.date`, 'Required');
     }
   });
@@ -165,7 +179,6 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   const isFiscal = (type: string) => {
     return Object.keys(FiscalKeys).includes(type);
   };
-
   return (
     <Fragment>
       <PaginatedFormErrors
