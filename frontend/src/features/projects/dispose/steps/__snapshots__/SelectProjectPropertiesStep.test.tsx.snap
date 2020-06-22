@@ -217,7 +217,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "330px",
+                  "minWidth": "560px",
                 }
               }
             >
@@ -231,11 +231,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "40 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "40px",
                   }
                 }
               >
@@ -403,11 +403,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "145 0 auto",
                     "justifyContent": "flex-start",
-                    "minWidth": "30px",
+                    "minWidth": "145px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "145px",
                   }
                 }
               >
@@ -423,11 +423,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "145 0 auto",
                     "justifyContent": "flex-start",
-                    "minWidth": "30px",
+                    "minWidth": "145px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "145px",
                   }
                 }
               >
@@ -504,7 +504,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "360px",
+                  "minWidth": "590px",
                 }
               }
             >
@@ -518,11 +518,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "40 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "40px",
                   }
                 }
               >
@@ -710,11 +710,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "145 0 auto",
                     "justifyContent": "flex-start",
-                    "minWidth": "30px",
+                    "minWidth": "145px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "145px",
                   }
                 }
               >
@@ -730,11 +730,11 @@ exports[`renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "145 0 auto",
                     "justifyContent": "flex-start",
-                    "minWidth": "30px",
+                    "minWidth": "145px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "145px",
                   }
                 }
               >
