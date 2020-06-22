@@ -1,0 +1,171 @@
+#!groovy
+
+// ------------------
+// Pipeline Variables
+// ------------------
+def cli
+def notify
+
+// --------------------
+// Declarative Pipeline
+// --------------------
+pipeline {
+  agent any
+  options {
+    disableResume()
+    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+  }
+  environment {
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = "true"
+
+    CI = "true"
+    PATHFINDER_URL = "pathfinder.gov.bc.ca"
+    VANITY_URL="https://pims-test.pathfinder.gov.bc.ca/"
+
+    // The name of your application
+    APP_NAME = "pims"
+
+    // The name of the project namespace(s).
+    NAME_SPACE = "jcxjin"
+
+    // This should match your monorepo folder structure
+    API_DIRECTORY = "backend"
+    FRONTEND_DIRECTORY = "frontend"
+    MAINTENANCE_DIRECTORY = "maintenance"
+
+    // Environment Variables that should be set in OpenShift
+    // -----------------------------------------------------
+
+    // The tag used to identify the image we want to deploy.
+    // IMAGE_TAG = "test"
+
+    // Which environment to deploy to.
+    // DESTINATION = "prod"
+
+    // Which instance ID to deploy to (if using multiple instances per environment)
+    // Leave empty for the default instance
+    // INSTANCE_ID = ""
+
+    // The URI to the application being deployed.
+    // VANITY_URL = "https://pims-prod.pathfinder.gov.bc.ca/"
+  }
+  stages {
+    stage("Initialize") {
+      steps {
+        script {
+          // load supporting functions from external script files
+          cli = load "openshift/pipelines/scripts/common.groovy"
+          notify = load "openshift/pipelines/scripts/notify.groovy"
+
+          // ensure required secrets and credentials are available in the CI environment
+          // [add more secrets here if needed...]
+          sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+
+          // initialize CI environment values
+          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
+
+          if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
+            // Force OpenShift Plugin directives to be verbose
+            openshift.logLevel(1)
+
+            // Print all environment variables
+            echo 'DEBUG - All pipeline environment variables:'
+            echo sh(returnStdout: true, script: 'env')
+          }
+        }
+      }
+    }
+    stage("Approval") {
+      options {
+        timeout(time: 1, unit: "HOURS")
+      }
+      input {
+        message "Deploy to PROD?"
+        ok "Yes, go ahead"
+      }
+      steps {
+        echo "[ci/cd] Promotion from TEST to PROD was approved. Proceeding..."
+      }
+    }
+    stage("Version check") {
+      steps {
+        echo "TODO: ask for a version to deploy"
+      }
+    }
+    stage("Maintenance mode ON") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      environment {
+        COMP_NAME = "api"
+      }
+      steps {
+        script {
+          try {
+            dir(MAINTENANCE_DIRECTORY) {
+              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} on"
+            }
+          } catch (e) {
+            echo 'Maintenance Page FAILED'
+            throw e
+          }
+        }
+      }
+    }
+    stage("Database backup") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        // pretend we are doing stuff - db backups etc
+        sleep(30)
+      }
+    }
+    stage("Database migration") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        // pretend we are doing stuff - db backups etc
+        sleep(30)
+      }
+    }
+    stage("PROD deploy (API)") {
+      steps {
+        echo "TODO: ... "
+      }
+    }
+    stage("PROD deploy (APP)") {
+      steps {
+        echo "TODO: ... "
+      }
+    }
+    stage("Maintenance mode OFF") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        script {
+          try {
+            dir(MAINTENANCE_DIRECTORY) {
+              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} off"
+            }
+          } catch (e) {
+            echo 'Maintenance Page FAILED'
+            throw e
+          }
+        }
+
+      }
+    }
+    stage("DONE") {
+      options {
+        timeout(time: 5, unit: "MINUTES")
+      }
+      steps {
+        echo "[ci/cd]  PRODUCTION deployment complete!"
+      }
+    }
+  }
+}
