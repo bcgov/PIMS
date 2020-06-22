@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Pims.Keycloak.Exceptions;
+using Pims.Core.Exceptions;
 
 namespace Pims.Keycloak
 {
@@ -16,10 +16,10 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task DeleteAttackDetectionAsync()
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/attack-detection/brute-force/users");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/attack-detection/brute-force/users");
 
             if (!response.IsSuccessStatusCode)
-                throw new KeycloakRequestException(response);
+                throw new HttpClientRequestException(response);
         }
         #endregion
     }

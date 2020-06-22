@@ -24,7 +24,7 @@ The PIMS technical architecture stack continues to grow as features and enhancem
 ## SRES Process Documentation
 
 - [Workflows](./WORKFLOWS.md)
-- [Notifiactions](./sres/NOTIFICATIONS.md)
+- [Notifications](./sres/NOTIFICATIONS.md)
 - [Submit Surplus Property Process Project](./sres/SUBMIT-DISPOSAL.md)
 - [Assess Surplus Property Process Project Request](./sres/ACCESS-DISPOSAL.md)
 

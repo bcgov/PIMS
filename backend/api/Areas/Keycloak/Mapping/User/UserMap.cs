@@ -3,6 +3,7 @@ using Mapster;
 using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
+using System.Linq;
 
 namespace Pims.Api.Areas.Keycloak.Mapping.User
 {
@@ -22,7 +23,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.Agencies, src => src.Agencies)
-                .Map(dest => dest.Roles, src => src.Roles)
+                .Map(dest => dest.Roles, src => src.Roles.Select(r => r.Role))
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.UserModel, Entity.User>()

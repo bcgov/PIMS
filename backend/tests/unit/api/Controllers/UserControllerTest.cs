@@ -19,6 +19,8 @@ using System;
 using Pims.Api.Helpers.Exceptions;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Pims.Core.Http.Configuration;
+using Pims.Core.Http;
 
 namespace PimsApi.Test.Controllers
 {
@@ -47,7 +49,7 @@ namespace PimsApi.Test.Controllers
                 Authority = "test",
                 Audience = "test",
                 Client = "test",
-                OpenIdConnect = new Pims.Keycloak.Configuration.OpenIdConnectOptions()
+                OpenIdConnect = new OpenIdConnectOptions()
                 {
                     Token = "test",
                     UserInfo = "test"
@@ -57,7 +59,7 @@ namespace PimsApi.Test.Controllers
             optionsMonitor.Setup(m => m.CurrentValue).Returns(options);
             var controller = helper.CreateController<UserController>(user, optionsMonitor.Object);
 
-            var service = helper.GetService<Mock<IKeycloakRequestClient>>();
+            var service = helper.GetService<Mock<IProxyRequestClient>>();
             var model = new KModel.UserInfoModel()
             {
                 Id = Guid.NewGuid()

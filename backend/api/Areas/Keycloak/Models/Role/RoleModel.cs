@@ -9,6 +9,11 @@ namespace Pims.Api.Areas.Keycloak.Models.Role
     {
         #region Properties
         /// <summary>
+        /// get/set - The GUID that identifies this Group in Keycloak.
+        /// </summary>
+        public Guid? KeycloakGroupId { get; set; }
+
+        /// <summary>
         /// get/set - The role description.
         /// </summary>
         /// <value></value>

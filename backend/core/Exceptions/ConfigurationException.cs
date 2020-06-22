@@ -1,6 +1,6 @@
 using System;
 
-namespace Pims.Keycloak.Exceptions
+namespace Pims.Core.Exceptions
 {
     /// <summary>
     /// ConfigurationException class, provides a way to throw an exception when a configuration is invalid.

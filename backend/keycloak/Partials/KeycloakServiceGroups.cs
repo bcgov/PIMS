@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using keycloak.Extensions;
+using Pims.Core.Extensions;
 using Pims.Keycloak.Extensions;
 
 namespace Pims.Keycloak
@@ -20,7 +20,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<int> GetGroupCountAsync()
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/groups/count");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/groups/count");
             var result = await response.HandleResponseAsync<Models.CountModel>();
 
             return result.Count;
@@ -36,7 +36,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.GroupModel[]> GetGroupsAsync(int first = 0, int max = 10, string search = null)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/groups?first={first}&max={max}&search={search}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/groups?first={first}&max={max}&search={search}");
 
             return await response.HandleResponseAsync<Models.GroupModel[]>();
         }
@@ -48,7 +48,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.GroupModel> GetGroupAsync(Guid id)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/groups/{id}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/groups/{id}");
 
             return await response.HandleResponseAsync<Models.GroupModel>();
         }
@@ -62,7 +62,7 @@ namespace Pims.Keycloak
         {
             var json = group.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/groups", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/groups", content);
 
             return await response.HandleResponseAsync<Models.GroupModel>();
         }
@@ -77,7 +77,7 @@ namespace Pims.Keycloak
         {
             var json = group.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/groups/{parentId}/children", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/groups/{parentId}/children", content);
 
             return await response.HandleResponseAsync<Models.GroupModel>();
         }
@@ -91,7 +91,7 @@ namespace Pims.Keycloak
         {
             var json = group.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/groups/{group.Id}", content);
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/groups/{group.Id}", content);
 
             return response.HandleResponse(group);
         }
@@ -103,7 +103,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Guid> DeleteGroupAsync(Guid id)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/groups/{id}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/groups/{id}");
 
             return response.HandleResponse(id);
         }
@@ -118,7 +118,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.UserModel[]> GetGroupMembersAsync(Guid id, int first = 0, int max = 10)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/groups/{id}/members?first={first}&max={max}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/groups/{id}/members?first={first}&max={max}");
 
             return await response.HandleResponseAsync<Models.UserModel[]>();
         }

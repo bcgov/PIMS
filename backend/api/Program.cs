@@ -34,6 +34,8 @@ namespace Pims.Api
                 .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"connectionstrings.{env}.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("geocoder.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"geocoder.{env}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();

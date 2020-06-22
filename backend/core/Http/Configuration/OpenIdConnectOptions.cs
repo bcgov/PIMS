@@ -1,7 +1,7 @@
 using System;
-using Pims.Keycloak.Exceptions;
+using Pims.Core.Exceptions;
 
-namespace Pims.Keycloak.Configuration
+namespace Pims.Core.Http.Configuration
 {
     /// <summary>
     /// OpenIdConnectOptions class, provides a way to configure keycloak open id connect endpoints.
@@ -51,7 +51,7 @@ namespace Pims.Keycloak.Configuration
         /// Validate the configuration.
         /// </summary>
         /// <exception type="ConfigurationException">The configuration is missing or invalid.</exception>
-        public void Validate()
+        public virtual void Validate()
         {
             if (String.IsNullOrWhiteSpace(this.Token))
                 throw new ConfigurationException("The configuration for Keycloak:OpenIdConnect:Token is invalid or missing.");

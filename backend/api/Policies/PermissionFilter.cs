@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Policies
 {
@@ -31,6 +33,15 @@ namespace Pims.Api.Policies
         public PermissionFilter(params Permissions[] permissions)
         {
             _permissions = permissions;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a PermissionFilter class, initializes it with the specified permissions.
+        /// </summary>
+        /// <param name="permissions"></param>
+        public PermissionFilter(IEnumerable<Permissions> permissions)
+        {
+            _permissions = permissions.ToArray();
         }
         #endregion
 
