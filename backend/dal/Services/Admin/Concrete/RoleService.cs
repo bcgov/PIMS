@@ -84,6 +84,23 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get the user with the specified keycloak group 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Role GetByKeycloakId(Guid id)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
+
+            return this.Context.Roles
+                .Include(r => r.Claims)
+                .ThenInclude(r => r.Claim)
+                .AsNoTracking()
+                .FirstOrDefault(u => u.KeycloakGroupId == id) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
         /// Updates the specified role in the datasource.
         /// </summary>
         /// <param name="entity"></param>

@@ -1,4 +1,4 @@
-namespace Pims.Keycloak.Models
+namespace Pims.Core.Http.Models
 {
     /// <summary>
     /// OpenIdConnectModel class, provides a model to represent the open Id connect information.

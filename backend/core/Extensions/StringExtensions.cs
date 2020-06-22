@@ -47,5 +47,19 @@ namespace Pims.Core.Extensions
                 return postal?.ToUpper().Insert(3, " ");
             return postal?.ToUpper();
         }
+
+        /// <summary>
+        /// Lowercases the first character of the specified 'word'.
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static string LowercaseFirstCharacter(this string word)
+        {
+            if (!String.IsNullOrWhiteSpace(word) && !char.IsUpper(word[0]))
+            {
+                return char.ToLower(word[0]) + (word.Length > 1 ? word.Substring(1) : null);
+            }
+            return word;
+        }
     }
 }

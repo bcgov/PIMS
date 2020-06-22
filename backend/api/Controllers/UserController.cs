@@ -8,12 +8,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Api.Helpers.Extensions;
 using Pims.Dal.Services;
-using Pims.Keycloak;
 using System.Linq;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using Pims.Api.Helpers.Exceptions;
-using System;
+using Pims.Core.Http;
 
 namespace Pims.Api.Controllers
 {
@@ -30,7 +29,7 @@ namespace Pims.Api.Controllers
         #region Variables
         private readonly ILogger<UserController> _logger;
         private readonly Keycloak.Configuration.KeycloakOptions _optionsKeycloak;
-        private readonly IKeycloakRequestClient _requestClient;
+        private readonly IProxyRequestClient _requestClient;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         #endregion
@@ -44,7 +43,7 @@ namespace Pims.Api.Controllers
         /// <param name="userService"></param>
         /// <param name="mapper"></param>
         /// <param name="requestClient"></param>
-        public UserController(ILogger<UserController> logger, IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IKeycloakRequestClient requestClient)
+        public UserController(ILogger<UserController> logger, IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IUserService userService, IMapper mapper, IProxyRequestClient requestClient)
         {
             _logger = logger;
             _optionsKeycloak = optionsKeycloak.CurrentValue;

@@ -4,7 +4,7 @@ using Pims.Keycloak;
 namespace Pims.Dal.Keycloak
 {
     /// <summary>
-    /// ServiceCollectionExtensions static class, provides extension methods for ServiceCollectionExtensions objects.
+    /// ServiceCollectionExtensions static class, provides extension methods for ServiceCollection objects.
     /// </summary>
     public static class ServiceCollectionExtensions
     {

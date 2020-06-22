@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
+using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
 
 namespace Pims.Api.Helpers.Middleware
@@ -132,7 +133,7 @@ namespace Pims.Api.Helpers.Middleware
 
                 _logger.LogWarning(ex, ex.Message);
             }
-            else if (ex is ConfigurationException)
+            else if (ex is Core.Exceptions.ConfigurationException)
             {
                 code = HttpStatusCode.InternalServerError;
                 message = "Application configuration details invalid or missing.";
@@ -164,9 +165,9 @@ namespace Pims.Api.Helpers.Middleware
                     _logger.LogError(streamEx, $"Failed to read the {nameof(ApiHttpRequestException)} error stream.");
                 }
             }
-            else if (ex is Keycloak.Exceptions.KeycloakRequestException)
+            else if (ex is HttpClientRequestException || ex is ProxyRequestException)
             {
-                var exception = ex as Keycloak.Exceptions.KeycloakRequestException;
+                var exception = ex as HttpClientRequestException;
                 code = exception.StatusCode;
                 message = ex.Message;
 
@@ -181,7 +182,7 @@ namespace Pims.Api.Helpers.Middleware
                 catch (Exception streamEx)
                 {
                     // Ignore for now.
-                    _logger.LogError(streamEx, $"Failed to read the {nameof(Keycloak.Exceptions.KeycloakRequestException)} error stream.");
+                    _logger.LogError(streamEx, $"Failed to read the {nameof(HttpClientRequestException)} error stream.");
                 }
             }
             else

@@ -1,4 +1,4 @@
-namespace Pims.Keycloak.Models
+namespace Pims.Core.Http.Models
 {
     /// <summary>
     /// TokenModel class, provides a model that represents the keycloak token.

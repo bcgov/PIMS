@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using keycloak.Extensions;
+using Pims.Core.Extensions;
 using Pims.Keycloak.Extensions;
 
 namespace Pims.Keycloak
@@ -20,7 +20,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<int> GetUserCountAsync()
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/users/count");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/users/count");
             var result = await response.HandleResponseAsync<Models.CountModel>();
 
             return result.Count;
@@ -36,7 +36,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.UserModel[]> GetUsersAsync(int first = 0, int max = 10, string search = null)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/users?first={first}&max={max}&search={search}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/users?first={first}&max={max}&search={search}");
 
             return await response.HandleResponseAsync<Models.UserModel[]>();
         }
@@ -48,7 +48,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.UserModel> GetUserAsync(Guid id)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/users/{id}");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/users/{id}");
 
             return await response.HandleResponseAsync<Models.UserModel>();
         }
@@ -62,7 +62,7 @@ namespace Pims.Keycloak
         {
             var json = user.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_client.Options.Admin.Authority}/users", content);
+            var response = await _client.PostAsync($"{this.Options.Admin.Authority}/users", content);
 
             return await response.HandleResponseAsync<Models.UserModel>();
         }
@@ -76,7 +76,7 @@ namespace Pims.Keycloak
         {
             var json = user.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/users/{user.Id}", content);
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/users/{user.Id}", content);
 
             return response.HandleResponse(user.Id);
         }
@@ -88,7 +88,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Guid> DeleteUserAsync(Guid id)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/users/{id}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/users/{id}");
 
             return response.HandleResponse(id);
         }
@@ -100,7 +100,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Models.GroupModel[]> GetUserGroupsAsync(Guid id)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/users/{id}/groups");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/users/{id}/groups");
 
             return await response.HandleResponseAsync<Models.GroupModel[]>();
         }
@@ -112,7 +112,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<int> GetUserGroupCountAsync(Guid id)
         {
-            var response = await _client.GetAsync($"{_client.Options.Admin.Authority}/users/{id}/groups/count");
+            var response = await _client.GetAsync($"{this.Options.Admin.Authority}/users/{id}/groups/count");
 
             return await response.HandleResponseAsync<int>();
         }
@@ -125,7 +125,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Guid> AddGroupToUserAsync(Guid userId, Guid groupId)
         {
-            var response = await _client.PutAsync($"{_client.Options.Admin.Authority}/users/{userId}/groups/{groupId}");
+            var response = await _client.PutAsync($"{this.Options.Admin.Authority}/users/{userId}/groups/{groupId}");
 
             return response.HandleResponse(userId);
         }
@@ -138,7 +138,7 @@ namespace Pims.Keycloak
         /// <returns></returns>
         public async Task<Guid> RemoveGroupFromUserAsync(Guid userId, Guid groupId)
         {
-            var response = await _client.DeleteAsync($"{_client.Options.Admin.Authority}/users/{userId}/groups/{groupId}");
+            var response = await _client.DeleteAsync($"{this.Options.Admin.Authority}/users/{userId}/groups/{groupId}");
 
             return response.HandleResponse(userId);
         }

@@ -15,6 +15,7 @@ COPY tests/unit/dal/*.csproj tests/unit/dal/
 COPY dal/*.csproj dal/
 COPY dal.keycloak/*.csproj dal.keycloak/
 COPY keycloak/*.csproj keycloak/
+COPY geocoder/*.csproj geocoder/
 COPY core/*.csproj core/
 
 RUN dotnet restore
