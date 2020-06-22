@@ -414,6 +414,8 @@ namespace Pims.Dal.Test.Services
             project.ProjectNumber = "test-generation-override";
             project.PrivateNote = "private note";
             project.PublicNote = "public note";
+            project.ExemptionRequested = true;
+            project.ExemptionRationale = "Providing reasoning for exemption request";
             project.SubmittedOn = DateTime.Now;
             project.DeniedOn = DateTime.Now.AddDays(1);
             project.ApprovedOn = DateTime.Now.AddDays(2);
@@ -432,6 +434,8 @@ namespace Pims.Dal.Test.Services
             Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
             Assert.Matches("private note", result.PrivateNote);
             Assert.Matches("public note", result.PublicNote);
+            Assert.True(result.ExemptionRequested);
+            Assert.Matches("Providing reasoning for exemption request", result.ExemptionRationale);
             Assert.Equal(project.SubmittedOn, result.SubmittedOn);
             Assert.Equal(project.DeniedOn, result.DeniedOn);
             Assert.Equal(project.ApprovedOn, result.ApprovedOn);

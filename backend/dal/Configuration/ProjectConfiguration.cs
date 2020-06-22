@@ -30,7 +30,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.PrivateNote).HasMaxLength(2000);
 
             builder.Property(m => m.ExemptionRequested).HasDefaultValue(false);
-            builder.Property(m => m.ExemptionRational).HasMaxLength(2000);
+            builder.Property(m => m.ExemptionRationale).HasMaxLength(2000);
 
             builder.Property(m => m.SubmittedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");

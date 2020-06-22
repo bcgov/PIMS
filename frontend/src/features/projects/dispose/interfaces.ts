@@ -125,6 +125,8 @@ export interface IProject {
   agencyId: number;
   statusId: number;
   status?: IStatus;
+  exemptionRationale?: string;
+  exemptionRequested?: boolean;
   statusCode: string;
   tierLevelId: number;
   tasks: IProjectTask[];
@@ -204,6 +206,8 @@ export interface IApiProject {
   properties: IProjectProperty[];
   note: string;
   privateNote: string;
+  exemptionRequested?: boolean;
+  exemptionRationale?: string;
   agencyId: number;
   statusId: number;
   statusCode: string;
