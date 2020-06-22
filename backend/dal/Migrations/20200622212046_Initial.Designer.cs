@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200618202055_Initial")]
+    [Migration("20200622212046_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1192,11 +1192,21 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("AgencyId1")
                         .HasColumnType("int");
 
+                    b.Property<string>("AgencyResponseNote")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
 
                     b.Property<decimal>("Assessed")
                         .HasColumnType("MONEY");
+
+                    b.Property<DateTime?>("CancelledOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<DateTime?>("ClearanceNotificationSentOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -1228,6 +1238,9 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("FiscalYear")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("InitialNotificationSentOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -1236,9 +1249,15 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
+                    b.Property<DateTime?>("NinetyDayNotificationSentOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
+
+                    b.Property<DateTime?>("OnHoldNotificationSentOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<string>("PrivateNote")
                         .HasColumnType("nvarchar(2000)")
@@ -1258,14 +1277,23 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<DateTime?>("SixtyDayNotificationSentOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("SubmittedOn")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<DateTime?>("ThirtyDayNotificationSentOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<int>("TierLevelId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("TransferredWithinGreOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -1311,7 +1339,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<int>("NotificationId")
+                    b.Property<int?>("NotificationId")
                         .HasColumnType("int");
 
                     b.Property<int>("Response")
@@ -2736,8 +2764,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.NotificationQueue", "Notification")
                         .WithMany("Responses")
                         .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Pims.Dal.Entities.Project", "Project")
                         .WithMany("Responses")

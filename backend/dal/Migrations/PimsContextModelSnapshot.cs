@@ -1275,7 +1275,7 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<DateTime?>("SixtyDayNoficationSentOn")
+                    b.Property<DateTime?>("SixtyDayNotificationSentOn")
                         .HasColumnType("DATETIME2");
 
                     b.Property<int>("StatusId")
@@ -2149,6 +2149,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<bool>("IsSystem")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLogin")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()
