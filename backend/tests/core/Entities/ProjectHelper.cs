@@ -59,7 +59,7 @@ namespace Pims.Core.Test
                 CancelledOn = DateTime.UtcNow,
                 InitialNotificationSentOn = DateTime.UtcNow,
                 ThirtyDayNotificationSentOn = DateTime.UtcNow,
-                SixtyDayNoficationSentOn = DateTime.UtcNow,
+                SixtyDayNotificationSentOn = DateTime.UtcNow,
                 NinetyDayNotificationSentOn = DateTime.UtcNow,
                 OnHoldNotificationSentOn = DateTime.UtcNow,
                 ClearanceNotificationSentOn = DateTime.UtcNow,

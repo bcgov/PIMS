@@ -245,7 +245,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(project.CancelledOn);
             Assert.NotNull(project.InitialNotificationSentOn);
             Assert.NotNull(project.ThirtyDayNotificationSentOn);
-            Assert.NotNull(project.SixtyDayNoficationSentOn);
+            Assert.NotNull(project.SixtyDayNotificationSentOn);
             Assert.NotNull(project.NinetyDayNotificationSentOn);
             Assert.NotNull(project.OnHoldNotificationSentOn);
             Assert.NotNull(project.ClearanceNotificationSentOn);
@@ -1599,7 +1599,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(deny.Id);
             result.Status.Should().Be(deny);
-            result.DeniedOn.Should().NotBeNull();
+            result.CancelledOn.Should().NotBeNull();
             parcel.ProjectNumber.Should().BeNull();
         }
 
