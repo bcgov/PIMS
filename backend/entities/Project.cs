@@ -102,7 +102,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The rational for the exemption from ERP.
         /// </summary>
-        public string ExemptionRational { get; set; }
+        public string ExemptionRationale { get; set; }
 
         /// <summary>
         /// get/set - The netbook value which is the sum of the properties.

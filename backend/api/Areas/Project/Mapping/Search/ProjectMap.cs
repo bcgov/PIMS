@@ -25,7 +25,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
                 .Map(dest => dest.ExemptionRequested, src => src.ExemptionRequested)
-                .Map(dest => dest.ExemptionRational, src => src.ExemptionRational)
+                .Map(dest => dest.ExemptionRationale, src => src.ExemptionRationale)
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.Estimated, src => src.Estimated)
                 .Map(dest => dest.Assessed, src => src.Assessed)
