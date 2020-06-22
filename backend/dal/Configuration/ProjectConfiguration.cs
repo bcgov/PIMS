@@ -28,6 +28,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Note).HasMaxLength(2000);
             builder.Property(m => m.PublicNote).HasMaxLength(2000);
             builder.Property(m => m.PrivateNote).HasMaxLength(2000);
+            builder.Property(m => m.AgencyResponseNote).HasMaxLength(2000);
 
             builder.Property(m => m.ExemptionRequested).HasDefaultValue(false);
             builder.Property(m => m.ExemptionRationale).HasMaxLength(2000);
@@ -35,6 +36,14 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.SubmittedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.DeniedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.CancelledOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.InitialNotificationSentOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.ThirtyDayNotificationSentOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.SixtyDayNotificationSentOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.NinetyDayNotificationSentOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.OnHoldNotificationSentOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.TransferredWithinGreOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.ClearanceNotificationSentOn).HasColumnType("DATETIME2");
 
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");

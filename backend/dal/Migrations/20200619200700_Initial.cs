@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -1024,9 +1024,18 @@ namespace Pims.Dal.Migrations
                     TierLevelId = table.Column<int>(nullable: false),
                     PublicNote = table.Column<string>(maxLength: 2000, nullable: true),
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
+                    AgencyResponseNote = table.Column<string>(maxLength: 2000, nullable: true),
                     SubmittedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ApprovedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    InitialNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    ThirtyDayNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    SixtyDayNoficationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    NinetyDayNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    OnHoldNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    TransferredWithinGreOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    ClearanceNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DeniedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    CancelledOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ExemptionRequested = table.Column<bool>(nullable: false, defaultValue: false),
                     ExemptionRationale = table.Column<string>(maxLength: 2000, nullable: true),
                     NetBook = table.Column<decimal>(type: "MONEY", nullable: false),
@@ -1474,7 +1483,7 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    NotificationId = table.Column<int>(nullable: false),
+                    NotificationId = table.Column<int>(nullable: true),
                     Response = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

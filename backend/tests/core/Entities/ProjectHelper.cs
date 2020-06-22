@@ -51,10 +51,19 @@ namespace Pims.Core.Test
                 UpdatedBy = user,
                 PublicNote = $"publicNote-{id}",
                 PrivateNote = $"privateNote-{id}",
+                AgencyResponseNote = $"agencyResponseNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
                 SubmittedOn = DateTime.UtcNow,
                 ApprovedOn = DateTime.UtcNow,
                 DeniedOn = DateTime.UtcNow,
+                CancelledOn = DateTime.UtcNow,
+                InitialNotificationSentOn = DateTime.UtcNow,
+                ThirtyDayNotificationSentOn = DateTime.UtcNow,
+                SixtyDayNoficationSentOn = DateTime.UtcNow,
+                NinetyDayNotificationSentOn = DateTime.UtcNow,
+                OnHoldNotificationSentOn = DateTime.UtcNow,
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                TransferredWithinGreOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }

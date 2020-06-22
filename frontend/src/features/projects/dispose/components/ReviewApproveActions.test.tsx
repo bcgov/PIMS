@@ -167,7 +167,7 @@ describe('Review Approve actions', () => {
       return node.type() === Button && node.text() === 'Deny';
     });
 
-    it('disables Approve button if already approved', () => {
+    it('disables Deny button if already approved', () => {
       expect(deny.prop('disabled')).toBe(true);
     });
 

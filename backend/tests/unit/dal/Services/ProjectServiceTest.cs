@@ -238,9 +238,18 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(project.ProjectNumber);
             Assert.NotNull(project.PrivateNote);
             Assert.NotNull(project.PublicNote);
+            Assert.NotNull(project.AgencyResponseNote);
             Assert.NotNull(project.SubmittedOn);
             Assert.NotNull(project.ApprovedOn);
             Assert.NotNull(project.DeniedOn);
+            Assert.NotNull(project.CancelledOn);
+            Assert.NotNull(project.InitialNotificationSentOn);
+            Assert.NotNull(project.ThirtyDayNotificationSentOn);
+            Assert.NotNull(project.SixtyDayNoficationSentOn);
+            Assert.NotNull(project.NinetyDayNotificationSentOn);
+            Assert.NotNull(project.OnHoldNotificationSentOn);
+            Assert.NotNull(project.ClearanceNotificationSentOn);
+            Assert.NotNull(project.TransferredWithinGreOn);
             Assert.NotNull(project.Name);
             Assert.NotNull(project.Agency);
             Assert.NotNull(project.Status);
@@ -1539,6 +1548,42 @@ namespace Pims.Dal.Test.Services
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
             var deny = init.ProjectStatus.First(s => s.Code == "DE");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = deny.Id; // Deny Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(deny.Id);
+            result.Status.Should().Be(deny);
+            result.DeniedOn.Should().NotBeNull();
+            parcel.ProjectNumber.Should().BeNull();
+        }
+
+        [Fact]
+        public void SetStatus_Cancel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var deny = init.ProjectStatus.First(s => s.Code == "CA");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
             init.SaveChanges();
 

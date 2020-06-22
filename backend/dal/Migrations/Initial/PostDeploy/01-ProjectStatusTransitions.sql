@@ -56,4 +56,7 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
 ), (
     10 -- First Nation Consultation
     , 13 -- Denied
+), (
+    11 -- Approved for ERP
+    , 14 -- Cancelled
 )

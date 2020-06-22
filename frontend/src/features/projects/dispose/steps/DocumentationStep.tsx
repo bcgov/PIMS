@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import { Formik, setIn } from 'formik';
 import { Form } from 'components/common/form';
 import { IStepProps, IProjectTask, IProject, DisposeWorkflowStatus } from '../interfaces';
-import { useStepForm, useStepper, DocumentationForm, StepErrorSummary } from '..';
+import { useStepForm, useStepper, DocumentationForm, StepErrorSummary, ProjectNotes } from '..';
 import _ from 'lodash';
 
 const handleValidate = (project: IProject) => {
@@ -37,6 +37,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
   return (
     <Container fluid className="DocumentationStep">
       <Formik
+        enableReinitialize
         initialValues={project}
         innerRef={formikRef}
         validate={handleValidate}
@@ -60,6 +61,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
               isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
               tasks={tasks}
             />
+            {!isReadOnly && <ProjectNotes />}
             <StepErrorSummary />
           </Form>
         )}

@@ -9,3 +9,5 @@ export const reviewAppraisalTooltip =
   'Required for Surplus Properties List but\noptional for Enhanced Referral Process';
 export const reviewFirstNationsTooltip =
   'Not required to be completed before\naddition to the Surplus Properties List';
+export const agencyResponsesNoteTooltip =
+  'Enter Agency Responses,\nAgencies Submitting Business Cases,\n& Accepted Business Cases';

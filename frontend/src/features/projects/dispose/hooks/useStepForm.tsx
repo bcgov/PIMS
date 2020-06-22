@@ -1,9 +1,4 @@
-import {
-  updateProject,
-  fetchProject,
-  updateWorkflowStatus,
-  createProject,
-} from '../projectsActionCreator';
+import { updateProject, updateWorkflowStatus, createProject } from '../projectsActionCreator';
 import { ProjectActions } from 'constants/actionTypes';
 import { useDispatch } from 'react-redux';
 import { clear } from 'actions/genericActions';
@@ -14,7 +9,6 @@ import { IProject } from '..';
 import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
-import { ReviewWorkflowStatus } from '../interfaces';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -26,24 +20,26 @@ const useStepForm = () => {
   // functions will need to handle all chained promises.
   const onSubmit = (values: any, actions: any) => Promise.resolve(values);
 
-  const onSubmitReview = (values: any, actions: any) => {
+  const onSubmitReview = (values: any, actions: any, statusCode?: string) => {
     const apiValues = _.cloneDeep(values);
-    let response: any =
-      values.statusCode !== ReviewWorkflowStatus.PropertyReview
-        ? dispatch(updateWorkflowStatus(apiValues, values.statusCode, 'ACCESS-DISPOSAL'))
-        : Promise.resolve(apiValues);
-    response
+    return ((statusCode !== undefined
+      ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
+      : Promise.resolve(apiValues)) as any)
       .then((values: IProject) => {
-        return dispatch(updateProject({ ...apiValues, rowVersion: values.rowVersion }));
+        return dispatch(
+          updateProject({
+            ...apiValues,
+            statusCode: values.statusCode,
+            rowVersion: values.rowVersion,
+          }),
+        );
       })
       .catch((error: any) => {
         actions.setStatus({ msg: error.toString() });
       })
       .finally(() => {
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
-        actions.setSubmitting(false);
       });
-    return response;
   };
 
   const canUserEditForm = (projectAgencyId: number) => {
@@ -87,9 +83,7 @@ const useStepForm = () => {
 
       // do not go to the next step if the form has validation errors.
       if (errors === undefined || Object.keys(errors).length === 0) {
-        return addOrUpdateProject(values, formikRef).then((project: IProject) => {
-          dispatch(fetchProject(project.projectNumber));
-        });
+        return addOrUpdateProject(values, formikRef);
       }
     });
   };

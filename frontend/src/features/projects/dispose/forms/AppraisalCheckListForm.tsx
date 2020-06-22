@@ -9,6 +9,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IAppraisalCheckListFormProps {
   className?: string;
+  isReadOnly?: boolean;
 }
 /**
  * Displays a checklist for every task within the AppraisalReview status.
@@ -24,7 +25,7 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
         <TooltipIcon toolTipId="review-appraisal" toolTip={reviewAppraisalTooltip}></TooltipIcon>
       </h3>
 
-      <TasksForm tasks={tasks} />
+      <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
     </Container>
   );
 };

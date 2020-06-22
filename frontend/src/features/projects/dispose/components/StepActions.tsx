@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Button } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 
@@ -16,6 +16,7 @@ interface IStepActionsProps {
   saveDisabled?: boolean;
   nextDisabled?: boolean;
   getNextStep?: Function;
+  isFetching?: boolean;
 }
 
 /**
@@ -39,6 +40,7 @@ export const StepActions: React.FC<IStepActionsProps> = ({
   nextDisabled,
   saveDisabled,
   getNextStep,
+  isFetching,
 }) => {
   const step = getNextStep && getNextStep();
   const nextLabel = step !== undefined ? 'Next' : 'Submit';
@@ -48,19 +50,37 @@ export const StepActions: React.FC<IStepActionsProps> = ({
   return (
     <StepActionsWrapper>
       <Button
-        disabled={nextDisabled || missingDisposeMilestonePermission}
+        disabled={nextDisabled || missingDisposeMilestonePermission || isFetching}
         style={{ marginLeft: 10 }}
         onClick={onNext}
         variant={nextLabel === 'Submit' ? 'warning' : 'primary'}
       >
         {nextLabel}
+        {isFetching && (
+          <Spinner
+            animation="border"
+            size="sm"
+            role="status"
+            as="span"
+            style={{ marginLeft: '.5rem' }}
+          />
+        )}
       </Button>
       <Button
         variant="secondary"
-        disabled={saveDisabled || missingDisposeMilestonePermission}
+        disabled={saveDisabled || missingDisposeMilestonePermission || isFetching}
         onClick={onSave}
       >
         Save
+        {isFetching && (
+          <Spinner
+            animation="border"
+            size="sm"
+            role="status"
+            as="span"
+            style={{ marginLeft: '.5rem' }}
+          />
+        )}
       </Button>
     </StepActionsWrapper>
   );

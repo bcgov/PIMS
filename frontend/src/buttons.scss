@@ -54,6 +54,10 @@
   color: $text-color;
 }
 
+.btn.btn-secondary.Button--disabled .Button__value {
+  color: $secondary-variant-color;
+}
+
 .btn.btn-light {
   background-color: $light-variant-color;
   font-family: 'BCSans', Fallback, sans-serif;

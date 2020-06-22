@@ -31,7 +31,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - Foreign key to the notification queue.
         /// </summary>
-        public int NotificationId { get; set; }
+        public int? NotificationId { get; set; }
 
         /// <summary>
         /// get/set - The notification queue.
