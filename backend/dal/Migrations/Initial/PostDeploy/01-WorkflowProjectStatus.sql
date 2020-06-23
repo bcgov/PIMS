@@ -26,30 +26,51 @@ INSERT INTO dbo.[WorkflowProjectStatus] (
     , 7 -- Property Review
 ), (
     2 -- ACCESS-DISPOSAL
-    , 8 -- Document Review
+    , 9 -- Document Review
 ), (
     2 -- ACCESS-DISPOSAL
-    , 9 -- Appraisal Review
+    , 10 -- Appraisal Review
 ), (
     2 -- ACCESS-DISPOSAL
-    , 10 -- First Nation Consultation
+    , 11 -- First Nation Consultation
 ), (
     2 -- ACCESS-DISPOSAL
-    , 11 -- Approved for ERP
+    , 13 -- Approved for ERP
 ), (
     2 -- ACCESS-DISPOSAL
-    , 12 -- Approved for SPL
+    , 14 -- Approved for SPL
 ), (
     2 -- ACCESS-DISPOSAL
-    , 13 -- Denied
+    , 16 -- Denied
 ), (
     2 -- ACCESS-DISPOSAL
-    , 14 -- Cancelled
+    , 17 -- Cancelled
 ), (
     2 -- ACCESS-DISPOSAL
-    , 15 -- On Hold
+    , 18 -- On Hold
 ), (
     2 -- ACCESS-DISPOSAL
-    , 16 -- Transferred within the GRE
+    , 19 -- Transferred to GRE
+),(
+    3 -- ACCESS-EXEMPTION
+    , 8 -- Submitted with exemption
+), (
+    3 -- ACCESS-EXEMPTION
+    , 9 -- Documentation Review
+), (
+    3 -- ACCESS-EXEMPTION
+    , 10 -- Appraisal Review
+), (
+    3 -- ACCESS-EXEMPTION
+    , 11 -- First Nation Consultation
+), (
+    3 -- ACCESS-EXEMPTION
+    , 12 -- Exemption Process
+), (
+    3 -- ACCESS-EXEMPTION
+    , 15 -- Approved for Exemption
+), (
+    3 -- ACCESS-EXEMPTION
+    , 16 -- Denied
 )
 

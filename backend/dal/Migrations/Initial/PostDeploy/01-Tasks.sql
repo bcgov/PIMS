@@ -39,7 +39,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Documents received and review completed'
     , 0
     , 'Documents have been received, reviewed and approved.'
-    , 8
+    , 9
     , 0
     , 0
 ), (
@@ -47,7 +47,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal ordered'
     , 0
     , 'An appraisal has been ordered.'
-    , 9
+    , 10
     , 1
     , 1
 ), (
@@ -55,7 +55,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal received'
     , 0
     , 'An appraisal has been received.'
-    , 9
+    , 10
     , 1
     , 2
 ), (
@@ -63,7 +63,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Appraisal completed'
     , 0
     , 'An appraisal has been reviewed and completed.'
-    , 9
+    , 10
     , 1
     , 3
 ), (
@@ -71,7 +71,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Strength of Claim'
     , 0
     , 'First Nation Strength of Claim has been created.'
-    , 10
+    , 11
     , 1
     , 1
 ), (
@@ -79,7 +79,7 @@ INSERT INTO dbo.[Tasks] (
     , 'In consultation'
     , 0
     , 'First Nation consulation is in progress.'
-    , 10
+    , 11
     , 1
     , 2
 ), (
@@ -87,9 +87,25 @@ INSERT INTO dbo.[Tasks] (
     , 'Agreement received'
     , 0
     , 'First Nation agreement has been received.'
-    , 10
+    , 11
     , 1
     , 3
+), (
+    11
+    , 'Notification to confirm exemption request sent to agency ADM'
+    , 0
+    , 'ADM has been notified of request for exemption'
+    , 12
+    , 0
+    , 1
+), (
+    12
+    , 'Confirmation has been received from agency ADM'
+    , 0
+    , 'ADM has confirmed request for exemption'
+    , 12
+    , 0
+    , 2
 )
 
 SET IDENTITY_INSERT dbo.[Tasks] OFF
