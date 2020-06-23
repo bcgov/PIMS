@@ -25,7 +25,19 @@ export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
 
 export const validateTasks = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
-    if (!task.isCompleted && !task.isOptional) {
+    if (
+      !task.isCompleted &&
+      !task.isOptional &&
+      task.statusCode !== ReviewWorkflowStatus.ExemptionProcess
+    ) {
+      errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
+    }
+    if (
+      !task.isCompleted &&
+      !task.isOptional &&
+      task.statusCode === ReviewWorkflowStatus.ExemptionProcess &&
+      project.exemptionRequested
+    ) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
     return errors;

@@ -741,6 +741,7 @@ namespace Pims.Dal.Services
                     originalProject.SubmittedOn = DateTime.UtcNow;
                     break;
                 case ("AP-ERP"): // Approve for ERP
+                case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     originalProject.Properties.ForEach(p =>

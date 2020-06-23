@@ -29,7 +29,7 @@ interface IProjectFilterState {
   createdByMe?: boolean;
   name?: string;
   statusId?: number;
-  accessDisposal?: boolean;
+  accessWorkflow?: boolean;
 }
 
 const initialQuery: IProjectFilter = {
@@ -128,7 +128,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         const query = getServerQuery({
           pageIndex,
           pageSize,
-          filter: mode === PageMode.APPROVAL ? { ...filter, accessDisposal: true } : filter,
+          filter: mode === PageMode.APPROVAL ? { ...filter, accessWorkflow: true } : filter,
         });
         const data = await service.getProjectList(query);
 
@@ -169,7 +169,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
     if (
-      row.statusCode === ReviewWorkflowStatus.PropertyReview &&
+      (row.statusCode === ReviewWorkflowStatus.PropertyReview ||
+        row.statusCode === ReviewWorkflowStatus.ExemptionReview) &&
       keycloak.hasClaim(Claims.ADMIN_PROJECTS)
     ) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
