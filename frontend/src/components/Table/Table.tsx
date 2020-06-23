@@ -170,6 +170,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                     <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
                   </div>
                 ),
+                maxWidth: 40,
               },
               ...columns,
             ]
