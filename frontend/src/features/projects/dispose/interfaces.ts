@@ -120,8 +120,10 @@ export interface IProject {
   description: string;
   fiscalYear: number;
   properties: IProperty[];
+  projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
   privateNote: string;
+  agencyResponseNote?: string;
   agencyId: number;
   statusId: number;
   status?: IStatus;
@@ -132,6 +134,17 @@ export interface IProject {
   tasks: IProjectTask[];
   rowVersion?: string;
   confirmation?: boolean;
+  approvedOn?: Date;
+  deniedOn?: Date;
+  cancelledOn?: Date;
+  submittedOn?: Date;
+  InitialNotificationSentOn?: Date;
+  ThirtyDayNotificationSentOn?: Date;
+  SixtyDayNoficationSentOn?: Date;
+  NinetyDayNotificationSentOn?: Date;
+  OnHoldNotificationSentOn?: Date;
+  TransferredWithinGreOn?: Date;
+  ClearanceNotificationSentOn?: Date;
 }
 
 export enum DisposeWorkflowStatus {
@@ -151,6 +164,14 @@ export enum ReviewWorkflowStatus {
   ApprovedForErp = 'AP-ERP',
   ApprovedForSpl = 'AP-SPL',
   Denied = 'DE',
+  Cancelled = 'CA',
+}
+
+export enum SPPApprovalTabs {
+  projectInformation = 'Project Information',
+  documentation = 'Documentation',
+  erp = 'Enhanced Referral Process',
+  spl = 'Surplus Properties List',
 }
 
 export interface ProjectWorkflowComponent {
@@ -204,9 +225,11 @@ export interface IApiProject {
   name: string;
   description: string;
   properties: IProjectProperty[];
+  projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
   privateNote: string;
   exemptionRequested?: boolean;
+  agencyResponseNote?: string;
   exemptionRationale?: string;
   agencyId: number;
   statusId: number;
@@ -214,6 +237,17 @@ export interface IApiProject {
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;
+  approvedOn?: Date;
+  deniedOn?: Date;
+  cancelledOn?: Date;
+  submittedOn?: Date;
+  InitialNotificationSentOn?: Date;
+  ThirtyDayNotificationSentOn?: Date;
+  SixtyDayNoficationSentOn?: Date;
+  NinetyDayNotificationSentOn?: Date;
+  OnHoldNotificationSentOn?: Date;
+  TransferredWithinGreOn?: Date;
+  ClearanceNotificationSentOn?: Date;
 }
 
 export interface IApiProperty {
@@ -244,4 +278,17 @@ export interface IApiProperty {
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   rowVersion?: string;
+}
+
+export enum AgencyResponses {
+  Ignore = 'Ignore',
+  Watch = 'Watch',
+}
+
+export interface IProjectAgencyResponse {
+  response: AgencyResponses;
+  notificationId?: number;
+  agencyId: number;
+  agencyCode?: string;
+  projectId: number;
 }

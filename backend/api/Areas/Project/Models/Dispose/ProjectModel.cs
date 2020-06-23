@@ -75,6 +75,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string PrivateNote { get; set; }
 
         /// <summary>
+        /// get/set - Notes summerizing agency responses to notifications.
+        /// </summary>
+        public string AgencyResponseNote { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
         public int AgencyId { get; set; }
@@ -115,6 +120,46 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? DeniedOn { get; set; }
 
         /// <summary>
+        /// get/set - When the project was cancelled.
+        /// </summary>
+        public DateTime? CancelledOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the initial enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? InitialNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 30 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? ThirtyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 60 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? SixtyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 90 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? NinetyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the on hold enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? OnHoldNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was transferred within the GRE.
+        /// </summary>
+        public DateTime? TransferredWithinGreOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the clearance enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? ClearanceNotificationSentOn { get; set; }
+
+        /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
@@ -148,6 +193,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - An array of tasks associated with this project.
         /// </summary>
         public IEnumerable<ProjectTaskModel> Tasks { get; set; } = new List<ProjectTaskModel>();
+
+        /// <summary>
+        /// get/set - An array of agency responses associated with this project.
+        /// </summary>
+        public IEnumerable<ProjectAgencyResponse> ProjectAgencyResponses { get; set; } = new List<ProjectAgencyResponse>();
         #endregion
     }
 }

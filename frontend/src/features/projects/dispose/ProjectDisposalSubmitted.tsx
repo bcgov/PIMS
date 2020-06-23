@@ -2,13 +2,8 @@ import './ProjectDisposalSubmitted.scss';
 
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import { FaRegCheckCircle } from 'react-icons/fa';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import styled from 'styled-components';
-
-const ColoredWrapper = styled.div`
-  color: #2e8540;
-`;
+import StepSuccessIcon from './components/StepSuccessIcon';
 
 /**
  * Display success message after all project disposal steps are completed successfully.
@@ -17,11 +12,10 @@ export function ProjectDisposalSubmitted() {
   const keycloak = useKeycloakWrapper();
   return (
     <Container className="ProjectDisposalSubmitted">
-      <ColoredWrapper>
-        <h5>Thank you, {keycloak.displayName ?? 'Pims User'}</h5>
-        <FaRegCheckCircle size={64} />
-        <h5>Application Successfully Submitted</h5>
-      </ColoredWrapper>
+      <StepSuccessIcon
+        preIconLabel={`Thank you, ${keycloak.displayName ?? 'Pims User'}`}
+        postIconLabel={'Application Successfully Submitted'}
+      />
       <p>
         We have received your application to the Surplus Property Program to be added to the
         Enhanced Referral Program. Once your application is reviewed Strategic Real Estate Services

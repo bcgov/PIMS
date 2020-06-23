@@ -87,6 +87,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
+                .Include(p => p.Responses)
+                .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -168,6 +170,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
+                .Include(p => p.Responses)
+                .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -327,6 +331,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Parcel)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Responses)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
 
@@ -515,6 +520,20 @@ namespace Pims.Dal.Services
                 else
                 {
                     this.Context.Entry(originalProjectTask).CurrentValues.SetValues(task);
+                }
+            }
+
+            foreach (var response in project.Responses)
+            {
+                var originalProjectResponse = originalProject.Responses.FirstOrDefault(r => r.AgencyId == response.AgencyId);
+
+                if (originalProjectResponse == null)
+                {
+                    originalProject.Responses.Add(response);
+                }
+                else
+                {
+                    this.Context.Entry(originalProjectResponse).CurrentValues.SetValues(response);
                 }
             }
 
@@ -727,11 +746,12 @@ namespace Pims.Dal.Services
                     // Must have shared note with a reason.
                     // if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
-                    originalProject.Properties.ForEach(p =>
-                    {
-                        this.Context.Update(p.UpdateProjectNumber(null));
-                    });
+                    this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.DeniedOn = DateTime.UtcNow;
+                    break;
+                case ("CA"): // Cancel
+                    this.Context.ReleaseProjectProperties(originalProject);
+                    originalProject.CancelledOn = DateTime.UtcNow;
                     break;
                 default:
                     // All other status changes can only be done by `admin-projects` or when the project is in draft mode.

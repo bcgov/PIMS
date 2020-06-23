@@ -156,6 +156,17 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been denied to be added to the Surplus Property Program.'
     , '/projects/denied'
     , 1
+), (
+    14
+    , 13
+    , 'Cancelled'
+    , 'Cancelled'
+    , 'CA'
+    , 0
+    , 0
+    , 'The project has been cancelled from the Surplus Property Program.'
+    , '/projects/cancelled'
+    , 1
 )
 
 SET IDENTITY_INSERT dbo.[ProjectStatus] OFF

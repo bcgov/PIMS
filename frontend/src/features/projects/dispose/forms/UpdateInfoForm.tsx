@@ -6,7 +6,7 @@ import { Form, Select } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import Button from 'react-bootstrap/Button';
 import _ from 'lodash';
-import { IStepProps, ProjectNotes, useStepper, DisposeWorkflowStatus } from '..';
+import { IStepProps, useStepper, DisposeWorkflowStatus } from '..';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { updateInfoMessage, tierTooltip } from '../strings';
@@ -69,7 +69,6 @@ const UpdateInfoForm = ({
         disabled={isReadOnly}
         setSelectedRows={!isReadOnly ? setSelectedProperties : undefined}
       ></PropertyListViewUpdate>
-      {!isReadOnly && <ProjectNotes />}
     </Container>
   );
 };

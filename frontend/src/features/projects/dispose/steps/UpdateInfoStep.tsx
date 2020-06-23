@@ -9,6 +9,7 @@ import {
   UpdateInfoStepYupSchema,
   UpdateInfoForm,
   StepErrorSummary,
+  ProjectNotes,
 } from '..';
 
 /**
@@ -26,6 +27,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
   return (
     <Container fluid>
       <Formik
+        enableReinitialize
         initialValues={project}
         validationSchema={UpdateInfoStepYupSchema}
         innerRef={formikRef}
@@ -36,6 +38,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
             isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
             title="Update Info"
           />
+          <ProjectNotes />
           <StepErrorSummary />
         </Form>
       </Formik>

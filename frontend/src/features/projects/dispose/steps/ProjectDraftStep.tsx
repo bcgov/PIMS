@@ -11,6 +11,7 @@ import {
   ProjectDraftForm,
   StepErrorSummary,
 } from '..';
+import ProjectNotes from '../components/ProjectNotes';
 
 /**
  * Initial Project creation step - allows entry of high level project information.
@@ -44,6 +45,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
             <ProjectDraftForm
               isReadOnly={isPreDraft() ? false : isReadOnly || !canUserEditForm(project.agencyId)}
             />
+            <ProjectNotes />
             <StepErrorSummary />
           </Form>
         )}

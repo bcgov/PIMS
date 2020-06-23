@@ -162,12 +162,13 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const onRowClick = (row: IProject) => {
-    if (
-      Object.values(ReviewWorkflowStatus.PropertyReview).includes(
-        ReviewWorkflowStatus.PropertyReview,
-      )
-    ) {
+    const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
+      (k: string) => (ReviewWorkflowStatus as any)[k],
+    );
+    if (row.statusCode === ReviewWorkflowStatus.PropertyReview) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
+    } else if (ReviewWorkflowStatuses.includes(row.statusCode)) {
+      history.push(`/dispose/projects/approved?projectNumber=${row.projectNumber}`);
     } else {
       history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
     }

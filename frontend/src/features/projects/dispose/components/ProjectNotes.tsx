@@ -14,6 +14,8 @@ export interface IProjectNotesProps {
   label?: string;
   /** the tooltip to be included with the label */
   tooltip?: string;
+  /** whether or not this text box can be interaced with */
+  disabled?: boolean;
 }
 
 /**
@@ -26,10 +28,12 @@ export default function ProjectNotes({
   field,
   className,
   outerClassName,
+  disabled,
 }: IProjectNotesProps) {
   return (
     <Form.Row className="ProjectNotes">
       <TextArea
+        disabled={disabled}
         tooltip={tooltip}
         label={label ?? 'Notes'}
         field={field ?? 'note'}

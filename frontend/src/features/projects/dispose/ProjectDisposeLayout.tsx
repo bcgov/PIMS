@@ -14,6 +14,8 @@ import {
   clearProject,
   IProject,
   useStepForm,
+  SelectProjectPropertiesPage,
+  ApprovalStep,
 } from '.';
 import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -24,7 +26,6 @@ import ReviewApproveStep from './steps/ReviewApproveStep';
 import { updateWorkflowStatus } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
-import SelectProjectPropertiesPage from './components/SelectProjectPropertiesPage';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -144,7 +145,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
               basePath={match.url}
             />
           ) : null}
-          {noFetchingProjectRequests ? (
+          {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
               <Switch>
                 {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
@@ -157,6 +158,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   path="/dispose/projects/assess/properties/update"
                   component={SelectProjectPropertiesPage}
                 />
+                <Route path="/dispose/projects/approved" component={ApprovalStep} />
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}
@@ -169,7 +171,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   path="/dispose"
                   component={() => <Redirect to="/dispose/projects/draft" />}
                 />
-                <Route exact path="/dispose/*" component={() => <Redirect to="page-not-found" />} />
+                <Route
+                  exact
+                  path="/dispose/*"
+                  component={() => <Redirect to="/page-not-found" />}
+                />
               </Switch>
               {currentStatus !== undefined && (
                 <StepActions
@@ -177,6 +183,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   onSave={() => onSave(formikRef)}
                   onNext={onNext}
                   saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
+                  isFetching={!noFetchingProjectRequests}
                 />
               )}
             </Container>
