@@ -73,7 +73,8 @@ namespace Pims.Core.Test
                 new Entity.ProjectStatus("First Nations Consultation", "AS-FNC") { Id = 10, SortOrder = 8, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Approved for ERP", "AP-ERP") { Id = 11, SortOrder = 9, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Approved for SPL", "AP-SPL") { Id = 12, SortOrder = 10, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus("Denied", "DE") { Id = 13, SortOrder = 11, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.ProjectStatus("Denied", "DE") { Id = 13, SortOrder = 11, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Cancelled", "CA") { Id = 14, SortOrder = 12, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
 

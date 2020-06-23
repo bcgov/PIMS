@@ -115,32 +115,6 @@ exports[`renders correctly 1`] = `
           </span>
         </div>
       </div>
-      <div
-        className="ProjectNotes form-row"
-      >
-        <div
-          className="col-md-10 form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="input-note"
-          >
-            Notes
-          </label>
-          <span
-            className="col-md-5"
-          >
-            <textarea
-              className="form-control"
-              id="input-note"
-              name="note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value=""
-            />
-          </span>
-        </div>
-      </div>
     </div>
     <div
       className="UpdateInfoForm container-fluid"

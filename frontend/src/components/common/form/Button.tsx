@@ -1,7 +1,7 @@
 import './Button.scss';
 
 import React, { CSSProperties, MouseEventHandler } from 'react';
-import { Button as ButtonBase, ButtonProps as ButtonPropsBase } from 'react-bootstrap';
+import { Button as ButtonBase, ButtonProps as ButtonPropsBase, Spinner } from 'react-bootstrap';
 import classnames from 'classnames';
 
 export type ButtonProps = ButtonPropsBase & {
@@ -15,9 +15,21 @@ export type ButtonProps = ButtonPropsBase & {
   disabled?: boolean;
   /** Button click handler */
   onClick?: MouseEventHandler<any>;
+  /** Display a spinner when the form is being submitted */
+  showSubmitting?: boolean;
+  /** if true and showSubmitting is true, display the spinner */
+  isSubmitting?: boolean;
 };
 
-export const Button: React.FC<ButtonProps> = ({ disabled, icon, children, className, ...rest }) => {
+export const Button: React.FC<ButtonProps> = ({
+  showSubmitting,
+  isSubmitting,
+  disabled,
+  icon,
+  children,
+  className,
+  ...rest
+}) => {
   const classes = classnames({
     Button: true,
     'Button--disabled': disabled,
@@ -25,9 +37,18 @@ export const Button: React.FC<ButtonProps> = ({ disabled, icon, children, classN
     [className!]: className,
   });
   return (
-    <ButtonBase className={classes} {...rest}>
+    <ButtonBase className={classes} disabled={disabled} {...rest}>
       {icon && <div className="Button__icon">{icon}</div>}
       {children && <div className="Button__value">{children}</div>}
+      {showSubmitting && isSubmitting && (
+        <Spinner
+          animation="border"
+          size="sm"
+          role="status"
+          as="span"
+          style={{ marginLeft: '.5rem' }}
+        />
+      )}
     </ButtonBase>
   );
 };

@@ -2,7 +2,7 @@ import './ProjectDraftForm.scss';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Form, Input } from 'components/common/form';
-import { IStepProps, ProjectNotes, projectNoDescription, EditButton } from '..';
+import { IStepProps, projectNoDescription, EditButton } from '..';
 import styled from 'styled-components';
 
 const ItalicText = styled.div`
@@ -63,7 +63,6 @@ const ProjectDraftForm = ({
           outerClassName="col-md-10"
         />
       </Form.Row>
-      <ProjectNotes />
     </Container>
   );
 };

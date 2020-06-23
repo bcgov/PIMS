@@ -126,7 +126,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     columns,
     data,
     onRequestData,
-    pageCount: controlledPageCount,
+    pageCount,
     setSelectedRows,
     footer,
   } = props;
@@ -142,7 +142,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       // that we'll handle our own data fetching.
       // This means we'll also have to provide our own
       // pageCount.
-      pageCount: controlledPageCount,
+      pageCount,
     },
     useFlexLayout,
     usePagination,

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Button } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { ReviewWorkflowStatus } from '../interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState } from 'react';
+import { Button } from 'components/common/form';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -24,85 +24,93 @@ export const ReviewApproveActions = ({
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
 }) => {
-  const { values, submitForm } = useFormikContext<any>();
+  const { values, submitForm, isSubmitting } = useFormikContext<any>();
   const [approveERP, setApproveERP] = useState(false);
   const [denyERP, setDenyERP] = useState(false);
   return (
     <>
       <FlexRight>Approve for Enhanced Referral Process</FlexRight>
       <FlexRight>
-        <span>
-          <Button
-            disabled={
-              values.statusCode === ReviewWorkflowStatus.Denied ||
-              values.statusCode === ReviewWorkflowStatus.ApprovedForErp
-            }
-            style={{ marginLeft: 10 }}
-            onClick={() => {
-              setApproveERP(true);
-            }}
-          >
-            Approve
-          </Button>
-          {approveERP && (
-            <GenericModal
-              display={approveERP}
-              cancelButtonText="Cancel"
-              okButtonText="Confirm Approval"
-              handleOk={() => {
-                setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
-                submitForm();
-                setApproveERP(false);
-              }}
-              handleCancel={() => setApproveERP(false)}
-              title="Confirm Approval"
-              message="Are you sure you want to approve this project for ERP?"
-            />
-          )}
-          <Button
-            disabled={values.statusCode === ReviewWorkflowStatus.Denied}
-            variant="secondary"
-            style={{ marginLeft: 10 }}
-            onClick={() => {
-              submitForm();
-            }}
-          >
-            Save
-          </Button>
-        </span>
+        <Button
+          showSubmitting
+          isSubmitting={isSubmitting}
+          disabled={
+            values.statusCode === ReviewWorkflowStatus.Denied ||
+            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            isSubmitting
+          }
+          style={{ marginLeft: 10 }}
+          onClick={() => {
+            setApproveERP(true);
+          }}
+        >
+          Approve
+        </Button>
+        <Button
+          showSubmitting
+          isSubmitting={isSubmitting}
+          disabled={
+            values.statusCode === ReviewWorkflowStatus.Denied ||
+            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            isSubmitting
+          }
+          variant="secondary"
+          style={{ marginLeft: 10 }}
+          onClick={() => {
+            submitForm();
+          }}
+        >
+          Save
+        </Button>
       </FlexRight>
       <FlexRight style={{ marginTop: '2rem' }}>Deny and Release Properties</FlexRight>
       <FlexRight>
-        <span>
-          <Button
-            disabled={
-              values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-              values.statusCode === ReviewWorkflowStatus.Denied
-            }
-            variant="danger"
-            onClick={() => {
-              setDenyERP(true);
+        <Button
+          showSubmitting
+          isSubmitting={isSubmitting}
+          disabled={
+            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            values.statusCode === ReviewWorkflowStatus.Denied ||
+            isSubmitting
+          }
+          variant="danger"
+          onClick={() => {
+            setDenyERP(true);
+          }}
+        >
+          Deny
+        </Button>
+        {denyERP && (
+          <GenericModal
+            display={denyERP}
+            cancelButtonText="Cancel"
+            okButtonText="Deny"
+            handleOk={() => {
+              setSubmitStatusCode(ReviewWorkflowStatus.Denied);
+              submitForm();
+              setDenyERP(false);
             }}
-          >
-            Deny
-          </Button>
-          {denyERP && (
-            <GenericModal
-              display={denyERP}
-              cancelButtonText="Cancel"
-              okButtonText="Deny"
-              handleOk={() => {
-                setSubmitStatusCode(ReviewWorkflowStatus.Denied);
-                submitForm();
-                setDenyERP(false);
-              }}
-              handleCancel={() => setDenyERP(false)}
-              title="Deny Approval"
-              message="Are you sure you want to deny this project for ERP?"
-            />
-          )}
-        </span>
+            handleCancel={() => setDenyERP(false)}
+            title="Deny Approval"
+            message="Are you sure you want to deny this project for ERP?"
+          />
+        )}
       </FlexRight>
+      {approveERP && (
+        <GenericModal
+          display={approveERP}
+          cancelButtonText="Cancel"
+          okButtonText="Confirm Approval"
+          handleOk={() => {
+            setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
+            submitForm();
+            setApproveERP(false);
+          }}
+          handleCancel={() => setApproveERP(false)}
+          title="Confirm Approval"
+          message="Are you sure you want to approve this project for ERP?"
+        />
+      )}
     </>
   );
 };
