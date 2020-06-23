@@ -118,8 +118,16 @@ pipeline {
         timeout(time: 5, unit: "MINUTES")
       }
       steps {
-        // pretend we are doing stuff - db backups etc
-        sleep(30)
+        script {
+          try {
+            dir('openshift') {
+              sh "INSTANCE_ID=${INSTANCE_ID} ./player.sh backup ${DESTINATION} apply"
+            }
+          } catch (e) {
+            echo 'Database backup FAILED'
+            throw e
+          }
+        }
       }
     }
     stage("Database migration") {
