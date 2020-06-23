@@ -139,7 +139,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "590px",
+                  "minWidth": "735px",
                 }
               }
             >
@@ -385,6 +385,26 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
+                    "flex": "145 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "145px",
+                    "textAlign": "left",
+                    "width": "145px",
+                  }
+                }
+              >
+                Assessed Value
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                onClick={[Function]}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
                     "flex": "60 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
@@ -411,7 +431,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "590px",
+                    "minWidth": "735px",
                   }
                 }
               >
@@ -736,6 +756,37 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   </div>
                 </div>
                 <div
+                  className="td"
+                  onClick={[Function]}
+                  role="cell"
+                  style={
+                    Object {
+                      "alignItems": "flex-start",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                  title=""
+                >
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="form-control"
+                      name="properties.0.assessed"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value={1}
+                    />
+                  </div>
+                </div>
+                <div
                   className="td clickable"
                   onClick={[Function]}
                   role="cell"
@@ -772,7 +823,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "590px",
+                  "minWidth": "735px",
                 }
               }
             >
@@ -989,6 +1040,27 @@ exports[`Update Info Form Matches Snapshot 1`] = `
               >
                 <span>
                   $0
+                </span>
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "145 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "145px",
+                    "textAlign": "left",
+                    "width": "145px",
+                  }
+                }
+              >
+                <span>
+                  $1
                 </span>
               </div>
               <div

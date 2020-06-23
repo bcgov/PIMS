@@ -510,7 +510,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
               title=""
               width="3.5%"
             >
-              $NaN
+              $0
             </div>
             <div
               className="td clickable"
@@ -531,7 +531,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
               title=""
               width="3.5%"
             >
-              $NaN
+              $0
             </div>
             <div
               className="td clickable"

@@ -4,7 +4,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import React from 'react';
 import { CellProps } from 'react-table';
 import { formatMoney, formatNumber } from 'utils';
-import { IProperty } from '../interfaces';
+import { IProperty, IProject, DisposeWorkflowStatus } from '../interfaces';
 import { useFormikContext } from 'formik';
 import { FastCurrencyInput, Input, FastSelect } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -54,8 +54,12 @@ const EditableParcelInputCell = (cellInfo: any) => {
   return <Input field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}></Input>;
 };
 
-export const getColumnsWithRemove = (setProperties: Function, editable?: boolean) => {
-  const cols = getColumns(editable);
+export const getColumnsWithRemove = (
+  setProperties: Function,
+  project: IProject,
+  editable?: boolean,
+) => {
+  const cols = getColumns(project, editable);
   cols.unshift({
     Header: '',
     align: 'left',
@@ -75,7 +79,11 @@ export const getColumnsWithRemove = (setProperties: Function, editable?: boolean
   return cols;
 };
 
-export const getColumns = (editable?: boolean): any => [
+const useProjectFinancialValues = (project: IProject, editable?: boolean) => {
+  return !editable && project.statusCode === DisposeWorkflowStatus.Review;
+};
+
+export const getColumns = (project: IProject, editable?: boolean): any => [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
@@ -131,7 +139,11 @@ export const getColumns = (editable?: boolean): any => [
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
-      <span>{sumFinancialRows(properties, 'netBook')}</span>
+      <span>
+        {useProjectFinancialValues(project, editable)
+          ? formatMoney(project.netBook)
+          : sumFinancialRows(properties, 'netBook')}
+      </span>
     ),
   },
   {
@@ -141,7 +153,25 @@ export const getColumns = (editable?: boolean): any => [
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
-      <span>{sumFinancialRows(properties, 'estimated')}</span>
+      <span>
+        {useProjectFinancialValues(project, editable)
+          ? formatMoney(project.estimated)
+          : sumFinancialRows(properties, 'estimated')}
+      </span>
+    ),
+  },
+  {
+    Header: 'Assessed Value',
+    accessor: 'assessed',
+    Cell: editable ? EditableMoneyCell : MoneyCell,
+    minWidth: 145,
+    align: 'left',
+    Footer: ({ properties }: { properties: IProperty[] }) => (
+      <span>
+        {useProjectFinancialValues(project, editable)
+          ? formatMoney(project.assessed)
+          : sumFinancialRows(properties, 'assessed')}
+      </span>
     ),
   },
   {
