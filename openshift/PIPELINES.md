@@ -4,7 +4,7 @@ Jenkins is being used to orchestrate jobs between GitHub and OpenShift. Anytime 
 
 This project makes use of several pipelines. For each one, use the generic pipeline template located at `openshift/templates/jenkins/generic-pipeline.yaml` and customize with appropriate values.
 
-## 3.1 cicd-pipeline
+## 1 cicd-pipeline
 
 1. View the parameters `oc process --parameters -f openshift/templates/jenkins/generic-pipeline.yaml`
 2. Create a **`.env`** file that contains the values for the parameters within the template
@@ -14,7 +14,7 @@ This project makes use of several pipelines. For each one, use the generic pipel
    ```
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/jenkins/generic-pipeline.yaml | oc create -f -`
 
-## 3.2 promote-to-test-pipeline
+## 2 dev-to-test-pipeline
 
 1. View the parameters `oc process --parameters -f openshift/templates/jenkins/generic-pipeline.yaml`
 
@@ -26,3 +26,5 @@ This project makes use of several pipelines. For each one, use the generic pipel
    ```
 
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/jenkins/generic-pipeline.yaml | oc create -f -`
+
+## 3 dev-to-test-pipeline
