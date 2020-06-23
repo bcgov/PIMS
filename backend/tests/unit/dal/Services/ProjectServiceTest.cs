@@ -1604,6 +1604,71 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void SetStatus_OnHold_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.OnHoldNotificationSentOn = DateTime.Now; // required for On Hold.
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var onHold = init.ProjectStatus.First(s => s.Code == "OH");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = onHold.Id; // On Hold Status
+
+            // Act
+            var result = service.SetStatus(project, workflowCode);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(onHold.Id);
+            result.Status.Should().Be(onHold);
+            result.OnHoldNotificationSentOn.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void SetStatus_OnHold_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1, 1);
+            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            var workflows = init.CreateDefaultWorkflows();
+            init.SaveChanges();
+            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var onHold = init.ProjectStatus.First(s => s.Code == "OH");
+            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
+            init.SaveChanges();
+
+            var service = helper.CreateService<ProjectService>(user);
+
+            var workflowCode = workflows.First().Code;
+            project.StatusId = onHold.Id; // On Hold Status
+
+            // Act
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+        }
+
+        [Fact]
         public void SetStatus_Submit_NotAuthorizedException()
         {
             // Arrange

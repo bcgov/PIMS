@@ -80,7 +80,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static bool IsAllowedToUpdate(this BaseService service, Entity.Project project, ProjectOptions options)
         {
-            return project != null && !project.IsProjectEditable(service.GetUser(), options);
+            return project != null && project.IsProjectEditable(service.GetUser(), options);
         }
     }
 }

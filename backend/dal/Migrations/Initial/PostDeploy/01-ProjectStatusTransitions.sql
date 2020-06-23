@@ -59,4 +59,13 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
 ), (
     11 -- Approved for ERP
     , 14 -- Cancelled
+), (
+    11 -- Approved for ERP
+    , 15 -- On Hold
+), (
+    15 -- On Hold
+    , 12 -- On Hold
+), (
+    15 -- On Hold
+    , 14 -- On Hold
 )

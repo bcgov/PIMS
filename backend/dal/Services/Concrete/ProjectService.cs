@@ -333,18 +333,23 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Responses)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+
+            var userAgencies = this.User.GetAgencies();
+            var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
+            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
+
             //If the user isn't allowed to update the project, just update the notes.
-            if(!this.IsAllowedToUpdate(originalProject, _options.Project))
+            if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !project.IsProjectInDraft(_options.Project))
             {
                 originalProject.Note = project.Note;
                 this.Context.SaveChanges();
                 this.Context.CommitTransaction();
                 return Get(originalProject.Id);
             }
-
-            var userAgencies = this.User.GetAgencies();
-            var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
-            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
+            else
+            {
+                this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
+            }
 
             // Do not allow switching agencies through this method.
             if (originalAgencyId != project.AgencyId) throw new NotAuthorizedException("Project cannot be transferred to the specified agency.");
@@ -759,6 +764,13 @@ namespace Pims.Dal.Services
                 case ("CA"): // Cancel
                     this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.CancelledOn = DateTime.UtcNow;
+                    break;
+                case ("OH"): // OnHold
+                    if(project.OnHoldNotificationSentOn == null)
+                    {
+                        throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
+                    }
+                    originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
                     break;
                 default:
                     // All other status changes can only be done by `admin-projects` or when the project is in draft mode.

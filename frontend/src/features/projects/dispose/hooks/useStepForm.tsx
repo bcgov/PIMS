@@ -30,6 +30,7 @@ const useStepForm = () => {
           updateProject({
             ...apiValues,
             statusCode: values.statusCode,
+            statusId: values.statusId,
             rowVersion: values.rowVersion,
           }),
         );

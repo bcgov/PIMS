@@ -2,7 +2,7 @@ import './EnhancedReferralCompleteForm.scss';
 import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
-import { ProjectNotes } from '..';
+import { ProjectNotes, IProject } from '..';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { noop } from 'lodash';
@@ -13,14 +13,18 @@ const OrText = styled.div`
 
 interface IEnhancedReferralCompleteFormProps {
   isReadOnly?: boolean;
+  onClickOnHold: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
  * Form component of EnhancedReferralCompleteForm. TODO: add button click functionality.
  * @param param0 isReadOnly disable editing
  */
-const EnhancedReferralCompleteForm = ({ isReadOnly }: IEnhancedReferralCompleteFormProps) => {
-  const formikProps = useFormikContext();
+const EnhancedReferralCompleteForm = ({
+  isReadOnly,
+  onClickOnHold,
+}: IEnhancedReferralCompleteFormProps) => {
+  const formikProps = useFormikContext<IProject>();
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
@@ -35,7 +39,10 @@ const EnhancedReferralCompleteForm = ({ isReadOnly }: IEnhancedReferralCompleteF
           field="onHoldNotificationSentOn"
         />
         <div className="col-md-6">
-          <Button disabled={isReadOnly} onClick={noop}>
+          <Button
+            disabled={isReadOnly || !formikProps.values.onHoldNotificationSentOn}
+            onClick={onClickOnHold}
+          >
             Place Project On Hold
           </Button>
         </div>
