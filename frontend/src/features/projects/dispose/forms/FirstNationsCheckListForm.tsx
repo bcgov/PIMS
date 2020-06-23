@@ -9,6 +9,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IFirstNationsCheckListFormProps {
   className?: string;
+  isReadOnly?: boolean;
 }
 /**
  * Displays a checklist for each task within the first nations review status.
@@ -29,7 +30,7 @@ const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListF
         ></TooltipIcon>
       </h3>
 
-      <TasksForm tasks={tasks} />
+      <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
     </Container>
   );
 };

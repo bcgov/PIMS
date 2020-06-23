@@ -162,22 +162,10 @@ export const toApiProject = (project: IProject) => {
   });
 
   const apiProject: IApiProject = {
-    id: project.id,
-    projectNumber: project.projectNumber,
-    name: project.name,
-    description: project.description,
-    fiscalYear: project.fiscalYear,
+    ...project,
     properties: properties,
-    note: project.note,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
-    privateNote: project.privateNote,
-    agencyId: project.agencyId,
-    tierLevelId: project.tierLevelId,
-    tasks: project.tasks,
-    statusId: project.statusId,
-    statusCode: project.statusCode,
-    rowVersion: project.rowVersion,
   };
   return apiProject;
 };

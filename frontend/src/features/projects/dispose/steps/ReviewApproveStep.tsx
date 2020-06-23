@@ -18,11 +18,11 @@ import {
 import { fetchProjectTasks } from '../projectsActionCreator';
 import _ from 'lodash';
 
-const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(ProjectDraftStepYupSchema).concat(
-  SelectProjectPropertiesStepYupSchema,
-);
+export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
+  ProjectDraftStepYupSchema,
+).concat(SelectProjectPropertiesStepYupSchema);
 
-const validateTasks = (project: IProject) => {
+export const validateTasks = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
     if (!task.isCompleted && !task.isOptional) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
@@ -31,7 +31,7 @@ const validateTasks = (project: IProject) => {
   }, {});
 };
 
-const handleValidate = (values: IProject) => {
+export const handleValidate = (values: IProject) => {
   let taskErrors = validateTasks(values);
   const yupErrors: any = validateYupSchema(values, ReviewApproveStepSchema).then(
     () => {
@@ -68,9 +68,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={(values: IProject, actions: any) => {
-          const tempValues = _.cloneDeep(values);
-          tempValues.statusCode = submitStatusCode ?? values.statusCode;
-          onSubmitReview(tempValues, actions);
+          onSubmitReview(values, actions, submitStatusCode);
         }}
         validate={handleValidate}
       >

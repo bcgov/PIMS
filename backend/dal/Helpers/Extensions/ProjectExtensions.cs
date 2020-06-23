@@ -271,6 +271,19 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Release properties from project, such as during the deny or cancelled statuses
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static void ReleaseProjectProperties(this PimsContext context, Entity.Project project)
+        {
+            project.Properties.ForEach(p =>
+            {
+                context.Update(p.UpdateProjectNumber(null));
+            });
+        }
+
+        /// <summary>
         /// Update the project financial values for the specified 'project'.
         /// Note - This requires that the referenced project includes all properties and their evaluations and fiscals.
         /// </summary>

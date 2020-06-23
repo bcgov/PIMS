@@ -34,6 +34,11 @@ namespace Pims.Api.Areas.Project.Models.Search
         public int StatusId { get; set; }
 
         /// <summary>
+        /// get/set - The code name of the status code.
+        /// </summary>
+        public string StatusCode { get; set; }
+
+        /// <summary>
         /// get/set - The status of the project.
         /// </summary>
         public string Status { get; set; }

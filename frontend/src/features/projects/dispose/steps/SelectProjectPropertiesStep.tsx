@@ -77,6 +77,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         </Container>
       )}
       <Formik
+        enableReinitialize
         initialValues={project}
         innerRef={formikRef}
         onSubmit={onSubmit}

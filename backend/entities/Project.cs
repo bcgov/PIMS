@@ -80,6 +80,11 @@ namespace Pims.Dal.Entities
         public string PrivateNote { get; set; }
 
         /// <summary>
+        /// get/set - Note summerizing agency responses to notifications.
+        /// </summary>
+        public string AgencyResponseNote { get; set; }
+
+        /// <summary>
         /// get/set - When the project was submitted.
         /// </summary>
         public DateTime? SubmittedOn { get; set; }
@@ -90,9 +95,49 @@ namespace Pims.Dal.Entities
         public DateTime? ApprovedOn { get; set; }
 
         /// <summary>
+        /// get/set - When the initial enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? InitialNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 30 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? ThirtyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 60 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? SixtyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the 90 day enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? NinetyDayNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the on hold enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? OnHoldNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was transferred within the GRE.
+        /// </summary>
+        public DateTime? TransferredWithinGreOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the clearance enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? ClearanceNotificationSentOn { get; set; }
+
+        /// <summary>
         /// get/set - When the project was denied.
         /// </summary>
         public DateTime? DeniedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was cancelled.
+        /// </summary>
+        public DateTime? CancelledOn { get; set; }
 
         /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
