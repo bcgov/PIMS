@@ -70,5 +70,17 @@ namespace Pims.Dal.Helpers.Extensions
                 throw new NotAuthorizedException("Cannot update or delete an active project.");
             }
         }
+
+        /// <summary>
+        /// A parcel can only be updated or removed if not within an active project or user has admin-properties permission
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="project"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static bool IsAllowedToUpdate(this BaseService service, Entity.Project project, ProjectOptions options)
+        {
+            return project != null && !project.IsProjectEditable(service.GetUser(), options);
+        }
     }
 }

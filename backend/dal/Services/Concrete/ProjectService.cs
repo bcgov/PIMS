@@ -333,7 +333,14 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Responses)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
+            //If the user isn't allowed to update the project, just update the notes.
+            if(!this.IsAllowedToUpdate(originalProject, _options.Project))
+            {
+                originalProject.Note = project.Note;
+                this.Context.SaveChanges();
+                this.Context.CommitTransaction();
+                return Get(originalProject.Id);
+            }
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];

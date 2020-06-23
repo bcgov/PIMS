@@ -4,7 +4,7 @@ import {
   useStepper,
   IProject,
   useStepForm,
-  StepSuccessIcon,
+  StepStatusIcon,
   ApprovalForm,
   ApprovalActions,
 } from '..';
@@ -134,7 +134,7 @@ const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
         validate={handleValidate}
       >
         <Form>
-          <StepSuccessIcon
+          <StepStatusIcon
             preIconLabel="Approved for SPP"
             postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
           />

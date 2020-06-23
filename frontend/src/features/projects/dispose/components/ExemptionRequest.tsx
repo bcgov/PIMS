@@ -20,6 +20,8 @@ export interface IProjectExemptionProps {
   rationaleField: string;
   /** Header used at the start of the component */
   sectionHeader?: string;
+  /** Controls whether or not this component should be interactive */
+  isReadOnly?: boolean;
 }
 
 /**
@@ -33,6 +35,7 @@ export default function ExemptionRequest({
   exemptionField,
   rationaleField,
   sectionHeader,
+  isReadOnly,
 }: IProjectExemptionProps) {
   const { values } = useFormikContext();
   const checked = getIn(values, exemptionField);
@@ -44,7 +47,7 @@ export default function ExemptionRequest({
         <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />
       </h3>
       <Form.Row className="ProjectExemptionRequestCheck">
-        <Check field={exemptionField} postLabel={exemptionLabel} />
+        <Check disabled={isReadOnly} field={exemptionField} postLabel={exemptionLabel} />
       </Form.Row>
       {checked && (
         <>

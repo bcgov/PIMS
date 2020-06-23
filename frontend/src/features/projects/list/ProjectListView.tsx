@@ -21,6 +21,8 @@ import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus } from '../dispose';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import Claims from 'constants/claims';
 
 interface IProjectFilterState {
   active?: boolean;
@@ -64,6 +66,10 @@ interface IProps {
   mode?: PageMode;
 }
 
+const adminOrCanApprove = (keycloak: any, project: IProject) =>
+  keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
+  (keycloak.hasClaim(Claims.DISPOSE_APPROVE) && keycloak.agencyIds.includes(+project.agencyId));
+
 const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -76,6 +82,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       }),
     [lookupCodes],
   );
+  const keycloak = useKeycloakWrapper();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => cols, []);
@@ -165,10 +172,17 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
-    if (row.statusCode === ReviewWorkflowStatus.PropertyReview) {
+    if (
+      row.statusCode === ReviewWorkflowStatus.PropertyReview &&
+      adminOrCanApprove(keycloak, row)
+    ) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
     } else if (ReviewWorkflowStatuses.includes(row.statusCode)) {
-      history.push(`/dispose/projects/approved?projectNumber=${row.projectNumber}`);
+      if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
+        history.push(`/dispose/projects/approved?projectNumber=${row.projectNumber}`);
+      } else {
+        history.push(`/dispose/projects/summary?projectNumber=${row.projectNumber}`);
+      }
     } else {
       history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
     }

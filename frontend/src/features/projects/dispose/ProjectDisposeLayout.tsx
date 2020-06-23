@@ -26,6 +26,7 @@ import ReviewApproveStep from './steps/ReviewApproveStep';
 import { updateWorkflowStatus } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
+import ProjectSummaryView from './ProjectSummaryView';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -158,6 +159,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   path="/dispose/projects/assess/properties/update"
                   component={SelectProjectPropertiesPage}
                 />
+                <Route path="/dispose/projects/summary" component={ProjectSummaryView} />
                 <Route path="/dispose/projects/approved" component={ApprovalStep} />
                 {projectWorkflowComponents.map(wfc => (
                   <Route

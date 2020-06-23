@@ -28,7 +28,7 @@ export const toFlatProject = (project?: IApiProject) => {
     const property: IProperty = {
       id: apiProperty.id,
       projectPropertyId: pp.id,
-      parcelId: pp.parcelId,
+      parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
       statusId: apiProperty.statusId,
       status: apiProperty.propertyStatus ?? '',
