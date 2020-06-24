@@ -64,8 +64,8 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
     , 15 -- On Hold
 ), (
     15 -- On Hold
-    , 12 -- On Hold
+    , 12 -- Approved for SPL
 ), (
     15 -- On Hold
-    , 14 -- On Hold
+    , 14 -- Cancelled
 )
