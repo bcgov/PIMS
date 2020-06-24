@@ -45,5 +45,8 @@ INSERT INTO dbo.[WorkflowProjectStatus] (
 ), (
     2 -- ACCESS-DISPOSAL
     , 14 -- Cancelled
+), (
+    2 -- ACCESS-DISPOSAL
+    , 15 -- On Hold
 )
 

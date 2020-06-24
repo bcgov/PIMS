@@ -20,16 +20,7 @@ exports[`renders correctly 1`] = `
         </h3>
         <span
           className="col-md-4"
-        >
-          <button
-            className="edit btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
-            type="button"
-          >
-            Edit
-          </button>
-        </span>
+        />
       </div>
       <div
         className="col-md-10 form-row"
@@ -545,7 +536,7 @@ exports[`renders correctly 1`] = `
           >
             <input
               className="form-check-input position-static"
-              disabled={false}
+              disabled={true}
               id="input-exemptionRequested"
               name="exemptionRequested"
               onChange={[Function]}
@@ -587,16 +578,6 @@ exports[`renders correctly 1`] = `
         </span>
       </div>
     </div>
-    <label
-      className="form-label"
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      Apply to the Surplus Property Program
-    </label>
   </form>
 </div>
 `;

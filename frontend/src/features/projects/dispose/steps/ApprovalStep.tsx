@@ -4,7 +4,7 @@ import {
   useStepper,
   IProject,
   useStepForm,
-  StepSuccessIcon,
+  StepStatusIcon,
   ApprovalForm,
   ApprovalActions,
 } from '..';
@@ -25,6 +25,7 @@ import {
   UpdateInfoStepYupSchema,
   DocumentationStepSchema,
 } from '../forms/disposalYupSchema';
+import StepErrorSummary from './StepErrorSummary';
 
 interface IApprovalStepProps {}
 
@@ -134,7 +135,7 @@ const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
         validate={handleValidate}
       >
         <Form>
-          <StepSuccessIcon
+          <StepStatusIcon
             preIconLabel="Approved for SPP"
             postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
           />
@@ -145,6 +146,7 @@ const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
             }
             {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
           />
+          <StepErrorSummary />
           <ApprovalActions
             submitStatusCode={submitStatusCode}
             setSubmitStatusCode={setSubmitStatusCode}

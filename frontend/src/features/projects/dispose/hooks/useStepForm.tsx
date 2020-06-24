@@ -30,12 +30,14 @@ const useStepForm = () => {
           updateProject({
             ...apiValues,
             statusCode: values.statusCode,
+            statusId: values.statusId,
             rowVersion: values.rowVersion,
           }),
         );
       })
       .catch((error: any) => {
-        actions.setStatus({ msg: error.toString() });
+        const msg: string = error?.response?.data?.error ?? error.toString();
+        actions.setStatus({ msg });
       })
       .finally(() => {
         dispatch(clear(ProjectActions.UPDATE_PROJECT));

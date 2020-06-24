@@ -35,7 +35,10 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
 
   return (
     <Fragment>
-      <ProjectDraftForm isReadOnly={isReadOnly || !canEdit} setIsReadOnly={setIsReadOnly} />
+      <ProjectDraftForm
+        isReadOnly={isReadOnly || !canEdit}
+        setIsReadOnly={canEdit ? setIsReadOnly : undefined}
+      />
       <UpdateInfoForm isReadOnly={isReadOnly || !canEdit} />
       <DocumentationForm tasks={documentationTasks as IProjectTask[]} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
@@ -46,9 +49,12 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
         exemptionLabel="Apply for Enhanced Referal Process exemption"
         tooltip="To fill later"
         rationaleInstruction="Please provide your rationale below for exemption request"
+        isReadOnly={isReadOnly || !canEdit}
       />
       <ProjectNotes />
-      <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>
+      {canEdit && (
+        <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>
+      )}
     </Fragment>
   );
 };

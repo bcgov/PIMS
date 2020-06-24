@@ -6,15 +6,14 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { IProject, IProjectTask } from '..';
-import { DisposeWorkflowStatus, ITask } from '../interfaces';
+import { IProject, IProjectTask } from '.';
+import { ITask, ReviewWorkflowStatus } from './interfaces';
 import { ProjectActions } from 'constants/actionTypes';
-import ReviewApproveStep from './ReviewApproveStep';
 import { render } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
-import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import ProjectSummaryView from './ProjectSummaryView';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -44,7 +43,7 @@ const mockTasks: IProjectTask[] = [
     sortOrder: 0,
     completedOn: new Date(),
     statusId: 0,
-    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
   },
   {
     projectNumber: 123,
@@ -57,11 +56,11 @@ const mockTasks: IProjectTask[] = [
     sortOrder: 0,
     completedOn: new Date(),
     statusId: 0,
-    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
   },
 ];
 
-const mockProject: IProject = {
+const getMockProject = (statusCode?: string): IProject => ({
   projectNumber: 'test-01',
   name: 'my project',
   description: 'my project description',
@@ -69,12 +68,25 @@ const mockProject: IProject = {
   properties: [],
   agencyId: 1,
   statusId: 0,
-  statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',
   id: 1,
-};
+  fiscalYear: 2020,
+  projectAgencyResponses: [],
+  statusCode: statusCode ?? ReviewWorkflowStatus.PropertyReview,
+  status: {
+    id: 0,
+    name: 'test',
+    sortOrder: 0,
+    description: '',
+    isMilestone: false,
+    tasks: [],
+    route: '',
+    workflow: '',
+    code: statusCode ?? ReviewWorkflowStatus.PropertyReview,
+  },
+});
 
 export const tasks: ITask[] = [
   {
@@ -93,24 +105,25 @@ export const tasks: ITask[] = [
   },
 ];
 
-const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-  [reducerTypes.ProjectReducers.PROJECT]: { project: mockProject },
-  [reducerTypes.ProjectReducers.TASKS]: tasks,
-  [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
-  },
-});
+const getStore = (statusCode?: string) =>
+  mockStore({
+    [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+    [reducerTypes.ProjectReducers.PROJECT]: { project: getMockProject(statusCode) },
+    [reducerTypes.ProjectReducers.TASKS]: tasks,
+    [reducerTypes.NETWORK]: {
+      [ProjectActions.GET_PROJECT]: {},
+    },
+  });
 
-const getReviewApproveStep = (storeOverride?: any) => (
-  <Provider store={storeOverride ?? store}>
+const getSummary = (statusCode?: string) => (
+  <Provider store={getStore(statusCode)}>
     <Router history={history}>
-      <ReviewApproveStep />
+      <ProjectSummaryView />
     </Router>
   </Provider>
 );
 
-describe('Review Approve Step', () => {
+describe('Review Summary View', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -119,19 +132,29 @@ describe('Review Approve Step', () => {
     mockAxios.onAny().reply(200, {});
     mockKeycloak([]);
   });
-  it('renders correctly', () => {
-    const tree = renderer.create(getReviewApproveStep()).toJSON();
+  it('renders submitted correctly', () => {
+    const tree = renderer.create(getSummary(ReviewWorkflowStatus.PropertyReview)).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  it('edit button is visible when user has correct claims', () => {
-    mockKeycloak([Claims.ADMIN_PROJECTS]);
-    const { getByText } = render(getReviewApproveStep());
-    const editButton = getByText(/Edit/);
-    expect(editButton).toBeTruthy();
+  it('renders denied correctly', () => {
+    const tree = renderer.create(getSummary(ReviewWorkflowStatus.Denied)).toJSON();
+    expect(tree).toMatchSnapshot();
   });
-  it('edit button is not visible when user does not have required agency/claims', () => {
-    const { queryByText } = render(getReviewApproveStep());
-    const editButton = queryByText(/Edit/);
-    expect(editButton).toBeFalsy();
+  it('renders approved correctly', () => {
+    const tree = renderer.create(getSummary(ReviewWorkflowStatus.ApprovedForErp)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  describe('field behaviour', () => {
+    it('edit button is not visible', () => {
+      const { queryByText } = render(getSummary());
+      const editButton = queryByText(/Edit/);
+      expect(editButton).toBeFalsy();
+    });
+    it('form fields are disabled except for notes', () => {
+      const { queryByRole } = render(getSummary());
+      const notes = queryByRole('textbox');
+      expect(notes).toBeVisible();
+      expect(notes).not.toBeDisabled();
+    });
   });
 });

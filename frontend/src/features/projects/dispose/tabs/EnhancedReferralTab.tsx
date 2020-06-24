@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
+import { ReviewWorkflowStatus } from '../interfaces';
+import { useFormikContext } from 'formik';
 
 interface IEnhancedReferralTabProps {
   isReadOnly?: boolean;
+  setSubmitStatusCode: Function;
 }
 
 /**
@@ -11,11 +14,19 @@ interface IEnhancedReferralTabProps {
  */
 const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = ({
   isReadOnly,
+  setSubmitStatusCode,
 }: IEnhancedReferralTabProps) => {
+  const { submitForm } = useFormikContext();
   return (
     <>
       <AgencyResponseForm isReadOnly={isReadOnly} />
-      <EnhancedReferralCompleteForm isReadOnly={isReadOnly} />
+      <EnhancedReferralCompleteForm
+        isReadOnly={isReadOnly}
+        onClickOnHold={() => {
+          setSubmitStatusCode(ReviewWorkflowStatus.OnHold);
+          submitForm();
+        }}
+      />
     </>
   );
 };
