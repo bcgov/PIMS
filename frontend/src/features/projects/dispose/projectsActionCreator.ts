@@ -49,11 +49,18 @@ export const createProject = (body: IProject) => (dispatch: Function) => {
   return handleAxiosResponse(dispatch, ProjectActions.ADD_PROJECT, axiosResponse);
 };
 
-export const updateProject = (body: IProject) => (dispatch: Function) => {
+export const updateProject = (body: IProject, formikIsFetching?: boolean) => (
+  dispatch: Function,
+) => {
   const axiosResponse = CustomAxios()
     .put(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_ROOT + body.projectNumber, toApiProject(body))
     .then(response => dispatch(saveProject(response.data)));
-  return handleAxiosResponse(dispatch, ProjectActions.UPDATE_PROJECT, axiosResponse);
+  return handleAxiosResponse(
+    dispatch,
+    ProjectActions.UPDATE_PROJECT,
+    axiosResponse,
+    formikIsFetching,
+  );
 };
 
 export const updateWorkflowStatus = (

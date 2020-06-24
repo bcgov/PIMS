@@ -78,9 +78,10 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
   const [properties, setProjectProperties] = useState(existingProperties);
-  const columnsWithRemove = useMemo(() => getColumnsWithRemove(setProjectProperties, project), [
-    project,
-  ]);
+  const columnsWithRemove = useMemo(
+    () => getColumnsWithRemove({ setProperties: setProjectProperties, project }),
+    [project],
+  );
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);

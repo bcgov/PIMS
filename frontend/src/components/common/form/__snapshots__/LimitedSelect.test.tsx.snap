@@ -8,7 +8,7 @@ exports[`limited fast select renders correctly 1`] = `
     className="form-control"
     id="input-TestField"
     name="TestField"
-    onBlur={[Function]}
+    onChange={[Function]}
     type="number"
     value={0}
   >

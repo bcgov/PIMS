@@ -68,4 +68,10 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
 ), (
     15 -- On Hold
     , 14 -- Cancelled
+), (
+    11 -- Approved for ERP
+    , 16 -- Transferred within the GRE
+), (
+    15 -- On Hold
+    , 16 -- Transferred within the GRE
 )

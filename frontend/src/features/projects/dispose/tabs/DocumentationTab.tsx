@@ -9,6 +9,7 @@ import {
   ProjectNotes,
 } from '..';
 import _ from 'lodash';
+import { PublicNotes, PrivateNotes } from '../components/ProjectNotes';
 
 interface IDocumentationTabProps {
   isReadOnly?: boolean;
@@ -31,13 +32,9 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
-      <ProjectNotes disabled={isReadOnly} />
-      <ProjectNotes
-        disabled={isReadOnly}
-        tooltip="Visible to SRES only"
-        label="Private Notes"
-        field="privateNote"
-      />
+      <ProjectNotes disabled={true} />
+      <PublicNotes disabled={isReadOnly} />
+      <PrivateNotes disabled={isReadOnly} />
     </Container>
   );
 };

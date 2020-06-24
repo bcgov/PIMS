@@ -19,6 +19,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string Route { get; set; }
 
         /// <summary>
+        /// get/set - Whether this status corresponds to an active project status.
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
         /// get/set - The tasks associated with this status.
         /// </summary>
         public IEnumerable<ProjectTaskModel> Tasks { get; set; }

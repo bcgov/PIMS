@@ -13,3 +13,9 @@ export const agencyResponsesNoteTooltip =
   'Enter Agency Responses,\nAgencies Submitting Business Cases,\n& Accepted Business Cases';
 export const cancellationWarning =
   'Are you sure you want to cancel the project? Please ensure to provide reasoning in the shared notes prior to clicking Cancel Project';
+export const onHoldNotificationTooltip =
+  'You must enter an On Hold Notification Sent Date to click Place Project On Hold.';
+export const onTransferredWithinTheGreTooltip =
+  'You must enter a Transferred within the GRE Date to click Update Property Information.';
+export const updatePimsWarning =
+  'Please ensure all the updated information is correct before clicking Update PIMS.';

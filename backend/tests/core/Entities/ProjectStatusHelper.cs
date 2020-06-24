@@ -75,7 +75,8 @@ namespace Pims.Core.Test
                 new Entity.ProjectStatus("Approved for SPL", "AP-SPL") { Id = 12, SortOrder = 10, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Denied", "DE") { Id = 13, SortOrder = 11, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Cancelled", "CA") { Id = 14, SortOrder = 12, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus("OnHold", "OH") { Id = 15, SortOrder = 13, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.ProjectStatus("On Hold", "OH") { Id = 15, SortOrder = 13, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Transferred within GRE", "T-GRE") { Id = 16, SortOrder = 14, IsMilestone = true, RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
 

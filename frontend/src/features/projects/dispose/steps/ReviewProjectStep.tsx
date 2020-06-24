@@ -1,6 +1,14 @@
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { IStepProps, useStepper, useStepForm, ReviewProjectForm } from '..';
+import {
+  IStepProps,
+  useStepper,
+  useStepForm,
+  ReviewProjectForm,
+  ProjectNotes,
+  PublicNotes,
+  PrivateNotes,
+} from '..';
 import { Formik } from 'formik';
 import {
   UpdateInfoStepYupSchema,
@@ -16,6 +24,7 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
   const { onSubmit, canUserEditForm } = useStepForm();
   const initialValues = { ...project, confirmation: true };
+  const canEdit = canUserEditForm(project.agencyId);
   return (
     <Container fluid className="ReviewProjectStep">
       <Formik
@@ -28,7 +37,15 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
           .concat(EnhancedReferalExemptionSchema)}
       >
         <Form>
-          <ReviewProjectForm canEdit={canUserEditForm(project.agencyId)} />
+          <ReviewProjectForm canEdit={canEdit} />
+          <ProjectNotes disabled={true} />
+          <PublicNotes disabled={!canEdit} />
+          <PrivateNotes disabled={!canEdit} />
+          {canEdit && (
+            <Form.Label style={{ float: 'right' }}>
+              Apply to the Surplus Property Program
+            </Form.Label>
+          )}
         </Form>
       </Formik>
     </Container>

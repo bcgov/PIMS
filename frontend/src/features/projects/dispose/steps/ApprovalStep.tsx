@@ -19,6 +19,7 @@ import {
   DisposeWorkflowStatus,
   ReviewWorkflowStatus,
   IProjectTask,
+  IStepProps,
 } from '../interfaces';
 import {
   ProjectDraftStepYupSchema,
@@ -26,8 +27,7 @@ import {
   DocumentationStepSchema,
 } from '../forms/disposalYupSchema';
 import StepErrorSummary from './StepErrorSummary';
-
-interface IApprovalStepProps {}
+import { useHistory } from 'react-router-dom';
 
 interface ValidationGroup {
   schema: any;
@@ -121,33 +121,35 @@ export const validateTasks = (project: IProject, statusCode: string) => {
   }, {});
 };
 
-const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
+const ApprovalStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
   const [currentTab, setCurrentTab] = useState(SPPApprovalTabs.erp);
-
+  const history = useHistory();
   const canUserEdit =
-    canUserApproveForm() && project.statusCode === ReviewWorkflowStatus.ApprovedForErp;
+    canUserApproveForm() &&
+    (project.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+      project.statusCode === ReviewWorkflowStatus.OnHold);
+  const goToGreTransferred = () =>
+    history.push(`/dispose/projects/gretransfer?projectNumber=${project.projectNumber}`);
   return (
     <Container fluid>
       <Formik
         enableReinitialize={true}
         initialValues={project}
-        onSubmit={(values: any, actions: any) => {
-          actions.setSubmitting(true);
-          onSubmitReview(values, actions, submitStatusCode);
-        }}
+        onSubmit={(values: IProject) => onSubmitReview(values, formikRef, submitStatusCode)}
         validate={handleValidate}
       >
         <Form>
           <StepStatusIcon
-            preIconLabel="Approved for SPP"
+            preIconLabel="Approved for Surplus Property Program"
             postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
           />
           <CenterBoldText>{project?.status?.name ?? 'Unknown'}</CenterBoldText>
           <ApprovalForm
             isReadOnly={canUserEdit !== true}
+            goToGreTransferred={goToGreTransferred}
             {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
           />
           <StepErrorSummary />

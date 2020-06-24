@@ -76,8 +76,9 @@ export const handleAxiosResponse = (
   dispatch: Function,
   actionType: string,
   axiosPromise: Promise<any>,
+  skipNetwork?: boolean,
 ): Promise<any> => {
-  dispatch(request(actionType));
+  skipNetwork !== true && dispatch(request(actionType));
   dispatch(showLoading());
   return axiosPromise
     .then((response: any) => {
@@ -89,7 +90,9 @@ export const handleAxiosResponse = (
       dispatch(error(actionType, axiosError?.response?.status, axiosError));
       throw axiosError;
     })
-    .finally(() => dispatch(hideLoading()));
+    .finally(() => {
+      dispatch(hideLoading());
+    });
 };
 
 export const generateSortCriteria = (column: string, direction: SortDirection) => {

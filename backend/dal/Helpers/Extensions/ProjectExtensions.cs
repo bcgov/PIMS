@@ -204,6 +204,33 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Update the originalProperty.agencyId and originalProperty.classificationId using the specified property.
+        /// </summary>
+        /// <param name="originalProperty"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static Entity.Property UpdateProjectProperty(this Entity.ProjectProperty originalProperty, Entity.ProjectProperty property)
+        {
+            switch (property.PropertyType)
+            {
+                case (Entity.PropertyTypes.Land):
+                    if (originalProperty.Parcel == null || property.Parcel == null) throw new InvalidOperationException("Unable to transfer parcel.");
+                    originalProperty.Parcel.AgencyId = property.Parcel.AgencyId;
+                    originalProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
+                    originalProperty.Parcel.ProjectNumber = null;
+                    return originalProperty.Parcel;
+                case (Entity.PropertyTypes.Building):
+                    if (originalProperty.Building == null || property.Building == null) throw new InvalidOperationException("Unable to transfer building.");
+                    originalProperty.Building.AgencyId = property.Building.AgencyId;
+                    originalProperty.Building.ClassificationId = property.Building.ClassificationId;
+                    originalProperty.Building.ProjectNumber = null;
+                    return originalProperty.Building;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Add a tasks to the project.
         /// </summary>
         /// <param name="project"></param>
@@ -280,6 +307,20 @@ namespace Pims.Dal.Helpers.Extensions
             project.Properties.ForEach(p =>
             {
                 context.Update(p.UpdateProjectNumber(null));
+            });
+        }
+
+        /// <summary>
+        /// Transfer Project properties to a new agency with updated classifications
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static void TransferProjectProperties(this PimsContext context, Entity.Project originalProject, Entity.Project project)
+        {
+            originalProject.Properties.ForEach(p =>
+            {
+                var matchingProperty = project.Properties.First(property => p.Id == property.Id);
+                context.Update(p.UpdateProjectProperty(matchingProperty));
             });
         }
 

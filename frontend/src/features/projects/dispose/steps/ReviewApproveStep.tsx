@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
 import {
-  IStepProps,
   useStepper,
   useStepForm,
   IProject,
@@ -17,6 +16,8 @@ import {
 } from '../forms/disposalYupSchema';
 import { fetchProjectTasks } from '../projectsActionCreator';
 import _ from 'lodash';
+import { ReviewWorkflowStatus, IStepProps } from '../interfaces';
+import StepErrorSummary from './StepErrorSummary';
 
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
@@ -56,7 +57,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     fetchProjectTasks('ACCESS-DISPOSAL');
   }, []);
 
-  const initialValues: IProject & { confirmation: boolean } = {
+  const initialValues: IProject = {
     ...project,
     statusCode: project.status?.code,
     confirmation: true,
@@ -65,10 +66,14 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     <Container fluid className="ReviewApproveStep">
       <Formik
         initialValues={initialValues}
-        enableReinitialize={true}
         innerRef={formikRef}
-        onSubmit={(values: IProject, actions: any) => {
-          onSubmitReview(values, actions, submitStatusCode);
+        enableReinitialize={true}
+        onSubmit={(values: IProject) => {
+          return onSubmitReview(values, formikRef, submitStatusCode).then((project: IProject) => {
+            if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
+              goToDisposePath('../approved');
+            }
+          });
         }}
         validate={handleValidate}
       >
@@ -78,6 +83,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
             goToAddProperties={() => goToDisposePath('properties/update')}
             canEdit={canUserApproveForm()}
           />
+          <StepErrorSummary />
           {canUserApproveForm() ? (
             <ReviewApproveActions {...{ submitStatusCode, setSubmitStatusCode }} />
           ) : null}

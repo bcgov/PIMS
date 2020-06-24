@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import { useStepper, ProjectNotes, ProjectDraftForm, UpdateInfoForm } from '..';
+import { PublicNotes, PrivateNotes } from '../components/ProjectNotes';
 
 interface IProjectInformationTabProps {
   isReadOnly?: boolean;
@@ -18,13 +19,9 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
         goToAddProperties={() => goToDisposePath('assess/properties/update')}
         title=""
       />
-      <ProjectNotes disabled={isReadOnly} />
-      <ProjectNotes
-        disabled={isReadOnly}
-        tooltip="Visible to SRES only"
-        label="Private Notes"
-        field="privateNote"
-      />
+      <ProjectNotes disabled={true} />
+      <PublicNotes disabled={isReadOnly} />
+      <PrivateNotes disabled={isReadOnly} />
     </Container>
   );
 };

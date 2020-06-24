@@ -21,7 +21,11 @@ const useStepForm = () => {
   // functions will need to handle all chained promises.
   const onSubmit = (values: any, actions: any) => Promise.resolve(values);
 
-  const onSubmitReview = (values: any, actions: any, statusCode?: string) => {
+  const onSubmitReview = (
+    values: any,
+    formikRef: MutableRefObject<FormikValues | undefined>,
+    statusCode?: string,
+  ) => {
     const apiValues = _.cloneDeep(values);
     return ((statusCode !== undefined
       ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
@@ -29,23 +33,24 @@ const useStepForm = () => {
       .then((values: IProject) => {
         //Only perform an update after a status transition if this is a non-closing status.
         return statusCode === ReviewWorkflowStatus.Cancelled ||
-          statusCode === ReviewWorkflowStatus.Denied
+          statusCode === ReviewWorkflowStatus.Denied ||
+          statusCode === ReviewWorkflowStatus.TransferredGRE
           ? Promise.resolve(values)
           : dispatch(
-              updateProject({
-                ...apiValues,
-                statusCode: values.statusCode,
-                statusId: values.statusId,
-                rowVersion: values.rowVersion,
-              }),
+              updateProject(
+                {
+                  ...apiValues,
+                  statusCode: values.statusCode,
+                  statusId: values.statusId,
+                  rowVersion: values.rowVersion,
+                },
+                true,
+              ),
             );
       })
       .catch((error: any) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
-        actions.setStatus({ msg });
-      })
-      .finally(() => {
-        dispatch(clear(ProjectActions.UPDATE_PROJECT));
+        formikRef.current?.setStatus({ msg });
       });
   };
 
@@ -77,9 +82,9 @@ const useStepForm = () => {
         throw Error('axios request failed');
       })
       .finally(() => {
+        formikRef.current?.setSubmitting(false);
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
         dispatch(clear(ProjectActions.ADD_PROJECT));
-        formikRef?.current?.setSubmitting(false);
       });
   };
 

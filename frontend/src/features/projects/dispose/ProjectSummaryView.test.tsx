@@ -71,6 +71,7 @@ const getMockProject = (statusCode?: string): IProject => ({
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',
+  publicNote: '',
   id: 1,
   fiscalYear: 2020,
   projectAgencyResponses: [],
@@ -150,11 +151,13 @@ describe('Review Summary View', () => {
       const editButton = queryByText(/Edit/);
       expect(editButton).toBeFalsy();
     });
-    it('form fields are disabled except for notes', () => {
-      const { queryByRole } = render(getSummary());
-      const notes = queryByRole('textbox');
-      expect(notes).toBeVisible();
-      expect(notes).not.toBeDisabled();
+    it('form fields are disabled', () => {
+      const { queryAllByRole } = render(getSummary());
+      const notes = queryAllByRole('textbox');
+      notes.forEach(note => {
+        expect(note).toBeVisible();
+        expect(note).toBeDisabled();
+      });
     });
   });
 });

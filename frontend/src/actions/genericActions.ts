@@ -19,7 +19,7 @@ export const success = (reducer: string, status?: number, data?: any): IGenericN
   data,
 });
 
-export const request = (reducer: string): IGenericNetworkAction => ({
+export const request = (reducer: string) => ({
   isFetching: true,
   name: reducer,
   type: ActionTypes.REQUEST,

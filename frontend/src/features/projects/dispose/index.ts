@@ -6,7 +6,7 @@ export { default as ProjectDisposeView } from './ProjectDisposeView';
 export * from './components/StepActions';
 export { default as StepStatusIcon } from './components/StepStatusIcon';
 export * from './components/ReviewApproveActions';
-export { default as ProjectNotes } from './components/ProjectNotes';
+export { default as ProjectNotes, PrivateNotes, PublicNotes } from './components/ProjectNotes';
 export { default as ExemptionRequest } from './components/ExemptionRequest';
 export { default as EditButton } from './components/EditButton';
 export { default as SelectProjectPropertiesPage } from './components/SelectProjectPropertiesPage';
@@ -25,6 +25,7 @@ export { default as ReviewProjectStep } from './steps/ReviewProjectStep';
 export { default as StepErrorSummary } from './steps/StepErrorSummary';
 export { default as ReviewApproveStep } from './steps/ReviewApproveStep';
 export { default as ApprovalStep } from './steps/ApprovalStep';
+export { default as GreTransferStep } from './steps/GreTransferStep';
 
 export { default as ApprovalConfirmationForm } from './forms/ApprovalConfirmationForm';
 export { default as UpdateInfoForm } from './forms/UpdateInfoForm';
@@ -38,6 +39,7 @@ export { default as FirstNationsCheckListForm } from './forms/FirstNationsCheckL
 export { default as SelectProjectPropertiesForm } from './forms/SelectProjectPropertiesForm';
 export { default as ApprovalForm } from './forms/ApprovalForm';
 export { default as EnhancedReferralCompleteForm } from './forms/EnhancedReferralCompleteForm';
+export { default as GreTransferForm } from './forms/GreTransferForm';
 
 export { default as ProjectInformationTab } from './tabs/ProjectInformationTab';
 export { default as DocumentationTab } from './tabs/DocumentationTab';

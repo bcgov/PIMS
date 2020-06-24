@@ -16,6 +16,7 @@ import {
   useStepForm,
   SelectProjectPropertiesPage,
   ApprovalStep,
+  GreTransferStep,
 } from '.';
 import { FormikValues } from 'formik';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -162,15 +163,25 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
                   exact
                   path="/dispose/projects/assess/properties"
-                  component={ReviewApproveStep}
+                  component={() => ReviewApproveStep({ formikRef })}
                 />
-                <Route path="/dispose/projects/summary" component={ProjectSummaryView} />
+                <Route
+                  path="/dispose/projects/summary"
+                  render={() => <ProjectSummaryView formikRef={formikRef} />}
+                />
                 <PrivateRoute
                   layout={(props: any) => <>{props.children}</>}
                   claim={Claims.ADMIN_PROJECTS}
                   path="/dispose/projects/approved"
-                  component={ApprovalStep}
+                  component={() => ApprovalStep({ formikRef })}
                 />
+                <PrivateRoute
+                  layout={(props: any) => <>{props.children}</>}
+                  claim={Claims.ADMIN_PROJECTS}
+                  path="/dispose/projects/gretransfer"
+                  component={() => GreTransferStep({ formikRef })}
+                />
+                } />
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}

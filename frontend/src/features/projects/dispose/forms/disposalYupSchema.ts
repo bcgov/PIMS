@@ -39,6 +39,19 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
   ),
 });
 
+export const GreTransferStepYupSchema = Yup.object().shape({
+  properties: Yup.array().of(
+    Yup.object().shape({
+      classificationId: Yup.number().test(
+        'is-valid',
+        'Must select Core Operational or Core Strategic',
+        (val: any) =>
+          val === CLASSIFICATIONS.CoreOperational || val === CLASSIFICATIONS.CoreStrategic,
+      ),
+    }),
+  ),
+});
+
 export const SelectProjectPropertiesStepYupSchema = Yup.object().shape({
   properties: Yup.array()
     .required('You must select at least one property')

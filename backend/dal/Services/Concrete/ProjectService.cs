@@ -320,29 +320,48 @@ namespace Pims.Dal.Services
 
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
-                .Include(p => p.Tasks)
                 .Include(p => p.Agency)
+                .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
-                .Include(p => p.Properties)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Status)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Evaluations)
-                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Fiscals)
-                .Include(p => p.Properties).ThenInclude(b => b.Building)
-                .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Parcel)
-                .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Properties).ThenInclude(b => b.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Responses)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+
+            //The following reduces the load on the database compared to eager loading all parcel/building props.
+            this.Context.Entry(originalProject)
+                .Collection(p => p.Properties)
+                .Load();
+            foreach (ProjectProperty pp in originalProject.Properties)
+            {
+                if (pp.PropertyType == PropertyTypes.Land)
+                {
+                    this.Context.Entry(pp)
+                    .Reference(p => p.Parcel).Query()
+                    .Include(p => p.Status)
+                    .Include(p => p.Evaluations)
+                    .Include(p => p.Fiscals)
+                    .Load();
+                }
+                else
+                {
+                    this.Context.Entry(pp)
+                    .Reference(p => p.Building).Query()
+                    .Include(b => b.Parcel)
+                    .Include(b => b.Status)
+                    .Include(b => b.Evaluations)
+                    .Include(p => p.Fiscals)
+                    .Load();
+                }
+            }
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
             if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
             //If the user isn't allowed to update the project, just update the notes.
-            if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !project.IsProjectInDraft(_options.Project))
+            if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !originalProject.IsProjectInDraft(_options.Project) && !originalProject.IsProjectClosed(_options.Project))
             {
                 originalProject.Note = project.Note;
+                originalProject.PublicNote = project.PublicNote;
                 this.Context.SaveChanges();
                 this.Context.CommitTransaction();
                 return Get(originalProject.Id);
@@ -772,6 +791,14 @@ namespace Pims.Dal.Services
                         throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     }
                     originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
+                    break;
+                case ("T-GRE"): // Transferred within the GRE
+                    if (project.TransferredWithinGreOn == null)
+                    {
+                        throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
+                    }
+                    originalProject.TransferredWithinGreOn = project.TransferredWithinGreOn;
+                    this.Context.TransferProjectProperties(originalProject, project);
                     break;
                 default:
                     // All other status changes can only be done by `admin-projects` or when the project is in draft mode.
