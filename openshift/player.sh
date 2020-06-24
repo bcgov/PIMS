@@ -4,21 +4,24 @@ ARGV=${@:2}
 
 case "$1" in
     backup)
-        ./scripts/oc-backup.sh ${ARGV}
+        cd scripts
+        ./oc-backup.sh ${ARGV}
+        cd ..
         ;;
     restore)
         echo "Not implemented yet"
         ;;
     build)
-        echo "Not implemented yet"
+        cd scripts
+        ./oc-build.sh ${ARGV}
+        cd ..
         ;;
     deploy)
-        echo "Not implemented yet"
+        cd scripts
+        ./oc-deploy.sh ${ARGV}
+        cd ..
         ;;
-    toolbelt)
-        echo "Not implemented yet"
-        ;;
-    scan)
+    sonar-scan)
         echo "Not implemented yet"
         ;;
     zap)

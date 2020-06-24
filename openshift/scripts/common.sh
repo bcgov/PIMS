@@ -15,7 +15,8 @@ IFS=$'\n\t'
 # Receive parameters
 #
 TARGET=${1:-}
-APPLY=$([ "${2:-}" != "apply" ] || echo true)
+LAST_ARG=$(for last in ${@:-''}; do :; done && echo "${last}")
+APPLY=$([ "${LAST_ARG:-}" != "apply" ] || echo true)
 
 # Load environment variables from a file
 #
@@ -46,11 +47,15 @@ $(oc whoami &>/dev/null) || {
 display_helper() {
   set +e
   if [ ! "${APPLY}" ]; then
-    echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***"
+    echo -e "\n*** This is a dry run.  Use 'apply' to do a real run. ***\n"
+    echo -e "OC commands that would be executed"
+    echo -e "==================================\n"
+  else
+    echo -e "\nOC commands executed"
+    echo -e "====================\n"
   fi
-  echo
   for i in $*; do
-    echo -e "$i\n"
+    echo -e "  $i"
   done
   set -e
 }
