@@ -9,6 +9,7 @@ import { IProject } from '..';
 import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
+import { ReviewWorkflowStatus } from '../interfaces';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -26,14 +27,18 @@ const useStepForm = () => {
       ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
       : Promise.resolve(apiValues)) as any)
       .then((values: IProject) => {
-        return dispatch(
-          updateProject({
-            ...apiValues,
-            statusCode: values.statusCode,
-            statusId: values.statusId,
-            rowVersion: values.rowVersion,
-          }),
-        );
+        //Only perform an update after a status transition if this is a non-closing status.
+        return statusCode === ReviewWorkflowStatus.Cancelled ||
+          statusCode === ReviewWorkflowStatus.Denied
+          ? Promise.resolve(values)
+          : dispatch(
+              updateProject({
+                ...apiValues,
+                statusCode: values.statusCode,
+                statusId: values.statusId,
+                rowVersion: values.rowVersion,
+              }),
+            );
       })
       .catch((error: any) => {
         const msg: string = error?.response?.data?.error ?? error.toString();

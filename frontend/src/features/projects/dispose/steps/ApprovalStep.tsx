@@ -126,12 +126,18 @@ const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
   const [currentTab, setCurrentTab] = useState(SPPApprovalTabs.erp);
+
+  const canUserEdit =
+    canUserApproveForm() && project.statusCode === ReviewWorkflowStatus.ApprovedForErp;
   return (
     <Container fluid>
       <Formik
         enableReinitialize={true}
         initialValues={project}
-        onSubmit={(values: any, actions: any) => onSubmitReview(values, actions, submitStatusCode)}
+        onSubmit={(values: any, actions: any) => {
+          actions.setSubmitting(true);
+          onSubmitReview(values, actions, submitStatusCode);
+        }}
         validate={handleValidate}
       >
         <Form>
@@ -139,18 +145,18 @@ const ApprovalStep: React.FunctionComponent<IApprovalStepProps> = () => {
             preIconLabel="Approved for SPP"
             postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
           />
-          <CenterBoldText>{project.status.name}</CenterBoldText>
+          <CenterBoldText>{project?.status?.name ?? 'Unknown'}</CenterBoldText>
           <ApprovalForm
-            isReadOnly={
-              !canUserApproveForm() || project.statusCode === ReviewWorkflowStatus.Cancelled
-            }
+            isReadOnly={canUserEdit !== true}
             {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
           />
           <StepErrorSummary />
-          <ApprovalActions
-            submitStatusCode={submitStatusCode}
-            setSubmitStatusCode={setSubmitStatusCode}
-          />
+          {canUserEdit && (
+            <ApprovalActions
+              submitStatusCode={submitStatusCode}
+              setSubmitStatusCode={setSubmitStatusCode}
+            />
+          )}
         </Form>
       </Formik>
     </Container>

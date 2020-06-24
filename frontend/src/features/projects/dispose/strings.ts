@@ -11,3 +11,5 @@ export const reviewFirstNationsTooltip =
   'Not required to be completed before\naddition to the Surplus Properties List';
 export const agencyResponsesNoteTooltip =
   'Enter Agency Responses,\nAgencies Submitting Business Cases,\n& Accepted Business Cases';
+export const cancellationWarning =
+  'Are you sure you want to cancel the project? Please ensure to provide reasoning in the shared notes prior to clicking Cancel Project';
