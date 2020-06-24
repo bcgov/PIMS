@@ -145,6 +145,9 @@ export interface IProject {
   onHoldNotificationSentOn?: Date;
   transferredWithinGreOn?: Date;
   clearanceNotificationSentOn?: Date;
+  netBook?: number;
+  assessed?: number;
+  estimated?: number;
 }
 
 export enum DisposeWorkflowStatus {

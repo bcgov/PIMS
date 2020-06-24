@@ -7,6 +7,7 @@ import { Table } from 'components/Table';
 import classNames from 'classnames';
 import { getColumnsWithRemove } from './columns';
 import { useHistory } from 'react-router-dom';
+import useStepper from '../hooks/useStepper';
 
 type RequiredAttributes = {
   /** The field name */
@@ -45,14 +46,15 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   const history = useHistory();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
-
+  const { project } = useStepper();
   const columns = useMemo(
     () =>
       getColumnsWithRemove(
         (properties: IProperty) => setFieldValue('properties', properties),
+        project,
         !disabled,
       ),
-    [disabled, setFieldValue],
+    [disabled, setFieldValue, project],
   );
 
   return (

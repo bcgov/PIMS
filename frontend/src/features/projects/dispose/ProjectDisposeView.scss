@@ -5,7 +5,6 @@
 .ProjectDisposeView {
   font-family: 'BCSans', Fallback, sans-serif;
   text-align: left;
-  padding: 0rem 10rem;
   margin-bottom: #{$footer-height};
   height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
   max-height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});

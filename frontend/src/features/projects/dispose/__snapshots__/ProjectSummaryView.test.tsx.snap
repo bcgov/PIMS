@@ -245,7 +245,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "560px",
+                    "minWidth": "705px",
                   }
                 }
               >
@@ -448,6 +448,26 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   }
                 >
                   Estimated Value
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  Assessed Value
                 </div>
                 <div
                   className="th"
@@ -893,7 +913,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "560px",
+                    "minWidth": "705px",
                   }
                 }
               >
@@ -1096,6 +1116,26 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   }
                 >
                   Estimated Value
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  Assessed Value
                 </div>
                 <div
                   className="th"
@@ -1541,7 +1581,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "560px",
+                    "minWidth": "705px",
                   }
                 }
               >
@@ -1744,6 +1784,26 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   }
                 >
                   Estimated Value
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  Assessed Value
                 </div>
                 <div
                   className="th"
