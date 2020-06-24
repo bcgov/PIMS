@@ -6,7 +6,7 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { IFilterBarState, IProperty, clickableTooltip } from '..';
+import { IFilterBarState, IProperty, clickableTooltip, useStepper } from '..';
 import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
 import { getColumns, getColumnsWithRemove } from './columns';
@@ -67,7 +67,8 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
 
   const history = useHistory();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
-  const columns = useMemo(() => getColumns(), []);
+  const { project } = useStepper();
+  const columns = useMemo(() => getColumns(project), [project]);
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);
@@ -77,7 +78,9 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
   const [properties, setProjectProperties] = useState(existingProperties);
-  const columnsWithRemove = useMemo(() => getColumnsWithRemove(setProjectProperties), []);
+  const columnsWithRemove = useMemo(() => getColumnsWithRemove(setProjectProperties, project), [
+    project,
+  ]);
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);

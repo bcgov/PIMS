@@ -43,7 +43,7 @@ exports[`Property List View Select renders correctly 1`] = `
             Object {
               "display": "flex",
               "flex": "1 0 auto",
-              "minWidth": "560px",
+              "minWidth": "705px",
             }
           }
         >
@@ -269,6 +269,26 @@ exports[`Property List View Select renders correctly 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
+                "flex": "145 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "145px",
+                "textAlign": "left",
+                "width": "145px",
+              }
+            }
+          >
+            Assessed Value
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
                 "flex": "60 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
@@ -330,7 +350,7 @@ exports[`Property List View Select renders correctly 1`] = `
             Object {
               "display": "flex",
               "flex": "1 0 auto",
-              "minWidth": "590px",
+              "minWidth": "735px",
             }
           }
         >
@@ -576,6 +596,26 @@ exports[`Property List View Select renders correctly 1`] = `
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
+                "flex": "145 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "145px",
+                "textAlign": "left",
+                "width": "145px",
+              }
+            }
+          >
+            Assessed Value
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
                 "flex": "60 0 auto",
                 "justifyContent": "flex-start",
                 "minWidth": "30px",
@@ -602,7 +642,7 @@ exports[`Property List View Select renders correctly 1`] = `
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "590px",
+                "minWidth": "735px",
               }
             }
           >
@@ -862,6 +902,26 @@ exports[`Property List View Select renders correctly 1`] = `
               $0
             </div>
             <div
+              className="td"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "145 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "145px",
+                  "textAlign": "left",
+                  "width": "145px",
+                }
+              }
+              title=""
+            >
+              $1
+            </div>
+            <div
               className="td clickable"
               onClick={[Function]}
               role="cell"
@@ -898,7 +958,7 @@ exports[`Property List View Select renders correctly 1`] = `
             Object {
               "display": "flex",
               "flex": "1 0 auto",
-              "minWidth": "590px",
+              "minWidth": "735px",
             }
           }
         >
@@ -1115,6 +1175,27 @@ exports[`Property List View Select renders correctly 1`] = `
           >
             <span>
               $0
+            </span>
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "145 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "145px",
+                "textAlign": "left",
+                "width": "145px",
+              }
+            }
+          >
+            <span>
+              $1
             </span>
           </div>
           <div

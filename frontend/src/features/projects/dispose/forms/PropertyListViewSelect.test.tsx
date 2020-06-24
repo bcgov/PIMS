@@ -104,6 +104,20 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.NETWORK]: {},
+  [reducerTypes.ProjectReducers.PROJECT]: {
+    project: {
+      name: '',
+      note: '',
+      description: '',
+      properties: [],
+      tierLevelId: 1,
+      statusId: 1,
+      agencyId: 0,
+      tasks: [],
+      fiscalYear: 2020,
+    },
+  },
 });
 
 const setPageIndex = jest.fn().mockReturnValue(0);
