@@ -699,6 +699,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             name="privateNote"
             onBlur={[Function]}
             onChange={[Function]}
+            value="private note"
           />
         </span>
       </div>

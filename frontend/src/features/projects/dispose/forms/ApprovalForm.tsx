@@ -9,6 +9,8 @@ interface IApprovalFormProps {
   setCurrentTab: Function;
   /** disable all tab content if true */
   isReadOnly?: boolean;
+  /** status code update triggered by a form action. Will trigger a status transition if set. */
+  setSubmitStatusCode: Function;
 }
 
 /**
@@ -19,6 +21,7 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
   currentTab,
   setCurrentTab,
   isReadOnly,
+  setSubmitStatusCode,
 }) => {
   return (
     <React.Fragment>
@@ -30,7 +33,7 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
           <DocumentationTab isReadOnly={isReadOnly} />
         </Tab>
         <Tab eventKey={SPPApprovalTabs.erp} title="Enhanced Referral Process">
-          <EnhancedReferralTab isReadOnly={isReadOnly} />
+          <EnhancedReferralTab isReadOnly={isReadOnly} setSubmitStatusCode={setSubmitStatusCode} />
         </Tab>
         <Tab eventKey={SPPApprovalTabs.spl} title="Surplus Properties List"></Tab>
       </Tabs>

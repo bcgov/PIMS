@@ -3,7 +3,7 @@ import './ProjectDisposalSubmitted.scss';
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import StepSuccessIcon from './components/StepSuccessIcon';
+import StepStatusIcon from './components/StepStatusIcon';
 
 /**
  * Display success message after all project disposal steps are completed successfully.
@@ -12,7 +12,7 @@ export function ProjectDisposalSubmitted() {
   const keycloak = useKeycloakWrapper();
   return (
     <Container className="ProjectDisposalSubmitted">
-      <StepSuccessIcon
+      <StepStatusIcon
         preIconLabel={`Thank you, ${keycloak.displayName ?? 'Pims User'}`}
         postIconLabel={'Application Successfully Submitted'}
       />

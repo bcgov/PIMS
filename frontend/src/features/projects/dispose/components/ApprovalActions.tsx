@@ -70,7 +70,10 @@ export const ApprovalActions = ({
                 submitForm();
                 setCancel(false);
               }}
-              handleCancel={() => setCancel(false)}
+              handleCancel={() => {
+                setCancel(false);
+                setSubmitting(false);
+              }}
               title="Really Cancel Project?"
               message="Are you sure you want to cancel this project?"
             />

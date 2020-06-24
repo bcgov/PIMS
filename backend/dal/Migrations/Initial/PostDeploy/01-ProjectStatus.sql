@@ -167,6 +167,17 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been cancelled from the Surplus Property Program.'
     , '/projects/cancelled'
     , 1
+), (
+    15
+    , 14
+    , 'OnHold'
+    , 'OnHold'
+    , 'OH'
+    , 0
+    , 0
+    , 'The project has been put on hold due to potential sale to an interested party.'
+    , '/projects/onhold'
+    , 1
 )
 
 SET IDENTITY_INSERT dbo.[ProjectStatus] OFF

@@ -138,13 +138,13 @@ export interface IProject {
   deniedOn?: Date;
   cancelledOn?: Date;
   submittedOn?: Date;
-  InitialNotificationSentOn?: Date;
-  ThirtyDayNotificationSentOn?: Date;
-  SixtyDayNoficationSentOn?: Date;
-  NinetyDayNotificationSentOn?: Date;
-  OnHoldNotificationSentOn?: Date;
-  TransferredWithinGreOn?: Date;
-  ClearanceNotificationSentOn?: Date;
+  initialNotificationSentOn?: Date;
+  thirtyDayNotificationSentOn?: Date;
+  sixtyDayNoficationSentOn?: Date;
+  ninetyDayNotificationSentOn?: Date;
+  onHoldNotificationSentOn?: Date;
+  transferredWithinGreOn?: Date;
+  clearanceNotificationSentOn?: Date;
 }
 
 export enum DisposeWorkflowStatus {
@@ -165,6 +165,7 @@ export enum ReviewWorkflowStatus {
   ApprovedForSpl = 'AP-SPL',
   Denied = 'DE',
   Cancelled = 'CA',
+  OnHold = 'OH',
 }
 
 export enum SPPApprovalTabs {

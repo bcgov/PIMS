@@ -26,6 +26,9 @@ import ReviewApproveStep from './steps/ReviewApproveStep';
 import { updateWorkflowStatus } from 'features/projects/dispose/projectsActionCreator';
 import queryString from 'query-string';
 import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
+import ProjectSummaryView from './ProjectSummaryView';
+import PrivateRoute from 'utils/PrivateRoute';
+import Claims from 'constants/claims';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -150,15 +153,24 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
               <Switch>
                 {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
                 <Route
+                  layout={() => null}
+                  path="/dispose/projects/assess/properties/update"
+                  component={SelectProjectPropertiesPage}
+                />
+                <PrivateRoute
+                  layout={(props: any) => <>{props.children}</>}
+                  claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
                   exact
                   path="/dispose/projects/assess/properties"
                   component={ReviewApproveStep}
                 />
-                <Route
-                  path="/dispose/projects/assess/properties/update"
-                  component={SelectProjectPropertiesPage}
+                <Route path="/dispose/projects/summary" component={ProjectSummaryView} />
+                <PrivateRoute
+                  layout={(props: any) => <>{props.children}</>}
+                  claim={Claims.ADMIN_PROJECTS}
+                  path="/dispose/projects/approved"
+                  component={ApprovalStep}
                 />
-                <Route path="/dispose/projects/approved" component={ApprovalStep} />
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}
