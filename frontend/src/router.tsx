@@ -18,6 +18,7 @@ import { NotFoundPage } from 'pages/404/NotFoundPage';
 import { ProjectDisposeView } from 'features/projects/dispose';
 import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
 import { ProjectListView, ProjectApprovalRequestListView } from 'features/projects/list';
+import { LogoutPage } from 'pages/Logout';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -32,6 +33,7 @@ const AppRouter: React.FC = () => {
         component={Login}
         layout={PublicLayout}
       ></AppRoute>
+      <AppRoute path="/logout" title={getTitle('Logout')} component={LogoutPage}></AppRoute>
       <AppRoute
         path="/forbidden"
         title={getTitle('Forbidden')}
