@@ -5,6 +5,7 @@ import { ReviewWorkflowStatus } from '../interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState } from 'react';
 import { DisplayError, Button } from 'components/common/form';
+import { cancellationWarning } from '../strings';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -25,7 +26,7 @@ export const ApprovalActions = ({
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
 }) => {
-  const { values, submitForm, isSubmitting, setSubmitting } = useFormikContext<any>();
+  const { values, submitForm, isSubmitting, setSubmitting, validateForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
   return (
     <>
@@ -40,7 +41,6 @@ export const ApprovalActions = ({
             showSubmitting
             isSubmitting={isSubmitting}
             onClick={() => {
-              setSubmitting(true);
               submitForm();
             }}
           >
@@ -54,8 +54,11 @@ export const ApprovalActions = ({
             showSubmitting
             isSubmitting={isSubmitting}
             onClick={() => {
-              setSubmitting(true);
-              setCancel(true);
+              validateForm().then((errors: any) => {
+                if (Object.keys(errors).length === 0) {
+                  setCancel(true);
+                }
+              });
             }}
           >
             Cancel Project
@@ -63,7 +66,7 @@ export const ApprovalActions = ({
           {cancel && (
             <GenericModal
               display={cancel}
-              cancelButtonText="Do not Cancel Project"
+              cancelButtonText="Close"
               okButtonText="Cancel Project"
               handleOk={() => {
                 setSubmitStatusCode(ReviewWorkflowStatus.Cancelled);
@@ -75,7 +78,7 @@ export const ApprovalActions = ({
                 setSubmitting(false);
               }}
               title="Really Cancel Project?"
-              message="Are you sure you want to cancel this project?"
+              message={cancellationWarning}
             />
           )}
         </span>

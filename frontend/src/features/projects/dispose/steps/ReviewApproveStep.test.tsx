@@ -74,6 +74,8 @@ const mockProject: IProject = {
   tasks: mockTasks,
   note: 'my notes',
   id: 1,
+  fiscalYear: 2020,
+  projectAgencyResponses: [],
 };
 
 export const tasks: ITask[] = [
