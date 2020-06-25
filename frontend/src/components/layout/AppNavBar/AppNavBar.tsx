@@ -5,6 +5,7 @@ import './AppNavBar.scss';
 import profileUrl from 'assets/images/profile.svg';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import { useConfiguration } from 'hooks/useConfiguration';
 
 /**
  * Nav bar with with role-based functionality.
@@ -13,6 +14,7 @@ function AppNavBar() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
   const displayName = keycloak.displayName || keycloak.firstName || 'default';
+  const configuration = useConfiguration();
 
   return (
     <Navbar variant="dark" className="map-nav" expand="lg">
@@ -34,7 +36,7 @@ function AppNavBar() {
           {history ? (
             <NavDropdown.Item
               onClick={() => {
-                keycloak.obj!.logout('/login');
+                keycloak.obj!.logout({ redirectUri: `${configuration.baseUrl}/logout` });
               }}
             >
               Sign Out
