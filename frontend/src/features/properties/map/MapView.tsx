@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Map, { MapViewportChangeEvent } from '../components/maps/leaflet/Map';
+import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';

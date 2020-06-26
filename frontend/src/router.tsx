@@ -1,13 +1,13 @@
 import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
-import MapView from './pages/MapView';
-import AccessRequestPage from './pages/AccessRequestPage';
-import EditUserPage from './pages/EditUserPage';
-import Login from './pages/Login';
-import AccessDenied from 'pages/AccessDenied';
-import SubmitProperty from 'pages/SubmitProperty';
-import { ManageUsersPage } from 'pages/admin/users/ManageUsersPage';
-import ManageAccessRequests from 'pages/admin/access/ManageAccessRequests';
+import MapView from './features/properties/map/MapView';
+import AccessRequestPage from './features/admin/access-request/AccessRequestPage';
+import EditUserPage from './features/admin/edit-user/EditUserPage';
+import Login from './features/account/Login';
+import AccessDenied from './pages/401/AccessDenied';
+import SubmitProperty from 'features/properties/submit/SubmitProperty';
+import { ManageUsersPage } from 'features/admin/users/ManageUsersPage';
+import ManageAccessRequests from 'features/admin/access/ManageAccessRequests';
 import { Claims } from 'constants/claims';
 import AppRoute from 'utils/AppRoute';
 import PublicLayout from 'layouts/PublicLayout';
@@ -18,7 +18,7 @@ import { NotFoundPage } from 'pages/404/NotFoundPage';
 import { ProjectDisposeView } from 'features/projects/dispose';
 import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
 import { ProjectListView, ProjectApprovalRequestListView } from 'features/projects/list';
-import { LogoutPage } from 'pages/Logout';
+import { LogoutPage } from 'features/account/Logout';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {

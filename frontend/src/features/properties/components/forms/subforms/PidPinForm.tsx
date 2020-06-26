@@ -3,7 +3,7 @@ import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { Col } from 'react-bootstrap';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { PidTooltip, PinTooltip } from 'forms/strings';
+import { PidTooltip, PinTooltip } from '../strings';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 

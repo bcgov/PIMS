@@ -5,16 +5,16 @@ import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
-import { Select } from '../components/common/form';
+import { Select } from '../../../components/common/form';
 import { Formik } from 'formik';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import AccessRequestPage from './AccessRequestPage';
-import { ILookupCode } from '../actions/lookupActions';
-import { IGenericNetworkAction } from '../actions/genericActions';
-import { NETWORK } from '../constants/reducerTypes';
-import * as actionTypes from '../constants/actionTypes';
+import { ILookupCode } from '../../../actions/lookupActions';
+import { IGenericNetworkAction } from '../../../actions/genericActions';
+import { NETWORK } from '../../../constants/reducerTypes';
+import * as actionTypes from '../../../constants/actionTypes';
 
 Enzyme.configure({ adapter: new Adapter() });
 
