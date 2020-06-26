@@ -22,6 +22,8 @@ export interface IProjectExemptionProps {
   sectionHeader?: string;
   /** Controls whether or not this component should be interactive */
   isReadOnly?: boolean;
+  /** to determine where the component is being called */
+  submissionStep?: boolean;
 }
 
 /**
@@ -36,6 +38,7 @@ export default function ExemptionRequest({
   rationaleField,
   sectionHeader,
   isReadOnly,
+  submissionStep,
 }: IProjectExemptionProps) {
   const { values } = useFormikContext();
   const checked = getIn(values, exemptionField);
@@ -44,12 +47,15 @@ export default function ExemptionRequest({
     <React.Fragment>
       <h3>
         {sectionHeader}
-        <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />
+        {submissionStep && <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />}
       </h3>
-      <Form.Row className="ProjectExemptionRequestCheck">
-        <Check disabled={isReadOnly} field={exemptionField} postLabel={exemptionLabel} />
-      </Form.Row>
-      {checked && (
+      {/* only want to display the checkbox for submissions */}
+      {submissionStep && (
+        <Form.Row className="ProjectExemptionRequestCheck">
+          <Check disabled={isReadOnly} field={exemptionField} postLabel={exemptionLabel} />
+        </Form.Row>
+      )}
+      {(checked || !submissionStep) && (
         <>
           <p>
             <i>{rationaleInstruction ?? 'Provide Rationale'}</i>
@@ -60,6 +66,7 @@ export default function ExemptionRequest({
               field={rationaleField}
               className="col-md-5"
               outerClassName="col-md-10"
+              readOnly={submissionStep ? false : true}
             />
           </Form.Row>
         </>

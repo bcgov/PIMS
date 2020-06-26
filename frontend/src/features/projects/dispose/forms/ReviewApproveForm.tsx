@@ -18,6 +18,7 @@ import {
 import TasksForm from './TasksForm';
 import _ from 'lodash';
 import { useFormikContext } from 'formik';
+import ExemptionRequest from '../components/ExemptionRequest';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).
@@ -39,7 +40,6 @@ const ReviewApproveForm = ({
       setIsReadOnly(canEdit !== true);
     }
   }, [canEdit, errors]);
-
   const infoReviewTasks = _.filter(project.tasks, {
     statusCode: ReviewWorkflowStatus.PropertyReview,
   });
@@ -49,6 +49,10 @@ const ReviewApproveForm = ({
   const documentationTasks = _.filter(project.tasks, {
     statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   });
+  const exemptionReviewTasks = _.filter(project.tasks, {
+    statusCode: ReviewWorkflowStatus.ExemptionProcess,
+  });
+
   return (
     <Fragment>
       <ProjectDraftForm
@@ -62,6 +66,18 @@ const ReviewApproveForm = ({
         title=""
       />
       <TasksForm tasks={infoReviewTasks} className="reviewRequired" isReadOnly={!canEdit} />
+      {project.exemptionRequested && (
+        <>
+          <ExemptionRequest
+            exemptionField="exemptionRequested"
+            rationaleField="exemptionRationale"
+            submissionStep={false}
+            sectionHeader="Enhanced Referal Process Exemption"
+            rationaleInstruction="The agency has requested exemption with the below rationale:"
+          />
+          <TasksForm tasks={exemptionReviewTasks} className="reviewRequired" />
+        </>
+      )}
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
       <TasksForm
         tasks={documentationReviewTasks}

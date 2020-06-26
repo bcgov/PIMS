@@ -41,6 +41,7 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
       <DocumentationForm tasks={documentationTasks as IProjectTask[]} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
       <ExemptionRequest
+        submissionStep={true}
         sectionHeader="Enhanced Referal Process Exemption"
         exemptionField="exemptionRequested"
         rationaleField="exemptionRationale"

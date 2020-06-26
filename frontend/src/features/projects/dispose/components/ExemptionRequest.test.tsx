@@ -16,6 +16,7 @@ const renderComponent = (
   rationaleInstruction?: string,
   tooltip?: string,
   sectionHeader?: string,
+  submissionStep?: boolean,
 ) => {
   return render(
     <ExemptionRequest
@@ -25,21 +26,39 @@ const renderComponent = (
       rationaleInstruction={rationaleInstruction}
       tooltip={tooltip}
       sectionHeader={sectionHeader}
+      submissionStep={submissionStep}
     />,
   );
 };
 
 it('Matches Snapshot', () => {
   const component = renderer.create(
-    <ExemptionRequest exemptionField="testFieldOne" rationaleField="testFieldTwo" />,
+    <ExemptionRequest
+      exemptionField="testFieldOne"
+      rationaleField="testFieldTwo"
+      submissionStep={true}
+    />,
   );
   expect(component.toJSON()).toMatchSnapshot();
 });
 
 it('does not display rationale box when checkbox is not checked', () => {
   // false by default
-  const { queryByText } = renderComponent();
+  const { queryByText } = renderComponent('label', 'instruction', 'tooltip', 'header', true);
   expect(queryByText('Rationale')).toBeNull();
+});
+
+it('does not display checkbox on Approval step', () => {
+  const { queryByText } = renderComponent(
+    'checkbox label',
+    'instruction',
+    'tooltip',
+    'header',
+    false,
+  );
+  expect(queryByText('checkbox label')).toBeNull();
+  expect(queryByText('instruction')).toBeInTheDocument();
+  expect(queryByText('tooltip')).toBeNull();
 });
 
 describe('rationale functionality', () => {
@@ -55,6 +74,7 @@ describe('rationale functionality', () => {
       'test rationale instruction',
       '',
       'test header',
+      true,
     );
     expect(getByText('test label')).toBeInTheDocument();
     expect(getByText('test rationale instruction')).toBeInTheDocument();

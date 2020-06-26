@@ -28,6 +28,7 @@ const element = (
     <ReviewApproveActions
       submitStatusCode={DisposeWorkflowStatus.Draft}
       setSubmitStatusCode={mockSubmit}
+      isSubmitting={false}
     />
   </Router>
 );

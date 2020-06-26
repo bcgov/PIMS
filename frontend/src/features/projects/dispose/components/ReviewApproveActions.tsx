@@ -31,7 +31,11 @@ export const ReviewApproveActions = ({
   const [denyERP, setDenyERP] = useState(false);
   return (
     <>
-      <FlexRight>Approve for Enhanced Referral Process</FlexRight>
+      <FlexRight>
+        {values.exemptionRequested
+          ? 'Approve Enhanced Referral Process Exemption'
+          : 'Approve for Enhanced Referral Process'}
+      </FlexRight>
       <FlexRight>
         <Button
           showSubmitting
@@ -39,6 +43,7 @@ export const ReviewApproveActions = ({
           disabled={
             values.statusCode === ReviewWorkflowStatus.Denied ||
             values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
             isSubmitting
           }
           style={{ marginLeft: 10 }}
@@ -54,6 +59,7 @@ export const ReviewApproveActions = ({
           disabled={
             values.statusCode === ReviewWorkflowStatus.Denied ||
             values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
             isSubmitting
           }
           variant="secondary"
@@ -72,6 +78,7 @@ export const ReviewApproveActions = ({
           isSubmitting={isSubmitting}
           disabled={
             values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
             values.statusCode === ReviewWorkflowStatus.Denied ||
             isSubmitting
           }
@@ -104,13 +111,19 @@ export const ReviewApproveActions = ({
           cancelButtonText="Cancel"
           okButtonText="Confirm Approval"
           handleOk={() => {
-            setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
+            !values.exemptionRequested
+              ? setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)
+              : setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForExemption);
             submitForm();
             setApproveERP(false);
           }}
           handleCancel={() => setApproveERP(false)}
           title="Confirm Approval"
-          message="Are you sure you want to approve this project for ERP?"
+          message={
+            values.exemptionRequested
+              ? 'Are you sure you want to approve this ERP exemption'
+              : 'Are you sure you want to approve this project for ERP?'
+          }
         />
       )}
     </>

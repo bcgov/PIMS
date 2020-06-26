@@ -34,4 +34,4 @@ This provides a way to identify a checklist of activities for each status that s
 There are currently two workflows;
 
 - [Submit Surplus Property Process Project](./sres/SUBMIT-DISPOSAL.md)
-- [Assess Surplus Property Process Project Request](./sres/ACCESS-DISPOSAL.md)
+- [Assess Surplus Property Process Project Request](./sres/ASSESS-DISPOSAL.md)
