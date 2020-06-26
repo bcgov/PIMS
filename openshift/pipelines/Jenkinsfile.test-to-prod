@@ -136,15 +136,10 @@ pipeline {
 
     stage("Promote to PROD") {
       options { timeout(time: 10, unit: "MINUTES") }
-      // These env-vars are required by player.sh below
-      environment {
-        RELEASE_TAG="${RELEASE_VERSION}"
-        TARGET_TAG="${DESTINATION}"
-      }
       steps {
         dir(DEVOPS_DIRECTORY) {
-          sh "./player.sh deploy api apply"
-          sh "./player.sh deploy app apply"
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} apply"
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} apply"
         }
       }
     }

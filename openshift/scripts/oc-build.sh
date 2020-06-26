@@ -8,7 +8,7 @@ source "$(dirname ${0})/common.sh"
 #%   This command starts a new build for the provided build config
 #%
 #%   Targets builds incl.: 'api', 'app-base' and 'app'
-#%   Git Branch: Git Branch to build (i.e. 'master' OR 'dev') -- defaults to 'dev'
+#%   Job Name: Job identifier (i.e. 'pr-5' OR 'master' or 'dev') -- defaults to 'dev'
 #%
 #% Usage:
 #%
@@ -23,18 +23,18 @@ source "$(dirname ${0})/common.sh"
 #%    ${THIS_FILE} api apply
 #%
 #%   Set variables to non-defaults at runtime.  E.g.:
-#%    VERBOSE=true GIT_BRANCH=master ${THIS_FILE} <...>
+#%    VERBOSE=true JOB_NAME=master ${THIS_FILE} <...>
 #%
 #%
 
 # Receive parameters
 #
-GIT_BRANCH=${GIT_BRANCH:-dev}
+JOB_NAME=${JOB_NAME:-dev}
 SHORTNAME=${1:-}
 
 # E.g. <buildname>-master
 #
-BUILD_NAME="${APP_NAME}-${SHORTNAME}-${GIT_BRANCH}"
+BUILD_NAME="${APP_NAME}-${SHORTNAME}-${JOB_NAME}"
 
 # Cancel non complete builds and start a new build (apply or don't run)
 #
