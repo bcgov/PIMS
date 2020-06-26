@@ -109,8 +109,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<NotificationQueue> GenerateNotifications(Project project, int? fromStatusId, int? toStatusId)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
-
             if (project == null) throw new ArgumentNullException(nameof(project));
 
             var options = this.Context.ProjectStatusNotifications
@@ -138,8 +136,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<NotificationQueue> GenerateNotifications(Project project, int projectStatusNotificationId)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
-
             return GenerateNotifications(project, this.Self.ProjectNotification.Get(projectStatusNotificationId));
         }
 
@@ -154,8 +150,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<NotificationQueue> GenerateNotifications(Project project, ProjectStatusNotification options, DateTime? sendOn = null)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
-
             if (project == null) throw new ArgumentNullException(nameof(project));
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (options.Template == null) throw new ArgumentNullException(nameof(options), "Argument property 'Template' is cannot be null.");
@@ -207,8 +201,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public async System.Threading.Tasks.Task SendNotificationsAsync(IEnumerable<NotificationQueue> notifications)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
-
             if (notifications == null) throw new ArgumentNullException(nameof(notifications));
 
             foreach (var notification in notifications)
