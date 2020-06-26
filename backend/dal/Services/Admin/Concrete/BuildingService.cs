@@ -30,8 +30,9 @@ namespace Pims.Dal.Services.Admin
         /// <param name="options"></param>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public BuildingService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, logger)
+        public BuildingService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<BuildingService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.Value;
         }

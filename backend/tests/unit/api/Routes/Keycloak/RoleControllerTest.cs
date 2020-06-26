@@ -1,5 +1,4 @@
 using Pims.Api.Areas.Keycloak.Controllers;
-using AdminModels = Pims.Api.Areas.Admin.Models.Role;
 using Pims.Core.Test;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;

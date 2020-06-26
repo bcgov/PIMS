@@ -124,6 +124,18 @@ namespace Pims.Dal.Services.Admin
         {
             return _dbContext.CommitTransaction();
         }
+
+        /// <summary>
+        /// Get the original value of the specified 'entity'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public T OriginalValue<T>(object entity, string propertyName)
+        {
+            return this.City.OriginalValue<T>(entity, propertyName);
+        }
         #endregion
     }
 }

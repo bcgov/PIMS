@@ -30,8 +30,9 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, logger)
+        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.Value;
         }
@@ -253,10 +254,10 @@ namespace Pims.Dal.Services
             project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
             project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
             project.Agency = agency;
-            project.StatusId = 0; // Always start a project as a Draft.
+            project.StatusId = status.Id; // Always start a project as a Draft.
             project.Status = status;
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
-            project.FiscalYear = project.FiscalYear <= 0 ? DateTime.Now.Year : project.FiscalYear;
+            project.FiscalYear = project.FiscalYear <= 0 ? DateTime.UtcNow.GetFiscalYear() : project.FiscalYear;
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();

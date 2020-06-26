@@ -22,8 +22,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public ProvinceService(PimsContext dbContext, ClaimsPrincipal user, ILogger<ProvinceService> logger) : base(dbContext, user, logger) { }
+        public ProvinceService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<ProvinceService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

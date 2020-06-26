@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Pims.Geocoder.Converters
+namespace Pims.Core.Converters
 {
     public class Int32ToStringJsonConverter : JsonConverter<string>
     {

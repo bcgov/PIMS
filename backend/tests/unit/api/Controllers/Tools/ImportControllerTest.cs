@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Pims.Dal.Services.Admin;
 using Pims.Core.Test;
-using Pims.Api.Areas.Admin.Controllers;
+using Pims.Api.Areas.Tools.Controllers;
 using Moq;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 using Microsoft.AspNetCore.Mvc;

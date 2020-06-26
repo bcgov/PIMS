@@ -55,6 +55,7 @@ namespace Pims.Dal.Configuration
 
             builder.HasIndex(m => m.ProjectNumber).IsUnique();
             builder.HasIndex(m => new { m.Name, m.StatusId, m.TierLevelId, m.AgencyId });
+            builder.HasIndex(m => new { m.Assessed, m.NetBook, m.Estimated, m.FiscalYear, m.ExemptionRequested });
 
             base.Configure(builder);
         }

@@ -20,8 +20,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public AddressService(PimsContext dbContext, ClaimsPrincipal user, ILogger<AddressService> logger) : base(dbContext, user, logger) { }
+        public AddressService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<AddressService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

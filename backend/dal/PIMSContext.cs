@@ -40,6 +40,10 @@ namespace Pims.Dal
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<WorkflowProjectStatus> WorkflowProjectStatus { get; set; }
+        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+        public DbSet<ProjectStatusNotification> ProjectStatusNotifications { get; set; }
+        public DbSet<ProjectAgencyResponse> ProjectAgencyResponses { get; set; }
+        public DbSet<NotificationQueue> NotificationQueue { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<User> Users { get; set; }

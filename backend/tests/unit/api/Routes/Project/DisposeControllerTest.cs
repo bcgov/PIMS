@@ -40,6 +40,7 @@ namespace Pims.Api.Test.Routes.Project
             type.HasRoute("[area]/disposal");
             type.HasRoute("v{version:apiVersion}/[area]/disposal");
             type.HasApiVersion("1.0");
+            type.HasAuthorize();
         }
 
         [Fact]
@@ -59,7 +60,7 @@ namespace Pims.Api.Test.Routes.Project
         public void AddProject_Route()
         {
             // Arrange
-            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.AddProject), typeof(Model.ProjectModel));
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.AddProjectAsync), typeof(Model.ProjectModel));
 
             // Act
             // Assert
@@ -72,7 +73,7 @@ namespace Pims.Api.Test.Routes.Project
         public void UpdateProject_Route()
         {
             // Arrange
-            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.UpdateProject), typeof(string), typeof(Model.ProjectModel));
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.UpdateProjectAsync), typeof(string), typeof(Model.ProjectModel));
 
             // Act
             // Assert
@@ -92,6 +93,32 @@ namespace Pims.Api.Test.Routes.Project
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{projectNumber}");
             endpoint.HasPermissions(Permissions.ProjectDelete);
+        }
+
+        [Fact]
+        public void SetStatus_WithStatusId_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.SetStatusAsync), typeof(string), typeof(int), typeof(Model.ProjectModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("workflow/{workflowCode}/{statusId:int}");
+            endpoint.HasPermissions(Permissions.ProjectEdit);
+        }
+
+        [Fact]
+        public void SetStatus_WithStatusCode_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.SetStatusAsync), typeof(string), typeof(string), typeof(Model.ProjectModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("workflow/{workflowCode}/{statusCode}");
+            endpoint.HasPermissions(Permissions.ProjectEdit);
         }
         #endregion
     }

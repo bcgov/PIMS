@@ -28,25 +28,15 @@ namespace Pims.Core.Extensions
         /// Increments the index and passes it to the action.
         /// </summary>
         /// <param name="items"></param>
-        /// <param name="index"></param>
         /// <param name="action"></param>
         /// <typeparam name="T"></typeparam>
-        public static void ForEach<T>(this IEnumerable<T> items, int index, Action<T, int> action)
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T, int> action)
         {
-            var i = index;
+            var i = 0;
             foreach (var item in items)
             {
                 action.Invoke(item, i++);
             }
-        }
-
-        /// <summary>
-        /// Recursively flatten a tree structure of IEnumerables.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
-        {
-            return e.SelectMany(c => f(c).Flatten(f)).Concat(e);
         }
 
         /// <summary>
@@ -75,6 +65,16 @@ namespace Pims.Core.Extensions
             if (skip < 0) throw new ArgumentException("Argument must be greater than or equal to zero.", nameof(skip));
             if (take < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(take));
             return items.Skip(skip).Take(take);
+        }
+
+        /// <summary>
+        /// Return a new enumerable by extracting all items that are null.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T> items)
+        {
+            return items.Where(v => v != null);
         }
     }
 }

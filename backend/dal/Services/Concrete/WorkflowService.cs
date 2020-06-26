@@ -20,8 +20,11 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public WorkflowService(PimsContext dbContext, ClaimsPrincipal user, ILogger<TaskService> logger) : base(dbContext, user, logger) { }
+        public WorkflowService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<TaskService> logger) : base(dbContext, user, service, logger)
+        {
+        }
         #endregion
 
         #region Methods

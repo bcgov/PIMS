@@ -416,7 +416,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -805,6 +805,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BodyType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -827,14 +828,17 @@ namespace Pims.Dal.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Encoding")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<Guid>("Key")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
@@ -859,6 +863,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("int");
+
                     b.Property<string>("To")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
@@ -876,13 +883,18 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("TemplateId");
 
                     b.HasIndex("ToAgencyId");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Key", "Status", "SendOn", "Subject", "ProjectId", "ToAgencyId");
+                    b.HasIndex("ProjectId", "TemplateId", "ToAgencyId");
+
+                    b.HasIndex("Status", "SendOn", "Subject");
 
                     b.ToTable("NotificationQueue");
                 });
@@ -894,12 +906,24 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Audience")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bcc")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BodyType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("Cc")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -914,6 +938,7 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(500);
 
                     b.Property<string>("Encoding")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -925,8 +950,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -941,6 +968,10 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("To")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -1076,7 +1107,7 @@ namespace Pims.Dal.Migrations
                         .IsUnique()
                         .HasFilter("[PIN] IS NOT NULL");
 
-                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
+                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
 
                     b.ToTable("Parcels");
                 });
@@ -1317,6 +1348,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.HasIndex("Name", "StatusId", "TierLevelId", "AgencyId");
+
+                    b.HasIndex("Assessed", "NetBook", "Estimated", "FiscalYear", "ExemptionRequested");
 
                     b.ToTable("Projects");
                 });
@@ -1593,13 +1626,13 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("FromStatusId");
-
                     b.HasIndex("TemplateId");
 
                     b.HasIndex("ToStatusId");
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("FromStatusId", "ToStatusId");
 
                     b.ToTable("ProjectStatusNotifications");
                 });
@@ -2629,11 +2662,15 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("Pims.Dal.Entities.Project", "Project")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("ProjectId");
 
+                    b.HasOne("Pims.Dal.Entities.NotificationTemplate", "Template")
+                        .WithMany("Notifications")
+                        .HasForeignKey("TemplateId");
+
                     b.HasOne("Pims.Dal.Entities.Agency", "ToAgency")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("ToAgencyId");
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")

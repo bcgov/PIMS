@@ -7,7 +7,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// IParcelService interface, provides functions to interact with parcels within the datasource.
     /// </summary>
-    public interface IParcelService
+    public interface IParcelService : IService
     {
         IEnumerable<Parcel> Get(double neLat, double neLong, double swLat, double swLong);
         IEnumerable<Parcel> Get(ParcelFilter filter);

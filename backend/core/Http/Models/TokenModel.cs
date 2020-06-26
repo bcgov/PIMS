@@ -1,7 +1,10 @@
+using System;
+using System.Text.Json.Serialization;
+
 namespace Pims.Core.Http.Models
 {
     /// <summary>
-    /// TokenModel class, provides a model that represents the keycloak token.
+    /// TokenModel class, provides a model that represents a response for requesting an access token.
     /// </summary>
     public class TokenModel
     {
@@ -9,43 +12,42 @@ namespace Pims.Core.Http.Models
         /// <summary>
         /// get/set - The access token.
         /// </summary>
-        /// <value></value>
-        public string Access_token { get; set; }
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
 
         /// <summary>
-        /// get/set - When the token expires.
+        /// get/set - When the access token expires.
         /// </summary>
-        /// <value></value>
-        public int Expires_in { get; set; }
+        [JsonPropertyName("expires_in")]
+        public int ExpiresIn { get; set; }
 
         /// <summary>
         /// get/set - When the refresh token expires.
         /// </summary>
-        /// <value></value>
-        public int Refresh_expires_in { get; set; }
+        [JsonPropertyName("refresh_expires_in")]
+        public int RefreshExpiresIn { get; set; }
 
         /// <summary>
         /// get/set - The refresh token.
         /// </summary>
-        /// <value></value>
-        public string Refresh_token { get; set; }
+        [JsonPropertyName("refresh_token")]
+        public string RefreshToken { get; set; }
 
         /// <summary>
-        /// get/set - The type of token.
+        /// get/set - The access token type.
         /// </summary>
-        /// <value></value>
-        public string Token_type { get; set; }
+        [JsonPropertyName("token_type")]
+        public string TokenType { get; set; }
 
         /// <summary>
-        /// get/set - Session state information.
+        /// get/set - The session state ID.
         /// </summary>
-        /// <value></value>
-        public string Session_state { get; set; }
+        [JsonPropertyName("session_state")]
+        public Guid SessionState { get; set; }
 
         /// <summary>
         /// get/set - The scope of the token.
         /// </summary>
-        /// <value></value>
         public string Scope { get; set; }
         #endregion
     }

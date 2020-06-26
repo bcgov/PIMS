@@ -2326,6 +2326,127 @@
                   ],
                   "protocolProfileBehavior": {},
                   "_postman_isSubFolder": true
+                },
+                {
+                  "name": "ches",
+                  "item": [
+                    {
+                      "name": "status/{messageId}",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/ches/status/{{message-id}}",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "tools",
+                            "ches",
+                            "status",
+                            "{{message-id}}"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "status",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/ches/status?tag=project",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "tools", "ches", "status"],
+                          "query": [
+                            {
+                              "key": "msgId",
+                              "value": "ea9e7944-12fd-448b-a0c2-3834bf897b35",
+                              "disabled": true
+                            },
+                            {
+                              "key": "status",
+                              "value": "",
+                              "disabled": true
+                            },
+                            {
+                              "key": "tag",
+                              "value": "project"
+                            },
+                            {
+                              "key": "txId",
+                              "value": "c9a26d56-4584-4991-9e42-21b8eb1eb1a3",
+                              "disabled": true
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "cancel/{messageId}",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/ches/status/{{message-id}}",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "tools",
+                            "ches",
+                            "status",
+                            "{{message-id}}"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "cancel",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/ches/status?txId=dd4b8fb9-1cb4-42e7-8402-f97e2f896ddf",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "tools", "ches", "status"],
+                          "query": [
+                            {
+                              "key": "msgId",
+                              "value": "",
+                              "disabled": true
+                            },
+                            {
+                              "key": "status",
+                              "value": "",
+                              "disabled": true
+                            },
+                            {
+                              "key": "tag",
+                              "value": "project",
+                              "disabled": true
+                            },
+                            {
+                              "key": "txId",
+                              "value": "dd4b8fb9-1cb4-42e7-8402-f97e2f896ddf"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
                 }
               ],
               "protocolProfileBehavior": {},
@@ -2640,7 +2761,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/ACCESS-DISPOSAL",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/SUBMIT-DISPOSAL",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2648,7 +2769,7 @@
                             "api",
                             "projects",
                             "workflows",
-                            "ACCESS-DISPOSAL"
+                            "SUBMIT-DISPOSAL"
                           ]
                         }
                       },
@@ -2838,7 +2959,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n\t\"projectNumber\": \"AUniqueID\",\n\t\"name\": \"\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 0,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
+                          "raw": "{\n\t\"name\": \"Test\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 1,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3042,6 +3163,281 @@
                             "page",
                             "filter"
                           ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
+                }
+              ],
+              "protocolProfileBehavior": {},
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "notification",
+              "item": [
+                {
+                  "name": "template",
+                  "item": [
+                    {
+                      "name": "/notifications/templates",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "ba1f95a9-9f23-4a91-b075-f4490c146ea2",
+                            "exec": [""],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/templates/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "aa19c020-a24c-4c5f-b245-a33304775f8f",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates", "1"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/templates",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "ee67cedd-a530-4def-9df6-73c87799de98",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"Name\": \"Test Email #4\",\r\n    \"Description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"To\": \"jeremy.foster@fosol.ca\",\r\n    \"Audience\": \"Default\",\r\n    \"Encoding\": \"utf-8\",\r\n    \"BodyType\": \"html\",\r\n    \"Priority\": \"normal\",\r\n    \"Subject\": \"Congratulations on creating a new disposal project \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"Body\": \"<html><head><title>Disposal Project</title></head><body>You have successfully created a disposal project. @Model.Project.ProjectNumber</br>@Model.Project.Name</body></html>\",\r\n    \"IsDisabled\": false,\r\n    \"Tag\": \"test\",\r\n    \"Status\": [\r\n        {\r\n            \"ToStatusId\": 1,\r\n            \"Priority\": \"normal\",\r\n            \"Delay\": \"None\"\r\n        }\r\n    ]\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/templates/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "5fa8d5ff-8f74-42f6-acd6-47ed57599538",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Test Email #2\",\r\n    \"description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"to\": \"jeremy.foster@fosol.ca\",\r\n    \"audience\": \"Default\",\r\n    \"encoding\": \"utf-8\",\r\n    \"bodyType\": \"html\",\r\n    \"priority\": \"Normal\",\r\n    \"subject\": \"This is a test email\",\r\n    \"body\": \"<html><body>This is a test</body></html>\",\r\n    \"isDisabled\": false,\r\n    \"tag\": \"test\",\r\n    \"status\": [],\r\n    \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates", "1"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/templates/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "03a59c48-cca4-4bc7-b41e-4a782b7fa11b",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Test Email #2\",\r\n    \"description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"to\": \"jeremy.foster@fosol.ca\",\r\n    \"audience\": \"Default\",\r\n    \"encoding\": \"utf-8\",\r\n    \"bodyType\": \"html\",\r\n    \"priority\": \"Normal\",\r\n    \"subject\": \"This is a test email\",\r\n    \"body\": \"<html><body>This is a test</body></html>\",\r\n    \"isDisabled\": false,\r\n    \"tag\": \"test\",\r\n    \"status\": [],\r\n    \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates", "1"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/templates/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "f5d7d707-fb54-4537-8f73-05420e617169",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1?to=jeremy.foster@fosol.ca",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "templates", "1"],
+                          "query": [
+                            {
+                              "key": "to",
+                              "value": "jeremy.foster@fosol.ca"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
+                },
+                {
+                  "name": "queue",
+                  "item": [
+                    {
+                      "name": "/notifications/queue/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "b321ed54-7345-42f1-ae7c-da0e79565fc0",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/12",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "queue", "12"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/queue/{id}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "c33cdefd-2cd9-4c1c-9a01-97a58a1154c2",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "queue", "1"]
                         }
                       },
                       "response": []

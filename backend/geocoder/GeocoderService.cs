@@ -26,7 +26,7 @@ namespace Pims.Geocoder
         /// Creates a new instance of a GeocoderService, initializes with specified arguments.
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="clientFactory"></param>
+        /// <param name="client"></param>
         public GeocoderService(IOptions<GeocoderOptions> options, IHttpRequestClient client)
         {
             this.Options = options.Value;
@@ -47,7 +47,7 @@ namespace Pims.Geocoder
         /// <returns></returns>
         private string GenerateUrl(string endpoint, string outputFormat = "json")
         {
-            var host = this.Options.Host;
+            var host = this.Options.HostUri;
             return $"{host}{endpoint.Replace("{outputFormat}", outputFormat)}";
         }
 
