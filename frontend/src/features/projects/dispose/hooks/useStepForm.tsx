@@ -45,28 +45,32 @@ const useStepForm = () => {
     statusCode?: string,
   ) => {
     const apiValues = _.cloneDeep(values);
-    return ((statusCode !== undefined
-      ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
-      : Promise.resolve(apiValues)) as any)
-      .then((values: IProject) => {
-        //Only perform an update after a status transition if this is a non-closing status.
-        return statusCode === ReviewWorkflowStatus.Cancelled ||
-          statusCode === ReviewWorkflowStatus.Denied ||
-          statusCode === ReviewWorkflowStatus.TransferredGRE
-          ? Promise.resolve(values)
-          : dispatch(
-              updateProject({
-                ...values,
-                statusCode: values.statusCode,
-                statusId: values.statusId,
-                rowVersion: values.rowVersion,
-              }),
-            );
-      })
-      .catch((error: any) => {
-        const msg: string = error?.response?.data?.error ?? error.toString();
-        formikRef.current?.setStatus({ msg });
-      });
+    if (values.exemptionRequested && statusCode !== undefined) {
+      return dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-EXEMPTION'));
+    } else {
+      return ((statusCode !== undefined
+        ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-DISPOSAL'))
+        : Promise.resolve(apiValues)) as any)
+        .then((values: IProject) => {
+          //Only perform an update after a status transition if this is a non-closing status.
+          return statusCode === ReviewWorkflowStatus.Cancelled ||
+            statusCode === ReviewWorkflowStatus.Denied ||
+            statusCode === ReviewWorkflowStatus.TransferredGRE
+            ? Promise.resolve(values)
+            : dispatch(
+                updateProject({
+                  ...values,
+                  statusCode: values.statusCode,
+                  statusId: values.statusId,
+                  rowVersion: values.rowVersion,
+                }),
+              );
+        })
+        .catch((error: any) => {
+          const msg: string = error?.response?.data?.error ?? error.toString();
+          formikRef.current?.setStatus({ msg });
+        });
+    }
   };
 
   const canUserEditForm = (projectAgencyId: number) => {

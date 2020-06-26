@@ -19,10 +19,17 @@ INSERT INTO dbo.[Workflows] (
 ), (
     2
     , 'Access Surplus Property Process Project Request'
-    , 'ACCESS-DISPOSAL'
+    , 'ASSESS-DISPOSAL'
     , 0
     , 'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'
     , 1
+), (
+    3
+    , 'Access Enhanced Referral Process Exemption'
+    , 'ASSESS-EXEMPTION'
+    , 0
+    , 'Assess a requested ERP exemption.'
+    , 2
 )
 
 SET IDENTITY_INSERT dbo.[Workflows] OFF

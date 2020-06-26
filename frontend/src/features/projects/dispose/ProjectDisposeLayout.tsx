@@ -55,7 +55,10 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     workflowStatusCode?: string,
   ) => {
     if (project?.statusId === currentStatus.id) {
-      if (nextStepCode === ReviewWorkflowStatus.PropertyReview) {
+      if (
+        nextStepCode === ReviewWorkflowStatus.PropertyReview ||
+        nextStepCode === ReviewWorkflowStatus.ExemptionReview
+      ) {
         history.push('/project/completed');
       }
       return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any).then(
@@ -77,9 +80,13 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       if (errors === undefined || !Object.keys(errors).length) {
         let nextStepCode = getNextStep(currentStatus)?.code;
         let workflowStatusCode: string | undefined = undefined;
-        if (nextStepCode === undefined) {
+        if (nextStepCode === undefined && !formikRef?.current?.values.exemptionRequested) {
           nextStepCode = ReviewWorkflowStatus.PropertyReview;
-          workflowStatusCode = 'ACCESS-DISPOSAL';
+          workflowStatusCode = 'ASSESS-DISPOSAL';
+        }
+        if (nextStepCode === undefined && formikRef?.current?.values.exemptionRequested) {
+          nextStepCode = ReviewWorkflowStatus.ExemptionReview;
+          workflowStatusCode = 'ASSESS-EXEMPTION';
         }
 
         addOrUpdateProject(values, formikRef).then((project: IProject) =>

@@ -14,6 +14,7 @@ import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
+import { ReviewWorkflowStatus } from '../interfaces';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -138,6 +139,7 @@ const useStepper = () => {
     if (
       project?.statusId !== undefined &&
       project.statusId > 0 &&
+      project.statusCode !== ReviewWorkflowStatus.ExemptionReview &&
       diposeWorkflowStatuses?.length > 0 &&
       currentStatus?.id !== undefined &&
       _.find(diposeWorkflowStatuses, { id: project.statusId }) === undefined &&

@@ -93,6 +93,17 @@ INSERT INTO dbo.[ProjectStatus] (
 ), (
     8
     , 7
+    , 'Submitted Exemption'
+    , 'Submitted'
+    , 'AS-EXE'
+    , 1
+    , 0
+    , 'Project has been been submitted with a request for exemption.'
+    , '/projects/assess/properties'
+    , 1  
+), (
+    9
+    , 8
     , 'Document Review'
     , 'Submitted'
     , 'AS-D'
@@ -102,8 +113,8 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/assess/documentation'
     , 0
 ), (
-    9
-    , 8
+    10
+    , 9
     , 'Appraisal Review'
     , 'Submitted'
     , 'AS-AP'
@@ -113,8 +124,8 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/assess/appraisal'
     , 0
 ), (
-    10
-    , 9
+    11
+    , 10
     , 'First Nation Consultation'
     , 'Submitted'
     , 'AS-FNC'
@@ -124,8 +135,19 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/assess/first/nation/consultation'
     , 0
 ), (
-    11
-    , 10
+    12
+    , 11
+    , 'Exemption Process'
+    , 'Submitted'
+    , 'AS-EXP'
+    , 1
+    , 0
+    , 'Process to approve ERP exemption.'
+    , 'projects/assess/exemption'
+    , 0
+), (
+    13
+    , 12
     , 'Approved for ERP'
     , 'Approved'
     , 'AP-ERP'
@@ -135,8 +157,8 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/approved'
     , 1
 ), (
-    12
-    , 11
+    14
+    , 13
     , 'Approved for SPL'
     , 'Approved'
     , 'AP-SPL'
@@ -146,8 +168,19 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/approved'
     , 1
 ), (
-    13
-    , 12
+    15
+    , 14
+    , 'Approved for Exemption'
+    , 'Approved'
+    , 'AP-EXE'
+    , 1
+    , 0
+    , 'Project has been approved for ERP exemption.'
+    , '/projects/approved'
+    , 1    
+), (
+    16
+    , 15
     , 'Denied'
     , 'Closed'
     , 'DE'
@@ -157,8 +190,8 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/denied'
     , 1
 ), (
-    14
-    , 13
+    17
+    , 16
     , 'Cancelled'
     , 'Closed'
     , 'CA'
@@ -167,11 +200,12 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been cancelled from the Surplus Property Program.'
     , '/projects/cancelled'
     , 1
-), (
-    15
-    , 14
-    , 'On Hold'
-    , 'Approved'
+)
+, (
+    18
+    , 17
+    , 'OnHold'
+    , 'OnHold'
     , 'OH'
     , 1
     , 0
@@ -179,9 +213,9 @@ INSERT INTO dbo.[ProjectStatus] (
     , '/projects/onhold'
     , 1
 ), (
-    16
-    , 15
-    , 'Transferred within GRE'
+    19
+    , 18
+    , 'Transferred within the GRE'
     , 'Closed'
     , 'T-GRE'
     , 0
