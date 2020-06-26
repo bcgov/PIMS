@@ -76,9 +76,8 @@ export const handleAxiosResponse = (
   dispatch: Function,
   actionType: string,
   axiosPromise: Promise<any>,
-  skipNetwork?: boolean,
 ): Promise<any> => {
-  skipNetwork !== true && dispatch(request(actionType));
+  dispatch(request(actionType));
   dispatch(showLoading());
   return axiosPromise
     .then((response: any) => {

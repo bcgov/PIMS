@@ -14,7 +14,7 @@ import { PublicNotes } from './components/ProjectNotes';
  */
 const ProjectSummaryView = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
-  const { onSubmitReview } = useStepForm();
+  const { onSubmitReview, noFetchingProjectRequests } = useStepForm();
   const initialValues = { ...project, confirmation: true };
   return (
     <Container fluid className="ProjectSummaryView">
@@ -36,7 +36,7 @@ const ProjectSummaryView = ({ formikRef }: IStepProps) => {
               onNext={noop}
               nextDisabled={true}
               saveDisabled={!project.status?.isActive}
-              isFetching={formikProps.isSubmitting}
+              isFetching={!noFetchingProjectRequests}
             />
           </Form>
         )}

@@ -56,6 +56,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   useEffect(() => {
     fetchProjectTasks('ACCESS-DISPOSAL');
   }, []);
+  const { noFetchingProjectRequests } = useStepForm();
 
   const initialValues: IProject = {
     ...project,
@@ -85,7 +86,13 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           />
           <StepErrorSummary />
           {canUserApproveForm() ? (
-            <ReviewApproveActions {...{ submitStatusCode, setSubmitStatusCode }} />
+            <ReviewApproveActions
+              {...{
+                submitStatusCode,
+                setSubmitStatusCode,
+                isSubmitting: !noFetchingProjectRequests,
+              }}
+            />
           ) : null}
         </Form>
       </Formik>

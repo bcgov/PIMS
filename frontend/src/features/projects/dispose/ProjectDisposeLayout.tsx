@@ -19,8 +19,6 @@ import {
   GreTransferStep,
 } from '.';
 import { FormikValues } from 'formik';
-import { IGenericNetworkAction } from 'actions/genericActions';
-import { ProjectActions } from 'constants/actionTypes';
 import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
 import SresManual from './components/SresManual';
 import ReviewApproveStep from './steps/ReviewApproveStep';
@@ -40,24 +38,12 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   const formikRef = useRef<FormikValues>();
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { goToNextStep, project, getNextStep, currentStatus, setCurrentStatus } = useStepper();
-  const { onSave, addOrUpdateProject } = useStepForm();
-  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
-  );
-  const addProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.ADD_PROJECT] as any,
-  );
-  const updateProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.UPDATE_PROJECT] as any,
-  );
-  const updateWorflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
-  );
-  const noFetchingProjectRequests =
-    getProjectRequest?.isFetching !== true &&
-    addProjectRequest?.isFetching !== true &&
-    updateProjectRequest?.isFetching !== true &&
-    updateWorflowStatusRequest?.isFetching !== true;
+  const {
+    onSave,
+    addOrUpdateProject,
+    noFetchingProjectRequests,
+    getProjectRequest,
+  } = useStepForm();
   const dispatch = useDispatch();
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;

@@ -1,7 +1,7 @@
 import { updateProject, updateWorkflowStatus, createProject } from '../projectsActionCreator';
 import { ProjectActions } from 'constants/actionTypes';
-import { useDispatch } from 'react-redux';
-import { clear } from 'actions/genericActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { clear, IGenericNetworkAction } from 'actions/genericActions';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
@@ -10,11 +10,29 @@ import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
 import { ReviewWorkflowStatus } from '../interfaces';
+import { RootState } from 'reducers/rootReducer';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
+  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  );
+  const addProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.ADD_PROJECT] as any,
+  );
+  const updateProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_PROJECT] as any,
+  );
+  const updateWorflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  );
+  const noFetchingProjectRequests =
+    getProjectRequest?.isFetching !== true &&
+    addProjectRequest?.isFetching !== true &&
+    updateProjectRequest?.isFetching !== true &&
+    updateWorflowStatusRequest?.isFetching !== true;
 
   //TODO: There is a known issue in formik preventing submitForm()
   // from returning promises. For the time being the higher level
@@ -37,15 +55,12 @@ const useStepForm = () => {
           statusCode === ReviewWorkflowStatus.TransferredGRE
           ? Promise.resolve(values)
           : dispatch(
-              updateProject(
-                {
-                  ...apiValues,
-                  statusCode: values.statusCode,
-                  statusId: values.statusId,
-                  rowVersion: values.rowVersion,
-                },
-                true,
-              ),
+              updateProject({
+                ...values,
+                statusCode: values.statusCode,
+                statusId: values.statusId,
+                rowVersion: values.rowVersion,
+              }),
             );
       })
       .catch((error: any) => {
@@ -106,6 +121,8 @@ const useStepForm = () => {
     onSubmitReview,
     addOrUpdateProject,
     onSave,
+    noFetchingProjectRequests,
+    getProjectRequest,
   };
 };
 

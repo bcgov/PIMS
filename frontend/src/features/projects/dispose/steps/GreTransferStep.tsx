@@ -47,7 +47,7 @@ const FlexRight = styled.div`
  */
 const GreTransferStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
-  const { onSubmitReview, canUserApproveForm } = useStepForm();
+  const { onSubmitReview, canUserApproveForm, noFetchingProjectRequests } = useStepForm();
   const [updatePims, setUpdatePims] = useState(false);
 
   const initialValues: IProject = {
@@ -89,7 +89,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
                   style={{ maxWidth: '18rem' }}
                   disabled={values.agencyId === project.agencyId}
                   showSubmitting
-                  isSubmitting={isSubmitting}
+                  isSubmitting={!noFetchingProjectRequests}
                   onClick={() =>
                     validateForm().then((errors: any) => {
                       if (Object.keys(errors).length === 0) {
