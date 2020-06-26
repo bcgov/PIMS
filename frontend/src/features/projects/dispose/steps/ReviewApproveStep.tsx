@@ -66,7 +66,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
   useEffect(() => {
-    fetchProjectTasks('ACCESS-DISPOSAL');
+    fetchProjectTasks('ASSESS-DISPOSAL');
   }, []);
   const { noFetchingProjectRequests } = useStepForm();
 

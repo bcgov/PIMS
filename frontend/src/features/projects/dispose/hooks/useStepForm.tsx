@@ -46,10 +46,10 @@ const useStepForm = () => {
   ) => {
     const apiValues = _.cloneDeep(values);
     if (values.exemptionRequested && statusCode !== undefined) {
-      return dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-EXEMPTION'));
+      return dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-EXEMPTION'));
     } else {
       return ((statusCode !== undefined
-        ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
+        ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-DISPOSAL'))
         : Promise.resolve(apiValues)) as any)
         .then((values: IProject) => {
           //Only perform an update after a status transition if this is a non-closing status.

@@ -82,11 +82,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         let workflowStatusCode: string | undefined = undefined;
         if (nextStepCode === undefined && !formikRef?.current?.values.exemptionRequested) {
           nextStepCode = ReviewWorkflowStatus.PropertyReview;
-          workflowStatusCode = 'ACCESS-DISPOSAL';
+          workflowStatusCode = 'ASSESS-DISPOSAL';
         }
         if (nextStepCode === undefined && formikRef?.current?.values.exemptionRequested) {
           nextStepCode = ReviewWorkflowStatus.ExemptionReview;
-          workflowStatusCode = 'ACCESS-EXEMPTION';
+          workflowStatusCode = 'ASSESS-EXEMPTION';
         }
 
         addOrUpdateProject(values, formikRef).then((project: IProject) =>
