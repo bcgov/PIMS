@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { SPPApprovalTabs, EnhancedReferralTab, ProjectInformationTab, DocumentationTab } from '..';
+import { useFormikContext } from 'formik';
 
 interface IApprovalFormProps {
   /** The currently displayed tab */
@@ -11,6 +12,8 @@ interface IApprovalFormProps {
   isReadOnly?: boolean;
   /** status code update triggered by a form action. Will trigger a status transition if set. */
   setSubmitStatusCode: Function;
+  /** Function that will navigate to the gre transferred form when executed */
+  goToGreTransferred: Function;
 }
 
 /**
@@ -22,7 +25,9 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
   setCurrentTab,
   isReadOnly,
   setSubmitStatusCode,
+  goToGreTransferred,
 }) => {
+  const { submitForm } = useFormikContext();
   return (
     <React.Fragment>
       <Tabs activeKey={currentTab} id="approvalTabs" onSelect={(key: string) => setCurrentTab(key)}>
@@ -33,7 +38,11 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
           <DocumentationTab isReadOnly={isReadOnly} />
         </Tab>
         <Tab eventKey={SPPApprovalTabs.erp} title="Enhanced Referral Process">
-          <EnhancedReferralTab isReadOnly={isReadOnly} setSubmitStatusCode={setSubmitStatusCode} />
+          <EnhancedReferralTab
+            isReadOnly={isReadOnly}
+            setSubmitStatusCode={setSubmitStatusCode}
+            goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
+          />
         </Tab>
         <Tab eventKey={SPPApprovalTabs.spl} title="Surplus Properties List"></Tab>
       </Tabs>

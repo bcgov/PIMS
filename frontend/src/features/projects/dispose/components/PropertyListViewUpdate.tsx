@@ -5,7 +5,7 @@ import { IProperty, clickableTooltip } from '..';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';
-import { getColumnsWithRemove } from './columns';
+import { getColumnsWithRemove, getColumns } from './columns';
 import { useHistory } from 'react-router-dom';
 import useStepper from '../hooks/useStepper';
 
@@ -29,6 +29,14 @@ type OptionalAttributes = {
   outerClassName?: string;
   /** allows table rows to be selected using this function */
   setSelectedRows?: Function;
+  /** makes the classification column editable */
+  editableClassification?: boolean;
+  /** makes the financial columns editable */
+  editableFinancials?: boolean;
+  /** makes the zoning columns editable */
+  editableZoning?: boolean;
+  /** limit the available classification labels that are returned */
+  classificationLimitLabels?: string[];
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -42,6 +50,10 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   outerClassName,
   disabled,
   setSelectedRows,
+  editableClassification,
+  editableFinancials,
+  editableZoning,
+  classificationLimitLabels,
 }) => {
   const history = useHistory();
   const { values, setFieldValue } = useFormikContext<any>();
@@ -49,12 +61,31 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   const { project } = useStepper();
   const columns = useMemo(
     () =>
-      getColumnsWithRemove(
-        (properties: IProperty) => setFieldValue('properties', properties),
-        project,
-        !disabled,
-      ),
-    [disabled, setFieldValue, project],
+      disabled
+        ? getColumns({
+            project,
+            editableClassification: !disabled && editableClassification,
+            editableFinancials: !disabled && editableFinancials,
+            editableZoning: !disabled && editableZoning,
+            limitLabels: classificationLimitLabels ?? [],
+          })
+        : getColumnsWithRemove({
+            setProperties: (properties: IProperty) => setFieldValue('properties', properties),
+            project,
+            editableClassification: !disabled && editableClassification,
+            editableFinancials: !disabled && editableFinancials,
+            editableZoning: !disabled && editableZoning,
+            limitLabels: classificationLimitLabels,
+          }),
+    [
+      project,
+      disabled,
+      editableClassification,
+      editableFinancials,
+      editableZoning,
+      classificationLimitLabels,
+      setFieldValue,
+    ],
   );
 
   return (

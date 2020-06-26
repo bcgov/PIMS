@@ -20,11 +20,13 @@ const FlexRight = styled.div`
 export const ReviewApproveActions = ({
   submitStatusCode,
   setSubmitStatusCode,
+  isSubmitting,
 }: {
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
+  isSubmitting: boolean;
 }) => {
-  const { values, submitForm, isSubmitting } = useFormikContext<any>();
+  const { values, submitForm } = useFormikContext<any>();
   const [approveERP, setApproveERP] = useState(false);
   const [denyERP, setDenyERP] = useState(false);
   return (

@@ -493,7 +493,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     disabled={true}
                     id="input-classificationId"
                     name="classificationId"
-                    onBlur={[Function]}
                     onChange={[Function]}
                     type="number"
                     value={1}

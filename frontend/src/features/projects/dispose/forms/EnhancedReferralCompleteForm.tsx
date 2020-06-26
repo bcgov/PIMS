@@ -2,10 +2,13 @@ import './EnhancedReferralCompleteForm.scss';
 import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
-import { ProjectNotes, IProject } from '..';
+import { ProjectNotes, IProject, ReviewWorkflowStatus } from '..';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { noop } from 'lodash';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { onHoldNotificationTooltip, onTransferredWithinTheGreTooltip } from '../strings';
+import { PrivateNotes, PublicNotes } from '../components/ProjectNotes';
 
 const OrText = styled.div`
   margin: 0.75rem 2rem 0.75rem 2rem;
@@ -14,6 +17,7 @@ const OrText = styled.div`
 interface IEnhancedReferralCompleteFormProps {
   isReadOnly?: boolean;
   onClickOnHold: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -23,6 +27,7 @@ interface IEnhancedReferralCompleteFormProps {
 const EnhancedReferralCompleteForm = ({
   isReadOnly,
   onClickOnHold,
+  onClickGreTransferred,
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
   return (
@@ -30,7 +35,8 @@ const EnhancedReferralCompleteForm = ({
       <h3>Enhanced Referral Process Complete</h3>
       <Form.Row>
         <Form.Label column md={4}>
-          On Hold Notification Sent
+          On Hold Notification Sent{' '}
+          <TooltipIcon toolTipId="onHoldTooltip" toolTip={onHoldNotificationTooltip} />
         </Form.Label>
         <FastDatePicker
           outerClassName="col-md-2"
@@ -40,7 +46,11 @@ const EnhancedReferralCompleteForm = ({
         />
         <div className="col-md-6">
           <Button
-            disabled={isReadOnly || !formikProps.values.onHoldNotificationSentOn}
+            disabled={
+              isReadOnly ||
+              !formikProps.values.onHoldNotificationSentOn ||
+              formikProps.values.statusCode === ReviewWorkflowStatus.OnHold
+            }
             onClick={onClickOnHold}
           >
             Place Project On Hold
@@ -50,6 +60,10 @@ const EnhancedReferralCompleteForm = ({
       <Form.Row>
         <Form.Label column md={4}>
           Date Transferred within the GRE
+          <TooltipIcon
+            toolTipId="onDateTransferredWithinGre"
+            toolTip={onTransferredWithinTheGreTooltip}
+          />
         </Form.Label>
         <FastDatePicker
           outerClassName="col-md-2"
@@ -58,7 +72,10 @@ const EnhancedReferralCompleteForm = ({
           field="transferredWithinGreOn"
         />
         <div className="col-md-6">
-          <Button disabled={isReadOnly} onClick={noop}>
+          <Button
+            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+            onClick={onClickGreTransferred}
+          >
             Update Property Information
           </Button>
         </div>
@@ -84,14 +101,9 @@ const EnhancedReferralCompleteForm = ({
           </Button>
         </div>
       </Form.Row>
-      <ProjectNotes outerClassName="col-md-12" disabled={isReadOnly} />
-      <ProjectNotes
-        outerClassName="col-md-12"
-        tooltip="Visible to SRES only"
-        label="Private Notes"
-        field="privateNote"
-        disabled={isReadOnly}
-      />
+      <ProjectNotes outerClassName="col-md-12" disabled={true} />
+      <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />
+      <PrivateNotes outerClassName="col-md-12" disabled={isReadOnly} />
     </Container>
   );
 };

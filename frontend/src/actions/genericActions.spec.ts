@@ -22,7 +22,7 @@ describe('genericActions', () => {
       { name: ActionTypes.GET_PARCELS, type: ActionTypes.REQUEST, isFetching: true },
     ];
 
-    store.dispatch(request(ActionTypes.GET_PARCELS));
+    store.dispatch<any>(request(ActionTypes.GET_PARCELS));
     expect(store.getActions()).toEqual(expectedActions);
   });
 
@@ -40,7 +40,7 @@ describe('genericActions', () => {
         },
       ];
 
-      store.dispatch(request(ActionTypes.GET_PARCELS));
+      store.dispatch<any>(request(ActionTypes.GET_PARCELS));
       store.dispatch(success(ActionTypes.GET_PARCELS, 200, mockData));
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -66,7 +66,7 @@ describe('genericActions', () => {
           data: undefined,
         },
       ];
-      store.dispatch(request(ActionTypes.GET_PARCELS));
+      store.dispatch<any>(request(ActionTypes.GET_PARCELS));
       store.dispatch(error(ActionTypes.GET_PARCELS, 400, mockError));
       expect(store.getActions()).toEqual(expectedActions);
     });

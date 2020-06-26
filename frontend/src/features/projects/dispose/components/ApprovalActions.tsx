@@ -6,6 +6,7 @@ import GenericModal from 'components/common/GenericModal';
 import { useState } from 'react';
 import { DisplayError, Button } from 'components/common/form';
 import { cancellationWarning } from '../strings';
+import { useStepForm } from '..';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -26,8 +27,9 @@ export const ApprovalActions = ({
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
 }) => {
-  const { values, submitForm, isSubmitting, setSubmitting, validateForm } = useFormikContext<any>();
+  const { values, submitForm, validateForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
+  const { noFetchingProjectRequests } = useStepForm();
   return (
     <>
       <FlexRight>
@@ -36,10 +38,12 @@ export const ApprovalActions = ({
       <FlexRight>
         <span>
           <Button
-            disabled={values.statusCode === ReviewWorkflowStatus.Cancelled || isSubmitting}
+            disabled={
+              values.statusCode === ReviewWorkflowStatus.Cancelled || !noFetchingProjectRequests
+            }
             style={{ marginLeft: 10 }}
             showSubmitting
-            isSubmitting={isSubmitting}
+            isSubmitting={!noFetchingProjectRequests}
             onClick={() => {
               submitForm();
             }}
@@ -49,10 +53,12 @@ export const ApprovalActions = ({
         </span>
         <span>
           <Button
-            disabled={values.statusCode === ReviewWorkflowStatus.Cancelled || isSubmitting}
+            disabled={
+              values.statusCode === ReviewWorkflowStatus.Cancelled || !noFetchingProjectRequests
+            }
             variant="danger"
             showSubmitting
-            isSubmitting={isSubmitting}
+            isSubmitting={!noFetchingProjectRequests}
             onClick={() => {
               validateForm().then((errors: any) => {
                 if (Object.keys(errors).length === 0) {
@@ -75,7 +81,6 @@ export const ApprovalActions = ({
               }}
               handleCancel={() => {
                 setCancel(false);
-                setSubmitting(false);
               }}
               title="Really Cancel Project?"
               message={cancellationWarning}

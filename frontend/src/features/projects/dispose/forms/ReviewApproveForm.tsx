@@ -11,6 +11,8 @@ import {
   DisposeWorkflowStatus,
   AppraisalCheckListForm,
   FirstNationsCheckListForm,
+  PrivateNotes,
+  PublicNotes,
 } from '..';
 
 import TasksForm from './TasksForm';
@@ -59,19 +61,19 @@ const ReviewApproveForm = ({
         goToAddProperties={goToAddProperties}
         title=""
       />
-      <TasksForm tasks={infoReviewTasks} className="reviewRequired" />
+      <TasksForm tasks={infoReviewTasks} className="reviewRequired" isReadOnly={!canEdit} />
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
-      <TasksForm tasks={documentationReviewTasks} className="reviewRequired" />
-      <AppraisalCheckListForm className="reviewRequired" />
-      <FirstNationsCheckListForm className="reviewRequired" />
-      <ApprovalConfirmationForm isReadOnly={true} />
-      <ProjectNotes outerClassName="col-md-12" />
-      <ProjectNotes
-        tooltip="Visible to SRES only"
-        label="Private Notes"
-        field="privateNote"
-        outerClassName="col-md-12 reviewRequired"
+      <TasksForm
+        tasks={documentationReviewTasks}
+        className="reviewRequired"
+        isReadOnly={!canEdit}
       />
+      <AppraisalCheckListForm className="reviewRequired" isReadOnly={!canEdit} />
+      <FirstNationsCheckListForm className="reviewRequired" isReadOnly={!canEdit} />
+      <ApprovalConfirmationForm isReadOnly={true} />
+      <ProjectNotes outerClassName="col-md-12 reviewRequired" disabled={true} />
+      <PublicNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
+      <PrivateNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
     </Fragment>
   );
 };

@@ -43,3 +43,43 @@ export default function ProjectNotes({
     </Form.Row>
   );
 }
+
+export const PrivateNotes = ({
+  label,
+  tooltip,
+  field,
+  className,
+  outerClassName,
+  disabled,
+}: IProjectNotesProps) => {
+  return (
+    <ProjectNotes
+      disabled={disabled}
+      tooltip={tooltip ?? 'Visible to SRES only'}
+      label={label ?? 'Private Notes'}
+      field={field ?? 'privateNote'}
+      className={className}
+      outerClassName={outerClassName}
+    />
+  );
+};
+
+export const PublicNotes = ({
+  label,
+  tooltip,
+  field,
+  className,
+  outerClassName,
+  disabled,
+}: IProjectNotesProps) => {
+  return (
+    <ProjectNotes
+      disabled={disabled}
+      tooltip={tooltip ?? 'Visible to SRES and project agency'}
+      label={label ?? 'Shared Notes'}
+      field={field ?? 'publicNote'}
+      className={className}
+      outerClassName={outerClassName}
+    />
+  );
+};

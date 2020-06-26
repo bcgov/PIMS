@@ -149,7 +149,7 @@ INSERT INTO dbo.[ProjectStatus] (
     13
     , 12
     , 'Denied'
-    , 'Denied'
+    , 'Closed'
     , 'DE'
     , 0
     , 0
@@ -160,7 +160,7 @@ INSERT INTO dbo.[ProjectStatus] (
     14
     , 13
     , 'Cancelled'
-    , 'Cancelled'
+    , 'Closed'
     , 'CA'
     , 0
     , 0
@@ -170,13 +170,24 @@ INSERT INTO dbo.[ProjectStatus] (
 ), (
     15
     , 14
-    , 'OnHold'
-    , 'OnHold'
+    , 'On Hold'
+    , 'Approved'
     , 'OH'
-    , 0
+    , 1
     , 0
     , 'The project has been put on hold due to potential sale to an interested party.'
     , '/projects/onhold'
+    , 1
+), (
+    16
+    , 15
+    , 'Transferred within GRE'
+    , 'Closed'
+    , 'T-GRE'
+    , 0
+    , 0
+    , 'The project has been transferred within the Greater Revenue Entity'
+    , '/projects/transferred'
     , 1
 )
 

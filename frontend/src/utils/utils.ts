@@ -89,7 +89,9 @@ export const handleAxiosResponse = (
       dispatch(error(actionType, axiosError?.response?.status, axiosError));
       throw axiosError;
     })
-    .finally(() => dispatch(hideLoading()));
+    .finally(() => {
+      dispatch(hideLoading());
+    });
 };
 
 export const generateSortCriteria = (column: string, direction: SortDirection) => {

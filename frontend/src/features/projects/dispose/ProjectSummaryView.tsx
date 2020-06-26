@@ -1,23 +1,20 @@
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useStepper, useStepForm, ReviewProjectForm, StepStatusIcon } from '.';
+import { useStepper, useStepForm, ReviewProjectForm, StepStatusIcon, ProjectNotes } from '.';
 import { Formik } from 'formik';
-import {
-  UpdateInfoStepYupSchema,
-  ProjectDraftStepYupSchema,
-  SelectProjectPropertiesStepYupSchema,
-} from './forms/disposalYupSchema';
 import './ProjectSummaryView.scss';
 import { StepActions } from './components/StepActions';
 import { noop } from 'lodash';
 import StepErrorSummary from './steps/StepErrorSummary';
+import { IStepProps } from './interfaces';
+import { PublicNotes } from './components/ProjectNotes';
 
 /**
  * Read only version of all step components. Allows notes field to be edited
  */
-const ProjectSummaryView = () => {
+const ProjectSummaryView = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
-  const { onSubmitReview } = useStepForm();
+  const { onSubmitReview, noFetchingProjectRequests } = useStepForm();
   const initialValues = { ...project, confirmation: true };
   return (
     <Container fluid className="ProjectSummaryView">
@@ -25,20 +22,21 @@ const ProjectSummaryView = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
-        onSubmit={(values, actions) => onSubmitReview(values, actions)}
-        validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema).concat(
-          SelectProjectPropertiesStepYupSchema,
-        )}
+        innerRef={formikRef}
+        onSubmit={(values, actions) => onSubmitReview(values, formikRef)}
       >
         {formikProps => (
           <Form>
             <ReviewProjectForm canEdit={false} />
+            <ProjectNotes disabled={!project.status?.isActive} />
+            <PublicNotes disabled={!project.status?.isActive} />
             <StepErrorSummary />
             <StepActions
               onSave={() => formikProps.submitForm()}
               onNext={noop}
               nextDisabled={true}
-              isFetching={formikProps.isSubmitting}
+              saveDisabled={!project.status?.isActive}
+              isFetching={!noFetchingProjectRequests}
             />
           </Form>
         )}

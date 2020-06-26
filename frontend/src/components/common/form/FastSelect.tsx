@@ -148,16 +148,20 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           disabled={disabled}
           custom={custom}
           isInvalid={!!touch && !!error}
-          onBlur={(e: any) => {
-            if (type === 'number' && !isNaN(parseInt(value))) {
-              setFieldValue(field, parseInt(value));
-            }
-            handleBlur(e);
-          }}
           isValid={false}
           value={getIn(values, field)}
           multiple={multiple}
-          onChange={multiple ? handleMultipleChange : handleChange}
+          onChange={
+            multiple
+              ? handleMultipleChange
+              : (e: any) => {
+                  let value = e.currentTarget.value;
+                  if (type === 'number' && !isNaN(parseInt(value))) {
+                    value = parseInt(value);
+                  }
+                  setFieldValue(field, value);
+                }
+          }
           type={type}
           {...rest}
         >
