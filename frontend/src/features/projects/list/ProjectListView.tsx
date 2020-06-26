@@ -29,7 +29,7 @@ interface IProjectFilterState {
   createdByMe?: boolean;
   name?: string;
   statusId?: number;
-  accessWorkflow?: boolean;
+  assessWorkflow?: boolean;
 }
 
 const initialQuery: IProjectFilter = {
@@ -128,7 +128,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         const query = getServerQuery({
           pageIndex,
           pageSize,
-          filter: mode === PageMode.APPROVAL ? { ...filter, accessWorkflow: true } : filter,
+          filter: mode === PageMode.APPROVAL ? { ...filter, assessWorkflow: true } : filter,
         });
         const data = await service.getProjectList(query);
 

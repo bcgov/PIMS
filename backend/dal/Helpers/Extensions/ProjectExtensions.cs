@@ -41,9 +41,9 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking();
 
-            if (filter.AccessWorkflow.HasValue && filter.AccessWorkflow.Value)
+            if (filter.AssessWorkflow.HasValue && filter.AssessWorkflow.Value)
             {
-                var statuses = context.Workflows.Where(w => w.Code == "ACCESS-DISPOSAL" || w.Code == "ACCESS-EXEMPTION")
+                var statuses = context.Workflows.Where(w => w.Code == "ASSESS-DISPOSAL" || w.Code == "ASSESS-EXEMPTION")
                     .SelectMany(w => w.Status).Select(x => x.StatusId).Distinct().ToArray();
                 query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE"));
             }

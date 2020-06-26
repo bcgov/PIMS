@@ -2781,7 +2781,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/ACCESS-DISPOSAL/tasks",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/ASSESS-DISPOSAL/tasks",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2789,7 +2789,7 @@
                             "api",
                             "projects",
                             "workflows",
-                            "ACCESS-DISPOSAL",
+                            "ASSESS-DISPOSAL",
                             "tasks"
                           ]
                         }
