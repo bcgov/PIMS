@@ -76,18 +76,18 @@ pipeline {
         }
       }
     }
+
     stage("Approval") {
-      options {
-        timeout(time: 1, unit: "HOURS")
-      }
+      options { timeout(time: 1, unit: "HOURS") }
       input {
         message "Deploy to PROD?"
         ok "Yes, go ahead"
       }
       steps {
-        echo "[ci/cd] Promotion from TEST to PROD was approved. Proceeding..."
+        echo "Promotion from TEST to PROD was approved. Proceeding..."
       }
     }
+
     stage("Version check") {
       steps {
         script {
@@ -108,60 +108,51 @@ pipeline {
         }
       }
     }
+
     stage("Maintenance mode ON") {
       steps {
-        script {
-          dir(MAINTENANCE_DIRECTORY) {
-            sh "./maintenance.sh ${DESTINATION} on"
-          }
-        }
+        dir(MAINTENANCE_DIRECTORY) { sh "./maintenance.sh ${DESTINATION} on" }
       }
     }
+
     stage("Database backup") {
       steps {
-        script {
-          dir(DEVOPS_DIRECTORY) {
-            sh "./player.sh backup ${DESTINATION} apply"
-          }
-        }
+        sh "./openshift/player.sh backup ${DESTINATION} apply"
       }
     }
+
     stage("Database migration") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
+      options { timeout(time: 5, unit: "MINUTES") }
       steps {
         // pretend we are doing stuff - db backups etc
         sleep(30)
       }
     }
+
     stage("Promote to PROD") {
+      options { timeout(time: 10, unit: "MINUTES") }
+      // These env-vars are required by player.sh below
       environment {
-        // These env-vars are required by player.sh below
         RELEASE_TAG="${RELEASE_VERSION}"
         TARGET_TAG="${DESTINATION}"
       }
       steps {
         script {
-          dir(DEVOPS_DIRECTORY) {
-            sh "./player.sh deploy api apply"
-            sh "./player.sh deploy app apply"
-          }
+          sh "./openshift/player.sh deploy api apply"
+          sh "./openshift/player.sh deploy app apply"
         }
       }
     }
+
     stage("Maintenance mode OFF") {
       steps {
-        script {
-          dir(MAINTENANCE_DIRECTORY) {
-            sh "./maintenance.sh ${DESTINATION} off"
-          }
-        }
+        dir(MAINTENANCE_DIRECTORY) { sh "./maintenance.sh ${DESTINATION} off" }
       }
     }
+
     stage("DONE") {
       steps {
-        echo "[ci/cd]  PRODUCTION deployment complete!"
+        echo "PRODUCTION deployment complete!"
       }
     }
   }
