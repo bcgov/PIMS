@@ -7,7 +7,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// IPropertyService interface, provides functions to interact with properties within the datasource.
     /// </summary>
-    public interface IPropertyService
+    public interface IPropertyService : IService
     {
         int Count();
         IEnumerable<Property> Get(AllPropertyFilter filter);

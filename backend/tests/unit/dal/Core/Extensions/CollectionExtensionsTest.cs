@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 
-namespace Pims.Api.Test.Helpers
+namespace Pims.Api.Test.Core.Extensions
 {
     [Trait("category", "unit")]
     [Trait("category", "core")]

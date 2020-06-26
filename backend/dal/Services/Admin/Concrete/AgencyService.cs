@@ -22,8 +22,9 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public AgencyService(PimsContext dbContext, ClaimsPrincipal user, ILogger<AgencyService> logger) : base(dbContext, user, logger) { }
+        public AgencyService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<AgencyService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

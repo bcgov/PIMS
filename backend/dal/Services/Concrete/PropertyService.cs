@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Entities.Views;
 using Pims.Dal.Helpers.Extensions;
@@ -23,8 +22,9 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="logger"></param>
-        public PropertyService(PimsContext dbContext, ClaimsPrincipal user, ILogger<PropertyService> logger) : base(dbContext, user, logger) { }
+        public PropertyService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<PropertyService> logger) : base(dbContext, user, service, logger) { }
         #endregion
 
         #region Methods

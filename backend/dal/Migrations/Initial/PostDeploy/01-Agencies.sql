@@ -8,51 +8,81 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
+    , [Email]
+    , [AddressTo]
 ) VALUES (
     1
     , 'AEST'
     , 'Ministry of Advanced Education, Skills & Training'
     , 0
+    , 1
+    , 'aest@gov.bc.ca'
+    , 'Agency'
 ), (
     2
     , 'CITZ'
     , 'Ministry of Citizens Services'
     , 0
+    , 1
+    , 'citz@gov.bc.ca'
+    , 'Agency'
 ), (
     3
     , 'CSNR'
     , 'Ministry of Corporate Services for the Natural Resources Sector'
     , 0
+    , 1
+    , 'csnr@gov.bc.ca'
+    , 'Agency'
 ), (
     4
     , 'EDUC'
     , 'Ministry of Education'
     , 0
+    , 1
+    , 'educ@gov.bc.ca'
+    , 'Agency'
 ), (
     5
     , 'FIN'
     , 'Ministry of Finance'
     , 0
+    , 1
+    , 'fin@gov.bc.ca'
+    , 'Agency'
 ), (
     6
     , 'FLNR'
     , 'Ministry of Forests, Lands, Natural Resources'
     , 0
+    , 1
+    , 'flnr@gov.bc.ca'
+    , 'Agency'
 ), (
     7
     , 'HLTH'
     , 'Ministry of Health'
     , 0
+    , 1
+    , 'hlth@gov.bc.ca'
+    , 'Agency'
 ), (
     8
     , 'MAH'
     , 'Ministry of Municipal Affairs & Housing'
     , 0
+    , 1
+    , 'mah@gov.bc.ca'
+    , 'Agency'
 ), (
     9
     , 'TRAN'
     , 'Ministry of Transportation and Infrastructure'
     , 0
+    , 1
+    , 'tran@gov.bc.ca'
+    , 'Agency'
 )
 
 -- Child Agencies for HLTH.

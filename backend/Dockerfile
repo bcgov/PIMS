@@ -16,6 +16,8 @@ COPY dal/*.csproj dal/
 COPY dal.keycloak/*.csproj dal.keycloak/
 COPY keycloak/*.csproj keycloak/
 COPY geocoder/*.csproj geocoder/
+COPY ches/*.csproj ches/
+COPY notifications/*.csproj notifications/
 COPY core/*.csproj core/
 
 RUN dotnet restore

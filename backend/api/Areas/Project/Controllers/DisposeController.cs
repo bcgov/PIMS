@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Areas.Project.Controllers
 {
@@ -94,10 +95,13 @@ namespace Pims.Api.Areas.Project.Controllers
         [ProducesResponseType(typeof(ProjectModel), 201)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult AddProject(ProjectModel model)
+        public async Task<IActionResult> AddProjectAsync(ProjectModel model)
         {
             var project = _pimsService.Project.Add(_mapper.Map<Entity.Project>(model));
-            return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project));
+            var notifications = _pimsService.NotificationQueue.GenerateNotifications(project, null, project.StatusId);
+            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
+
+            return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
         }
 
         /// <summary>
@@ -113,10 +117,15 @@ namespace Pims.Api.Areas.Project.Controllers
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
-        public IActionResult UpdateProject(string projectNumber, ProjectModel model)
+        public async Task<IActionResult> UpdateProjectAsync(string projectNumber, ProjectModel model)
         {
-            var project = _pimsService.Project.Update(_mapper.Map<Entity.Project>(model));
-            return new JsonResult(_mapper.Map<ProjectModel>(project));
+            var project = _pimsService.Project.Get(model.Id);
+            var fromStatusId = project.StatusId;
+            project = _pimsService.Project.Update(_mapper.Map<Entity.Project>(model));
+            var notifications = _pimsService.NotificationQueue.GenerateNotifications(project, fromStatusId, project.StatusId);
+            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
+
+            return new JsonResult(_mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
         }
 
         /// <summary>
@@ -151,15 +160,22 @@ namespace Pims.Api.Areas.Project.Controllers
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult SetStatus(string workflowCode, string statusCode, ProjectModel model)
+        public async Task<IActionResult> SetStatusAsync(string workflowCode, string statusCode, ProjectModel model)
         {
             if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
             if (String.IsNullOrWhiteSpace(statusCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(statusCode));
 
+            var project = _pimsService.Project.Get(model.Id);
+            var fromStatusId = project.StatusId;
+
             var workflow = _pimsService.Workflow.Get(workflowCode);
             var status = workflow.Status.FirstOrDefault(s => s.Status.Code == statusCode) ?? throw new KeyNotFoundException();
             model.StatusId = status.StatusId;
-            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
+            project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
+
+            var notifications = _pimsService.NotificationQueue.GenerateNotifications(project, fromStatusId, project.StatusId);
+            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
+
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
 
@@ -176,12 +192,19 @@ namespace Pims.Api.Areas.Project.Controllers
         [ProducesResponseType(typeof(ProjectModel), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult SetStatus(string workflowCode, int statusId, ProjectModel model)
+        public async Task<IActionResult> SetStatusAsync(string workflowCode, int statusId, ProjectModel model)
         {
             if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
 
+            var project = _pimsService.Project.Get(model.Id);
+            var fromStatusId = project.StatusId;
+
             model.StatusId = statusId;
-            var project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
+            project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
+
+            var notifications = _pimsService.NotificationQueue.GenerateNotifications(project, fromStatusId, project.StatusId);
+            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
+
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
         #endregion

@@ -10,7 +10,7 @@ using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Pims.Api.Areas.Admin.Controllers
+namespace Pims.Api.Areas.Tools.Controllers
 {
     /// <summary>
     /// ImportController class, provides endpoints for managing parcels.
@@ -57,6 +57,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-import" })]
+        [HasPermission(Permissions.SystemAdmin)]
         public IActionResult ImportProperties([FromBody] Model.ImportPropertyModel[] models)
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");

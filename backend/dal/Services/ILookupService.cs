@@ -6,7 +6,7 @@ namespace Pims.Dal.Services
     /// <summary>
     /// ILookupService interface, provides a way to fetch lookup lists from the datasource.
     /// </summary>
-    public interface ILookupService
+    public interface ILookupService : IService
     {
         IEnumerable<Agency> GetAgencies();
         IEnumerable<City> GetCities();

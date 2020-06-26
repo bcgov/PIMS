@@ -60,6 +60,21 @@ namespace Pims.Dal
         /// </summary>
         public IWorkflowService Workflow { get { return _serviceProvider.GetService<IWorkflowService>(); } }
 
+        /// <summary>
+        /// get - The notification template services.
+        /// </summary>
+        public INotificationTemplateService NotificationTemplate { get { return _serviceProvider.GetService<INotificationTemplateService>(); } }
+
+        /// <summary>
+        /// get - The project notification services.
+        /// </summary>
+        public IProjectNotificationService ProjectNotification { get { return _serviceProvider.GetService<IProjectNotificationService>(); } }
+
+        /// <summary>
+        /// get - The notification queue services.
+        /// </summary>
+        public INotificationQueueService NotificationQueue { get { return _serviceProvider.GetService<INotificationQueueService>(); } }
+
         #endregion
 
         #region Constructors
@@ -72,6 +87,18 @@ namespace Pims.Dal
         {
             this.Principal = user;
             _serviceProvider = serviceProvider;
+        }
+
+        /// <summary>
+        /// Get the original value of the specified 'entity'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public T OriginalValue<T>(object entity, string propertyName)
+        {
+            return this.Project.OriginalValue<T>(entity, propertyName);
         }
         #endregion
 

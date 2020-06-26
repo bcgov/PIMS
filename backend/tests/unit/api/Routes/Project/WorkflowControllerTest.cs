@@ -40,6 +40,7 @@ namespace Pims.Api.Test.Routes.Project
             type.HasRoute("[area]/workflows");
             type.HasRoute("v{version:apiVersion}/[area]/workflows");
             type.HasApiVersion("1.0");
+            type.HasAuthorize();
         }
 
         [Fact]

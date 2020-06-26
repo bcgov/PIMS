@@ -1,9 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pims.Core.Http;
-using Pims.Geocoder;
 
-namespace Pims.Dal.Keycloak
+namespace Pims.Geocoder
 {
     /// <summary>
     /// ServiceCollectionExtensions static class, provides extension methods for ServiceCollection objects.
@@ -18,8 +17,9 @@ namespace Pims.Dal.Keycloak
         /// <returns></returns>
         public static IServiceCollection AddGeocoderService(this IServiceCollection services, IConfigurationSection section)
         {
-            services.Configure<Geocoder.Configuration.GeocoderOptions>(section);
-            return services.AddScoped<IGeocoderService, GeocoderService>()
+            return services
+                .Configure<Configuration.GeocoderOptions>(section)
+                .AddScoped<IGeocoderService, GeocoderService>()
                 .AddScoped<IHttpRequestClient, HttpRequestClient>();
         }
     }

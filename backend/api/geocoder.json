@@ -1,3 +1,5 @@
 {
-  "Host": "https://geocoder.api.gov.bc.ca"
+  "Geocoder": {
+    "HostUri": "https://geocoder.api.gov.bc.ca"
+  }
 }

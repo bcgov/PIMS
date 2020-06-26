@@ -28,10 +28,11 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
+        /// <param name="service"></param>
         /// <param name="options"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public UserService(PimsContext dbContext, ClaimsPrincipal user, IOptionsMonitor<PimsOptions> options, ILogger<UserService> logger) : base(dbContext, user, logger)
+        public UserService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, IOptionsMonitor<PimsOptions> options, ILogger<UserService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.CurrentValue;
         }

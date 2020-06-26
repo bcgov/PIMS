@@ -9,8 +9,9 @@ using Pims.Geocoder;
 using System.Threading.Tasks;
 using Pims.Geocoder.Parameters;
 using Pims.Geocoder.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Pims.Api.Areas.Admin.Controllers
+namespace Pims.Api.Areas.Tools.Controllers
 {
     /// <summary>
     /// GeocoderController class, provides endpoints to integrate with Data BC Geocoder.
@@ -19,7 +20,7 @@ namespace Pims.Api.Areas.Admin.Controllers
     /// - https://catalogue.data.gov.bc.ca/dataset/bc-address-geocoder-web-service/resource/40d6411e-ab98-4df9-a24e-67f81c45f6fa/view/1d3c42fc-53dc-4aab-ae3b-f4d056cb00e0
     /// - https://bcgov.github.io/ols-devkit/widget/
     /// </summary>
-    [HasPermission(Permissions.PropertyEdit)]
+    [Authorize]
     [ApiController]
     [Area("tools")]
     [ApiVersion("1.0")]
@@ -56,6 +57,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(IEnumerable<Model.AddressModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-geocoder" })]
+        [HasPermission(Permissions.PropertyEdit)]
         public async Task<IActionResult> FindAddressesAsync(string address)
         {
             var parameters = this.Request.QueryString.ParseQueryString<AddressesParameters>();

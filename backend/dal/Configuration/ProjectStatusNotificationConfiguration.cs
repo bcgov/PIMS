@@ -21,6 +21,8 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.FromStatus).WithMany().HasForeignKey(m => m.FromStatusId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(m => m.ToStatus).WithMany().HasForeignKey(m => m.ToStatusId).OnDelete(DeleteBehavior.ClientCascade);
 
+            builder.HasIndex(m => new { m.FromStatusId, m.ToStatusId });
+
             base.Configure(builder);
         }
         #endregion

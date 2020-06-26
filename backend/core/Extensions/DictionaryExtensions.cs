@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Pims.Core.Extensions
@@ -181,7 +180,6 @@ namespace Pims.Core.Extensions
                 return defaultValue;
             }
         }
-
 
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as a boolean.

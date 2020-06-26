@@ -1,4 +1,4 @@
-using Pims.Geocoder.Converters;
+using Pims.Core.Converters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
