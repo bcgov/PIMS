@@ -92,7 +92,7 @@ export const ReviewApproveActions = ({
         {denyERP && (
           <GenericModal
             display={denyERP}
-            cancelButtonText="Cancel"
+            cancelButtonText="Close"
             okButtonText="Deny"
             handleOk={() => {
               setSubmitStatusCode(ReviewWorkflowStatus.Denied);
@@ -101,15 +101,19 @@ export const ReviewApproveActions = ({
             }}
             handleCancel={() => setDenyERP(false)}
             title="Deny Approval"
-            message="Are you sure you want to deny this project for ERP?"
+            message={
+              !values.exemptionRequested
+                ? 'Are you sure you want to deny the project for Enhanced Referral Process? Please ensure to provide reasoning in the shared notes prior to clicking deny.'
+                : 'Are you sure you want to deny this project with the request for exemption? Please ensure to provide reasoning in the shared notes prior to clicking deny.'
+            }
           />
         )}
       </FlexRight>
       {approveERP && (
         <GenericModal
           display={approveERP}
-          cancelButtonText="Cancel"
-          okButtonText="Confirm Approval"
+          cancelButtonText="Close"
+          okButtonText="Approve"
           handleOk={() => {
             !values.exemptionRequested
               ? setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)
@@ -122,7 +126,7 @@ export const ReviewApproveActions = ({
           message={
             values.exemptionRequested
               ? 'Are you sure you want to approve this ERP exemption'
-              : 'Are you sure you want to approve this project for ERP?'
+              : 'Are you sure you want to approve the project for Enhanced Referral Process?'
           }
         />
       )}
