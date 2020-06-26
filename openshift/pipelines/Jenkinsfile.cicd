@@ -324,11 +324,11 @@ pipeline {
                 rm -rf api/TestResults
                 rm -rf dal/TestResults
                 cd api
-                dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
+                dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
                 mv TestResults/*/* ../TestResults/
                 cd ..
                 cd dal
-                dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
+                dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
                 mv TestResults/*/* ../TestResults/
                 cd ..
                 head TestResults/coverage.opencover.xml
