@@ -111,13 +111,18 @@ pipeline {
 
     stage("Maintenance mode ON") {
       steps {
-        dir(MAINTENANCE_DIRECTORY) { sh "./maintenance.sh ${DESTINATION} on" }
+        script {
+          cli.maintenancePageOn("${DESTINATION}")
+        }
       }
     }
 
     stage("Database backup") {
+      options { timeout(time: 10, unit: "MINUTES") }
       steps {
-        sh "./openshift/player.sh backup ${DESTINATION} apply"
+        dir(DEVOPS_DIRECTORY) {
+          sh "./player.sh backup ${DESTINATION} apply"
+        }
       }
     }
 
@@ -125,7 +130,7 @@ pipeline {
       options { timeout(time: 5, unit: "MINUTES") }
       steps {
         // pretend we are doing stuff - db backups etc
-        sleep(30)
+        sleep(5)
       }
     }
 
@@ -137,16 +142,18 @@ pipeline {
         TARGET_TAG="${DESTINATION}"
       }
       steps {
-        script {
-          sh "./openshift/player.sh deploy api apply"
-          sh "./openshift/player.sh deploy app apply"
+        dir(DEVOPS_DIRECTORY) {
+          sh "./player.sh deploy api apply"
+          sh "./player.sh deploy app apply"
         }
       }
     }
 
     stage("Maintenance mode OFF") {
       steps {
-        dir(MAINTENANCE_DIRECTORY) { sh "./maintenance.sh ${DESTINATION} off" }
+        script {
+          cli.maintenancePageOff("${DESTINATION}")
+        }
       }
     }
 

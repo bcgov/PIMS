@@ -45,17 +45,17 @@ boolean hasDirectoryChanged(String contextDirectory) {
  * Generates a string containing all the commit messages from
  * the builds in pastBuilds.
  */
- String getChangeLog() {
+String getChangeLog() {
   MAX_MSG_LEN = 512
   def changeString = ""
   def changeLogSets = currentBuild.changeSets
   for (int i = 0; i < changeLogSets.size(); i++) {
-     def entries = changeLogSets[i].items
-     for (int j = 0; j < entries.length; j++) {
-         def entry = entries[j]
-         truncated_msg = entry.msg.take(MAX_MSG_LEN)
-         changeString += " - ${truncated_msg} [${entry.author}]\n"
-     }
+    def entries = changeLogSets[i].items
+    for (int j = 0; j < entries.length; j++) {
+      def entry = entries[j]
+      truncated_msg = entry.msg.take(MAX_MSG_LEN)
+      changeString += " - ${truncated_msg} [${entry.author}]\n"
+    }
   }
   if (!changeString) {
      changeString = "No changes"
@@ -94,8 +94,8 @@ def build(buildconfigs, int waitTimeout) {
       // untilEach and watch - do not support watching multiple named resources,
       // so we have to feed it one at a time.
       it.untilEach(1) {
-          echo "${it.object().status.phase} - ${it.name()}"
-          return (it.object().status.phase == "Complete")
+        echo "${it.object().status.phase} - ${it.name()}"
+        return (it.object().status.phase == "Complete")
       }
     }
   }
@@ -105,35 +105,46 @@ def build(buildconfigs, int waitTimeout) {
 
 // Abort the specified build.
 @NonCPS
-private void abortBuild(build){
-    boolean aborted=false;
-    if (build instanceof org.jenkinsci.plugins.workflow.job.WorkflowRun){
-        int counter=0
-        while (counter<60 && build.isInProgress()){
-            for (org.jenkinsci.plugins.workflow.support.steps.input.InputAction inputAction:build.getActions(org.jenkinsci.plugins.workflow.support.steps.input.InputAction.class)){
-                for (org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution inputStep:inputAction.getExecutions()){
-                    if (!inputStep.isSettled()){
-                        inputStep.doAbort()
-                    }
-                }
-            }
-
-            counter++
-            Thread.sleep(1000) //milliseconds
+private void abortBuild(build) {
+  boolean aborted=false;
+  if (build instanceof org.jenkinsci.plugins.workflow.job.WorkflowRun) {
+    int counter=0
+    while (counter<60 && build.isInProgress()) {
+      for (org.jenkinsci.plugins.workflow.support.steps.input.InputAction inputAction:build.getActions(org.jenkinsci.plugins.workflow.support.steps.input.InputAction.class)){
+        for (org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution inputStep:inputAction.getExecutions()) {
+          if (!inputStep.isSettled()) {
+            inputStep.doAbort()
+          }
         }
-    }
+      }
 
-    if (build.isInProgress()){
-        build.doKill()
+      counter++
+      Thread.sleep(1000) //milliseconds
     }
+  }
 
+  if (build.isInProgress()) {
+    build.doKill()
+  }
 }
 
 // Abort all previous builds in progress for the specified build.
 def abortAllPreviousBuildInProgress(currentBuild) {
-    while(currentBuild.rawBuild.getPreviousBuildInProgress() != null) {
-        abortBuild(currentBuild.rawBuild.getPreviousBuildInProgress())
-    }
+  while(currentBuild.rawBuild.getPreviousBuildInProgress() != null) {
+    abortBuild(currentBuild.rawBuild.getPreviousBuildInProgress())
+  }
+}
+
+def maintenancePageOn(envName) {
+  dir('maintenance') {
+    sh "./maintenance.sh ${envName} on"
+  }
+}
+
+def maintenancePageOff(envName) {
+  dir('maintenance') {
+    sh "./maintenance.sh ${envName} off"
+  }
 }
 
 // --------------------

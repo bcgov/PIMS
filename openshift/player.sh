@@ -1,9 +1,10 @@
 #!/bin/bash
 
-DIRECTORY=$(cd `dirname $0` && pwd)
+THIS_DIRECTORY=$(cd `dirname $0` && pwd)
 ARGV=${@:2}
 
-pushd ${DIRECTORY}/scripts > /dev/null
+# the oc-scripts need to be run from the scripts folder
+pushd ${THIS_DIRECTORY}/scripts > /dev/null
 
 case "${1:-}" in
     backup)
