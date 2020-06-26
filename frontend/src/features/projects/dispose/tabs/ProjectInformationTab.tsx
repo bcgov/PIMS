@@ -12,7 +12,7 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
 }: IProjectInformationTabProps) => {
   const { goToDisposePath } = useStepper();
   return (
-    <Container>
+    <Container fluid>
       <ProjectDraftForm isReadOnly={isReadOnly} title="Project Property Information" />
       <UpdateInfoForm
         isReadOnly={isReadOnly}

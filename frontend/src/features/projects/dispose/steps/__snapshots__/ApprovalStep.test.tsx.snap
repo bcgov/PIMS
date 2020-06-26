@@ -119,7 +119,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
         role="tabpanel"
       >
         <div
-          className="container"
+          className="container-fluid"
         >
           <div
             className="ProjectDraftForm container-fluid"
@@ -704,7 +704,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
         role="tabpanel"
       >
         <div
-          className="container"
+          className="container-fluid"
         >
           <h3>
             Documentation

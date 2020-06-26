@@ -28,7 +28,7 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
   });
 
   return (
-    <Container>
+    <Container fluid>
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
