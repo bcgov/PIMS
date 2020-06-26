@@ -28,6 +28,7 @@ const element = (
     <ReviewApproveActions
       submitStatusCode={DisposeWorkflowStatus.Draft}
       setSubmitStatusCode={mockSubmit}
+      isSubmitting={false}
     />
   </Router>
 );
@@ -53,7 +54,7 @@ describe('approve exemption review actions', () => {
     const confirm = component
       .find(GenericModal)
       .findWhere((node: { type: () => any; text: () => string }) => {
-        return node.type() === Button && node.text() === 'Confirm Approval';
+        return node.type() === Button && node.text() === 'Approve';
       });
     confirm.simulate('click');
     expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.ApprovedForExemption);
