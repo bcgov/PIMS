@@ -1,7 +1,7 @@
 import { updateProject, updateWorkflowStatus, createProject } from '../projectsActionCreator';
 import { ProjectActions } from 'constants/actionTypes';
-import { useDispatch } from 'react-redux';
-import { clear } from 'actions/genericActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { clear, IGenericNetworkAction } from 'actions/genericActions';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
@@ -10,18 +10,40 @@ import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
 import { ReviewWorkflowStatus } from '../interfaces';
+import { RootState } from 'reducers/rootReducer';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
+  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  );
+  const addProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.ADD_PROJECT] as any,
+  );
+  const updateProjectRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_PROJECT] as any,
+  );
+  const updateWorflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  );
+  const noFetchingProjectRequests =
+    getProjectRequest?.isFetching !== true &&
+    addProjectRequest?.isFetching !== true &&
+    updateProjectRequest?.isFetching !== true &&
+    updateWorflowStatusRequest?.isFetching !== true;
 
   //TODO: There is a known issue in formik preventing submitForm()
   // from returning promises. For the time being the higher level
   // functions will need to handle all chained promises.
   const onSubmit = (values: any, actions: any) => Promise.resolve(values);
 
-  const onSubmitReview = (values: any, actions: any, statusCode?: string) => {
+  const onSubmitReview = (
+    values: any,
+    formikRef: MutableRefObject<FormikValues | undefined>,
+    statusCode?: string,
+  ) => {
     const apiValues = _.cloneDeep(values);
     return ((statusCode !== undefined
       ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ACCESS-DISPOSAL'))
@@ -29,11 +51,12 @@ const useStepForm = () => {
       .then((values: IProject) => {
         //Only perform an update after a status transition if this is a non-closing status.
         return statusCode === ReviewWorkflowStatus.Cancelled ||
-          statusCode === ReviewWorkflowStatus.Denied
+          statusCode === ReviewWorkflowStatus.Denied ||
+          statusCode === ReviewWorkflowStatus.TransferredGRE
           ? Promise.resolve(values)
           : dispatch(
               updateProject({
-                ...apiValues,
+                ...values,
                 statusCode: values.statusCode,
                 statusId: values.statusId,
                 rowVersion: values.rowVersion,
@@ -42,10 +65,7 @@ const useStepForm = () => {
       })
       .catch((error: any) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
-        actions.setStatus({ msg });
-      })
-      .finally(() => {
-        dispatch(clear(ProjectActions.UPDATE_PROJECT));
+        formikRef.current?.setStatus({ msg });
       });
   };
 
@@ -77,9 +97,9 @@ const useStepForm = () => {
         throw Error('axios request failed');
       })
       .finally(() => {
+        formikRef.current?.setSubmitting(false);
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
         dispatch(clear(ProjectActions.ADD_PROJECT));
-        formikRef?.current?.setSubmitting(false);
       });
   };
 
@@ -101,6 +121,8 @@ const useStepForm = () => {
     onSubmitReview,
     addOrUpdateProject,
     onSave,
+    noFetchingProjectRequests,
+    getProjectRequest,
   };
 };
 

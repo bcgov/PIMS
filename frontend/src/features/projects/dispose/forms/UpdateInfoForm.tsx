@@ -68,6 +68,10 @@ const UpdateInfoForm = ({
         field="properties"
         disabled={isReadOnly}
         setSelectedRows={!isReadOnly ? setSelectedProperties : undefined}
+        editableClassification
+        editableFinancials
+        editableZoning
+        classificationLimitLabels={['Surplus Active', 'Surplus Encumbered']}
       ></PropertyListViewUpdate>
     </Container>
   );

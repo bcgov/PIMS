@@ -122,6 +122,7 @@ export interface IProject {
   properties: IProperty[];
   projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
+  publicNote: string;
   privateNote: string;
   agencyResponseNote?: string;
   agencyId: number;
@@ -169,6 +170,7 @@ export enum ReviewWorkflowStatus {
   Denied = 'DE',
   Cancelled = 'CA',
   OnHold = 'OH',
+  TransferredGRE = 'T-GRE',
 }
 
 export enum SPPApprovalTabs {
@@ -231,6 +233,7 @@ export interface IApiProject {
   properties: IProjectProperty[];
   projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
+  publicNote: string;
   privateNote: string;
   exemptionRequested?: boolean;
   agencyResponseNote?: string;

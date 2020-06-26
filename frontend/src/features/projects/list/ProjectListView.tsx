@@ -66,10 +66,6 @@ interface IProps {
   mode?: PageMode;
 }
 
-const adminOrCanApprove = (keycloak: any, project: IProject) =>
-  keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
-  (keycloak.hasClaim(Claims.DISPOSE_APPROVE) && keycloak.agencyIds.includes(+project.agencyId));
-
 const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -174,7 +170,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     );
     if (
       row.statusCode === ReviewWorkflowStatus.PropertyReview &&
-      adminOrCanApprove(keycloak, row)
+      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
     ) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
     } else if (ReviewWorkflowStatuses.includes(row.statusCode)) {

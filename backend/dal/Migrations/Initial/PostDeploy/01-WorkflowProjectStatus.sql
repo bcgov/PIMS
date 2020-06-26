@@ -48,5 +48,8 @@ INSERT INTO dbo.[WorkflowProjectStatus] (
 ), (
     2 -- ACCESS-DISPOSAL
     , 15 -- On Hold
+), (
+    2 -- ACCESS-DISPOSAL
+    , 16 -- Transferred within the GRE
 )
 

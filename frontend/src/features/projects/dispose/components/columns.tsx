@@ -4,9 +4,16 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import React from 'react';
 import { CellProps } from 'react-table';
 import { formatMoney, formatNumber } from 'utils';
-import { IProperty, IProject, DisposeWorkflowStatus } from '../interfaces';
+import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
 import { useFormikContext } from 'formik';
-import { FastCurrencyInput, Input, FastSelect } from 'components/common/form';
+import {
+  FastCurrencyInput,
+  Input,
+  FastSelect,
+  Check,
+  Select,
+  SelectOption,
+} from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import _ from 'lodash';
@@ -28,12 +35,12 @@ const EditableMoneyCell = (cellInfo: any) => {
   );
 };
 
-const EditableClassificationCell = (cellInfo: any) => {
+const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any) => {
   const classifications = useCodeLookups().getOptionsByType('PropertyClassification');
   const context = useFormikContext();
   return (
     <FastSelect
-      limitLabels={['Surplus Active', 'Surplus Encumbered']}
+      limitLabels={limitLabels}
       formikProps={context}
       type="number"
       options={classifications}
@@ -54,12 +61,41 @@ const EditableParcelInputCell = (cellInfo: any) => {
   return <Input field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}></Input>;
 };
 
+const CheckCell = (cellInfo: any) => {
+  return (
+    <Check
+      disabled={true}
+      field={`projectAgencyResponses.${cellInfo.row.id}.${cellInfo.column.id}`}
+    />
+  );
+};
+
+const responseOptions: SelectOption[] = [
+  { label: AgencyResponses.Ignore, value: AgencyResponses.Ignore },
+  { label: AgencyResponses.Watch, value: AgencyResponses.Watch },
+];
+
+const EditableSelect = (cellInfo: any) => {
+  return (
+    <Select
+      options={responseOptions}
+      field={`projectAgencyResponses.${cellInfo.row.id}.${cellInfo.column.id}`}
+    />
+  );
+};
+
+export interface IDisposeColumnOptions {
+  project: IProject;
+  editableClassification?: boolean;
+  editableFinancials?: boolean;
+  editableZoning?: boolean;
+  limitLabels?: string[];
+}
+
 export const getColumnsWithRemove = (
-  setProperties: Function,
-  project: IProject,
-  editable?: boolean,
+  columnOptions: IDisposeColumnOptions & { setProperties: Function },
 ) => {
-  const cols = getColumns(project, editable);
+  const cols = getColumns(columnOptions);
   cols.unshift({
     Header: '',
     align: 'left',
@@ -71,7 +107,9 @@ export const getColumnsWithRemove = (
         style={{ cursor: 'pointer' }}
         size={16}
         onClick={() => {
-          setProperties(_.difference(_.map(props.rows, 'original'), [props.row.original]));
+          columnOptions.setProperties(
+            _.difference(_.map(props.rows, 'original'), [props.row.original]),
+          );
         }}
       />
     ),
@@ -83,7 +121,13 @@ const useProjectFinancialValues = (project: IProject, editable?: boolean) => {
   return !editable && project.statusCode === DisposeWorkflowStatus.Review;
 };
 
-export const getColumns = (project: IProject, editable?: boolean): any => [
+export const getColumns = ({
+  project,
+  editableClassification,
+  editableFinancials,
+  editableZoning,
+  limitLabels,
+}: IDisposeColumnOptions): any => [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
@@ -108,8 +152,10 @@ export const getColumns = (project: IProject, editable?: boolean): any => [
     accessor: 'classification',
     width: 140,
     align: 'left',
-    Cell: editable ? EditableClassificationCell : (cellInfo: any) => cellInfo.value,
-    clickable: !editable,
+    Cell: editableClassification
+      ? getEditableClassificationCell(limitLabels)
+      : (cellInfo: any) => cellInfo.value,
+    clickable: !editableClassification,
   },
   {
     Header: 'Civic Address',
@@ -121,26 +167,26 @@ export const getColumns = (project: IProject, editable?: boolean): any => [
     Header: 'Current Zoning Code',
     accessor: 'zoning',
     align: 'left',
-    clickable: !editable,
-    Cell: editable ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
+    clickable: !editableZoning,
+    Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
   },
   {
     Header: 'Potential Zoning Code',
     accessor: 'zoningPotential',
     align: 'left',
-    clickable: !editable,
-    Cell: editable ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
+    clickable: !editableZoning,
+    Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
     Footer: () => <span>Sum</span>,
   },
   {
     Header: 'Netbook Value',
     accessor: 'netBook',
-    Cell: editable ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
       <span>
-        {useProjectFinancialValues(project, editable)
+        {useProjectFinancialValues(project, editableFinancials)
           ? formatMoney(project.netBook)
           : sumFinancialRows(properties, 'netBook')}
       </span>
@@ -149,12 +195,12 @@ export const getColumns = (project: IProject, editable?: boolean): any => [
   {
     Header: 'Estimated Value',
     accessor: 'estimated',
-    Cell: editable ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
       <span>
-        {useProjectFinancialValues(project, editable)
+        {useProjectFinancialValues(project, editableFinancials)
           ? formatMoney(project.estimated)
           : sumFinancialRows(properties, 'estimated')}
       </span>
@@ -163,12 +209,12 @@ export const getColumns = (project: IProject, editable?: boolean): any => [
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
-    Cell: editable ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
       <span>
-        {useProjectFinancialValues(project, editable)
+        {useProjectFinancialValues(project, editableFinancials)
           ? formatMoney(project.assessed)
           : sumFinancialRows(properties, 'assessed')}
       </span>
@@ -183,5 +229,26 @@ export const getColumns = (project: IProject, editable?: boolean): any => [
       const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
       return icon;
     },
+  },
+];
+
+export const getProjectAgencyResponseColumns = (editable?: boolean): any => [
+  {
+    Header: 'Agency',
+    accessor: 'agencyCode', // accessor is the "key" in the data
+    align: 'left',
+  },
+  {
+    Header: 'Notification Sent?',
+    accessor: 'notificationId',
+    align: 'left',
+    Cell: CheckCell,
+  },
+  {
+    Header: 'Response',
+    accessor: 'response',
+    maxWidth: 170,
+    align: 'left',
+    Cell: EditableSelect,
   },
 ];

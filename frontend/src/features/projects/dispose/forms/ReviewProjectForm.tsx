@@ -6,11 +6,9 @@ import {
   ExemptionRequest,
   DocumentationForm,
   ApprovalConfirmationForm,
-  ProjectNotes,
   DisposeWorkflowStatus,
   IProject,
 } from '..';
-import { Form } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import { IProjectTask } from '../interfaces';
@@ -51,10 +49,6 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
         rationaleInstruction="Please provide your rationale below for exemption request"
         isReadOnly={isReadOnly || !canEdit}
       />
-      <ProjectNotes />
-      {canEdit && (
-        <Form.Label style={{ float: 'right' }}>Apply to the Surplus Property Program</Form.Label>
-      )}
     </Fragment>
   );
 };
