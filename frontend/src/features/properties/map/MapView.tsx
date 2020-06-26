@@ -10,7 +10,10 @@ import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsAc
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
-import { saveClickLatLng as saveLeafletMouseEvent } from 'reducers/LeafletMouseSlice';
+import {
+  saveClickLatLng as saveLeafletMouseEvent,
+  clearClickLatLng,
+} from 'reducers/LeafletMouseSlice';
 import * as API from 'constants/API';
 import _ from 'lodash';
 
@@ -104,6 +107,12 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   useEffect(() => {
     dispatch(fetchParcels(parcelBounds));
     dispatch(getFetchLookupCodeAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearClickLatLng());
+    };
   }, [dispatch]);
 
   return (

@@ -38,7 +38,7 @@ export const defaultBuildingValues: any = {
   longitude: '',
   agencyId: 0,
   parcelId: 0,
-  rentableArea: '',
+  rentableArea: '0',
   buildingFloorCount: '',
   buildingConstructionType: undefined,
   buildingConstructionTypeId: '',
