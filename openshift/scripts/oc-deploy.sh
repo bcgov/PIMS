@@ -35,14 +35,22 @@ SHORTNAME=${1:-}
 IMG_DEST="${APP_NAME}-${SHORTNAME}"
 DEPLOYMENT_NAME="${APP_NAME}-${SHORTNAME}-${TARGET_TAG}"
 
+# Trigger the deployment manually when both tags reference the same image hash - retagging won't trigger a deployment
+#
+HASH_SOURCE="$(oc -n ${PROJ_TOOLS} get istag ${IMG_DEST}:${RELEASE_TAG} -o jsonpath='{.image.dockerImageReference}')"
+HASH_TARGET="$(oc -n ${PROJ_TOOLS} get istag ${IMG_DEST}:${TARGET_TAG} -o jsonpath='{.image.dockerImageReference}')"
+MANUAL_DEPLOY=$([ "${HASH_SOURCE:-}" != "${HASH_TARGET:-}" ] || echo true)
+
 # Cancel all previous deployments
 #
 OC_CANCEL_ALL_PREV_DEPLOY="oc -n ${PROJ_TARGET} rollout cancel dc/${DEPLOYMENT_NAME} || true"
 
 # Deploy and follow the progress
 #
-OC_DEPLOY="oc -n ${PROJ_TOOLS} tag ${IMG_DEST}:${RELEASE_TAG} ${IMG_DEST}:${TARGET_TAG}"
-OC_LOG="oc -n ${PROJ_TARGET} logs -f --pod-running-timeout=1m dc/${DEPLOYMENT_NAME}"
+OC_IMG_RETAG="oc -n ${PROJ_TOOLS} tag ${IMG_DEST}:${RELEASE_TAG} ${IMG_DEST}:${TARGET_TAG}"
+OC_DEPLOY="oc -n ${PROJ_TARGET} rollout latest dc/${DEPLOYMENT_NAME}"
+[ "${MANUAL_DEPLOY}" ] || OC_DEPLOY=""
+OC_STATUS="oc -n ${PROJ_TARGET} rollout status dc/${DEPLOYMENT_NAME} --watch"
 
 if [ "${APPLY}" ]; then
   echo "canceling previous deployments..."
@@ -67,10 +75,11 @@ if [ "${APPLY}" ]; then
 
   # Execute commands
   #
+  eval "${OC_IMG_RETAG}"
   eval "${OC_DEPLOY}"
-  eval "${OC_LOG}"
+  eval "${OC_STATUS}"
 fi
 
 # Provide oc command instructions
 #
-display_helper $OC_CANCEL_ALL_PREV_DEPLOY $OC_DEPLOY $OC_LOG
+display_helper $OC_CANCEL_ALL_PREV_DEPLOY $OC_IMG_RETAG $OC_DEPLOY $OC_STATUS
