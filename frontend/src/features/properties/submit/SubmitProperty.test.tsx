@@ -13,7 +13,7 @@ import { render, fireEvent, act, cleanup } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
 import { Claims } from 'constants/claims';
 
-jest.mock('./MapView', () => () => <div id="mockMapView"></div>);
+jest.mock('../map/MapView', () => () => <div id="mockMapView"></div>);
 jest.mock('@react-keycloak/web');
 jest.mock('leaflet');
 

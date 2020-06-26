@@ -9,7 +9,7 @@ import {
   IUpdateUsersPageIndexAction,
 } from 'actions/adminActions';
 import { TableSort } from 'components/Table/TableSort';
-import { IUserRecord } from 'pages/admin/users/interfaces/IUserRecord';
+import { IUserRecord } from 'features/admin/users/interfaces/IUserRecord';
 import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
 
 export interface IUsersState {

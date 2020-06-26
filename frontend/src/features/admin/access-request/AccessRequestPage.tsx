@@ -10,7 +10,7 @@ import {
 } from 'actionCreators/accessRequestActionCreator';
 import { IUserInfo, IAccessRequest } from 'interfaces';
 import { Formik } from 'formik';
-import { Form, Input, TextArea, Select } from '../components/common/form';
+import { Form, Input, TextArea, Select } from '../../../components/common/form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';

@@ -1,6 +1,6 @@
 import * as ActionTypes from 'constants/actionTypes';
 import { IPagedItems, IUser, IUserDetails, IAgency, IRole, IUsersFilter } from 'interfaces';
-import { IUserRecord } from 'pages/admin/users/interfaces/IUserRecord';
+import { IUserRecord } from 'features/admin/users/interfaces/IUserRecord';
 import { TableSort } from 'components/Table/TableSort';
 
 //Admin API actions
