@@ -247,7 +247,7 @@ const Map: React.FC<MapProps> = ({
             onViewportChanged={() => {
               handleViewportChange(mapFilter);
             }}
-            onpreclick={onMapClick}
+            onclick={onMapClick}
             closePopupOnClick={interactive}
             onzoomend={onZoomEnd}
             onmoveend={updateMap}
