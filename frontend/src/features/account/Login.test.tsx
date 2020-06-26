@@ -6,7 +6,7 @@ import renderer from 'react-test-renderer';
 import { useKeycloak } from '@react-keycloak/web';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
-import Login from '../pages/Login';
+import Login from './Login';
 import * as reducerTypes from 'constants/reducerTypes';
 import {} from 'reducers/networkReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';

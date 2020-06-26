@@ -2,8 +2,8 @@ import './SubmitProperty.scss';
 
 import React, { useState } from 'react';
 import { Row, Col, Spinner, Button, Container, Modal, Form } from 'react-bootstrap';
-import ParcelDetailForm from 'forms/ParcelDetailForm';
-import MapView from './MapView';
+import ParcelDetailForm from '../components/forms/ParcelDetailForm';
+import MapView from '../map/MapView';
 import {
   storeParcelDetail,
   IPropertyDetail,

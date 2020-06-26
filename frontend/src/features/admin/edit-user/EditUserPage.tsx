@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Navbar, Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
-import { Form, Input, Select, SelectOption } from '../components/common/form';
+import { Form, Input, Select, SelectOption } from '../../../components/common/form';
 import { fetchUserDetail, getUpdateUserAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';

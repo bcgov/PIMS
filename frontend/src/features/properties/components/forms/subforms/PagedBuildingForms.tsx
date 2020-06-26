@@ -3,7 +3,7 @@ import { Col, Button } from 'react-bootstrap';
 import { FieldArray, useFormikContext, FormikProps, getIn } from 'formik';
 import BuildingForm, { defaultBuildingValues, IFormBuilding } from './BuildingForm';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import { IFormParcel } from 'forms/ParcelDetailForm';
+import { IFormParcel } from '../ParcelDetailForm';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import _ from 'lodash';
 import { IPaginate } from 'utils/CommonFunctions';
