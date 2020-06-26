@@ -5,6 +5,7 @@
 // ------------------
 def cli
 def notify
+def RELEASE_VERSION
 
 // --------------------
 // Declarative Pipeline
@@ -21,7 +22,6 @@ pipeline {
 
     CI = "true"
     PATHFINDER_URL = "pathfinder.gov.bc.ca"
-    VANITY_URL="https://pims-test.pathfinder.gov.bc.ca/"
 
     // The name of your application
     APP_NAME = "pims"
@@ -33,18 +33,18 @@ pipeline {
     API_DIRECTORY = "backend"
     FRONTEND_DIRECTORY = "frontend"
     MAINTENANCE_DIRECTORY = "maintenance"
+    DEVOPS_DIRECTORY = "openshift"
 
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
 
     // The tag used to identify the image we want to deploy.
-    // IMAGE_TAG = "test"
+    // RELEASE_TAG = "test"
 
     // Which environment to deploy to.
     // DESTINATION = "prod"
 
-    // Which instance ID to deploy to (if using multiple instances per environment)
-    // Leave empty for the default instance
+    // Which instance ID to deploy to (if using multiple instances per environment). Leave empty for default.
     // INSTANCE_ID = ""
 
     // The URI to the application being deployed.
@@ -90,42 +90,38 @@ pipeline {
     }
     stage("Version check") {
       steps {
-        echo "TODO: ask for a version to deploy"
+        script {
+          try {
+            timeout(time: 10, unit: "MINUTES") {
+              def app_tag = input(message: "Enter the desired version to release to PRODUCTION", parameters: [
+                string(name: 'VERSION_TAG', defaultValue: '', description: 'Release Version')
+              ])
+              if (app_tag != '') {
+                RELEASE_VERSION = app_tag
+              } else {
+                error "No version specified. Aborting..."
+              }
+            }
+          } catch (err) {
+            error "No version specified. Aborting..."
+          }
+        }
       }
     }
     stage("Maintenance mode ON") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
-      environment {
-        COMP_NAME = "api"
-      }
       steps {
         script {
-          try {
-            dir(MAINTENANCE_DIRECTORY) {
-              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} on"
-            }
-          } catch (e) {
-            echo 'Maintenance Page FAILED'
-            throw e
+          dir(MAINTENANCE_DIRECTORY) {
+            sh "./maintenance.sh ${DESTINATION} on"
           }
         }
       }
     }
     stage("Database backup") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
       steps {
         script {
-          try {
-            dir('openshift') {
-              sh "INSTANCE_ID=${INSTANCE_ID} ./player.sh backup ${DESTINATION} apply"
-            }
-          } catch (e) {
-            echo 'Database backup FAILED'
-            throw e
+          dir(DEVOPS_DIRECTORY) {
+            sh "./player.sh backup ${DESTINATION} apply"
           }
         }
       }
@@ -139,38 +135,31 @@ pipeline {
         sleep(30)
       }
     }
-    stage("PROD deploy (API)") {
-      steps {
-        echo "TODO: ... "
-      }
-    }
-    stage("PROD deploy (APP)") {
-      steps {
-        echo "TODO: ... "
-      }
-    }
-    stage("Maintenance mode OFF") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
+    stage("Promote to PROD") {
+      environment {
+        // These env-vars are required by player.sh below
+        RELEASE_TAG="${RELEASE_VERSION}"
+        TARGET_TAG="${DESTINATION}"
       }
       steps {
         script {
-          try {
-            dir(MAINTENANCE_DIRECTORY) {
-              sh "INSTANCE_ID=${INSTANCE_ID} ./maintenance.sh ${DESTINATION} off"
-            }
-          } catch (e) {
-            echo 'Maintenance Page FAILED'
-            throw e
+          dir(DEVOPS_DIRECTORY) {
+            sh "./player.sh deploy api apply"
+            sh "./player.sh deploy app apply"
           }
         }
-
+      }
+    }
+    stage("Maintenance mode OFF") {
+      steps {
+        script {
+          dir(MAINTENANCE_DIRECTORY) {
+            sh "./maintenance.sh ${DESTINATION} off"
+          }
+        }
       }
     }
     stage("DONE") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
       steps {
         echo "[ci/cd]  PRODUCTION deployment complete!"
       }
