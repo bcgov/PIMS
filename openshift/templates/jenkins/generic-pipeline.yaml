@@ -35,7 +35,7 @@ objects:
           env:
             - name: VANITY_URL
               value: ${APP_URI}
-            - name: IMAGE_TAG
+            - name: RELEASE_TAG
               value: ${GIT_REF}
             - name: DESTINATION
               value: ${ENV_NAME}
