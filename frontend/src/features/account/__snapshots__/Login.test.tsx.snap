@@ -24,18 +24,6 @@ exports[`login login renders correctly 1`] = `
       >
         Sign In
       </button>
-      <p
-        className="or"
-      >
-        Or
-      </p>
-      <button
-        className="border border-dark btn btn-secondary"
-        disabled={false}
-        type="button"
-      >
-        Sign Up
-      </button>
     </div>
     <div
       className="col-md-3 col-1"
