@@ -69,7 +69,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     fetchProjectTasks('ASSESS-DISPOSAL');
   }, []);
   const { noFetchingProjectRequests } = useStepForm();
-
+  const canEdit =
+    canUserApproveForm() &&
+    (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
+      project.statusCode === ReviewWorkflowStatus.ExemptionReview);
   const initialValues: IProject = {
     ...project,
     statusCode: project.status?.code,
@@ -97,10 +100,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           <h1>Project Application Review</h1>
           <ReviewApproveForm
             goToAddProperties={() => goToDisposePath('properties/update')}
-            canEdit={canUserApproveForm()}
+            canEdit={canEdit}
           />
           <StepErrorSummary />
-          {canUserApproveForm() ? (
+          {canEdit ? (
             <ReviewApproveActions
               {...{
                 submitStatusCode,
