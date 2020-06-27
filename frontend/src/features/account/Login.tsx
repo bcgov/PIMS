@@ -34,10 +34,6 @@ const Login = () => {
           <Button variant="primary" onClick={() => keycloak.login()}>
             Sign In
           </Button>
-          <p className="or">Or</p>
-          <Button className="border border-dark" variant="secondary">
-            Sign Up
-          </Button>
         </Col>
         <Col xs={1} md={3} />
       </Row>
