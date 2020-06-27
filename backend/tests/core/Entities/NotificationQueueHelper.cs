@@ -26,7 +26,7 @@ namespace Pims.Core.Test
             {
                 Id = id,
                 CreatedById = Guid.NewGuid(),
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = new DateTime(2019, 1, 1, 18 ,23, 22, DateTimeKind.Utc),
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }

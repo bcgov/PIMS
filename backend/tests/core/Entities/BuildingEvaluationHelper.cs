@@ -1,7 +1,6 @@
 using Pims.Dal;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Core.Test
@@ -14,33 +13,22 @@ namespace Pims.Core.Test
         /// <summary>
         /// Create a new instance of a BuildingEvaluations.
         /// </summary>
-        /// <param name="buildingId"></param>
-        /// <returns></returns>
-        public static Entity.BuildingEvaluation CreateBuildingEvaluation(int buildingId)
-        {
-            return CreateBuildingEvaluation(buildingId, DateTime.Now, Entity.EvaluationKeys.Appraised, Decimal.One);
-        }
-
-        /// <summary>
-        /// Create a new instance of a BuildingEvaluations.
-        /// </summary>
-        /// <param name="buildingId"></param>
+        /// <param name="building"></param>
         /// <param name="date"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity.BuildingEvaluation CreateBuildingEvaluation(int buildingId, DateTime date, Entity.EvaluationKeys key = Entity.EvaluationKeys.Appraised, decimal value = 1)
+        public static Entity.BuildingEvaluation CreateEvaluation(Entity.Building building, DateTime date, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
         {
             return new Entity.BuildingEvaluation()
             {
-                BuildingId = buildingId,
+                BuildingId = building.Id,
+                Building = building,
                 Date = date,
                 Key = key,
                 Value = value,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
-                UpdatedById = Guid.NewGuid(),
-                UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }
@@ -48,70 +36,89 @@ namespace Pims.Core.Test
         /// <summary>
         /// Create a new List with new instances of BuildingEvaluations.
         /// </summary>
-        /// <param name="startId"></param>
+        /// <param name="building"></param>
+        /// <param name="startDate"></param>
         /// <param name="count"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.BuildingEvaluation> CreateBuildingEvaluations(int buildingId, int startId, int count)
+        public static List<Entity.BuildingEvaluation> CreateEvaluations(Entity.Building building, DateTime startDate, int count, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                building.Evaluations.Add(CreateEvaluation(building, startDate.AddYears(i), key, value));
+            }
+            return building.Evaluations as List<Entity.BuildingEvaluation>;
+        }
+
+        /// <summary>
+        /// Create a new List with new instances of BuildingEvaluations.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="dates"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static List<Entity.BuildingEvaluation> CreateEvaluations(Entity.Building building, DateTime[] dates, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
+        {
+            foreach (var date in dates)
+            {
+                building.Evaluations.Add(CreateEvaluation(building, date, key, value));
+            }
+            return building.Evaluations as List<Entity.BuildingEvaluation>;
+        }
+
+        /// <summary>
+        /// Create a new instance of a BuildingEvaluations.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="building"></param>
+        /// <param name="date"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Entity.BuildingEvaluation CreateEvaluation(this PimsContext context, Entity.Building building, DateTime date, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
+        {
+            var evaluation = CreateEvaluation(building, date, key, value);
+            context.BuildingEvaluations.Add(evaluation);
+            return evaluation;
+        }
+
+        /// <summary>
+        /// Create a new List with new instances of BuildingEvaluations.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="building"></param>
+        /// <param name="startDate"></param>
+        /// <param name="count"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static List<Entity.BuildingEvaluation> CreateEvaluations(this PimsContext context, Entity.Building building, DateTime startDate, int count, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
         {
             var evaluations = new List<Entity.BuildingEvaluation>(count);
-            for (var i = startId; i < (startId + count); i++)
+            for (var i = 0; i < count; i++)
             {
-                evaluations.Add(CreateBuildingEvaluation(buildingId, DateTime.Now.AddDays(i)));
+                evaluations.Add(context.CreateEvaluation(building, startDate.AddYears(i), key, value));
             }
             return evaluations;
         }
 
         /// <summary>
-        /// Create a new instance of a BuildingEvaluations.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="buildingId"></param>
-        /// <returns></returns>
-        public static Entity.BuildingEvaluation CreateBuildingEvaluation(this PimsContext context, int buildingId)
-        {
-            return context.CreateBuildingEvaluation(buildingId, DateTime.Now, Entity.EvaluationKeys.Appraised, Decimal.One);
-        }
-
-        /// <summary>
-        /// Create a new instance of a BuildingEvaluations.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="buildingId"></param>
-        /// <param name="date"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static Entity.BuildingEvaluation CreateBuildingEvaluation(this PimsContext context, int buildingId, DateTime date, Entity.EvaluationKeys key = Entity.EvaluationKeys.Appraised, decimal value = 1)
-        {
-            var BuildingEvaluation = new Entity.BuildingEvaluation()
-            {
-                BuildingId = buildingId,
-                Date = date,
-                Key = key,
-                Value = value,
-                CreatedById = Guid.NewGuid(),
-                CreatedOn = DateTime.UtcNow,
-                UpdatedById = Guid.NewGuid(),
-                UpdatedOn = DateTime.UtcNow,
-                RowVersion = new byte[] { 12, 13, 14 }
-            };
-            context.BuildingEvaluations.Add(BuildingEvaluation);
-            return BuildingEvaluation;
-        }
-
-        /// <summary>
         /// Create a new List with new instances of BuildingEvaluations.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="startId"></param>
-        /// <param name="count"></param>
+        /// <param name="building"></param>
+        /// <param name="dates"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.BuildingEvaluation> CreateBuildingEvaluations(this PimsContext context, int buildingId, int startId, int count)
+        public static List<Entity.BuildingEvaluation> CreateEvaluations(this PimsContext context, Entity.Building building, DateTime[] dates, Entity.EvaluationKeys key = Entity.EvaluationKeys.Assessed, decimal value = 1)
         {
-            var evaluations = new List<Entity.BuildingEvaluation>(count);
-            for (var i = startId; i < (startId + count); i++)
+            var evaluations = new List<Entity.BuildingEvaluation>(dates.Length);
+            foreach (var date in dates)
             {
-                evaluations.Add(context.CreateBuildingEvaluation(buildingId, DateTime.Now.AddDays(i)));
+                evaluations.Add(context.CreateEvaluation(building, date, key, value));
             }
             return evaluations;
         }

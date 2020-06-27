@@ -413,6 +413,41 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Add_Financials()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectAdd).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            project.FiscalYear = 2020;
+            var parcel = init.CreateParcel(1, project.Agency);
+            var buildings = init.CreateBuildings(parcel, 2, 5);
+            init.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
+            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.Estimated, 5);
+            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.NetBook, 5);
+            init.CreateEvaluations(buildings.Next(0), new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
+            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.Estimated, 5);
+            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.NetBook, 5);
+            project.AddProperty(parcel);
+            buildings.ForEach(b => project.AddProperty(b));
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<Entity.Project>(result);
+            project.Estimated.Should().Be(10);
+            project.NetBook.Should().Be(10);
+            project.Assessed.Should().Be(10);
+        }
+
+        [Fact]
         public void Add_Project_SimpleFields()
         {
             // Arrange
@@ -628,6 +663,47 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_Financials()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            project.FiscalYear = 2020;
+            var parcel = init.CreateParcel(1, project.Agency);
+            var buildings = init.CreateBuildings(parcel, 2, 5);
+            init.SaveChanges();
+            init.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
+            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.Estimated, 5);
+            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.NetBook, 5);
+            init.CreateEvaluations(buildings.Next(0), new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
+            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.Estimated, 5);
+            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.NetBook, 5);
+            project.AddProperty(parcel);
+            buildings.ForEach(b => project.AddProperty(b));
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.Id);
+            parcel.Evaluations.Where(e => e.Date.Year == project.FiscalYear).Single().Value = 10;
+            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.FiscalYear).Single().Value = 10;
+            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.FiscalYear).Single().Value = 10;
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<Entity.Project>(result);
+            project.Estimated.Should().Be(15);
+            project.NetBook.Should().Be(15);
+            project.Assessed.Should().Be(15);
+        }
+
+        [Fact]
         public void Update_SimpleFields()
         {
             // Arrange
@@ -803,7 +879,7 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
-            var parcelEvaluation = init.CreateParcelEvaluation(parcel.Id);
+            var parcelEvaluation = init.CreateEvaluation(parcel, DateTime.UtcNow);
             project.AddProperty(parcel);
             init.AddAndSaveChanges(parcel);
 
@@ -915,7 +991,7 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1, project.Agency);
             var building = init.CreateBuilding(parcel, 20);
             var newClassification = init.PropertyClassifications.Find(2);
-            var parcelEvaluation = init.CreateBuildingEvaluation(building.Id);
+            var parcelEvaluation = init.CreateEvaluation(building, DateTime.UtcNow);
             project.AddProperty(building);
             init.AddAndSaveChanges(building);
 
@@ -1947,6 +2023,9 @@ namespace Pims.Dal.Test.Services
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeFalse();
         }
+        #endregion
+
+        #region Property Financials
         #endregion
         #endregion
     }

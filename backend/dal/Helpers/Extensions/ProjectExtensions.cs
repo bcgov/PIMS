@@ -265,11 +265,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="project"></param>
         /// <returns></returns>
-        public static DateTime GetProjectFinancialDate(this Entity.Project project)
+        public static DateTime GetProjectFinancialDate(this Entity.Project project) // TODO: This is most likely invalid, but for now will work.
         {
-            return project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).Select(p => p.Parcel).SelectMany(p => p.Evaluations).OrderByDescending(e => e.Date).FirstOrDefault()?.Date
-                ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Evaluations).OrderByDescending(e => e.Date).FirstOrDefault()?.Date
-                ?? DateTime.Now;
+            return project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).Select(p => p.Parcel).SelectMany(p => p.Evaluations).Max(p => (DateTime?)p.Date)
+                ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Evaluations).Max(b => (DateTime?)b.Date)
+                ?? DateTime.UtcNow;
         }
 
         /// <summary>
