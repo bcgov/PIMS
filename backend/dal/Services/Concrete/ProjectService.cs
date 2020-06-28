@@ -734,6 +734,7 @@ namespace Pims.Dal.Services
             switch (toStatus.Code)
             {
                 case ("AS-I"): // Review
+                case ("AS-EXE"): // Exemption Review 
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeRequest, "User does not have permission to submit project.");
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
