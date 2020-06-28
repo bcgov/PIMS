@@ -86,6 +86,9 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
             if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
               goToDisposePath('../approved');
             }
+            if (project?.statusCode === ReviewWorkflowStatus.Denied) {
+              goToDisposePath('../summary');
+            }
           });
         }}
         validate={handleValidate}
