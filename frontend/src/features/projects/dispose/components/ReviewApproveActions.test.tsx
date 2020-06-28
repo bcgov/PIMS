@@ -54,7 +54,7 @@ describe('Review Approve actions', () => {
       const confirm = component
         .find(GenericModal)
         .findWhere((node: { type: () => any; text: () => string }) => {
-          return node.type() === Button && node.text() === 'Confirm Approval';
+          return node.type() === Button && node.text() === 'Approve';
         });
       confirm.simulate('click');
       expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.ApprovedForErp);
