@@ -175,7 +175,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     ) {
       history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
     } else if (ReviewWorkflowStatuses.includes(row.statusCode)) {
-      if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
+      if (
+        keycloak.hasClaim(Claims.ADMIN_PROJECTS) &&
+        row.statusCode !== ReviewWorkflowStatus.Denied
+      ) {
         history.push(`/dispose/projects/approved?projectNumber=${row.projectNumber}`);
       } else {
         history.push(`/dispose/projects/summary?projectNumber=${row.projectNumber}`);
