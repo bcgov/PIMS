@@ -54,15 +54,14 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
     >
       <a
         aria-controls="approvalTabs-tabpane-Project Information"
-        aria-selected={false}
-        className="nav-item nav-link"
+        aria-selected={true}
+        className="nav-item nav-link active"
         data-rb-event-key="Project Information"
         href="#"
         id="approvalTabs-tab-Project Information"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
-        tabIndex={-1}
       >
         Project Information
       </a>
@@ -82,14 +81,15 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
       </a>
       <a
         aria-controls="approvalTabs-tabpane-Enhanced Referral Process"
-        aria-selected={true}
-        className="nav-item nav-link active"
+        aria-selected={false}
+        className="nav-item nav-link"
         data-rb-event-key="Enhanced Referral Process"
         href="#"
         id="approvalTabs-tab-Enhanced Referral Process"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
+        tabIndex={-1}
       >
         Enhanced Referral Process
       </a>
@@ -112,9 +112,9 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
       className="tab-content"
     >
       <div
-        aria-hidden={true}
+        aria-hidden={false}
         aria-labelledby="approvalTabs-tab-Project Information"
-        className="fade tab-pane"
+        className="fade tab-pane active show"
         id="approvalTabs-tabpane-Project Information"
         role="tabpanel"
       >
@@ -969,9 +969,9 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
         </div>
       </div>
       <div
-        aria-hidden={false}
+        aria-hidden={true}
         aria-labelledby="approvalTabs-tab-Enhanced Referral Process"
-        className="fade tab-pane active show"
+        className="fade tab-pane"
         id="approvalTabs-tabpane-Enhanced Referral Process"
         role="tabpanel"
       >

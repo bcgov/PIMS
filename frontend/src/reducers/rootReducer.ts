@@ -16,6 +16,7 @@ import { ProjectReducers } from 'constants/reducerTypes';
 import projectSlice from 'features/projects/dispose/slices/projectSlice';
 import projectTasksSlice from 'features/projects/dispose/slices/projectTasksSlice';
 import ProjectWorkflowTasksSlice from 'features/projects/dispose/slices/projectWorkflowTasksSlice';
+import projectApprovalTabSlice from 'features/projects/dispose/slices/projectApprovalTabSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -31,6 +32,7 @@ export const reducerObject = {
   [ProjectReducers.WORKFLOW_TASKS]: ProjectWorkflowTasksSlice.reducer,
   [ProjectReducers.TASKS]: projectTasksSlice.reducer,
   [ProjectReducers.PROJECT]: projectSlice.reducer,
+  [ProjectReducers.PROJECT_APPROVAL_TAB]: projectApprovalTabSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,
   [reducerTypes.MAP_VIEW_ZOOM]: mapViewZoomSlice.reducer,
 };

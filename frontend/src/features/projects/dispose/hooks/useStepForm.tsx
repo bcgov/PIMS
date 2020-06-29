@@ -9,8 +9,9 @@ import { IProject } from '..';
 import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
-import { ReviewWorkflowStatus } from '../interfaces';
+import { ReviewWorkflowStatus, IApiProject } from '../interfaces';
 import { RootState } from 'reducers/rootReducer';
+import { toFlatProject } from '../projectConverter';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -51,15 +52,17 @@ const useStepForm = () => {
       return ((statusCode !== undefined
         ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-DISPOSAL'))
         : Promise.resolve(apiValues)) as any)
-        .then((values: IProject) => {
+        .then((values: IApiProject) => {
+          const project: IProject | undefined = toFlatProject(values);
           //Only perform an update after a status transition if this is a non-closing status.
           return statusCode === ReviewWorkflowStatus.Cancelled ||
             statusCode === ReviewWorkflowStatus.Denied ||
-            statusCode === ReviewWorkflowStatus.TransferredGRE
-            ? Promise.resolve(values)
+            statusCode === ReviewWorkflowStatus.TransferredGRE ||
+            project === undefined
+            ? Promise.resolve(project)
             : dispatch(
                 updateProject({
-                  ...values,
+                  ...project,
                   statusCode: values.statusCode,
                   statusId: values.statusId,
                   rowVersion: values.rowVersion,

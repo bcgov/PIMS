@@ -28,6 +28,9 @@ import {
 } from '../forms/disposalYupSchema';
 import StepErrorSummary from './StepErrorSummary';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveProjectApprovalTab } from '../slices/projectApprovalTabSlice';
+import { RootState } from 'reducers/rootReducer';
 
 interface ValidationGroup {
   schema: any;
@@ -125,12 +128,16 @@ const ApprovalStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
-  const [currentTab, setCurrentTab] = useState(SPPApprovalTabs.erp);
+  const currentTab = useSelector<RootState, string>(state => state.projectApprovalTab);
+  const dispatch = useDispatch();
   const history = useHistory();
   const canUserEdit =
     canUserApproveForm() &&
     (project.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
       project.statusCode === ReviewWorkflowStatus.OnHold);
+  const setCurrentTab = (tabName: string) => {
+    dispatch(saveProjectApprovalTab(tabName));
+  };
   const goToGreTransferred = () =>
     history.push(`/dispose/projects/gretransfer?projectNumber=${project.projectNumber}`);
   return (

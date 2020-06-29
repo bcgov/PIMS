@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { IProject, IProjectTask } from '..';
-import { DisposeWorkflowStatus, ITask } from '../interfaces';
+import { ITask, ReviewWorkflowStatus } from '../interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 import ReviewApproveStep from './ReviewApproveStep';
 import { render } from '@testing-library/react';
@@ -44,7 +44,7 @@ const mockTasks: IProjectTask[] = [
     sortOrder: 0,
     completedOn: new Date(),
     statusId: 0,
-    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
   },
   {
     projectNumber: 123,
@@ -57,7 +57,7 @@ const mockTasks: IProjectTask[] = [
     sortOrder: 0,
     completedOn: new Date(),
     statusId: 0,
-    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
   },
 ];
 
@@ -66,10 +66,11 @@ const mockProject: IProject = {
   name: 'my project',
   description: 'my project description',
   privateNote: 'private note',
+  publicNote: 'public note',
   properties: [],
   agencyId: 1,
   statusId: 0,
-  statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+  statusCode: ReviewWorkflowStatus.PropertyReview,
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',
