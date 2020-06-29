@@ -38,7 +38,10 @@ describe('Review Approve actions', () => {
       values: {
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
-      submitForm: jest.fn(),
+      submitForm: () => Promise.resolve(),
+      validateForm: () => ({
+        then: (func: Function) => func({}),
+      }),
     });
     const component = mount(element);
 
@@ -47,7 +50,9 @@ describe('Review Approve actions', () => {
         return node.type() === Button && node.text() === 'Approve';
       });
       button.simulate('click');
-      expect(component.find(GenericModal)).toHaveLength(1);
+      return Promise.resolve().then(() => {
+        expect(component.find(GenericModal)).toHaveLength(1);
+      });
     });
 
     it('calls the function to change the status id', () => {
@@ -67,7 +72,7 @@ describe('Review Approve actions', () => {
       values: {
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
-      submitForm: jest.fn(),
+      submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
 
@@ -96,7 +101,7 @@ describe('Review Approve actions', () => {
       values: {
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
-      submitForm: jest.fn(),
+      submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
     const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
@@ -127,7 +132,7 @@ describe('Review Approve actions', () => {
       values: {
         statusCode: ReviewWorkflowStatus.Denied,
       },
-      submitForm: jest.fn(),
+      submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
     const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
@@ -158,7 +163,7 @@ describe('Review Approve actions', () => {
       values: {
         statusCode: ReviewWorkflowStatus.ApprovedForErp,
       },
-      submitForm: jest.fn(),
+      submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
     const approve = component.findWhere((node: { type: () => any; text: () => string }) => {

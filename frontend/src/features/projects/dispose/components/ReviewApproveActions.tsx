@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { ReviewWorkflowStatus } from '../interfaces';
 import GenericModal from 'components/common/GenericModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from 'components/common/form';
 
 const FlexRight = styled.div`
@@ -26,9 +26,14 @@ export const ReviewApproveActions = ({
   setSubmitStatusCode: Function;
   isSubmitting: boolean;
 }) => {
-  const { values, submitForm } = useFormikContext<any>();
+  const { values, submitForm, validateForm } = useFormikContext<any>();
   const [approveERP, setApproveERP] = useState(false);
   const [denyERP, setDenyERP] = useState(false);
+  useEffect(() => {
+    if (submitStatusCode !== undefined) {
+      submitForm().then(() => setSubmitStatusCode(undefined));
+    }
+  }, [setSubmitStatusCode, submitForm, submitStatusCode]);
   return (
     <>
       <FlexRight>
@@ -48,7 +53,11 @@ export const ReviewApproveActions = ({
           }
           style={{ marginLeft: 10 }}
           onClick={() => {
-            setApproveERP(true);
+            validateForm().then((errors: any) => {
+              if (Object.keys(errors).length === 0) {
+                setApproveERP(true);
+              }
+            });
           }}
         >
           Approve
@@ -96,7 +105,6 @@ export const ReviewApproveActions = ({
             okButtonText="Deny"
             handleOk={() => {
               setSubmitStatusCode(ReviewWorkflowStatus.Denied);
-              submitForm();
               setDenyERP(false);
             }}
             handleCancel={() => setDenyERP(false)}
@@ -118,7 +126,6 @@ export const ReviewApproveActions = ({
             !values.exemptionRequested
               ? setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)
               : setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForExemption);
-            submitForm();
             setApproveERP(false);
           }}
           handleCancel={() => setApproveERP(false)}

@@ -38,7 +38,10 @@ describe('approve exemption review actions', () => {
     values: {
       exemptionRequested: true,
     },
-    submitForm: jest.fn(),
+    submitForm: () => Promise.resolve(),
+    validateForm: () => ({
+      then: (func: Function) => func({}),
+    }),
   });
   const component = mount(element);
 
@@ -67,7 +70,8 @@ describe('deny exemption review actions', () => {
     values: {
       exemptionRequested: true,
     },
-    submitForm: jest.fn(),
+    submitForm: () => Promise.resolve(),
+    validateForm: () => Promise.resolve({}),
   });
   const component = mount(element);
 

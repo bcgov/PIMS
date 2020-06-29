@@ -10,6 +10,8 @@ interface IApprovalFormProps {
   setCurrentTab: Function;
   /** disable all tab content if true */
   isReadOnly?: boolean;
+  /** Used to signal the need for an api request at the given status */
+  submitStatusCode?: string;
   /** status code update triggered by a form action. Will trigger a status transition if set. */
   setSubmitStatusCode: Function;
   /** Function that will navigate to the gre transferred form when executed */
