@@ -12,7 +12,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an int.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -25,7 +24,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an int.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -38,7 +36,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an array of int.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="separator"></param>
@@ -51,7 +48,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an float.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -64,20 +60,17 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an float.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
-        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static float? GetFloatNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, float? defaultvalue = null)
+        public static float? GetFloatNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, float? defaultValue = null)
         {
-            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && float.TryParse(dValue, out float value) ? value : defaultvalue;
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && float.TryParse(dValue, out float value) ? value : defaultValue;
         }
 
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an float.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -90,20 +83,18 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an float.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static decimal? GetDecimalNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, decimal? defaultvalue = null)
+        public static decimal? GetDecimalNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, decimal? defaultValue = null)
         {
-            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && decimal.TryParse(dValue, out decimal value) ? value : defaultvalue;
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && decimal.TryParse(dValue, out decimal value) ? value : defaultValue;
         }
 
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an double.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -116,7 +107,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an double.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -129,7 +119,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an string.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -142,7 +131,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an array of string.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -153,10 +141,86 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an Guid.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static Guid GetGuidValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, Guid defaultValue = default)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && Guid.TryParse(dValue, out Guid value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an Guid.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static Guid? GetGuidNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, Guid? defaultValue = null)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && Guid.TryParse(dValue, out Guid value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an DateTime.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static DateTime GetDateTimeValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, DateTime defaultValue = default)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && DateTime.TryParse(dValue, out DateTime value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an DateTime.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static DateTime? GetDateTimeNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, DateTime? defaultValue = null)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && DateTime.TryParse(dValue, out DateTime value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an Enum of type 'T'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="ignoreCase"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static T GetEnumValue<T>(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, bool ignoreCase = true, T defaultValue = default)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && Enum.TryParse(typeof(T), dValue, ignoreCase, out object value) ? (T)value : defaultValue;
+        }
+
+        /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an Enum of type 'T'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="ignoreCase"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static T? GetEnumNullValue<T>(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, bool ignoreCase = true, T? defaultValue = null)
+            where T : struct
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && Enum.TryParse(typeof(T), dValue, ignoreCase, out object value) ? (T)value : defaultValue;
+        }
+
+        /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as the specified type 'T'.
         /// If the value doesn't convert correctly it will return a default value of the specified type 'T'.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -184,7 +248,6 @@ namespace Pims.Core.Extensions
         /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as a boolean.
         /// </summary>
-        /// <param name="IDictionary<string"></param>
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>

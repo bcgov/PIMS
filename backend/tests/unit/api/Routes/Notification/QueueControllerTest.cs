@@ -4,6 +4,7 @@ using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Notification.Controllers;
 using Pims.Dal.Security;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Test.Routes.Project
 {
@@ -40,6 +41,32 @@ namespace Pims.Api.Test.Routes.Project
             type.HasRoute("v{version:apiVersion}/[area]/queue");
             type.HasApiVersion("1.0");
             type.HasAuthorize();
+        }
+
+        [Fact]
+        public void GetNotificationsPage_Query_Route()
+        {
+            // Arrange
+            var endpoint = typeof(QueueController).FindMethod(nameof(QueueController.GetNotificationsPage));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet();
+            endpoint.HasPermissions(Permissions.SystemAdmin);
+        }
+
+        [Fact]
+        public void GetNotificationsPage_Route()
+        {
+            // Arrange
+            var endpoint = typeof(QueueController).FindMethod(nameof(QueueController.GetNotificationsPage), typeof(NotificationQueueFilter));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("filter");
+            endpoint.HasPermissions(Permissions.SystemAdmin);
         }
 
         [Fact]

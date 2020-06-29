@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
-using Pims.Dal.Models;
 using Pims.Dal.Security;
 using Pims.Notifications;
 using System;
@@ -38,6 +38,23 @@ namespace Pims.Dal.Services
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get an array of notifications within the specified filter.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Paged<NotificationQueue> GetPage(NotificationQueueFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
+
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var total = query.Count();
+            var items = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+
+            return new Paged<NotificationQueue>(items, filter.Page, filter.Quantity, total);
+        }
+
         /// <summary>
         /// Get the notification in the queue for the specified 'id'.
         /// </summary>
