@@ -1627,7 +1627,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = deny.Id; // Deny Status
@@ -1663,7 +1664,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, cancel));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = cancel.Id; // Cancel Status
@@ -1700,7 +1702,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = onHold.Id; // On Hold Status
@@ -1735,7 +1738,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = onHold.Id; // On Hold Status
@@ -1766,7 +1770,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, transferredWithinGre));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
@@ -1811,7 +1816,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, transferredWithinGre));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
@@ -1871,7 +1877,15 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
-            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}", NumberFormat = "SPP-{0:00000}" } });
+            var options = Options.Create(new PimsOptions()
+            {
+                Project = new ProjectOptions()
+                {
+                    DraftFormat = "TEST-{0:00000}",
+                    NumberFormat = "SPP-{0:00000}",
+                    ClosedStatus = new [] { "DE" }
+                }
+            });
             var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
@@ -1910,7 +1924,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = approve.Id; // Submit Status
@@ -1940,7 +1955,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = approve.Id; // Submit Status
@@ -1977,7 +1993,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = approve.Id; // Submit Status
@@ -2007,7 +2024,8 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = approve.Id; // Submit Status

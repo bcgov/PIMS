@@ -129,7 +129,6 @@ namespace Pims.Dal.Services
             if (project == null) throw new ArgumentNullException(nameof(project));
 
             var options = this.Context.ProjectStatusNotifications
-                .AsNoTracking()
                 .Include(n => n.Template)
                 .Where(n => !n.Template.IsDisabled && n.FromStatusId == fromStatusId && n.ToStatusId == toStatusId);
 
