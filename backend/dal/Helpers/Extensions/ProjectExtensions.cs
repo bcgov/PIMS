@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
@@ -376,7 +377,210 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static bool IsProjectClosed(this Entity.Project project, ProjectOptions options)
         {
-            return options.ClosedStatus.Contains(project.Status.Code);
+            return options.ClosedStatus?.Contains(project.Status.Code) ?? throw new ConfigurationException("Project closed status have not been configured.");
+        }
+
+        /// <summary>
+        /// Merge the specified 'updatedProject' changes into the specified 'originalProject'.
+        /// </summary>
+        /// <param name="originalProject"></param>
+        /// <param name="updatedProject"></param>
+        /// <param name="context"></param>
+        /// <param name="options"></param>
+        public static void Merge(this Entity.Project originalProject, Entity.Project updatedProject, PimsContext context, ProjectOptions options)
+        {
+            // Update a project
+            context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
+            context.SetOriginalRowVersion(originalProject);
+
+            // Update all properties
+            foreach (var property in updatedProject.Properties)
+            {
+                var existingProperty = originalProject.Properties.FirstOrDefault(b => b.PropertyType == Entity.PropertyTypes.Land
+                && b.ParcelId == property.ParcelId
+                && b.ProjectId == updatedProject.Id
+                ||
+                b.PropertyType == Entity.PropertyTypes.Building
+                && b.ProjectId == updatedProject.Id
+                && b.BuildingId == property.BuildingId);
+
+                if (existingProperty == null)
+                {
+                    //Todo: Navigation properties on project object were causing concurrency exceptions.
+                    var eproperty = property.PropertyType == Entity.PropertyTypes.Land ? context.Parcels.Find(property.ParcelId) : context.Buildings.Find(property.BuildingId) as Entity.Property;
+                    // Ignore properties that don't exist.
+                    if (eproperty != null)
+                    {
+                        if (property.PropertyType == Entity.PropertyTypes.Land)
+                        {
+                            var existingParcel = context.Parcels
+                                .Include(p => p.Agency)
+                                .Include(p => p.Evaluations)
+                                .Include(p => p.Fiscals)
+                                .FirstOrDefault(p => p.Id == property.ParcelId);
+                            originalProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
+                            if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
+                            existingParcel.ProjectNumber = updatedProject.ProjectNumber;
+                        }
+                        else
+                        {
+                            var existingBuilding = context.Buildings
+                                .Include(b => b.Agency)
+                                .Include(p => p.Evaluations)
+                                .Include(p => p.Fiscals)
+                                .FirstOrDefault(p => p.Id == property.BuildingId);
+                            originalProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
+                            if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
+                            existingBuilding.ProjectNumber = updatedProject.ProjectNumber;
+                        }
+                        originalProject.AddProperty(eproperty);
+                    }
+                }
+                else
+                {
+                    if (property.PropertyType == Entity.PropertyTypes.Land)
+                    {
+                        // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Parcel.ProjectNumber = updatedProject.ProjectNumber;
+                        existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
+                        existingProperty.Parcel.Zoning = property.Parcel.Zoning;
+                        existingProperty.Parcel.ZoningPotential = property.Parcel.ZoningPotential;
+                        foreach (var evaluation in property.Parcel.Evaluations)
+                        {
+                            var existingEvaluation = existingProperty.Parcel.Evaluations
+                                .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
+
+                            if (existingEvaluation == null)
+                            {
+                                existingProperty.Parcel.Evaluations.Add(evaluation);
+                            }
+                            else
+                            {
+                                context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
+                            }
+                        }
+                        foreach (var fiscal in property.Parcel.Fiscals)
+                        {
+                            var existingFiscal = existingProperty.Parcel.Fiscals
+                                .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
+
+                            if (existingFiscal == null)
+                            {
+                                existingProperty.Parcel.Fiscals.Add(fiscal);
+                            }
+                            else
+                            {
+                                context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                            }
+                        }
+                    }
+                    else if (property.PropertyType == Entity.PropertyTypes.Building)
+                    {
+                        // Only allow editing the classification and evaluations/fiscals for now
+                        existingProperty.Building.ProjectNumber = updatedProject.ProjectNumber;
+                        existingProperty.Building.ClassificationId = property.Building.ClassificationId;
+                        foreach (var evaluation in property.Building.Evaluations)
+                        {
+                            var existingEvaluation = existingProperty.Building.Evaluations
+                                .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
+
+                            if (existingEvaluation == null)
+                            {
+                                existingProperty.Building.Evaluations.Add(evaluation);
+                            }
+                            else
+                            {
+                                context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
+                            }
+                        }
+                        foreach (var fiscal in property.Building.Fiscals)
+                        {
+                            var existingFiscal = existingProperty.Building.Fiscals
+                                .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
+
+                            if (existingFiscal == null)
+                            {
+                                existingProperty.Building.Fiscals.Add(fiscal);
+                            }
+                            else
+                            {
+                                context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Remove any properties from this project that are no longer associated.
+            var removePropertyIds = originalProject.Properties.Select(p => p.Id).Except(updatedProject.Properties.Select(p => p.Id));
+            var removeProperties = originalProject.Properties.Where(p => removePropertyIds.Contains(p.Id));
+
+            var removeParcelIds = removeProperties.Where(p => p.ParcelId.HasValue).Select(p => p.ParcelId.Value).ToArray();
+            var removeParcels = context.Parcels.Where(p => removeParcelIds.Contains(p.Id));
+            removeParcels.ForEach(p =>
+            {
+                p.ProjectNumber = null;
+                context.Parcels.Update(p);
+            });
+
+            var removeBuildingIds = removeProperties.Where(b => b.BuildingId.HasValue).Select(p => p.BuildingId.Value).ToArray();
+            var removeBuildings = context.Buildings.Where(p => removeBuildingIds.Contains(p.Id));
+            removeBuildings.ForEach(b =>
+            {
+                b.ProjectNumber = null;
+                context.Buildings.Update(b);
+            });
+
+            originalProject.Properties.RemoveAll(p => removePropertyIds.Contains(p.Id));
+
+            // Update tasks
+            foreach (var task in updatedProject.Tasks)
+            {
+                var originalProjectTask = originalProject.Tasks.FirstOrDefault(t => t.TaskId == task.TaskId);
+
+                if (originalProjectTask == null)
+                {
+                    originalProject.Tasks.Add(task);
+                }
+                else
+                {
+                    context.Entry(originalProjectTask).CurrentValues.SetValues(task);
+                }
+            }
+
+            // Update responses
+            foreach (var response in updatedProject.Responses)
+            {
+                var originalProjectResponse = originalProject.Responses.FirstOrDefault(r => r.AgencyId == response.AgencyId);
+
+                if (originalProjectResponse == null)
+                {
+                    originalProject.Responses.Add(response);
+                }
+                else
+                {
+                    context.Entry(originalProjectResponse).CurrentValues.SetValues(response);
+                }
+            }
+
+            var toStatus = context.ProjectStatus
+                .Include(s => s.Tasks)
+                .FirstOrDefault(s => s.Id == updatedProject.StatusId);
+            updatedProject.Status = toStatus;
+
+            // If the tasks haven't been specified, generate them.
+            var taskIds = updatedProject.Tasks.Select(t => t.TaskId).ToArray();
+            // Add the tasks for project status if they are not already added.
+            foreach (var task in toStatus.Tasks.Where(t => !taskIds.Contains(t.Id)))
+            {
+                originalProject.Tasks.Add(new Entity.ProjectTask(updatedProject, task));
+            }
+
+            // Update project financials if the project is still active.
+            if (!updatedProject.IsProjectClosed(options))
+            {
+                originalProject.UpdateProjectFinancials();
+            }
         }
     }
 }
