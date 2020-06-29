@@ -25,6 +25,12 @@ namespace Pims.Dal
         /// get/set - An array of project status codes for when the project is closed.
         /// </summary>
         public string[] ClosedStatus { get; set; }
+
+        /// <summary>
+        /// get/set - An array of project status codes for when the project is terminated.
+        /// These are used to identify which status do not require validation.
+        /// </summary>
+        public string[] TerminateStatus { get; set; }
         #endregion
     }
 }

@@ -1597,7 +1597,8 @@ namespace Pims.Dal.Test.Services
             task.IsOptional = false;
             init.SaveChanges();
 
-            var service = helper.CreateService<ProjectService>(user);
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
             project.StatusId = deny.Id; // Deny Status
@@ -1634,6 +1635,7 @@ namespace Pims.Dal.Test.Services
             project.StatusId = deny.Id; // Deny Status
 
             // Act
+            project.PublicNote = "this is the reason";
             var result = service.SetStatus(project, workflowCode);
 
             // Assert
@@ -1877,15 +1879,7 @@ namespace Pims.Dal.Test.Services
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
-            var options = Options.Create(new PimsOptions()
-            {
-                Project = new ProjectOptions()
-                {
-                    DraftFormat = "TEST-{0:00000}",
-                    NumberFormat = "SPP-{0:00000}",
-                    ClosedStatus = new [] { "DE" }
-                }
-            });
+            var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
