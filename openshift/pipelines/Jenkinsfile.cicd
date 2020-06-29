@@ -262,7 +262,9 @@ pipeline {
   post {
     success {
       script {
-        notify.success(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+        if (env.SKIP_BUILD == "false") {
+          notify.success(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+        }
       }
     }
     failure {
