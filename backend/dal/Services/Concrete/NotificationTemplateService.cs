@@ -119,7 +119,10 @@ namespace Pims.Dal.Services
             template.ThrowIfNotAllowedToEdit(nameof(template), this.User, new[] { Permissions.SystemAdmin });
 
             var etemplate = this.Context.NotificationTemplates
+                .Include(t => t.Status)
                 .FirstOrDefault(t => t.Id == template.Id) ?? throw new KeyNotFoundException();
+
+            etemplate.Status.Clear();
 
             this.Context.NotificationTemplates.Remove(etemplate);
             this.Context.CommitTransaction();
