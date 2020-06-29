@@ -54,6 +54,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     nextStepCode: string,
     workflowStatusCode?: string,
   ) => {
+    //if we are at the most recent incomplete step, update status and project.
     if (project?.statusId === currentStatus.id) {
       if (
         nextStepCode === ReviewWorkflowStatus.PropertyReview ||
@@ -61,15 +62,20 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       ) {
         history.push('/project/completed');
       }
-      return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any).then(
-        (project: IProject) => {
+      return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any)
+        .then((project: IProject) => {
           goToNextStep(project);
           return project;
-        },
-      );
+        })
+        .catch((error: any) => {
+          const msg: string = error?.response?.data?.error ?? error.toString();
+          formikRef.current?.setStatus({ msg });
+          return project;
+        });
+    } else {
+      //if we are updating a previous step, just update the project with no status change.
+      return addOrUpdateProject(project, formikRef).then(() => goToNextStep(project));
     }
-    goToNextStep(project);
-    return Promise.resolve(project);
   };
 
   const onNext = () => {
@@ -88,10 +94,14 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           nextStepCode = ReviewWorkflowStatus.ExemptionReview;
           workflowStatusCode = 'ASSESS-EXEMPTION';
         }
-
-        addOrUpdateProject(values, formikRef).then((project: IProject) =>
-          updateProjectStatus(project, nextStepCode!, workflowStatusCode),
-        );
+        let promise: Promise<any> = Promise.resolve(values);
+        // If the project has not been created, create it before performing status updates.
+        if (values.id === undefined) {
+          promise = addOrUpdateProject(values, formikRef);
+        }
+        promise.then(project => {
+          return updateProjectStatus(project, nextStepCode!, workflowStatusCode);
+        });
       }
     });
   };

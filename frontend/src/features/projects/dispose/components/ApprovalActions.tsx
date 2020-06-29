@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { ReviewWorkflowStatus } from '../interfaces';
 import GenericModal from 'components/common/GenericModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DisplayError, Button } from 'components/common/form';
 import { cancellationWarning } from '../strings';
 import { useStepForm } from '..';
@@ -30,6 +30,11 @@ export const ApprovalActions = ({
   const { values, submitForm, validateForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
   const { noFetchingProjectRequests } = useStepForm();
+  useEffect(() => {
+    if (submitStatusCode !== undefined) {
+      submitForm().then(() => setSubmitStatusCode(undefined));
+    }
+  }, [setSubmitStatusCode, submitForm, submitStatusCode]);
   return (
     <>
       <FlexRight>
@@ -76,7 +81,6 @@ export const ApprovalActions = ({
               okButtonText="Cancel Project"
               handleOk={() => {
                 setSubmitStatusCode(ReviewWorkflowStatus.Cancelled);
-                submitForm();
                 setCancel(false);
               }}
               handleCancel={() => {

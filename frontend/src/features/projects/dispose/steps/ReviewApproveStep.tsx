@@ -44,19 +44,6 @@ export const validateTasks = (project: IProject) => {
   }, {});
 };
 
-export const handleValidate = (values: IProject) => {
-  let taskErrors = validateTasks(values);
-  const yupErrors: any = validateYupSchema(values, ReviewApproveStepSchema).then(
-    () => {
-      return taskErrors;
-    },
-    (err: any) => {
-      return _.merge(yupToFormErrors(err), taskErrors);
-    },
-  );
-  return Promise.resolve(yupErrors);
-};
-
 /**
  * Expanded version of the ReviewApproveStep allowing for application review.
  * {isReadOnly formikRef} formikRef allow remote formik access
@@ -73,6 +60,23 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     canUserApproveForm() &&
     (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
       project.statusCode === ReviewWorkflowStatus.ExemptionReview);
+
+  //validate form and tasks, skipping validation in the case of deny.
+  const handleValidate = (values: IProject) => {
+    if (submitStatusCode === ReviewWorkflowStatus.Denied) {
+      return Promise.resolve({});
+    }
+    let taskErrors = validateTasks(values);
+    const yupErrors: any = validateYupSchema(values, ReviewApproveStepSchema).then(
+      () => {
+        return taskErrors;
+      },
+      (err: any) => {
+        return _.merge(yupToFormErrors(err), taskErrors);
+      },
+    );
+    return Promise.resolve(yupErrors);
+  };
   const initialValues: IProject = {
     ...project,
     statusCode: project.status?.code,
