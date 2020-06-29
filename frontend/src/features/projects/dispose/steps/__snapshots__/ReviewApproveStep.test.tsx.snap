@@ -454,11 +454,8 @@ exports[`Review Approve Step renders correctly 1`] = `
         </div>
       </div>
     </div>
-    <h3>
-      Documentation
-    </h3>
     <div
-      className="tasksForm form-row"
+      className="tasksForm reviewRequired form-row"
     >
       <div
         className="form-group"
@@ -491,7 +488,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="tasksForm form-row"
+      className="tasksForm reviewRequired form-row"
     >
       <div
         className="form-group"
@@ -523,6 +520,9 @@ exports[`Review Approve Step renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <h3>
+      Documentation
+    </h3>
     <div
       className="reviewRequired container-fluid"
     >
@@ -701,6 +701,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             name="publicNote"
             onBlur={[Function]}
             onChange={[Function]}
+            value="public note"
           />
         </span>
       </div>
