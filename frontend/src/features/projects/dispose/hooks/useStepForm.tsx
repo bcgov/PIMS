@@ -9,9 +9,7 @@ import { IProject } from '..';
 import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
-import { ReviewWorkflowStatus, IApiProject } from '../interfaces';
 import { RootState } from 'reducers/rootReducer';
-import { toFlatProject } from '../projectConverter';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -49,30 +47,13 @@ const useStepForm = () => {
     if (values.exemptionRequested && statusCode !== undefined) {
       return dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-EXEMPTION'));
     } else {
-      return ((statusCode !== undefined
+      return (statusCode !== undefined
         ? dispatch(updateWorkflowStatus(apiValues, statusCode, 'ASSESS-DISPOSAL'))
-        : Promise.resolve(apiValues)) as any)
-        .then((values: IApiProject) => {
-          const project: IProject | undefined = toFlatProject(values);
-          //Only perform an update after a status transition if this is a non-closing status.
-          return statusCode === ReviewWorkflowStatus.Cancelled ||
-            statusCode === ReviewWorkflowStatus.Denied ||
-            statusCode === ReviewWorkflowStatus.TransferredGRE ||
-            project === undefined
-            ? Promise.resolve(project)
-            : dispatch(
-                updateProject({
-                  ...project,
-                  statusCode: values.statusCode,
-                  statusId: values.statusId,
-                  rowVersion: values.rowVersion,
-                }),
-              );
-        })
-        .catch((error: any) => {
-          const msg: string = error?.response?.data?.error ?? error.toString();
-          formikRef.current?.setStatus({ msg });
-        });
+        : (dispatch(updateProject(apiValues)) as any)
+      ).catch((error: any) => {
+        const msg: string = error?.response?.data?.error ?? error.toString();
+        formikRef.current?.setStatus({ msg });
+      });
     }
   };
 
