@@ -26,7 +26,7 @@ pipeline {
     DEBUG_OUTPUT = "false"
 
     // To force asking for a release version before running the pipeline, set to "true"
-    REQUIRE_VERSION = "true"
+    REQUIRE_VERSION = "false"
 
     // The name of your application
     APP_NAME = "pims"
