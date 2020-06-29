@@ -155,14 +155,22 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: IFormParcel) => {
-    let financialErrors = validateFinancials(values.financials, 'financials', showAppraisal);
+    let financialErrors = {};
 
-    values.buildings.forEach((building, index) => {
-      financialErrors = {
-        ...financialErrors,
-        ...validateFinancials(building.financials, `buildings.${index}.financials`, showAppraisal),
-      };
-    });
+    if (values.pid) {
+      financialErrors = validateFinancials(values.financials, 'financials', showAppraisal);
+      values.buildings.forEach((building, index) => {
+        financialErrors = {
+          ...financialErrors,
+          ...validateFinancials(
+            building.financials,
+            `buildings.${index}.financials`,
+            showAppraisal,
+          ),
+        };
+      });
+    }
+
     const yupErrors: any = validateYupSchema(values, ParcelSchema).then(
       () => {
         return financialErrors;

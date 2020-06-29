@@ -187,7 +187,7 @@ describe('ParcelDetailForm', () => {
       });
       const errors = getAllByText('Required');
       const idErrors = getAllByText('PID or PIN Required');
-      expect(errors).toHaveLength(8);
+      expect(errors).toHaveLength(6);
       expect(idErrors).toHaveLength(2);
     });
 
