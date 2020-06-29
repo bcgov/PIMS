@@ -22,12 +22,6 @@ pipeline {
   environment {
     CI = "true"
 
-    // To enable pipeline verbose debug output set to "true"
-    DEBUG_OUTPUT = "false"
-
-    // To force asking for a release version before running the pipeline, set to "true"
-    REQUIRE_VERSION = "false"
-
     // The name of your application
     APP_NAME = "pims"
 
@@ -50,6 +44,17 @@ pipeline {
 
     // The URI to the application being deployed.
     // VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
+
+    // To force asking for a release version before running the pipeline, set to "true"
+    // REQUIRE_VERSION = "false"
+
+    REQUIRE_VERSION = sh(script: 'echo ${REQUIRE_VERSION:-false}', returnStdout: true).trim()
+    JOB_NAME = sh(script: 'echo ${JOB_NAME:-dev}', returnStdout: true).trim()
+    DESTINATION = sh(script: 'echo ${DESTINATION:-dev}', returnStdout: true).trim()
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
+
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = sh(script: 'echo ${DEBUG_OUTPUT:-false}', returnStdout: true).trim()
   }
   stages {
     stage("Initialize") {
