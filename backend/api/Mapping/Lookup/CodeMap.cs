@@ -8,12 +8,11 @@ namespace Pims.Api.Mapping.Lookup
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Agency, Models.CodeModel<int>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Code, src => src.Code)
+                .Map(dest => dest.ParentId, src => src.ParentId)
                 .Inherits<Entity.LookupEntity<int>, Models.LookupModel<int>>();
 
             config.NewConfig<Entity.City, Models.CodeModel<int>>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Code, src => src.Code)
                 .Inherits<Entity.LookupEntity<int>, Models.LookupModel<int>>();
         }
