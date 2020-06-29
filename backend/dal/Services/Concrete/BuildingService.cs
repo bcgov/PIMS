@@ -173,6 +173,7 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
             var userAgencies = this.User.GetAgenciesAsNullable(); ;
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");

@@ -1,82 +1,85 @@
-using System.Security.Policy;
 using Xunit;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Dal.Test.Helpers.Extensions
 {
     [Trait("category", "unit")]
     [Trait("category", "dal")]
-    [Trait("group", "building_extensions")]
+    [Trait("category", "extensions")]
+    [Trait("group", "building")]
+    [ExcludeFromCodeCoverage]
     public class BuildingExtensionsTest
     {
         #region Tests
-
         [Fact]
         public void Get_BuildingZoning()
         {
-            // arrange
+            // Arrange
             var zone = "Zoning";
-            var parcel = new Parcel();
-            parcel.Zoning = zone;
-            var building = new Building();
-            building.Parcel = parcel;
+            var parcel = new Parcel
+            {
+                Zoning = zone
+            };
+            var building = new Building
+            {
+                Parcel = parcel
+            };
 
-            // act
+            // Act
             var zoning = building.GetZoning();
 
             // Assert
             Assert.Equal(zoning, zone);
-
         }
-
 
         [Fact]
         public void Get_BuildingZoning_NoParcel()
         {
-            // arrange
+            // Arrange
             var building = new Building();
 
-            // act
+            // Act
             var zoning = building.GetZoning();
 
             // Assert
             Assert.Empty(zoning);
-
         }
 
         [Fact]
         public void Get_BuildingZoningPotential()
         {
-            // arrange
+            // Arrange
             var zoningPotential = "ZoningPotential";
-            var parcel = new Parcel();
-            parcel.ZoningPotential = zoningPotential;
-            var building = new Building();
-            building.Parcel = parcel;
+            var parcel = new Parcel
+            {
+                ZoningPotential = zoningPotential
+            };
+            var building = new Building
+            {
+                Parcel = parcel
+            };
 
-            // act
-            var actualZoningPotential = building.GetZoningPotential();
+            // Act
+            var ActualZoningPotential = building.GetZoningPotential();
 
             // Assert
-            Assert.Equal(actualZoningPotential, zoningPotential);
-
+            Assert.Equal(ActualZoningPotential, zoningPotential);
         }
 
         [Fact]
         public void Get_BuildingZoningPotential_NoParcel()
         {
-            // arrange
+            // Arrange
             var building = new Building();
 
-            // act
+            // Act
             var zoningPotential = building.GetZoningPotential();
 
             // Assert
             Assert.Empty(zoningPotential);
-
         }
         #endregion
-
     }
 }

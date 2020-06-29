@@ -5,6 +5,7 @@ using Pims.Core.Extensions;
 using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Dal.Services;
 using System;
@@ -748,6 +749,53 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             result.Description.Should().Be("a new description.");
+        }
+
+        [Fact]
+        public void Update_Parcel_UpdateProjectFinancials()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.AdminProjects).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            project.FiscalYear = 2020;
+            var parcel = init.CreateParcel(1);
+            var fiscal = init.CreateFiscal(parcel, 2020, Entity.FiscalKeys.NetBook, 10);
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            fiscal.Value = 15;
+            var result = service.Update(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            project.NetBook.Should().Be(15);
+        }
+
+        [Fact]
+        public void Update_Parcel_LinkedToProject_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            project.FiscalYear = 2020;
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() => service.Update(parcel));
         }
         #endregion
 

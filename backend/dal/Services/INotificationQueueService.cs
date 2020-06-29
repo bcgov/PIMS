@@ -1,4 +1,5 @@
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +10,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface INotificationQueueService : IService
     {
+        Paged<NotificationQueue> GetPage(NotificationQueueFilter filter);
         NotificationQueue Get(int id);
         void Add(IEnumerable<NotificationQueue> notifications);
         void Add(NotificationQueue notification);

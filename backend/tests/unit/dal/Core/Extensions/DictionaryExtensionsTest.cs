@@ -1,7 +1,9 @@
 using Pims.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Test.Core.Extensions
 {
@@ -587,7 +589,7 @@ namespace Pims.Api.Test.Core.Extensions
         }
         #endregion
 
-        #region GetIntValue
+        #region GetValue
         [Fact]
         public void GetValue_Int()
         {
@@ -669,6 +671,327 @@ namespace Pims.Api.Test.Core.Extensions
             // Assert
             Assert.True(result);
             Assert.IsType<bool>(result);
+        }
+        #endregion
+
+        #region GetGuidValue
+        [Fact]
+        public void GetGuidValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidValue("Id");
+
+            // Assert
+            Assert.Equal(new Guid("8d1a35b3-6280-4103-93f5-792f8954bef8"), result);
+            Assert.IsType<Guid>(result);
+        }
+
+        [Fact]
+        public void GetGuidValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidValue("Id");
+
+            // Assert
+            Assert.Equal(Guid.Empty, result);
+            Assert.IsType<Guid>(result);
+        }
+
+        [Fact]
+        public void GetGuidValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidValue("Id", new Guid("8d1a35b3-6280-4103-93f5-792f8954bef2"));
+
+            // Assert
+            Assert.Equal(new Guid("8d1a35b3-6280-4103-93f5-792f8954bef2"), result);
+            Assert.IsType<Guid>(result);
+        }
+
+        [Fact]
+        public void GetGuidNullValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidNullValue("Id");
+
+            // Assert
+            Assert.Equal(new Guid("8d1a35b3-6280-4103-93f5-792f8954bef8"), result);
+            Assert.IsType<Guid>(result);
+        }
+
+        [Fact]
+        public void GetGuidNullValue_Null()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidNullValue("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetGuidNullValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidNullValue("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetGuidNullValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "8d1a35b3-6280-4103-93f5-792f8954bef8" } };
+
+            // Act
+            var result = dict.GetGuidNullValue("Id", new Guid("8d1a35b3-6280-4103-93f5-792f8954bef2"));
+
+            // Assert
+            Assert.Equal(new Guid("8d1a35b3-6280-4103-93f5-792f8954bef2"), result);
+            Assert.IsType<Guid>(result);
+        }
+        #endregion
+
+        #region GetDateTimeValue
+        [Fact]
+        public void GetDateTimeValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeValue("Id");
+
+            // Assert
+            Assert.Equal(DateTime.Parse("2020-01-30"), result);
+            Assert.IsType<DateTime>(result);
+        }
+
+        [Fact]
+        public void GetDateTimeValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeValue("Id");
+
+            // Assert
+            Assert.Equal(DateTime.MinValue, result);
+            Assert.IsType<DateTime>(result);
+        }
+
+        [Fact]
+        public void GetDateTimeValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeValue("Id", DateTime.Parse("2019-12-31"));
+
+            // Assert
+            Assert.Equal(DateTime.Parse("2019-12-31"), result);
+            Assert.IsType<DateTime>(result);
+        }
+
+        [Fact]
+        public void GetDateTimeNullValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeNullValue("Id");
+
+            // Assert
+            Assert.Equal(DateTime.Parse("2020-01-30"), result);
+            Assert.IsType<DateTime>(result);
+        }
+
+        [Fact]
+        public void GetDateTimeNullValue_Null()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeNullValue("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetDateTimeNullValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeNullValue("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetDateTimeNullValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "2020-01-30" } };
+
+            // Act
+            var result = dict.GetDateTimeNullValue("Id", DateTime.Parse("2019-12-31"));
+
+            // Assert
+            Assert.Equal(DateTime.Parse("2019-12-31"), result);
+            Assert.IsType<DateTime>(result);
+        }
+        #endregion
+
+        #region GetEnumValue
+        [Fact]
+        public void GetEnumValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumValue<Entity.NotificationEncodings>("Id");
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Utf8, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
+        }
+
+        [Fact]
+        public void GetEnumValue_Case()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "utf8" } };
+
+            // Act
+            var result = dict.GetEnumValue("Id", false, Entity.NotificationEncodings.Base64);
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Base64, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
+        }
+
+        [Fact]
+        public void GetEnumValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumValue<Entity.NotificationEncodings>("Id");
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Utf8, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
+        }
+
+        [Fact]
+        public void GetEnumValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumValue<Entity.NotificationEncodings>("Id", false, Entity.NotificationEncodings.Binary);
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Binary, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
+        }
+
+        [Fact]
+        public void GetEnumNullValue()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumNullValue<Entity.NotificationEncodings>("Id");
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Utf8, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
+        }
+
+        [Fact]
+        public void GetEnumNullValue_Case()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Id", "utf8" } };
+
+            // Act
+            var result = dict.GetEnumNullValue<Entity.NotificationEncodings>("Id", false);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetEnumNullValue_Null()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumNullValue<Entity.NotificationEncodings>("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetEnumNullValue_Default()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumNullValue<Entity.NotificationEncodings>("Id");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetEnumNullValue_WithDefault()
+        {
+            // Arrange
+            var dict = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>() { { "Name", "Utf8" } };
+
+            // Act
+            var result = dict.GetEnumNullValue<Entity.NotificationEncodings>("Id", false, Entity.NotificationEncodings.Binary);
+
+            // Assert
+            Assert.Equal(Entity.NotificationEncodings.Binary, result);
+            Assert.IsType<Entity.NotificationEncodings>(result);
         }
         #endregion
         #endregion
