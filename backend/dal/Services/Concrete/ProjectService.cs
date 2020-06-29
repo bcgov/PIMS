@@ -532,14 +532,21 @@ namespace Pims.Dal.Services
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId);
 
-            if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+            if (fromStatus.Id != toStatus.Id)
+            {
+                if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
 
-            // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
-            var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
-            var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
-            var statusTaskIds = fromStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
-            var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
-            if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
+                // If the project is terminated do not validate tasks. // TODO: Ideally this would handle scenarios where some tasks would need to be performed for termnating a project.
+                if (!_options.Project.TerminateStatus?.Contains(toStatus.Code) ?? throw new ConfigurationException("Project terminate status have not been configured."))
+                {
+                    // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
+                    var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
+                    var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
+                    var statusTaskIds = fromStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
+                    var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
+                    if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
+                }
+            }
 
             originalProject.Merge(project, this.Context, _options.Project);
 
@@ -592,7 +599,7 @@ namespace Pims.Dal.Services
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
-                    // if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
+                    if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
                     this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.DeniedOn = DateTime.UtcNow;
@@ -602,17 +609,11 @@ namespace Pims.Dal.Services
                     originalProject.CancelledOn = DateTime.UtcNow;
                     break;
                 case ("OH"): // OnHold
-                    if(project.OnHoldNotificationSentOn == null)
-                    {
-                        throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
-                    }
+                    if(project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
                     break;
                 case ("T-GRE"): // Transferred within the GRE
-                    if (project.TransferredWithinGreOn == null)
-                    {
-                        throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
-                    }
+                    if (project.TransferredWithinGreOn == null) throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
                     originalProject.TransferredWithinGreOn = project.TransferredWithinGreOn;
                     this.Context.TransferProjectProperties(originalProject, project);
                     break;
