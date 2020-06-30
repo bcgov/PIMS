@@ -42,10 +42,10 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
       <ApprovalConfirmationForm isReadOnly={true} />
       <ExemptionRequest
         submissionStep={true}
-        sectionHeader="Enhanced Referal Process Exemption"
+        sectionHeader="Enhanced Referral Process Exemption"
         exemptionField="exemptionRequested"
         rationaleField="exemptionRationale"
-        exemptionLabel="Apply for Enhanced Referal Process exemption"
+        exemptionLabel="Apply for Enhanced Referral Process exemption"
         tooltip="To fill later"
         rationaleInstruction="Please provide your rationale below for exemption request"
         isReadOnly={isReadOnly || !canEdit}
