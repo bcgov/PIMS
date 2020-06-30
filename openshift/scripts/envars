@@ -1,6 +1,7 @@
 GIT_URL="${GIT_URL:-$(git remote get-url origin)}"
 GIT_BRANCH="${GIT_BRANCH:-$(git describe --all --contains HEAD)}"
-NAME_APP="${NAME_APP:-$(echo ${GIT_URL##*/} | sed -e 's/\.[^.]*$//')}"
+
+APP_NAME="${APP_NAME:-pims}"
 
 PROJ_PREFIX="${PROJ_PREFIX:-jcxjin}"
 PROJ_TOOLS="${PROJ_TOOLS:-$(echo ${PROJ_PREFIX})-tools}"
@@ -8,4 +9,6 @@ PROJ_DEV="${PROJ_DEV:-$(echo ${PROJ_PREFIX})-dev}"
 PROJ_TEST="${PROJ_TEST:-$(echo ${PROJ_PREFIX})-test}"
 PROJ_PROD="${PROJ_PROD:-$(echo ${PROJ_PREFIX})-prod}"
 
+TAG_DEV="${TAG_DEV:-dev}"
+TAG_TEST="${TAG_TEST:-test}"
 TAG_PROD="${TAG_PROD:-prod}"

@@ -4,6 +4,96 @@ import java.util.regex.Pattern
 
 def version = "1.0"
 
+// ---------------
+// Pipeline Stages
+// ---------------
+
+// Run Tests
+def runFrontendTests() {
+  // pull code
+  checkout scm
+  timeout(20) {
+    dir('frontend') {
+      sh 'node --version'
+      sh 'npm --version'
+      echo 'Installing NPM Dependencies...'
+      sh 'npm ci'
+      echo 'Reporting Outdated and Vulnerable Dependencies...'
+      sh 'npm audit || true'
+      sh 'npm outdated || true'
+      echo "Linting and Testing Frontend..."
+      sh 'npm run lint'
+      sh 'npm run coverage'
+    }
+  }
+}
+
+// For future reference, if we have N test projects the flow of events would be:
+//
+// **Pre-conditions:**
+//  - All projects export their individual coverage percents in JSON and OpenCover format
+//  - There's no way to merge OpenCover xmls together (that I could find)
+//  - Common folder "../TestResults" is  git ignored so nothing gets in source control
+//
+// **Steps:**
+//
+// Test-project 1
+//   - generate coverage files (without merging)
+//   - copy results to common folder "../TestResults"
+// Test-project 2
+//   - generate coverage files merging with previous `coverage.json`
+//   - the previous `coverage.opencoverage.xml` is ignored
+//   - copy results to common folder "../TestResults"
+//  ...
+// Test-project N
+//   - generate coverage files merging with previous `coverage.json`
+//   - the previous `coverage.opencoverage.xml` is ignored
+//   - copy results to common folder "../TestResults"
+//
+// The final `coverage.opencover.xml` is the one we want
+def runBackendTests() {
+  // pull code
+  checkout scm
+  timeout(20) {
+    dir('backend') {
+      sh 'dotnet --version'
+      sh 'node --version'
+
+      echo 'Install dependencies...'
+      sh 'dotnet restore'
+
+      echo 'Build'
+      sh 'dotnet build --configuration Release --no-restore'
+    }
+    dir('backend/tests/unit') {
+      sh 'mkdir -p TestResults'
+      sh 'rm -rf api/TestResults'
+      sh 'rm -rf dal/TestResults'
+      dir('api') {
+        sh 'dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore'
+        sh 'mv TestResults/*/* ../TestResults/'
+      }
+      dir('dal') {
+        sh 'dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore'
+        sh 'mv TestResults/*/* ../TestResults/'
+      }
+    }
+  }
+}
+
+def maintenancePageOn(envName) {
+  dir('maintenance') {
+    sh "./maintenance.sh ${envName} on"
+  }
+}
+
+def maintenancePageOff(envName) {
+  dir('maintenance') {
+    sh "./maintenance.sh ${envName} off"
+  }
+}
+
+
 // ------------------
 // Git Functions
 // ------------------
@@ -45,17 +135,17 @@ boolean hasDirectoryChanged(String contextDirectory) {
  * Generates a string containing all the commit messages from
  * the builds in pastBuilds.
  */
- String getChangeLog() {
+String getChangeLog() {
   MAX_MSG_LEN = 512
   def changeString = ""
   def changeLogSets = currentBuild.changeSets
   for (int i = 0; i < changeLogSets.size(); i++) {
-     def entries = changeLogSets[i].items
-     for (int j = 0; j < entries.length; j++) {
-         def entry = entries[j]
-         truncated_msg = entry.msg.take(MAX_MSG_LEN)
-         changeString += " - ${truncated_msg} [${entry.author}]\n"
-     }
+    def entries = changeLogSets[i].items
+    for (int j = 0; j < entries.length; j++) {
+      def entry = entries[j]
+      truncated_msg = entry.msg.take(MAX_MSG_LEN)
+      changeString += " - ${truncated_msg} [${entry.author}]\n"
+    }
   }
   if (!changeString) {
      changeString = "No changes"
@@ -94,8 +184,8 @@ def build(buildconfigs, int waitTimeout) {
       // untilEach and watch - do not support watching multiple named resources,
       // so we have to feed it one at a time.
       it.untilEach(1) {
-          echo "${it.object().status.phase} - ${it.name()}"
-          return (it.object().status.phase == "Complete")
+        echo "${it.object().status.phase} - ${it.name()}"
+        return (it.object().status.phase == "Complete")
       }
     }
   }
@@ -105,35 +195,34 @@ def build(buildconfigs, int waitTimeout) {
 
 // Abort the specified build.
 @NonCPS
-private void abortBuild(build){
-    boolean aborted=false;
-    if (build instanceof org.jenkinsci.plugins.workflow.job.WorkflowRun){
-        int counter=0
-        while (counter<60 && build.isInProgress()){
-            for (org.jenkinsci.plugins.workflow.support.steps.input.InputAction inputAction:build.getActions(org.jenkinsci.plugins.workflow.support.steps.input.InputAction.class)){
-                for (org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution inputStep:inputAction.getExecutions()){
-                    if (!inputStep.isSettled()){
-                        inputStep.doAbort()
-                    }
-                }
-            }
-
-            counter++
-            Thread.sleep(1000) //milliseconds
+private void abortBuild(build) {
+  boolean aborted=false;
+  if (build instanceof org.jenkinsci.plugins.workflow.job.WorkflowRun) {
+    int counter=0
+    while (counter<60 && build.isInProgress()) {
+      for (org.jenkinsci.plugins.workflow.support.steps.input.InputAction inputAction:build.getActions(org.jenkinsci.plugins.workflow.support.steps.input.InputAction.class)){
+        for (org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution inputStep:inputAction.getExecutions()) {
+          if (!inputStep.isSettled()) {
+            inputStep.doAbort()
+          }
         }
-    }
+      }
 
-    if (build.isInProgress()){
-        build.doKill()
+      counter++
+      Thread.sleep(1000) //milliseconds
     }
+  }
 
+  if (build.isInProgress()) {
+    build.doKill()
+  }
 }
 
 // Abort all previous builds in progress for the specified build.
-def abortAllPreviousBuildInProgress(currentBuild) {
-    while(currentBuild.rawBuild.getPreviousBuildInProgress() != null) {
-        abortBuild(currentBuild.rawBuild.getPreviousBuildInProgress())
-    }
+def abortAllPreviousBuildsInProgress(currentBuild) {
+  while(currentBuild.rawBuild.getPreviousBuildInProgress() != null) {
+    abortBuild(currentBuild.rawBuild.getPreviousBuildInProgress())
+  }
 }
 
 // --------------------
