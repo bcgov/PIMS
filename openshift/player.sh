@@ -1,9 +1,14 @@
 #!/bin/bash
 
+# Specify halt conditions (errors, unsets, non-zero pipes)
+#
+set -euo pipefail
+
 THIS_DIRECTORY=$(cd `dirname $0` && pwd)
 ARGV=${@:2}
 
-# the oc-scripts need to be run from the scripts folder
+# oc-scripts need to run from the scripts folder
+#
 pushd ${THIS_DIRECTORY}/scripts > /dev/null
 
 case "${1:-}" in

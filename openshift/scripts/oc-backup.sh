@@ -10,7 +10,7 @@ source "$(dirname ${0})/common.sh"
 #%
 #% Usage:
 #%
-#%   ${THIS_FILE} [TARGET] [apply]
+#%   ${THIS_FILE} [TARGET] [-apply]
 #%
 #% Examples:
 #%
@@ -18,7 +18,7 @@ source "$(dirname ${0})/common.sh"
 #%   ${THIS_FILE} dev
 #%
 #%   Apply when satisfied.
-#%   ${THIS_FILE} dev apply
+#%   ${THIS_FILE} dev -apply
 #%
 
 # Target project override for Dev, Test or Prod deployments

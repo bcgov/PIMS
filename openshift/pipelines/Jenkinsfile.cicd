@@ -37,7 +37,7 @@ pipeline {
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
     // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
-    // JOB_NAME = "dev"
+    // OC_JOB_NAME = "dev"
 
     // Which environment to deploy to ('dev' OR 'test' OR 'prod').
     // DESTINATION = "dev"
@@ -49,7 +49,7 @@ pipeline {
     // ENABLE_VERSION_PROMPT = "false"
 
     ENABLE_VERSION_PROMPT = sh(script: 'echo "${ENABLE_VERSION_PROMPT:-false}"', returnStdout: true).trim()
-    JOB_NAME = sh(script: 'echo "${JOB_NAME:-dev}"', returnStdout: true).trim()
+    OC_JOB_NAME = sh(script: 'echo "${OC_JOB_NAME:-dev}"', returnStdout: true).trim()
     DESTINATION = sh(script: 'echo "${DESTINATION:-dev}"', returnStdout: true).trim()
     VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
 
@@ -197,8 +197,8 @@ pipeline {
           steps {
             script {
               dir(DEVOPS_DIRECTORY) {
-                sh "JOB_NAME=${JOB_NAME} ./player.sh build app-base apply"
-                sh "JOB_NAME=${JOB_NAME} ./player.sh build app apply"
+                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base apply"
+                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app apply"
               }
             }
           }
@@ -206,7 +206,7 @@ pipeline {
         stage("Backend") {
           steps {
             dir(DEVOPS_DIRECTORY) {
-              sh "JOB_NAME=${JOB_NAME} ./player.sh build api apply"
+              sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api apply"
             }
           }
         }
@@ -230,8 +230,8 @@ pipeline {
         // sh """
         // sonar-scanner \
         //   -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-        //   -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
-        //   -Dsonar.projectName='NRPTI (${JOB_NAME.toUpperCase()})'
+        //   -Dsonar.projectKey='${REPO_NAME}-${OC_JOB_NAME}' \
+        //   -Dsonar.projectName='NRPTI (${OC_JOB_NAME.toUpperCase()})'
         // """
       }
     }
