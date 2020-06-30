@@ -12,7 +12,7 @@ source "$(dirname ${0})/common.sh"
 #%
 #% Usage:
 #%
-#%    ${THIS_FILE} [BUILD_NAME] [apply]
+#%    ${THIS_FILE} [BUILD_NAME] [-apply]
 #%
 #% Examples:
 #%
@@ -20,21 +20,21 @@ source "$(dirname ${0})/common.sh"
 #%    ${THIS_FILE} api
 #%
 #%   Apply when satisfied.
-#%    ${THIS_FILE} api apply
+#%    ${THIS_FILE} api -apply
 #%
 #%   Set variables to non-defaults at runtime.  E.g.:
-#%    VERBOSE=true JOB_NAME=master ${THIS_FILE} <...>
+#%    VERBOSE=true OC_JOB_NAME=master ${THIS_FILE} <...>
 #%
 #%
 
 # Receive parameters
 #
-JOB_NAME=${JOB_NAME:-dev}
+OC_JOB_NAME=${OC_JOB_NAME:-dev}
 SHORTNAME=${1:-}
 
 # E.g. <buildname>-master
 #
-BUILD_NAME="${APP_NAME}-${SHORTNAME}-${JOB_NAME}"
+BUILD_NAME="${APP_NAME}-${SHORTNAME}-${OC_JOB_NAME}"
 
 # Cancel non complete builds and start a new build (apply or don't run)
 #

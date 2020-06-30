@@ -11,7 +11,7 @@ source "$(dirname ${0})/common.sh"
 #%
 #% Usage:
 #%
-#%   [RELEASE_TAG=<>] ${THIS_FILE} [DEPLOY_NAME] [ENV_NAME] [apply]
+#%   [RELEASE_TAG=<>] ${THIS_FILE} [DEPLOY_NAME] [ENV_NAME] [-apply]
 #%
 #% Examples:
 #%
@@ -19,10 +19,10 @@ source "$(dirname ${0})/common.sh"
 #%   ${THIS_FILE} api dev
 #%
 #%   Apply when satisfied.
-#%   ${THIS_FILE} api dev apply
+#%   ${THIS_FILE} api dev -apply
 #%
 #%   Set variables to non-defaults at runtime.  E.g. to deploy from TEST to PROD:
-#%   RELEASE_TAG=test ${THIS_FILE} api prod apply
+#%   RELEASE_TAG=test ${THIS_FILE} api prod -apply
 
 # Receive parameters (source and destination)
 #

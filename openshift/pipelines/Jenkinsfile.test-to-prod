@@ -35,7 +35,7 @@ pipeline {
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
     // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
-    // JOB_NAME = "dev"
+    // OC_JOB_NAME = "dev"
 
     // Which environment to deploy to ('dev' OR 'test' OR 'prod').
     // DESTINATION = "dev"
@@ -47,7 +47,7 @@ pipeline {
     // VANITY_URL="https://pims-prod.pathfinder.gov.bc.ca/"
 
     ENABLE_VERSION_PROMPT = true // ignored - version prompt always enabled in the PROD pipeline
-    JOB_NAME = sh(script: 'echo "${JOB_NAME:-master}"', returnStdout: true).trim()
+    OC_JOB_NAME = sh(script: 'echo "${OC_JOB_NAME:-master}"', returnStdout: true).trim()
     DESTINATION = sh(script: 'echo "${DESTINATION:-prod}"', returnStdout: true).trim()
     VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims-prod.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
 
