@@ -10,10 +10,10 @@ objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
-      name: "${NAME}-pipeline"
+      name: "${NAME}"
       creationTimestamp: null
       labels:
-        name: "${NAME}-pipeline"
+        name: "${NAME}"
         role: "pipeline"
     spec:
       triggers:
@@ -35,10 +35,12 @@ objects:
           env:
             - name: VANITY_URL
               value: ${APP_URI}
-            - name: IMAGE_TAG
-              value: ${GIT_REF}
+            - name: JOB_NAME
+              value: ${JOB_NAME}
             - name: DESTINATION
               value: ${ENV_NAME}
+            - name: ENABLE_VERSION_PROMPT
+              value: ${ENABLE_VERSION_PROMPT}
           jenkinsfilePath: "${JENKINSFILE_PATH}"
       output: {}
       resources: {}
@@ -47,7 +49,7 @@ objects:
       lastVersion: 0
 parameters:
   - name: NAME
-    displayName: Pipeline Name (without -pipeline suffix)
+    displayName: Pipeline Name
     description: Name of the pipeline, e.g cicd, promote-to-test, sonarqube. A -pipeline suffix will be appended to the name provided.
     required: true
   - name: GITHUB_WEBHOOK_SECRET
@@ -69,12 +71,10 @@ parameters:
     displayName: Git Reference
     description: Set this to a branch name, tag or other ref of your repository if you are not using the default branch.
     value: dev
-
   - name: JENKINSFILE_PATH
     displayName: Jenkinsfile path
     description: Set this to the path to your Jenkinsfile (include the filename), relative to the contextDir.
-    value: Jenkinsfile
-
+    value: openshift/pipelines/Jenkinsfile
   - name: APP_URI
     displayName: Application URI
     description: The URI to the application being deployed.
@@ -85,3 +85,12 @@ parameters:
     description: The name for the environment that the build will be deployed to [dev, test, prod]
     required: true
     value: dev
+  - name: JOB_NAME
+    displayName: Job Branch Name
+    description: Job identifier (i.e. 'pr-5' OR 'dev' OR 'master')
+    required: true
+    value: dev
+  - name: ENABLE_VERSION_PROMPT
+    displayName: Enable Version Prompt
+    description: To force asking for a release version before running the pipeline, set to "true"
+    value: false

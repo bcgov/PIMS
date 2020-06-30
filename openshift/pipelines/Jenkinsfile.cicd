@@ -3,11 +3,12 @@
 // ------------------
 // Pipeline Variables
 // ------------------
-def cli
+def commonPipeline
 def notify
 
 def FE_COV_STASH = 'fe-test-coverage'
 def API_COV_STASH = 'api-test-coverage'
+def RELEASE_VERSION = ""
 
 // --------------------
 // Declarative Pipeline
@@ -19,66 +20,75 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
   }
   environment {
-    // To enable pipeline verbose debug output set to "true"
-    DEBUG_OUTPUT = "false"
-
-    // Wait timeout in minutes
-    WAIT_TIMEOUT = 15
-
     CI = "true"
 
     // The name of your application
     APP_NAME = "pims"
 
-    // This should match your monorepo folder structure
-    API_CONTEXT_DIRECTORY = "backend"
-    FRONTEND_CONTEXT_DIRECTORY = "frontend"
-
     // The name of the project namespace(s).
     NAME_SPACE = "jcxjin"
 
+    // This should match your monorepo folder structure
+    API_DIRECTORY = "backend"
+    FRONTEND_DIRECTORY = "frontend"
+    MAINTENANCE_DIRECTORY = "maintenance"
+    DEVOPS_DIRECTORY = "openshift"
+
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
-    // The tag used to identify the image.
-    // IMAGE_TAG = "dev"
+    // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
+    // JOB_NAME = "dev"
 
-    // Which environment to deploy to.
+    // Which environment to deploy to ('dev' OR 'test' OR 'prod').
     // DESTINATION = "dev"
 
     // The URI to the application being deployed.
     // VANITY_URL="https://pims-dev.pathfinder.gov.bc.ca/"
+
+    // To force asking for a release version before running the pipeline, set to "true"
+    // ENABLE_VERSION_PROMPT = "false"
+
+    ENABLE_VERSION_PROMPT = sh(script: 'echo "${ENABLE_VERSION_PROMPT:-false}"', returnStdout: true).trim()
+    JOB_NAME = sh(script: 'echo "${JOB_NAME:-dev}"', returnStdout: true).trim()
+    DESTINATION = sh(script: 'echo "${DESTINATION:-dev}"', returnStdout: true).trim()
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
+
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = sh(script: 'echo "${DEBUG_OUTPUT:-false}"', returnStdout: true).trim()
   }
   stages {
     stage("Initialize") {
       steps {
         script {
           // load supporting functions from external script files
-          cli = load "openshift/pipelines/scripts/common.groovy"
+          commonPipeline = load "openshift/pipelines/scripts/common.groovy"
           notify = load "openshift/pipelines/scripts/notify.groovy"
+
+          // Cancel any running builds in progress
+          timeout(time: 10, unit: 'MINUTES') {
+            echo "Cancelling previous builds in progress..."
+            commonPipeline.abortAllPreviousBuildsInProgress(currentBuild)
+          }
 
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
           sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
 
           // initialize CI environment values
-          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
-          env.CHANGELOG = cli.getChangeLog()
+          env.CHANGELOG = commonPipeline.getChangeLog()
 
-          // back-end CI flags
-          def api_changes = cli.hasDirectoryChanged(API_CONTEXT_DIRECTORY)
-          env.API_HAS_CHANGES = api_changes.toString()
-          env.API_FORCE_BUILD = "false"
-          env.API_BUILT = "false"
-          env.API_DEPLOYED = "false"
+          // whether Build and Deploy stage should be skipped
+          def api_changes = commonPipeline.hasDirectoryChanged('backend').toString()
+          def fe_changes = commonPipeline.hasDirectoryChanged('frontend').toString()
 
-          // front-end CI flags
-          def fe_changes = cli.hasDirectoryChanged(FRONTEND_CONTEXT_DIRECTORY)
-          env.FRONTEND_HAS_CHANGES = fe_changes.toString()
-          env.FRONTEND_FORCE_BUILD = "false"
-          env.FRONTEND_BUILT = "false"
-          env.FRONTEND_DEPLOYED = "false"
+          if (api_changes.equalsIgnoreCase("false") && fe_changes.equalsIgnoreCase("false")) {
+            env.SKIP_BUILD = "true"
+          } else {
+            env.SKIP_BUILD = "false"
+          }
 
-          if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
+          if (new Boolean(DEBUG_OUTPUT)) {
             // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
@@ -89,271 +99,124 @@ pipeline {
         }
       }
     }
-    stage("Force API Build?") {
-      when { environment name: "API_HAS_CHANGES", value: "false" }
+
+    stage("Version Prompt") {
+      when {
+        anyOf {
+          expression { env.GIT_BRANCH == "origin/master" }
+          expression { new Boolean(env.ENABLE_VERSION_PROMPT) }
+        }
+      }
+      steps {
+        script {
+          timeout(time: 5, unit: "MINUTES") {
+            def version = input(message: "Enter the version tag for this release", parameters: [
+              string(name: "RELEASE VERSION", defaultValue: "", description: "")
+            ])
+            if (version != "") {
+              RELEASE_VERSION = version
+            } else {
+              error "***  No release version specified. Aborting pipeline.  ***"
+            }
+          }
+        }
+      }
+    }
+
+    stage("Force Build?") {
+      when {
+        expression { new Boolean(env.SKIP_BUILD) == true }
+      }
       steps {
         script {
           try {
-            timeout(time: 1, unit: "MINUTES") {
-              input(message: "Should we force the API Build?", ok: "Yes, we should")
+            timeout(time: 2, unit: "MINUTES") {
+              input(message: "No code changes detected. Should we force the Build?", ok: "Yes, we should")
             }
-            echo "[ci/cd]  The API build was forced..."
-            env.API_FORCE_BUILD = "true"
+            env.SKIP_BUILD = "false"
           } catch (err) {
-            echo "[ci/cd]  No API code changes. Skipping the API build..."
-            env.API_FORCE_BUILD = "false"
+            echo "[ci/cd]  No code changes. Skipping the Build stage..."
+            env.SKIP_BUILD = "true"
           }
         }
       }
     }
-    stage("Build API and run tests") {
-      environment {
-        COMP_NAME = "api"
-      }
+
+    stage('Tests') {
       when {
-        anyOf {
-          environment name: "API_HAS_CHANGES", value: "true"
-          environment name: "API_FORCE_BUILD", value: "true"
-        }
+        expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      steps {
-        echo "[ci/cd]  Building API artifacts..."
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              def build_config = "${APP_NAME}-${COMP_NAME}-${IMAGE_TAG}"
-              def apiSelector = openshift.selector("bc", build_config)
-              if (!apiSelector.exists()) {
-                throw new Exception("Could not find API build with name: '${build_config}'")
-              } else {
-                timeout(WAIT_TIMEOUT) {
-                  apiSelector.startBuild("-w")
-                }
-              }
+      options { timeout(time: 10, unit: "MINUTES") }
+      failFast true
+      parallel {
+        stage("Frontend") {
+          agent { label 'jenkins-slave-npm' }
+          steps {
+            script {
+              commonPipeline.runFrontendTests()
+            }
+          }
+          post {
+            success {
+              echo 'Frontend lint checks and tests passed'
+              stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+            }
+            failure {
+              error '*** Frontend lint checks and tests failed ***'
+            }
+          }
+        }
+        stage("Backend") {
+          agent { label 'jenkins-slave-dotnet' }
+          steps {
+            script {
+              commonPipeline.runBackendTests()
+            }
+          }
+          post {
+            success {
+              echo 'Backend tests passed'
+              stash name: API_COV_STASH, includes: 'backend/tests/unit/TestResults/**'
+            }
+            failure {
+              error '*** Backend tests failed ***'
             }
           }
         }
       }
-      post {
-        success {
-          script {
-            env.API_BUILT = "true"
-          }
-        }
-      }
     }
-    stage("Force FRONTEND Build?") {
-      when { environment name: "FRONTEND_HAS_CHANGES", value: "false" }
-      steps {
-        script {
-          try {
-            timeout(time: 1, unit: "MINUTES") {
-              input(message: "Should we force the FRONTEND Build?", ok: "Yes, we should")
-            }
-            echo "[ci/cd]  The FRONTEND build was forced..."
-            env.FRONTEND_FORCE_BUILD = "true"
-          } catch (err) {
-            echo "[ci/cd]  No FRONTEND code changes. Skipping the FRONTEND build..."
-            env.FRONTEND_FORCE_BUILD = "false"
-          }
-        }
-      }
-    }
-    stage("Build FRONTEND") {
-      environment {
-        COMP_NAME = "app"
-        WAIT_TIMEOUT = 20 // increase the timeout for this stage as it takes longer to build
-      }
+
+    stage('Build') {
       when {
-        anyOf {
-          environment name: "FRONTEND_HAS_CHANGES", value: "true"
-          environment name: "FRONTEND_FORCE_BUILD", value: "true"
-        }
+        expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      steps {
-        echo "[ci/cd]  Building FRONTEND artifacts..."
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              // Build the base image. This image leverages Node to create a production build of the React frontend.
-              def build_config = "${APP_NAME}-${COMP_NAME}-base-${IMAGE_TAG}"
-              def feBase = openshift.selector("bc", build_config)
-              if (!feBase.exists()) {
-                throw new Exception("Could not find FRONTEND-base build with name: '${build_config}'")
-              } else {
-                timeout(WAIT_TIMEOUT) {
-                  feBase.startBuild("-w")
-                }
-              }
-
-              // Build the runtime image. This image serves the compiled React artifacts via an NGINX web-server.
-              def runtime_build_config = "${APP_NAME}-${COMP_NAME}-${IMAGE_TAG}"
-              def feRuntime = openshift.selector("bc", runtime_build_config)
-              if (!feRuntime.exists()) {
-                throw new Exception("Could not find FRONTEND-runtime build with name: '${runtime_build_config}'")
-              } else {
-                timeout(WAIT_TIMEOUT) {
-                  feRuntime.startBuild("-w")
-                }
+      options { timeout(time: 25, unit: "MINUTES") }
+      failFast true
+      parallel {
+        stage("Frontend") {
+          steps {
+            script {
+              dir(DEVOPS_DIRECTORY) {
+                sh "JOB_NAME=${JOB_NAME} ./player.sh build app-base apply"
+                sh "JOB_NAME=${JOB_NAME} ./player.sh build app apply"
               }
             }
           }
         }
-      }
-      post {
-        success {
-          script {
-            env.FRONTEND_BUILT = "true"
-          }
-        }
-      }
-    }
-    stage("FRONTEND Tests") {
-      agent {
-        label 'jenkins-slave-npm'
-      }
-      environment {
-        COMP_NAME = "app"
-        CI = "true"
-      }
-      when {
-        anyOf {
-          environment name: "FRONTEND_BUILT", value: "true"
-        }
-      }
-      steps {
-        echo "[ci/cd]  Run FRONTEND Test Cases"
-        script {
-          // pull code
-          checkout scm
-
-          dir(FRONTEND_CONTEXT_DIRECTORY) {
-            try {
-              timeout(20) {
-                sh 'node --version'
-                sh 'npm --version'
-
-                echo 'Installing NPM Dependencies...'
-                sh 'npm ci'
-
-                echo 'Reporting Outdated and Vulnerable Dependencies...'
-                sh 'npm audit || true'
-                sh 'npm outdated || true'
-
-                echo "Linting and Testing Frontend..."
-                sh 'npm run lint'
-                sh 'npm run coverage'
-
-                echo 'Frontend Lint Checks and Tests passed'
-              }
-            } catch (e) {
-              echo 'Lint Checks and Tests failed'
-              throw e
+        stage("Backend") {
+          steps {
+            dir(DEVOPS_DIRECTORY) {
+              sh "JOB_NAME=${JOB_NAME} ./player.sh build api apply"
             }
           }
         }
       }
-      post {
-        success {
-          stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
-          echo 'All Tests passed'
-        }
-        failure {
-          echo 'Tests failed'
-        }
-      }
     }
-    stage("API Tests") {
-      agent {
-        label 'jenkins-slave-dotnet'
-      }
-      environment {
-        COMP_NAME = "api"
-        CI = "true"
-      }
-      when {
-        anyOf {
-          environment name: "API_BUILT", value: "true"
-        }
-      }
-      steps {
-        echo "[ci/cd]  Run API Test Cases"
-        script {
-          // pull code
-          checkout scm
 
-          dir(API_CONTEXT_DIRECTORY) {
-            try {
-              timeout(20) {
-                sh 'dotnet --version'
-                sh 'node --version'
-
-                echo 'Install dependencies...'
-                sh 'dotnet restore'
-
-                echo 'Build'
-                sh 'dotnet build --configuration Release --no-restore'
-
-                // For future reference, if we have N test projects the flow of events would be:
-                //
-                // **Pre-conditions:**
-                //  - All projects export their individual coverage percents in JSON and OpenCover format
-                //  - There's no way to merge OpenCover xmls together (that I could find)
-                //  - Common folder "../TestResults" is  git ignored so nothing gets in source control
-                //
-                // **Steps:**
-                //
-                // Test-project 1
-                //   - generate coverage files (without merging)
-                //   - copy results to common folder "../TestResults"
-                // Test-project 2
-                //   - generate coverage files merging with previous `coverage.json`
-                //   - the previous `coverage.opencoverage.xml` is ignored
-                //   - copy results to common folder "../TestResults"
-                //  ...
-                // Test-project N
-                //   - generate coverage files merging with previous `coverage.json`
-                //   - the previous `coverage.opencoverage.xml` is ignored
-                //   - copy results to common folder "../TestResults"
-                //
-                // The final `coverage.opencover.xml` is the one we want
-                echo 'Run API tests and collect code coverage'
-                sh '''
-                cd tests/unit
-                mkdir -p TestResults
-                rm -rf api/TestResults
-                rm -rf dal/TestResults
-                cd api
-                dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
-                mv TestResults/*/* ../TestResults/
-                cd ..
-                cd dal
-                dotnet test -m:1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --no-restore
-                mv TestResults/*/* ../TestResults/
-                cd ..
-                head TestResults/coverage.opencover.xml
-                '''
-
-                echo 'API Tests passed'
-              }
-            } catch (e) {
-              echo 'Lint Checks and Tests failed'
-              throw e
-            }
-          }
-        }
-      }
-      post {
-        success {
-          stash name: API_COV_STASH, includes: 'backend/tests/unit/TestResults/**'
-          echo 'All Tests passed'
-        }
-        failure {
-          echo 'Tests failed'
-        }
-      }
-    }
     stage("Quality Gate") {
+      when {
+        expression { new Boolean(env.SKIP_BUILD) == false }
+      }
       options {
         timeout(time: 1, unit: "MINUTES")
       }
@@ -372,190 +235,47 @@ pipeline {
         // """
       }
     }
-    stage("Tag API") {
-      environment {
-        COMP_NAME = "api"
-      }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              try {
-                timeout(time: 1, unit: "MINUTES") {
-                  def api_tag = input(message: "Enter the desired API tag", parameters: [
-                    string(name: 'API_TAG', defaultValue: '', description: 'Tag to apply to the API image.')
-                  ])
-                  if (api_tag != '') {
-                    def image_name = "${APP_NAME}-${COMP_NAME}"
-                    def hash = cli.getImageTagHash("${image_name}")
-                    echo "[ci/cd]  Create permanent tag ${api_tag} for image ${image_name}@${hash}"
-                    openshift.tag("${image_name}@${hash}", "${image_name}:${api_tag}")
-                  }
-                }
-              } catch (err) {
-                echo "${err}"
-                echo "[ci/cd]  No api tag specified"
-              }
-            }
-          }
-        }
-      }
-    }
-    stage("Tag App") {
-      environment {
-        COMP_NAME = "app"
-      }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              try {
-                timeout(time: 1, unit: "MINUTES") {
-                  def app_tag = input(message: "Enter the desired App tag", parameters: [
-                    string(name: 'APP_TAG', defaultValue: '', description: 'Tag to apply to the App image.')
-                  ])
-                  if (app_tag != '') {
-                    def image_name = "${APP_NAME}-${COMP_NAME}"
-                    def hash = cli.getImageTagHash("${image_name}")
-                    echo "[ci/cd]  Create permanent tag ${app_tag} for image ${image_name}@${hash}"
-                    openshift.tag("${image_name}@${hash}", "${image_name}:${app_tag}")
-                  }
-                }
-              } catch (err) {
-                echo "${err}"
-                echo "[ci/cd]  No app tag specified"
-              }
-            }
-          }
-        }
-      }
-    }
-    stage("Deploy API -> DEV") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
-      environment {
-        COMP_NAME = "api"
-      }
-      when { environment name: "API_BUILT", value: "true" }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              def image_name = "${APP_NAME}-${COMP_NAME}"
-              // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
-              // Tag the images for deployment based on the image's hash
-              def hash = cli.getImageTagHash("${image_name}")
-              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
-              openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
-            }
 
-            openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
-                def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
-                echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
-                // Wait for the deployment to complete.
-                // This will wait until the desired replicas are all available
-                dc.rollout().status()
-            }
-          }
-        }
-        echo "[ci/cd]  API deployment done..."
+    stage("Deploy") {
+      when {
+        expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      post {
-        success {
-          script {
-            env.API_DEPLOYED = "true"
-          }
-        }
-      }
-    }
-    stage("Deploy frontend -> DEV") {
-      options {
-        timeout(time: 5, unit: "MINUTES")
-      }
-      environment {
-        COMP_NAME = "app"
-      }
-      when { environment name: "FRONTEND_BUILT", value: "true" }
+      options { timeout(time: 15, unit: "MINUTES") }
       steps {
         script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              def image_name = "${APP_NAME}-${COMP_NAME}"
-              // Don't tag with BUILD_ID so the pruner can do it's job; it won't delete tagged images.
-              // Tag the images for deployment based on the image's hash
-              def hash = cli.getImageTagHash("${image_name}")
-              echo "[ci/cd]  Tagging ${image_name}@${hash} for deployment to ${DESTINATION.toUpperCase()} ..."
-              openshift.tag("${image_name}@${hash}", "${image_name}:${DESTINATION}")
-            }
+          def img_backend = "${APP_NAME}-api"
+          def img_frontend = "${APP_NAME}-app"
 
-            openshift.withProject("${NAME_SPACE}-${DESTINATION}") {
-                def dc = openshift.selector("dc", [ app: APP_NAME, component: COMP_NAME ])
-                echo "[ci/cd]  Found ${dc.count()} DeploymentConfigs: ${dc.names()}"
-                // Wait for the deployment to complete.
-                // This will wait until the desired replicas are all available
-                dc.rollout().status()
-            }
+          // tag release version (if provided)
+          if (RELEASE_VERSION != "") {
+            echo "Tagging images - ${img_backend}:latest, ${img_frontend}:latest..."
+            sh "oc tag ${img_backend}:latest ${img_backend}:${RELEASE_VERSION}"
+            sh "oc tag ${img_frontend}:latest ${img_frontend}:${RELEASE_VERSION}"
+          } else {
+            RELEASE_VERSION = "latest"
           }
-        }
-        echo "[ci/cd]  Frontend deployment done..."
-      }
-      post {
-        success {
-          script {
-            env.FRONTEND_DEPLOYED = "true"
+
+          dir(DEVOPS_DIRECTORY) {
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} apply"
           }
         }
       }
     }
-    stage("Notify") {
-      when {
-        anyOf {
-          environment name: "API_DEPLOYED", value: "true"
-          environment name: "FRONTEND_DEPLOYED", value: "true"
-        }
-      }
-      steps {
-        script {
-          if (env.API_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("${APP_NAME.toUpperCase()} API", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-          }
-          if (env.FRONTEND_DEPLOYED.equalsIgnoreCase("true")) {
-            notify.deploySuccess("${APP_NAME.toUpperCase()} FRONTEND", DESTINATION.toUpperCase(), CHANGELOG, VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-          }
-        }
-      }
-    }
-    stage("No Changes") {
-      when {
-        allOf {
-          environment name: "API_DEPLOYED", value: "false"
-          environment name: "FRONTEND_DEPLOYED", value: "false"
-        }
-      }
-      steps {
-        script {
-          echo "[ci/cd]  No changes ..."
-          currentBuild.result = 'ABORTED'
-          notify.noChanges(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
-        }
-      }
-    }
+
   } // stages
   post {
-    aborted {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-    }
-    }
-    failure {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
+    success {
+      script {
+        if (new Boolean(env.SKIP_BUILD) == false) {
+          notify.success(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
         }
       }
     }
-  } // post
+    failure {
+      script {
+        notify.failure(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+  } // post-stages
 } // pipeline

@@ -6,15 +6,15 @@ source "$(dirname ${0})/common.sh"
 #% OpenShift Database Helper
 #%
 #%   Intended for use with a pull request-based pipeline.
-#%   Targets incl.: dev, test and prod.
+#%   Targets incl.: 'dev', 'test' and 'prod'
 #%
 #% Usage:
 #%
-#%   ${THIS_FILE} [TARGER] [apply]
+#%   ${THIS_FILE} [TARGET] [apply]
 #%
 #% Examples:
 #%
-#%   Provide a target environment (dev, test or prod). Defaults to a dry-run.
+#%   Provide a target environment ('dev' OR 'test' OR 'prod'). Defaults to a dry-run.
 #%   ${THIS_FILE} dev
 #%
 #%   Apply when satisfied.

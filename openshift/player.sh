@@ -1,24 +1,25 @@
 #!/bin/bash
 
+THIS_DIRECTORY=$(cd `dirname $0` && pwd)
 ARGV=${@:2}
 
-case "$1" in
+# the oc-scripts need to be run from the scripts folder
+pushd ${THIS_DIRECTORY}/scripts > /dev/null
+
+case "${1:-}" in
     backup)
-        ./scripts/oc-backup.sh ${ARGV}
+        ./oc-backup.sh ${ARGV}
         ;;
     restore)
         echo "Not implemented yet"
         ;;
     build)
-        echo "Not implemented yet"
+        ./oc-build.sh ${ARGV}
         ;;
     deploy)
-        echo "Not implemented yet"
+        ./oc-deploy.sh ${ARGV}
         ;;
-    toolbelt)
-        echo "Not implemented yet"
-        ;;
-    scan)
+    sonar-scan)
         echo "Not implemented yet"
         ;;
     zap)
@@ -28,5 +29,7 @@ case "$1" in
         echo "Not implemented yet"
         ;;
     *)
-    echo "You\'re doing it wrong..."
+    echo "You are doing it wrong..."
 esac
+
+popd > /dev/null
