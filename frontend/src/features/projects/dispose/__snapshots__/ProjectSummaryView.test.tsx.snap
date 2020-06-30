@@ -530,7 +530,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       </div>
     </div>
     <h3>
-      Enhanced Referal Process Exemption
+      Enhanced Referral Process Exemption
       <svg
         className="tooltip-icon"
         fill="currentColor"
@@ -581,7 +581,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             className="form-label"
             htmlFor="input-exemptionRequested"
           >
-            Apply for Enhanced Referal Process exemption
+            Apply for Enhanced Referral Process exemption
           </label>
         </div>
       </div>
@@ -1230,7 +1230,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       </div>
     </div>
     <h3>
-      Enhanced Referal Process Exemption
+      Enhanced Referral Process Exemption
       <svg
         className="tooltip-icon"
         fill="currentColor"
@@ -1281,7 +1281,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             className="form-label"
             htmlFor="input-exemptionRequested"
           >
-            Apply for Enhanced Referal Process exemption
+            Apply for Enhanced Referral Process exemption
           </label>
         </div>
       </div>
@@ -1930,7 +1930,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       </div>
     </div>
     <h3>
-      Enhanced Referal Process Exemption
+      Enhanced Referral Process Exemption
       <svg
         className="tooltip-icon"
         fill="currentColor"
@@ -1981,7 +1981,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             className="form-label"
             htmlFor="input-exemptionRequested"
           >
-            Apply for Enhanced Referal Process exemption
+            Apply for Enhanced Referral Process exemption
           </label>
         </div>
       </div>
