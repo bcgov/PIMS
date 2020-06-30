@@ -35,8 +35,8 @@ objects:
           env:
             - name: VANITY_URL
               value: ${APP_URI}
-            - name: JOB_NAME
-              value: ${JOB_NAME}
+            - name: OC_JOB_NAME
+              value: ${OC_JOB_NAME}
             - name: DESTINATION
               value: ${ENV_NAME}
             - name: ENABLE_VERSION_PROMPT
@@ -85,7 +85,7 @@ parameters:
     description: The name for the environment that the build will be deployed to [dev, test, prod]
     required: true
     value: dev
-  - name: JOB_NAME
+  - name: OC_JOB_NAME
     displayName: Job Branch Name
     description: Job identifier (i.e. 'pr-5' OR 'dev' OR 'master')
     required: true
