@@ -63,7 +63,7 @@ export const ProjectDraftStepYupSchema = Yup.object().shape({
   description: Yup.string(),
 });
 
-export const EnhancedReferalExemptionSchema = Yup.object().shape({
+export const EnhancedReferralExemptionSchema = Yup.object().shape({
   exemptionRationale: Yup.string().when(
     'exemptionRequested',
     (exemptionRequested: boolean, schema: any) =>

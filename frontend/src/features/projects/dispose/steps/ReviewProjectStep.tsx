@@ -13,7 +13,7 @@ import {
   UpdateInfoStepYupSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
-  EnhancedReferalExemptionSchema,
+  EnhancedReferralExemptionSchema,
 } from '../forms/disposalYupSchema';
 /**
  * Read only version of all step components. TODO: provide ability to update fields on this form.
@@ -33,7 +33,7 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         onSubmit={onSubmit}
         validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)
           .concat(SelectProjectPropertiesStepYupSchema)
-          .concat(EnhancedReferalExemptionSchema)}
+          .concat(EnhancedReferralExemptionSchema)}
       >
         <Form>
           <ReviewProjectForm canEdit={canEdit} />

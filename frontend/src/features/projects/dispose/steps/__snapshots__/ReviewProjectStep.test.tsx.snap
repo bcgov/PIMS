@@ -496,7 +496,7 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <h3>
-      Enhanced Referal Process Exemption
+      Enhanced Referral Process Exemption
       <svg
         className="tooltip-icon"
         fill="currentColor"
@@ -547,7 +547,7 @@ exports[`renders correctly 1`] = `
             className="form-label"
             htmlFor="input-exemptionRequested"
           >
-            Apply for Enhanced Referal Process exemption
+            Apply for Enhanced Referral Process exemption
           </label>
         </div>
       </div>
