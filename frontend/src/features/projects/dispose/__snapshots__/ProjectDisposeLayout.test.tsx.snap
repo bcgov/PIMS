@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`stepper renders correctly based off of workflow 1`] = `
+exports[`dispose project draft step display stepper renders correctly based off of workflow 1`] = `
 <div
   className="ProjectDisposeLayout container-fluid"
 >
@@ -58,7 +58,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
       className="bs-stepper-header"
     >
       <div
-        className="step active"
+        className="step"
         data-target="stepper-0"
       >
         <button
@@ -78,6 +78,126 @@ exports[`stepper renders correctly based off of workflow 1`] = `
           </span>
         </button>
       </div>
+      <div
+        className="line"
+      />
+      <div
+        className="step"
+        data-target="stepper-1"
+      >
+        <button
+          className="step-trigger"
+          disabled={true}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            2
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Select Properties
+          </span>
+        </button>
+      </div>
+      <div
+        className="line"
+      />
+      <div
+        className="step"
+        data-target="stepper-2"
+      >
+        <button
+          className="step-trigger"
+          disabled={true}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            3
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Update Information
+          </span>
+        </button>
+      </div>
+      <div
+        className="line"
+      />
+      <div
+        className="step"
+        data-target="stepper-3"
+      >
+        <button
+          className="step-trigger"
+          disabled={true}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            4
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Required Documentation
+          </span>
+        </button>
+      </div>
+      <div
+        className="line"
+      />
+      <div
+        className="step active"
+        data-target="stepper-4"
+      >
+        <button
+          className="step-trigger"
+          disabled={true}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            5
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Approval
+          </span>
+        </button>
+      </div>
+      <div
+        className="line"
+      />
+      <div
+        className="step"
+        data-target="stepper-5"
+      >
+        <button
+          className="step-trigger"
+          disabled={true}
+          onClick={[Function]}
+        >
+          <span
+            className="bs-stepper-circle"
+          >
+            6
+          </span>
+          <span
+            className="bs-stepper-label"
+          >
+            Review
+          </span>
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -87,8 +207,8 @@ exports[`stepper renders correctly based off of workflow 1`] = `
       className="sc-AxiKw lcHKKY"
     >
       <button
-        className="btn btn-warning"
-        disabled={true}
+        className="btn btn-primary"
+        disabled={false}
         onClick={[Function]}
         style={
           Object {
@@ -97,7 +217,7 @@ exports[`stepper renders correctly based off of workflow 1`] = `
         }
         type="button"
       >
-        Submit
+        Next
       </button>
       <button
         className="btn btn-secondary"
