@@ -53,8 +53,6 @@ const ReviewApproveForm = ({
     statusCode: ReviewWorkflowStatus.ExemptionProcess,
   });
 
-  alert(project.exemptionRequested);
-
   return (
     <Fragment>
       <ProjectDraftForm
