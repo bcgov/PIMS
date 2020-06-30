@@ -53,6 +53,8 @@ const ReviewApproveForm = ({
     statusCode: ReviewWorkflowStatus.ExemptionProcess,
   });
 
+  alert(project.exemptionRequested);
+
   return (
     <Fragment>
       <ProjectDraftForm
@@ -72,7 +74,7 @@ const ReviewApproveForm = ({
             exemptionField="exemptionRequested"
             rationaleField="exemptionRationale"
             submissionStep={false}
-            sectionHeader="Enhanced Referal Process Exemption"
+            sectionHeader="Enhanced Referral Process Exemption"
             rationaleInstruction="The agency has requested exemption with the below rationale:"
           />
           <TasksForm tasks={exemptionReviewTasks} className="reviewRequired" />

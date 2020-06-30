@@ -61,9 +61,12 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
       project.statusCode === ReviewWorkflowStatus.ExemptionReview);
 
-  //validate form and tasks, skipping validation in the case of deny.
+  //validate form and tasks, skipping validation in the case of deny and save.
   const handleValidate = (values: IProject) => {
-    if (submitStatusCode === ReviewWorkflowStatus.Denied) {
+    if (
+      submitStatusCode !== ReviewWorkflowStatus.ApprovedForErp &&
+      submitStatusCode !== ReviewWorkflowStatus.ApprovedForExemption
+    ) {
       return Promise.resolve({});
     }
     let taskErrors = validateTasks(values);
