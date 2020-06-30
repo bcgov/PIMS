@@ -16,7 +16,7 @@ IFS=$'\n\t'
 #
 TARGET=${1:-}
 LAST_ARG=$(for last in ${@:-''}; do :; done && echo "${last}")
-APPLY=$([ "${LAST_ARG:-}" != "apply" ] || echo true)
+APPLY=$([ "${LAST_ARG:-}" != "-apply" ] || echo true)
 
 # Load environment variables from a file
 #
@@ -47,7 +47,7 @@ $(oc whoami &>/dev/null) || {
 display_helper() {
   set +e
   if [ ! "${APPLY}" ]; then
-    echo -e "\n*** This is a dry run.  Use 'apply' to do a real run. ***\n"
+    echo -e "\n*** This is a dry run.  Use '-apply' to do a real run. ***\n"
     echo -e "OC commands that would be executed"
     echo -e "==================================\n"
   else
