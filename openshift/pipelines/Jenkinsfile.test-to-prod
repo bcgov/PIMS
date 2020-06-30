@@ -17,9 +17,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
   }
   environment {
-    // To enable pipeline verbose debug output set to "true"
-    DEBUG_OUTPUT = "true"
-
     CI = "true"
     PATHFINDER_URL = "pathfinder.gov.bc.ca"
 
@@ -37,25 +34,32 @@ pipeline {
 
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
+    // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
+    // JOB_NAME = "dev"
 
-    // The tag used to identify the image we want to deploy.
-    // RELEASE_TAG = "test"
-
-    // Which environment to deploy to.
-    // DESTINATION = "prod"
+    // Which environment to deploy to ('dev' OR 'test' OR 'prod').
+    // DESTINATION = "dev"
 
     // Which instance ID to deploy to (if using multiple instances per environment). Leave empty for default.
     // INSTANCE_ID = ""
 
     // The URI to the application being deployed.
-    // VANITY_URL = "https://pims-prod.pathfinder.gov.bc.ca/"
+    // VANITY_URL="https://pims-prod.pathfinder.gov.bc.ca/"
+
+    ENABLE_VERSION_PROMPT = true // ignored - version prompt always enabled in the PROD pipeline
+    JOB_NAME = sh(script: 'echo "${JOB_NAME:-master}"', returnStdout: true).trim()
+    DESTINATION = sh(script: 'echo "${DESTINATION:-prod}"', returnStdout: true).trim()
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims-prod.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
+
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = sh(script: 'echo "${DEBUG_OUTPUT:-false}"', returnStdout: true).trim()
   }
   stages {
     stage("Initialize") {
       steps {
         script {
           // load supporting functions from external script files
-          cli = load "openshift/pipelines/scripts/common.groovy"
+          commonPipeline = load "openshift/pipelines/scripts/common.groovy"
           notify = load "openshift/pipelines/scripts/notify.groovy"
 
           // ensure required secrets and credentials are available in the CI environment
@@ -65,7 +69,7 @@ pipeline {
           // initialize CI environment values
           env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
 
-          if (DEBUG_OUTPUT.equalsIgnoreCase("true")) {
+          if (new Boolean(DEBUG_OUTPUT)) {
             // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
@@ -77,33 +81,29 @@ pipeline {
       }
     }
 
-    stage("Approval") {
+    stage("Approval Prompt") {
       options { timeout(time: 1, unit: "HOURS") }
       input {
         message "Deploy to PROD?"
         ok "Yes, go ahead"
       }
       steps {
-        echo "Promotion from TEST to PROD was approved. Proceeding..."
+        echo "*** Promotion from TEST to PROD was approved. Proceeding... ***"
       }
     }
 
-    stage("Version check") {
+    stage("Version Prompt") {
       steps {
         script {
-          try {
-            timeout(time: 10, unit: "MINUTES") {
-              def app_tag = input(message: "Enter the desired version to release to PRODUCTION", parameters: [
-                string(name: 'VERSION_TAG', defaultValue: '', description: 'Release Version')
-              ])
-              if (app_tag != '') {
-                RELEASE_VERSION = app_tag
-              } else {
-                error "No version specified. Aborting..."
-              }
+          timeout(time: 10, unit: "MINUTES") {
+            def version = input(message: "Enter the desired version to release to PRODUCTION", parameters: [
+              string(name: "RELEASE VERSION", defaultValue: "", description: "Release Version")
+            ])
+            if (version != "") {
+              RELEASE_VERSION = version
+            } else {
+              error "***  No release version specified. Aborting pipeline.  ***"
             }
-          } catch (err) {
-            error "No version specified. Aborting..."
           }
         }
       }
@@ -112,7 +112,7 @@ pipeline {
     stage("Maintenance mode ON") {
       steps {
         script {
-          cli.maintenancePageOn("${DESTINATION}")
+          commonPipeline.maintenancePageOn("${DESTINATION}")
         }
       }
     }
@@ -147,7 +147,7 @@ pipeline {
     stage("Maintenance mode OFF") {
       steps {
         script {
-          cli.maintenancePageOff("${DESTINATION}")
+          commonPipeline.maintenancePageOff("${DESTINATION}")
         }
       }
     }
@@ -157,5 +157,17 @@ pipeline {
         echo "PRODUCTION deployment complete!"
       }
     }
-  }
-}
+  } // stages
+  post {
+    success {
+      script {
+        notify.success(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+    failure {
+      script {
+        notify.failure(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+  } // post-stages
+} // pipeline
