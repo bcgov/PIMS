@@ -18,6 +18,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import _ from 'lodash';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 /**
  * Form to display two property list views, one for searching/selecting and one to show
@@ -49,6 +50,11 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
       }),
     [lookupCodes],
   );
+  const filterByParent = useCodeLookups().filterByParent;
+  const filteredAgencies: ILookupCode[] = useMemo(
+    () => filterByParent(agencies, project.agencyId),
+    [agencies, filterByParent, project.agencyId],
+  );
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
@@ -69,7 +75,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         <Container fluid className="filter-container border-bottom">
           <Container className="px-0">
             <FilterBar
-              agencyLookupCodes={agencies}
+              agencyLookupCodes={filteredAgencies}
               propertyClassifications={propertyClassifications}
               onChange={handleFilterChange}
             />

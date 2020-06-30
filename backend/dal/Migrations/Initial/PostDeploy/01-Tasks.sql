@@ -68,25 +68,25 @@ INSERT INTO dbo.[Tasks] (
     , 3
 ), (
     8
-    , 'Strength of Claim'
+    , 'Preparation and due diligence'
     , 0
-    , 'First Nation Strength of Claim has been created.'
+    , 'First Nations consulatation preparation and due diligence.'
     , 11
     , 1
     , 1
 ), (
     9
-    , 'In consultation'
+    , 'Consultation underway'
     , 0
-    , 'First Nation consulation is in progress.'
+    , 'First Nations consulation is underway.'
     , 11
     , 1
     , 2
 ), (
     10
-    , 'Agreement received'
+    , 'Consultation complete'
     , 0
-    , 'First Nation agreement has been received.'
+    , 'First Nations consultation is complete.'
     , 11
     , 1
     , 3

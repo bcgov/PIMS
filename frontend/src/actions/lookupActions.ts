@@ -9,6 +9,7 @@ export interface ILookupCode {
   isDisabled: boolean;
   isPublic?: boolean;
   type: string;
+  parentId?: number;
 }
 
 export interface IStoreLookupCodeAction {

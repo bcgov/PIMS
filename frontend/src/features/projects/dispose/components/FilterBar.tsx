@@ -13,8 +13,6 @@ import {
   InputGroup,
 } from 'components/common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
-import _ from 'lodash';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
@@ -80,12 +78,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
     label: code.name,
     value: code.id.toString(),
   });
-  const keycloak = useKeycloakWrapper();
   //restrict available agencies to user agencies.
-  const agencies = _.filter(
-    (agencyLookupCodes ?? []).map(c => mapLookupCode(c)),
-    agency => keycloak.hasAgency(parseInt(agency.value as string)),
-  );
+  const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
 
   return (

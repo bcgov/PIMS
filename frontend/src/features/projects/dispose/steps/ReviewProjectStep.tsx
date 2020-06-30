@@ -7,7 +7,6 @@ import {
   ReviewProjectForm,
   ProjectNotes,
   PublicNotes,
-  PrivateNotes,
 } from '..';
 import { Formik } from 'formik';
 import {
@@ -40,7 +39,6 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
           <ReviewProjectForm canEdit={canEdit} />
           <ProjectNotes disabled={true} />
           <PublicNotes disabled={!canEdit} />
-          <PrivateNotes disabled={!canEdit} />
           {canEdit && (
             <Form.Label style={{ float: 'right' }}>
               Apply to the Surplus Property Program
