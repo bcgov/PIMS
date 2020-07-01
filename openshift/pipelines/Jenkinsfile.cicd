@@ -34,6 +34,9 @@ pipeline {
     MAINTENANCE_DIRECTORY = "maintenance"
     DEVOPS_DIRECTORY = "openshift"
 
+    // SonarQube configuration
+    SONARQUBE_URL_INT = "http://sonarqube:9000"
+
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
     // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
@@ -154,6 +157,16 @@ pipeline {
           steps {
             script {
               commonPipeline.runFrontendTests()
+
+              echo 'Performing SonarQube static code analysis...'
+              dir('frontend') {
+                sh """
+                sonar-scanner \
+                  -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+                  -Dsonar.projectKey='bcgov_PIMS_FE' \
+                  -Dsonar.projectName='PIMS React Frontend (${OC_JOB_NAME.toUpperCase()})'
+                """
+              }
             }
           }
           post {
@@ -214,6 +227,7 @@ pipeline {
     }
 
     stage("Quality Gate") {
+      agent { label 'jenkins-slave-npm' }
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
