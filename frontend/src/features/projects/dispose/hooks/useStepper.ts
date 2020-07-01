@@ -83,7 +83,7 @@ export const isStatusNavigable = (
  * @param currentStatus The current status within the above list
  * @param project The project that is going through this workflow
  */
-const getLastCompletedStatus = (
+export const getLastCompletedStatus = (
   workflowStatuses: IStatus[],
   currentStatus: IStatus,
   project?: IProject,
