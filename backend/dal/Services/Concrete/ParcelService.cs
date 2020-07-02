@@ -213,7 +213,7 @@ namespace Pims.Dal.Services
             if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
-            if (originalAgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
+            if (originalAgencyId != parcel.AgencyId && !isAdmin) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
 
             // Do not allow making property visible through this service.
             if (existingParcel.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) throw new InvalidOperationException("Parcel cannot be made visible to other agencies through this service.");

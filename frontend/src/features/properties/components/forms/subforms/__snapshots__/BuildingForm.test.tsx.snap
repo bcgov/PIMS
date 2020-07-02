@@ -61,7 +61,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               name="address.cityId"
               onChange={[Function]}
               required={true}
-              value="city"
+              value="test city"
             />
           </div>
         </div>

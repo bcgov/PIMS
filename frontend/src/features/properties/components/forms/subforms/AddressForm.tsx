@@ -74,7 +74,6 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           </Form.Label>
           <AutoCompleteText
             autoSetting="new-password"
-            textVal={props.values.address.city}
             field={withNameSpace('cityId')}
             options={cities}
             disabled={props.disabled}
