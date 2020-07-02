@@ -58,7 +58,7 @@ namespace Pims.Dal.Test.Helpers.Extensions
         {
             // Arrange
             var project = EntityHelper.CreateProject(1);
-            project.FiscalYear = 2019;
+            project.ReportedFiscalYear = 2019;
             var parcel = EntityHelper.CreateParcel(1);
             EntityHelper.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 5, EvaluationKeys.Assessed, 5);
             EntityHelper.CreateFiscals(parcel, new[] { 2015, 2016, 2017, 2018, 2019 }, FiscalKeys.Estimated, 5);

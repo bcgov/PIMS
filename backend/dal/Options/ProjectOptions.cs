@@ -17,6 +17,11 @@ namespace Pims.Dal
         public string NumberFormat { get; set; } = "SPP-{0:00000}";
 
         /// <summary>
+        /// get/set - An array of workflow codes that represent the assessment stage.
+        /// </summary>
+        public string[] AssessmentWorkflows { get; set; }
+
+        /// <summary>
         /// get/set - An array of project status codes for when the project is in draft.
         /// </summary>
         public string[] DraftStatus { get; set; }

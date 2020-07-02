@@ -3,9 +3,11 @@ using CsvHelper.Configuration;
 using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 
 namespace Pims.Core.Helpers
 {
@@ -53,9 +55,15 @@ namespace Pims.Core.Helpers
             properties.ForEach(p =>
             {
                 var isNullable = p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
-                var type = isNullable ? Nullable.GetUnderlyingType(p.PropertyType) : p.PropertyType;
-                if (type.IsEnum || isNullable) type = typeof(string); // Need to do this because enums are converted to strings.
-                dt.Columns.Add(new DataColumn(p.Name, type) { AllowDBNull = isNullable });
+                // Skip enumerable values.
+                if (!p.PropertyType.IsEnumerable())
+                {
+                    var type = isNullable ? Nullable.GetUnderlyingType(p.PropertyType) : p.PropertyType;
+                    if (type.IsEnum || isNullable) type = typeof(string); // Need to do this because enums are converted to strings.
+                    var displayAttr = p.GetCustomAttribute<DisplayNameAttribute>();
+                    var name = displayAttr?.DisplayName ?? p.Name;
+                    dt.Columns.Add(new DataColumn(name, type) { AllowDBNull = isNullable });
+                }
             });
 
             dt.Load(dataReader);

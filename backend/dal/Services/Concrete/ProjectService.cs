@@ -40,6 +40,15 @@ namespace Pims.Dal.Services
 
         #region Methods
         /// <summary>
+        /// Get the total number of projects in the datasource.
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return this.Context.Projects.Count();
+        }
+
+        /// <summary>
         /// Get a page with an array of projects within the specified filters.
         /// </summary>
         /// <param name="filter"></param>
@@ -52,7 +61,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
             if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
 
-            var query = this.Context.GenerateQuery(this.User, filter);
+            var query = this.Context.GenerateQuery(this.User, filter, _options.Project);
             var total = query.Count();
             var items = query
                 .Skip((filter.Page - 1) * filter.Quantity)
@@ -90,6 +99,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
                 .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
+                .Include(p => p.Notes)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -173,6 +183,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
                 .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
+                .Include(p => p.Notes)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -257,7 +268,8 @@ namespace Pims.Dal.Services
             project.StatusId = status.Id; // Always start a project as a Draft.
             project.Status = status;
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
-            project.FiscalYear = project.FiscalYear <= 0 ? DateTime.UtcNow.GetFiscalYear() : project.FiscalYear;
+            project.ReportedFiscalYear = project.ReportedFiscalYear <= 0 ? DateTime.UtcNow.GetFiscalYear() : project.ReportedFiscalYear;
+            project.ActualFiscalYear = project.ReportedFiscalYear;
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
@@ -555,7 +567,7 @@ namespace Pims.Dal.Services
             switch (toStatus.Code)
             {
                 case ("AS-I"): // Review
-                case ("AS-EXE"): // Exemption Review 
+                case ("AS-EXE"): // Exemption Review
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeRequest, "User does not have permission to submit project.");
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
@@ -608,7 +620,7 @@ namespace Pims.Dal.Services
                     this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.CancelledOn = DateTime.UtcNow;
                     break;
-                case ("OH"): // OnHold
+                case ("ERP-OH"): // OnHold
                     if(project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
                     break;

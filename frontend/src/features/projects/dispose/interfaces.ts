@@ -172,7 +172,7 @@ export enum ReviewWorkflowStatus {
   ApprovedForExemption = 'AP-EXE',
   Denied = 'DE',
   Cancelled = 'CA',
-  OnHold = 'OH',
+  OnHold = 'ERP-OH',
   TransferredGRE = 'T-GRE',
 }
 
@@ -197,6 +197,7 @@ export interface IStatus {
   workflow: string;
   code: string;
   isMilestone: boolean;
+  isOptional?: boolean;
   tasks: IProjectTask[];
 }
 

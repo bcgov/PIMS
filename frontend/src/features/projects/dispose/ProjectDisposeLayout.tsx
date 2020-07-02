@@ -184,7 +184,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   path="/dispose/projects/gretransfer"
                   component={() => GreTransferStep({ formikRef })}
                 />
-                } />
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}
@@ -203,15 +202,16 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   component={() => <Redirect to="/page-not-found" />}
                 />
               </Switch>
-              {currentStatus !== undefined && (
-                <StepActions
-                  getNextStep={getNextStep}
-                  onSave={() => onSave(formikRef)}
-                  onNext={onNext}
-                  saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
-                  isFetching={!noFetchingProjectRequests}
-                />
-              )}
+              {currentStatus !== undefined &&
+              currentStatus.workflow === 'SUBMIT-DISPOSAL' && ( // TODO: This isn't an ideal way to hide these buttons.
+                  <StepActions
+                    getNextStep={getNextStep}
+                    onSave={() => onSave(formikRef)}
+                    onNext={onNext}
+                    saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
+                    isFetching={!noFetchingProjectRequests}
+                  />
+                )}
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>

@@ -7,6 +7,11 @@ namespace Pims.Api.Areas.Project.Models.Workflow
     {
         #region Properties
         /// <summary>
+        /// get/set - A name to describe related status.
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
         /// get/set - A description of the status.
         /// </summary>
         public string Description { get; set; }
@@ -20,6 +25,16 @@ namespace Pims.Api.Areas.Project.Models.Workflow
         /// get/set - whether or not this status is a milestone, requiring special transition logic.
         /// </summary>
         public bool IsMilestone { get; set; }
+
+        /// <summary>
+        /// get/set - Whether this status is optional for the specified workflow.
+        /// </summary>
+        public bool? IsOptional { get; set; }
+
+        /// <summary>
+        /// get/set - The workflow this status belongs to.
+        /// </summary>
+        public string Workflow { get; set; }
         #endregion
     }
 }

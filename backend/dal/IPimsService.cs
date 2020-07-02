@@ -20,6 +20,7 @@ namespace Pims.Dal
         IWorkflowService Workflow { get; }
         INotificationTemplateService NotificationTemplate { get; }
         IProjectNotificationService ProjectNotification { get; }
+        IProjectStatusService ProjectStatus { get; }
         INotificationQueueService NotificationQueue { get; }
         #endregion
 

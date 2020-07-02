@@ -11,12 +11,6 @@ namespace Pims.Api.Areas.Keycloak.Models.User
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - The id of the owning agency.
-        /// </summary>
-        /// <value></value>
-        public int? ParentId { get; set; }
         #endregion
     }
 }

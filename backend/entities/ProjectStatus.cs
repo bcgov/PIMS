@@ -25,9 +25,9 @@ namespace Pims.Dal.Entities
         public bool IsMilestone { get; set; }
 
         /// <summary>
-        /// get/set - Whether this status represents an active project.
+        /// get/set - Whether this status represents a terminal status
         /// </summary>
-        public bool IsActive { get; set; } = true;
+        public bool IsTerminal { get; set; }
 
         /// <summary>
         /// get/set - The route to the component/page that represents this status.

@@ -21,8 +21,9 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="context"></param>
         /// <param name="user"></param>
         /// <param name="filter"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public static IQueryable<Entity.Project> GenerateQuery(this PimsContext context, ClaimsPrincipal user, Entity.Models.ProjectFilter filter)
+        public static IQueryable<Entity.Project> GenerateQuery(this PimsContext context, ClaimsPrincipal user, Entity.Models.ProjectFilter filter, ProjectOptions options)
         {
             filter.ThrowIfNull(nameof(user));
             filter.ThrowIfNull(nameof(filter));
@@ -40,21 +41,20 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.TierLevel)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .Include(p => p.Notes)
                 .AsNoTracking();
 
             if (filter.AssessWorkflow.HasValue && filter.AssessWorkflow.Value)
             {
-                var statuses = context.Workflows.Where(w => w.Code == "ASSESS-DISPOSAL" || w.Code == "ASSESS-EXEMPTION")
+                var statuses = context.Workflows.Where(w => options.AssessmentWorkflows.Contains(w.Code))
                     .SelectMany(w => w.Status).Select(x => x.StatusId).Distinct().ToArray();
-                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE"));
+                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE")); // TODO: Need optional Status paths within Workflows.
             }
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"%{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
                 query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%"));
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
             if (filter.TierLevelId.HasValue)
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
@@ -64,7 +64,12 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Active.HasValue && filter.Active.Value)
             {
-                query = query.Where(p => p.Status.IsActive);
+                query = query.Where(p => !p.Status.IsTerminal);
+            }
+
+            if (filter.StatusId?.Any() == true)
+            {
+                query = query.Where(p => filter.StatusId.Contains(p.StatusId));
             }
 
             if (filter.Agencies?.Any() == true)
@@ -72,6 +77,11 @@ namespace Pims.Dal.Helpers.Extensions
                 // Get list of sub-agencies for any agency selected in the filter.
                 var agencies = filter.Agencies.Concat(context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+
+            if (filter.Workflows?.Any() == true)
+            {
+                query = query.Where(p => p.Status.Workflows.Any(w => filter.Workflows.Contains(w.Workflow.Code)));
             }
 
             // Only admins can view all agency projects.
@@ -270,6 +280,8 @@ namespace Pims.Dal.Helpers.Extensions
         {
             return project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).Select(p => p.Parcel).SelectMany(p => p.Evaluations).Max(p => (DateTime?)p.Date)
                 ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Evaluations).Max(b => (DateTime?)b.Date)
+                ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).Select(p => p.Parcel).SelectMany(p => p.Fiscals).Max(b => (DateTime?)new DateTime(b.FiscalYear, 1, 1))
+                ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Fiscals).Max(b => (DateTime?)new DateTime(b.FiscalYear, 1, 1))
                 ?? DateTime.UtcNow;
         }
 
@@ -334,7 +346,7 @@ namespace Pims.Dal.Helpers.Extensions
         {
             var date = project.GetProjectFinancialDate();
             var year = date.Year;
-            var fiscalYear = project.FiscalYear;
+            var fiscalYear = date.GetFiscalYear(); // TODO: Unclear if this should be 'Reported' or 'Actual', or current year.  Using the most recent fiscal year based on financial data in project.
 
             // Sum up parcel values for the project year.
             project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);

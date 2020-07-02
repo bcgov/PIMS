@@ -32,7 +32,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new ProjectFilter() { Name = "Name" }, 1 },
                 new object[] { new ProjectFilter() { Agencies = new int[] { 3 } }, 1 },
                 new object[] { new ProjectFilter() { TierLevelId = 2 }, 1 },
-                new object[] { new ProjectFilter() { StatusId = 2 }, 1 }
+                new object[] { new ProjectFilter() { StatusId = new int[] { 2 } }, 1 }
             };
 
         public static IEnumerable<object[]> Workflows =>
@@ -421,7 +421,7 @@ namespace Pims.Dal.Test.Services
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
-            project.FiscalYear = 2020;
+            project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1, project.Agency);
             var buildings = init.CreateBuildings(parcel, 2, 5);
             init.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
@@ -671,7 +671,7 @@ namespace Pims.Dal.Test.Services
 
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
-            project.FiscalYear = 2020;
+            project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1, project.Agency);
             var buildings = init.CreateBuildings(parcel, 2, 5);
             init.SaveChanges();
@@ -690,9 +690,9 @@ namespace Pims.Dal.Test.Services
 
             // Act
             var projectToUpdate = service.Get(project.Id);
-            parcel.Evaluations.Where(e => e.Date.Year == project.FiscalYear).Single().Value = 10;
-            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.FiscalYear).Single().Value = 10;
-            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.FiscalYear).Single().Value = 10;
+            parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
+            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
+            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             var result = service.Update(projectToUpdate);
 
             // Assert
@@ -1700,7 +1700,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var onHold = init.ProjectStatus.First(s => s.Code == "OH");
+            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
@@ -1736,7 +1736,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var onHold = init.ProjectStatus.First(s => s.Code == "OH");
+            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
             project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
@@ -1777,7 +1777,7 @@ namespace Pims.Dal.Test.Services
 
             var workflowCode = workflows.First().Code;
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
-            
+
             EntityHelper.CreateAgency(2);
             parcel.AgencyId = 2;
             EntityHelper.CreatePropertyClassification(2, "new classification");

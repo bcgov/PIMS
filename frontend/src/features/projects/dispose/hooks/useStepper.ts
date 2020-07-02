@@ -28,12 +28,13 @@ export const getNextWorkflowStatus = (
   if (!currentStatus) {
     return workflowStatuses[0];
   }
+  var requiredStatuses = workflowStatuses.filter(s => !s.isOptional);
   // return undefined to indicate all steps have been completed.
-  if (currentStatus.sortOrder >= workflowStatuses.length - 1) {
+  if (currentStatus.sortOrder >= requiredStatuses.length - 1) {
     return undefined;
   }
   const currentStatusIndex = currentStatus.sortOrder + 1;
-  return workflowStatuses[currentStatusIndex];
+  return requiredStatuses[currentStatusIndex];
 };
 
 /**

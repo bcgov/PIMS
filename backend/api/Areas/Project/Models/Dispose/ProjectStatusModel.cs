@@ -19,9 +19,9 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string Route { get; set; }
 
         /// <summary>
-        /// get/set - Whether this status corresponds to an active project status.
+        /// get/set - Whether this status corresponds to a terminal project.
         /// </summary>
-        public bool IsActive { get; set; }
+        public bool IsTerminal { get; set; }
 
         /// <summary>
         /// get/set - The tasks associated with this status.

@@ -115,7 +115,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
             else
-                query = query.OrderBy(b => b.Id);
+                query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
 
             return query;
         }
