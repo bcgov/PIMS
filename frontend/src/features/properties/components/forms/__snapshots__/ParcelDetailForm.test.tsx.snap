@@ -206,7 +206,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="address.cityId"
                       onChange={[Function]}
                       required={true}
-                      value="Victoria"
+                      value="test city"
                     />
                   </div>
                 </div>
@@ -382,18 +382,20 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Agency
                 </label>
                 <div
-                  className="col-md-10 form-group"
+                  className="AutoCompleteText"
                 >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-agency"
-                    name="agency"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    type="string"
-                    value="MOTI"
-                  />
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-agencyId"
+                      name="agencyId"
+                      onChange={[Function]}
+                      value="TEST"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

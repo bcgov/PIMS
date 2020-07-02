@@ -125,7 +125,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   name="buildings.0.address.cityId"
                   onChange={[Function]}
                   required={true}
-                  value="Victoria"
+                  value="test city"
                 />
               </div>
             </div>

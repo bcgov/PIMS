@@ -132,7 +132,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     );
     values.financials = [];
     values.buildings.forEach(building => {
-      building.agencyId = building.agencyId = values.agencyId;
+      building.agencyId = building?.agencyId ? building.agencyId : values.agencyId;
 
       if (!building.leaseExpiry || !building.leaseExpiry.length) {
         building.leaseExpiry = undefined;

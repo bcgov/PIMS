@@ -15,6 +15,8 @@ export type IAutoCompleteProps = {
   textVal?: string;
   autoSetting?: string;
   required?: boolean;
+  /** to determine whether to show the code or label defaults to label*/
+  showAbbreviation?: boolean;
 };
 
 export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
@@ -25,6 +27,7 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
   textVal,
   autoSetting,
   required,
+  showAbbreviation,
 }) => {
   const { values, setFieldValue, handleChange, errors, touched } = useFormikContext<any>();
   const [suggestions, setSuggestions] = useState<SelectOptions>([]);
@@ -79,9 +82,20 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
     return null;
   };
 
+  // to override text shown value if needed
   if (textVal !== undefined && loaded === false && textVal !== text) {
     setText(textVal);
     setLoaded(true);
+  }
+
+  // set text to previously assigned value
+  if (value && !textVal && loaded === false) {
+    options.forEach((x: any) => {
+      if (Number(x.value) === value) {
+        showAbbreviation ? setText(x.code) : setText(x.label);
+        setLoaded(true);
+      }
+    });
   }
 
   return (
