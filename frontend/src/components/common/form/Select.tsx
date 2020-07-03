@@ -43,6 +43,7 @@ export type SelectOption = {
   label: string;
   value: string | number;
   selected?: boolean;
+  code?: string;
 };
 
 export type SelectOptions = SelectOption[];
