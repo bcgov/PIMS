@@ -1,3 +1,4 @@
+import { getFiscalYear } from './../../../utils/utils';
 import { IApiProject, IProjectProperty, IApiProperty } from './interfaces';
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
@@ -10,9 +11,16 @@ export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();
   return _.find(fiscals, { fiscalYear: currentFiscal, key: key });
 };
-//TODO: test sort order
+
 export const getMostRecentEvaluation = (evaluations: IEvaluation[], key: EvaluationKeys) => {
-  return _.find(_.sortBy(evaluations, 'date'), { key: key });
+  const currentFiscal = getCurrentFiscalYear();
+
+  const mostRecentEvaluation = _.find(_.orderBy(evaluations, 'date', 'desc'), { key: key });
+  const fiscal = getFiscalYear(mostRecentEvaluation?.date);
+  if (mostRecentEvaluation !== undefined && currentFiscal !== fiscal) {
+    mostRecentEvaluation.date = new Date();
+  }
+  return mostRecentEvaluation;
 };
 
 export const toFlatProject = (project?: IApiProject) => {
