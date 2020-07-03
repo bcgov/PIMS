@@ -163,8 +163,8 @@ pipeline {
                 sh """
                 sonar-scanner \
                   -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-                  -Dsonar.projectKey='bcgov_PIMS_FE' \
-                  -Dsonar.projectName='PIMS React Frontend (${OC_JOB_NAME.toUpperCase()})'
+                  -Dsonar.projectKey='pims-frontend-${OC_JOB_NAME}' \
+                  -Dsonar.projectName='PIMS Frontend [${OC_JOB_NAME.toUpperCase()}]'
                 """
               }
             }
@@ -210,8 +210,8 @@ pipeline {
           steps {
             script {
               dir(DEVOPS_DIRECTORY) {
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base apply"
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app apply"
+                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base -apply"
+                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app -apply"
               }
             }
           }
@@ -219,7 +219,7 @@ pipeline {
         stage("Backend") {
           steps {
             dir(DEVOPS_DIRECTORY) {
-              sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api apply"
+              sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api -apply"
             }
           }
         }
@@ -270,8 +270,8 @@ pipeline {
           }
 
           dir(DEVOPS_DIRECTORY) {
-            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} apply"
-            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} -apply"
           }
         }
       }
