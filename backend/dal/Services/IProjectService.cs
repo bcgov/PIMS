@@ -8,6 +8,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IProjectService : IService
     {
+        int Count();
         Paged<Project> GetPage(ProjectFilter filter);
         Project Get(int id);
         Project Get(string projectNumber);

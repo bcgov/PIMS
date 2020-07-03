@@ -3,7 +3,6 @@ using Pims.Core.Extensions;
 using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Project.Controllers;
-using Model = Pims.Api.Areas.Project.Models.Workflow;
 using Pims.Dal.Security;
 
 namespace Pims.Api.Test.Routes.Project
@@ -47,12 +46,12 @@ namespace Pims.Api.Test.Routes.Project
         public void GetWorkflow_Route()
         {
             // Arrange
-            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetWorkflow), typeof(string));
+            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetWorkflowStatus), typeof(string));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasGet("{workflowCode}");
+            endpoint.HasGet("{workflowCode}/status");
             endpoint.HasPermissions(Permissions.ProjectView);
         }
 
@@ -60,38 +59,12 @@ namespace Pims.Api.Test.Routes.Project
         public void GetTasksForWorkflow_Code_Route()
         {
             // Arrange
-            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetTasksForWorkflow), typeof(string));
+            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetWorkflowTasks), typeof(string));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("{workflowCode}/tasks");
-            endpoint.HasPermissions(Permissions.ProjectView);
-        }
-
-        [Fact]
-        public void GetTasksForStatus_Id_Route()
-        {
-            // Arrange
-            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetTasksForStatus), typeof(int));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("tasks/{statusId:int}");
-            endpoint.HasPermissions(Permissions.ProjectView);
-        }
-
-        [Fact]
-        public void GetTasksForStatus_Code_Route()
-        {
-            // Arrange
-            var endpoint = typeof(WorkflowController).FindMethod(nameof(WorkflowController.GetTasksForStatus), typeof(string));
-
-            // Act
-            // Assert
-            Assert.NotNull(endpoint);
-            endpoint.HasGet("tasks/{statusCode}");
             endpoint.HasPermissions(Permissions.ProjectView);
         }
         #endregion

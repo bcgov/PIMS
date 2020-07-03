@@ -9,7 +9,6 @@ using Model = Pims.Api.Areas.Project.Models.Workflow;
 using Microsoft.AspNetCore.Mvc;
 using MapsterMapper;
 using FluentAssertions;
-using Pims.Core.Comparers;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -41,13 +40,13 @@ namespace Pims.Api.Test.Controllers
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
 
             // Act
-            var result = controller.GetWorkflow("SUBMIT");
+            var result = controller.GetWorkflowStatus("SUBMIT");
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<Model.ProjectStatusModel[]>(actionResult.Value);
             Assert.Null(actionResult.StatusCode);
-            var expectedResult = mapper.Map<Model.ProjectStatusModel[]>(status);
+            var expectedResult = mapper.Map<Model.ProjectStatusModel[]>(workflow.Status);
             actualResult.Should().HaveCount(6);
             actualResult.Should().BeEquivalentTo(expectedResult, m => m
                 .Excluding(o => o.UpdatedOn)
@@ -55,57 +54,6 @@ namespace Pims.Api.Test.Controllers
             service.Verify(m => m.Workflow.Get("SUBMIT"), Times.Once());
         }
         #endregion
-
-        #region GetTasksForStatus
-        [Fact]
-        public void GetTasksForStatus_Code_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var status0 = EntityHelper.CreateProjectStatus(0, "DRAFT", "DRAFT");
-            var tasks = EntityHelper.CreateDefaultTasks(status0);
-            service.Setup(m => m.Task.GetForStatus(It.IsAny<string>())).Returns(tasks);
-
-            // Act
-            var result = controller.GetTasksForStatus(status0.Code);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.TaskModel[]>(actionResult.Value);
-            Assert.Null(actionResult.StatusCode);
-            Assert.Equal(mapper.Map<Model.TaskModel[]>(tasks), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Task.GetForStatus(status0.Code), Times.Once());
-        }
-
-        [Fact]
-        public void GetTasksForStatus_Id_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
-
-            var service = helper.GetService<Mock<IPimsService>>();
-            var mapper = helper.GetService<IMapper>();
-            var status0 = EntityHelper.CreateProjectStatus(0, "DRAFT", "DRAFT");
-            var tasks = EntityHelper.CreateDefaultTasks(status0);
-            service.Setup(m => m.Task.GetForStatus(It.IsAny<int>())).Returns(tasks);
-
-            // Act
-            var result = controller.GetTasksForStatus(status0.Id);
-
-            // Assert
-            var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Model.TaskModel[]>(actionResult.Value);
-            Assert.Null(actionResult.StatusCode);
-            Assert.Equal(mapper.Map<Model.TaskModel[]>(tasks), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Task.GetForStatus(status0.Id), Times.Once());
-        }
-        #endregion
-
         #endregion
     }
 }

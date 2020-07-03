@@ -71,6 +71,11 @@ namespace Pims.Dal
         public IProjectNotificationService ProjectNotification { get { return _serviceProvider.GetService<IProjectNotificationService>(); } }
 
         /// <summary>
+        /// get - The project status services.
+        /// </summary>
+        public IProjectStatusService ProjectStatus { get { return _serviceProvider.GetService<IProjectStatusService>(); } }
+
+        /// <summary>
         /// get - The notification queue services.
         /// </summary>
         public INotificationQueueService NotificationQueue { get { return _serviceProvider.GetService<INotificationQueueService>(); } }

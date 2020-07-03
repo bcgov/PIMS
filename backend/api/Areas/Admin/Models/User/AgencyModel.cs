@@ -11,12 +11,6 @@ namespace Pims.Api.Areas.Admin.Models.User
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - The parent agency.
-        /// </summary>
-        /// <value></value>
-        public int? ParentId { get; set; }
         #endregion
     }
 }

@@ -31,7 +31,7 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new ProjectFilter() { Agencies = new int[] { 3 } } },
                 new object[] { new ProjectFilter() { ProjectNumber = "ProjectNumber" } },
                 new object[] { new ProjectFilter() { Name = "Name" } },
-                new object[] { new ProjectFilter() { StatusId = 1 } },
+                new object[] { new ProjectFilter() { StatusId = new[] { 1 } } },
                 new object[] { new ProjectFilter() { TierLevelId = 2 } }
             };
 

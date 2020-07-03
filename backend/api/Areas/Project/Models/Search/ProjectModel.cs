@@ -24,9 +24,14 @@ namespace Pims.Api.Areas.Project.Models.Search
         public string Name { get; set; }
 
         /// <summary>
-        /// get/set - The fiscal year this project is relevant to.
+        /// get/set - The reported fiscal year this project.
         /// </summary>
-        public int FiscalYear { get; set; }
+        public int ReportedFiscalYear { get; set; }
+
+        /// <summary>
+        /// get/set - The actual or forecasted fiscal year.
+        /// </summary>
+        public int ActualFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the project status.

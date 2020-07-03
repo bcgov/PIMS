@@ -80,9 +80,9 @@ namespace Pims.Core.Extensions
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsEnumerable(this Type type)
+        public static bool IsEnumerable(this Type type, bool notString = true)
         {
-            return typeof(IEnumerable).IsAssignableFrom(type);
+            return typeof(IEnumerable).IsAssignableFrom(type) && (!notString || type != typeof(string));
         }
 
         /// <summary>

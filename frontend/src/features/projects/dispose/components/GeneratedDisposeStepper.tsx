@@ -16,12 +16,14 @@ interface GeneratedDisposeStepperProps {
 const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepperProps) => {
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { projectStatusCompleted, canGoToStatus, project } = useStepper();
-  const steps = workflowStatuses.map(wfs => ({
-    title: wfs.name,
-    route: `${basePath}${wfs.route}?projectNumber=${project.projectNumber}`,
-    completed: projectStatusCompleted(wfs),
-    canGoToStep: canGoToStatus(wfs),
-  }));
+  const steps = workflowStatuses
+    .filter(i => !i.isOptional)
+    .map(wfs => ({
+      title: wfs.name,
+      route: `${basePath}${wfs.route}?projectNumber=${project.projectNumber}`,
+      completed: projectStatusCompleted(wfs),
+      canGoToStep: canGoToStatus(wfs),
+    }));
   return (
     <Stepper
       activeStep={activeStep}

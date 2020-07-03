@@ -30,6 +30,20 @@ INSERT INTO dbo.[Workflows] (
     , 0
     , 'Assess a requested ERP exemption.'
     , 2
+), (
+    4
+    , 'Enhanced Referral Program'
+    , 'ERP'
+    , 0
+    , 'Internal marketing for 90 days.'
+    , 3
+), (
+    5
+    , 'Surplus Property List'
+    , 'SPL'
+    , 0
+    , 'External marketing.'
+    , 3
 )
 
 SET IDENTITY_INSERT dbo.[Workflows] OFF

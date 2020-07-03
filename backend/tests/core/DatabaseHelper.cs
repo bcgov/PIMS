@@ -117,7 +117,7 @@ namespace Pims.Core.Test
         {
             var context = helper.CreatePimsContext(dbName, user, true);
             context.AddRange(EntityHelper.CreateDefaultPropertyClassifications());
-            context.AddRange(EntityHelper.CreateDefaultPropertyStatuses());
+            context.AddRange(EntityHelper.CreateDefaultPropertyStatus());
             context.AddRange(EntityHelper.CreateDefaultProvinces());
             context.AddRange(EntityHelper.CreateDefaultCities());
             context.AddRange(EntityHelper.CreateDefaultRoles());
@@ -126,7 +126,7 @@ namespace Pims.Core.Test
             context.AddRange(EntityHelper.CreateDefaultBuildingOccupantTypes());
             context.AddRange(EntityHelper.CreateDefaultAgencies());
             context.AddRange(EntityHelper.CreateDefaultTierLevels());
-            context.AddRange(EntityHelper.CreateDefaultProjectStatuses());
+            context.AddRange(EntityHelper.CreateDefaultProjectStatus());
             context.SaveChanges();
             return context;
         }

@@ -8,7 +8,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , [Name]
     , [GroupName]
     , [Code]
-    , [IsActive]
+    , [IsTerminal]
     , [IsDisabled]
     , [Description]
     , [Route]
@@ -19,7 +19,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Draft'
     , 'Draft'
     , 'DR'
-    , 1
+    , 0
     , 0
     , 'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.'
     , '/projects/draft'
@@ -30,7 +30,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Select Properties'
     , 'Draft'
     , 'DR-P'
-    , 1
+    , 0
     , 0
     , 'Add properties to the project.'
     , '/projects/properties'
@@ -41,7 +41,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Update Information'
     , 'Draft'
     , 'DR-I'
-    , 1
+    , 0
     , 0
     , 'Assign tier level, classification and update current financial information.'
     , '/projects/information'
@@ -52,7 +52,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Required Documentation'
     , 'Draft'
     , 'DR-D'
-    , 1
+    , 0
     , 0
     , 'Required documentation has been completed and sent (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
     , '/projects/documentation'
@@ -63,7 +63,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Approval'
     , 'Draft'
     , 'DR-A'
-    , 1
+    , 0
     , 0
     , 'The project is ready to be approved by owning agency.'
     , '/projects/approval'
@@ -74,7 +74,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Review'
     , 'Draft'
     , 'DR-RE'
-    , 1
+    , 0
     , 0
     , 'The project has been submitted for review to be added to the Surplus Property Program.'
     , '/projects/review'
@@ -85,143 +85,225 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Submitted'
     , 'Submitted'
     , 'AS-I'
-    , 1
+    , 0
     , 0
     , 'Submitted project property information review.'
     , '/projects/assess/properties'
     , 1
 ), (
     8
-    , 7
+    , 6
     , 'Submitted Exemption'
     , 'Submitted'
     , 'AS-EXE'
-    , 1
+    , 0
     , 0
     , 'Project has been been submitted with a request for exemption.'
     , '/projects/assess/properties'
-    , 1  
-), (
-    9
-    , 8
+    , 1
+)
+
+-- Assessment
+
+, (
+    10
+    , 7
     , 'Document Review'
     , 'Submitted'
     , 'AS-D'
-    , 1
+    , 0
     , 0
     , 'Documentation reviewed (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
     , '/projects/assess/documentation'
     , 0
 ), (
-    10
-    , 9
+    11
+    , 8
     , 'Appraisal Review'
     , 'Submitted'
     , 'AS-AP'
-    , 1
+    , 0
     , 0
     , 'Appraisal review process.'
     , '/projects/assess/appraisal'
     , 0
 ), (
-    11
-    , 10
+    12
+    , 9
     , 'First Nation Consultation'
     , 'Submitted'
     , 'AS-FNC'
-    , 1
+    , 0
     , 0
     , 'First Nation Consultation process.'
     , '/projects/assess/first/nation/consultation'
     , 0
 ), (
-    12
-    , 11
-    , 'Exemption Process'
+    13
+    , 10
+    , 'Exemption Review'
     , 'Submitted'
     , 'AS-EXP'
-    , 1
+    , 0
     , 0
     , 'Process to approve ERP exemption.'
     , 'projects/assess/exemption'
     , 0
 ), (
-    13
-    , 12
+    14
+    , 11
     , 'Approved for ERP'
     , 'Approved'
     , 'AP-ERP'
-    , 1
+    , 0
     , 0
     , 'The project has been approved to be added to the Surplus Property Program - Enhanced Referral Program.  This begins the 90 day internal marketing process.'
     , '/projects/approved'
     , 1
 ), (
-    14
-    , 13
+    15
+    , 11
+    , 'Approved for Exemption'
+    , 'Approved'
+    , 'AP-EXE'
+    , 0
+    , 0
+    , 'Project has been approved for ERP exemption.'
+    , '/projects/approved'
+    , 1
+), (
+    16
+    , 11
+    , 'Denied'
+    , 'Closed'
+    , 'DE'
+    , 1
+    , 0
+    , 'The project has been denied to be added to the Surplus Property Program.'
+    , '/projects/denied'
+    , 1
+)
+
+-- Exemption outcome
+-- ERP outcome
+
+, (
+    20
+    , 21
+    , 'Transferred within the GRE'
+    , 'Closed'
+    , 'T-GRE'
+    , 1
+    , 0
+    , 'The project has been transferred within the Greater Revenue Entity'
+    , '/projects/transferred'
+    , 1
+), (
+    21
+    , 21
     , 'Approved for SPL'
     , 'Approved'
     , 'AP-SPL'
-    , 1
+    , 0
     , 0
     , 'The project has been approved to be added to the Surplus Property Program - Surplus Property List.  This begins the external marketing process.'
     , '/projects/approved'
     , 1
 ), (
-    15
-    , 14
-    , 'Approved for Exemption'
+    22
+    , 21
+    , 'Not in SPL'
     , 'Approved'
-    , 'AP-EXE'
-    , 1
+    , 'AP-!SPL'
     , 0
-    , 'Project has been approved for ERP exemption.'
+    , 0
+    , 'The project has been approved to not be included in the Surplus Property Program - Surplus Property List. '
     , '/projects/approved'
-    , 1    
-), (
-    16
-    , 15
-    , 'Denied'
-    , 'Closed'
-    , 'DE'
-    , 0
-    , 0
-    , 'The project has been denied to be added to the Surplus Property Program.'
-    , '/projects/denied'
     , 1
 ), (
-    17
-    , 16
+    23
+    , 21
     , 'Cancelled'
     , 'Closed'
     , 'CA'
-    , 0
+    , 1
     , 0
     , 'The project has been cancelled from the Surplus Property Program.'
     , '/projects/cancelled'
     , 1
 )
+
+-- ERP process
+
 , (
-    18
+    30
     , 17
-    , 'OnHold'
-    , 'OnHold'
-    , 'OH'
-    , 1
+    , 'On Hold'
+    , 'On Hold'
+    , 'ERP-OH'
+    , 0
     , 0
     , 'The project has been put on hold due to potential sale to an interested party.'
     , '/projects/onhold'
-    , 1
+    , 0
 ), (
-    19
+    31
+    , 21
+    , 'Disposed'
+    , 'Complete'
+    , 'DIS'
+    , 0
+    , 0
+    , 'The project has been disposed externally.'
+    , '/projects/disposed'
+    , 1
+)
+
+-- SPL process
+
+, (
+    40
     , 18
-    , 'Transferred within the GRE'
-    , 'Closed'
-    , 'T-GRE'
+    , 'Pre-Marketing'
+    , 'Pre-Marketing'
+    , 'SPL-PM'
     , 0
     , 0
-    , 'The project has been transferred within the Greater Revenue Entity'
-    , '/projects/transferred'
+    , 'The project is in the pre-marketing stage of the Surplus Property List.'
+    , '/projects/premarketing'
+    , 0
+), (
+    41
+    , 19
+    , 'On Market'
+    , 'Marketing'
+    , 'SPL-M'
+    , 0
+    , 0
+    , 'The project is in the marketing stage of the Surplus Property List.'
+    , '/projects/premarketing'
+    , 0
+), (
+    42
+    , 20
+    , 'Contract in Place'
+    , 'Contract in Place'
+    , 'SPL-CIP'
+    , 0
+    , 0
+    , 'The project has received an offer either conditional or unconditional.'
+    , '/projects/contractinplace'
+    , 0
+), (
+    43
+    , 21
+    , 'Disposed'
+    , 'Complete'
+    , 'SPL-DIS'
+    , 0
+    , 0
+    , 'The project has been disposed externally.'
+    , '/projects/disposed'
     , 1
 )
 
