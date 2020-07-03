@@ -40,7 +40,8 @@ namespace Pims.Core.Test
             var user = CreateUser(Guid.NewGuid(), "project tester", "asasa", "asasa", null, agency);
             return new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
             {
-                FiscalYear = DateTime.UtcNow.GetFiscalYear(),
+                ReportedFiscalYear = DateTime.UtcNow.GetFiscalYear(),
+                ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
                 Agency = agency,
                 AgencyId = agency.Id,
                 Status = status,
@@ -117,7 +118,8 @@ namespace Pims.Core.Test
 
             var project = new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
             {
-                FiscalYear = DateTime.UtcNow.GetFiscalYear(),
+                ReportedFiscalYear = DateTime.UtcNow.GetFiscalYear(),
+                ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
                 Agency = agency,
                 AgencyId = agency.Id,
                 Description = $"description-{id}",

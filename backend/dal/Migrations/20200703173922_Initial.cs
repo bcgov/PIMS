@@ -379,7 +379,7 @@ namespace Pims.Dal.Migrations
                     GroupName = table.Column<string>(maxLength: 150, nullable: true),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     IsMilestone = table.Column<bool>(nullable: false, defaultValue: false),
-                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
+                    IsTerminal = table.Column<bool>(nullable: false, defaultValue: false),
                     Route = table.Column<string>(maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -1021,7 +1021,9 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     ProjectNumber = table.Column<string>(maxLength: 25, nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    FiscalYear = table.Column<int>(nullable: false),
+                    Manager = table.Column<string>(maxLength: 150, nullable: true),
+                    ReportedFiscalYear = table.Column<int>(nullable: false),
+                    ActualFiscalYear = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: false),
                     StatusId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
@@ -1029,6 +1031,7 @@ namespace Pims.Dal.Migrations
                     TierLevelId = table.Column<int>(nullable: false),
                     PublicNote = table.Column<string>(maxLength: 2000, nullable: true),
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
+                    Metadata = table.Column<string>(type: "NVARCHAR(MAX)", nullable: true),
                     AgencyResponseNote = table.Column<string>(maxLength: 2000, nullable: true),
                     SubmittedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ApprovedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
@@ -1041,11 +1044,19 @@ namespace Pims.Dal.Migrations
                     ClearanceNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DeniedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     CancelledOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    MarketedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    DisposedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ExemptionRequested = table.Column<bool>(nullable: false, defaultValue: false),
                     ExemptionRationale = table.Column<string>(maxLength: 2000, nullable: true),
                     NetBook = table.Column<decimal>(type: "MONEY", nullable: false),
                     Estimated = table.Column<decimal>(type: "MONEY", nullable: false),
                     Assessed = table.Column<decimal>(type: "MONEY", nullable: false),
+                    SalesCost = table.Column<decimal>(type: "MONEY", nullable: false),
+                    NetProceeds = table.Column<decimal>(type: "MONEY", nullable: false),
+                    ProgramCost = table.Column<decimal>(type: "MONEY", nullable: false),
+                    GainLoss = table.Column<decimal>(type: "MONEY", nullable: false),
+                    OcgFinalStatement = table.Column<decimal>(type: "MONEY", nullable: false),
+                    InterestComponent = table.Column<decimal>(type: "MONEY", nullable: false),
                     AgencyId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -1099,7 +1110,8 @@ namespace Pims.Dal.Migrations
                     CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    IsOptional = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1260,6 +1272,44 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_NotificationQueue_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectNotes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    ProjectId = table.Column<int>(nullable: false),
+                    NoteType = table.Column<int>(nullable: false),
+                    Note = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectNotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectNotes_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectNotes_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectNotes_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -2113,6 +2163,21 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "ProjectId", "AgencyId", "Response" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectNotes_CreatedById",
+                table: "ProjectNotes",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectNotes_UpdatedById",
+                table: "ProjectNotes",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectNotes_ProjectId_NoteType",
+                table: "ProjectNotes",
+                columns: new[] { "ProjectId", "NoteType" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectNumbers_CreatedById",
                 table: "ProjectNumbers",
                 column: "CreatedById");
@@ -2191,9 +2256,9 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Name", "StatusId", "TierLevelId", "AgencyId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_Assessed_NetBook_Estimated_FiscalYear_ExemptionRequested",
+                name: "IX_Projects_Assessed_NetBook_Estimated_ReportedFiscalYear_ActualFiscalYear_ExemptionRequested",
                 table: "Projects",
-                columns: new[] { "Assessed", "NetBook", "Estimated", "FiscalYear", "ExemptionRequested" });
+                columns: new[] { "Assessed", "NetBook", "Estimated", "ReportedFiscalYear", "ActualFiscalYear", "ExemptionRequested" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatus_Code",
@@ -2205,12 +2270,6 @@ namespace Pims.Dal.Migrations
                 name: "IX_ProjectStatus_CreatedById",
                 table: "ProjectStatus",
                 column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectStatus_Name",
-                table: "ProjectStatus",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatus_UpdatedById",
@@ -2562,6 +2621,9 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectAgencyResponses");
+
+            migrationBuilder.DropTable(
+                name: "ProjectNotes");
 
             migrationBuilder.DropTable(
                 name: "ProjectNumbers");

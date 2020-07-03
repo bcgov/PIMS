@@ -646,7 +646,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.AdminProjects).AddAgency(1);
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
-            project.FiscalYear = 2020;
+            project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             var fiscal = init.CreateFiscal(building, 2020, Entity.FiscalKeys.NetBook, 10);
@@ -674,7 +674,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
-            project.FiscalYear = 2020;
+            project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
             var fiscal = init.CreateFiscal(building, 2020, Entity.FiscalKeys.NetBook, 10);

@@ -27,6 +27,11 @@ namespace Pims.Dal.Entities
         /// get/set - The project status.
         /// </summary>
         public ProjectStatus Status { get; set; }
+
+        /// <summary>
+        /// get/ste - This status is an optional path.
+        /// </summary>
+        public bool IsOptional { get; set; }
         #endregion
 
         #region Constructors
@@ -38,13 +43,16 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Creates a new instance of a WorkflowProjectStatus object, initializes it with specified arguments.
         /// </summary>
-        /// <param name="name"></param>
-        public WorkflowProjectStatus(Workflow workflow, ProjectStatus status)
+        /// <param name="workflow"></param>
+        /// <param name="status"></param>
+        /// <param name="isOptional"></param>
+        public WorkflowProjectStatus(Workflow workflow, ProjectStatus status, bool isOptional = false)
         {
             this.Workflow = workflow;
             this.WorkflowId = workflow?.Id ?? throw new ArgumentNullException(nameof(workflow));
             this.Status = status;
             this.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
+            this.IsOptional = isOptional;
         }
         #endregion
     }

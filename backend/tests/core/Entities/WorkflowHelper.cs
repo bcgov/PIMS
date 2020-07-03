@@ -37,9 +37,38 @@ namespace Pims.Core.Test
         {
             return new List<Entity.Workflow>()
             {
-                new Entity.Workflow("Submit", "DISPOSE-SUBMIT") { Id = 1, SortOrder = 0, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Workflow("Access", "DISPOSE-ACCESS") { Id = 2, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.Workflow("Submit", "SUBMIT-DISPOSE") { Id = 1, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Access", "ACCESS-DISPOSE") { Id = 2, SortOrder = 2, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Access", "ACCESS-EXEMPTION") { Id = 3, SortOrder = 3, RowVersion = new byte[] { 12, 13, 14 } }
             };
+        }
+
+        /// <summary>
+        /// Creates a default list of Workflow.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.Workflow> CreateDefaultWorkflowsWithStatus()
+        {
+            var status = EntityHelper.CreateDefaultProjectStatus();
+
+            var workflows = new List<Entity.Workflow>()
+            {
+                new Entity.Workflow("Submit", "SUBMIT-DISPOSE") { Id = 1, SortOrder = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Access", "ACCESS-DISPOSE") { Id = 2, SortOrder = 2, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Access", "ACCESS-EXEMPTION") { Id = 3, SortOrder = 3, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Enhanced Referral Program", "ERP") { Id = 4, SortOrder = 4, RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.Workflow("Surplus Property List", "SPL") { Id = 5, SortOrder = 5, RowVersion = new byte[] { 12, 13, 14 } }
+            };
+
+            ((List<Entity.WorkflowProjectStatus>)workflows.Next(0).Status).AddRange(status.Where(s => s.Route.Contains("{DR}")).Select(s => new Entity.WorkflowProjectStatus(workflows.Next(0), s)));
+            ((List<Entity.WorkflowProjectStatus>)workflows.Next(1).Status).AddRange(status.Where(s => s.Route.Contains("{AS}")).Select(s => new Entity.WorkflowProjectStatus(workflows.Next(1), s)));
+            ((List<Entity.WorkflowProjectStatus>)workflows.Next(2).Status).AddRange(status.Where(s => s.Route.Contains("{EX}")).Select(s => new Entity.WorkflowProjectStatus(workflows.Next(2), s)));
+            ((List<Entity.WorkflowProjectStatus>)workflows.Next(3).Status).AddRange(status.Where(s => s.Route.Contains("{ERP}")).Select(s => new Entity.WorkflowProjectStatus(workflows.Next(3), s)));
+            ((List<Entity.WorkflowProjectStatus>)workflows.Next(4).Status).AddRange(status.Where(s => s.Route.Contains("{SPL}")).Select(s => new Entity.WorkflowProjectStatus(workflows.Next(4), s)));
+
+            workflows.ForEach(w => w.Status.ForEach(s => s.Status.Workflows.Add(s)));
+
+            return workflows;
         }
 
         /// <summary>

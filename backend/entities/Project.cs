@@ -25,9 +25,19 @@ namespace Pims.Dal.Entities
         public string Name { get; set; }
 
         /// <summary>
-        /// get/set - The fiscal year this project is relevant to.
+        /// get/set - The project manager name(s).
         /// </summary>
-        public int FiscalYear { get; set; }
+        public string Manager { get; set; }
+
+        /// <summary>
+        /// get/set - The reported fiscal year this project.
+        /// </summary>
+        public int ReportedFiscalYear { get; set; }
+
+        /// <summary>
+        /// get/set - The actual or forecasted fiscal year.
+        /// </summary>
+        public int ActualFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the owning agency.
@@ -80,10 +90,18 @@ namespace Pims.Dal.Entities
         public string PrivateNote { get; set; }
 
         /// <summary>
+        /// get/set - Additional serialized metadata.
+        /// </summary>
+        public string Metadata { get; set; }
+
+        #region ERP
+        /// <summary>
         /// get/set - Note summerizing agency responses to notifications.
         /// </summary>
         public string AgencyResponseNote { get; set; }
+        #endregion
 
+        #region Dates
         /// <summary>
         /// get/set - When the project was submitted.
         /// </summary>
@@ -140,6 +158,18 @@ namespace Pims.Dal.Entities
         public DateTime? CancelledOn { get; set; }
 
         /// <summary>
+        /// get/set - When the project was externally marketed.
+        /// </summary>
+        public DateTime? MarketedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was disposed.
+        /// </summary>
+        public DateTime? DisposedOn { get; set; }
+        #endregion
+
+        #region Exemption
+        /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
@@ -148,7 +178,9 @@ namespace Pims.Dal.Entities
         /// get/set - The rational for the exemption from ERP.
         /// </summary>
         public string ExemptionRationale { get; set; }
+        #endregion
 
+        #region Financials
         /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
@@ -163,6 +195,37 @@ namespace Pims.Dal.Entities
         /// get/set - The assessed value which is the sum of the properties.
         /// </summary>
         public decimal Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - The sales cost.
+        /// </summary>
+        public decimal SalesCost { get; set; }
+
+        /// <summary>
+        /// get/set - The net proceeds
+        /// </summary>
+        public decimal NetProceeds { get; set; }
+
+        /// <summary>
+        /// get/set - The program cost.
+        /// </summary>
+        public decimal ProgramCost { get; set; }
+
+        /// <summary>
+        /// get/set - The gain or loss from selling the properties.
+        /// </summary>
+        public decimal GainLoss { get; set; }
+
+        /// <summary>
+        /// get/set - OCG final statement.
+        /// </summary>
+        public decimal OcgFinalStatement { get; set; }
+
+        /// <summary>
+        /// get/set - Record the interest component.
+        /// </summary>
+        public decimal InterestComponent { get; set; }
+        #endregion
 
         /// <summary>
         /// get - A collection of properties associated to this project.
@@ -183,6 +246,11 @@ namespace Pims.Dal.Entities
         /// get - A collection of notifications sent for this project.
         /// </summary>
         public ICollection<NotificationQueue> Notifications { get; } = new List<NotificationQueue>();
+
+        /// <summary>
+        /// get - A collection of notes for this project.
+        /// </summary>
+        public ICollection<ProjectNote> Notes { get; } = new List<ProjectNote>();
         #endregion
 
         #region Constructors

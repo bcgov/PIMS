@@ -36,74 +36,82 @@ INSERT INTO dbo.[Tasks] (
     , 0
 ), (
     4
-    , 'Documents received and review completed'
+    , 'Review completed'
     , 0
-    , 'Documents have been received, reviewed and approved.'
-    , 9
+    , 'Project property information has been reviewed'
+    , 8
     , 0
     , 0
 ), (
     5
+    , 'Documents received and review completed'
+    , 0
+    , 'Documents have been received, reviewed and approved.'
+    , 10
+    , 0
+    , 0
+), (
+    6
     , 'Appraisal ordered'
     , 0
     , 'An appraisal has been ordered.'
-    , 10
+    , 11
     , 1
     , 1
 ), (
-    6
+    7
     , 'Appraisal received'
     , 0
     , 'An appraisal has been received.'
-    , 10
+    , 11
     , 1
     , 2
 ), (
-    7
+    8
     , 'Appraisal completed'
     , 0
     , 'An appraisal has been reviewed and completed.'
-    , 10
+    , 11
     , 1
     , 3
 ), (
-    8
+    9
     , 'Preparation and due diligence'
     , 0
     , 'First Nations consulatation preparation and due diligence.'
-    , 11
+    , 12
     , 1
     , 1
 ), (
-    9
+    10
     , 'Consultation underway'
     , 0
     , 'First Nations consulation is underway.'
-    , 11
+    , 12
     , 1
     , 2
 ), (
-    10
+    11
     , 'Consultation complete'
     , 0
     , 'First Nations consultation is complete.'
-    , 11
+    , 12
     , 1
     , 3
 ), (
-    11
+    12
     , 'Notification to confirm exemption request sent to agency ADM'
     , 0
     , 'ADM has been notified of request for exemption'
-    , 12
+    , 13
     , 0
     , 1
 ), (
-    12
+    13
     , 'Confirmation has been received from agency ADM'
     , 0
     , 'ADM has confirmed request for exemption'
-    , 12
+    , 13
     , 0
     , 2
 )

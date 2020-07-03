@@ -22,9 +22,9 @@ namespace Pims.Dal.Entities.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// get/set - The project potential zoning.
+        /// get/set - An array of status Id.
         /// </summary>
-        public int? StatusId { get; set; }
+        public int[] StatusId { get; set; }
 
         /// <summary>
         /// get/set - The project tier level.
@@ -45,7 +45,7 @@ namespace Pims.Dal.Entities.Models
         public bool? AssessWorkflow { get; set; }
 
         /// <summary>
-        /// get/set - Only limit to projects created by current user.
+        /// get/set - Only return active projects.
         /// </summary>
         /// <value></value>
         public bool? Active { get; set; }
@@ -55,6 +55,11 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public int[] Agencies { get; set; }
+
+        /// <summary>
+        /// get/set - An array of workflow [SUBMIT-DISPOSAL, ASSESS-DISPOSAL, ASSESS-EXEMPTION, ERP, SPL].
+        /// </summary>
+        public string[] Workflows { get; set; }
         #endregion
 
         #region Constructors
@@ -74,12 +79,14 @@ namespace Pims.Dal.Entities.Models
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.Name = filter.GetStringValue(nameof(this.Name));
-            this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
+            this.StatusId = filter.GetIntArrayValue("status");
+            this.StatusId = filter.GetIntArrayValue(nameof(this.StatusId));
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
             this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
             this.AssessWorkflow = filter.GetBoolNullValue(nameof(this.AssessWorkflow));
             this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
+            this.Workflows = filter.GetStringArrayValue(nameof(this.Workflows));
         }
         #endregion
 
@@ -93,9 +100,13 @@ namespace Pims.Dal.Entities.Models
             return base.IsValid()
                 || !String.IsNullOrWhiteSpace(this.ProjectNumber)
                 || !String.IsNullOrWhiteSpace(this.Name)
-                || this.StatusId.HasValue
                 || this.TierLevelId.HasValue
-                || this.Agencies?.Any() == true;
+                || this.Active.HasValue
+                || this.AssessWorkflow.HasValue
+                || this.CreatedByMe.HasValue
+                || (this.StatusId?.Any() ?? false)
+                || (this.Agencies?.Any() ?? false)
+                || (this.Workflows?.Any() ?? false);
         }
         #endregion
     }

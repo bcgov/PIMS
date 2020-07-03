@@ -28,12 +28,11 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Description).HasMaxLength(1000);
 
             builder.Property(m => m.IsMilestone).HasDefaultValue(false);
-            builder.Property(m => m.IsActive).HasDefaultValue(true);
+            builder.Property(m => m.IsTerminal).HasDefaultValue(false);
 
             builder.Property(m => m.Route).IsRequired();
             builder.Property(m => m.Route).HasMaxLength(150);
 
-            builder.HasIndex(m => new { m.Name }).IsUnique();
             builder.HasIndex(m => new { m.Code }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.Name, m.Code, m.SortOrder });
 

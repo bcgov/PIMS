@@ -48,17 +48,17 @@ namespace Pims.Api.Areas.Project.Controllers
         /// </summary>
         /// <param name="workflowCode"></param>
         /// <returns></returns>
-        [HttpGet("{workflowCode}")]
+        [HttpGet("{workflowCode}/status")]
         [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetWorkflow(string workflowCode)
+        public IActionResult GetWorkflowStatus(string workflowCode)
         {
             if (String.IsNullOrWhiteSpace(workflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(workflowCode));
 
-            var status = _pimsService.Workflow.Get(workflowCode).Status.Select(s => _mapper.Map<ProjectStatusModel>(s.Status)).ToArray();
+            var status = _pimsService.Workflow.Get(workflowCode).Status.Select(s => _mapper.Map<ProjectStatusModel>(s)).ToArray();
             return new JsonResult(status);
         }
 
@@ -70,46 +70,12 @@ namespace Pims.Api.Areas.Project.Controllers
         [HttpGet("{workflowCode}/tasks")]
         [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<TaskModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetTasksForWorkflow(string workflowCode)
+        public IActionResult GetWorkflowTasks(string workflowCode)
         {
             var tasks = _pimsService.Task.GetForWorkflow(workflowCode).Select(s => _mapper.Map<TaskModel>(s)).ToArray();
-            return new JsonResult(tasks);
-        }
-
-        /// <summary>
-        /// Get an array of tasks for the current disposal project status.
-        /// </summary>
-        /// <param name="statusCode"></param>
-        /// <returns></returns>
-        [HttpGet("tasks/{statusCode}")]
-        [HasPermission(Permissions.ProjectView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
-        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetTasksForStatus(string statusCode)
-        {
-            var tasks = _pimsService.Task.GetForStatus(statusCode).Select(s => _mapper.Map<TaskModel>(s)).ToArray();
-            return new JsonResult(tasks);
-        }
-
-        /// <summary>
-        /// Get an array of tasks for the current disposal project status.
-        /// </summary>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        [HttpGet("tasks/{statusId:int}")]
-        [HasPermission(Permissions.ProjectView)]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<ProjectStatusModel>), 200)]
-        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetTasksForStatus(int statusId)
-        {
-            var tasks = _pimsService.Task.GetForStatus(statusId).Select(s => _mapper.Map<TaskModel>(s)).ToArray();
             return new JsonResult(tasks);
         }
         #endregion
