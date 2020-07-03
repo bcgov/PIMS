@@ -38,13 +38,14 @@ jest.mock('@react-keycloak/web');
   keycloak: {
     userInfo: {
       agencies: ['1'],
+      roles: ['admin-properties'],
     },
   },
 });
 
 const lCodes = {
   lookupCodes: [
-    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME, code: 'TEST' },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
     { name: 'test city', id: '1', isDisabled: false, type: API.CITY_CODE_SET_NAME },
     { name: 'test province', id: '2222', isDisabled: false, type: API.PROVINCE_CODE_SET_NAME },
@@ -221,6 +222,22 @@ describe('ParcelDetailForm', () => {
       const submit = form.getByText('Submit');
       mockAxios.onPost().reply(config => {
         expect(JSON.parse(config.data)).toEqual(exampleData);
+        return [200, Promise.resolve(config.data)];
+      });
+      await wait(() => {
+        fireEvent.click(submit!);
+      });
+      done();
+    });
+
+    it('allows admin to change agency', async done => {
+      const form = render(parcelDetailForm());
+      const container = form.container;
+      await fillInput(container, 'agencyId', 2);
+      const mockAxios = new MockAdapter(axios);
+      const submit = form.getByText('Submit');
+      mockAxios.onPost().reply(config => {
+        expect(JSON.parse(config.data)).toContain({ agencyId: 2 });
         return [200, Promise.resolve(config.data)];
       });
       await wait(() => {

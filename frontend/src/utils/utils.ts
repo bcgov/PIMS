@@ -38,6 +38,7 @@ export const mapLookupCode = (
   label: code.name,
   value: code.id.toString(),
   selected: code.id === defaultId,
+  code: code.code,
 });
 
 type FormikMemoProps = {

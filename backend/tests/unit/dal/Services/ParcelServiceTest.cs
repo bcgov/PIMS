@@ -752,6 +752,28 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_Parcel_UpdateAgencyAsAdmin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            parcel.AgencyId = 2;
+            var result = service.Update(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            result.AgencyId.Should().Be(2);
+        }
+
+        [Fact]
         public void Update_Parcel_UpdateProjectFinancials()
         {
             // Arrange

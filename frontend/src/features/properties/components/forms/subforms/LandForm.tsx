@@ -8,11 +8,13 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastSelect, InputGroup, FastInput } from 'components/common/form';
+import { Form, FastSelect, InputGroup, FastInput, AutoCompleteText } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
 import TooltipIcon from 'components/common/TooltipIcon';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from 'constants/claims';
 
 interface LandProps {
   nameSpace?: string;
@@ -51,10 +53,15 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
   const classifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   }).map(mapLookupCode);
+  // only return parent agencies
+  const parentAgencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AGENCY_CODE_SET_NAME && lookupCode.parentId === undefined;
+  }).map(mapLookupCode);
   const withNameSpace: Function = (fieldName: string) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
+  const keycloak = useKeycloakWrapper();
   return (
     <Fragment>
       <Form.Row className="landForm">
@@ -109,12 +116,11 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             <Form.Label column md={2}>
               Agency
             </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={true}
-              type="string"
-              outerClassName="col-md-10"
-              field={withNameSpace('agency')}
+            <AutoCompleteText
+              field={withNameSpace('agencyId')}
+              options={parentAgencies}
+              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
+              showAbbreviation={true}
             />
           </Form.Row>
           {getIn(props.values, withNameSpace('subAgency')) && (

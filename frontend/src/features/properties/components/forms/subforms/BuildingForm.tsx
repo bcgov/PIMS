@@ -16,6 +16,7 @@ import {
   InputGroup,
   FastInput,
   Input,
+  AutoCompleteText,
 } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
@@ -79,11 +80,14 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const occupantTypes = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.OCCUPANT_TYPE_CODE_SET_NAME;
   }).map(mapLookupCode);
+  // only return parent agencies
+  const parentAgencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AGENCY_CODE_SET_NAME && lookupCode.parentId === undefined;
+  }).map(mapLookupCode);
   const withNameSpace: Function = (name?: string) => {
     return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
   };
   const [readonly, setReadonly] = useState(false);
-
   React.useEffect(() => {
     if (props.nameSpace && props.index !== undefined) {
       setReadonly(
@@ -197,12 +201,25 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
           </Form.Row>
         </Col>
         <Col md={6}>
+          {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
+            <Form.Row>
+              <Form.Label column md={2}>
+                Agency
+              </Form.Label>
+              <AutoCompleteText
+                field={withNameSpace('agencyId')}
+                options={parentAgencies}
+                disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
+                showAbbreviation={true}
+              />
+            </Form.Row>
+          )}
           <Form.Row>
             <Form.Label column md={2}>
               RAEG or SPP
             </Form.Label>
             <Input
-              disabled={projectNumberDisabled}
+              disabled={projectNumberDisabled || props.disabled}
               outerClassName="col-md-10"
               field={withNameSpace('projectNumber')}
             />
