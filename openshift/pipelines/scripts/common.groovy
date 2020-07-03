@@ -10,20 +10,29 @@ def version = "1.0"
 
 // Run Tests
 def runFrontendTests() {
-  // pull code
-  checkout scm
   timeout(20) {
     dir('frontend') {
-      sh 'node --version'
-      sh 'npm --version'
       echo 'Installing NPM Dependencies...'
       sh 'npm ci'
-      echo 'Reporting Outdated and Vulnerable Dependencies...'
+      echo 'Reporting Vulnerable Dependencies...'
       sh 'npm audit || true'
-      sh 'npm outdated || true'
       echo "Linting and Testing Frontend..."
       sh 'npm run lint'
       sh 'npm run coverage'
+    }
+  }
+}
+
+def runFrontendStaticAnalysis(String sonarUrl, String jobName) {
+  timeout(20) {
+    dir('frontend') {
+      echo 'Performing SonarQube static code analysis...'
+      sh """
+      sonar-scanner \
+        -Dsonar.host.url='${sonarUrl}' \
+        -Dsonar.projectKey='pims-frontend-${jobName}' \
+        -Dsonar.projectName='PIMS Frontend [${jobName.toUpperCase()}]'
+      """
     }
   }
 }

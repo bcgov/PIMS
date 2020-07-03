@@ -156,17 +156,10 @@ pipeline {
           agent { label 'jenkins-slave-npm' }
           steps {
             script {
+              // pull code
+              checkout scm
               commonPipeline.runFrontendTests()
-
-              echo 'Performing SonarQube static code analysis...'
-              dir('frontend') {
-                sh """
-                sonar-scanner \
-                  -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-                  -Dsonar.projectKey='pims-frontend-${OC_JOB_NAME}' \
-                  -Dsonar.projectName='PIMS Frontend [${OC_JOB_NAME.toUpperCase()}]'
-                """
-              }
+              commonPipeline.runFrontendStaticAnalysis(SONARQUBE_URL_INT, OC_JOB_NAME)
             }
           }
           post {
