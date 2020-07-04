@@ -17,7 +17,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Advanced Education, Skills & Training'
     , 0
     , 1
-    , 'aest@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     2
@@ -25,7 +25,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Citizens Services'
     , 0
     , 1
-    , 'citz@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     3
@@ -33,7 +33,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Corporate Services for the Natural Resources Sector'
     , 0
     , 1
-    , 'csnr@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     4
@@ -41,7 +41,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Education'
     , 0
     , 1
-    , 'educ@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     5
@@ -49,7 +49,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Finance'
     , 0
     , 1
-    , 'fin@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     6
@@ -57,7 +57,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Forests, Lands, Natural Resources'
     , 0
     , 1
-    , 'flnr@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     7
@@ -65,7 +65,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Health'
     , 0
     , 1
-    , 'hlth@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     8
@@ -73,7 +73,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Municipal Affairs & Housing'
     , 0
     , 1
-    , 'mah@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 ), (
     9
@@ -81,7 +81,7 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Transportation and Infrastructure'
     , 0
     , 1
-    , 'tran@gov.bc.ca'
+    , 'jeremy.foster@fosol.ca'
     , 'Agency'
 )
 

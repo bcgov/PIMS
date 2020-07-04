@@ -38,10 +38,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
+    <None Remove="Migrations\Initial\PostDeploy\01-NotificationTemplates.sql" />
     <None Remove="Migrations\Initial\PostDeploy\01-ProjectStatusTasks.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\01-ProjectStatusTransitions.sql" />
     <None Remove="Migrations\Initial\PostDeploy\01-Workflow.sql" />
     <None Remove="Migrations\Initial\PostDeploy\01-WorkflowProjectStatus.sql" />
+    <None Remove="Migrations\Initial\PostDeploy\02-ProjectStatusTransitions.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />

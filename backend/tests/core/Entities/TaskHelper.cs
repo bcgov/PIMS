@@ -16,10 +16,11 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
+        /// <param name="isOptional"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(int id, string name, Entity.ProjectStatus status = null)
+        public static Entity.Task CreateTask(int id, string name, Entity.ProjectStatus status = null, bool isOptional = false)
         {
-            return new Entity.Task(name, status) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
+            return new Entity.Task(name, status, isOptional) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
@@ -27,10 +28,11 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="name"></param>
         /// <param name="status"></param>
+        /// <param name="isOptional"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(string name, Entity.ProjectStatus status = null)
+        public static Entity.Task CreateTask(string name, Entity.ProjectStatus status = null, bool isOptional = false)
         {
-            return new Entity.Task(name, status) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } };
+            return new Entity.Task(name, status, isOptional) { Id = 1, RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
@@ -54,16 +56,18 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
+        /// <param name="isOptional"></param>
         /// <returns></returns>
-        public static Entity.Task CreateTask(this PimsContext context, int id, string name, Entity.ProjectStatus status)
+        public static Entity.Task CreateTask(this PimsContext context, int id, string name, Entity.ProjectStatus status = null, bool isOptional = false)
         {
-            var task = new Entity.Task(name, status)
+            var task = new Entity.Task(name, status, isOptional)
             {
                 Id = id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
                 UpdatedOn = DateTime.UtcNow,
+                IsOptional = false,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
 

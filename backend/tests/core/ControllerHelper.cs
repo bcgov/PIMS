@@ -123,9 +123,7 @@ namespace Pims.Core.Test
             {
                 DraftFormat = "DRAFT-{0:00000}",
                 NumberFormat = "SPP-{0:00000}",
-                DraftStatus = new[] { "DR", "DR-P", "DR-I", "DR-D", "DR-A", "DR-RE" },
-                ClosedStatus = new[] { "DE", "CA", "T-GRE" },
-                TerminateStatus = new [] { "DE", "CA" }
+                DraftWorkflows = new[] { "SUBMIT-DISPOSAL" }
             });
         }
         #endregion

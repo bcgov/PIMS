@@ -3,49 +3,70 @@ using System;
 namespace Pims.Dal.Entities
 {
     /// <summary>
-    /// ProjectStatusTransition class, provides a way to manage valid project status transitions.
+    /// ProjectStatusTransition class, provides a way to manage workflow project status transitions within the solution.
     /// </summary>
     public class ProjectStatusTransition : BaseEntity
     {
         #region Properties
         /// <summary>
-        /// get/set - Primary key and foreign key to the project status.
+        /// get/set - Foreign key to the workflow project status this transitions is from.
         /// </summary>
-        public int StatusId { get; set; }
+        public int FromWorkflowId { get; set; }
 
         /// <summary>
-        /// get/set - The owning project status.
+        /// get/set - Foreign key to the workflow project status this transition is from.
         /// </summary>
-        public ProjectStatus Status { get; set; }
+        public int FromStatusId { get; set; }
 
         /// <summary>
-        /// get/set - Primary key and foreign key to the valid project status this transition allows.
+        /// get/set - The workflow project status this transition is from.
+        /// </summary>
+        public WorkflowProjectStatus FromWorkflowStatus { get; set; }
+
+        /// <summary>
+        /// get/set - The action name that describes the transition.
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// get/set - Foreign key to the workflow project status this goes to.
+        /// </summary>
+        public int ToWorkflowId { get; set; }
+
+        /// <summary>
+        /// get/set - Foreign key to the workflow project status this goes to.
         /// </summary>
         public int ToStatusId { get; set; }
 
         /// <summary>
-        /// get/set - The project status this transition allows.
+        /// get/set - The workflow project status this goes to.
         /// </summary>
-        public ProjectStatus ToStatus { get; set; }
+        public WorkflowProjectStatus ToWorkflowStatus { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Create a new instance of a ProjectStatusTransition class.
+        /// Creates a new instance of a ProjectStatusTransition object.
         /// </summary>
         public ProjectStatusTransition() { }
 
         /// <summary>
-        /// Create a new instance of a ProjectStatusTransition class, initiailizes with specified arguments.
+        /// Creates a new instance of a ProjectStatusTransition object, initializes it with specified arguments.
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="toStatus"></param>
-        public ProjectStatusTransition(ProjectStatus status, ProjectStatus toStatus)
+        /// <param name="from"></param>
+        /// <param name="action"></param>
+        /// <param name="to"></param>
+        public ProjectStatusTransition(WorkflowProjectStatus from, string action, WorkflowProjectStatus to)
         {
-            this.Status = status;
-            this.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
-            this.ToStatus = toStatus;
-            this.ToStatusId = toStatus?.Id ?? throw new ArgumentNullException(nameof(toStatus));
+            this.FromWorkflowStatus = from ?? throw new ArgumentNullException(nameof(from));
+            this.FromWorkflowId = from.WorkflowId;
+            this.FromStatusId = from.StatusId;
+            from.ToStatus.Add(this);
+            this.Action = action;
+            this.ToWorkflowStatus = to ?? throw new ArgumentNullException(nameof(to));
+            this.ToWorkflowId = to.WorkflowId;
+            this.ToStatusId = to.StatusId;
+            to.FromStatus.Add(this);
         }
         #endregion
     }

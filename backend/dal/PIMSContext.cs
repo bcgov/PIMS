@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Pims.Core.Extensions;
 using Pims.Dal.Configuration;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
@@ -42,6 +43,7 @@ namespace Pims.Dal
         public DbSet<WorkflowProjectStatus> WorkflowProjectStatus { get; set; }
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public DbSet<ProjectStatusNotification> ProjectStatusNotifications { get; set; }
+        public DbSet<ProjectStatusTransition> ProjectStatusTransitions { get; set; }
         public DbSet<ProjectAgencyResponse> ProjectAgencyResponses { get; set; }
         public DbSet<NotificationQueue> NotificationQueue { get; set; }
         public DbSet<Province> Provinces { get; set; }

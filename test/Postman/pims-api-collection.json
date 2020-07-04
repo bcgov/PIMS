@@ -2308,7 +2308,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/geocoder/addresses?address=949 Tayberry",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/geocoder/addresses?address=Blueberry bc",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2316,7 +2316,7 @@
                           "query": [
                             {
                               "key": "address",
-                              "value": "949 Tayberry"
+                              "value": "Blueberry bc"
                             }
                           ]
                         }
@@ -2744,6 +2744,157 @@
                   ],
                   "protocolProfileBehavior": {},
                   "_postman_isSubFolder": true
+                },
+                {
+                  "name": "project",
+                  "item": [
+                    {
+                      "name": "project - csv",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "text/csv",
+                            "type": "text"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/reports/projects?all=true",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "reports", "projects"],
+                          "query": [
+                            {
+                              "key": "all",
+                              "value": "true"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "project -csv",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "text/csv",
+                            "type": "text"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n\t\"Page\": 1,\n\t\"Quantity\": 15,\n\t\"MinAssessedValue\": 0,\n\t\"MaxAssessedValue\": 50000,\n\t\"Address\": \"Victoria\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/reports/projects/filter",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "reports", "projects", "filter"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "project - excel",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "type": "text"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/reports/projects?minAssessedValue=1&maxAssessedValue=1",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "reports", "projects"],
+                          "query": [
+                            {
+                              "key": "minAssessedValue",
+                              "value": "1"
+                            },
+                            {
+                              "key": "maxAssessedValue",
+                              "value": "1"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "surplus property list - csv",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "text/csv",
+                            "type": "text"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/reports/projects/surplus/properties/list",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "reports",
+                            "projects",
+                            "surplus",
+                            "properties",
+                            "list"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "surplus property list - excel",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "type": "text"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/reports/projects/surplus/properties/list",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "reports",
+                            "projects",
+                            "surplus",
+                            "properties",
+                            "list"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
                 }
               ],
               "protocolProfileBehavior": {},
@@ -2756,12 +2907,12 @@
                   "name": "workflow",
                   "item": [
                     {
-                      "name": "/projects/workflows/{code}",
+                      "name": "/projects/workflows/{code}/status",
                       "request": {
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/SUBMIT-DISPOSAL",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/ASSESS-DISPOSAL/status",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2769,7 +2920,8 @@
                             "api",
                             "projects",
                             "workflows",
-                            "SUBMIT-DISPOSAL"
+                            "ASSESS-DISPOSAL",
+                            "status"
                           ]
                         }
                       },
@@ -2789,45 +2941,61 @@
                             "api",
                             "projects",
                             "workflows",
-                            "ASSESS-DISPOSAL",
+                            "ACCESS-DISPOSAL",
                             "tasks"
                           ]
                         }
                       },
                       "response": []
-                    },
+                    }
+                  ],
+                  "protocolProfileBehavior": {},
+                  "_postman_isSubFolder": true
+                },
+                {
+                  "name": "status",
+                  "item": [
                     {
-                      "name": "/projects/workflows/tasks/{statusCode}",
+                      "name": "/projects/status",
                       "request": {
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/tasks/SU",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/status",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": [
-                            "api",
-                            "projects",
-                            "workflows",
-                            "tasks",
-                            "SU"
-                          ]
+                          "path": ["api", "projects", "status"]
                         }
                       },
                       "response": []
                     },
                     {
-                      "name": "/projects/workflows/tasks/{statusId}",
+                      "name": "/projects/status/{code}/tasks",
                       "request": {
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/tasks/0",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/status/DR-D/tasks",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "projects", "workflows", "tasks", "0"]
+                          "path": ["api", "projects", "status", "DR-D", "tasks"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/status/{id}/tasks",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/status/4/tasks",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "projects", "status", "4", "tasks"]
                         }
                       },
                       "response": []
@@ -2839,6 +3007,55 @@
                 {
                   "name": "dispose",
                   "item": [
+                    {
+                      "name": "example",
+                      "item": [
+                        {
+                          "name": "/projects/disposal/{projectNumber}",
+                          "event": [
+                            {
+                              "listen": "test",
+                              "script": {
+                                "id": "678e05f1-1a97-42cc-befe-564c5baf7c56",
+                                "exec": [
+                                  "var jsonData = JSON.parse(responseBody);\r",
+                                  "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                                ],
+                                "type": "text/javascript"
+                              }
+                            }
+                          ],
+                          "request": {
+                            "method": "PUT",
+                            "header": [],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\r\n  \"id\": 10,\r\n  \"projectNumber\": \"DRAFT-00010\",\r\n  \"name\": \"PIMS Application\",\r\n  \"fiscalYear\": 2021,\r\n  \"statusId\": 2,\r\n  \"statusCode\": \"DR-P\",\r\n  \"status\": {\r\n    \"description\": \"Add properties to the project.\",\r\n    \"route\": \"/projects/properties\",\r\n    \"isActive\": true,\r\n    \"tasks\": [\r\n      \r\n    ],\r\n    \"code\": \"DR-P\",\r\n    \"id\": 2,\r\n    \"name\": \"Select Properties\",\r\n    \"isDisabled\": false,\r\n    \"sortOrder\": 1,\r\n    \"type\": \"ProjectStatus\",\r\n    \"createdOn\": \"2020-06-26T21:57:55.76\",\r\n    \"rowVersion\": \"AAAAAAAACUQ=\"\r\n  },\r\n  \"tierLevelId\": 1,\r\n  \"tierLevel\": \"Tier 1\",\r\n  \"description\": \"\",\r\n  \"note\": \"\",\r\n  \"agencyId\": 4,\r\n  \"agency\": \"EDUC\",\r\n  \"exemptionRequested\": false,\r\n  \"netBook\": 0,\r\n  \"estimated\": 0,\r\n  \"assessed\": 0,\r\n  \"properties\": [\r\n    {\r\n      \"projectNumber\": \"DRAFT-00010\",\r\n      \"propertyType\": \"Land\",\r\n      \"parcelId\": 1417,\r\n      \"parcel\": {\r\n        \"id\": 1417,\r\n        \"parcelId\": 1417,\r\n        \"pid\": \"005-000-003\",\r\n        \"projectNumber\": \"\",\r\n        \"latitude\": 49.2527948,\r\n        \"longitude\": -126.0994881,\r\n        \"statusId\": 1,\r\n        \"propertyStatus\": \"Active\",\r\n        \"classificationId\": 0,\r\n        \"description\": \"Site-CONTINUING EDUCATION\",\r\n        \"address\": {\r\n          \"id\": 3568,\r\n          \"line1\": \"Unknown, Ahousaht\",\r\n          \"postal\": \"\",\r\n          \"provinceId\": \"British Columbia\"\r\n        },\r\n        \"agency\": \"Ministry of Education\",\r\n        \"subAgency\": \"Capital Planning Branch\",\r\n        \"agencyId\": 44,\r\n        \"isSensitive\": false,\r\n        \"landArea\": 0,\r\n        \"landLegalDescription\": \"to be determined\",\r\n        \"buildings\": [\r\n          \r\n        ],\r\n        \"evaluations\": [\r\n          {\r\n            \"parcelId\": 1417,\r\n            \"value\": 100,\r\n            \"date\": \"2018-01-01T00:00:00\",\r\n            \"key\": \"Assessed\"\r\n          },\r\n          {\r\n            \"parcelId\": 1417,\r\n            \"value\": 0,\r\n            \"date\": \"2020-06-29T14:59:19.228Z\",\r\n            \"key\": \"Appraised\"\r\n          }\r\n        ],\r\n        \"fiscals\": [\r\n          {\r\n            \"parcelId\": 1417,\r\n            \"value\": 0,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"NetBook\"\r\n          },\r\n          {\r\n            \"parcelId\": 1417,\r\n            \"value\": 0,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"Estimated\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"projectNumber\": \"DRAFT-00010\",\r\n      \"propertyType\": \"Land\",\r\n      \"parcelId\": 1418,\r\n      \"parcel\": {\r\n        \"id\": 1418,\r\n        \"parcelId\": 1418,\r\n        \"pid\": \"005-000-004\",\r\n        \"projectNumber\": \"\",\r\n        \"latitude\": 49.5133582,\r\n        \"longitude\": -115.7582117,\r\n        \"statusId\": 1,\r\n        \"propertyStatus\": \"Active\",\r\n        \"classificationId\": 0,\r\n        \"description\": \"Site-CRANBROOK ST. ALT\",\r\n        \"address\": {\r\n          \"id\": 3570,\r\n          \"line1\": \"25-17th Ave. N., Cranbrook\",\r\n          \"postal\": \"\",\r\n          \"provinceId\": \"British Columbia\"\r\n        },\r\n        \"agency\": \"Ministry of Education\",\r\n        \"subAgency\": \"Capital Planning Branch\",\r\n        \"agencyId\": 44,\r\n        \"isSensitive\": false,\r\n        \"landArea\": 0.15,\r\n        \"landLegalDescription\": \"(PID: 010-598-782) LOT 1, PLAN 8743, KLD\",\r\n        \"buildings\": [\r\n          \r\n        ],\r\n        \"evaluations\": [\r\n          {\r\n            \"parcelId\": 1418,\r\n            \"value\": 100,\r\n            \"date\": \"2018-01-01T00:00:00\",\r\n            \"key\": \"Assessed\"\r\n          },\r\n          {\r\n            \"parcelId\": 1418,\r\n            \"value\": 0,\r\n            \"date\": \"2020-06-29T14:59:19.230Z\",\r\n            \"key\": \"Appraised\"\r\n          }\r\n        ],\r\n        \"fiscals\": [\r\n          {\r\n            \"parcelId\": 1418,\r\n            \"value\": 0,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"NetBook\"\r\n          },\r\n          {\r\n            \"parcelId\": 1418,\r\n            \"value\": 0,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"Estimated\"\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  ],\r\n  \"tasks\": [\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 1,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Surplus Declaration & Readiness Checklist completed and sent\",\r\n      \"description\": \"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 4,\r\n      \"statusCode\": \"DR-D\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750684\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098195\",\r\n      \"rowVersion\": \"AAAAAAAAhhQ=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 2,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Triple Bottom Line completed and sent\",\r\n      \"description\": \"Triple Bottom Line document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 4,\r\n      \"statusCode\": \"DR-D\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750692\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098197\",\r\n      \"rowVersion\": \"AAAAAAAAhhU=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 3,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Review completed\",\r\n      \"description\": \"Project property information has been reviewed\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"statusId\": 7,\r\n      \"statusCode\": \"AS-I\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750693\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098198\",\r\n      \"rowVersion\": \"AAAAAAAAhhY=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 4,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Documents received and review completed\",\r\n      \"description\": \"Documents have been received, reviewed and approved.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"statusId\": 9,\r\n      \"statusCode\": \"AS-D\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750694\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098199\",\r\n      \"rowVersion\": \"AAAAAAAAhhc=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 5,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal ordered\",\r\n      \"description\": \"An appraisal has been ordered.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 10,\r\n      \"statusCode\": \"AS-AP\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750696\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.90982\",\r\n      \"rowVersion\": \"AAAAAAAAhhg=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 6,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal received\",\r\n      \"description\": \"An appraisal has been received.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 10,\r\n      \"statusCode\": \"AS-AP\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750698\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098202\",\r\n      \"rowVersion\": \"AAAAAAAAhhk=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 7,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal completed\",\r\n      \"description\": \"An appraisal has been reviewed and completed.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 3,\r\n      \"statusId\": 10,\r\n      \"statusCode\": \"AS-AP\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750699\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098204\",\r\n      \"rowVersion\": \"AAAAAAAAhho=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 8,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Strength of Claim\",\r\n      \"description\": \"First Nation Strength of Claim has been created.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 11,\r\n      \"statusCode\": \"AS-FNC\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750701\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098205\",\r\n      \"rowVersion\": \"AAAAAAAAhhs=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 9,\r\n      \"isCompleted\": false,\r\n      \"name\": \"In consultation\",\r\n      \"description\": \"First Nation consulation is in progress.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 11,\r\n      \"statusCode\": \"AS-FNC\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750702\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098206\",\r\n      \"rowVersion\": \"AAAAAAAAhhw=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 10,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Agreement received\",\r\n      \"description\": \"First Nation agreement has been received.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 3,\r\n      \"statusId\": 11,\r\n      \"statusCode\": \"AS-FNC\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750704\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098207\",\r\n      \"rowVersion\": \"AAAAAAAAhh0=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 11,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Notification to confirm exemption request sent to agency ADM\",\r\n      \"description\": \"ADM has been notified of request for exemption\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 12,\r\n      \"statusCode\": \"AS-EXP\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750705\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.9098209\",\r\n      \"rowVersion\": \"AAAAAAAAhh4=\"\r\n    },\r\n    {\r\n      \"projectId\": \"10\",\r\n      \"taskId\": 12,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Confirmation has been received from agency ADM\",\r\n      \"description\": \"ADM has confirmed request for exemption\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 12,\r\n      \"statusCode\": \"AS-EXP\",\r\n      \"createdOn\": \"2020-06-29T14:24:11.2750707\",\r\n      \"updatedOn\": \"2020-06-29T14:35:27.909821\",\r\n      \"rowVersion\": \"AAAAAAAAhh8=\"\r\n    }\r\n  ],\r\n  \"projectAgencyResponses\": [\r\n    \r\n  ],\r\n  \"createdOn\": \"2020-06-29T14:24:11.2750679\",\r\n  \"updatedOn\": \"2020-06-29T14:35:27.9098185\",\r\n  \"rowVersion\": \"AAAAAAAAhiA=\"\r\n}",
+                              "options": {
+                                "raw": {
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/DRAFT-00010",
+                              "protocol": "{{scheme}}",
+                              "host": ["{{host}}"],
+                              "port": "{{port}}",
+                              "path": [
+                                "api",
+                                "projects",
+                                "disposal",
+                                "DRAFT-00010"
+                              ]
+                            }
+                          },
+                          "response": []
+                        }
+                      ],
+                      "protocolProfileBehavior": {},
+                      "_postman_isSubFolder": true
+                    },
                     {
                       "name": "/projects/disposal/workflow/{workflowCode}/{statusCode}",
                       "event": [
@@ -2902,11 +3119,11 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/DRAFT-00001",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/DRAFT-00010",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "projects", "disposal", "DRAFT-00001"]
+                          "path": ["api", "projects", "disposal", "DRAFT-00010"]
                         }
                       },
                       "response": []
@@ -3182,6 +3399,87 @@
                   "name": "template",
                   "item": [
                     {
+                      "name": "example",
+                      "item": [
+                        {
+                          "name": "/notifications/templates - draft",
+                          "event": [
+                            {
+                              "listen": "test",
+                              "script": {
+                                "id": "99e62df3-924f-48b4-99cc-203ce83a4b98",
+                                "exec": [
+                                  "var jsonData = JSON.parse(responseBody);\r",
+                                  "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                                ],
+                                "type": "text/javascript"
+                              }
+                            }
+                          ],
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\r\n    \"Name\": \"Test Email #4\",\r\n    \"Description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"To\": \"jeremy.foster@fosol.ca\",\r\n    \"Audience\": \"Default\",\r\n    \"Encoding\": \"utf-8\",\r\n    \"BodyType\": \"html\",\r\n    \"Priority\": \"normal\",\r\n    \"Subject\": \"Congratulations on creating a new disposal project \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"Body\": \"<html><head><title>Disposal Project</title></head><body><p>You have successfully created a disposal project.</p><p>@Model.Project.ProjectNumber</br>@Model.Project.Name</p></body></html>\",\r\n    \"IsDisabled\": false,\r\n    \"Tag\": \"test\",\r\n    \"Status\": [\r\n        {\r\n            \"ToStatusId\": 1,\r\n            \"Priority\": \"normal\",\r\n            \"Delay\": \"None\"\r\n        }\r\n    ]\r\n}",
+                              "options": {
+                                "raw": {
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates",
+                              "protocol": "{{scheme}}",
+                              "host": ["{{host}}"],
+                              "port": "{{port}}",
+                              "path": ["api", "notifications", "templates"]
+                            }
+                          },
+                          "response": []
+                        },
+                        {
+                          "name": "/notifications/templates - submit",
+                          "event": [
+                            {
+                              "listen": "test",
+                              "script": {
+                                "id": "4c22a4a2-d4da-4de1-85a1-d86983bfdd61",
+                                "exec": [
+                                  "var jsonData = JSON.parse(responseBody);\r",
+                                  "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                                ],
+                                "type": "text/javascript"
+                              }
+                            }
+                          ],
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\r\n    \"Name\": \"SPP Submitted\",\r\n    \"Description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"To\": \"jeremy.foster@fosol.ca\",\r\n    \"Audience\": \"Default\",\r\n    \"Encoding\": \"utf-8\",\r\n    \"BodyType\": \"html\",\r\n    \"Priority\": \"normal\",\r\n    \"Subject\": \"Congratulations on submitting properties to the Surplus Property Program - \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"Body\": \"<html><head><title>Disposal Project</title></head><body><p>Your project will be reviewed to determine whether it can be included in the Surplus Property Program (SPP).</p><p>@Model.Project.ProjectNumber</br>@Model.Project.Name</p></body></html>\",\r\n    \"IsDisabled\": false,\r\n    \"Tag\": \"test\",\r\n    \"Status\": [\r\n        {\r\n            \"FromStatusId\": 6,\r\n            \"ToStatusId\": 7,\r\n            \"Priority\": \"normal\",\r\n            \"Delay\": \"None\"\r\n        }\r\n    ]\r\n}",
+                              "options": {
+                                "raw": {
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates",
+                              "protocol": "{{scheme}}",
+                              "host": ["{{host}}"],
+                              "port": "{{port}}",
+                              "path": ["api", "notifications", "templates"]
+                            }
+                          },
+                          "response": []
+                        }
+                      ],
+                      "protocolProfileBehavior": {},
+                      "_postman_isSubFolder": true
+                    },
+                    {
                       "name": "/notifications/templates",
                       "event": [
                         {
@@ -3254,7 +3552,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\r\n    \"Name\": \"Test Email #4\",\r\n    \"Description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"To\": \"jeremy.foster@fosol.ca\",\r\n    \"Audience\": \"Default\",\r\n    \"Encoding\": \"utf-8\",\r\n    \"BodyType\": \"html\",\r\n    \"Priority\": \"normal\",\r\n    \"Subject\": \"Congratulations on creating a new disposal project \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"Body\": \"<html><head><title>Disposal Project</title></head><body>You have successfully created a disposal project. @Model.Project.ProjectNumber</br>@Model.Project.Name</body></html>\",\r\n    \"IsDisabled\": false,\r\n    \"Tag\": \"test\",\r\n    \"Status\": [\r\n        {\r\n            \"ToStatusId\": 1,\r\n            \"Priority\": \"normal\",\r\n            \"Delay\": \"None\"\r\n        }\r\n    ]\r\n}",
+                          "raw": "{\r\n    \"Name\": \"Test Email #4\",\r\n    \"Description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"To\": \"jeremy.foster@fosol.ca\",\r\n    \"Audience\": \"Default\",\r\n    \"Encoding\": \"utf-8\",\r\n    \"BodyType\": \"html\",\r\n    \"Priority\": \"normal\",\r\n    \"Subject\": \"Congratulations on creating a new disposal project \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"Body\": \"<html><head><title>Disposal Project</title></head><body><p>You have successfully created a disposal project.</p><p>@Model.Project.ProjectNumber</br>@Model.Project.Name</p></body></html>\",\r\n    \"IsDisabled\": false,\r\n    \"Tag\": \"test\",\r\n    \"Status\": [\r\n        {\r\n            \"ToStatusId\": 1,\r\n            \"Priority\": \"normal\",\r\n            \"Delay\": \"None\"\r\n        }\r\n    ]\r\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3328,7 +3626,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Test Email #2\",\r\n    \"description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"to\": \"jeremy.foster@fosol.ca\",\r\n    \"audience\": \"Default\",\r\n    \"encoding\": \"utf-8\",\r\n    \"bodyType\": \"html\",\r\n    \"priority\": \"Normal\",\r\n    \"subject\": \"This is a test email\",\r\n    \"body\": \"<html><body>This is a test</body></html>\",\r\n    \"isDisabled\": false,\r\n    \"tag\": \"test\",\r\n    \"status\": [],\r\n    \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"SPP Submitted\",\r\n    \"description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"to\": \"jeremy.foster@fosol.ca\",\r\n    \"audience\": \"Default\",\r\n    \"encoding\": \"utf-8\",\r\n    \"bodyType\": \"html\",\r\n    \"priority\": \"normal\",\r\n    \"subject\": \"Congratulations on submitting properties to the Surplus Property Program - \\\"@Model.Project.ProjectNumber\\\"\",\r\n    \"body\": \"<html><head><title>Disposal Project</title></head><body><p>Your project will be reviewed to determine whether it can be included in the Surplus Property Program (SPP).</p><p>@Model.Project.ProjectNumber</br>@Model.Project.Name</p></body></html>\",\r\n    \"isDisabled\": false,\r\n    \"tag\": \"test\",\r\n    \"status\": [\r\n        {\r\n            \"id\": 2,\r\n            \"toStatusId\": 7,\r\n            \"priority\": \"Normal\",\r\n            \"delay\": \"None\",\r\n            \"delayDays\": 0\r\n        }\r\n    ],\r\n    \"createdOn\": \"2020-06-29T19:45:00.3438303\",\r\n    \"rowVersion\": \"AAAAAAAAh68=\"\r\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3336,11 +3634,11 @@
                           }
                         },
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/4",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "templates", "1"]
+                          "path": ["api", "notifications", "templates", "4"]
                         }
                       },
                       "response": []
@@ -3433,11 +3731,11 @@
                         "method": "PUT",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/1",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/12",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "queue", "1"]
+                          "path": ["api", "notifications", "queue", "12"]
                         }
                       },
                       "response": []

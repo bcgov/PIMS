@@ -78,6 +78,7 @@ namespace Pims.Core.Test
             helper.AddSingleton(user);
             var options = new DbContextOptionsBuilder<PimsContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
+                .EnableSensitiveDataLogging()
                 .ConfigureWarnings(m => m.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
 
@@ -126,7 +127,6 @@ namespace Pims.Core.Test
             context.AddRange(EntityHelper.CreateDefaultBuildingOccupantTypes());
             context.AddRange(EntityHelper.CreateDefaultAgencies());
             context.AddRange(EntityHelper.CreateDefaultTierLevels());
-            context.AddRange(EntityHelper.CreateDefaultProjectStatus());
             context.SaveChanges();
             return context;
         }

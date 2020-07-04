@@ -7,7 +7,6 @@ using Model = Pims.Api.Areas.Admin.Models.Parcel;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Policies;
 using Pims.Core.Helpers;
-using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,6 +16,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Dal.Entities.Models;
 using Pims.Api.Helpers.Extensions;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {

@@ -35,6 +35,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public int ActualFiscalYear { get; set; }
 
         /// <summary>
+        /// get/set - The foreign key to the workflow.
+        /// </summary>
+        public int WorkflowId { get; set; }
+
+        /// <summary>
+        /// get/set - The code of the workflow.
+        /// </summary>
+        public string WorkflowCode { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the project status.
         /// </summary>
         public int StatusId { get; set; }

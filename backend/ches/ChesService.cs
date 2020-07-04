@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using Pims.Core.Exceptions;
 using Pims.Core.Http.Models;
+using System.Security.Claims;
+using Pims.Core.Extensions;
 
 namespace Pims.Ches
 {
@@ -19,6 +21,7 @@ namespace Pims.Ches
     public class ChesService : IChesService
     {
         #region Variables
+        private readonly ClaimsPrincipal _user;
         private TokenModel _token = null;
         private readonly JwtSecurityTokenHandler _tokenHandler;
         #endregion
@@ -33,11 +36,13 @@ namespace Pims.Ches
         /// Creates a new instance of a ChesService, initializes with specified arguments.
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="user"></param>
         /// <param name="client"></param>
         /// <param name="tokenHandler"></param>
-        public ChesService(IOptions<ChesOptions> options, IHttpRequestClient client, JwtSecurityTokenHandler tokenHandler)
+        public ChesService(IOptions<ChesOptions> options, ClaimsPrincipal user, IHttpRequestClient client, JwtSecurityTokenHandler tokenHandler)
         {
             this.Options = options.Value;
+            _user = user;
             this.Client = client;
             _tokenHandler = tokenHandler;
         }
@@ -167,6 +172,11 @@ namespace Pims.Ches
             if (email == null) throw new ArgumentNullException(nameof(email));
 
             email.From = this.Options.From ?? email.From;
+
+            if (this.Options.OverrideTo)
+            {
+                email.To = new[] { _user.GetEmail() };
+            }
             return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
         }
 
@@ -180,6 +190,15 @@ namespace Pims.Ches
             if (email == null) throw new ArgumentNullException(nameof(email));
 
             email.From = this.Options.From ?? email.From;
+
+            if (this.Options.OverrideTo)
+            {
+                var address = _user.GetEmail();
+                email.Contexts.ForEach(c =>
+                {
+                    c.To = new[] { address };
+                });
+            }
             return await SendAsync<EmailResponseModel, IEmailMerge>("/emailMerge", HttpMethod.Post, email);
         }
 

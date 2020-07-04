@@ -35,7 +35,7 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            var status = EntityHelper.CreateProjectStatuses(0, 6);
+            var status = EntityHelper.CreateProjectStatus(0, 6);
             var workflow = EntityHelper.CreateWorkflow(0, "Submit", "SUBMIT", status);
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
 

@@ -30,6 +30,12 @@ namespace Pims.Ches.Configuration
         /// get/set - The API user password.
         /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// get/set - Send emails only to the currently logged in user.
+        /// This is helpful to stop sending emails to agencies when doing testing.
+        /// </summary>
+        public bool OverrideTo { get; set; }
         #endregion
     }
 }
