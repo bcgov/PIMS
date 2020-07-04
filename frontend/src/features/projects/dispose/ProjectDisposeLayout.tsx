@@ -1,33 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import './ProjectDisposeView.scss';
 import { Container, Spinner } from 'react-bootstrap';
 import { Route, match as Match, useHistory, Redirect, Switch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
+import { FormikValues } from 'formik';
+import queryString from 'query-string';
 import {
-  ProjectWorkflowComponent,
-  projectWorkflowComponents,
-  useStepper,
-  StepActions,
-  IStatus,
-  clearProject,
+  SresManual,
+  ReviewWorkflowStatus,
+  updateWorkflowStatus,
   IProject,
   useStepForm,
-  SelectProjectPropertiesPage,
-  ApprovalStep,
-  GreTransferStep,
-} from '.';
-import { FormikValues } from 'formik';
-import GeneratedDisposeStepper from './components/GeneratedDisposeStepper';
-import SresManual from './components/SresManual';
-import ReviewApproveStep from './steps/ReviewApproveStep';
-import { updateWorkflowStatus } from 'features/projects/dispose/projectsActionCreator';
-import queryString from 'query-string';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from './interfaces';
-import ProjectSummaryView from './ProjectSummaryView';
-import PrivateRoute from 'utils/PrivateRoute';
-import Claims from 'constants/claims';
+  IStatus,
+  DisposeWorkflowStatus,
+  clearProject,
+  ProjectWorkflowComponent,
+} from '../common';
+import { GeneratedDisposeStepper, useStepper, projectWorkflowComponents, StepActions } from '.';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -56,15 +46,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   ) => {
     //if we are at the most recent incomplete step, update status and project.
     if (project?.statusId === currentStatus.id) {
-      if (
-        nextStepCode === ReviewWorkflowStatus.PropertyReview ||
-        nextStepCode === ReviewWorkflowStatus.ExemptionReview
-      ) {
-        history.push('/project/completed');
-      }
       return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any)
         .then((project: IProject) => {
-          goToNextStep(project);
+          if (goToNextStep(project) === undefined) {
+            history.push('/project/completed');
+          }
           return project;
         })
         .catch((error: any) => {
@@ -155,35 +141,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
               <Switch>
-                {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
-                <Route
-                  layout={() => null}
-                  path="/dispose/projects/assess/properties/update"
-                  component={SelectProjectPropertiesPage}
-                />
-                <PrivateRoute
-                  layout={(props: any) => <>{props.children}</>}
-                  claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
-                  exact
-                  path="/dispose/projects/assess/properties"
-                  component={() => ReviewApproveStep({ formikRef })}
-                />
-                <Route
-                  path="/dispose/projects/summary"
-                  render={() => <ProjectSummaryView formikRef={formikRef} />}
-                />
-                <PrivateRoute
-                  layout={(props: any) => <>{props.children}</>}
-                  claim={Claims.ADMIN_PROJECTS}
-                  path="/dispose/projects/approved"
-                  component={() => ApprovalStep({ formikRef })}
-                />
-                <PrivateRoute
-                  layout={(props: any) => <>{props.children}</>}
-                  claim={Claims.ADMIN_PROJECTS}
-                  path="/dispose/projects/gretransfer"
-                  component={() => GreTransferStep({ formikRef })}
-                />
+                )}
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}
@@ -202,15 +160,13 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   component={() => <Redirect to="/page-not-found" />}
                 />
               </Switch>
-              {currentStatus !== undefined && ( // TODO: This isn't an ideal way to hide these buttons.
-                <StepActions
-                  getNextStep={getNextStep}
-                  onSave={() => onSave(formikRef)}
-                  onNext={onNext}
-                  saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
-                  isFetching={!noFetchingProjectRequests}
-                />
-              )}
+              <StepActions
+                getNextStep={getNextStep}
+                onSave={() => onSave(formikRef)}
+                onNext={onNext}
+                saveDisabled={currentStatus?.code === DisposeWorkflowStatus.Approval}
+                isFetching={!noFetchingProjectRequests}
+              />
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>

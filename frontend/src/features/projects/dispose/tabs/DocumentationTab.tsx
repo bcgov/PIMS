@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
+import { useStepper } from '../../dispose';
+import _ from 'lodash';
 import {
-  FirstNationsCheckListForm,
   DisposeWorkflowStatus,
-  useStepper,
   DocumentationForm,
   AppraisalCheckListForm,
+  FirstNationsCheckListForm,
   ProjectNotes,
-} from '..';
-import _ from 'lodash';
-import { PublicNotes, PrivateNotes } from '../components/ProjectNotes';
+  PublicNotes,
+  PrivateNotes,
+} from '../../common';
 
 interface IDocumentationTabProps {
   isReadOnly?: boolean;

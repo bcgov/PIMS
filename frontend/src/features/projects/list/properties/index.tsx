@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { columns } from './columns';
 import { Table } from 'components/Table';
-import { IProperty } from '../../dispose';
+import { IProperty } from '../../common';
 
 interface IProps {
   data: IProperty[];

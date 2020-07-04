@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import Stepper from 'components/common/Stepper';
-import { IStatus, useStepper } from '..';
+import { useStepper } from '..';
+import { IStatus } from '../../common';
 
 interface GeneratedDisposeStepperProps {
   activeStep: number;

@@ -1,6 +1,4 @@
 import {
-  DisposeWorkflowStatus,
-  ProjectWorkflowComponent,
   ProjectDraftStep,
   SelectProjectPropertiesStep,
   UpdateInfoStep,
@@ -9,6 +7,7 @@ import {
   ReviewProjectStep,
 } from '.';
 import React from 'react';
+import { ProjectWorkflowComponent, DisposeWorkflowStatus } from '../common';
 
 /**
  * TODO: re-evaluate this approach. It may be cleaner/simpler to just hardcode these components to their respective routes.

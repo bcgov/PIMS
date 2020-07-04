@@ -1,4 +1,4 @@
-import { IProperty } from '../dispose';
+import { IProperty } from '../common';
 
 /**
  * IProject interface represents the model used for searching projects.

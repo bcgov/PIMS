@@ -11,12 +11,12 @@ import userDetailReducer from './userDetailReducer';
 import jwtSlice from './JwtSlice';
 import keycloakReadySlice from './keycloakReadySlice';
 import mapViewZoomSlice from './mapViewZoomSlice';
-import projectWorkflowSlice from 'features/projects/dispose/slices/projectWorkflowSlice';
+import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
 import { ProjectReducers } from 'constants/reducerTypes';
-import projectSlice from 'features/projects/dispose/slices/projectSlice';
-import projectTasksSlice from 'features/projects/dispose/slices/projectTasksSlice';
-import ProjectWorkflowTasksSlice from 'features/projects/dispose/slices/projectWorkflowTasksSlice';
-import projectApprovalTabSlice from 'features/projects/dispose/slices/projectApprovalTabSlice';
+import projectSlice from 'features/projects/common/slices/projectSlice';
+import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
+import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
+import projectApprovalTabSlice from 'features/projects/erp/slices/projectApprovalTabSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,

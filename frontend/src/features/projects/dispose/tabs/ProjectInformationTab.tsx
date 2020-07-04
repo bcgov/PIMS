@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import { useStepper, ProjectNotes, ProjectDraftForm, UpdateInfoForm } from '..';
-import { PublicNotes, PrivateNotes } from '../components/ProjectNotes';
+import { ProjectNotes, ProjectDraftForm, UpdateInfoForm, useProject } from '../../common';
+import { PublicNotes, PrivateNotes } from '../../common/components/ProjectNotes';
 
 interface IProjectInformationTabProps {
   isReadOnly?: boolean;
@@ -10,7 +10,7 @@ interface IProjectInformationTabProps {
 const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps> = ({
   isReadOnly,
 }: IProjectInformationTabProps) => {
-  const { goToDisposePath } = useStepper();
+  const { goToDisposePath } = useProject();
   return (
     <Container fluid>
       <ProjectDraftForm isReadOnly={isReadOnly} title="Project Property Information" />

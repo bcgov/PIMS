@@ -1,8 +1,13 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjectTasks, fetchProjectWorkflow } from '../projectsActionCreator';
 import { RootState } from 'reducers/rootReducer';
-import { IProjectWrapper, initialValues, IStatus } from '..';
+import {
+  IProjectWrapper,
+  initialValues,
+  IStatus,
+  fetchProjectTasks,
+  fetchProjectWorkflow,
+} from '../../common';
 
 export const StepperContext = createContext({} as any);
 

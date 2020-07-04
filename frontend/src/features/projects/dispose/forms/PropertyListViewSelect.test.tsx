@@ -10,9 +10,9 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as API from 'constants/API';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { IFilterBarState } from '../components/FilterBar';
+import { IFilterBarState } from '../../common/components/FilterBar';
 import { useFormikContext, getIn } from 'formik';
-import { PropertyListViewSelect } from '../components/PropertyListViewSelect';
+import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
 import { useKeycloak } from '@react-keycloak/web';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 

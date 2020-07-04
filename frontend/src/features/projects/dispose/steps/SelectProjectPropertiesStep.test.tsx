@@ -13,7 +13,7 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
 const store = mockStore({
-  [reducerTypes.ProjectReducers.PROJECT]: {},
+  [reducerTypes.ProjectReducers.PROJECT]: { project: {} },
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.NETWORK]: {
     [ProjectActions.GET_PROJECT]: {},

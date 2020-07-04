@@ -20,7 +20,7 @@ import { Input } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
-import { ReviewWorkflowStatus } from '../dispose';
+import { ReviewWorkflowStatus } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 
@@ -168,20 +168,11 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
-    if (
-      (row.statusCode === ReviewWorkflowStatus.PropertyReview ||
-        row.statusCode === ReviewWorkflowStatus.ExemptionReview) &&
-      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
-    ) {
-      history.push(`/dispose/projects/assess/properties?projectNumber=${row.projectNumber}`);
-    } else if (ReviewWorkflowStatuses.includes(row.statusCode)) {
-      if (
-        keycloak.hasClaim(Claims.ADMIN_PROJECTS) &&
-        row.statusCode !== ReviewWorkflowStatus.Denied
-      ) {
-        history.push(`/dispose/projects/approved?projectNumber=${row.projectNumber}`);
+    if (ReviewWorkflowStatuses.includes(row.statusCode)) {
+      if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
+        history.push(`${row.statusRoute}?projectNumber=${row.projectNumber}`);
       } else {
-        history.push(`/dispose/projects/summary?projectNumber=${row.projectNumber}`);
+        history.push(`/projects/summary?projectNumber=${row.projectNumber}`);
       }
     } else {
       history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
