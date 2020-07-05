@@ -101,7 +101,11 @@ namespace Pims.Tools.Keycloak.Sync.Models
             this.Email = user.Email;
             this.IsDisabled = !user.Enabled;
             this.EmailVerified = user.EmailVerified;
-            this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a => new AgencyModel() { Id = Int32.Parse(a) }).ToArray() : null;
+            this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a => {
+                if (Int32.TryParse(a, out int id))
+                    return new AgencyModel() { Id = id };
+                return null;
+            }).Where(a => a != null).ToList() : null;
         }
         #endregion
     }

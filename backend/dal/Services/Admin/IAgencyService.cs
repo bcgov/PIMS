@@ -9,5 +9,6 @@ namespace Pims.Dal.Services.Admin
     public interface IAgencyService : IBaseService<Agency>
     {
         IEnumerable<Agency> GetAll();
+        Agency Get(int id);
     }
 }

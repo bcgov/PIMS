@@ -41,6 +41,17 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get the agency for the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="KeyNotFoundException">Agency does not exists for the specified 'id'.</exception>
+        /// <returns></returns>
+        public Agency Get(int id)
+        {
+            return this.Context.Agencies.Find(id) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
         /// Updates the specified agency in the datasource.
         /// </summary>
         /// <param name="entity"></param>
