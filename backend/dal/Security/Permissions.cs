@@ -24,11 +24,14 @@ namespace Pims.Dal.Security
         [Display(GroupName = "admin", Name = "admin-roles", Description = "Can administer application roles.")]
         AdminRoles = 4,
 
+        [Display(GroupName = "admin", Name = "admin-agencies", Description = "Can administer application roles.")]
+        AdminAgencies = 5,
+
         [Display(GroupName = "admin", Name = "admin-properties", Description = "Can administer properties.")]
-        AdminProperties = 5,
+        AdminProperties = 6,
 
         [Display(GroupName = "admin", Name = "admin-projects", Description = "Can administer projects.")]
-        AdminProjects = 6,
+        AdminProjects = 7,
 
         [Display(GroupName = "property", Name = "property-view", Description = "Can view properties from inventory.")]
         PropertyView = 10,
