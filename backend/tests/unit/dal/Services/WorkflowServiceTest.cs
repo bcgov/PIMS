@@ -21,7 +21,7 @@ namespace Pims.Dal.Test.Services
             new List<object[]>
             {
                 new object[] { "SUBMIT", 6 },
-                new object[] { "ACCESS", 2 }
+                new object[] { "ASSESS", 2 }
             };
         #endregion
 
@@ -40,10 +40,10 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var submit = EntityHelper.CreateWorkflow(1, "Submit", "SUBMIT", status);
-            var access = EntityHelper.CreateWorkflow(2, "Access", "ACCESS", status.Take(2));
+            var access = EntityHelper.CreateWorkflow(2, "Access", "ASSESS", status.Take(2));
             init.AddAndSaveChanges(submit, access);
 
             var service = helper.CreateService<WorkflowService>(user);

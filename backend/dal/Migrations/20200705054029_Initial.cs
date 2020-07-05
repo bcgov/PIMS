@@ -306,7 +306,7 @@ namespace Pims.Dal.Migrations
                     To = table.Column<string>(maxLength: 500, nullable: true),
                     Cc = table.Column<string>(maxLength: 500, nullable: true),
                     Bcc = table.Column<string>(maxLength: 500, nullable: true),
-                    Audience = table.Column<int>(nullable: false),
+                    Audience = table.Column<string>(maxLength: 50, nullable: false),
                     Encoding = table.Column<string>(maxLength: 50, nullable: false),
                     BodyType = table.Column<string>(maxLength: 50, nullable: false),
                     Priority = table.Column<string>(maxLength: 50, nullable: false),
@@ -380,6 +380,7 @@ namespace Pims.Dal.Migrations
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     IsMilestone = table.Column<bool>(nullable: false, defaultValue: false),
                     IsTerminal = table.Column<bool>(nullable: false, defaultValue: false),
+                    ValidateTasks = table.Column<bool>(nullable: false),
                     Route = table.Column<string>(maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -758,47 +759,6 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectStatusTransitions",
-                columns: table => new
-                {
-                    StatusId = table.Column<int>(nullable: false),
-                    ToStatusId = table.Column<int>(nullable: false),
-                    CreatedById = table.Column<Guid>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    UpdatedById = table.Column<Guid>(nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectStatusTransitions", x => new { x.StatusId, x.ToStatusId });
-                    table.ForeignKey(
-                        name: "FK_ProjectStatusTransitions_Users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectStatusTransitions_ProjectStatus_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "ProjectStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectStatusTransitions_ProjectStatus_ToStatusId",
-                        column: x => x.ToStatusId,
-                        principalTable: "ProjectStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectStatusTransitions_Users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
                 {
@@ -1021,6 +981,7 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     ProjectNumber = table.Column<string>(maxLength: 25, nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
+                    WorkflowId = table.Column<int>(nullable: true),
                     Manager = table.Column<string>(maxLength: 150, nullable: true),
                     ReportedFiscalYear = table.Column<int>(nullable: false),
                     ActualFiscalYear = table.Column<int>(nullable: false),
@@ -1098,6 +1059,12 @@ namespace Pims.Dal.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Workflows_WorkflowId",
+                        column: x => x.WorkflowId,
+                        principalTable: "Workflows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1111,7 +1078,10 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    IsOptional = table.Column<bool>(nullable: false)
+                    SortOrder = table.Column<int>(nullable: false),
+                    IsOptional = table.Column<bool>(nullable: false),
+                    ProjectStatusId = table.Column<int>(nullable: true),
+                    WorkflowId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1120,6 +1090,12 @@ namespace Pims.Dal.Migrations
                         name: "FK_WorkflowProjectStatus_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkflowProjectStatus_ProjectStatus_ProjectStatusId",
+                        column: x => x.ProjectStatusId,
+                        principalTable: "ProjectStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1140,6 +1116,12 @@ namespace Pims.Dal.Migrations
                         principalTable: "Workflows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkflowProjectStatus_Workflows_WorkflowId1",
+                        column: x => x.WorkflowId1,
+                        principalTable: "Workflows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1356,6 +1338,50 @@ namespace Pims.Dal.Migrations
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectStatusTransitions",
+                columns: table => new
+                {
+                    FromWorkflowId = table.Column<int>(nullable: false),
+                    FromStatusId = table.Column<int>(nullable: false),
+                    ToWorkflowId = table.Column<int>(nullable: false),
+                    ToStatusId = table.Column<int>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedById = table.Column<Guid>(nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Action = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectStatusTransitions", x => new { x.FromWorkflowId, x.FromStatusId, x.ToWorkflowId, x.ToStatusId });
+                    table.ForeignKey(
+                        name: "FK_ProjectStatusTransitions_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatusTransitions_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatusTransitions_WorkflowProjectStatus_FromWorkflowId_FromStatusId",
+                        columns: x => new { x.FromWorkflowId, x.FromStatusId },
+                        principalTable: "WorkflowProjectStatus",
+                        principalColumns: new[] { "WorkflowId", "StatusId" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatusTransitions_WorkflowProjectStatus_ToWorkflowId_ToStatusId",
+                        columns: x => new { x.ToWorkflowId, x.ToStatusId },
+                        principalTable: "WorkflowProjectStatus",
+                        principalColumns: new[] { "WorkflowId", "StatusId" },
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -2251,6 +2277,11 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_WorkflowId",
+                table: "Projects",
+                column: "WorkflowId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_Name_StatusId_TierLevelId_AgencyId",
                 table: "Projects",
                 columns: new[] { "Name", "StatusId", "TierLevelId", "AgencyId" });
@@ -2312,14 +2343,14 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectStatusTransitions_ToStatusId",
-                table: "ProjectStatusTransitions",
-                column: "ToStatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatusTransitions_UpdatedById",
                 table: "ProjectStatusTransitions",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatusTransitions_ToWorkflowId_ToStatusId",
+                table: "ProjectStatusTransitions",
+                columns: new[] { "ToWorkflowId", "ToStatusId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTasks_CreatedById",
@@ -2560,6 +2591,11 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_WorkflowProjectStatus_ProjectStatusId",
+                table: "WorkflowProjectStatus",
+                column: "ProjectStatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WorkflowProjectStatus_StatusId",
                 table: "WorkflowProjectStatus",
                 column: "StatusId");
@@ -2568,6 +2604,11 @@ namespace Pims.Dal.Migrations
                 name: "IX_WorkflowProjectStatus_UpdatedById",
                 table: "WorkflowProjectStatus",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkflowProjectStatus_WorkflowId1",
+                table: "WorkflowProjectStatus",
+                column: "WorkflowId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workflows_Code",
@@ -2653,9 +2694,6 @@ namespace Pims.Dal.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "WorkflowProjectStatus");
-
-            migrationBuilder.DropTable(
                 name: "AccessRequests");
 
             migrationBuilder.DropTable(
@@ -2665,6 +2703,9 @@ namespace Pims.Dal.Migrations
                 name: "Buildings");
 
             migrationBuilder.DropTable(
+                name: "WorkflowProjectStatus");
+
+            migrationBuilder.DropTable(
                 name: "Tasks");
 
             migrationBuilder.DropTable(
@@ -2672,9 +2713,6 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Workflows");
 
             migrationBuilder.DropTable(
                 name: "Projects");
@@ -2699,6 +2737,9 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "TierLevels");
+
+            migrationBuilder.DropTable(
+                name: "Workflows");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

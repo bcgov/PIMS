@@ -15,6 +15,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear)
                 .Map(dest => dest.ActualFiscalYear, src => src.ActualFiscalYear)
+                .Map(dest => dest.WorkflowCode, src => src.Workflow == null ? null : src.Workflow.Code)
                 .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.StatusCode, src => src.Status == null ? null : src.Status.Code)
                 .Map(dest => dest.Status, src => src.Status == null ? null : src.Status.Name)

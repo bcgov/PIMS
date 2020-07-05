@@ -258,18 +258,23 @@ namespace Pims.Dal.Services
 
             if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
 
-            var status = this.Context.ProjectStatus
-                .Include(s => s.Tasks)
-                .FirstOrDefault(s => s.Id == 1) ?? throw new KeyNotFoundException("The default project status could not be found.");
+            var workflow = this.Context.Workflows
+                .Include(w => w.Status)
+                .FirstOrDefault(w => w.Id == 1) ?? throw new KeyNotFoundException("The default workflow could not be found."); // TODO: The default should be based on configuration for a project type.
+
+            // First status from the workflow. // TODO: The workflow should specify the first status, as this could return a random status.
+            var status = workflow.Status.OrderBy(s => s.SortOrder).FirstOrDefault() ?? throw new ConfigurationException($"The workflow '{workflow.Name}' status have not been configured.");
 
             project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
             project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
             project.Agency = agency;
-            project.StatusId = status.Id; // Always start a project as a Draft.
-            project.Status = status;
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
             project.ReportedFiscalYear = project.ReportedFiscalYear <= 0 ? DateTime.UtcNow.GetFiscalYear() : project.ReportedFiscalYear;
             project.ActualFiscalYear = project.ReportedFiscalYear;
+            project.WorkflowId = workflow.Id;
+            project.Workflow = workflow;
+            project.StatusId = status.StatusId;
+            project.Status = status.Status;
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
@@ -336,6 +341,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Responses)
+                .Include(p => p.Workflow)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             //The following reduces the load on the database compared to eager loading all parcel/building props.
@@ -369,8 +375,8 @@ namespace Pims.Dal.Services
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
             if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
-            //If the user isn't allowed to update the project, just update the notes.
-            if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !originalProject.IsProjectInDraft(_options.Project) && !originalProject.IsProjectClosed(_options.Project))
+            // If the user isn't allowed to update the project, just update the notes.
+            if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !originalProject.IsProjectInDraft(_options.Project) && !originalProject.IsProjectClosed())
             {
                 originalProject.Note = project.Note;
                 originalProject.PublicNote = project.PublicNote;
@@ -394,23 +400,25 @@ namespace Pims.Dal.Services
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
             if (fromStatusId != project.StatusId)
             {
-                var fromStatus = this.Context.ProjectStatus
+                var fromStatus = this.Context.WorkflowProjectStatus
+                    .Include(s => s.Status)
+                    .ThenInclude(s => s.Tasks)
                     .Include(s => s.ToStatus)
-                    .FirstOrDefault(s => s.Id == fromStatusId);
+                    .FirstOrDefault(s => s.WorkflowId == originalProject.WorkflowId && s.StatusId == fromStatusId);
                 var toStatus = this.Context.ProjectStatus
                     .Include(s => s.Tasks)
                     .FirstOrDefault(s => s.Id == project.StatusId);
-                if (toStatus.IsMilestone) throw new InvalidOperationException($"Project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}' requires a milestone transition.");
-                if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+                if (toStatus.IsMilestone) throw new InvalidOperationException($"Project status transitions from '{fromStatus.Status.Name}' to '{toStatus?.Name}' requires a milestone transition.");
+                if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Status.Name}' to '{toStatus?.Name}'.");
 
                 // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
                 var incompleteTaskIds = project.Tasks.Where(t => t.IsCompleted == false).Select(t => t.TaskId);
-                var statusTaskIds = fromStatus.Tasks.Select(t => t.Id);
+                var statusTaskIds = fromStatus.Status.Tasks.Select(t => t.Id);
                 var incompleteStatusTaskIds = incompleteTaskIds.Intersect(statusTaskIds);
                 if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && incompleteStatusTaskIds.Contains(t.TaskId))) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
 
-            originalProject.Merge(project, this.Context, _options.Project);
+            originalProject.Merge(project, this.Context);
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
@@ -439,6 +447,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
+                .Include(p => p.Workflow)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             if (!project.IsProjectInDraft(_options.Project))
@@ -509,6 +518,7 @@ namespace Pims.Dal.Services
         /// <exception cref="ArgumentNullException">Argument 'status' is required.</exception>
         /// <exception cref="RowVersionMissingException">Project rowversion is required.</exception>
         /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
+        /// <exception cref="KeyNotFoundException">Project status does not exist.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to submit request.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to approve request.</exception>
@@ -529,6 +539,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
+                .Include(p => p.Workflow)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
@@ -536,31 +547,34 @@ namespace Pims.Dal.Services
 
             // Only allow valid project status transitions.
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
-            var fromStatus = this.Context.ProjectStatus
+            var fromStatus = this.Context.WorkflowProjectStatus
                 .Include(s => s.ToStatus)
-                .Include(s => s.Tasks)
-                .FirstOrDefault(s => s.Id == fromStatusId);
+                .Include(s => s.Status)
+                .ThenInclude(s => s.Tasks)
+                .FirstOrDefault(s => s.WorkflowId == originalProject.WorkflowId && s.StatusId == fromStatusId) ?? throw new ConfigurationException($"Original workflow '{originalProject.Workflow.Code}' no longer has status '{fromStatusId}'.");
             var toStatus = this.Context.ProjectStatus
                 .Include(s => s.Tasks)
-                .FirstOrDefault(s => s.Id == project.StatusId);
+                .FirstOrDefault(s => s.Id == project.StatusId) ?? throw new KeyNotFoundException();
 
-            if (fromStatus.Id != toStatus.Id)
+            if (fromStatus.StatusId != toStatus.Id)
             {
-                if (!fromStatus.ToStatus.Any(s => s.ToStatusId == project.StatusId)) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Name}' to '{toStatus?.Name}'.");
+                var fromWorkflow = fromStatus.ToStatus.FirstOrDefault(s => s.ToStatusId == project.StatusId);
+                if (fromWorkflow == null) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Status.Name}' to '{toStatus?.Name}'.");
+                project.WorkflowId = fromWorkflow.ToWorkflowId; // Transition to the new workflow if required.
 
-                // If the project is terminated do not validate tasks. // TODO: Ideally this would handle scenarios where some tasks would need to be performed for termnating a project.
-                if (!_options.Project.TerminateStatus?.Contains(toStatus.Code) ?? throw new ConfigurationException("Project terminate status have not been configured."))
+                // TODO: Ideally this would handle scenarios where some tasks would need to be performed for termnating a project.
+                if (toStatus.ValidateTasks)
                 {
                     // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
                     var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
                     var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
-                    var statusTaskIds = fromStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
+                    var statusTaskIds = fromStatus.Status.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
                     var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
                     if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
                 }
             }
 
-            originalProject.Merge(project, this.Context, _options.Project);
+            originalProject.Merge(project, this.Context);
 
             // Hardcoded logic to handle milestone project status transitions.
             // This could be extracted at some point to a configurable layer, but not required presently.

@@ -130,7 +130,7 @@ const useStepper = () => {
   useEffect(() => {
     const lastCompletedStatus = _.findLast(diposeWorkflowStatuses, { id: project?.statusId });
     if (
-      lastCompletedStatus?.sortOrder !== undefined &&
+      lastCompletedStatus?.sortOrder !== undefined && // TODO: Stop using 'sortOrder' for index positioning.  It'll cause bugs.
       currentStatus?.sortOrder !== undefined &&
       getProjectRequest?.isFetching === false &&
       currentStatus.sortOrder > lastCompletedStatus.sortOrder

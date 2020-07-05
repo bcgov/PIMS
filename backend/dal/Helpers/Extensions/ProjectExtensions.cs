@@ -378,18 +378,17 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static bool IsProjectInDraft(this Entity.Project project, ProjectOptions options)
         {
-            return options.DraftStatus.Contains(project.Status.Code);
+            return options.DraftWorkflows.Contains(project.Workflow.Code);
         }
 
         /// <summary>
         /// Determine if the project is closed or complete.
         /// </summary>
         /// <param name="project"></param>
-        /// <param name="options"></param>
         /// <returns></returns>
-        public static bool IsProjectClosed(this Entity.Project project, ProjectOptions options)
+        public static bool IsProjectClosed(this Entity.Project project)
         {
-            return options.ClosedStatus?.Contains(project.Status.Code) ?? throw new ConfigurationException("Project closed status have not been configured.");
+            return project.Status.IsTerminal;
         }
 
         /// <summary>
@@ -398,8 +397,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="originalProject"></param>
         /// <param name="updatedProject"></param>
         /// <param name="context"></param>
-        /// <param name="options"></param>
-        public static void Merge(this Entity.Project originalProject, Entity.Project updatedProject, PimsContext context, ProjectOptions options)
+        public static void Merge(this Entity.Project originalProject, Entity.Project updatedProject, PimsContext context)
         {
             // Update a project
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
@@ -589,7 +587,7 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             // Update project financials if the project is still active.
-            if (!updatedProject.IsProjectClosed(options))
+            if (!updatedProject.IsProjectClosed())
             {
                 originalProject.UpdateProjectFinancials();
             }

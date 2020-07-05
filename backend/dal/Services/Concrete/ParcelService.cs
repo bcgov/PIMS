@@ -337,7 +337,7 @@ namespace Pims.Dal.Services
             }
 
             // update only an active project with any financial value changes.
-            if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed(_options.Project) ?? false))
+            if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed() ?? false))
             {
                 this.Context.UpdateProjectFinancials(parcel.ProjectNumber);
             }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Api.Areas.Project.Models.Workflow
 {
     /// <summary>
@@ -34,7 +36,12 @@ namespace Pims.Api.Areas.Project.Models.Workflow
         /// <summary>
         /// get/set - The workflow this status belongs to.
         /// </summary>
-        public string Workflow { get; set; }
+        public string WorkflowCode { get; set; }
+
+        /// <summary>
+        /// get/set - An array of status this status can transition to.
+        /// </summary>
+        public IEnumerable<ProjectStatusModel> ToStatus { get; set; }
         #endregion
     }
 }

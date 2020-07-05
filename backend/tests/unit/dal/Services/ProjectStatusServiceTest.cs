@@ -21,7 +21,7 @@ namespace Pims.Dal.Test.Services
             new List<object[]>
             {
                 new object[] { "SUBMIT", 6 },
-                new object[] { "ACCESS", 2 }
+                new object[] { "ASSESS", 2 }
             };
         #endregion
 

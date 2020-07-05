@@ -75,6 +75,14 @@ namespace Pims.Dal.Services
                 .AsNoTracking()
                 .Include(w => w.Status)
                 .ThenInclude(s => s.Status)
+                .Include(w => w.Status)
+                .ThenInclude(s => s.ToStatus)
+                .ThenInclude(t => t.ToWorkflowStatus)
+                .ThenInclude(s => s.Status)
+                .Include(w => w.Status)
+                .ThenInclude(s => s.ToStatus)
+                .ThenInclude(t => t.ToWorkflowStatus)
+                .ThenInclude(s => s.Workflow)
                 .FirstOrDefault(w => w.Code == code) ?? throw new KeyNotFoundException();
 
             return workflow;

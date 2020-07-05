@@ -30,6 +30,11 @@ namespace Pims.Dal.Entities
         public bool IsTerminal { get; set; }
 
         /// <summary>
+        /// get/set - Whether to validate the tasks before accepting a transition to this status.
+        /// </summary>
+        public bool ValidateTasks { get; set; } = true;
+
+        /// <summary>
         /// get/set - The route to the component/page that represents this status.
         /// </summary>
         public string Route { get; set; }
@@ -40,19 +45,14 @@ namespace Pims.Dal.Entities
         public ICollection<Task> Tasks { get; } = new List<Task>();
 
         /// <summary>
-        /// get - A collection of valid projects status go to transitions.
-        /// </summary>
-        public ICollection<ProjectStatusTransition> ToStatus { get; } = new List<ProjectStatusTransition>();
-
-        /// <summary>
-        /// get - A collection of valid projects status come from transitions.
-        /// </summary>
-        public ICollection<ProjectStatusTransition> FromStatus { get; } = new List<ProjectStatusTransition>();
-
-        /// <summary>
         /// get - A collection of workflows that contain this project status.
         /// </summary>
         public ICollection<WorkflowProjectStatus> Workflows { get; } = new List<WorkflowProjectStatus>();
+
+        /// <summary>
+        /// get - Collection of workflows that go to this status.
+        /// </summary>
+        public ICollection<WorkflowProjectStatus> FromWorkflows { get; } = new List<WorkflowProjectStatus>();
         #endregion
 
         #region Constructors

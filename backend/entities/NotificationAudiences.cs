@@ -20,6 +20,10 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Notifications are sent to the owning agency.
         /// </summary>
-        OwningAgency = 3
+        OwningAgency = 3,
+        /// <summary>
+        /// Agencies that have shown interest in the project.
+        /// </summary>
+        WatchingAgencies = 4
     }
 }

@@ -23,6 +23,8 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Description).HasMaxLength(500);
 
+            builder.Property(m => m.Audience).HasMaxLength(50)
+                .HasConversion(v => v.ToString(), v => (NotificationAudiences)Enum.Parse(typeof(NotificationAudiences), v));
             builder.Property(m => m.Priority).HasMaxLength(50)
                 .HasConversion(v => v.ToString(), v => (NotificationPriorities)Enum.Parse(typeof(NotificationPriorities), v));
             builder.Property(m => m.Encoding).HasMaxLength(50)

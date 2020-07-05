@@ -147,6 +147,8 @@ namespace Pims.Api.Areas.Project.Controllers
             return new JsonResult(model);
         }
 
+
+        #region SetStatus
         /// <summary>
         /// Update the specified 'project' by submitting it to the specified 'workflowCode' and request to change the status to the specified 'statusCode'
         /// </summary>
@@ -170,6 +172,7 @@ namespace Pims.Api.Areas.Project.Controllers
 
             var workflow = _pimsService.Workflow.Get(workflowCode);
             var status = workflow.Status.FirstOrDefault(s => s.Status.Code == statusCode) ?? throw new KeyNotFoundException();
+            model.WorkflowId = workflow.Id;
             model.StatusId = status.StatusId;
             project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
 
@@ -199,6 +202,8 @@ namespace Pims.Api.Areas.Project.Controllers
             var project = _pimsService.Project.Get(model.Id);
             var fromStatusId = project.StatusId;
 
+            var workflow = _pimsService.Workflow.Get(workflowCode);
+            model.WorkflowId = workflow.Id;
             model.StatusId = statusId;
             project = _pimsService.Project.SetStatus(_mapper.Map<Entity.Project>(model), workflowCode);
 
@@ -207,6 +212,7 @@ namespace Pims.Api.Areas.Project.Controllers
 
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
+        #endregion
         #endregion
     }
 }

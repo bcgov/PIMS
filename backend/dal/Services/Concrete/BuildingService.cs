@@ -189,7 +189,7 @@ namespace Pims.Dal.Services
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 
             // update only an active project with any financial value changes.
-            if (!String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed(_options.Project) ?? false))
+            if (!String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed() ?? false))
             {
                 this.Context.UpdateProjectFinancials(existingBuilding.ProjectNumber);
             }

@@ -27,8 +27,6 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Description).IsRequired();
             builder.Property(m => m.Description).HasMaxLength(500);
 
-            builder.HasMany(m => m.Status).WithOne(m => m.Workflow).HasForeignKey(m => m.WorkflowId).OnDelete(DeleteBehavior.Cascade);
-
             builder.HasIndex(m => new { m.Name }).IsUnique();
             builder.HasIndex(m => new { m.Code }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });

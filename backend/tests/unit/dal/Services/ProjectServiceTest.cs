@@ -163,7 +163,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -183,7 +183,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -203,7 +203,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.SensitiveView);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -223,7 +223,18 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            project.SubmittedOn = DateTime.UtcNow;
+            project.ApprovedOn = DateTime.UtcNow;
+            project.DeniedOn = DateTime.UtcNow;
+            project.CancelledOn = DateTime.UtcNow;
+            project.InitialNotificationSentOn = DateTime.UtcNow;
+            project.ThirtyDayNotificationSentOn = DateTime.UtcNow;
+            project.SixtyDayNotificationSentOn = DateTime.UtcNow;
+            project.NinetyDayNotificationSentOn = DateTime.UtcNow;
+            project.OnHoldNotificationSentOn = DateTime.UtcNow;
+            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+            project.TransferredWithinGreOn = DateTime.UtcNow;
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
             var context = helper.GetService<PimsContext>();
@@ -266,7 +277,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.AdminProjects);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
             var context = helper.GetService<PimsContext>();
@@ -395,12 +406,17 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
-            var project = EntityHelper.CreateProject(1);
 
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
             project.ProjectNumber = "test-generation-override";
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
-            helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -420,6 +436,9 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectAdd).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1, project.Agency);
@@ -453,8 +472,15 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd, Permissions.ProjectView).AddAgency(1);
-            var project = EntityHelper.CreateProject(1);
 
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
             project.ProjectNumber = "test-generation-override";
             project.PrivateNote = "private note";
             project.PublicNote = "public note";
@@ -491,9 +517,15 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
-            var project = EntityHelper.CreateProject(1);
 
-            helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
@@ -513,9 +545,15 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
-            var init = helper.CreatePimsContext(user);
-            var project = EntityHelper.CreateProject(1);
-            init.AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
 
             var tasks = EntityHelper.CreateDefaultTasks();
             var task = EntityHelper.CreateTask(20, "test tasks");
@@ -545,10 +583,15 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
-            var init = helper.CreatePimsContext(user);
-            var project = EntityHelper.CreateProject(1);
 
-            init.AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
 
             var tasks = EntityHelper.CreateDefaultTasks(project.Status);
             init.AddAndSaveRange(tasks);
@@ -643,7 +686,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
-            var init = helper.CreatePimsContext(user);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             init.SaveChanges();
 
@@ -670,6 +716,9 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
             var parcel = init.CreateParcel(1, project.Agency);
@@ -710,7 +759,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
-            var init = helper.CreatePimsContext(user);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             init.SaveChanges();
 
@@ -748,7 +800,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.AdminProjects).AddAgency(1);
 
-            var init = helper.CreatePimsContext(user);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             init.SaveChanges();
 
@@ -776,6 +831,9 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             var task = init.CreateTask(20, "testing", project.Status);
             init.AddAndSaveChanges(task);
@@ -803,6 +861,9 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
 
@@ -910,6 +971,9 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             var parcel = init.CreateParcel(1, project.Agency);
             var building = init.CreateBuilding(parcel, 20);
@@ -1166,7 +1230,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
-            using var init = helper.InitializeDatabase(user);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             var newProject = init.CreateProject(2, project.Agency);
             var parcel = init.CreateParcel(1, project.Agency);
@@ -1193,7 +1260,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyEdit, Permissions.PropertyView, Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
-            using var init = helper.InitializeDatabase(user);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
             var project = init.CreateProject(1);
             var newProject = init.CreateProject(2, project.Agency);
             var parcel = init.CreateParcel(1, project.Agency);
@@ -1228,7 +1298,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete);
             var find = EntityHelper.CreateProject(1);
             var project = EntityHelper.CreateProject(2);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -1248,7 +1318,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
 
@@ -1268,7 +1338,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
@@ -1289,7 +1359,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete, Permissions.AdminProjects);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
@@ -1311,9 +1381,13 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete).AddAgency(1);
-            var project = EntityHelper.CreateProject(1);
-            project.Status.Code = "TEST";
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var project = init.CreateProject(1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
@@ -1333,7 +1407,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete).AddAgency(1);
             var project = EntityHelper.CreateProject(1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(project);
+            helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
@@ -1375,17 +1449,18 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
+
             var project = init.CreateProject(1, 1);
+            init.SaveChanges();
+            project.StatusId = 999;
 
             var service = helper.CreateService<ProjectService>(user);
 
-            var workflowCode = workflows.First().Code;
-
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1396,6 +1471,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            init.CreateDefaultProjectStatus();
             var workflows = init.CreateDefaultWorkflows();
             init.SaveChanges();
             init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
@@ -1439,21 +1515,22 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
             project.RowVersion = null;
 
             var service = helper.CreateService<ProjectService>(user);
 
-            var workflowCode = workflows.First().Code;
-            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+            var review = init.ProjectStatus.First(s => s.Code == "AS-D");
+            project.StatusId = review.Id;
 
             // Act
             // Assert
-            Assert.Throws<RowVersionMissingException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<RowVersionMissingException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1464,20 +1541,21 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
 
             var service = helper.CreateService<ProjectService>(user);
 
-            var workflowCode = workflows.First().Code;
-            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+            var review = init.ProjectStatus.First(s => s.Code == "AS-D");
+            project.StatusId = review.Id;
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1488,15 +1566,17 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
 
             var service = helper.CreateService<ProjectService>(user);
 
-            var statusCode = init.ProjectStatus.Find(6); // Submitted Status
+            var review = init.ProjectStatus.First(s => s.Code == "AS-D");
+            project.StatusId = review.Id;
 
             // Act
             // Assert
@@ -1511,22 +1591,21 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
 
             var service = helper.CreateService<ProjectService>(user);
-
-            var workflowCode = workflows.First().Code;
 
             var find = init.CreateProject(2, 1);
             find.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
 
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(find, workflowCode));
+            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(find, find.Workflow.Code));
         }
 
         [Fact]
@@ -1537,20 +1616,20 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(2);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
 
             var service = helper.CreateService<ProjectService>(user);
 
-            var workflowCode = workflows.First().Code;
-            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+            var review = init.ProjectStatus.First(s => s.Code == "AS-D");
+            project.StatusId = review.Id;
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1561,20 +1640,20 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
+            init.SaveChanges();
+            
             var service = helper.CreateService<ProjectService>(user);
 
-            var workflowCode = workflows.First().Code;
-            project.StatusId = init.ProjectStatus.Find(6).Id; // Submitted Status
+            var review = init.ProjectStatus.First(s => s.Code == "AS-AP");
+            project.StatusId = review.Id;
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1585,23 +1664,20 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1, 1);
-            var approval = init.ProjectStatus.Find(5);
-            project.StatusId = approval.Id; // Approval Status
-            var workflows = init.CreateDefaultWorkflows();
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var deny = init.ProjectStatus.First(s => s.Code == "DE");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
-            var task = init.CreateTask(1, "Documentation", approval);
-            task.IsOptional = false;
+            var project = init.CreateProject(1, 1);
+            init.SaveChanges();
+            var draft = init.ProjectStatus.First(s => s.Code == "DR");
+            var addProperties = init.ProjectStatus.First(s => s.Code == "DR-P");
+            var task = init.CreateTask(1, "Documentation", draft);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
             var workflowCode = workflows.First().Code;
-            project.StatusId = deny.Id; // Deny Status
+            project.StatusId = addProperties.Id; // Deny Status
 
             // Act
             // Assert
@@ -1616,27 +1692,24 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-FNC");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var deny = init.ProjectStatus.First(s => s.Code == "DE");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, deny));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var deny = init.ProjectStatus.First(s => s.Code == "DE");
             project.StatusId = deny.Id; // Deny Status
 
             // Act
             project.PublicNote = "this is the reason";
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1654,26 +1727,23 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var cancel = init.ProjectStatus.First(s => s.Code == "CA");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, cancel));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var cancel = init.ProjectStatus.First(s => s.Code == "CA");
             project.StatusId = cancel.Id; // Cancel Status
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1691,27 +1761,24 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
             project.OnHoldNotificationSentOn = DateTime.Now; // required for On Hold.
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
             project.StatusId = onHold.Id; // On Hold Status
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1728,26 +1795,23 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, onHold));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
             project.StatusId = onHold.Id; // On Hold Status
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1758,24 +1822,20 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-
             project.TransferredWithinGreOn = DateTime.Now; // required for Transferred within GRE.
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "T-GRE");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, transferredWithinGre));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "T-GRE");
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
 
             EntityHelper.CreateAgency(2);
@@ -1785,7 +1845,7 @@ namespace Pims.Dal.Test.Services
             project.Properties.First().Parcel = parcel;
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1806,26 +1866,23 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "T-GRE");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, transferredWithinGre));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "T-GRE");
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1836,27 +1893,26 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            var erp = init.ProjectStatus.First(s => s.Code == "DR-RE");
+            project.StatusId = erp.Id; // Review
+            project.Status = erp;
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var submit = init.ProjectStatus.First(s => s.Code == "DR-RE");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var submit = init.ProjectStatus.First(s => s.Code == "AS-I");
             project.StatusId = submit.Id; // Submit Status
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1867,26 +1923,25 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeRequest).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
+            var erp = init.ProjectStatus.First(s => s.Code == "DR-RE");
+            project.StatusId = erp.Id; // Review
+            project.Status = erp;
             project.ProjectNumber = "TEST";
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 7)).SaveChanges();
-            var submit = init.ProjectStatus.First(s => s.Code == "AS-I");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, submit));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var submit = init.ProjectStatus.First(s => s.Code == "AS-I");
             project.StatusId = submit.Id; // Submit Status
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1906,27 +1961,24 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-FNC");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
             project.StatusId = approve.Id; // Submit Status
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -1937,26 +1989,23 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ASSESS-DISPOSAL", "AS-FNC");
             var parcel = init.CreateParcel(1);
             parcel.IsVisibleToOtherAgencies = false;
             project.AddProperty(parcel);
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
             project.StatusId = approve.Id; // Submit Status
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1975,27 +2024,24 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-OH");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, workflowCode));
+            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
 
         [Fact]
@@ -2006,26 +2052,23 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
 
             var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            project.StatusId = init.ProjectStatus.Find(5).Id; // Approval Status
+            init.SetStatus(project, "ERP", "ERP-OH");
             var parcel = init.CreateParcel(1);
             parcel.IsVisibleToOtherAgencies = true;
             project.AddProperty(parcel);
-            var workflows = init.CreateDefaultWorkflows();
-            init.SaveChanges();
-            init.AddStatusToWorkflow(workflows.First(), init.ProjectStatus.Where(s => s.Id <= 6)).SaveChanges();
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.Status.ToStatus.Add(new Entity.ProjectStatusTransition(project.Status, approve));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var workflowCode = workflows.First().Code;
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
 
             // Act
-            var result = service.SetStatus(project, workflowCode);
+            var result = service.SetStatus(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);

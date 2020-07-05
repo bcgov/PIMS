@@ -202,16 +202,15 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
                   component={() => <Redirect to="/page-not-found" />}
                 />
               </Switch>
-              {currentStatus !== undefined &&
-              currentStatus.workflow === 'SUBMIT-DISPOSAL' && ( // TODO: This isn't an ideal way to hide these buttons.
-                  <StepActions
-                    getNextStep={getNextStep}
-                    onSave={() => onSave(formikRef)}
-                    onNext={onNext}
-                    saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
-                    isFetching={!noFetchingProjectRequests}
-                  />
-                )}
+              {currentStatus !== undefined && ( // TODO: This isn't an ideal way to hide these buttons.
+                <StepActions
+                  getNextStep={getNextStep}
+                  onSave={() => onSave(formikRef)}
+                  onNext={onNext}
+                  saveDisabled={currentStatus.code === DisposeWorkflowStatus.Approval}
+                  isFetching={!noFetchingProjectRequests}
+                />
+              )}
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>

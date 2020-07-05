@@ -25,6 +25,16 @@ namespace Pims.Dal.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// get/set - Foreign key to the current workflow the project is in.
+        /// </summary>
+        public int? WorkflowId { get; set; }
+
+        /// <summary>
+        /// get/set - The current workflow the project is in.
+        /// </summary>
+        public Workflow Workflow { get; set; }
+
+        /// <summary>
         /// get/set - The project manager name(s).
         /// </summary>
         public string Manager { get; set; }

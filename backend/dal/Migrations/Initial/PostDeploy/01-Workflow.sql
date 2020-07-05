@@ -32,18 +32,25 @@ INSERT INTO dbo.[Workflows] (
     , 2
 ), (
     4
+    , 'Access Enhanced Referral Process Exemption Project Request'
+    , 'ASSESS-EX-DISPOSAL'
+    , 0
+    , 'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'
+    , 3
+), (
+    5
     , 'Enhanced Referral Program'
     , 'ERP'
     , 0
     , 'Internal marketing for 90 days.'
-    , 3
+    , 4
 ), (
-    5
+    6
     , 'Surplus Property List'
     , 'SPL'
     , 0
     , 'External marketing.'
-    , 3
+    , 5
 )
 
 SET IDENTITY_INSERT dbo.[Workflows] OFF

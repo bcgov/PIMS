@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal;
-using Pims.Dal.Helpers.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;

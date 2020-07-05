@@ -22,20 +22,9 @@ namespace Pims.Dal
         public string[] AssessmentWorkflows { get; set; }
 
         /// <summary>
-        /// get/set - An array of project status codes for when the project is in draft.
+        /// get/set - An array of workflow codes that are used for drafting projects.
         /// </summary>
-        public string[] DraftStatus { get; set; }
-
-        /// <summary>
-        /// get/set - An array of project status codes for when the project is closed.
-        /// </summary>
-        public string[] ClosedStatus { get; set; }
-
-        /// <summary>
-        /// get/set - An array of project status codes for when the project is terminated.
-        /// These are used to identify which status do not require validation.
-        /// </summary>
-        public string[] TerminateStatus { get; set; }
+        public string[] DraftWorkflows { get; set; }
         #endregion
     }
 }
