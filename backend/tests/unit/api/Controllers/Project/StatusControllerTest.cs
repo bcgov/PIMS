@@ -37,8 +37,7 @@ namespace Pims.Api.Test.Controllers
 
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            var workflows = EntityHelper.CreateDefaultWorkflowsWithStatus();
-            var status = workflows.SelectMany(w => w.Status).Select(s => s.Status).Distinct();
+            var status = EntityHelper.CreateDefaultProjectStatus();
             service.Setup(m => m.ProjectStatus.Get()).Returns(status);
 
             // Act
@@ -49,8 +48,7 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ProjectStatusModel[]>(actionResult.Value);
             Assert.Null(actionResult.StatusCode);
             var expectedResult = mapper.Map<Model.ProjectStatusModel[]>(status);
-            actualResult.Should().HaveCount(32);
-            actualResult.Select(s => s.Workflow.Code).Distinct().Should().HaveCount(5);
+            actualResult.Should().HaveCount(25);
             service.Verify(m => m.ProjectStatus.Get(), Times.Once());
         }
         #endregion

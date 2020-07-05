@@ -11,6 +11,8 @@ namespace Pims.Api.Areas.Project.Mapping.Status
             config.NewConfig<Entity.ProjectStatus, Model.ProjectStatusModel>()
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.IsMilestone, src => src.IsMilestone)
+                .Map(dest => dest.IsTerminal, src => src.IsTerminal)
+                .Map(dest => dest.ValidateTasks, src => src.ValidateTasks)
                 .Map(dest => dest.Route, src => src.Route)
                 .Inherits<Entity.CodeEntity<int>, Api.Models.CodeModel<int>>();
 
@@ -18,6 +20,8 @@ namespace Pims.Api.Areas.Project.Mapping.Status
                 .Map(dest => dest.Id, src => src.Status.Id)
                 .Map(dest => dest.Description, src => src.Status.Description)
                 .Map(dest => dest.IsMilestone, src => src.Status.IsMilestone)
+                .Map(dest => dest.IsTerminal, src => src.Status.IsTerminal)
+                .Map(dest => dest.ValidateTasks, src => src.Status.ValidateTasks)
                 .Map(dest => dest.Route, src => src.Status.Route)
                 .Map(dest => dest.IsOptional, src => src.IsOptional)
                 .Map(dest => dest.Name, src => src.Status.Name)
@@ -26,7 +30,7 @@ namespace Pims.Api.Areas.Project.Mapping.Status
                 .Map(dest => dest.CreatedOn, src => src.Status.CreatedOn)
                 .Map(dest => dest.UpdatedOn, src => src.Status.UpdatedOn)
                 .Map(dest => dest.RowVersion, src => src.Status.RowVersion)
-                .Map(dest => dest.SortOrder, src => src.Status.SortOrder);
+                .Map(dest => dest.SortOrder, src => src.SortOrder);
         }
     }
 }

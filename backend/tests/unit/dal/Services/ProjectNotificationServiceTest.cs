@@ -22,7 +22,7 @@ namespace Pims.Dal.Test.Services
             new List<object[]>
             {
                 new object[] { "SUBMIT", 6 },
-                new object[] { "ACCESS", 2 }
+                new object[] { "ASSESS", 2 }
             };
         #endregion
 
@@ -40,7 +40,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var psn = new Entity.ProjectStatusNotification(template, status.Next(0), status.Next(1), Entity.NotificationDelays.None);
@@ -71,7 +71,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var psn = new Entity.ProjectStatusNotification(template, null, status.Next(1), Entity.NotificationDelays.None);
@@ -118,7 +118,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var psn = new Entity.ProjectStatusNotification(template, status.Next(0), status.Next(1), Entity.NotificationDelays.None);
@@ -150,7 +150,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var psn = new Entity.ProjectStatusNotification(template, null, status.Next(1), Entity.NotificationDelays.None);
@@ -182,7 +182,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView);
 
             var init = helper.CreatePimsContext(user, true);
-            var status = EntityHelper.CreateProjectStatuses(1, 7);
+            var status = EntityHelper.CreateProjectStatus(1, 7);
             init.AddAndSaveRange(status);
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var psn = new Entity.ProjectStatusNotification(template, status.Next(0), null, Entity.NotificationDelays.None);

@@ -44,8 +44,7 @@ namespace Pims.Api.Areas.Project.Controllers
         #region Endpoints
         #region Status
         /// <summary>
-        /// Get an array of all project status, group by workflow and sort by sortorder.
-        /// This will result in status shared by workflows being duplicated, but referencing different workflows.
+        /// Get an array of all project status.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -55,42 +54,8 @@ namespace Pims.Api.Areas.Project.Controllers
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult GetStatus()
         {
-            var workflows = _pimsService.ProjectStatus.Get().SelectMany(s => s.Workflows);
-            var status = (from w in workflows
-                          group w by new
-                          {
-                              w.WorkflowId,
-                              WorkflowName = w.Workflow.Name,
-                              WorkflowCode = w.Workflow.Code,
-                              WorkflowSortOrder = w.Workflow.SortOrder,
-                              w.IsOptional,
-                              w.StatusId,
-                              w.Status.Name,
-                              w.Status.Code,
-                              w.Status.SortOrder,
-                              w.Status.Description,
-                              w.Status.IsDisabled,
-                              w.Status.IsMilestone
-                          } into ws
-                          select ws);
-
-            // Flatten the results so that status are duplicated for each relevant workflow.
-            var result = status
-                .OrderBy(s => s.Key.WorkflowSortOrder)
-                .ThenBy(s => s.Key.SortOrder)
-                .Select(s =>
-            {
-                var model = _mapper.Map<ProjectStatusModel>(s.Key);
-                model.Workflow = new WorkflowModel()
-                {
-                    Id = s.Key.WorkflowId,
-                    Name = s.Key.WorkflowName,
-                    Code = s.Key.WorkflowCode,
-                    SortOrder = s.Key.WorkflowSortOrder,
-                };
-                return model;
-            }).ToArray();
-            return new JsonResult(result);
+            var status = _pimsService.ProjectStatus.Get();
+            return new JsonResult(_mapper.Map<ProjectStatusModel[]>(status));
         }
         #endregion
 

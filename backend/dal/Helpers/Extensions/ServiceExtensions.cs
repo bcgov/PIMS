@@ -23,7 +23,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (parcel.ProjectNumber != null)
             {
                 var project = service.GetContext().Projects
-                    .Include(p => p.Status)
+                    .Include(p => p.Workflow)
                     .FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber);
                 if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
@@ -47,7 +47,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (building.ProjectNumber != null && changed())
             {
                 var project = context.Projects
-                    .Include(p => p.Status)
+                    .Include(p => p.Workflow)
                     .FirstOrDefault(p => p.ProjectNumber == building.ProjectNumber);
                 if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {

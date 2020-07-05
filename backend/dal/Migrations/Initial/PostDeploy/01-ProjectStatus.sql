@@ -13,6 +13,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , [Description]
     , [Route]
     , [IsMilestone]
+    , [ValidateTasks]
 ) VALUES (
     1
     , 0
@@ -24,6 +25,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.'
     , '/projects/draft'
     , 0
+    , 1
 ), (
     2
     , 1
@@ -35,6 +37,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Add properties to the project.'
     , '/projects/properties'
     , 0
+    , 1
 ), (
     3
     , 2
@@ -46,6 +49,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Assign tier level, classification and update current financial information.'
     , '/projects/information'
     , 0
+    , 1
 ), (
     4
     , 3
@@ -57,6 +61,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Required documentation has been completed and sent (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
     , '/projects/documentation'
     , 0
+    , 1
 ), (
     5
     , 4
@@ -68,6 +73,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project is ready to be approved by owning agency.'
     , '/projects/approval'
     , 0
+    , 1
 ), (
     6
     , 5
@@ -79,6 +85,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been submitted for review to be added to the Surplus Property Program.'
     , '/projects/review'
     , 0
+    , 1
 ), (
     7
     , 6
@@ -90,6 +97,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Submitted project property information review.'
     , '/projects/assess/properties'
     , 1
+    , 1
 ), (
     8
     , 6
@@ -100,6 +108,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 0
     , 'Project has been been submitted with a request for exemption.'
     , '/projects/assess/properties'
+    , 1
     , 1
 )
 
@@ -116,6 +125,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Documentation reviewed (Surplus Declaration & Readiness Checklist, Triple Bottom Line).'
     , '/projects/assess/documentation'
     , 0
+    , 1
 ), (
     11
     , 8
@@ -127,6 +137,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Appraisal review process.'
     , '/projects/assess/appraisal'
     , 0
+    , 1
 ), (
     12
     , 9
@@ -138,6 +149,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'First Nation Consultation process.'
     , '/projects/assess/first/nation/consultation'
     , 0
+    , 1
 ), (
     13
     , 10
@@ -149,6 +161,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Process to approve ERP exemption.'
     , 'projects/assess/exemption'
     , 0
+    , 1
 ), (
     14
     , 11
@@ -159,6 +172,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 0
     , 'The project has been approved to be added to the Surplus Property Program - Enhanced Referral Program.  This begins the 90 day internal marketing process.'
     , '/projects/approved'
+    , 1
     , 1
 ), (
     15
@@ -171,6 +185,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'Project has been approved for ERP exemption.'
     , '/projects/approved'
     , 1
+    , 1
 ), (
     16
     , 11
@@ -182,6 +197,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been denied to be added to the Surplus Property Program.'
     , '/projects/denied'
     , 1
+    , 0
 )
 
 -- Exemption outcome
@@ -198,6 +214,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been transferred within the Greater Revenue Entity'
     , '/projects/transferred'
     , 1
+    , 1
 ), (
     21
     , 21
@@ -208,6 +225,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 0
     , 'The project has been approved to be added to the Surplus Property Program - Surplus Property List.  This begins the external marketing process.'
     , '/projects/approved'
+    , 1
     , 1
 ), (
     22
@@ -220,6 +238,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been approved to not be included in the Surplus Property Program - Surplus Property List. '
     , '/projects/approved'
     , 1
+    , 1
 ), (
     23
     , 21
@@ -231,31 +250,46 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has been cancelled from the Surplus Property Program.'
     , '/projects/cancelled'
     , 1
+    , 0
 )
 
 -- ERP process
 
 , (
     30
-    , 17
+    , 1
+    , 'In ERP'
+    , 'ERP'
+    , 'ERP-ON'
+    , 0
+    , 0
+    , 'The project has is in the Enhanced Referral Program.'
+    , '/projects/erp'
+    , 0
+    , 1
+), (
+    31
+    , 2
     , 'On Hold'
-    , 'On Hold'
+    , 'ERP'
     , 'ERP-OH'
     , 0
     , 0
     , 'The project has been put on hold due to potential sale to an interested party.'
     , '/projects/onhold'
     , 0
+    , 1
 ), (
-    31
+    32
     , 21
     , 'Disposed'
     , 'Complete'
     , 'DIS'
-    , 0
+    , 1
     , 0
     , 'The project has been disposed externally.'
     , '/projects/disposed'
+    , 1
     , 1
 )
 
@@ -272,6 +306,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project is in the pre-marketing stage of the Surplus Property List.'
     , '/projects/premarketing'
     , 0
+    , 1
 ), (
     41
     , 19
@@ -283,6 +318,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project is in the marketing stage of the Surplus Property List.'
     , '/projects/premarketing'
     , 0
+    , 1
 ), (
     42
     , 20
@@ -294,16 +330,6 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'The project has received an offer either conditional or unconditional.'
     , '/projects/contractinplace'
     , 0
-), (
-    43
-    , 21
-    , 'Disposed'
-    , 'Complete'
-    , 'SPL-DIS'
-    , 0
-    , 0
-    , 'The project has been disposed externally.'
-    , '/projects/disposed'
     , 1
 )
 

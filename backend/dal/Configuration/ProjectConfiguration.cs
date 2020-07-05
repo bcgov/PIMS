@@ -63,6 +63,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.TierLevel).WithMany().HasForeignKey(m => m.TierLevelId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(m => m.Workflow).WithMany(m => m.Projects).HasForeignKey(m => m.WorkflowId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasIndex(m => m.ProjectNumber).IsUnique();
             builder.HasIndex(m => new { m.Name, m.StatusId, m.TierLevelId, m.AgencyId });

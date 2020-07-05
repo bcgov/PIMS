@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using MapsterMapper;
 using Entity = Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
+using FluentAssertions;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -264,12 +265,14 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
+            var workflow = EntityHelper.CreateWorkflow(1, "test", "TEST");
+            service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
             service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
             service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.NotificationQueue[0]);
             service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
             var model = mapper.Map<Model.ProjectModel>(project);
-            var workflowCode = "code";
+            var workflowCode = "TEST";
             var statusId = 1;
 
             // Act
@@ -280,7 +283,10 @@ namespace Pims.Api.Test.Controllers
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Project.Get(It.IsAny<int>()), Times.Once());
+            actualResult.WorkflowId.Should().Be(1);
+            actualResult.StatusId.Should().Be(1);
+            service.Verify(m => m.Workflow.Get(workflowCode), Times.Once());
+            service.Verify(m => m.Project.Get(project.Id), Times.Once());
             service.Verify(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), workflowCode), Times.Once());
             service.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once());
             service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once());

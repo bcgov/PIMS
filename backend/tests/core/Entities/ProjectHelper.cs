@@ -29,13 +29,15 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="id"></param>
         /// <param name="agency"></param>
-        /// <param name="status"></param>
+        /// <param name="tierLevel"></param>
+        /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static Entity.Project CreateProject(int id, Entity.Agency agency = null, Entity.ProjectStatus status = null)
+        public static Entity.Project CreateProject(int id, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null)
         {
             agency ??= EntityHelper.CreateAgency(id);
-            status ??= EntityHelper.CreateProjectStatus("Draft", "DR");
-            var tierLevel = EntityHelper.CreateTierLevel("tierLevel");
+            tierLevel ??= EntityHelper.CreateTierLevel(id, "tierLevel");
+            var status = workflowStatus?.Status ?? EntityHelper.CreateProjectStatus("Draft", "DR");
+            var workflow = workflowStatus?.Workflow ?? EntityHelper.CreateWorkflow(id, "Submit", "SUBMIT-DISPOSAL", new[] { status });
 
             var user = CreateUser(Guid.NewGuid(), "project tester", "asasa", "asasa", null, agency);
             return new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
@@ -44,6 +46,8 @@ namespace Pims.Core.Test
                 ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
                 Agency = agency,
                 AgencyId = agency.Id,
+                Workflow = workflow,
+                WorkflowId = workflow?.Id,
                 Status = status,
                 StatusId = status.Id,
                 Description = $"description-{id}",
@@ -56,17 +60,6 @@ namespace Pims.Core.Test
                 PrivateNote = $"privateNote-{id}",
                 AgencyResponseNote = $"agencyResponseNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
-                SubmittedOn = DateTime.UtcNow,
-                ApprovedOn = DateTime.UtcNow,
-                DeniedOn = DateTime.UtcNow,
-                CancelledOn = DateTime.UtcNow,
-                InitialNotificationSentOn = DateTime.UtcNow,
-                ThirtyDayNotificationSentOn = DateTime.UtcNow,
-                SixtyDayNotificationSentOn = DateTime.UtcNow,
-                NinetyDayNotificationSentOn = DateTime.UtcNow,
-                OnHoldNotificationSentOn = DateTime.UtcNow,
-                ClearanceNotificationSentOn = DateTime.UtcNow,
-                TransferredWithinGreOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }
@@ -77,14 +70,15 @@ namespace Pims.Core.Test
         /// <param name="startId"></param>
         /// <param name="count"></param>
         /// <param name="agency"></param>
-        /// <param name="status"></param>
+        /// <param name="tierLevel"></param>
+        /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static List<Entity.Project> CreateProjects(int startId, int count, Entity.Agency agency = null, Entity.ProjectStatus status = null)
+        public static List<Entity.Project> CreateProjects(int startId, int count, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null)
         {
             var projects = new List<Entity.Project>(count);
             for (var i = startId; i < (startId + count); i++)
             {
-                projects.Add(CreateProject(i, agency, status));
+                projects.Add(CreateProject(i, agency, tierLevel, workflowStatus));
             }
             return projects;
         }
@@ -108,29 +102,22 @@ namespace Pims.Core.Test
         /// <param name="context"></param>
         /// <param name="id"></param>
         /// <param name="agency"></param>
-        /// <param name="status"></param>
+        /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency = null, Entity.ProjectStatus status = null)
+        public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null)
         {
             agency ??= context.Agencies.OrderBy(a => a.Id).FirstOrDefault() ?? EntityHelper.CreateAgency(1);
-            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("Draft", "DR");
+            workflowStatus ??= context.WorkflowProjectStatus.FirstOrDefault(ws => ws.WorkflowId == 1 && ws.StatusId == 1);
+            if (workflowStatus == null)
+            {
+                var status = workflowStatus?.Status ?? EntityHelper.CreateProjectStatus("Draft", "DR");
+                var workflow = workflowStatus?.Workflow ?? EntityHelper.CreateWorkflow(id, "Submit", "SUBMIT-DISPOSAL", new[] { status });
+                workflowStatus ??= workflow.Status.First();
+            }
+
             var tierLevel = context.TierLevels.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateTierLevel("tierLevel");
 
-            var project = new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
-            {
-                ReportedFiscalYear = DateTime.UtcNow.GetFiscalYear(),
-                ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
-                Agency = agency,
-                AgencyId = agency.Id,
-                Description = $"description-{id}",
-                Status = status,
-                StatusId = status.Id,
-                CreatedById = Guid.NewGuid(),
-                CreatedOn = DateTime.UtcNow,
-                UpdatedById = Guid.NewGuid(),
-                UpdatedOn = DateTime.UtcNow,
-                RowVersion = new byte[] { 12, 13, 14 }
-            };
+            var project = EntityHelper.CreateProject(id, agency, tierLevel, workflowStatus);
             context.Projects.Add(project);
             return project;
         }
@@ -142,46 +129,58 @@ namespace Pims.Core.Test
         /// <param name="startId"></param>
         /// <param name="count"></param>
         /// <param name="agency"></param>
-        /// <param name="status"></param>
+        /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static List<Entity.Project> CreateProjects(this PimsContext context, int startId, int count, Entity.Agency agency = null, Entity.ProjectStatus status = null)
+        public static List<Entity.Project> CreateProjects(this PimsContext context, int startId, int count, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null)
         {
             agency ??= context.Agencies.FirstOrDefault(a => a.Id == 1) ?? EntityHelper.CreateAgency(startId);
-            status ??= context.ProjectStatus.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateProjectStatus("Draft", "DR");
+            workflowStatus ??= context.WorkflowProjectStatus.FirstOrDefault(ws => ws.WorkflowId == 1 && ws.StatusId == 1);
+            if (workflowStatus == null)
+            {
+                var status = workflowStatus?.Status ?? EntityHelper.CreateProjectStatus("Draft", "DR");
+                var workflow = workflowStatus?.Workflow ?? EntityHelper.CreateWorkflow(startId, "Submit", "SUBMIT-DISPOSAL", new[] { status });
+                workflowStatus ??= workflow.Status.First();
+            }
 
             var projects = new List<Entity.Project>(count);
             for (var i = startId; i < (startId + count); i++)
             {
-                projects.Add(context.CreateProject(i, agency, status));
+                projects.Add(context.CreateProject(i, agency, workflowStatus));
             }
             return projects;
         }
 
         /// <summary>
-        /// Change the status of the project.
+        /// Set the project workflow and status to the specified 'workflowStatus'.
         /// </summary>
-        /// <param name="context"></param>
         /// <param name="project"></param>
-        /// <param name="statusId"></param>
+        /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static Entity.Project ChangeStatus(this PimsContext context, Entity.Project project, int statusId)
+        public static Entity.Project SetStatus(this Entity.Project project, Entity.WorkflowProjectStatus workflowStatus)
         {
-            project.StatusId = statusId;
-            project.Status = context.ProjectStatus.First(s => s.Id == statusId);
+            project.Workflow = workflowStatus.Workflow;
+            project.WorkflowId = workflowStatus.WorkflowId;
+            project.Status = workflowStatus.Status;
+            project.StatusId = workflowStatus.StatusId;
             return project;
         }
 
         /// <summary>
-        /// Change the status of the project.
+        /// Set the project workflow and status to the specified 'workflow' and 'status'.
+        /// If the status is not part of the specified workflow it will throw an exception.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="project"></param>
-        /// <param name="statusId"></param>
+        /// <param name="workflowCode"></param>
+        /// <param name="statusCode"></param>
         /// <returns></returns>
-        public static Entity.Project ChangeStatus(this Entity.Project project, Entity.ProjectStatus status)
+        public static PimsContext SetStatus(this PimsContext context, Entity.Project project, string workflowCode, string statusCode)
         {
-            project.Status = status;
-            project.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
-            return project;
+            var workflow = context.Workflows.First(w => w.Code == workflowCode);
+            var status = workflow.Status.First(s => s.Status.Code == statusCode);
+            project.SetStatus(status);
+
+            return context;
         }
     }
 }

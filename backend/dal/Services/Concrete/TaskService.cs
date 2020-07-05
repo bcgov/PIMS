@@ -65,11 +65,10 @@ namespace Pims.Dal.Services
         {
             var tasks = from w in this.Context.Workflows.AsNoTracking()
                         join ws in this.Context.WorkflowProjectStatus on w.Id equals ws.WorkflowId
-                        join s in this.Context.ProjectStatus on ws.StatusId equals s.Id
-                        join t in this.Context.Tasks on s.Id equals t.StatusId into gt
+                        join t in this.Context.Tasks on ws.StatusId equals t.StatusId into gt
                         from at in gt.DefaultIfEmpty()
                         where w.Code == workflowCode
-                        orderby at.StatusId, at.SortOrder, at.Name
+                        orderby ws.SortOrder, at.SortOrder, at.Name
                         select at;
 
             return tasks.ToArray();

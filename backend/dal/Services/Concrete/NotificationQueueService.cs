@@ -192,8 +192,15 @@ namespace Pims.Dal.Services
             }
             else if (options.Template.Audience == NotificationAudiences.ParentAgencies)
             {
-                // Generate a notification for all enabled parent agencies that have not turned of emails.
-                var agencies = this.Context.Agencies.Where(a => a.ParentId == null && !a.IsDisabled && a.SendEmail);
+                // Generate a notification for all enabled parent agencies that have not turned of emails, or asked to ignore the project.
+                var agencies = from a in this.Context.Agencies
+                               join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
+                               from n in g.DefaultIfEmpty()
+                               where a.ParentId == null
+                                && !a.IsDisabled
+                                && a.SendEmail
+                                && (n == null || n.Response != NotificationResponses.Ignore)
+                               select a;
 
                 foreach (var agency in agencies)
                 {
@@ -204,6 +211,23 @@ namespace Pims.Dal.Services
             {
                 // Generate a notification for the default specified 'To' email addresses.
                 notifications.Add(GenerateNotification(options, new ProjectNotificationModel(Guid.NewGuid(), project), sendOn));
+            }
+            else if (options.Template.Audience == NotificationAudiences.WatchingAgencies)
+            {
+                // Generate a notification for agencies that have expressed interest.
+                var agencies = from a in this.Context.Agencies
+                               join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
+                               from n in g.DefaultIfEmpty()
+                               where !a.IsDisabled
+                                && a.SendEmail
+                                && n != null
+                                && n.Response == NotificationResponses.Watch
+                               select a;
+
+                foreach (var agency in agencies)
+                {
+                    notifications.Add(GenerateNotification(options, new ProjectNotificationModel(Guid.NewGuid(), project, agency), sendOn));
+                }
             }
 
             return notifications;

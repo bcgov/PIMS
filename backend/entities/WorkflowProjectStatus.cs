@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Dal.Entities
 {
@@ -29,9 +30,24 @@ namespace Pims.Dal.Entities
         public ProjectStatus Status { get; set; }
 
         /// <summary>
-        /// get/ste - This status is an optional path.
+        /// get/set - The sort order of the status for this workflow.
+        /// </summary>
+        public int SortOrder { get; set; }
+
+        /// <summary>
+        /// get/set - Whether this workflow project status is an optional path.
         /// </summary>
         public bool IsOptional { get; set; }
+
+        /// <summary>
+        /// get - Collection of status transitions this status can go to.
+        /// </summary>
+        public ICollection<ProjectStatusTransition> ToStatus { get; } = new List<ProjectStatusTransition>();
+
+        /// <summary>
+        /// get - Collection of status transitions this status can come from.
+        /// </summary>
+        public ICollection<ProjectStatusTransition> FromStatus { get; } = new List<ProjectStatusTransition>();
         #endregion
 
         #region Constructors
@@ -45,14 +61,14 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="workflow"></param>
         /// <param name="status"></param>
-        /// <param name="isOptional"></param>
-        public WorkflowProjectStatus(Workflow workflow, ProjectStatus status, bool isOptional = false)
+        /// <param name="sortOrder"></param>
+        public WorkflowProjectStatus(Workflow workflow, ProjectStatus status, int sortOrder = 0)
         {
             this.Workflow = workflow;
             this.WorkflowId = workflow?.Id ?? throw new ArgumentNullException(nameof(workflow));
             this.Status = status;
             this.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
-            this.IsOptional = isOptional;
+            this.SortOrder = sortOrder;
         }
         #endregion
     }
