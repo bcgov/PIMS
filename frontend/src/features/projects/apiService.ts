@@ -3,8 +3,8 @@ import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { ENVIRONMENT } from 'constants/environment';
 import { IProjectFilter, IProject } from './list/interfaces';
-import { IApiProject, IProperty } from './dispose';
-import { toFlatProject } from './dispose/projectConverter';
+import { toFlatProject } from './common/projectConverter';
+import { IProperty, IApiProject } from './common';
 
 const { apiUrl: basePath } = ENVIRONMENT;
 

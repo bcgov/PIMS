@@ -2,9 +2,10 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik, setIn } from 'formik';
 import { Form } from 'components/common/form';
-import { IStepProps, IProjectTask, IProject, DisposeWorkflowStatus } from '../interfaces';
-import { useStepForm, useStepper, DocumentationForm, StepErrorSummary, ProjectNotes } from '..';
+import { IStepProps, IProjectTask, IProject, DisposeWorkflowStatus } from '../../common/interfaces';
+import { useStepper, StepErrorSummary } from '..';
 import _ from 'lodash';
+import { useStepForm, DocumentationForm, ProjectNotes } from '../../common';
 
 const handleValidate = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {

@@ -1,20 +1,14 @@
 import { useEffect, useContext } from 'react';
-import { fetchProjectWorkflow } from '../projectsActionCreator';
+import { fetchProjectWorkflow } from '../../common/projectsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import {
-  IProject,
-  initialValues,
-  IStatus,
-  StepperContext,
-  IProjectWrapper,
-  IProjectTask,
-} from '..';
+import { StepperContext } from '..';
+import { IProject, initialValues, IStatus, IProjectWrapper, IProjectTask } from '../../common';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
-import { ReviewWorkflowStatus } from '../interfaces';
+import { ReviewWorkflowStatus } from '../../common/interfaces';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -121,6 +115,9 @@ const useStepper = () => {
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
+  const updateWorkflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
+    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  );
   useEffect(() => {
     if (!diposeWorkflowStatuses?.length) {
       dispatch(fetchProjectWorkflow());
@@ -142,13 +139,20 @@ const useStepper = () => {
       project.statusId > 0 &&
       project.statusCode !== ReviewWorkflowStatus.ExemptionReview &&
       diposeWorkflowStatuses?.length > 0 &&
+      updateWorkflowStatusRequest === undefined &&
       currentStatus?.id !== undefined &&
       _.find(diposeWorkflowStatuses, { id: project.statusId }) === undefined &&
       _.find(diposeWorkflowStatuses, { id: currentStatus.id })?.sortOrder !== undefined
     ) {
       throw Error('You cannot edit a project disposal form after it has been submitted');
     }
-  }, [currentStatus, getProjectRequest, project, diposeWorkflowStatuses]);
+  }, [
+    currentStatus,
+    getProjectRequest,
+    project,
+    diposeWorkflowStatuses,
+    updateWorkflowStatusRequest,
+  ]);
 
   return {
     currentStatus,

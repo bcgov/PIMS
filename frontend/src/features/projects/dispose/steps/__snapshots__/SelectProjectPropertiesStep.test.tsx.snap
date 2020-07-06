@@ -834,7 +834,6 @@ exports[`renders correctly 1`] = `
             name="note"
             onBlur={[Function]}
             onChange={[Function]}
-            value=""
           />
         </span>
       </div>

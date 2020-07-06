@@ -2,15 +2,9 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form } from 'components/common/form';
-import { IStepProps } from '../interfaces';
-import {
-  useStepForm,
-  useStepper,
-  UpdateInfoStepYupSchema,
-  UpdateInfoForm,
-  StepErrorSummary,
-  ProjectNotes,
-} from '..';
+import { IStepProps } from '../../common/interfaces';
+import { useStepper, UpdateInfoStepYupSchema, StepErrorSummary } from '..';
+import { useStepForm, ProjectNotes, UpdateInfoForm } from '../../common';
 
 /**
  * Update property information already associated to this project on a property list view.

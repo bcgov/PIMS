@@ -10,7 +10,7 @@ import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
-import { DisposeWorkflowStatus, IProjectTask } from '../interfaces';
+import { DisposeWorkflowStatus, IProjectTask } from '../../common/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 
 const mockAxios = new MockAdapter(axios);

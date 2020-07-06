@@ -3,7 +3,7 @@ import './ProjectDisposalSubmitted.scss';
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import StepStatusIcon from './components/StepStatusIcon';
+import StepStatusIcon from '../common/components/StepStatusIcon';
 
 /**
  * Display success message after all project disposal steps are completed successfully.

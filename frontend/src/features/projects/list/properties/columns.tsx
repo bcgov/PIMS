@@ -7,7 +7,7 @@ import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
-import { IProperty } from '../../dispose/interfaces';
+import { IProperty } from '../../common/interfaces';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
