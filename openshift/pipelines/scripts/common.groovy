@@ -23,15 +23,16 @@ def runFrontendTests() {
   }
 }
 
-def runFrontendStaticAnalysis(String sonarUrl, String jobName) {
+def runFrontendStaticAnalysis(String sonarUrl, String jobName, String sonarToken = '') {
   timeout(20) {
     dir('frontend') {
       echo 'Performing SonarQube static code analysis...'
       sh """
       sonar-scanner \
         -Dsonar.host.url='${sonarUrl}' \
+        -Dsonar.login='${sonarToken}' \
         -Dsonar.projectKey='pims-frontend-${jobName}' \
-        -Dsonar.projectName='PIMS Frontend [${jobName.toUpperCase()}]'
+        -Dsonar.projectName='PIMS Frontend [${jobName}]'
       """
     }
   }

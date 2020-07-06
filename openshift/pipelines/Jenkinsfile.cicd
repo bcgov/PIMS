@@ -220,26 +220,14 @@ pipeline {
     }
 
     stage("Quality Gate") {
-      agent { label 'jenkins-slave-npm' }
       when {
-        expression { new Boolean(env.SKIP_BUILD) == false }
+        expression { false } // skip this stage (for now)
       }
       options {
-        timeout(time: 1, unit: "MINUTES")
+        timeout(time: 5, unit: "MINUTES")
       }
       steps {
-        echo 'TODO: SonarQube integration'
-
-        // unstash API_COV_STASH
-        // unstash FE_COV_STASH
-
-        // echo 'Performing SonarQube static code analysis...'
-        // sh """
-        // sonar-scanner \
-        //   -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-        //   -Dsonar.projectKey='${REPO_NAME}-${OC_JOB_NAME}' \
-        //   -Dsonar.projectName='NRPTI (${OC_JOB_NAME.toUpperCase()})'
-        // """
+        //  TODO: Break the build if Quality Gate failed
       }
     }
 
