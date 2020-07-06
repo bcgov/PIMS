@@ -80,9 +80,8 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const occupantTypes = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.OCCUPANT_TYPE_CODE_SET_NAME;
   }).map(mapLookupCode);
-  // only return parent agencies
-  const parentAgencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME && lookupCode.parentId === undefined;
+  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   }).map(mapLookupCode);
   const withNameSpace: Function = (name?: string) => {
     return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
@@ -208,7 +207,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               </Form.Label>
               <AutoCompleteText
                 field={withNameSpace('agencyId')}
-                options={parentAgencies}
+                options={agencies}
                 disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
                 showAbbreviation={true}
               />
