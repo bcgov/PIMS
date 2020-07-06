@@ -4,17 +4,36 @@ import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
 import * as MOCK from 'mocks/filterDataMock';
 import Axios from 'axios';
+import { useKeycloak } from '@react-keycloak/web';
 
 const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
+jest.mock('@react-keycloak/web');
 const mockedAxios = Axios as jest.Mocked<typeof Axios>;
+
+const uiElement = (
+  <MapFilterBar
+    agencyLookupCodes={MOCK.AGENCIES}
+    propertyClassifications={MOCK.CLASSIFICATIONS}
+    lotSizes={[1, 2, 3]}
+    onFilterChange={onFilterChange}
+  />
+);
 
 describe('MapFilterBar', () => {
   afterEach(() => {
     cleanup();
   });
   it('renders correctly', () => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['property-view'],
+        },
+      },
+    });
     // Capture any changes
     const tree = renderer
       .create(
@@ -31,21 +50,23 @@ describe('MapFilterBar', () => {
 
   xit('submits correct values', async () => {
     // Arrange
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['admin-properties'],
+        },
+      },
+    });
     mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
-    const uiElement = (
-      <MapFilterBar
-        agencyLookupCodes={MOCK.AGENCIES}
-        propertyClassifications={MOCK.CLASSIFICATIONS}
-        lotSizes={[1, 2, 3]}
-        onFilterChange={onFilterChange}
-      />
-    );
+
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
     const agencies = container.querySelector('input[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('input[name="minLotSize"]');
     const maxLotSize = container.querySelector('input[name="maxLotSize"]');
+    const projectPropertiesOnly = container.querySelector('input[name="projectPropertiesOnly"]');
     const submit = container.querySelector('button[type="submit"]');
 
     // Act
@@ -91,6 +112,10 @@ describe('MapFilterBar', () => {
     });
 
     await wait(() => {
+      fireEvent.click(projectPropertiesOnly!);
+    });
+
+    await wait(() => {
       fireEvent.click(submit!);
     });
 
@@ -104,6 +129,20 @@ describe('MapFilterBar', () => {
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',
+      projectPropertiesOnly: true,
     });
+  });
+
+  it('does not display SPP property filter for non-sres users', () => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['property-view'],
+        },
+      },
+    });
+    const { queryByText } = render(uiElement);
+    expect(queryByText('Properties in SPP')).toBeNull();
   });
 });

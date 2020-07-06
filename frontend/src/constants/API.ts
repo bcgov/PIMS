@@ -38,6 +38,7 @@ export interface IParcelListParams {
   classificationId: number | null;
   minLandArea: number | null;
   maxLandArea: number | null;
+  projectPropertiesOnly: boolean | null;
 }
 export const PARCELS = (params: IParcelListParams | null) =>
   `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.

@@ -67,6 +67,13 @@ namespace Pims.Api.Areas.Property.Models.Search
         public bool? IgnorePropertiesInProjects { get; set; }
 
         /// <summary>
+        /// get/set - Flag indicating to show only properties that belong to a project.
+        /// </summary>
+        /// <value></value>
+
+        public bool? ProjectPropertiesOnly { get; set; }
+
+        /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
         /// </summary>
         /// <value></value>
@@ -248,6 +255,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
+            this.ProjectPropertiesOnly = filter.GetBoolNullValue(nameof(this.ProjectPropertiesOnly));
 
             this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
             this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
@@ -372,6 +380,7 @@ namespace Pims.Api.Areas.Property.Models.Search
 
                 ProjectNumber = model.ProjectNumber,
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
+                ProjectPropertiesOnly = model.ProjectPropertiesOnly,
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,

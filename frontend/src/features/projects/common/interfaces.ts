@@ -83,6 +83,7 @@ export interface IPropertyFilter {
   municipality?: string;
   projectNumber?: string;
   ignorePropertiesInProjects?: boolean;
+  projectPropertiesOnly?: boolean;
   classificationId?: number;
   statusId?: number;
   agencies?: number | number[];
