@@ -86,13 +86,26 @@ namespace Pims.Api.Test.Routes.Project
         public void DeleteProject_Route()
         {
             // Arrange
-            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.DeleteProject), typeof(string), typeof(Model.ProjectModel));
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.DeleteProjectAsync), typeof(string), typeof(Model.ProjectModel));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{projectNumber}");
             endpoint.HasPermissions(Permissions.ProjectDelete);
+        }
+
+        [Fact]
+        public void SetStatus_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.SetStatusAsync), typeof(Model.ProjectModel));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("workflows");
+            endpoint.HasPermissions(Permissions.ProjectEdit);
         }
 
         [Fact]
@@ -104,7 +117,7 @@ namespace Pims.Api.Test.Routes.Project
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPut("workflow/{workflowCode}/{statusId:int}");
+            endpoint.HasPut("workflows/{workflowCode}/{statusId:int}");
             endpoint.HasPermissions(Permissions.ProjectEdit);
         }
 
@@ -117,7 +130,46 @@ namespace Pims.Api.Test.Routes.Project
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPut("workflow/{workflowCode}/{statusCode}");
+            endpoint.HasPut("workflows/{workflowCode}/{statusCode}");
+            endpoint.HasPermissions(Permissions.ProjectEdit);
+        }
+
+        [Fact]
+        public void GetProjectNotificationsAsync_AsQuery_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.GetProjectNotificationsAsync), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("{id}/notifications");
+            endpoint.HasPermissions(Permissions.ProjectView);
+        }
+
+        [Fact]
+        public void GetProjectNotificationsAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.GetProjectNotificationsAsync), typeof(Pims.Dal.Entities.Models.ProjectNotificationFilter));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("notifications");
+            endpoint.HasPermissions(Permissions.ProjectView);
+        }
+
+        [Fact]
+        public void CancelProjectNotificationsAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(DisposeController).FindMethod(nameof(DisposeController.CancelProjectNotificationsAsync), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("{id}/notifications/cancel");
             endpoint.HasPermissions(Permissions.ProjectEdit);
         }
         #endregion

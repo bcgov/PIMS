@@ -12,6 +12,7 @@ using MapsterMapper;
 using System.Linq;
 using System.Collections.Generic;
 using Entity = Pims.Dal.Entities;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -200,23 +201,27 @@ namespace Pims.Api.Test.Controllers
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<TemplateController>(Permissions.SystemAdmin);
-
+            var options = helper.CreateDefaultPimsOptions();
+            var controller = helper.CreateController<TemplateController>(Permissions.SystemAdmin, options);
+            
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var notification = EntityHelper.CreateNotificationQueue(1, template);
+            var project = EntityHelper.CreateProject(1);
             service.Setup(m => m.NotificationTemplate.SendNotificationAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(notification);
+            service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
 
             // Act
-            var result = await controller.SendNotificationAsync(template.Id, "test@test.com");
+            var result = await controller.SendProjectNotificationAsync(template.Id, "test@test.com", project.Id);
 
             // Assert
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualResult = Assert.IsType<Areas.Notification.Models.Queue.NotificationQueueModel>(actionResult.Value);
             Assert.Equal(201, actionResult.StatusCode);
             Assert.Equal(mapper.Map<Areas.Notification.Models.Queue.NotificationQueueModel>(notification), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.NotificationTemplate.SendNotificationAsync<object>(template.Id, "test@test.com", null), Times.Once());
+            service.Verify(m => m.NotificationTemplate.SendNotificationAsync<object>(template.Id, "test@test.com", null), Times.Never());
+            service.Verify(m => m.Project.Get(project.Id), Times.Once());
         }
         #endregion
         #endregion

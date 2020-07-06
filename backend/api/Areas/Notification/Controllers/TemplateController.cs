@@ -10,6 +10,8 @@ using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Api.Areas.Notification.Controllers
 {
@@ -25,6 +27,7 @@ namespace Pims.Api.Areas.Notification.Controllers
     public class TemplateController : ControllerBase
     {
         #region Variables
+        private readonly PimsOptions _options;
         private readonly IPimsService _pimsService;
         private readonly IMapper _mapper;
         #endregion
@@ -33,10 +36,12 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <summary>
         /// Creates a new instance of a TemplateController class, initializes it with the specified arguments.
         /// </summary>
+        /// <param name="options"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public TemplateController(IPimsService pimsService, IMapper mapper)
+        public TemplateController(IOptions<PimsOptions> options, IPimsService pimsService, IMapper mapper)
         {
+            _options = options.Value;
             _pimsService = pimsService;
             _mapper = mapper;
         }
@@ -131,16 +136,19 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// </summary>
         /// <param name="templateId"></param>
         /// <param name="to"></param>
-        /// <param name="model"></param>
+        /// <param name="projectId"></param>
         /// <returns></returns>
-        [HttpPost("{templateId}")]
+        [HttpPost("{templateId}/projects/{projectId}")]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.Queue.NotificationQueueModel), 201)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "notification" })]
-        public async Task<IActionResult> SendNotificationAsync(int templateId, string to, [FromBody] object model = null) // TODO: Provide a way to pass a model.
+        public async Task<IActionResult> SendProjectNotificationAsync(int templateId, string to, int projectId)
         {
+            var project = _pimsService.Project.Get(projectId);
+            var env = new Entity.Models.EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
+            var model = new Entity.Models.ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency);
             var notification = await _pimsService.NotificationTemplate.SendNotificationAsync(templateId, to, model);
 
             return CreatedAtAction(nameof(QueueController.GetNotificationQueue), new { controller = "queue", id = notification.Id }, _mapper.Map<Models.Queue.NotificationQueueModel>(notification));

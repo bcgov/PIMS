@@ -22,6 +22,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - The agency this notification was sent to.
         /// </summary>
         public Agency ToAgency { get; set; }
+
+        /// <summary>
+        /// get/set - Environmental variables.
+        /// </summary>
+        public EnvironmentModel Environment { get; set; }
         #endregion
 
         #region Constructors
@@ -34,13 +39,15 @@ namespace Pims.Dal.Entities.Models
         /// Creates a new instance of a ProjectNotificationModel, initialize with specified arguments.
         /// </summary>
         /// <param name="notificationKey"></param>
+        /// <param name="environment"></param>
         /// <param name="project"></param>
         /// <param name="toAgency"></param>
-        public ProjectNotificationModel(Guid notificationKey, Project project, Agency toAgency = null)
+        public ProjectNotificationModel(Guid notificationKey, EnvironmentModel environment, Project project, Agency toAgency = null)
         {
             this.NotificationKey = notificationKey;
             this.Project = project;
             this.ToAgency = toAgency;
+            this.Environment = environment;
         }
         #endregion
     }

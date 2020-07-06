@@ -11,9 +11,11 @@ namespace Pims.Dal.Services
     {
         IEnumerable<NotificationTemplate> Get();
         NotificationTemplate Get(int id);
+        NotificationTemplate Get(string name);
         NotificationTemplate Add(NotificationTemplate template);
         NotificationTemplate Update(NotificationTemplate template);
         void Remove(NotificationTemplate template);
-        Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model = null) where T : class;
+        Task<NotificationQueue> SendNotificationAsync(int templateId, string to);
+        Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model) where T : class;
     }
 }

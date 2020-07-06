@@ -17,5 +17,6 @@ namespace Pims.Dal.Services
         AccessRequest DeleteAccessRequest(AccessRequest accessRequest);
         AccessRequest AddAccessRequest(AccessRequest request);
         AccessRequest UpdateAccessRequest(AccessRequest request);
+        IEnumerable<User> GetAdmininstrators(params int[] agencyId);
     }
 }

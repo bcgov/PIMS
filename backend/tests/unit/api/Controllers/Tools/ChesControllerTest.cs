@@ -97,7 +97,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var helper = new TestHelper();
             var controller = helper.CreateController<ChesController>(Permissions.PropertyEdit);
 
-            var response = new Model.CancelResponseModel()
+            var response = new Model.StatusResponseModel()
             {
                 TransactionId = Guid.NewGuid(),
                 MessageId = Guid.NewGuid(),
@@ -112,7 +112,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            var results = Assert.IsAssignableFrom<Model.CancelResponseModel>(actionResult.Value);
+            var results = Assert.IsAssignableFrom<Model.StatusResponseModel>(actionResult.Value);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var filter = new Model.StatusModel();
             var response = new[] {
-                new Model.CancelResponseModel()
+                new Model.StatusResponseModel()
                 {
                     TransactionId = Guid.NewGuid(),
                     MessageId = Guid.NewGuid(),
@@ -140,7 +140,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            var results = Assert.IsAssignableFrom<IEnumerable<Model.CancelResponseModel>>(actionResult.Value);
+            var results = Assert.IsAssignableFrom<IEnumerable<Model.StatusResponseModel>>(actionResult.Value);
         }
         #endregion
         #endregion

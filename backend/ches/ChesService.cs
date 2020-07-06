@@ -12,6 +12,7 @@ using Pims.Core.Exceptions;
 using Pims.Core.Http.Models;
 using System.Security.Claims;
 using Pims.Core.Extensions;
+using System.Linq;
 
 namespace Pims.Ches
 {
@@ -71,6 +72,34 @@ namespace Pims.Ches
             if (_token == null || String.IsNullOrWhiteSpace(_token.AccessToken) || _tokenHandler.ReadJwtToken(_token.AccessToken).ValidTo <= DateTime.UtcNow)
             {
                 _token = await GetTokenAsync();
+            }
+        }
+
+        /// <summary>
+        /// Send a request to the specified endpoint.
+        /// </summary>
+        /// <typeparam name="TR"></typeparam>
+        /// <param name="endpoint"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private async Task<string> SendAsync(string endpoint, HttpMethod method)
+        {
+            await RefreshAccessTokenAsync();
+
+            var url = GenerateUrl(endpoint);
+
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add("Authorization", $"Bearer {_token.AccessToken}");
+
+            try
+            {
+                var response = await this.Client.SendAsync(url, method, headers);
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpClientRequestException ex)
+            {
+                var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
+                throw new ChesException(ex, this.Client, response);
             }
         }
 
@@ -176,6 +205,16 @@ namespace Pims.Ches
             if (this.Options.OverrideTo)
             {
                 email.To = new[] { _user.GetEmail() };
+                email.Cc = new string[0];
+                email.Bcc = new string[0];
+            }
+            if (this.Options.BccUser)
+            {
+                email.Bcc = email.Bcc?.Concat(new[] { _user.GetEmail() });
+            }
+            if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
+            {
+                email.Bcc = email.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
             }
             return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
         }
@@ -197,6 +236,23 @@ namespace Pims.Ches
                 email.Contexts.ForEach(c =>
                 {
                     c.To = new[] { address };
+                    c.Cc = new string[0];
+                    c.Bcc = new string[0];
+                });
+            }
+            if (this.Options.BccUser)
+            {
+                var address = _user.GetEmail();
+                email.Contexts.ForEach(c =>
+                {
+                    c.Bcc = c.Bcc?.Concat(new[] { _user.GetEmail() });
+                });
+            }
+            if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
+            {
+                email.Contexts.ForEach(c =>
+                {
+                    c.Bcc = c.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
                 });
             }
             return await SendAsync<EmailResponseModel, IEmailMerge>("/emailMerge", HttpMethod.Post, email);
@@ -236,9 +292,10 @@ namespace Pims.Ches
         /// </summary>
         /// <param name="messageId"></param>
         /// <returns></returns>
-        public async Task<CancelResponseModel> CancelEmailAsync(Guid messageId)
+        public async Task<StatusResponseModel> CancelEmailAsync(Guid messageId)
         {
-            return await SendAsync<CancelResponseModel>($"/cancel/{messageId}", HttpMethod.Get);
+            await SendAsync($"/cancel/{messageId}", HttpMethod.Delete);
+            return await GetStatusAsync(messageId);
         }
 
         /// <summary>
@@ -246,7 +303,7 @@ namespace Pims.Ches
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CancelResponseModel>> CancelEmailAsync(StatusModel filter)
+        public async Task<IEnumerable<StatusResponseModel>> CancelEmailAsync(StatusModel filter)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
             if (!filter.MessageId.HasValue && !filter.TransactionId.HasValue && String.IsNullOrWhiteSpace(filter.Status) && String.IsNullOrWhiteSpace(filter.Tag)) throw new ArgumentException("At least one parameter must be specified.");
@@ -257,7 +314,8 @@ namespace Pims.Ches
             if (!String.IsNullOrEmpty(filter.Tag)) query.Append($"&tag={filter.Tag}");
             if (filter.TransactionId.HasValue) query.Append($"&txId={filter.TransactionId.HasValue}");
 
-            return await SendAsync<IEnumerable<CancelResponseModel>>($"/cancel{query}", HttpMethod.Get);
+            await SendAsync($"/cancel{query}", HttpMethod.Delete);
+            return await GetStatusAsync(filter);
         }
         #endregion
     }

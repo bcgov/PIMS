@@ -1,5 +1,7 @@
+using Pims.Core.Converters;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Pims.Ches.Models
 {
@@ -8,7 +10,11 @@ namespace Pims.Ches.Models
         IEnumerable<string> Bcc { get; set; }
         IEnumerable<string> Cc { get; set; }
         object Context { get; set; }
+
+        [JsonConverter(typeof(MicrosecondEpochJsonConverter))]
+        [JsonPropertyName("delayTS")]
         DateTime SendOn { get; set; }
+
         string Tag { get; set; }
         IEnumerable<string> To { get; set; }
     }

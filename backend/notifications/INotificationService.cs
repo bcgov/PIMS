@@ -12,5 +12,6 @@ namespace Pims.Notifications
         Task<Model.EmailResponse> SendNotificationAsync(Model.IEmail notification);
         Task<Model.EmailResponse> SendNotificationsAsync(IEnumerable<Model.IEmail> notifications);
         Task<Model.StatusResponse> GetStatusAsync(Guid messageId);
+        Task<Model.StatusResponse> CancelNotificationAsync(Guid messageId);
     }
 }

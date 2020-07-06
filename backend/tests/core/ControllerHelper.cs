@@ -109,8 +109,25 @@ namespace Pims.Core.Test
         {
             return Options.Create(new PimsOptions()
             {
-                Project = CreateDefaultProjectOptions().Value
+                Project = CreateDefaultProjectOptions().Value,
+                Environment = new EnvironmentOptions()
+                {
+                    Uri = new Uri("http://localhost:3000"),
+                    Name = "Testing",
+                    Title = "Property Inventory Management System"
+                }
             });
+        }
+
+        /// <summary>
+        /// Creates a default pims configuration options.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <returns></returns>
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "This just makes it easier to reference.")]
+        public static IOptions<PimsOptions> CreateDefaultPimsOptions(this TestHelper helper)
+        {
+            return CreateDefaultPimsOptions();
         }
 
         /// <summary>

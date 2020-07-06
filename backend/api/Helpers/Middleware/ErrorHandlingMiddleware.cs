@@ -17,7 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
-using ChesModel = Pims.Ches.Models;
 
 namespace Pims.Api.Helpers.Middleware
 {

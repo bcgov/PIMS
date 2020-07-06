@@ -1,7 +1,5 @@
-using Pims.Core.Converters;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Pims.Ches.Models
 {
@@ -34,8 +32,6 @@ namespace Pims.Ches.Models
         /// <summary>
         /// get/set - When the email will be sent.
         /// </summary>
-        [JsonConverter(typeof(MicrosecondEpochJsonConverter))]
-        [JsonPropertyName("delayTS")]
         public DateTime SendOn { get; set; }
 
         /// <summary>

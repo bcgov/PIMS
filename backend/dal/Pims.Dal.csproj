@@ -42,6 +42,7 @@
     <None Remove="Migrations\Initial\PostDeploy\01-ProjectStatusTasks.sql" />
     <None Remove="Migrations\Initial\PostDeploy\01-Workflow.sql" />
     <None Remove="Migrations\Initial\PostDeploy\01-WorkflowProjectStatus.sql" />
+    <None Remove="Migrations\Initial\PostDeploy\02-ProjectStatusNotifications.sql" />
     <None Remove="Migrations\Initial\PostDeploy\02-ProjectStatusTransitions.sql" />
   </ItemGroup>
   <ItemGroup>
