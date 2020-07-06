@@ -59,3 +59,16 @@ display_helper() {
   done
   set -e
 }
+
+_log_error() {
+  echo "$@" 1>&2
+}
+
+fatal_error() {
+  _log_error "Fatal:" "$@"
+  exit 1
+}
+
+_log() {
+  echo "$@"
+}
