@@ -100,6 +100,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
+                .Include(p => p.Workflow)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -184,6 +185,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
+                .Include(p => p.Workflow)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 

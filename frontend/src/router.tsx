@@ -15,10 +15,11 @@ import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test.ignore';
 import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
-import { ProjectDisposeView } from 'features/projects/dispose';
 import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
 import { ProjectListView, ProjectApprovalRequestListView } from 'features/projects/list';
 import { LogoutPage } from 'features/account/Logout';
+import { ProjectRouter } from 'features/projects/common';
+import { ProjectDisposeView } from 'features/projects/dispose';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -101,19 +102,27 @@ const AppRouter: React.FC = () => {
       />
       <AppRoute
         protected
-        path="/project/completed"
-        component={ProjectDisposalSubmitted}
-        layout={AuthLayout}
-        claim={Claims.PROJECT_VIEW}
-        title={getTitle('Dispose Property Complete')}
-      />
-      <AppRoute
-        protected
         path="/projects/list"
         component={ProjectListView}
         layout={AuthLayout}
         claim={Claims.PROJECT_VIEW}
         title={getTitle('View Projects')}
+      />
+      <AppRoute
+        protected
+        path="/projects"
+        component={ProjectRouter}
+        layout={AuthLayout}
+        claim={Claims.PROJECT_ADD}
+        title={getTitle('Dispose Property')}
+      />
+      <AppRoute
+        protected
+        path="/project/completed"
+        component={ProjectDisposalSubmitted}
+        layout={AuthLayout}
+        claim={Claims.PROJECT_VIEW}
+        title={getTitle('Dispose Property Complete')}
       />
       <AppRoute
         protected

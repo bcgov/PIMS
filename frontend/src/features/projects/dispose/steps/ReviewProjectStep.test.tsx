@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReviewProjectStep from './ReviewProjectStep';
 import { IProject, IProjectTask } from '..';
-import { DisposeWorkflowStatus, ITask } from '../interfaces';
+import { DisposeWorkflowStatus, ITask } from '../../common/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 
 const mockStore = configureMockStore([thunk]);
@@ -55,6 +55,10 @@ const mockProject: IProject = {
   tasks: mockTasks,
   note: 'my notes',
   id: 1,
+  fiscalYear: 2020,
+  projectAgencyResponses: [],
+  publicNote: 'public',
+  privateNote: 'private',
 };
 
 export const tasks: ITask[] = [

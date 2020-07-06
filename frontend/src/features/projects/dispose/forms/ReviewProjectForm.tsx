@@ -1,17 +1,17 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewProjectForm.scss';
-import {
-  ProjectDraftForm,
-  UpdateInfoForm,
-  ExemptionRequest,
-  DocumentationForm,
-  ApprovalConfirmationForm,
-  DisposeWorkflowStatus,
-  IProject,
-} from '..';
+import { ExemptionRequest } from '..';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
-import { IProjectTask } from '../interfaces';
+import {
+  IProjectTask,
+  DisposeWorkflowStatus,
+  IProject,
+  ProjectDraftForm,
+  UpdateInfoForm,
+  DocumentationForm,
+  ApprovalConfirmationForm,
+} from '../../common';
 
 /**
  * Form component of ReviewProjectForm.

@@ -1,4 +1,10 @@
-import { IProjectTask, DisposeWorkflowStatus, IProject, ReviewWorkflowStatus, ITask } from '.';
+import {
+  IProjectTask,
+  DisposeWorkflowStatus,
+  IProject,
+  ReviewWorkflowStatus,
+  ITask,
+} from '../common';
 import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
@@ -53,6 +59,7 @@ export const mockProject: IProject = {
     code: ReviewWorkflowStatus.ApprovedForErp,
     isMilestone: true,
     tasks: [],
+    isOptional: false,
   },
   tierLevelId: 1,
   tasks: mockTasks,

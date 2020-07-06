@@ -9,15 +9,17 @@ import { Provider } from 'react-redux';
 import { Router, match as Match } from 'react-router-dom';
 import * as actionTypes from 'constants/actionTypes';
 import useStepper from './hooks/useStepper';
-import useStepForm from './hooks/useStepForm';
+import useStepForm from '../common/hooks/useStepForm';
 import { noop } from 'lodash';
 import { render, fireEvent, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import useProject from '../common/hooks/useProject';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 jest.mock('./hooks/useStepper');
-jest.mock('./hooks/useStepForm');
+jest.mock('../common/hooks/useProject');
+jest.mock('../common/hooks/useStepForm');
 jest.mock('components/Table/Table', () => ({
   __esModule: true,
   default: () => <></>,
@@ -163,6 +165,9 @@ describe('dispose project draft step display', () => {
       getStatusByCode: noop,
       goToNextStep: goToNextStep,
       getNextStep: () => mockWorkflow[5],
+    });
+    (useProject as jest.Mock).mockReturnValue({
+      project: { projectNumber: '', statusId: 5 },
     });
     (useStepForm as jest.Mock).mockReturnValue({
       noFetchingProjectRequests: true,
