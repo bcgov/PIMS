@@ -105,7 +105,7 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
         <Form.Control
           autoComplete={autoSetting}
           name={field}
-          value={text}
+          value={text ? text : value}
           isInvalid={!!touch && !!error}
           onChange={onTextChanged}
           placeholder={placeholder}
