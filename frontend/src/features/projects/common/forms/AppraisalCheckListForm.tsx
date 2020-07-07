@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import classNames from 'classnames';
 import TasksForm from './TasksForm';
-import { useStepper } from '../../dispose';
-import { ReviewWorkflowStatus, reviewAppraisalTooltip } from '../../common';
+import { ReviewWorkflowStatus, reviewAppraisalTooltip, useProject } from '../../common';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 
@@ -16,7 +15,7 @@ interface IAppraisalCheckListFormProps {
  * @param props
  */
 const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormProps> = props => {
-  const { project } = useStepper();
+  const { project } = useProject();
   const tasks = _.filter(project.tasks, { statusCode: ReviewWorkflowStatus.AppraisalReview });
   return (
     <Container fluid className={classNames(props.className)}>

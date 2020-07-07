@@ -610,6 +610,7 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     originalProject.Properties.ForEach(p =>
                     {

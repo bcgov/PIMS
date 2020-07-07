@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Formik, Form, setIn, validateYupSchema, yupToFormErrors } from 'formik';
-import { useStepper } from '../../dispose';
 import _ from 'lodash';
 import { useState } from 'react';
 import { formatDate } from 'utils';
@@ -25,6 +24,7 @@ import {
   IProject,
   IProjectTask,
   IStepProps,
+  useProject,
 } from '../../common';
 import { ApprovalForm, ApprovalActions, saveProjectApprovalTab } from '../../assess';
 
@@ -121,7 +121,7 @@ export const validateTasks = (project: IProject, statusCode: string) => {
 };
 
 const ApprovalStep = ({ formikRef }: IStepProps) => {
-  const { project } = useStepper();
+  const { project, getStatusTransitionWorkflow } = useProject();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
   const currentTab = useSelector<RootState, string>(state => state.projectApprovalTab);
@@ -129,25 +129,32 @@ const ApprovalStep = ({ formikRef }: IStepProps) => {
   const history = useHistory();
   const canUserEdit =
     canUserApproveForm() &&
-    (project.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-      project.statusCode === ReviewWorkflowStatus.OnHold);
+    (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+      project?.statusCode === ReviewWorkflowStatus.OnHold);
   const setCurrentTab = (tabName: string) => {
     dispatch(saveProjectApprovalTab(tabName));
   };
   const goToGreTransferred = () =>
-    history.push(`./gretransfer?projectNumber=${project.projectNumber}`);
+    history.push(`./gretransfer?projectNumber=${project?.projectNumber}`);
   return (
     <Container fluid>
       <Formik
         enableReinitialize={true}
         initialValues={project}
-        onSubmit={(values: IProject) => onSubmitReview(values, formikRef, submitStatusCode)}
+        onSubmit={(values: IProject) =>
+          onSubmitReview(
+            values,
+            formikRef,
+            submitStatusCode,
+            getStatusTransitionWorkflow(submitStatusCode),
+          )
+        }
         validate={handleValidate}
       >
         <Form>
           <StepStatusIcon
             preIconLabel="Approved for Surplus Property Program"
-            postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
+            postIconLabel={`Approval Date ${formatDate(project?.approvedOn)}`}
           />
           <CenterBoldText>{project?.status?.name ?? 'Unknown'}</CenterBoldText>
           <ApprovalForm
