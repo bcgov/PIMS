@@ -13,6 +13,7 @@ import { Table } from 'components/Table';
 import useTable from '../../dispose/hooks/useTable';
 import { useHistory } from 'react-router-dom';
 import { getColumns, getColumnsWithRemove } from './columns';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 type RequiredAttributes = {
   /** The field name */
@@ -65,9 +66,15 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [lookupCodes],
   );
 
-  const history = useHistory();
-  const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const { project } = useProject();
+  const filterByParent = useCodeLookups().filterByParent;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const filteredAgencies = useMemo(() => filterByParent(agencies, project.agencyId), [agencies]);
+
+  const history = useHistory();
+  const agencyIds = useMemo(() => filteredAgencies.map(x => parseInt(x.id, 10)), [
+    filteredAgencies,
+  ]);
   if (project === undefined) {
     throw Error('unable to load project data');
   }

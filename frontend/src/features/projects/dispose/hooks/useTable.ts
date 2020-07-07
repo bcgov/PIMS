@@ -7,7 +7,6 @@ import { IPagedItems } from 'interfaces';
 import { IProperty } from 'actions/parcelsActions';
 import { IProperty as IRowProperty } from '../../common';
 import queryString from 'query-string';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 const initialQuery: IPropertyFilter = {
   page: 1,
@@ -75,7 +74,6 @@ function transformData(data: IRowProperty[]) {
 }
 
 function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
-  const keycloak = useKeycloakWrapper();
   const fetchData = useCallback(
     async ({
       pageIndex,
@@ -91,11 +89,6 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
 
-      // TODO: Set the loading state
-      // setLoading(true);
-      // Agencies must be part of the user's agency.
-      agencyIds = keycloak.agencyIds;
-
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds: agencyIds });
@@ -109,7 +102,7 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
         // setLoading(false);
       }
     },
-    [fetchIdRef, keycloak.agencyIds, setData, setPageCount],
+    [fetchIdRef, setData, setPageCount],
   );
 
   return fetchData;

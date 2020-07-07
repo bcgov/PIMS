@@ -71,6 +71,12 @@ describe('ERP/SPL Approval Step', () => {
       expect(cancelButton).toBeVisible();
       expect(cancelButton).not.toBeDisabled();
     });
+    it('Proceed to SPL button is visible and disabled', () => {
+      const { getByText } = render(getApprovalStep());
+      const proceedToSplButton = getByText(/Proceed to SPL/);
+      expect(proceedToSplButton).toBeVisible();
+      expect(proceedToSplButton).toBeDisabled();
+    });
     it('form fields are not disabled', () => {
       const { queryAllByRole } = render(getApprovalStep());
       const textboxes = queryAllByRole('textbox');
@@ -95,6 +101,11 @@ describe('ERP/SPL Approval Step', () => {
       const component = render(getApprovalStep());
       const cancelButton = component.queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
+    });
+    it('Proceed to SPL button is disabled', () => {
+      const component = render(getApprovalStep());
+      const proceedToSplButton = component.queryByText(/Proceed to SPL/);
+      expect(proceedToSplButton).toBeDisabled();
     });
     it('form fields are disabled', () => {
       const component = render(getApprovalStep());
@@ -123,6 +134,11 @@ describe('ERP/SPL Approval Step', () => {
       const cancelButton = component.queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
     });
+    it('Proceed to SPL button is disabled', () => {
+      const component = render(getApprovalStep(getStore(project)));
+      const proceedToSplButton = component.queryByText(/Proceed to SPL/);
+      expect(proceedToSplButton).toBeDisabled();
+    });
     it('form fields are disabled', () => {
       const component = render(getApprovalStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
@@ -144,6 +160,14 @@ describe('ERP/SPL Approval Step', () => {
       const onHoldButton = getByText(/Place Project On Hold/);
       expect(onHoldButton).not.toBeDisabled();
     });
+    it('enables proceed to SPL button when proceed to SPL date entered', () => {
+      const project = _.cloneDeep(mockProject);
+      project.clearanceNotificationSentOn = new Date();
+
+      const { getByText } = render(getApprovalStep(getStore(project)));
+      const proceedToSplButton = getByText(/Proceed to SPL/);
+      expect(proceedToSplButton).not.toBeDisabled();
+    });
     it('displays modal when cancel button clicked', async (done: any) => {
       const component = render(getApprovalStep());
       const cancelButton = component.getByText(/Cancel Project/);
@@ -152,6 +176,19 @@ describe('ERP/SPL Approval Step', () => {
       });
       const cancelModel = await screen.findByText(/Really Cancel Project/);
       expect(cancelModel).toBeVisible();
+      done();
+    });
+    it('displays modal when proceed to SPL button clicked', async (done: any) => {
+      const project = _.cloneDeep(mockProject);
+      project.clearanceNotificationSentOn = new Date();
+
+      const component = render(getApprovalStep(getStore(project)));
+      const proceedToSplButton = component.getByText(/Proceed to SPL/);
+      act(() => {
+        proceedToSplButton.click();
+      });
+      const proceedModal = await screen.findByText(/Really Proceed to SPL/);
+      expect(proceedModal).toBeVisible();
       done();
     });
     it('performs validation on save', async (done: any) => {

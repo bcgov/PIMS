@@ -110,6 +110,14 @@ const AppRouter: React.FC = () => {
       />
       <AppRoute
         protected
+        path="/projects/approval/requests"
+        component={ProjectApprovalRequestListView}
+        layout={AuthLayout}
+        claim={Claims.DISPOSE_APPROVE}
+        title={getTitle('Surplus Property Program Projects - Approval Requests')}
+      />
+      <AppRoute
+        protected
         path="/projects"
         component={ProjectRouter}
         layout={AuthLayout}
@@ -123,14 +131,6 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.PROJECT_VIEW}
         title={getTitle('Dispose Property Complete')}
-      />
-      <AppRoute
-        protected
-        path="/projects/approval/requests"
-        component={ProjectApprovalRequestListView}
-        layout={AuthLayout}
-        claim={Claims.DISPOSE_APPROVE}
-        title={getTitle('Surplus Property Program Projects - Approval Requests')}
       />
       <AppRoute
         protected
