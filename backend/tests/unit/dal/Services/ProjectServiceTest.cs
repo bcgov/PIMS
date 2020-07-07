@@ -1967,7 +1967,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "SPL", "AP-!SPL");
+            init.SetStatus(project, "ERP", "AP-!SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
@@ -2011,7 +2011,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "SPL", "AP-!SPL");
+            init.SetStatus(project, "ERP", "AP-!SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
