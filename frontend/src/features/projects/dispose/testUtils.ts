@@ -55,7 +55,7 @@ export const mockProject: IProject = {
     sortOrder: 0,
     route: '',
     description: '',
-    workflow: '',
+    workflowCode: '',
     code: ReviewWorkflowStatus.ApprovedForErp,
     isMilestone: true,
     tasks: [],

@@ -34,9 +34,9 @@ export const StepContextProvider = (props: { children?: any }) => {
   const workflowStatusesLength = workflowStatuses?.length;
   useEffect(() => {
     if (!workflowStatusesLength) {
-      dispatch(fetchProjectWorkflow('SUBMIT-DISPOSAL'));
+      dispatch(fetchProjectWorkflow(project.workflowStatusCode));
     }
-  }, [dispatch, project.statusId, workflowStatusesLength]);
+  }, [dispatch, project.statusId, project.workflowStatusCode, workflowStatusesLength]);
 
   // Pass the value in Provider and return
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;

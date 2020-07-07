@@ -19,3 +19,4 @@ export const onTransferredWithinTheGreTooltip =
   'You must enter a Transferred within the GRE Date to click Update Property Information.';
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
+export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;

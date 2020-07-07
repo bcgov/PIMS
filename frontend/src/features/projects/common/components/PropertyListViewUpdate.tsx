@@ -6,8 +6,8 @@ import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import useStepper from '../../dispose/hooks/useStepper';
 import { getColumns, getColumnsWithRemove } from './columns';
+import { useStepper } from 'features/projects/dispose';
 
 type RequiredAttributes = {
   /** The field name */

@@ -195,11 +195,12 @@ export interface IStatus {
   sortOrder: number;
   description: string;
   route: string;
-  workflow: string;
+  workflowCode: string;
   code: string;
   isMilestone: boolean;
   tasks: IProjectTask[];
   isOptional: boolean;
+  toStatus?: IStatus[];
 }
 
 export interface IStepProps {

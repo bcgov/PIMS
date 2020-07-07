@@ -1886,6 +1886,77 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void SetStatus_ApprovedForSpl_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "AP-SPL");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.ClearanceNotificationSentOn = DateTime.Now; // required for Approved for SPL.
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.StatusId = clearanceNotificationSentOn.Id; // Approved for SPL status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = service.SetStatus(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(clearanceNotificationSentOn.Id);
+            result.Status.Should().Be(clearanceNotificationSentOn);
+            result.ClearanceNotificationSentOn.Should().NotBeNull();
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().Be(2);
+            property.ClassificationId.Should().Be(2);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+
+        [Fact]
+        public void SetStatus_ApprovedForSpl_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "AP-SPL");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.StatusId = transferredWithinGre.Id; // Approved for SPL status.
+
+            // Act
+            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+        }
+
+        [Fact]
         public void SetStatus_Submit_NotAuthorizedException()
         {
             // Arrange
@@ -2042,41 +2113,6 @@ namespace Pims.Dal.Test.Services
             // Act
             // Assert
             Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
-        }
-
-        [Fact]
-        public void SetStatus_ApproveSPL_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
-
-            var init = helper.InitializeDatabase(user);
-            var workflows = init.CreateDefaultWorkflowsWithStatus();
-            init.SaveChanges();
-            var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "ERP", "ERP-OH");
-            var parcel = init.CreateParcel(1);
-            parcel.IsVisibleToOtherAgencies = true;
-            project.AddProperty(parcel);
-            init.SaveChanges();
-
-            var options = ControllerHelper.CreateDefaultPimsOptions();
-            var service = helper.CreateService<ProjectService>(user, options);
-
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.StatusId = approve.Id; // Submit Status
-
-            // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
-
-            // Assert
-            Assert.NotNull(result);
-            result.StatusId.Should().Be(approve.Id);
-            result.Status.Should().Be(approve);
-            result.DeniedOn.Should().BeNull();
-            result.ApprovedOn.Should().NotBeNull();
-            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
         }
         #endregion
 

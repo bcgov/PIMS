@@ -1,6 +1,5 @@
 import { useEffect, useContext } from 'react';
-import { fetchProjectWorkflow } from '../../common/projectsActionCreator';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { StepperContext } from '..';
 import { IProject, initialValues, IStatus, IProjectWrapper, IProjectTask } from '../../common';
@@ -103,7 +102,6 @@ export const getLastCompletedStatus = (
  */
 const useStepper = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
   const { currentStatus, setCurrentStatus } = useContext(StepperContext);
   const diposeWorkflowStatuses = useSelector<RootState, IStatus[]>(
     state => state.projectWorkflow as any,
@@ -118,11 +116,6 @@ const useStepper = () => {
   const updateWorkflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
   );
-  useEffect(() => {
-    if (!diposeWorkflowStatuses?.length) {
-      dispatch(fetchProjectWorkflow());
-    }
-  }, [dispatch, diposeWorkflowStatuses]);
 
   useEffect(() => {
     const lastCompletedStatus = _.findLast(diposeWorkflowStatuses, { id: project?.statusId });

@@ -1,5 +1,5 @@
 import './EnhancedReferralCompleteForm.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import styled from 'styled-components';
@@ -12,8 +12,10 @@ import {
   IProject,
   onTransferredWithinTheGreTooltip,
   onHoldNotificationTooltip,
+  proceedToSplWarning,
 } from '../../common';
 import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
+import GenericModal from 'components/common/GenericModal';
 
 const OrText = styled.div`
   margin: 0.75rem 2rem 0.75rem 2rem;
@@ -23,6 +25,7 @@ interface IEnhancedReferralCompleteFormProps {
   isReadOnly?: boolean;
   onClickOnHold: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickProceedToSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -33,8 +36,10 @@ const EnhancedReferralCompleteForm = ({
   isReadOnly,
   onClickOnHold,
   onClickGreTransferred,
+  onClickProceedToSpl,
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
+  const [proceedToSpl, setProceedToSpl] = useState(false);
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
@@ -97,13 +102,32 @@ const EnhancedReferralCompleteForm = ({
           field="clearanceNotificationSentOn"
         />
         <div className="col-md-6" style={{ display: 'flex' }}>
-          <Button disabled={isReadOnly} onClick={noop}>
+          <Button
+            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+            onClick={() => setProceedToSpl(true)}
+          >
             Proceed to SPL
           </Button>
           <OrText>OR</OrText>
           <Button disabled={isReadOnly} onClick={noop}>
             Not Included in the SPL
           </Button>
+          {proceedToSpl && (
+            <GenericModal
+              display={proceedToSpl}
+              cancelButtonText="Close"
+              okButtonText="Proceed to SPL"
+              handleOk={(e: any) => {
+                onClickProceedToSpl(e);
+                setProceedToSpl(false);
+              }}
+              handleCancel={() => {
+                setProceedToSpl(false);
+              }}
+              title="Really Proceed to SPL?"
+              message={proceedToSplWarning}
+            />
+          )}
         </div>
       </Form.Row>
       <ProjectNotes outerClassName="col-md-12" disabled={true} />
