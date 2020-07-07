@@ -1900,14 +1900,14 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.ClearanceNotificationSentOn = DateTime.Now; // required for Transferred within GRE.
+            project.ClearanceNotificationSentOn = DateTime.Now; // required for Approved for SPL.
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
             var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.StatusId = clearanceNotificationSentOn.Id; // Transferred within GRE Status
+            project.StatusId = clearanceNotificationSentOn.Id; // Approved for SPL status
 
             EntityHelper.CreateAgency(2);
             parcel.AgencyId = 2;
@@ -1950,7 +1950,7 @@ namespace Pims.Dal.Test.Services
             var service = helper.CreateService<ProjectService>(user, options);
 
             var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
+            project.StatusId = transferredWithinGre.Id; // Approved for SPL status.
 
             // Act
             Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
