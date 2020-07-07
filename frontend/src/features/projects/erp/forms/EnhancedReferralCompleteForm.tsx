@@ -4,7 +4,6 @@ import { Container, Button } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { noop } from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 import {
   ProjectNotes,
@@ -26,6 +25,7 @@ interface IEnhancedReferralCompleteFormProps {
   onClickOnHold: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickProceedToSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickNotInSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -37,6 +37,7 @@ const EnhancedReferralCompleteForm = ({
   onClickOnHold,
   onClickGreTransferred,
   onClickProceedToSpl,
+  onClickNotInSpl,
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const [proceedToSpl, setProceedToSpl] = useState(false);
@@ -109,26 +110,29 @@ const EnhancedReferralCompleteForm = ({
             Proceed to SPL
           </Button>
           <OrText>OR</OrText>
-          <Button disabled={isReadOnly} onClick={noop}>
+          <Button
+            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+            onClick={onClickNotInSpl}
+          >
             Not Included in the SPL
           </Button>
-          {proceedToSpl && (
-            <GenericModal
-              display={proceedToSpl}
-              cancelButtonText="Close"
-              okButtonText="Proceed to SPL"
-              handleOk={(e: any) => {
-                onClickProceedToSpl(e);
-                setProceedToSpl(false);
-              }}
-              handleCancel={() => {
-                setProceedToSpl(false);
-              }}
-              title="Really Proceed to SPL?"
-              message={proceedToSplWarning}
-            />
-          )}
         </div>
+        {proceedToSpl && (
+          <GenericModal
+            display={proceedToSpl}
+            cancelButtonText="Close"
+            okButtonText="Proceed to SPL"
+            handleOk={(e: any) => {
+              onClickProceedToSpl(e);
+              setProceedToSpl(false);
+            }}
+            handleCancel={() => {
+              setProceedToSpl(false);
+            }}
+            title="Really Proceed to SPL?"
+            message={proceedToSplWarning}
+          />
+        )}
       </Form.Row>
       <ProjectNotes outerClassName="col-md-12" disabled={true} />
       <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />

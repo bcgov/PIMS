@@ -77,6 +77,12 @@ describe('ERP/SPL Approval Step', () => {
       expect(proceedToSplButton).toBeVisible();
       expect(proceedToSplButton).toBeDisabled();
     });
+    it('Not in SPL button is visible and disabled', () => {
+      const { getByText } = render(getApprovalStep());
+      const proceedToSplButton = getByText(/Not Included in the SPL/);
+      expect(proceedToSplButton).toBeVisible();
+      expect(proceedToSplButton).toBeDisabled();
+    });
     it('form fields are not disabled', () => {
       const { queryAllByRole } = render(getApprovalStep());
       const textboxes = queryAllByRole('textbox');
@@ -105,6 +111,11 @@ describe('ERP/SPL Approval Step', () => {
     it('Proceed to SPL button is disabled', () => {
       const component = render(getApprovalStep());
       const proceedToSplButton = component.queryByText(/Proceed to SPL/);
+      expect(proceedToSplButton).toBeDisabled();
+    });
+    it('Not in SPL button is disabled', () => {
+      const component = render(getApprovalStep());
+      const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
       expect(proceedToSplButton).toBeDisabled();
     });
     it('form fields are disabled', () => {
@@ -139,6 +150,11 @@ describe('ERP/SPL Approval Step', () => {
       const proceedToSplButton = component.queryByText(/Proceed to SPL/);
       expect(proceedToSplButton).toBeDisabled();
     });
+    it('Not in SPL button is disabled', () => {
+      const component = render(getApprovalStep(getStore(project)));
+      const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
+      expect(proceedToSplButton).toBeDisabled();
+    });
     it('form fields are disabled', () => {
       const component = render(getApprovalStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
@@ -160,12 +176,20 @@ describe('ERP/SPL Approval Step', () => {
       const onHoldButton = getByText(/Place Project On Hold/);
       expect(onHoldButton).not.toBeDisabled();
     });
-    it('enables proceed to SPL button when proceed to SPL date entered', () => {
+    it('enables proceed to SPL button when clearance date entered', () => {
       const project = _.cloneDeep(mockProject);
       project.clearanceNotificationSentOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = getByText(/Proceed to SPL/);
+      expect(proceedToSplButton).not.toBeDisabled();
+    });
+    it('enables not in SPL button when clearance date entered', () => {
+      const project = _.cloneDeep(mockProject);
+      project.clearanceNotificationSentOn = new Date();
+
+      const { getByText } = render(getApprovalStep(getStore(project)));
+      const proceedToSplButton = getByText(/Not Included in the SPL/);
       expect(proceedToSplButton).not.toBeDisabled();
     });
     it('displays modal when cancel button clicked', async (done: any) => {

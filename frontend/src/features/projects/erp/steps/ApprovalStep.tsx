@@ -26,7 +26,7 @@ import {
   IStepProps,
   useProject,
 } from '../../common';
-import { ApprovalForm, ApprovalActions, saveProjectApprovalTab } from '../../assess';
+import { saveProjectApprovalTab, ApprovalForm, ApprovalActions } from '..';
 
 interface ValidationGroup {
   schema: any;

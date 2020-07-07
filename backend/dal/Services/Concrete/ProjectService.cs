@@ -610,7 +610,25 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
-                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires Clearance Notification Sent date.");
+                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
+                    originalProject.ApprovedOn = DateTime.UtcNow;
+                    originalProject.Properties.ForEach(p =>
+                    {
+                        if (p.BuildingId.HasValue)
+                        {
+                            p.Building.IsVisibleToOtherAgencies = false;
+                            this.Context.Buildings.Update(p.Building);
+                        }
+                        else if (p.ParcelId.HasValue)
+                        {
+                            p.Parcel.IsVisibleToOtherAgencies = false;
+                            this.Context.Parcels.Update(p.Parcel);
+                        }
+                    });
+                    break;
+                case ("AP-!SPL"): // Approve for SPL
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     originalProject.Properties.ForEach(p =>
                     {
