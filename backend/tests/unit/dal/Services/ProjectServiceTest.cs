@@ -2114,41 +2114,6 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
         }
-
-        [Fact]
-        public void SetStatus_ApproveSPL_Success()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
-
-            var init = helper.InitializeDatabase(user);
-            var workflows = init.CreateDefaultWorkflowsWithStatus();
-            init.SaveChanges();
-            var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "ERP", "ERP-OH");
-            var parcel = init.CreateParcel(1);
-            parcel.IsVisibleToOtherAgencies = true;
-            project.AddProperty(parcel);
-            init.SaveChanges();
-
-            var options = ControllerHelper.CreateDefaultPimsOptions();
-            var service = helper.CreateService<ProjectService>(user, options);
-
-            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
-            project.StatusId = approve.Id; // Submit Status
-
-            // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
-
-            // Assert
-            Assert.NotNull(result);
-            result.StatusId.Should().Be(approve.Id);
-            result.Status.Should().Be(approve);
-            result.DeniedOn.Should().BeNull();
-            result.ApprovedOn.Should().NotBeNull();
-            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
-        }
         #endregion
 
         #region Property Financials
