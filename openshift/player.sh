@@ -24,17 +24,18 @@ case "${1:-}" in
     deploy)
         ./oc-deploy.sh ${ARGV}
         ;;
-    sonar-scan)
-        echo "Not implemented yet"
+    scan)
+        ./oc-sonar-scan.sh ${ARGV}
         ;;
-    zap)
-        echo "Not implemented yet"
+    scan-dotnet)
+        ./oc-sonar-dotnet.sh ${ARGV}
         ;;
     clean)
         echo "Not implemented yet"
         ;;
     *)
     echo "You are doing it wrong..."
+    exit 1
 esac
 
 popd > /dev/null
