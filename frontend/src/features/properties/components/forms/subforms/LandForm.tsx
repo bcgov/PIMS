@@ -53,9 +53,8 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
   const classifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   }).map(mapLookupCode);
-  // only return parent agencies
-  const parentAgencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME && lookupCode.parentId === undefined;
+  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   }).map(mapLookupCode);
   const withNameSpace: Function = (fieldName: string) => {
     const { nameSpace } = props;
@@ -118,9 +117,10 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
             </Form.Label>
             <AutoCompleteText
               field={withNameSpace('agencyId')}
-              options={parentAgencies}
+              options={agencies}
               disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
               showAbbreviation={true}
+              textVal={props.values.agency}
             />
           </Form.Row>
           {getIn(props.values, withNameSpace('subAgency')) && (
