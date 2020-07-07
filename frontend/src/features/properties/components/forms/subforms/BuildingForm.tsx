@@ -17,6 +17,7 @@ import {
   FastInput,
   Input,
   AutoCompleteText,
+  SelectOption,
 } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
@@ -24,6 +25,7 @@ import * as API from 'constants/API';
 import { IBuilding } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import { IGeocoderResponse } from 'hooks/useApi';
 
 export interface IFormBuilding extends IBuilding {
   financials: any;
@@ -83,9 +85,12 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const withNameSpace: Function = (name?: string) => {
-    return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
-  };
+  const withNameSpace: Function = React.useCallback(
+    (name?: string) => {
+      return [props.nameSpace ?? '', `${props.index ?? ''}`, name].filter(x => x).join('.');
+    },
+    [props.nameSpace, props.index],
+  );
   const [readonly, setReadonly] = useState(false);
   React.useEffect(() => {
     if (props.nameSpace && props.index !== undefined) {
@@ -107,6 +112,42 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
 
   const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
 
+  const handleGeocoderChanges = (data: IGeocoderResponse) => {
+    if (data) {
+      console.log(props.values);
+      const newValues = {
+        ...(props.values as any),
+      };
+
+      newValues.buildings[props.index!].address.line1 = data.fullAddress;
+      newValues.buildings[props.index!].latitude = data.latitude;
+      newValues.buildings[props.index!].longitude = data.longitude;
+
+      const city = data.city
+        ? lookupCodes.find(code => {
+            return code.type === API.CITY_CODE_SET_NAME && code.name === data.city;
+          })
+        : undefined;
+
+      if (city) {
+        newValues.buildings[props.index!].address.cityId = city.id;
+        newValues.buildings[props.index!].address.city = city.name;
+      }
+
+      const province = data.provinceCode
+        ? lookupCodes.find(code => {
+            return code.type === API.PROVINCE_CODE_SET_NAME && code.code === data.provinceCode;
+          })
+        : undefined;
+
+      if (province) {
+        newValues.buildings[props.index!].address.provinceId = province.code;
+        newValues.buildings[props.index!].address.province = province.name;
+      }
+      props.setValues(newValues);
+    }
+  };
+
   return (
     <Fragment>
       <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
@@ -114,6 +155,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
           {...props}
           nameSpace={withNameSpace('address')}
           disabled={props.disabled || readonly}
+          onGeocoderChange={handleGeocoderChanges}
         />
         <Col md={6}>
           <Form.Row>
@@ -209,7 +251,7 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
                 field={withNameSpace('agencyId')}
                 options={agencies}
                 disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-                showAbbreviation={true}
+                getValueDisplay={(val: SelectOption) => val.code!}
               />
             </Form.Row>
           )}

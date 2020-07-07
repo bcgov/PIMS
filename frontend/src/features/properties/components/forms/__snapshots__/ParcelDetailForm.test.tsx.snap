@@ -171,17 +171,22 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   Street Address
                 </label>
                 <div
-                  className="col-md-10 form-group"
+                  className="GeocoderAutoComplete"
                 >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-address.line1"
-                    name="address.line1"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="1234 mock Street"
-                  />
+                  <div>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="form-control"
+                        disabled={true}
+                        id="input-address.line1"
+                        name="address.line1"
+                        onChange={[Function]}
+                        value="1234 mock Street"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div
@@ -206,7 +211,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       name="address.cityId"
                       onChange={[Function]}
                       required={true}
-                      value="test city"
+                      value=""
                     />
                   </div>
                 </div>
@@ -393,7 +398,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       id="input-agencyId"
                       name="agencyId"
                       onChange={[Function]}
-                      value="MOTI"
+                      value=""
                     />
                   </div>
                 </div>

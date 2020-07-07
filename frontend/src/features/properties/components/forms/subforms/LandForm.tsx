@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
 import { FormikProps, getIn } from 'formik';
@@ -8,7 +8,14 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastSelect, InputGroup, FastInput, AutoCompleteText } from 'components/common/form';
+import {
+  Form,
+  FastSelect,
+  InputGroup,
+  FastInput,
+  AutoCompleteText,
+  SelectOption,
+} from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
@@ -50,16 +57,20 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+
+  const withNameSpace: Function = useCallback(
+    (fieldName: string) => {
+      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
+    },
+    [props.nameSpace],
+  );
+
   const classifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   }).map(mapLookupCode);
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const withNameSpace: Function = (fieldName: string) => {
-    const { nameSpace } = props;
-    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
-  };
   const keycloak = useKeycloakWrapper();
   return (
     <Fragment>
@@ -119,8 +130,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               field={withNameSpace('agencyId')}
               options={agencies}
               disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-              showAbbreviation={true}
-              textVal={props.values.agency}
+              getValueDisplay={(val: SelectOption) => val.code!}
             />
           </Form.Row>
           {getIn(props.values, withNameSpace('subAgency')) && (

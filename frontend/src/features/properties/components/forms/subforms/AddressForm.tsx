@@ -1,20 +1,23 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import React from 'react';
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastInput, Select, AutoCompleteText } from 'components/common/form';
+import { Form, FastInput, Select, AutoCompleteText, SelectOption } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
+import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
+import { IGeocoderResponse } from 'hooks/useApi';
 
 interface AddressProps {
   nameSpace?: string;
   disabled?: boolean;
+  onGeocoderChange?: (data: IGeocoderResponse) => void;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -36,9 +39,18 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   const cities = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.CITY_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const withNameSpace: Function = (fieldName: string) => {
-    const { nameSpace } = props;
-    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
+
+  const withNameSpace: Function = useCallback(
+    (fieldName: string) => {
+      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
+    },
+    [props.nameSpace],
+  );
+
+  const handleGeocoderChanges = (data: IGeocoderResponse) => {
+    if (data && props.onGeocoderChange) {
+      props.onGeocoderChange(data);
+    }
   };
 
   /**
@@ -61,11 +73,14 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           <Form.Label column md={2}>
             Street Address
           </Form.Label>
-          <FastInput
-            formikProps={props}
-            outerClassName="col-md-10"
+          <GeocoderAutoComplete
+            value={getIn(props.values, withNameSpace('line1'))}
             disabled={props.disabled}
             field={withNameSpace('line1')}
+            onSelectionChanged={handleGeocoderChanges}
+            onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+            error={getIn(props.errors, withNameSpace('line1'))}
+            touch={getIn(props.touched, withNameSpace('line1'))}
           />
         </Form.Row>
         <Form.Row>
@@ -74,6 +89,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           </Form.Label>
           <AutoCompleteText
             autoSetting="new-password"
+            getValueDisplay={(val: SelectOption) => val.label}
             field={withNameSpace('cityId')}
             options={cities}
             disabled={props.disabled}

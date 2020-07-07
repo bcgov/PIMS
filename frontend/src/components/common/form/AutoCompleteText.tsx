@@ -12,11 +12,10 @@ export type IAutoCompleteProps = {
   placeholder?: string;
   options: SelectOptions;
   disabled?: boolean;
-  textVal?: string;
   autoSetting?: string;
   required?: boolean;
   /** to determine whether to show the code or label defaults to label*/
-  showAbbreviation?: boolean;
+  getValueDisplay?: (value: any) => string;
 };
 
 export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
@@ -24,27 +23,28 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
   options,
   placeholder,
   disabled,
-  textVal,
   autoSetting,
   required,
-  showAbbreviation,
+  getValueDisplay,
 }) => {
-  const { values, setFieldValue, handleChange, errors, touched } = useFormikContext<any>();
+  const { values, setFieldValue, errors, touched } = useFormikContext<any>();
   const [suggestions, setSuggestions] = useState<SelectOptions>([]);
   const [text, setText] = useState<string>('');
-  const [loaded, setLoaded] = useState<boolean>(false);
 
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const value = getIn(values, field);
 
-  // Listen for changes in form value. Reset auto-complete if form value is empty
   useEffect(() => {
-    if (value === null || value === undefined || value === '') {
-      setText('');
-      setSuggestions([]);
+    if (value && options.length > 0) {
+      const option = options.find(x => Number(x.value) === value);
+      if (getValueDisplay && option) {
+        setText(getValueDisplay(options.find(x => Number(x.value) === value)));
+      } else {
+        setText(option ? option.label : '');
+      }
     }
-  }, [value]);
+  }, [value, setText, options, getValueDisplay, values, field]);
 
   const onTextChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -55,11 +55,10 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
     }
     setSuggestions(dynamicSuggestions);
     setText(val);
-    handleChange(e);
   };
 
   const suggestionSelected = (val: SelectOption) => {
-    setText(val.label);
+    setText(getValueDisplay ? getValueDisplay(val) : val.label);
     setSuggestions([]);
     setFieldValue(field, Number(val.value));
   };
@@ -82,22 +81,6 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
     return null;
   };
 
-  // to override text shown value if needed
-  if (textVal !== undefined && loaded === false && textVal !== text) {
-    setText(textVal);
-    setLoaded(true);
-  }
-
-  // set text to previously assigned value
-  if (value && !textVal && loaded === false) {
-    options.forEach((x: any) => {
-      if (Number(x.value) === value) {
-        showAbbreviation ? setText(x.code) : setText(x.label);
-        setLoaded(true);
-      }
-    });
-  }
-
   return (
     // autoComplete will have different value depending on form. eg) 'new-password' is needed to override chrome's address suggestions etc.
     <div className="AutoCompleteText">
@@ -105,7 +88,7 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
         <Form.Control
           autoComplete={autoSetting}
           name={field}
-          value={text ? text : value}
+          value={text}
           isInvalid={!!touch && !!error}
           onChange={onTextChanged}
           placeholder={placeholder}
