@@ -159,14 +159,14 @@ pipeline {
               // pull code
               checkout scm
               commonPipeline.runFrontendTests()
-              commonPipeline.runFrontendStaticAnalysis(SONARQUBE_URL_INT, OC_JOB_NAME)
+              sh """
+                cd openshift
+                SONAR_URL=${SONARQUBE_URL_INT} ./player.sh scan ${OC_JOB_NAME} -apply
+              """
+              echo 'Frontend lint checks and tests passed'
             }
           }
           post {
-            success {
-              echo 'Frontend lint checks and tests passed'
-              stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
-            }
             failure {
               error '*** Frontend lint checks and tests failed ***'
             }
@@ -176,14 +176,14 @@ pipeline {
           agent { label 'jenkins-slave-dotnet' }
           steps {
             script {
-              commonPipeline.runBackendTests()
+              sh """
+                cd openshift
+                SONAR_URL=${SONARQUBE_URL_INT} ./player.sh scan-dotnet ${OC_JOB_NAME} -apply
+              """
+              echo 'Backend tests passed'
             }
           }
           post {
-            success {
-              echo 'Backend tests passed'
-              stash name: API_COV_STASH, includes: 'backend/tests/unit/TestResults/**'
-            }
             failure {
               error '*** Backend tests failed ***'
             }
@@ -202,18 +202,20 @@ pipeline {
         stage("Frontend") {
           steps {
             script {
-              dir(DEVOPS_DIRECTORY) {
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base -apply"
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app -apply"
-              }
+              sh """
+                cd openshift
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base -apply
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app -apply
+              """
             }
           }
         }
         stage("Backend") {
           steps {
-            dir(DEVOPS_DIRECTORY) {
-              sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api -apply"
-            }
+            sh """
+              cd openshift
+              OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api -apply
+            """
           }
         }
       }
@@ -228,6 +230,7 @@ pipeline {
       }
       steps {
         //  TODO: Break the build if Quality Gate failed
+        echo "..."
       }
     }
 
