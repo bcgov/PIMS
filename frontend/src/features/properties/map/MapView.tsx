@@ -29,7 +29,7 @@ const parcelBounds: IParcelListParams = {
   classificationId: null,
   minLandArea: null,
   maxLandArea: null,
-  projectPropertiesOnly: false,
+  inSurplusPropertyProgram: false,
 };
 
 // This could also come from the API, a local file, etc -OR- replacing the <select> fields with free text inputs.
@@ -76,7 +76,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       classificationId,
       minLotSize,
       maxLotSize,
-      projectPropertiesOnly,
+      inSurplusPropertyProgram,
     } = e.filter ?? {};
 
     const ne = e.bounds.getNorthEast();
@@ -93,7 +93,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       classificationId: classificationId ?? null,
       minLandArea: minLotSize ?? null,
       maxLandArea: maxLotSize ?? null,
-      projectPropertiesOnly: projectPropertiesOnly ?? null,
+      inSurplusPropertyProgram: inSurplusPropertyProgram ?? null,
     };
     return apiParams;
   };

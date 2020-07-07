@@ -71,7 +71,7 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// </summary>
         /// <value></value>
 
-        public bool? ProjectPropertiesOnly { get; set; }
+        public bool? InSurplusPropertyProgram { get; set; }
 
         /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
@@ -255,7 +255,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
-            this.ProjectPropertiesOnly = filter.GetBoolNullValue(nameof(this.ProjectPropertiesOnly));
+            this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
 
             this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
             this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
@@ -380,7 +380,7 @@ namespace Pims.Api.Areas.Property.Models.Search
 
                 ProjectNumber = model.ProjectNumber,
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
-                ProjectPropertiesOnly = model.ProjectPropertiesOnly,
+                InSurplusPropertyProgram = model.InSurplusPropertyProgram,
                 StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,

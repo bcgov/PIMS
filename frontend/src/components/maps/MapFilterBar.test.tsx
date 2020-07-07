@@ -66,7 +66,9 @@ describe('MapFilterBar', () => {
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('input[name="minLotSize"]');
     const maxLotSize = container.querySelector('input[name="maxLotSize"]');
-    const projectPropertiesOnly = container.querySelector('input[name="projectPropertiesOnly"]');
+    const inSurplusPropertyProgram = container.querySelector(
+      'input[name="inSurplusPropertyProgram"]',
+    );
     const submit = container.querySelector('button[type="submit"]');
 
     // Act
@@ -112,7 +114,7 @@ describe('MapFilterBar', () => {
     });
 
     await wait(() => {
-      fireEvent.click(projectPropertiesOnly!);
+      fireEvent.click(inSurplusPropertyProgram!);
     });
 
     await wait(() => {
@@ -129,7 +131,7 @@ describe('MapFilterBar', () => {
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',
-      projectPropertiesOnly: true,
+      inSurplusPropertyProgram: true,
     });
   });
 

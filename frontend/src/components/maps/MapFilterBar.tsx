@@ -79,7 +79,7 @@ export type MapFilterChangeEvent = {
   classificationId: string;
   minLotSize: string;
   maxLotSize: string;
-  projectPropertiesOnly: boolean;
+  inSurplusPropertyProgram: boolean;
 };
 
 type MapFilterProps = {
@@ -116,7 +116,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         classificationId: '',
         minLotSize: '',
         maxLotSize: '',
-        projectPropertiesOnly: false,
+        inSurplusPropertyProgram: false,
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
@@ -157,7 +157,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
             </Col>
             {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
               <Col className="bar-item">
-                <Check field="projectPropertiesOnly" label="Properties in SPP" />
+                <Check field="inSurplusPropertyProgram" label="Properties in SPP" />
               </Col>
             )}
             <Col className="bar-item flex-grow-0">

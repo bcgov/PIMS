@@ -70,7 +70,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (filter.IgnorePropertiesInProjects == true)
                 query = query.Where(p => p.ProjectNumber == null);
-            if(filter.ProjectPropertiesOnly == true)
+            if(filter.InSurplusPropertyProgram == true)
                 query = query.Where(p => p.ProjectNumber.Contains("SPP"));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));

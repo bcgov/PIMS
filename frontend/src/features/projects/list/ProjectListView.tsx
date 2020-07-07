@@ -1,7 +1,7 @@
 import './ProjectListView.scss';
 
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import _ from 'lodash';
 import * as API from 'constants/API';
@@ -16,13 +16,16 @@ import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col, Form } from 'react-bootstrap';
-import { Input } from 'components/common/form';
+import { Input, Button } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import { ENVIRONMENT } from 'constants/environment';
+import queryString from 'query-string';
+import download from 'utils/download';
 
 interface IProjectFilterState {
   active?: boolean;
@@ -31,6 +34,9 @@ interface IProjectFilterState {
   statusId?: number;
   assessWorkflow?: boolean;
 }
+
+const getProjectReportUrl = (filter: IProjectFilter) =>
+  `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
 
 const initialQuery: IProjectFilter = {
   page: 1,
@@ -152,6 +158,22 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
 
+  const dispatch = useDispatch();
+
+  const fetch = (accept: 'csv' | 'excel') => {
+    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+    return dispatch(
+      download({
+        url: getProjectReportUrl({ ...query, all: true }),
+        fileName: `projects.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        actionType: 'projects-report',
+        headers: {
+          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+        },
+      }),
+    );
+  };
+
   const handleDelete = async () => {
     const project = data.find(p => p.projectNumber === deleteId);
     if (project) {
@@ -246,6 +268,14 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             message="Are you sure that you want to delete this project?"
           />
         )}
+        <Container fluid className="TableToolbar">
+          <Button className="mr-2 float-right" onClick={() => fetch('excel')}>
+            Export as Excel
+          </Button>
+          <Button className="float-right" onClick={() => fetch('csv')}>
+            Export as CSV
+          </Button>
+        </Container>
         <Table<IProject>
           name="projectsTable"
           columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}

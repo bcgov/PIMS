@@ -160,6 +160,34 @@ exports[`Project list view Matches snapshot 1`] = `
     className="ScrollContainer"
   >
     <div
+      className="TableToolbar container-fluid"
+    >
+      <button
+        className="Button mr-2 float-right btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export as Excel
+        </div>
+      </button>
+      <button
+        className="Button float-right btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export as CSV
+        </div>
+      </button>
+    </div>
+    <div
       className="table"
       role="table"
       style={
