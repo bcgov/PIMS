@@ -13,6 +13,11 @@ import { IFormParcel, getInitialValues } from '../ParcelDetailForm';
 import { IFormBuilding } from './BuildingForm';
 import { ILookupCode } from 'actions/lookupActions';
 import _ from 'lodash';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 const mockBuilding: IFormBuilding = {
   address: {

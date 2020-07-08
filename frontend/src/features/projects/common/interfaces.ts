@@ -170,6 +170,7 @@ export enum ReviewWorkflowStatus {
   ExemptionProcess = 'AS-EXP',
   ApprovedForErp = 'AP-ERP',
   ApprovedForSpl = 'AP-SPL',
+  NotInSpl = 'AP-!SPL',
   ApprovedForExemption = 'AP-EXE',
   Denied = 'DE',
   Cancelled = 'CA',
