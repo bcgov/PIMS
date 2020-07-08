@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
-import { EnhancedReferralTab, ProjectInformationTab, DocumentationTab } from '../../assess';
 import { SPPApprovalTabs } from '../../common';
 import { useFormikContext } from 'formik';
+import { ProjectInformationTab, DocumentationTab, EnhancedReferralTab } from '..';
 
 interface IApprovalFormProps {
   /** The currently displayed tab */

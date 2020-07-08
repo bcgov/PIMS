@@ -11,6 +11,11 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../apiService';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 const testData = {
   items: [

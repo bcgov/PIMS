@@ -43,7 +43,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-AxmLO fxeuGk"
+      className="sc-Axmtr fvpLdJ"
     >
       Approved for ERP
     </div>
@@ -1343,7 +1343,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-Axmtr fIrPDX"
+            className="sc-fzoLsD dXWVip"
           >
             OR
           </div>
@@ -1402,7 +1402,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-Axmtr fIrPDX"
+                className="sc-fzoLsD dXWVip"
               >
                 OR
               </div>

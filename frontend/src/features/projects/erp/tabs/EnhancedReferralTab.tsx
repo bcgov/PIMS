@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { EnhancedReferralCompleteForm, AgencyResponseForm } from '../../assess';
 import { ReviewWorkflowStatus } from '../../common';
+import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
 
 interface IEnhancedReferralTabProps {
   isReadOnly?: boolean;
@@ -26,6 +26,7 @@ const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = 
           setSubmitStatusCode(ReviewWorkflowStatus.OnHold);
         }}
         onClickProceedToSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
+        onClickNotInSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
         onClickGreTransferred={() => goToGreTransferred()}
       />
     </>
