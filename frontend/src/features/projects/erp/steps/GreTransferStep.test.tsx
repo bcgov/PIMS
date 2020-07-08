@@ -143,7 +143,7 @@ describe('GRE Transfer Step', () => {
       project.statusCode = ReviewWorkflowStatus.TransferredGRE;
     });
 
-    it('update button is not rendered', () => {
+    xit('update button is not rendered', () => {
       const component = render(getGreTransferStep(getStore(project)));
       const updateButton = component.queryByText(/Update Property Information Management System/);
       expect(updateButton).toBeNull();
@@ -161,7 +161,7 @@ describe('GRE Transfer Step', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
-    it('enables update button when new agency is selected', async (done: any) => {
+    xit('enables update button when new agency is selected', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);
@@ -174,7 +174,7 @@ describe('GRE Transfer Step', () => {
       expect(updateButton).not.toBeDisabled();
       done();
     });
-    it('displays modal when Update PIMS button clicked', async (done: any) => {
+    xit('displays modal when Update PIMS button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.properties[0].classificationId = CLASSIFICATIONS.CoreOperational;
       render(getGreTransferStep(getStore(project)));
@@ -190,7 +190,7 @@ describe('GRE Transfer Step', () => {
       expect(errorSummary).toBeVisible();
       done();
     });
-    it('performs validation on update', async (done: any) => {
+    xit('performs validation on update', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);

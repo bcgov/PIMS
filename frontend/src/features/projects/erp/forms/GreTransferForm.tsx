@@ -56,7 +56,6 @@ const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
         </Form.Label>
         <AutoCompleteText
           autoSetting="new-password"
-          textVal=""
           field="agencyId"
           options={agencyOptions}
           disabled={!canEdit}

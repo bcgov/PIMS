@@ -175,7 +175,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="agencyId"
             onChange={[Function]}
             required={true}
-            value={1}
+            value=""
           />
         </div>
       </div>

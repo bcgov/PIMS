@@ -34,7 +34,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { useApi } from 'hooks/useApi';
+import { useApi, IGeocoderResponse } from 'hooks/useApi';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -65,6 +65,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const api = useApi();
+  let formikRef = React.useRef<any>() as any;
 
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -197,10 +198,51 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     return available;
   };
 
+  const handleGeocoderChanges = (data: IGeocoderResponse) => {
+    if (!!formikRef && data) {
+      const newValues = {
+        ...formikRef.values,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        address: {
+          ...formikRef.values.address,
+          line1: data.fullAddress,
+        },
+      };
+
+      const city = data.city
+        ? lookupCodes.find(code => {
+            return code.type === API.CITY_CODE_SET_NAME && code.name === data.city;
+          })
+        : undefined;
+
+      if (city) {
+        newValues.address.cityId = city.id;
+        newValues.address.city = city.name;
+      }
+
+      const province = data.provinceCode
+        ? lookupCodes.find(code => {
+            return code.type === API.PROVINCE_CODE_SET_NAME && code.code === data.provinceCode;
+          })
+        : undefined;
+
+      if (province) {
+        newValues.address.provinceId = province.code;
+        newValues.address.province = province.name;
+      }
+
+      formikRef.setValues(newValues);
+    }
+  };
+
   return (
     <Row noGutters className="parcelDetailForm">
       <Col>
         <Formik
+          innerRef={instance => {
+            formikRef = instance;
+          }}
           initialValues={initialValues}
           validateOnChange={false}
           validate={handleValidate}
@@ -244,7 +286,12 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   <h3>Parcel Information</h3>
                   <Form.Row className="pidPinForm">
                     <PidPinForm disabled={props.disabled} />
-                    <AddressForm {...formikProps} disabled={props.disabled} nameSpace="address" />
+                    <AddressForm
+                      onGeocoderChange={handleGeocoderChanges}
+                      {...formikProps}
+                      disabled={props.disabled}
+                      nameSpace="address"
+                    />
                   </Form.Row>
                 </Col>
               </Row>

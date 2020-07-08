@@ -9,6 +9,7 @@ import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import * as API from 'constants/API';
 
 export const mockTasks: IProjectTask[] = [
   {
@@ -185,7 +186,16 @@ export const mockWorkflow = [
 const mockStore = configureMockStore([thunk]);
 export const getStore = (mockProject: IProject) =>
   mockStore({
-    [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+    [reducerTypes.LOOKUP_CODE]: {
+      lookupCodes: [
+        {
+          code: 'BCT',
+          name: 'BC Transit',
+          id: 1,
+          type: API.AGENCY_CODE_SET_NAME,
+        },
+      ],
+    },
     [reducerTypes.ProjectReducers.PROJECT]: { project: mockProject },
     [reducerTypes.ProjectReducers.TASKS]: tasks,
     [reducerTypes.NETWORK]: {
