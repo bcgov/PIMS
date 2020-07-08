@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 using Pims.Core.Test;
 using Pims.Core.Extensions;
 using System;
+using System.Linq;
 using FluentAssertions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Test.Helpers.Extensions
 {
@@ -78,6 +80,35 @@ namespace Pims.Dal.Test.Helpers.Extensions
             project.Estimated.Should().Be(10);
             project.NetBook.Should().Be(10);
             project.Assessed.Should().Be(10);
+        }
+
+        [Fact]
+        public void SetProjectPropertiesVisiblity()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var context = helper.InitializeDatabase(user);
+            var project = context.CreateProject(1);
+            var parcel = context.CreateParcel(1);
+            project.AddProperty(parcel);
+
+            // Act
+            context.SetProjectPropertiesVisiblity(project, false);
+
+            // Assert
+            var properties = project.Properties.ToArray();
+            foreach (var property in properties)
+            {
+                if (property.BuildingId.HasValue)
+                {
+                    property.Building.IsVisibleToOtherAgencies.Should().BeFalse();
+                } else if (property.ParcelId.HasValue)
+                {
+                    property.Parcel.IsVisibleToOtherAgencies.Should().BeFalse();
+                }
+            }
         }
         #endregion
     #endregion

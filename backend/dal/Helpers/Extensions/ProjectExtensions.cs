@@ -592,5 +592,28 @@ namespace Pims.Dal.Helpers.Extensions
                 originalProject.UpdateProjectFinancials();
             }
         }
+
+        /// <summary>
+        /// Set Project properties' visibility to other agencies
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="project"></param>
+        /// <param name="visibility"></param>
+        public static void SetProjectPropertiesVisiblity(this PimsContext context, Entity.Project project,  bool visibility)
+        {
+            project.Properties.ForEach(p =>
+            {
+                if (p.BuildingId.HasValue)
+                {
+                    p.Building.IsVisibleToOtherAgencies = visibility;
+                    context.Buildings.Update(p.Building);
+                }
+                else if (p.ParcelId.HasValue)
+                {
+                    p.Parcel.IsVisibleToOtherAgencies = visibility;
+                    context.Parcels.Update(p.Parcel);
+                }
+            });
+        }
     }
 }
