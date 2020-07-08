@@ -12,9 +12,14 @@ import {} from 'reducers/networkReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { Provider } from 'react-redux';
 import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
+
 const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({

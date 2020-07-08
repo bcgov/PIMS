@@ -16,16 +16,17 @@ import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col, Form } from 'react-bootstrap';
-import { Input, Button } from 'components/common/form';
+import { Input, Button, AutoCompleteText, Select } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
-import { ReviewWorkflowStatus } from '../common';
+import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
 import queryString from 'query-string';
 import download from 'utils/download';
+import { mapLookupCode, mapStatuses } from 'utils';
 
 interface IProjectFilterState {
   active?: boolean;
@@ -33,10 +34,16 @@ interface IProjectFilterState {
   name?: string;
   statusId?: number;
   assessWorkflow?: boolean;
+  agencyId?: number;
 }
 
 const getProjectReportUrl = (filter: IProjectFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
+
+const getProjectFinancialReportUrl = (filter: IProjectFilter) =>
+  `${ENVIRONMENT.apiUrl}/reports/projects/surplus/properties/list?${
+    filter ? queryString.stringify(filter) : ''
+  }`;
 
 const initialQuery: IProjectFilter = {
   page: 1,
@@ -84,9 +91,12 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       }),
     [lookupCodes],
   );
+  const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
   const keycloak = useKeycloakWrapper();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
+  const agencyOptions = (agencies ?? []).map(c => mapLookupCode(c, null));
+  const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -152,19 +162,21 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     },
     [setData, setPageCount, mode],
   );
-
+  const dispatch = useDispatch();
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
     fetchData({ pageIndex, pageSize, filter, agencyIds });
-  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
+    dispatch(fetchProjectStatuses());
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch]);
 
-  const dispatch = useDispatch();
-
-  const fetch = (accept: 'csv' | 'excel') => {
+  const fetch = (accept: 'csv' | 'excel', reportType: 'generic' | 'spl') => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getProjectReportUrl({ ...query, all: true }),
+        url:
+          reportType === 'generic'
+            ? getProjectReportUrl({ ...query, all: true })
+            : getProjectFinancialReportUrl({ ...query, all: true }),
         fileName: `projects.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'projects-report',
         headers: {
@@ -247,6 +259,18 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               </Form.Group>
             </Col>
             <Col className="bar-item">
+              {/* Will need UI for this before merging */}
+              <Select field="statusId" options={statuses} multiple={true} label="Project Status:" />
+            </Col>
+            <Col className="bar-item">
+              <AutoCompleteText
+                autoSetting="off"
+                field="agencies"
+                options={agencyOptions}
+                placeholder="Type an agency"
+              />
+            </Col>
+            <Col className="bar-item">
               <Input field="name" placeholder="Search by project name" />
             </Col>
           </FilterBar>
@@ -269,12 +293,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           />
         )}
         <Container fluid className="TableToolbar">
-          <Button className="mr-2 float-right" onClick={() => fetch('excel')}>
-            Export as Excel
+          <Button className="mr-2" onClick={() => fetch('excel', 'generic')}>
+            Export Generic Report
           </Button>
-          <Button className="float-right" onClick={() => fetch('csv')}>
-            Export as CSV
-          </Button>
+          <Button onClick={() => fetch('excel', 'spl')}>Export SPL Report</Button>
         </Container>
         <Table<IProject>
           name="projectsTable"

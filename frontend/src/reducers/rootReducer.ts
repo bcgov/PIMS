@@ -17,6 +17,7 @@ import projectSlice from 'features/projects/common/slices/projectSlice';
 import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
 import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
 import projectApprovalTabSlice from 'features/projects/erp/slices/projectApprovalTabSlice';
+import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -31,6 +32,7 @@ export const reducerObject = {
   [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,
   [ProjectReducers.WORKFLOW_TASKS]: ProjectWorkflowTasksSlice.reducer,
   [ProjectReducers.TASKS]: projectTasksSlice.reducer,
+  [ProjectReducers.STATUSES]: projectStatusesSlice.reducer,
   [ProjectReducers.PROJECT]: projectSlice.reducer,
   [ProjectReducers.PROJECT_APPROVAL_TAB]: projectApprovalTabSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,

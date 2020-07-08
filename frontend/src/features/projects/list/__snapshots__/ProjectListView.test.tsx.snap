@@ -69,6 +69,49 @@ exports[`Project list view Matches snapshot 1`] = `
           <div
             className="form-group"
           >
+            <label
+              className="form-label"
+              htmlFor="input-statusId"
+            >
+              Project Status:
+            </label>
+            <select
+              className="form-select form-control"
+              id="input-statusId"
+              multiple={true}
+              name="statusId"
+              onBlur={[Function]}
+              onChange={[Function]}
+            />
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="AutoCompleteText"
+          >
+            <div
+              className="form-group"
+            >
+              <input
+                autoComplete="off"
+                className="form-control"
+                id="input-agencies"
+                name="agencies"
+                onChange={[Function]}
+                placeholder="Type an agency"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="form-group"
+          >
             <span>
               <input
                 className="form-control"
@@ -163,7 +206,7 @@ exports[`Project list view Matches snapshot 1`] = `
       className="TableToolbar container-fluid"
     >
       <button
-        className="Button mr-2 float-right btn btn-primary"
+        className="Button mr-2 btn btn-primary"
         disabled={false}
         onClick={[Function]}
         type="button"
@@ -171,11 +214,11 @@ exports[`Project list view Matches snapshot 1`] = `
         <div
           className="Button__value"
         >
-          Export as Excel
+          Export Generic Report
         </div>
       </button>
       <button
-        className="Button float-right btn btn-primary"
+        className="Button btn btn-primary"
         disabled={false}
         onClick={[Function]}
         type="button"
@@ -183,7 +226,7 @@ exports[`Project list view Matches snapshot 1`] = `
         <div
           className="Button__value"
         >
-          Export as CSV
+          Export SPL Report
         </div>
       </button>
     </div>

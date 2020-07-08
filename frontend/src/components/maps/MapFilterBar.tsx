@@ -157,7 +157,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
             </Col>
             {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
               <Col className="bar-item">
-                <Check field="inSurplusPropertyProgram" label="Properties in SPP" />
+                <Check field="inSurplusPropertyProgram" label="Property in SPP" />
               </Col>
             )}
             <Col className="bar-item flex-grow-0">

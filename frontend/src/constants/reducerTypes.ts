@@ -38,4 +38,5 @@ export enum ProjectReducers {
   PROJECT = 'project',
   PROJECT_APPROVAL_TAB = 'projectApprovalTab',
   TASKS = 'tasks',
+  STATUSES = 'statuses',
 }

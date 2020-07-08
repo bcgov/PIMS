@@ -22,7 +22,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
       className="TableToolbar container-fluid"
     >
       <button
-        className="Button mr-2 float-right btn btn-primary"
+        className="Button mr-2 btn btn-primary"
         disabled={false}
         onClick={[Function]}
         type="button"
@@ -30,11 +30,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
         <div
           className="Button__value"
         >
-          Export as Excel
+          Export Generic Report
         </div>
       </button>
       <button
-        className="Button float-right btn btn-primary"
+        className="Button btn btn-primary"
         disabled={false}
         onClick={[Function]}
         type="button"
@@ -42,7 +42,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
         <div
           className="Button__value"
         >
-          Export as CSV
+          Export SPL Report
         </div>
       </button>
     </div>
