@@ -594,55 +594,19 @@ namespace Pims.Dal.Services
                 case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
-                    originalProject.Properties.ForEach(p =>
-                    {
-                        if (p.BuildingId.HasValue)
-                        {
-                            p.Building.IsVisibleToOtherAgencies = true;
-                            this.Context.Buildings.Update(p.Building);
-                        }
-                        else if (p.ParcelId.HasValue)
-                        {
-                            p.Parcel.IsVisibleToOtherAgencies = true;
-                            this.Context.Parcels.Update(p.Parcel);
-                        }
-                    });
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, true);
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
-                    originalProject.Properties.ForEach(p =>
-                    {
-                        if (p.BuildingId.HasValue)
-                        {
-                            p.Building.IsVisibleToOtherAgencies = false;
-                            this.Context.Buildings.Update(p.Building);
-                        }
-                        else if (p.ParcelId.HasValue)
-                        {
-                            p.Parcel.IsVisibleToOtherAgencies = false;
-                            this.Context.Parcels.Update(p.Parcel);
-                        }
-                    });
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("AP-!SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
-                    originalProject.Properties.ForEach(p =>
-                    {
-                        if (p.BuildingId.HasValue)
-                        {
-                            p.Building.IsVisibleToOtherAgencies = false;
-                            this.Context.Buildings.Update(p.Building);
-                        }
-                        else if (p.ParcelId.HasValue)
-                        {
-                            p.Parcel.IsVisibleToOtherAgencies = false;
-                            this.Context.Parcels.Update(p.Parcel);
-                        }
-                    });
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
@@ -658,11 +622,15 @@ namespace Pims.Dal.Services
                 case ("ERP-OH"): // OnHold
                     if(project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("T-GRE"): // Transferred within the GRE
                     if (project.TransferredWithinGreOn == null) throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
                     originalProject.TransferredWithinGreOn = project.TransferredWithinGreOn;
                     this.Context.TransferProjectProperties(originalProject, project);
+                    break;
+                case ("ERP-ON"):
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, true);
                     break;
                 default:
                     // All other status changes can only be done by `admin-projects` or when the project is in draft mode.
