@@ -90,17 +90,22 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               Street Address
             </label>
             <div
-              className="col-md-10 form-group"
+              className="GeocoderAutoComplete"
             >
-              <input
-                className="form-control"
-                disabled={false}
-                id="input-buildings.0.address.line1"
-                name="buildings.0.address.line1"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="line1"
-              />
+              <div>
+                <div
+                  className="form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-buildings.0.address.line1"
+                    name="buildings.0.address.line1"
+                    onChange={[Function]}
+                    value="line1"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -125,7 +130,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   name="buildings.0.address.cityId"
                   onChange={[Function]}
                   required={true}
-                  value="test city"
+                  value=""
                 />
               </div>
             </div>
