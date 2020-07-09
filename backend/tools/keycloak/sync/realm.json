@@ -89,17 +89,14 @@
         "Description": "Agency Administrator of the users agency.",
         "Composite": true,
         "RealmRoles": [
-          "admin-agencies",
           "admin-users",
           "property-add",
           "property-edit",
-          "property-delete",
           "property-view",
           "sensitive-view",
           "project-add",
           "project-edit",
-          "project-view",
-          "project-delete"
+          "project-view"
         ]
       },
       {
@@ -109,7 +106,11 @@
         "RealmRoles": [
           "agency-administrator",
           "admin-roles",
-          "admin-properties"
+          "admin-agencies",
+          "admin-properties",
+          "admin-projects",
+          "property-delete",
+          "project-delete"
         ]
       }
     ],
@@ -128,7 +129,7 @@
           "project-add",
           "project-edit",
           "project-view",
-          "project-delete"
+          "property-delete"
         ]
       },
       {
@@ -141,7 +142,7 @@
           "project-add",
           "project-edit",
           "project-view",
-          "project-delete"
+          "property-delete"
         ]
       },
       {
@@ -154,7 +155,7 @@
           "project-add",
           "project-edit",
           "project-view",
-          "project-delete"
+          "property-delete"
         ]
       },
       {
@@ -167,7 +168,7 @@
           "project-add",
           "project-edit",
           "project-view",
-          "project-delete"
+          "property-delete"
         ]
       },
       {
@@ -182,7 +183,7 @@
           "project-add",
           "project-edit",
           "project-view",
-          "project-delete"
+          "property-delete"
         ]
       },
       {
@@ -195,6 +196,7 @@
           "admin-properties",
           "admin-projects",
           "property-delete",
+          "project-delete",
           "dispose-approve"
         ]
       }

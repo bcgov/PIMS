@@ -1,5 +1,7 @@
+using Pims.Core.Converters;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Pims.Notifications.Models
 {
@@ -31,11 +33,13 @@ namespace Pims.Notifications.Models
         /// <summary>
         /// get/set - The email encoding.
         /// </summary>
+        [JsonConverter(typeof(EnumValueJsonConverter<EmailEncodings>))]
         EmailEncodings Encoding { get; set; }
 
         /// <summary>
         /// get/set - The email priority.
         /// </summary>
+        [JsonConverter(typeof(EnumValueJsonConverter<EmailPriorities>))]
         EmailPriorities Priority { get; set; }
 
         /// <summary>

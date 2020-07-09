@@ -10,6 +10,7 @@ using Pims.Dal.Entities;
 using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services
 {
@@ -249,6 +250,22 @@ namespace Pims.Dal.Services
             agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children).Select(a => a.Id));
 
             return agencies.ToArray();
+        }
+
+        /// <summary>
+        /// Get all the system administrators, and agency administrators for the specified 'agencyId'.
+        /// </summary>
+        /// <param name="agencies"></param>
+        /// <returns></returns>
+        public IEnumerable<User> GetAdmininstrators(params int[] agencies)
+        {
+            if (agencies == null) throw new ArgumentNullException(nameof(agencies));
+
+            return this.Context.Users
+                .AsNoTracking()
+                .Where(u => u.Roles.Any(r => r.Role.Claims.Any(c => c.Claim.Name == Permissions.SystemAdmin.GetName()))
+                    || (u.Agencies.Any(a => agencies.Contains(a.AgencyId)) && u.Roles.Any(r => r.Role.Claims.Any(c => c.Claim.Name == Permissions.AgencyAdmin.GetName())))
+                );
         }
         #endregion
     }

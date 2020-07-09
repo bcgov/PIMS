@@ -80,7 +80,7 @@ namespace Pims.Api.Test.Routes
         public void AddAccessRequest_Route()
         {
             // Arrange
-            var endpoint = typeof(UserController).FindMethod(nameof(UserController.AddAccessRequest), typeof(Model.AccessRequestModel));
+            var endpoint = typeof(UserController).FindMethod(nameof(UserController.AddAccessRequestAsync), typeof(Model.AccessRequestModel));
 
             // Act
             // Assert

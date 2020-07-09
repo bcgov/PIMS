@@ -133,20 +133,24 @@ namespace Pims.Tools.Keycloak.Sync
                 log.Append($"Keycloak - User added '{user.Username}'{Environment.NewLine}");
 
                 // Check if the agencies listed in Keycloak exist in PIMS.  If they don't report the issue in the summary.
+                var removeAgencies = new List<AgencyModel>();
                 if (user.Agencies?.Any() == true)
                 {
                     var agencies = user.Agencies.ToArray();
                     foreach (var agency in agencies)
                     {
-                        var aexists = _client.HandleRequestAsync<AgencyModel>(HttpMethod.Get, $"{_options.Api.Uri}/admin/agencies/{agency.Id}", r =>
+                        var aexists = await _client.HandleRequestAsync<AgencyModel>(HttpMethod.Get, $"{_options.Api.Uri}/admin/agencies/{agency.Id}", r =>
                         {
                             _logger.LogError($"Agency '{agency.Id}' does not exist in PIMS.", user);
                             log.Append($"PIMS - Agency missing '{agency.Id}'{Environment.NewLine}");
-                            ((List<AgencyModel>)user.Agencies).Remove(agency);
+                            removeAgencies.Add(agency);
                             return true;
                         });
                     }
                 }
+
+                // Remove any agencies.
+                removeAgencies.ForEach(a => ((List<AgencyModel>)user.Agencies).Remove(a));
 
                 // Fetch the users groups from keycloak.
                 var kgroups = await _client.HandleGetAsync<KModel.GroupModel[]>(_client.AdminRoute($"users/{kuser.Id}/groups"));

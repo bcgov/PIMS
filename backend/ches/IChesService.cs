@@ -13,7 +13,7 @@ namespace Pims.Ches
         Task<EmailResponseModel> SendEmailAsync(IEmailMerge email);
         Task<StatusResponseModel> GetStatusAsync(Guid messageId);
         Task<IEnumerable<StatusResponseModel>> GetStatusAsync(StatusModel filter);
-        Task<CancelResponseModel> CancelEmailAsync(Guid messageId);
-        Task<IEnumerable<CancelResponseModel>> CancelEmailAsync(StatusModel filter);
+        Task<StatusResponseModel> CancelEmailAsync(Guid messageId);
+        Task<IEnumerable<StatusResponseModel>> CancelEmailAsync(StatusModel filter);
     }
 }

@@ -112,12 +112,12 @@ namespace Pims.Api.Test.Routes.Project
         public void SendNotificationAsync_Route()
         {
             // Arrange
-            var endpoint = typeof(TemplateController).FindMethod(nameof(TemplateController.SendNotificationAsync), typeof(int), typeof(string), typeof(object));
+            var endpoint = typeof(TemplateController).FindMethod(nameof(TemplateController.SendProjectNotificationAsync), typeof(int), typeof(string), typeof(int));
 
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPost("{templateId}");
+            endpoint.HasPost("{templateId}/projects/{projectId}");
             endpoint.HasPermissions(Permissions.SystemAdmin);
         }
         #endregion

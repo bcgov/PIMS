@@ -34,9 +34,9 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Tag).HasMaxLength(50);
 
-            builder.Property(m => m.To).HasMaxLength(100);
-            builder.Property(m => m.Bcc).HasMaxLength(100);
-            builder.Property(m => m.Cc).HasMaxLength(100);
+            builder.Property(m => m.To).HasMaxLength(500);
+            builder.Property(m => m.Bcc).HasMaxLength(500);
+            builder.Property(m => m.Cc).HasMaxLength(500);
 
             builder.HasOne(m => m.Project).WithMany(m => m.Notifications).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.ToAgency).WithMany(m => m.Notifications).HasForeignKey(m => m.ToAgencyId).OnDelete(DeleteBehavior.ClientSetNull);

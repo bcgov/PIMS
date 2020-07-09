@@ -82,7 +82,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <returns>A response containing the message status.</returns>
         [HttpDelete("cancel/{messageId}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.CancelResponseModel), 200)]
+        [ProducesResponseType(typeof(Model.StatusResponseModel), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-ches" })]
         [HasPermission(Permissions.AdminProjects)]
@@ -99,7 +99,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <returns>A response containing the message status.</returns>
         [HttpDelete("cancel")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.CancelResponseModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.StatusResponseModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-ches" })]
         [HasPermission(Permissions.AdminProjects)]

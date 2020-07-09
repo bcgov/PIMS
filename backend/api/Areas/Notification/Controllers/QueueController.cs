@@ -116,6 +116,23 @@ namespace Pims.Api.Areas.Notification.Controllers
             var notification = await _pimsService.NotificationQueue.UpdateStatusAsync(id);
             return new JsonResult(_mapper.Map<NotificationQueueModel>(notification));
         }
+
+        /// <summary>
+        /// Update the status of the notification in the queue for the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("{id}/cancel")]
+        [HasPermission(Permissions.SystemAdmin)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(NotificationQueueModel), 200)]
+        [ProducesResponseType(typeof(ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "notification" })]
+        public async Task<IActionResult> CancelNotificationAsync(int id)
+        {
+            var notification = await _pimsService.NotificationQueue.CancelNotificationAsync(id);
+            return new JsonResult(_mapper.Map<NotificationQueueModel>(notification));
+        }
         #endregion
     }
 }

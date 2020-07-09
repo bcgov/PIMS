@@ -279,11 +279,15 @@ namespace Pims.Dal.Test.Services
                 Messages = new[] { new Notifications.Models.MessageResponse() { MessageId = Guid.NewGuid() } },
                 TransactionId = Guid.NewGuid()
             };
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
             var notifyService = helper.GetService<Mock<INotificationService>>();
-            notifyService.Setup(m => m.SendNotificationAsync<object>(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), null)).ReturnsAsync(response);
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            notifyService.Setup(m => m.SendNotificationAsync(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), It.IsAny<Entity.Project>())).ReturnsAsync(response);
 
             // Act
-            var result = await service.SendNotificationAsync<object>(template.Id, "test@test.com");
+            var result = await service.SendNotificationAsync(template.Id, "test@test.com", project);
 
             // Assert
             Assert.NotNull(result);
@@ -320,11 +324,14 @@ namespace Pims.Dal.Test.Services
                 Messages = new[] { new Notifications.Models.MessageResponse() { MessageId = Guid.NewGuid() } },
                 TransactionId = Guid.NewGuid()
             };
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
             var notifyService = helper.GetService<Mock<INotificationService>>();
-            notifyService.Setup(m => m.SendNotificationAsync<object>(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), null)).ThrowsAsync(new Exception());
+            notifyService.Setup(m => m.SendNotificationAsync(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), It.IsAny<Entity.Project>())).ThrowsAsync(new Exception());
 
             // Act
-            await Assert.ThrowsAsync<Exception>(async () => await service.SendNotificationAsync<object>(template.Id, "test@test.com"));
+            await Assert.ThrowsAsync<Exception>(async () => await service.SendNotificationAsync(template.Id, "test@test.com", project));
 
             // Assert
             var result = init.NotificationQueue.Find(template.Id);
@@ -355,7 +362,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, null));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, null, 1));
         }
 
         [Fact]
@@ -369,7 +376,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, ""));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, "", 1));
         }
 
         [Fact]
@@ -383,7 +390,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, " "));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.SendNotificationAsync<object>(1, " ", 1));
         }
 
         [Fact]
@@ -399,7 +406,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SendNotificationAsync<object>(1, "test"));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SendNotificationAsync<object>(1, "test", 1));
         }
 
         [Fact]
@@ -413,7 +420,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await service.SendNotificationAsync<object>(1, "test"));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await service.SendNotificationAsync<object>(1, "test", 1));
         }
         #endregion
         #endregion

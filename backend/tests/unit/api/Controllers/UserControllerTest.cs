@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Core.Http.Configuration;
 using Pims.Core.Http;
+using Pims.Dal;
 
 namespace PimsApi.Test.Controllers
 {
@@ -90,11 +91,11 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
             var accessRequest = EntityHelper.CreateAccessRequest();
-            service.Setup(m => m.GetAccessRequest()).Returns(accessRequest);
+            service.Setup(m => m.User.GetAccessRequest()).Returns(accessRequest);
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
 
             // Act
@@ -107,7 +108,7 @@ namespace PimsApi.Test.Controllers
             Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
             Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
             Assert.Equal(model.User.Id, actualResult.User.Id);
-            service.Verify(m => m.GetAccessRequest(), Times.Once());
+            service.Verify(m => m.User.GetAccessRequest(), Times.Once());
         }
 
         [Fact]
@@ -118,17 +119,17 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
-            service.Setup(m => m.GetAccessRequest());
+            service.Setup(m => m.User.GetAccessRequest());
 
             // Act
             var result = controller.GetAccessRequest();
 
             // Assert
             var actionResult = Assert.IsType<NoContentResult>(result);
-            service.Verify(m => m.GetAccessRequest(), Times.Once());
+            service.Verify(m => m.User.GetAccessRequest(), Times.Once());
         }
 
         [Fact]
@@ -139,11 +140,11 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
             var accessRequest = EntityHelper.CreateAccessRequest();
-            service.Setup(m => m.GetAccessRequest(It.IsAny<int>())).Returns(accessRequest);
+            service.Setup(m => m.User.GetAccessRequest(It.IsAny<int>())).Returns(accessRequest);
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
 
             // Act
@@ -156,28 +157,28 @@ namespace PimsApi.Test.Controllers
             Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
             Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
             Assert.Equal(model.User.Id, actualResult.User.Id);
-            service.Verify(m => m.GetAccessRequest(1), Times.Once());
+            service.Verify(m => m.User.GetAccessRequest(1), Times.Once());
         }
         #endregion
 
         #region AddAccessRequest
         [Fact]
-        public void AddAccessRequest_Success()
+        public async void AddAccessRequest_Success()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = EntityHelper.CreateAccessRequest();
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
 
             // Act
-            var result = controller.AddAccessRequest(model);
+            var result = await controller.AddAccessRequestAsync(model);
 
             // Assert
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -186,38 +187,38 @@ namespace PimsApi.Test.Controllers
             Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
             Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
             Assert.Equal(model.User.Id, actualResult.User.Id);
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
         }
 
         [Fact]
-        public void AddAccessRequest_Null_BadRequest()
+        public async void AddAccessRequestAsync_Null_BadRequest()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(null));
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            await Assert.ThrowsAsync<BadRequestException>(async () => await controller.AddAccessRequestAsync(null));
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
-        public void AddAccessRequest_NullAgencies_BadRequest()
+        public async void AddAccessRequestAsync_NullAgencies_BadRequest()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -228,21 +229,21 @@ namespace PimsApi.Test.Controllers
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(model));
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            await Assert.ThrowsAsync<BadRequestException>(async () => await controller.AddAccessRequestAsync(model));
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
-        public void AddAccessRequest_NullRoles_BadRequest()
+        public async void AddAccessRequestAsync_NullRoles_BadRequest()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -253,21 +254,21 @@ namespace PimsApi.Test.Controllers
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(model));
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            await Assert.ThrowsAsync<BadRequestException>(async () => await controller.AddAccessRequestAsync(model));
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
-        public void AddAccessRequest_InvalidRoles_BadRequest()
+        public async void AddAccessRequestAsync_InvalidRoles_BadRequest()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -278,21 +279,21 @@ namespace PimsApi.Test.Controllers
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(model));
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            await Assert.ThrowsAsync<BadRequestException>(async () => await controller.AddAccessRequestAsync(model));
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
-        public void AddAccessRequest_InvalidAgencies_BadRequest()
+        public async void AddAccessRequestAsync_InvalidAgencies_BadRequest()
         {
             // Arrange
             var user = PrincipalHelper.CreateForRole();
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -303,8 +304,8 @@ namespace PimsApi.Test.Controllers
 
             // Act
             // Assert
-            Assert.Throws<BadRequestException>(() => controller.AddAccessRequest(model));
-            service.Verify(m => m.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            await Assert.ThrowsAsync<BadRequestException>(async () => await controller.AddAccessRequestAsync(model));
+            service.Verify(m => m.User.AddAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
         #endregion
 
@@ -317,9 +318,9 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = EntityHelper.CreateAccessRequest();
             var model = mapper.Map<Model.AccessRequestModel>(accessRequest);
@@ -334,7 +335,7 @@ namespace PimsApi.Test.Controllers
             Assert.Equal(model.Agencies, actualResult.Agencies, new DeepPropertyCompare());
             Assert.Equal(model.Roles, actualResult.Roles, new DeepPropertyCompare());
             Assert.Equal(model.User.Id, actualResult.User.Id);
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Once());
         }
 
         [Fact]
@@ -345,14 +346,14 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(1, null));
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
@@ -363,9 +364,9 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -377,7 +378,7 @@ namespace PimsApi.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
@@ -388,9 +389,9 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -402,7 +403,7 @@ namespace PimsApi.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
@@ -413,9 +414,9 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -427,7 +428,7 @@ namespace PimsApi.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
 
         [Fact]
@@ -438,9 +439,9 @@ namespace PimsApi.Test.Controllers
             var helper = new TestHelper();
             var controller = helper.CreateController<UserController>(user);
 
-            var service = helper.GetService<Mock<IUserService>>();
+            var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
-            service.Setup(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
+            service.Setup(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()));
 
             var accessRequest = new Model.AccessRequestModel()
             {
@@ -452,7 +453,7 @@ namespace PimsApi.Test.Controllers
             // Act
             // Assert
             Assert.Throws<BadRequestException>(() => controller.UpdateAccessRequest(model.Id, model));
-            service.Verify(m => m.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
+            service.Verify(m => m.User.UpdateAccessRequest(It.IsAny<Entity.AccessRequest>()), Times.Never());
         }
         #endregion
         #endregion

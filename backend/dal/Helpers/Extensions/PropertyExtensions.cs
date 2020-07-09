@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +119,19 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
 
             return query;
+        }
+
+        /// <summary>
+        /// Throw an exception if the passed property is not in the same agency or sub agency as this project.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <param name="projectAgencyIds"></param>
+        /// <returns></returns>
+        public static void ThrowIfPropertyNotInProjectAgency(this Entity.Property parcel, IEnumerable<int> projectAgencyIds)
+        {
+            // properties may be in the same agency or sub-agency of a project. A parcel in a parent agency may not be added to a sub-agency project.
+            if (!parcel.AgencyId.HasValue || !projectAgencyIds.Contains(parcel.AgencyId.Value))
+                throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
         }
     }
 }

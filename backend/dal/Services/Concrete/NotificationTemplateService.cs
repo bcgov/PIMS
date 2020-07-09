@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Pims.Ches;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
@@ -73,6 +72,24 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
+        /// Get the notification template for the specified 'name'.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="KeyNotFoundException">The notification template does not exist for the specified 'id'.</exception>
+        /// <returns></returns>
+        public NotificationTemplate Get(string name)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
+
+            return this.Context.NotificationTemplates
+                .Include(t => t.Status)
+                .ThenInclude(s => s.FromStatus)
+                .Include(t => t.Status)
+                .ThenInclude(s => s.ToStatus)
+                .FirstOrDefault(t => t.Name == name) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
         /// Add a new notification template to the datasource.
         /// </summary>
         /// <param name="template"></param>
@@ -128,13 +145,19 @@ namespace Pims.Dal.Services
             this.Context.CommitTransaction();
         }
 
+        public async Task<NotificationQueue> SendNotificationAsync(int templateId, string to)
+        {
+            return await SendNotificationAsync<object>(templateId, to, null);
+
+        }
+
         /// <summary>
         /// Send an email notification for the specified notification template 'templateId' to the specified list of email addresses in 'to'.
         /// </summary>
         /// <param name="templateId"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public async Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model = null) where T : class // TODO: Allow for a way to pass a model to this function.
+        public async Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model) where T : class // TODO: Allow for a way to pass a model to this function.
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
 
@@ -163,10 +186,12 @@ namespace Pims.Dal.Services
                     Tag = notification.Tag,
                     SendOn = notification.SendOn,
                 };
-                var response = await _notifyService.SendNotificationAsync(templateId.ToString(), email, model);
+                var response = await _notifyService.SendNotificationAsync($"{templateId}-{template.RowVersion.ConvertRowVersion()}", email, model);
 
                 notification.ChesTransactionId = response.TransactionId;
                 notification.ChesMessageId = response.Messages.First().MessageId;
+                notification.Subject = email.Subject;
+                notification.Body = email.Body;
             }
             catch (Exception ex)
             {
