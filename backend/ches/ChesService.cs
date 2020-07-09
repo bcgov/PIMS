@@ -216,6 +216,10 @@ namespace Pims.Ches
             {
                 email.Bcc = email.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
             }
+
+            // Make sure there are no blank CC or BCC;
+            email.Cc = email.Cc.NotNullOrWhiteSpace();
+            email.Bcc = email.Bcc.NotNullOrWhiteSpace();
             return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
         }
 
@@ -255,6 +259,13 @@ namespace Pims.Ches
                     c.Bcc = c.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
                 });
             }
+
+            // Make sure there are no blank CC or BCC;
+            email.Contexts.ForEach(c =>
+            {
+                c.Cc = c.Cc.NotNullOrWhiteSpace();
+                c.Bcc = c.Bcc.NotNullOrWhiteSpace();
+            });
             return await SendAsync<EmailResponseModel, IEmailMerge>("/emailMerge", HttpMethod.Post, email);
         }
 
