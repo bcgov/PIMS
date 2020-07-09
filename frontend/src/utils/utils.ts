@@ -7,6 +7,7 @@ import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment';
+import { IStatus } from 'features/projects/common';
 
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
@@ -39,6 +40,11 @@ export const mapLookupCode = (
   value: code.id.toString(),
   selected: code.id === defaultId,
   code: code.code,
+});
+
+export const mapStatuses = (status: IStatus): SelectOption => ({
+  label: status.name,
+  value: status.id.toString(),
 });
 
 type FormikMemoProps = {

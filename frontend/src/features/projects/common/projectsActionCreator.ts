@@ -5,6 +5,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { toApiProject } from './projectConverter';
 import { saveProjectStatus, saveProjectTasks, saveProject, IProject } from '.';
+import { saveProjectStatuses } from './slices/projectStatusesSlice';
 
 export const fetchProjectWorkflow = (workflowCode: string = 'SUBMIT-DISPOSAL') => (
   dispatch: Function,
@@ -26,6 +27,13 @@ export const getProjectTasks = (statusCode: string | number) => (dispatch: Funct
   return CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.PROJECT_DISPOSE_TASKS(statusCode))
     .then(response => response.data);
+};
+
+export const fetchProjectStatuses = () => (dispatch: Function) => {
+  const axiosResponse = CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.PROJECT_STATUSES)
+    .then(response => dispatch(saveProjectStatuses(response.data)));
+  return handleAxiosResponse(dispatch, ProjectActions.GET_PROJECT_STATUSES, axiosResponse);
 };
 
 export const fetchWorkflowTasks = (workflowCode: string) => (dispatch: Function) => {

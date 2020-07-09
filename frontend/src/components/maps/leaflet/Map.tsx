@@ -29,6 +29,7 @@ export type MapViewportChangeEvent = {
     classificationId: number | null;
     minLotSize: number | null;
     maxLotSize: number | null;
+    inSurplusPropertyProgram: boolean | null;
   };
 };
 
@@ -79,6 +80,7 @@ const Map: React.FC<MapProps> = ({
     classificationId: '',
     minLotSize: '',
     maxLotSize: '',
+    inSurplusPropertyProgram: false,
   });
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
@@ -129,6 +131,7 @@ const Map: React.FC<MapProps> = ({
       classificationId,
       minLotSize,
       maxLotSize,
+      inSurplusPropertyProgram,
     } = filter;
     const e: MapViewportChangeEvent = {
       bounds,
@@ -140,6 +143,7 @@ const Map: React.FC<MapProps> = ({
         classificationId: decimalOrNull(classificationId),
         minLotSize: floatOrNull(minLotSize),
         maxLotSize: floatOrNull(maxLotSize),
+        inSurplusPropertyProgram,
       },
     };
     onViewportChanged?.(e);
