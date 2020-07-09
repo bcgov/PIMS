@@ -149,10 +149,10 @@ pipeline {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      options { timeout(time: 10, unit: "MINUTES") }
+      options { timeout(time: 20, unit: "MINUTES") }
       failFast true
       parallel {
-        stage("Frontend") {
+        stage("Test Frontend") {
           agent { label 'jenkins-slave-npm' }
           steps {
             script {
@@ -172,7 +172,7 @@ pipeline {
             }
           }
         }
-        stage("Backend") {
+        stage("Test Backend") {
           agent { label 'jenkins-slave-dotnet' }
           steps {
             script {
@@ -199,7 +199,7 @@ pipeline {
       options { timeout(time: 25, unit: "MINUTES") }
       failFast true
       parallel {
-        stage("Frontend") {
+        stage("Build Frontend") {
           steps {
             script {
               sh """
@@ -210,7 +210,7 @@ pipeline {
             }
           }
         }
-        stage("Backend") {
+        stage("Build Backend") {
           steps {
             sh """
               cd openshift
