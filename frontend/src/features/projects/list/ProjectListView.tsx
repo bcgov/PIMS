@@ -179,7 +179,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           reportType === 'generic'
             ? getProjectReportUrl({ ...query, all: true })
             : getProjectFinancialReportUrl({ ...query, all: true }),
-        fileName: `projects.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        fileName: `${reportType === 'spl' ? 'spl_report' : 'generic_project_report'}.${
+          accept === 'csv' ? 'csv' : 'xlsx'
+        }`,
         actionType: 'projects-report',
         headers: {
           Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
@@ -294,7 +296,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           <Button className="mr-2" onClick={() => fetch('csv', 'generic')}>
             Export CSV
           </Button>
-          <Button onClick={() => fetch('excel', 'spl')}>Export SPL Report</Button>
+          {keycloak.hasClaim(Claims.ADMIN_PROJECTS) && (
+            <Button onClick={() => fetch('excel', 'spl')}>Export SPL Report</Button>
+          )}
         </Container>
         <Table<IProject>
           name="projectsTable"

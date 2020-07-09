@@ -42,18 +42,6 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
           Export CSV
         </div>
       </button>
-      <button
-        className="Button btn btn-primary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        <div
-          className="Button__value"
-        >
-          Export SPL Report
-        </div>
-      </button>
     </div>
     <div
       className="table"
