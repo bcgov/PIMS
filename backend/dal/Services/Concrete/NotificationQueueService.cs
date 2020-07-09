@@ -345,10 +345,16 @@ namespace Pims.Dal.Services
                     notification.ChesTransactionId = messages.TransactionId;
                     notification.ChesMessageId = messages.Messages.First().MessageId;
                 }
+                catch (HttpClientRequestException ex)
+                {
+                    notification.Status = NotificationStatus.Failed;
+                    var data = await ex.Response.Content.ReadAsStringAsync();
+                    this.Logger.LogError(ex, $"Failed to send email to CHES - Template:{notification.TemplateId}{Environment.NewLine}CHES StatusCode:{ex.StatusCode}{Environment.NewLine}{ex.Message}{Environment.NewLine}{data}");
+                }
                 catch (Exception ex)
                 {
                     notification.Status = NotificationStatus.Failed;
-                    this.Logger.LogError(ex, $"Failed to send email to CHES - notification:{notification.Id}");
+                    this.Logger.LogError(ex, $"Failed to send email to CHES - notification:{notification.Id}, template:{notification.TemplateId}{Environment.NewLine}{ex.Message}");
                 }
             }
 
