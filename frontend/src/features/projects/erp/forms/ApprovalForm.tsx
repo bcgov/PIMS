@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Tab, Tabs } from 'react-bootstrap';
-import { SPPApprovalTabs } from '../../common';
+import { Tab, Tabs, Spinner } from 'react-bootstrap';
+import { SPPApprovalTabs, initialValues } from '../../common';
 import { useFormikContext } from 'formik';
 import { ProjectInformationTab, DocumentationTab, EnhancedReferralTab } from '..';
+import { isEqual } from 'lodash';
 
 interface IApprovalFormProps {
   /** The currently displayed tab */
@@ -30,7 +31,12 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
   setSubmitStatusCode,
   goToGreTransferred,
 }) => {
-  const { submitForm } = useFormikContext();
+  const { submitForm, values } = useFormikContext();
+
+  if (isEqual(values, initialValues)) {
+    return <Spinner animation="border" />;
+  }
+
   return (
     <React.Fragment>
       <Tabs activeKey={currentTab} id="approvalTabs" onSelect={(key: string) => setCurrentTab(key)}>
