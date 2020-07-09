@@ -51,6 +51,9 @@ const ReviewApproveForm = ({
   const exemptionReviewTasks = _.filter(project.tasks, {
     statusCode: ReviewWorkflowStatus.ExemptionProcess,
   });
+  const exemptionInfoReviewTasks = _.filter(project.tasks, {
+    statusCode: ReviewWorkflowStatus.ExemptionReview,
+  });
 
   return (
     <Fragment>
@@ -64,7 +67,11 @@ const ReviewApproveForm = ({
         goToAddProperties={goToAddProperties}
         title=""
       />
-      <TasksForm tasks={infoReviewTasks} className="reviewRequired" isReadOnly={!canEdit} />
+      <TasksForm
+        tasks={project.exemptionRequested ? exemptionInfoReviewTasks : infoReviewTasks}
+        className="reviewRequired"
+        isReadOnly={!canEdit}
+      />
       {project.exemptionRequested && (
         <>
           <ExemptionRequest
