@@ -79,8 +79,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public NotificationTemplate Get(string name)
         {
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
-
             return this.Context.NotificationTemplates
                 .Include(t => t.Status)
                 .ThenInclude(s => s.FromStatus)
