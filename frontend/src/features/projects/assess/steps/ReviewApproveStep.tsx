@@ -30,13 +30,15 @@ export const validateTasks = (project: IProject) => {
     if (
       !task.isCompleted &&
       !task.isOptional &&
-      task.statusCode !== ReviewWorkflowStatus.ExemptionProcess
+      task.statusCode !== ReviewWorkflowStatus.ExemptionProcess &&
+      !project.exemptionRequested
     ) {
       errors = setIn(errors, `tasks.${project.tasks.indexOf(task)}.isCompleted`, 'Required');
     }
     if (
       !task.isCompleted &&
       !task.isOptional &&
+      task.statusCode !== ReviewWorkflowStatus.PropertyReview &&
       task.statusCode === ReviewWorkflowStatus.ExemptionProcess &&
       project.exemptionRequested
     ) {
@@ -88,6 +90,16 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     statusCode: project.status?.code,
     confirmation: true,
   };
+
+  const getNextWorkflowCode = (submitStatusCode: string | undefined, values: any) => {
+    if (submitStatusCode === ReviewWorkflowStatus.ApprovedForErp) {
+      return 'ERP';
+    } else if (submitStatusCode === ReviewWorkflowStatus.ApprovedForExemption) {
+      return 'ASSESS-EX-DISPOSAL';
+    } else {
+      return values.workflowCode;
+    }
+  };
   return (
     <Container fluid className="ReviewApproveStep">
       <Formik
@@ -95,11 +107,13 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         innerRef={formikRef}
         enableReinitialize={true}
         onSubmit={(values: IProject) => {
-          const workflowCode =
-            submitStatusCode === ReviewWorkflowStatus.ApprovedForErp ? 'ERP' : values.workflowCode;
+          const workflowCode = getNextWorkflowCode(submitStatusCode, values);
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
             (project: IProject) => {
-              if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
+              if (
+                project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+                project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption
+              ) {
                 history.push(
                   `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
                 );
