@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Pims.Dal
 {
@@ -18,6 +17,17 @@ namespace Pims.Dal
         /// get/set - Global project configuration settings.
         /// </summary>
         public ProjectOptions Project { get; set; }
+
+        /// <summary>
+        /// get/set - Environmental configuration settings.
+        /// These are included in the notifications model.
+        /// </summary>
+        public EnvironmentOptions Environment { get; set; }
+
+        /// <summary>
+        /// get/set - Access request configuration settings.
+        /// </summary>
+        public AccessRequestOptions AccessRequest { get; set; }
         #endregion
     }
 }

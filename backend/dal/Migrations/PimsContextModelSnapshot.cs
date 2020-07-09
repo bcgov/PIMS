@@ -797,8 +797,8 @@ namespace Pims.Dal.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Bcc")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -810,8 +810,8 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("Cc")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<Guid?>("ChesMessageId")
                         .HasColumnType("uniqueidentifier");
@@ -867,8 +867,8 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("To")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<int?>("ToAgencyId")
                         .HasColumnType("int");

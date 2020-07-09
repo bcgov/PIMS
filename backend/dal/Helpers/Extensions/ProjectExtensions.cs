@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
+using Pims.Dal.Entities;
 using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
@@ -257,20 +257,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Throw an exception if the passed property is not in the same agency or sub agency as this project.
-        /// </summary>
-        /// <param name="project"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public static void ThrowIfPropertyNotInProjectAgency(this Entity.Project project, Entity.Property property)
-        {
-            //properties may be in the same agency or sub-agency of a project. A parcel in a parent agency may not be added to a sub-agency project.
-            if (property.AgencyId != project.AgencyId
-                && property.Agency?.ParentId != project.AgencyId)
-                throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
-        }
-
-        /// <summary>
         /// Determine the financial year the project is based on.
         /// Scans properties and gets the most recent evaluation date.
         /// </summary>
@@ -403,6 +389,8 @@ namespace Pims.Dal.Helpers.Extensions
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
             context.SetOriginalRowVersion(originalProject);
 
+            var agencies = originalProject.Agency.ParentId.HasValue ? new[] { originalProject.AgencyId } : context.Agencies.Where(a => a.ParentId == originalProject.AgencyId || a.Id == originalProject.AgencyId).Select(a => a.Id).ToArray();
+
             // Update all properties
             foreach (var property in updatedProject.Properties)
             {
@@ -428,7 +416,7 @@ namespace Pims.Dal.Helpers.Extensions
                                 .Include(p => p.Evaluations)
                                 .Include(p => p.Fiscals)
                                 .FirstOrDefault(p => p.Id == property.ParcelId);
-                            originalProject.ThrowIfPropertyNotInProjectAgency(existingParcel);
+                            existingParcel.ThrowIfPropertyNotInProjectAgency(agencies);
                             if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
                             existingParcel.ProjectNumber = updatedProject.ProjectNumber;
                         }
@@ -439,7 +427,7 @@ namespace Pims.Dal.Helpers.Extensions
                                 .Include(p => p.Evaluations)
                                 .Include(p => p.Fiscals)
                                 .FirstOrDefault(p => p.Id == property.BuildingId);
-                            originalProject.ThrowIfPropertyNotInProjectAgency(existingBuilding);
+                            existingBuilding.ThrowIfPropertyNotInProjectAgency(agencies);
                             if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
                             existingBuilding.ProjectNumber = updatedProject.ProjectNumber;
                         }
@@ -452,35 +440,38 @@ namespace Pims.Dal.Helpers.Extensions
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
                         existingProperty.Parcel.ProjectNumber = updatedProject.ProjectNumber;
-                        existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
-                        existingProperty.Parcel.Zoning = property.Parcel.Zoning;
-                        existingProperty.Parcel.ZoningPotential = property.Parcel.ZoningPotential;
-                        foreach (var evaluation in property.Parcel.Evaluations)
+                        if (property.Parcel != null)
                         {
-                            var existingEvaluation = existingProperty.Parcel.Evaluations
-                                .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
+                            existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
+                            existingProperty.Parcel.Zoning = property.Parcel.Zoning;
+                            existingProperty.Parcel.ZoningPotential = property.Parcel.ZoningPotential;
+                            foreach (var evaluation in property.Parcel.Evaluations)
+                            {
+                                var existingEvaluation = existingProperty.Parcel.Evaluations
+                                    .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
 
-                            if (existingEvaluation == null)
-                            {
-                                existingProperty.Parcel.Evaluations.Add(evaluation);
+                                if (existingEvaluation == null)
+                                {
+                                    existingProperty.Parcel.Evaluations.Add(evaluation);
+                                }
+                                else
+                                {
+                                    context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
+                                }
                             }
-                            else
+                            foreach (var fiscal in property.Parcel.Fiscals)
                             {
-                                context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
-                            }
-                        }
-                        foreach (var fiscal in property.Parcel.Fiscals)
-                        {
-                            var existingFiscal = existingProperty.Parcel.Fiscals
-                                .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
+                                var existingFiscal = existingProperty.Parcel.Fiscals
+                                    .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
 
-                            if (existingFiscal == null)
-                            {
-                                existingProperty.Parcel.Fiscals.Add(fiscal);
-                            }
-                            else
-                            {
-                                context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                                if (existingFiscal == null)
+                                {
+                                    existingProperty.Parcel.Fiscals.Add(fiscal);
+                                }
+                                else
+                                {
+                                    context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                                }
                             }
                         }
                     }
@@ -488,33 +479,36 @@ namespace Pims.Dal.Helpers.Extensions
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
                         existingProperty.Building.ProjectNumber = updatedProject.ProjectNumber;
-                        existingProperty.Building.ClassificationId = property.Building.ClassificationId;
-                        foreach (var evaluation in property.Building.Evaluations)
+                        if (property.Building != null)
                         {
-                            var existingEvaluation = existingProperty.Building.Evaluations
-                                .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
+                            existingProperty.Building.ClassificationId = property.Building.ClassificationId;
+                            foreach (var evaluation in property.Building.Evaluations)
+                            {
+                                var existingEvaluation = existingProperty.Building.Evaluations
+                                    .FirstOrDefault(e => e.Date == evaluation.Date && e.Key == evaluation.Key);
 
-                            if (existingEvaluation == null)
-                            {
-                                existingProperty.Building.Evaluations.Add(evaluation);
+                                if (existingEvaluation == null)
+                                {
+                                    existingProperty.Building.Evaluations.Add(evaluation);
+                                }
+                                else
+                                {
+                                    context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
+                                }
                             }
-                            else
+                            foreach (var fiscal in property.Building.Fiscals)
                             {
-                                context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
-                            }
-                        }
-                        foreach (var fiscal in property.Building.Fiscals)
-                        {
-                            var existingFiscal = existingProperty.Building.Fiscals
-                                .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
+                                var existingFiscal = existingProperty.Building.Fiscals
+                                    .FirstOrDefault(e => e.FiscalYear == fiscal.FiscalYear && e.Key == fiscal.Key);
 
-                            if (existingFiscal == null)
-                            {
-                                existingProperty.Building.Fiscals.Add(fiscal);
-                            }
-                            else
-                            {
-                                context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                                if (existingFiscal == null)
+                                {
+                                    existingProperty.Building.Fiscals.Add(fiscal);
+                                }
+                                else
+                                {
+                                    context.Entry(existingFiscal).CurrentValues.SetValues(fiscal);
+                                }
                             }
                         }
                     }
@@ -522,7 +516,7 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             // Remove any properties from this project that are no longer associated.
-            var removePropertyIds = originalProject.Properties.Select(p => p.Id).Except(updatedProject.Properties.Select(p => p.Id));
+            var removePropertyIds = originalProject.Properties.Where(p => p.Id != 0).Select(p => p.Id).Except(updatedProject.Properties.Where(p => p.Id != 0).Select(p => p.Id));
             var removeProperties = originalProject.Properties.Where(p => removePropertyIds.Contains(p.Id));
 
             var removeParcelIds = removeProperties.Where(p => p.ParcelId.HasValue).Select(p => p.ParcelId.Value).ToArray();
@@ -614,6 +608,27 @@ namespace Pims.Dal.Helpers.Extensions
                     context.Parcels.Update(p.Parcel);
                 }
             });
+        }
+
+        /// Get a collection of responses that have changed from the original to the updated project.
+        /// </summary>
+        /// <param name="originalProject"></param>
+        /// <param name="updatedProject"></param>
+        /// <returns></returns>
+        public static IEnumerable<ProjectAgencyResponse> GetResponseChanges(this Entity.Project originalProject, Entity.Project updatedProject)
+        {
+            if (updatedProject == null) throw new ArgumentNullException(nameof(updatedProject));
+
+            var responses = new List<ProjectAgencyResponse>(updatedProject.Responses.Count());
+            foreach (var response in updatedProject.Responses)
+            {
+                var originalResponse = originalProject.Responses.FirstOrDefault(r => r.ProjectId == response.ProjectId && r.AgencyId == response.AgencyId);
+                if (originalResponse == null || originalResponse.Response != response.Response)
+                {
+                    responses.Add(response);
+                }
+            }
+            return responses;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Pims.Core.Converters
                 JsonTokenType.String => Int64.TryParse(reader.GetString(), out long result) ? result : 0,
                 _ => 0
             };
-            return DateTimeOffset.UnixEpoch.AddSeconds(value).UtcDateTime;
+            return DateTimeOffset.UnixEpoch.AddMilliseconds(value).UtcDateTime;
         }
 
         /// <summary>
@@ -37,8 +37,16 @@ namespace Pims.Core.Converters
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            long unixTime = ((DateTimeOffset)value).ToUnixTimeSeconds();
-            writer.WriteNumberValue(unixTime);
+            var date = ((DateTimeOffset)value);
+            if (date <= DateTime.UtcNow.AddHours(1))
+            {
+                writer.WriteNumberValue(0);
+            }
+            else
+            {
+                long unixTime = date.ToUnixTimeMilliseconds();
+                writer.WriteNumberValue(unixTime);
+            }
         }
         #endregion
     }

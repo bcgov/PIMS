@@ -193,9 +193,9 @@ namespace Pims.Dal.Services
             this.Context.Entry(project)
                 .Collection(p => p.Properties)
                 .Load();
-            foreach(ProjectProperty pp in project.Properties)
+            foreach (ProjectProperty pp in project.Properties)
             {
-                if(pp.PropertyType == PropertyTypes.Land)
+                if (pp.PropertyType == PropertyTypes.Land)
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Parcel).Query()
@@ -238,6 +238,44 @@ namespace Pims.Dal.Services
             }
             this.Context.Entry(project).State = EntityState.Detached;
             return project;
+        }
+
+        /// <summary>
+        /// Get all the notifications in the queue for the specified project 'filter'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public Paged<NotificationQueue> GetNotificationsInQueue(ProjectNotificationFilter filter)
+        {
+            var query = this.Context.NotificationQueue
+                .AsNoTracking();
+
+            if (filter.ProjectId.HasValue)
+                query = query.Where(n => n.ProjectId == filter.ProjectId);
+
+            if (filter.AgencyId.HasValue)
+                query = query.Where(n => n.ToAgencyId == filter.AgencyId);
+
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(n => n.Project.ProjectNumber == filter.ProjectNumber);
+
+            if (!String.IsNullOrWhiteSpace(filter.To))
+                query = query.Where(n => EF.Functions.Like(n.To, $"%{filter.To}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Tag))
+                query = query.Where(n => EF.Functions.Like(n.Tag, $"%{filter.Tag}%"));
+
+            if (filter.Status?.Any() ?? false)
+                query = query.Where(n => filter.Status.Contains(n.Status));
+
+            var total = query.Count();
+            var items = query
+                .Skip((filter.Page - 1) * filter.Quantity)
+                .Take(filter.Quantity)
+                .ToArray();
+
+            return new Paged<NotificationQueue>(items, filter.Page, filter.Quantity, total);
         }
 
         /// <summary>
@@ -427,6 +465,8 @@ namespace Pims.Dal.Services
             return Get(originalProject.Id);
         }
 
+
+
         /// <summary>
         /// Remove the specified project from the datasource.
         /// </summary>
@@ -436,7 +476,7 @@ namespace Pims.Dal.Services
         /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to delete project.</exception>
         /// <returns></returns>
-        public void Remove(Project project)
+        public async System.Threading.Tasks.Task RemoveAsync(Project project)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectDelete, Permissions.AdminProjects });
 
@@ -473,6 +513,10 @@ namespace Pims.Dal.Services
 
                 this.Context.ProjectProperties.Remove(p);
             });
+
+            await this.CancelNotificationsAsync(project.Id);
+
+            originalProject.Notifications.Clear(); // TODO: Need to test this to determine if it'll let us delete a project with existing notifications.
             this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
         }
@@ -497,14 +541,14 @@ namespace Pims.Dal.Services
         /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
         /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
-        public Project SetStatus(Project project, string workflowCode)
+        public async System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, string workflowCode)
         {
             var workflow = this.Context.Workflows
                 .Include(w => w.Status)
                 .ThenInclude(s => s.Status)
                 .FirstOrDefault(w => w.Code == workflowCode) ?? throw new KeyNotFoundException();
 
-            return SetStatus(project, workflow);
+            return await SetStatusAsync(project, workflow);
         }
 
         /// <summary>
@@ -527,7 +571,7 @@ namespace Pims.Dal.Services
         /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
         /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
-        public Project SetStatus(Project project, Workflow workflow)
+        public async System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
             workflow.ThrowIfNull(nameof(workflow));
@@ -593,8 +637,14 @@ namespace Pims.Dal.Services
                 case ("AP-ERP"): // Approve for ERP
                 case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
-                    originalProject.ApprovedOn = DateTime.UtcNow;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, true);
+                    var now = DateTime.UtcNow;
+                    originalProject.ApprovedOn = now;
+                    // Default notification dates.
+                    originalProject.InitialNotificationSentOn = now;
+                    originalProject.ThirtyDayNotificationSentOn = now.AddDays(30);
+                    originalProject.SixtyDayNotificationSentOn = now.AddDays(60);
+                    originalProject.NinetyDayNotificationSentOn = now.AddDays(90);
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
@@ -618,9 +668,12 @@ namespace Pims.Dal.Services
                 case ("CA"): // Cancel
                     this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.CancelledOn = DateTime.UtcNow;
+
+                    // Cancel any pending notifications.
+                    await CancelNotificationsAsync(originalProject.Id);
                     break;
                 case ("ERP-OH"): // OnHold
-                    if(project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
+                    if (project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
@@ -646,6 +699,83 @@ namespace Pims.Dal.Services
 
             return Get(originalProject.Id);
         }
+
+        #region Notifications
+        /// <summary>
+        /// Cancel any pending notifications for the specified project 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id)
+        {
+            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = id, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
+            await this.Self.NotificationQueue.CancelNotificationsAsync(page);
+            return page;
+        }
+
+        /// <summary>
+        /// Cancel any pending notifications for the specified project 'id' and agency 'agencyId'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="agencyId"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id, int agencyId)
+        {
+            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = id, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
+            await this.Self.NotificationQueue.CancelNotificationsAsync(page);
+            return page;
+        }
+
+        /// <summary>
+        /// Generates new notifications for response that have shown interested.
+        /// Additionally cancels any future dated notifications for responses that have indicated they are not interested in a project.
+        /// This function does not send notifications, it only generates them.
+        /// This will generated notifications if there are templates mapped to the current status and their audience is for 'WatchingAgencies'.
+        /// All 'SendOn' dates will be based on the 'Project.ApprovalDate + DelayDays'.
+        /// </summary>
+        /// <param name="responses"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> GenerateWatchNotificationsAsync(IEnumerable<ProjectAgencyResponse> responses)
+        {
+            var notifications = new List<NotificationQueue>();
+            foreach (var response in responses)
+            {
+                switch (response.Response)
+                {
+                    case (NotificationResponses.Ignore):
+                        // Any future dated notifications need to be cancelled for the specified agency.
+                        await CancelNotificationsAsync(response.ProjectId, response.AgencyId);
+                        break;
+                    case (NotificationResponses.Watch):
+                        // Notifications need to be added to the queue for the interested agency.
+                        var daysSinceApproved = response.Project.ApprovedOn.HasValue ? (DateTime.UtcNow - response.Project.ApprovedOn.Value).TotalDays : 0;
+
+                        // Get all notifications for the project that are configured for watching agencies and have not expired.
+                        var options = this.Context.ProjectStatusNotifications
+                            .Include(s => s.Template)
+                            .Where(s => s.ToStatusId == response.Project.StatusId
+                                && s.Template.Audience == NotificationAudiences.WatchingAgencies
+                                && (s.Delay == NotificationDelays.Days || s.Delay == NotificationDelays.None)
+                                && s.DelayDays > daysSinceApproved);
+
+                        foreach (var option in options)
+                        {
+                            var sendOn = option.Delay switch
+                            {
+                                NotificationDelays.None => response.Project.CreatedOn,
+                                NotificationDelays.Days => response.Project.ApprovedOn?.AddDays(option.DelayDays) ?? DateTime.UtcNow.AddDays(option.DelayDays),
+                                _ => response.Project.CreatedOn
+                            };
+
+                            notifications.Add(this.Self.NotificationQueue.GenerateNotification(response.Project, option, response.Agency, sendOn));
+                        }
+                        break;
+                };
+            }
+
+            return notifications;
+        }
+        #endregion
         #endregion
     }
 }

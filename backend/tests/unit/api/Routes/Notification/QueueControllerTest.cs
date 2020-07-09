@@ -94,6 +94,19 @@ namespace Pims.Api.Test.Routes.Project
             endpoint.HasPut("{id}");
             endpoint.HasPermissions(Permissions.SystemAdmin);
         }
+
+        [Fact]
+        public void CancelNotificationAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(QueueController).FindMethod(nameof(QueueController.CancelNotificationAsync), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("{id}/cancel");
+            endpoint.HasPermissions(Permissions.SystemAdmin);
+        }
         #endregion
     }
 }

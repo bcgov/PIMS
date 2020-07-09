@@ -83,21 +83,21 @@ namespace Pims.Notifications
         /// </summary>
         /// <param name="notification"></param>
         /// <returns></returns>
-        public async Task<Model.EmailResponse> SendNotificationAsync(Model.IEmail notification)
+        public async Task<Model.EmailResponse> SendNotificationAsync(Model.IEmail email)
         {
             var response = await this.Ches.SendEmailAsync(new Ches.Models.EmailModel()
             {
-                From = notification.From,
-                To = notification.To,
-                Cc = notification.Cc,
-                Bcc = notification.Bcc,
-                Encoding = notification.Encoding.ConvertTo<Model.EmailEncodings, Ches.Models.EmailEncodings>(),
-                Priority = notification.Priority.ConvertTo<Model.EmailPriorities, Ches.Models.EmailPriorities>(),
-                BodyType = notification.BodyType.ConvertTo<Model.EmailBodyTypes, Ches.Models.EmailBodyTypes>(),
-                Subject = notification.Subject,
-                Body = notification.Body,
-                Tag = notification.Tag,
-                SendOn = notification.SendOn,
+                From = email.From,
+                To = email.To,
+                Cc = email.Cc,
+                Bcc = email.Bcc,
+                Encoding = email.Encoding.ConvertTo<Model.EmailEncodings, Ches.Models.EmailEncodings>(),
+                Priority = email.Priority.ConvertTo<Model.EmailPriorities, Ches.Models.EmailPriorities>(),
+                BodyType = email.BodyType.ConvertTo<Model.EmailBodyTypes, Ches.Models.EmailBodyTypes>(),
+                Subject = email.Subject,
+                Body = email.Body,
+                Tag = email.Tag,
+                SendOn = email.SendOn,
             });
 
             return new Model.EmailResponse(response);
@@ -153,6 +153,18 @@ namespace Pims.Notifications
 
             return new Model.StatusResponse(response);
         }
+
+        /// <summary>
+        /// Get the status of the message for the specified 'messageId'.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
+        public async Task<Model.StatusResponse> CancelNotificationAsync(Guid messageId)
+        {
+            var response = await this.Ches.CancelEmailAsync(messageId);
+
+            return new Model.StatusResponse(response);
+        }
         #endregion
 
         #region Helpers
@@ -163,16 +175,17 @@ namespace Pims.Notifications
         private void CompileTemplate<TModel>(string templateKey, Model.IEmailTemplate template)
         {
             var subjectKey = String.Format(SUBJECT_TEMPLATE_KEY, templateKey);
+            var type = typeof(TModel) == typeof(object) || typeof(TModel).IsAnonymousType() ? null : typeof(TModel);
             if (!_cache.ContainsKey(subjectKey))
             {
-                Engine.Razor.Compile(template.Subject, subjectKey, typeof(TModel));
+                Engine.Razor.Compile(template.Subject, subjectKey, type);
                 _cache.Add(subjectKey, template);
             }
 
             var bodyKey = String.Format(BODY_TEMPLATE_KEY, templateKey);
             if (!_cache.ContainsKey(bodyKey))
             {
-                Engine.Razor.Compile(template.Body, bodyKey, typeof(TModel));
+                Engine.Razor.Compile(template.Body, bodyKey, type);
                 _cache.Add(bodyKey, template);
             }
         }
@@ -187,8 +200,9 @@ namespace Pims.Notifications
         /// <returns></returns>
         private void Merge<TModel>(string templateKey, Model.IEmailTemplate template, TModel model)
         {
-            template.Subject = Engine.Razor.Run(String.Format(SUBJECT_TEMPLATE_KEY, templateKey), typeof(TModel), model);
-            template.Body = Engine.Razor.Run(String.Format(BODY_TEMPLATE_KEY, templateKey), typeof(TModel), model);
+            var type = typeof(TModel) == typeof(object) || typeof(TModel).IsAnonymousType() ? null : typeof(TModel);
+            template.Subject = Engine.Razor.Run(String.Format(SUBJECT_TEMPLATE_KEY, templateKey), type, model);
+            template.Body = Engine.Razor.Run(String.Format(BODY_TEMPLATE_KEY, templateKey), type, model);
         }
         #endregion
     }

@@ -17,23 +17,24 @@ namespace Pims.Dal.Test.Core.Converters
     public class MicrosecondEpochJsonConverterTest
     {
         #region Data
-        private static readonly DateTimeOffset DATE = new DateTimeOffset(new DateTime(2020, 1, 1));
-        private static readonly DateTimeOffset MIN_DATE = new DateTimeOffset(DateTime.MinValue);
+        private static readonly long DATE = new DateTimeOffset(DateTime.MaxValue.AsUtc().AddDays(-2)).ToUnixTimeMilliseconds();
+        private static readonly long MIN_DATE = new DateTimeOffset(DateTime.MinValue.AsUtc()).ToUnixTimeMilliseconds();
 
         public static IEnumerable<object[]> WriteData = new List<object[]>()
         {
-            new object[] { DATE, $"{{\"test\":{DATE.ToUnixTimeSeconds()}}}" },
-            new object[] { null, $"{{\"test\":{MIN_DATE.ToUnixTimeSeconds()}}}" }
+            new object[] { DateTimeOffset.UnixEpoch.AddMilliseconds(MIN_DATE).UtcDateTime, $"{{\"test\":0}}" },
+            new object[] { DateTimeOffset.UnixEpoch.AddMilliseconds(DATE).UtcDateTime, $"{{\"test\":{DATE}}}" },
+            new object[] { null, $"{{\"test\":0}}" }
         };
 
         public static IEnumerable<object[]> ReadData = new List<object[]>()
         {
-            new object[] { JsonTokenType.String, $"{DATE.ToUnixTimeSeconds()}", DATE },
+            new object[] { JsonTokenType.String, $"{DATE}", DateTimeOffset.UnixEpoch.AddMilliseconds(DATE).UtcDateTime },
             new object[] { JsonTokenType.String, "", DateTimeOffset.UnixEpoch },
             new object[] { JsonTokenType.String, "test", DateTimeOffset.UnixEpoch },
             new object[] { JsonTokenType.String, null, DateTimeOffset.UnixEpoch },
             new object[] { JsonTokenType.Number, null, DateTimeOffset.UnixEpoch },
-            new object[] { JsonTokenType.Number, DATE.ToUnixTimeSeconds(), DATE },
+            new object[] { JsonTokenType.Number, DATE, DateTimeOffset.UnixEpoch.AddMilliseconds(DATE).UtcDateTime },
             new object[] { JsonTokenType.True, true, DateTimeOffset.UnixEpoch },
             new object[] { JsonTokenType.False, false, DateTimeOffset.UnixEpoch },
         };

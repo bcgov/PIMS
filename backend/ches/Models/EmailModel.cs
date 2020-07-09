@@ -1,7 +1,5 @@
-using Pims.Core.Converters;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Pims.Ches.Models
 {
@@ -33,14 +31,12 @@ namespace Pims.Ches.Models
 
         /// <summary>
         /// get/set - The email encoding.
-        /// </summary>c
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailEncodings>))]
+        /// </summary>
         public EmailEncodings Encoding { get; set; } = EmailEncodings.Utf8;
 
         /// <summary>
         /// get/set - The email priority.
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailPriorities>))]
         public EmailPriorities Priority { get; set; } = EmailPriorities.Normal;
 
         /// <summary>
@@ -51,7 +47,6 @@ namespace Pims.Ches.Models
         /// <summary>
         /// get/set - The email body type.
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailBodyTypes>))]
         public EmailBodyTypes BodyType { get; set; } = EmailBodyTypes.Html;
 
         /// <summary>
@@ -67,8 +62,6 @@ namespace Pims.Ches.Models
         /// <summary>
         /// get/set - When the message will be sent.
         /// </summary>
-        [JsonConverter(typeof(MicrosecondEpochJsonConverter))]
-        [JsonPropertyName("delayTS")]
         public DateTime SendOn { get; set; }
 
         /// <summary>

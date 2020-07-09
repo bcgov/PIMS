@@ -1,6 +1,4 @@
-using Pims.Core.Converters;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Pims.Ches.Models
 {
@@ -18,19 +16,16 @@ namespace Pims.Ches.Models
         /// <summary>
         /// get/set - The email encoding.
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailEncodings>))]
         public EmailEncodings Encoding { get; set; } = EmailEncodings.Utf8;
 
         /// <summary>
         /// get/set - The email priority.
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailPriorities>))]
         public EmailPriorities Priority { get; set; } = EmailPriorities.Normal;
 
         /// <summary>
         /// get/set - The email body type.
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailBodyTypes>))]
         public EmailBodyTypes BodyType { get; set; } = EmailBodyTypes.Html;
 
         /// <summary>

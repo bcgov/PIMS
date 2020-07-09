@@ -36,6 +36,16 @@ namespace Pims.Ches.Configuration
         /// This is helpful to stop sending emails to agencies when doing testing.
         /// </summary>
         public bool OverrideTo { get; set; }
+
+        /// <summary>
+        /// get/set - Send emails to the currently user as Bcc.
+        /// </summary>
+        public bool BccUser { get; set; }
+
+        /// <summary>
+        /// get/set - Always BCC the specified email address.
+        /// </summary>
+        public string AlwaysBcc { get; set; }
         #endregion
     }
 }

@@ -1,6 +1,3 @@
-using Newtonsoft.Json;
-using Pims.Core.Converters;
-
 namespace Pims.Notifications.Models
 {
     /// <summary>
@@ -17,7 +14,6 @@ namespace Pims.Notifications.Models
         /// <summary>
         /// get/set - The body type [html, text].
         /// </summary>
-        [JsonConverter(typeof(EnumValueJsonConverter<EmailBodyTypes>))]
         public EmailBodyTypes BodyType { get; set; } = EmailBodyTypes.Html;
 
         /// <summary>

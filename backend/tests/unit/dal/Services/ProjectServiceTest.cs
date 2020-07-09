@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Moq;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
@@ -1291,7 +1292,7 @@ namespace Pims.Dal.Test.Services
         /// Project does not exist.
         /// </summary>
         [Fact]
-        public void Remove_KeyNotFound()
+        public async void Remove_KeyNotFound()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1304,15 +1305,15 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() =>
-                service.Remove(find));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+                await service.RemoveAsync(find));
         }
 
         /// <summary>
         /// User does not have 'property-delete' claim.
         /// </summary>
         [Fact]
-        public void Remove_NotAuthorized()
+        public async void Remove_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1324,15 +1325,15 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() =>
-                service.Remove(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () =>
+                await service.RemoveAsync(project));
         }
 
         /// <summary>
         /// User is attempting to view sensitive project from another agency.
         /// </summary>
         [Fact]
-        public void Remove_WrongAgency_NotAuthorized()
+        public async void Remove_WrongAgency_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1345,15 +1346,15 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() =>
-                service.Remove(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () =>
+                await service.RemoveAsync(project));
         }
 
         /// <summary>
         /// User is attempting to view sensitive project from another agency.
         /// </summary>
         [Fact]
-        public void Remove_WrongAgency_AsAdmin()
+        public async void Remove_WrongAgency_AsAdmin()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1364,19 +1365,22 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
 
             // Act
-            service.Remove(project);
+            await service.RemoveAsync(project);
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
+            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
         }
 
         /// <summary>
         /// Project found.
         /// </summary>
         [Fact]
-        public void Remove_ActiveProject_NotAuthorizedException()
+        public async void Remove_ActiveProject_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1394,14 +1398,14 @@ namespace Pims.Dal.Test.Services
             var context = helper.GetService<PimsContext>();
 
             // Act
-            Assert.Throws<NotAuthorizedException>(() => service.Remove(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.RemoveAsync(project));
         }
 
         /// <summary>
         /// Project found.
         /// </summary>
         [Fact]
-        public void Remove()
+        public async void Remove()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1412,18 +1416,22 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
 
             // Act
-            service.Remove(project);
+            await service.RemoveAsync(project);
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
+            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
+
         }
         #endregion
 
         #region SetStatus
         [Fact]
-        public void SetStatus_WithCode_InvalidWorkflow_KeyNotFoundException()
+        public async void SetStatus_WithCode_InvalidWorkflow_KeyNotFoundException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1438,11 +1446,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, workflowCode));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await service.SetStatusAsync(project, workflowCode));
         }
 
         [Fact]
-        public void SetStatus_WithCode_InvalidStatus_KeyNotFoundException()
+        public async void SetStatus_WithCode_InvalidStatus_KeyNotFoundException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1460,11 +1468,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_WithCode_NullProject_ArgumentNullException()
+        public async void SetStatus_WithCode_NullProject_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1483,11 +1491,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.SetStatus(null, workflowCode));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SetStatusAsync(null, workflowCode));
         }
 
         [Fact]
-        public void SetStatus_NoProject_ArgumentNullException()
+        public async void SetStatus_NoProject_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1504,11 +1512,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.SetStatus(null, workflowCode));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SetStatusAsync(null, workflowCode));
         }
 
         [Fact]
-        public void SetStatus_NoRowVersion_RowVersionMissingException()
+        public async void SetStatus_NoRowVersion_RowVersionMissingException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1530,11 +1538,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<RowVersionMissingException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<RowVersionMissingException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_NoPermission_NotAuthorizedException()
+        public async void SetStatus_NoPermission_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1555,11 +1563,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_NullWorkflow_ArgumentNullException()
+        public async void SetStatus_NullWorkflow_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1580,11 +1588,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.SetStatus(project, (Entity.Workflow)null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SetStatusAsync(project, (Entity.Workflow)null));
         }
 
         [Fact]
-        public void SetStatus_InvalidProject_KeyNotFoundException()
+        public async void SetStatus_InvalidProject_KeyNotFoundException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1605,11 +1613,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<KeyNotFoundException>(() => service.SetStatus(find, find.Workflow.Code));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await service.SetStatusAsync(find, find.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_WrongAgency_NotAuthorizedException()
+        public async void SetStatus_WrongAgency_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1629,11 +1637,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_InvalidTransition_InvalidOperationException()
+        public async void SetStatus_InvalidTransition_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1645,7 +1653,7 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1, 1);
             init.SetStatus(project, "ASSESS-DISPOSAL", "AS-I");
             init.SaveChanges();
-            
+
             var service = helper.CreateService<ProjectService>(user);
 
             var review = init.ProjectStatus.First(s => s.Code == "AS-AP");
@@ -1653,11 +1661,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_IncompleteTasks_InvalidOperationException()
+        public async void SetStatus_IncompleteTasks_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1681,11 +1689,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, workflowCode));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, workflowCode));
         }
 
         [Fact]
-        public void SetStatus_Deny_Success()
+        public async void SetStatus_Deny_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1709,7 +1717,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             project.PublicNote = "this is the reason";
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1720,7 +1728,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_Cancel_Success()
+        public async void SetStatus_Cancel_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1738,12 +1746,14 @@ namespace Pims.Dal.Test.Services
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
 
             var cancel = init.ProjectStatus.First(s => s.Code == "CA");
             project.StatusId = cancel.Id; // Cancel Status
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1751,10 +1761,11 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(cancel);
             result.CancelledOn.Should().NotBeNull();
             parcel.ProjectNumber.Should().BeNull();
+            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
         }
 
         [Fact]
-        public void SetStatus_OnHold_Success()
+        public async void SetStatus_OnHold_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1778,7 +1789,7 @@ namespace Pims.Dal.Test.Services
             project.StatusId = onHold.Id; // On Hold Status
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1788,7 +1799,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_OnHold_InvalidOperationException()
+        public async void SetStatus_OnHold_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1811,11 +1822,11 @@ namespace Pims.Dal.Test.Services
             project.StatusId = onHold.Id; // On Hold Status
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_TransferredWithinGre_Success()
+        public async void SetStatus_TransferredWithinGre_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1845,7 +1856,7 @@ namespace Pims.Dal.Test.Services
             project.Properties.First().Parcel = parcel;
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1859,7 +1870,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_TransferredWithinGre_InvalidOperationException()
+        public async void SetStatus_TransferredWithinGre_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1882,11 +1893,11 @@ namespace Pims.Dal.Test.Services
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_ApprovedForSpl_Success()
+        public async void SetStatus_ApprovedForSpl_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1916,7 +1927,7 @@ namespace Pims.Dal.Test.Services
             project.Properties.First().Parcel = parcel;
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -1930,7 +1941,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_ApprovedForSpl_InvalidOperationException()
+        public async void SetStatus_ApprovedForSpl_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1953,11 +1964,11 @@ namespace Pims.Dal.Test.Services
             project.StatusId = transferredWithinGre.Id; // Approved for SPL status.
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_NotInSpl_Success()
+        public async void SetStatusAsync_NotInSpl_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1987,7 +1998,7 @@ namespace Pims.Dal.Test.Services
             project.Properties.First().Parcel = parcel;
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -2001,7 +2012,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_NotInSpl_InvalidOperationException()
+        public async void SetStatusAsync_NotInSpl_InvalidOperationException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2024,11 +2035,11 @@ namespace Pims.Dal.Test.Services
             project.StatusId = transferredWithinGre.Id; // Not in SPL status.
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_Submit_NotAuthorizedException()
+        public async void SetStatus_Submit_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2054,11 +2065,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_Submit_Success()
+        public async void SetStatus_Submit_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2083,7 +2094,7 @@ namespace Pims.Dal.Test.Services
             project.StatusId = submit.Id; // Submit Status
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -2096,7 +2107,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_ApproveERP_NotAuthorizedException()
+        public async void SetStatus_ApproveERP_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2120,11 +2131,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
         }
 
         [Fact]
-        public void SetStatus_ApproveERP_Success()
+        public async void SetStatus_ApproveERP_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2147,7 +2158,7 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
 
             // Act
-            var result = service.SetStatus(project, project.Workflow.Code);
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
             Assert.NotNull(result);
@@ -2159,7 +2170,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void SetStatus_ApproveSPL_NotAuthorizedException()
+        public async void SetStatus_ApproveSPL_NotAuthorizedException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -2183,7 +2194,43 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.SetStatus(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
+        }
+
+        [Fact]
+        public async void SetStatus_ApproveSPL_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ERP", "ERP-OH");
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = true;
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.StatusId = approve.Id; // Submit Status
+            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
         }
         #endregion
 

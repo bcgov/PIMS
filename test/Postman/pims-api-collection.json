@@ -2308,7 +2308,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/geocoder/addresses?address=Blueberry bc",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/tools/geocoder/addresses?address=Tayberry Terrace",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2316,7 +2316,7 @@
                           "query": [
                             {
                               "key": "address",
-                              "value": "Blueberry bc"
+                              "value": "Tayberry Terrace"
                             }
                           ]
                         }
@@ -2912,7 +2912,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/ASSESS-DISPOSAL/status",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/workflows/SUBMIT-DISPOSAL/status",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -2920,7 +2920,7 @@
                             "api",
                             "projects",
                             "workflows",
-                            "ASSESS-DISPOSAL",
+                            "SUBMIT-DISPOSAL",
                             "status"
                           ]
                         }
@@ -2941,7 +2941,7 @@
                             "api",
                             "projects",
                             "workflows",
-                            "ACCESS-DISPOSAL",
+                            "ASSESS-DISPOSAL",
                             "tasks"
                           ]
                         }
@@ -3057,50 +3057,6 @@
                       "_postman_isSubFolder": true
                     },
                     {
-                      "name": "/projects/disposal/workflow/{workflowCode}/{statusCode}",
-                      "event": [
-                        {
-                          "listen": "test",
-                          "script": {
-                            "id": "29c005d7-d030-488d-ba82-43aa425bcc30",
-                            "exec": [
-                              "var jsonData = JSON.parse(responseBody);\r",
-                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
-                            ],
-                            "type": "text/javascript"
-                          }
-                        }
-                      ],
-                      "request": {
-                        "method": "PUT",
-                        "header": [],
-                        "body": {
-                          "mode": "raw",
-                          "raw": "{\r\n  \"id\": 1,\r\n  \"projectNumber\": \"DRAFT-00001\",\r\n  \"name\": \"\",\r\n  \"statusId\": 0,\r\n  \"status\": \"Draft\",\r\n  \"tierLevelId\": 1,\r\n  \"tierLevel\": \"Tier 1\",\r\n  \"description\": \"\",\r\n  \"note\": \"\",\r\n  \"agencyId\": 14,\r\n  \"agency\": \"HLTH\",\r\n  \"subAgency\": \"IHA\",\r\n  \"projectProperties\": [],\r\n  \"tasks\": [\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 1,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false,\r\n      \"name\": \"Surplus Declaration & Readiness Checklist completed and sent\",\r\n      \"description\": \"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"createdOn\": \"2020-06-04T14:44:36.0439145\",\r\n      \"rowVersion\": \"AAAAAAAAC2s=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 2,\r\n      \"taskType\": \"DisposalProjectDocuments\",\r\n      \"isCompleted\": false,\r\n      \"name\": \"Triple Bottom Line completed and sent\",\r\n      \"description\": \"Triple Bottom Line document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"createdOn\": \"2020-06-04T14:44:36.0439148\",\r\n      \"rowVersion\": \"AAAAAAAAC2w=\"\r\n    }\r\n  ],\r\n  \"createdOn\": \"2020-06-04T14:44:36.0439137\",\r\n  \"updatedOn\": \"2020-06-04T14:44:36.0867489\",\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
-                          "options": {
-                            "raw": {
-                              "language": "json"
-                            }
-                          }
-                        },
-                        "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/workflow/SUBMIT-DISPOSAL/SU",
-                          "protocol": "{{scheme}}",
-                          "host": ["{{host}}"],
-                          "port": "{{port}}",
-                          "path": [
-                            "api",
-                            "projects",
-                            "disposal",
-                            "workflow",
-                            "SUBMIT-DISPOSAL",
-                            "SU"
-                          ]
-                        }
-                      },
-                      "response": []
-                    },
-                    {
                       "name": "/projects/disposal/{projectNumber}",
                       "event": [
                         {
@@ -3176,7 +3132,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\n\t\"name\": \"Test\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 1,\n\t\"tasks\": [],\n\t\"properties\": []\n}",
+                          "raw": "{\n\t\"name\": \"Test\",\n\t\"description\": \"A description\",\n\t\"note\": \"A note\",\n\t\"agencyId\": 1,\n\t\"tierLevelId\": 1,\n\t\"statusId\": 1,\n\t\"tasks\": [],\n\t\"properties\": [\n\t\t{\n\t\t\t\"propertyType\": 0,\n\t\t\t\"parcelId\": 109\n\t\t}\n\t]\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3250,7 +3206,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\r\n  \"id\": 1,\r\n  \"projectNumber\": \"DRAFT-00001\",\r\n  \"name\": \"PIMS APP\",\r\n  \"statusId\": 3,\r\n  \"status\": {\r\n    \"description\": \"Assign tier level, classification and update current financial information.\",\r\n    \"route\": \"/projects/information\",\r\n    \"tasks\": [],\r\n    \"code\": \"DR-I\",\r\n    \"id\": 3,\r\n    \"name\": \"Update Information\",\r\n    \"isDisabled\": false,\r\n    \"sortOrder\": 2,\r\n    \"type\": \"ProjectStatus\",\r\n    \"createdOn\": \"2020-06-15T13:53:36.2966667\",\r\n    \"rowVersion\": \"AAAAAAAACUU=\"\r\n  },\r\n  \"tierLevelId\": 1,\r\n  \"tierLevel\": \"Tier 1\",\r\n  \"description\": \"test\",\r\n  \"note\": \"test\",\r\n  \"agencyId\": 46,\r\n  \"agency\": \"CITZ\",\r\n  \"subAgency\": \"RPD\",\r\n  \"projectProperties\": [\r\n    {\r\n      \"id\": 1,\r\n      \"projectId\": \"1\",\r\n      \"propertyType\": \"Land\",\r\n      \"parcelId\": 3764,\r\n      \"parcel\": {\r\n        \"pid\": \"000-982-334\",\r\n        \"landArea\": 1.2395,\r\n        \"landLegalDescription\": \"LOT A, SECTION 6, VICTORIA DISTRICT, PLAN 38662\",\r\n        \"subAgency\": \"Real Property Division\",\r\n        \"evaluations\": [\r\n          {\r\n            \"parcelId\": 3764,\r\n            \"date\": \"2018-01-01T00:00:00\",\r\n            \"key\": \"Assessed\",\r\n            \"value\": 23071590,\r\n            \"createdOn\": \"0001-01-01T00:00:00\",\r\n            \"updatedOn\": \"2020-06-15T16:10:18.6520334\",\r\n            \"rowVersion\": \"AAAAAAAAfRo=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3764,\r\n            \"date\": \"2020-06-15T00:00:00\",\r\n            \"key\": \"Appraised\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520119\",\r\n            \"rowVersion\": \"AAAAAAAAfR4=\"\r\n          }\r\n        ],\r\n        \"fiscals\": [\r\n          {\r\n            \"parcelId\": 3764,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"NetBook\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520141\",\r\n            \"rowVersion\": \"AAAAAAAAfSU=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3764,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"Estimated\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.652016\",\r\n            \"rowVersion\": \"AAAAAAAAfSQ=\"\r\n          }\r\n        ],\r\n        \"buildings\": [],\r\n        \"id\": 3764,\r\n        \"projectNumber\": \"DRAFT-00001\",\r\n        \"statusId\": 1,\r\n        \"status\": \"Active\",\r\n        \"description\": \"Douglas Bldg & Annex\",\r\n        \"classificationId\": 0,\r\n        \"classification\": \"Core Operational\",\r\n        \"agencyId\": 46,\r\n        \"agency\": \"CITZ\",\r\n        \"address\": {\r\n          \"id\": 8836,\r\n          \"line1\": \"617 Government St.\",\r\n          \"cityId\": 300,\r\n          \"city\": \"Victoria\",\r\n          \"provinceId\": \"BC\",\r\n          \"province\": \"British Columbia\",\r\n          \"postal\": \"\",\r\n          \"createdOn\": \"2020-06-15T14:00:31.7167763\",\r\n          \"rowVersion\": \"AAAAAAAAcgk=\"\r\n        },\r\n        \"latitude\": 48.4188196804,\r\n        \"longitude\": -123.367921909,\r\n        \"isSensitive\": false,\r\n        \"isVisibleToOtherAgencies\": false,\r\n        \"createdOn\": \"2020-06-15T14:00:31.7167771\",\r\n        \"updatedOn\": \"2020-06-15T16:09:37.4197753\",\r\n        \"rowVersion\": \"AAAAAAAAfO8=\"\r\n      },\r\n      \"createdOn\": \"2020-06-15T16:09:37.4197698\",\r\n      \"rowVersion\": \"AAAAAAAAfPI=\"\r\n    },\r\n    {\r\n      \"id\": 2,\r\n      \"projectId\": \"1\",\r\n      \"propertyType\": \"Land\",\r\n      \"parcelId\": 3766,\r\n      \"parcel\": {\r\n        \"pid\": \"002-244-772\",\r\n        \"landArea\": 0.7608,\r\n        \"landLegalDescription\": \"LOT 1 OF SUBURBAN LOT5, SECTION 18, VICTORIA DISTRICT, PLAN 27951\",\r\n        \"subAgency\": \"Real Property Division\",\r\n        \"evaluations\": [\r\n          {\r\n            \"parcelId\": 3766,\r\n            \"date\": \"2018-01-01T00:00:00\",\r\n            \"key\": \"Assessed\",\r\n            \"value\": 59031000,\r\n            \"createdOn\": \"0001-01-01T00:00:00\",\r\n            \"updatedOn\": \"2020-06-15T16:10:18.6520347\",\r\n            \"rowVersion\": \"AAAAAAAAfRw=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3766,\r\n            \"date\": \"2020-06-15T00:00:00\",\r\n            \"key\": \"Appraised\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520178\",\r\n            \"rowVersion\": \"AAAAAAAAfR8=\"\r\n          }\r\n        ],\r\n        \"fiscals\": [\r\n          {\r\n            \"parcelId\": 3766,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"NetBook\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520197\",\r\n            \"rowVersion\": \"AAAAAAAAfSM=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3766,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"Estimated\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520215\",\r\n            \"rowVersion\": \"AAAAAAAAfSA=\"\r\n          }\r\n        ],\r\n        \"buildings\": [],\r\n        \"id\": 3766,\r\n        \"projectNumber\": \"DRAFT-00001\",\r\n        \"statusId\": 1,\r\n        \"status\": \"Active\",\r\n        \"description\": \"Richard Blanshard Building\",\r\n        \"classificationId\": 0,\r\n        \"classification\": \"Core Operational\",\r\n        \"agencyId\": 46,\r\n        \"agency\": \"CITZ\",\r\n        \"address\": {\r\n          \"id\": 8842,\r\n          \"line1\": \"1515 Blanshard St.\",\r\n          \"cityId\": 300,\r\n          \"city\": \"Victoria\",\r\n          \"provinceId\": \"BC\",\r\n          \"province\": \"British Columbia\",\r\n          \"postal\": \"\",\r\n          \"createdOn\": \"2020-06-15T14:00:32.0206839\",\r\n          \"rowVersion\": \"AAAAAAAAchw=\"\r\n        },\r\n        \"latitude\": 48.4281998264,\r\n        \"longitude\": -123.360995746,\r\n        \"isSensitive\": false,\r\n        \"isVisibleToOtherAgencies\": false,\r\n        \"createdOn\": \"2020-06-15T14:00:32.0206837\",\r\n        \"updatedOn\": \"2020-06-15T16:09:37.4197756\",\r\n        \"rowVersion\": \"AAAAAAAAfPE=\"\r\n      },\r\n      \"createdOn\": \"2020-06-15T16:09:37.4197713\",\r\n      \"rowVersion\": \"AAAAAAAAfPM=\"\r\n    },\r\n    {\r\n      \"id\": 3,\r\n      \"projectId\": \"1\",\r\n      \"propertyType\": \"Land\",\r\n      \"parcelId\": 3765,\r\n      \"parcel\": {\r\n        \"pid\": \"002-190-397\",\r\n        \"landArea\": 10,\r\n        \"landLegalDescription\": \"LOT 1, SECTION 5, LAKE DISTRICT, PLAN 20520\",\r\n        \"subAgency\": \"Real Property Division\",\r\n        \"evaluations\": [\r\n          {\r\n            \"parcelId\": 3765,\r\n            \"date\": \"2018-01-01T00:00:00\",\r\n            \"key\": \"Assessed\",\r\n            \"value\": 8293977,\r\n            \"createdOn\": \"0001-01-01T00:00:00\",\r\n            \"updatedOn\": \"2020-06-15T16:10:18.6520359\",\r\n            \"rowVersion\": \"AAAAAAAAfRs=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3765,\r\n            \"date\": \"2020-06-15T00:00:00\",\r\n            \"key\": \"Appraised\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520233\",\r\n            \"rowVersion\": \"AAAAAAAAfR0=\"\r\n          }\r\n        ],\r\n        \"fiscals\": [\r\n          {\r\n            \"parcelId\": 3765,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"NetBook\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520251\",\r\n            \"rowVersion\": \"AAAAAAAAfSE=\"\r\n          },\r\n          {\r\n            \"parcelId\": 3765,\r\n            \"fiscalYear\": 2021,\r\n            \"key\": \"Estimated\",\r\n            \"value\": 0,\r\n            \"createdOn\": \"2020-06-15T16:10:18.6520269\",\r\n            \"rowVersion\": \"AAAAAAAAfSI=\"\r\n          }\r\n        ],\r\n        \"buildings\": [],\r\n        \"id\": 3765,\r\n        \"projectNumber\": \"DRAFT-00001\",\r\n        \"statusId\": 1,\r\n        \"status\": \"Active\",\r\n        \"description\": \"Vancouver Island Regional Correctional Centre\",\r\n        \"classificationId\": 1,\r\n        \"classification\": \"Core Strategic\",\r\n        \"agencyId\": 46,\r\n        \"agency\": \"CITZ\",\r\n        \"address\": {\r\n          \"id\": 8839,\r\n          \"line1\": \"4216 Wilkinson Rd.\",\r\n          \"cityId\": 242,\r\n          \"city\": \"Saanich\",\r\n          \"provinceId\": \"BC\",\r\n          \"province\": \"British Columbia\",\r\n          \"postal\": \"\",\r\n          \"createdOn\": \"2020-06-15T14:00:31.8609176\",\r\n          \"rowVersion\": \"AAAAAAAAchI=\"\r\n        },\r\n        \"latitude\": 48.4829235802,\r\n        \"longitude\": -123.410396042,\r\n        \"isSensitive\": false,\r\n        \"isVisibleToOtherAgencies\": false,\r\n        \"createdOn\": \"2020-06-15T14:00:31.8609181\",\r\n        \"updatedOn\": \"2020-06-15T16:09:37.4197755\",\r\n        \"rowVersion\": \"AAAAAAAAfPA=\"\r\n      },\r\n      \"createdOn\": \"2020-06-15T16:09:37.4197711\",\r\n      \"rowVersion\": \"AAAAAAAAfPQ=\"\r\n    }\r\n  ],\r\n  \"tasks\": [\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 1,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Surplus Declaration & Readiness Checklist completed and sent\",\r\n      \"description\": \"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 4,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565386\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520371\",\r\n      \"rowVersion\": \"AAAAAAAAfSY=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 2,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Triple Bottom Line completed and sent\",\r\n      \"description\": \"Triple Bottom Line document emailed to SRES.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 4,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565388\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520391\",\r\n      \"rowVersion\": \"AAAAAAAAfSc=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 3,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Review completed\",\r\n      \"description\": \"Project property information has been reviewed\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"statusId\": 7,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565391\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520405\",\r\n      \"rowVersion\": \"AAAAAAAAfSg=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 4,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Documents received and review completed\",\r\n      \"description\": \"Documents have been received, reviewed and approved.\",\r\n      \"isOptional\": false,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 0,\r\n      \"statusId\": 8,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565393\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520414\",\r\n      \"rowVersion\": \"AAAAAAAAfSk=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 5,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal ordered\",\r\n      \"description\": \"An appraisal has been ordered.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 9,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565395\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520423\",\r\n      \"rowVersion\": \"AAAAAAAAfSo=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 6,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal received\",\r\n      \"description\": \"An appraisal has been received.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 9,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565402\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520432\",\r\n      \"rowVersion\": \"AAAAAAAAfSs=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 7,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Appraisal completed\",\r\n      \"description\": \"An appraisal has been reviewed and completed.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 3,\r\n      \"statusId\": 9,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565405\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.652044\",\r\n      \"rowVersion\": \"AAAAAAAAfSw=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 8,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Strength of Claim\",\r\n      \"description\": \"First Nation Strength of Claim has been created.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 1,\r\n      \"statusId\": 10,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565407\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520449\",\r\n      \"rowVersion\": \"AAAAAAAAfS0=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 9,\r\n      \"isCompleted\": false,\r\n      \"name\": \"In consultation\",\r\n      \"description\": \"First Nation consulation is in progress.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 2,\r\n      \"statusId\": 10,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565409\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520457\",\r\n      \"rowVersion\": \"AAAAAAAAfS4=\"\r\n    },\r\n    {\r\n      \"projectId\": \"1\",\r\n      \"taskId\": 10,\r\n      \"isCompleted\": false,\r\n      \"name\": \"Agreement received\",\r\n      \"description\": \"First Nation agreement has been received.\",\r\n      \"isOptional\": true,\r\n      \"isDisabled\": false,\r\n      \"sortOrder\": 3,\r\n      \"statusId\": 10,\r\n      \"createdOn\": \"2020-06-15T16:09:29.2565411\",\r\n      \"updatedOn\": \"2020-06-15T16:10:18.6520466\",\r\n      \"rowVersion\": \"AAAAAAAAfS8=\"\r\n    }\r\n  ],\r\n  \"createdOn\": \"0001-01-01T00:00:00\",\r\n  \"updatedOn\": \"2020-06-15T16:10:18.6520298\",\r\n  \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "raw": "{\r\n    \"id\": 3,\r\n    \"projectNumber\": \"DRAFT-00003\",\r\n    \"name\": \"Test\",\r\n    \"reportedFiscalYear\": 2021,\r\n    \"actualFiscalYear\": 2021,\r\n    \"workflowId\": 1,\r\n    \"statusId\": 1,\r\n    \"statusCode\": \"DR\",\r\n    \"status\": {\r\n        \"description\": \"A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.\",\r\n        \"route\": \"/projects/draft\",\r\n        \"isTerminal\": \"false\",\r\n        \"tasks\": [],\r\n        \"code\": \"DR\",\r\n        \"id\": 1,\r\n        \"name\": \"Draft\",\r\n        \"isDisabled\": \"false\",\r\n        \"sortOrder\": 0,\r\n        \"type\": \"ProjectStatus\",\r\n        \"createdOn\": \"2020-07-05T22:02:20.1366667\",\r\n        \"rowVersion\": \"AAAAAAAACVI=\"\r\n    },\r\n    \"tierLevelId\": 1,\r\n    \"tierLevel\": \"Tier 1\",\r\n    \"description\": \"A description\",\r\n    \"note\": \"A note\",\r\n    \"agencyId\": 2,\r\n    \"agency\": \"CITZ\",\r\n    \"exemptionRequested\": \"false\",\r\n    \"netBook\": 0.0000,\r\n    \"estimated\": 0.0000,\r\n    \"assessed\": 0.0000,\r\n    \"properties\": [\r\n        {\r\n            \"id\": 3,\r\n            \"projectId\": \"3\",\r\n            \"propertyType\": \"Land\",\r\n            \"parcelId\": 109\r\n        },\r\n        {\r\n            \"projectId\": \"3\",\r\n            \"propertyType\": \"Building\",\r\n            \"buildingId\": 5073\r\n        }\r\n    ],\r\n    \"rowVersion\": \"{{row-version}}\"\r\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3297,6 +3253,119 @@
                           "host": ["{{host}}"],
                           "port": "{{port}}",
                           "path": ["api", "projects", "disposal", "AUniqueID"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/workflow/{workflowCode}/{statusCode}",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "29c005d7-d030-488d-ba82-43aa425bcc30",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\"id\":2,\"projectNumber\":\"SPP-10001\",\"name\":\"PIMS Application\",\"reportedFiscalYear\":2021,\"actualFiscalYear\":2021,\"workflowId\":2,\"workflowCode\":\"ASSESS-DISPOSAL\",\"statusId\":7,\"statusCode\":\"AS-I\",\"status\":{\"description\":\"Submitted project property information review.\",\"route\":\"/projects/assess/properties\",\"isTerminal\":false,\"tasks\":[{\"taskId\":0,\"isCompleted\":false,\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"createdOn\":\"2020-07-06T23:01:56.9666667\",\"rowVersion\":\"AAAAAAAACX8=\"}],\"code\":\"AS-I\",\"id\":7,\"name\":\"Submitted\",\"isDisabled\":false,\"sortOrder\":6,\"type\":\"ProjectStatus\",\"createdOn\":\"2020-07-06T23:01:56.9133333\",\"rowVersion\":\"AAAAAAAACVg=\"},\"tierLevelId\":1,\"tierLevel\":\"Tier 1\",\"description\":\"PIMS web React GIS application\",\"note\":\"test\",\"publicNote\":\"test\",\"agencyId\":1,\"agency\":\"AEST\",\"submittedOn\":\"2020-07-07T12:39:53.6765901\",\"exemptionRequested\":false,\"netBook\":357,\"estimated\":257,\"assessed\":0,\"properties\":[{\"id\":3,\"projectNumber\":\"SPP-10001\",\"propertyType\":\"Land\",\"parcelId\":110,\"parcel\":{\"id\":110,\"parcelId\":110,\"pid\":\"000-002-000\",\"projectNumber\":\"\",\"latitude\":54.0533334,\"longitude\":-128.6522222,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Kitimat foreshore station\",\"address\":{\"id\":487,\"line1\":\"Kitimat Village Foreshore , Kitimat\",\"cityId\":142,\"postal\":\"\",\"provinceId\":\"British Columbia\"},\"zoning\":\"testzone\",\"agency\":\"AEST\",\"subAgency\":\"University of Victoria\",\"agencyId\":35,\"isSensitive\":false,\"landArea\":0.1,\"landLegalDescription\":\"Kitimat Village\",\"buildings\":[],\"evaluations\":[{\"parcelId\":110,\"value\":17000,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAnNc=\",\"key\":\"Assessed\"},{\"parcelId\":110,\"value\":0,\"date\":\"2020-07-07T00:00:00\",\"rowVersion\":\"AAAAAAAAnNg=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"parcelId\":110,\"value\":123,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNk=\",\"key\":\"NetBook\"},{\"parcelId\":110,\"value\":23,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNo=\",\"key\":\"Estimated\"}]}},{\"id\":4,\"projectNumber\":\"SPP-10001\",\"propertyType\":\"Building\",\"buildingId\":1029,\"building\":{\"id\":1029,\"buildingId\":1029,\"pid\":\"\",\"projectNumber\":\"\",\"latitude\":48.3790292,\"longitude\":-123.5960639,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Metchosin Property - Caretaker's House\",\"address\":{\"id\":1238,\"line1\":\"4970 Barrow Rd , Metchosin\",\"cityId\":176,\"postal\":\"\",\"provinceId\":\"British Columbia\"},\"agency\":\"AEST\",\"subAgency\":\"Camosun College\",\"agencyId\":38,\"isSensitive\":false,\"landArea\":64.75,\"buildings\":[],\"evaluations\":[{\"buildingId\":1029,\"value\":138000,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAnNM=\",\"key\":\"Assessed\"},{\"buildingId\":1029,\"value\":0,\"date\":\"2020-07-07T00:00:00\",\"rowVersion\":\"AAAAAAAAnNQ=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"buildingId\":1029,\"value\":234,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNU=\",\"key\":\"NetBook\"},{\"buildingId\":1029,\"value\":234,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNY=\",\"key\":\"Estimated\"}]}}],\"tasks\":[{\"projectId\":\"2\",\"taskId\":1,\"isCompleted\":true,\"completedOn\":\"2020-07-07T12:39:45.259\",\"name\":\"Surplus Declaration & Readiness Checklist completed and sent\",\"description\":\"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-07T11:44:00.5447445\",\"updatedOn\":\"2020-07-07T12:40:41.1900375\",\"rowVersion\":\"AAAAAAAAnNs=\"},{\"projectId\":\"2\",\"taskId\":2,\"isCompleted\":true,\"completedOn\":\"2020-07-07T12:39:45.259\",\"name\":\"Triple Bottom Line completed and sent\",\"description\":\"Triple Bottom Line document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-07T11:44:00.5447448\",\"updatedOn\":\"2020-07-07T12:40:41.1900376\",\"rowVersion\":\"AAAAAAAAnNw=\"},{\"projectId\":\"2\",\"taskId\":3,\"isCompleted\":true,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":7,\"statusCode\":\"AS-I\",\"createdOn\":\"2020-07-07T11:44:00.544745\",\"updatedOn\":\"2020-07-07T12:40:41.1900378\",\"rowVersion\":\"AAAAAAAAnN0=\"},{\"projectId\":\"2\",\"taskId\":4,\"isCompleted\":false,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":8,\"statusCode\":\"AS-EXE\",\"createdOn\":\"2020-07-07T11:44:00.5447452\",\"updatedOn\":\"2020-07-07T12:40:41.1900381\",\"rowVersion\":\"AAAAAAAAnN4=\"},{\"projectId\":\"2\",\"taskId\":5,\"isCompleted\":true,\"name\":\"Documents received and review completed\",\"description\":\"Documents have been received, reviewed and approved.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":10,\"statusCode\":\"AS-D\",\"createdOn\":\"2020-07-07T11:44:00.5447454\",\"updatedOn\":\"2020-07-07T12:40:41.1900383\",\"rowVersion\":\"AAAAAAAAnN8=\"},{\"projectId\":\"2\",\"taskId\":6,\"isCompleted\":false,\"name\":\"Appraisal ordered\",\"description\":\"An appraisal has been ordered.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447456\",\"updatedOn\":\"2020-07-07T12:40:41.1900385\",\"rowVersion\":\"AAAAAAAAnOA=\"},{\"projectId\":\"2\",\"taskId\":7,\"isCompleted\":false,\"name\":\"Appraisal received\",\"description\":\"An appraisal has been received.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447458\",\"updatedOn\":\"2020-07-07T12:40:41.1900387\",\"rowVersion\":\"AAAAAAAAnOE=\"},{\"projectId\":\"2\",\"taskId\":8,\"isCompleted\":false,\"name\":\"Appraisal completed\",\"description\":\"An appraisal has been reviewed and completed.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447461\",\"updatedOn\":\"2020-07-07T12:40:41.1900389\",\"rowVersion\":\"AAAAAAAAnOI=\"},{\"projectId\":\"2\",\"taskId\":9,\"isCompleted\":false,\"name\":\"Preparation and due diligence\",\"description\":\"First Nations consulatation preparation and due diligence.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447463\",\"updatedOn\":\"2020-07-07T12:40:41.1900391\",\"rowVersion\":\"AAAAAAAAnOM=\"},{\"projectId\":\"2\",\"taskId\":10,\"isCompleted\":false,\"name\":\"Consultation underway\",\"description\":\"First Nations consulation is underway.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447465\",\"updatedOn\":\"2020-07-07T12:40:41.1900393\",\"rowVersion\":\"AAAAAAAAnOQ=\"},{\"projectId\":\"2\",\"taskId\":11,\"isCompleted\":false,\"name\":\"Consultation complete\",\"description\":\"First Nations consultation is complete.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447467\",\"updatedOn\":\"2020-07-07T12:40:41.1900395\",\"rowVersion\":\"AAAAAAAAnOU=\"},{\"projectId\":\"2\",\"taskId\":12,\"isCompleted\":false,\"name\":\"Notification to confirm exemption request sent to agency ADM\",\"description\":\"ADM has been notified of request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-07T11:44:00.5447469\",\"updatedOn\":\"2020-07-07T12:40:41.1900397\",\"rowVersion\":\"AAAAAAAAnOY=\"},{\"projectId\":\"2\",\"taskId\":13,\"isCompleted\":false,\"name\":\"Confirmation has been received from agency ADM\",\"description\":\"ADM has confirmed request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-07T11:44:00.5447472\",\"updatedOn\":\"2020-07-07T12:40:41.1900398\",\"rowVersion\":\"AAAAAAAAnOc=\"}],\"projectAgencyResponses\":[],\"createdOn\":\"2020-07-07T11:44:00.5447411\",\"updatedOn\":\"2020-07-07T12:40:41.1900352\",\"rowVersion\":\"AAAAAAAAnOg=\",\"confirmation\":true}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/workflow/ERP/AP-ERP",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "projects",
+                            "disposal",
+                            "workflow",
+                            "ERP",
+                            "AP-ERP"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/{id}/notifications",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "bc4a8a43-596a-4858-b6e8-dfd8060ef43a",
+                            "exec": [""],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/2/notifications?status=Pending",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "projects",
+                            "disposal",
+                            "2",
+                            "notifications"
+                          ],
+                          "query": [
+                            {
+                              "key": "status",
+                              "value": "Pending"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/projects/disposal/{id}/notifications/cancel",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "4c6877b1-5976-42e7-a234-17e697307230",
+                            "exec": [""],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/2/notifications/cancel",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "projects",
+                            "disposal",
+                            "2",
+                            "notifications",
+                            "cancel"
+                          ]
                         }
                       },
                       "response": []
@@ -3589,7 +3658,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Test Email #2\",\r\n    \"description\": \"A test email to send out to ensure notifications are working.\",\r\n    \"to\": \"jeremy.foster@fosol.ca\",\r\n    \"audience\": \"Default\",\r\n    \"encoding\": \"utf-8\",\r\n    \"bodyType\": \"html\",\r\n    \"priority\": \"Normal\",\r\n    \"subject\": \"This is a test email\",\r\n    \"body\": \"<html><body>This is a test</body></html>\",\r\n    \"isDisabled\": false,\r\n    \"tag\": \"test\",\r\n    \"status\": [],\r\n    \"rowVersion\": \"{{row-version}}\"\r\n}",
+                          "raw": "{\r\n        \"id\": 15,\r\n        \"name\": \"Access Request\",\r\n        \"description\": \"A new authenticated user has requested access.\",\r\n        \"to\": \"\",\r\n        \"cc\": \"\",\r\n        \"bcc\": \"\",\r\n        \"audience\": \"Default\",\r\n        \"encoding\": \"utf-8\",\r\n        \"bodyType\": \"html\",\r\n        \"priority\": \"high\",\r\n        \"subject\": \"PIMS - Access Request\",\r\n        \"body\": \"<html><head><title>@Model.Environment.Title</title></head><body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href=\\\"@Model.Environment.Uri\\\">PIMS</a>.</p><p>Signin and review their request.</p></body></html>\",\r\n        \"isDisabled\": false,\r\n        \"tag\": \"ERP\",\r\n        \"status\": [],\r\n        \"createdOn\": \"2020-07-07T23:40:14.6266667\",\r\n        \"rowVersion\": \"AAAAAAAAC8s=\"\r\n    }",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3644,7 +3713,7 @@
                       "response": []
                     },
                     {
-                      "name": "/notifications/templates/{id}",
+                      "name": "/notifications/templates/{id}/projects",
                       "event": [
                         {
                           "listen": "test",
@@ -3652,7 +3721,8 @@
                             "id": "f5d7d707-fb54-4537-8f73-05420e617169",
                             "exec": [
                               "var jsonData = JSON.parse(responseBody);\r",
-                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);\r",
+                              "postman.setEnvironmentVariable(\"id\", jsonData.id);"
                             ],
                             "type": "text/javascript"
                           }
@@ -3660,17 +3730,30 @@
                       ],
                       "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1?to=jeremy.foster@fosol.ca",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/4/projects/1?to=Jeremy Foster <jeremy.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "templates", "1"],
+                          "path": [
+                            "api",
+                            "notifications",
+                            "templates",
+                            "4",
+                            "projects",
+                            "1"
+                          ],
                           "query": [
                             {
                               "key": "to",
-                              "value": "jeremy.foster@fosol.ca"
+                              "value": "Jeremy Foster <jeremy.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>"
                             }
                           ]
                         }
@@ -3684,6 +3767,40 @@
                 {
                   "name": "queue",
                   "item": [
+                    {
+                      "name": "/notifications/queue",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "7cb35243-46ac-44ec-a2d0-5eaf9233877d",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue?quantity=50",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "queue"],
+                          "query": [
+                            {
+                              "key": "quantity",
+                              "value": "50"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
                     {
                       "name": "/notifications/queue/{id}",
                       "event": [
@@ -3703,11 +3820,39 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/12",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/{{id}}",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "queue", "12"]
+                          "path": ["api", "notifications", "queue", "{{id}}"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/queue/{id} = value",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "44f0a9fb-3e8b-4e01-b75a-91bac72b468d",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/89",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "queue", "89"]
                         }
                       },
                       "response": []
@@ -3731,11 +3876,73 @@
                         "method": "PUT",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/12",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/{{id}}",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "queue", "12"]
+                          "path": ["api", "notifications", "queue", "{{id}}"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/queue/{id} Copy",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "eb5130f9-b6f6-4305-a87d-57f43ecd1972",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/89",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": ["api", "notifications", "queue", "89"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/queue/{id}/cancel",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "b18f0497-9b61-453d-8b1d-b3537ada7a59",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/{{id}}/cancel",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "notifications",
+                            "queue",
+                            "{{id}}",
+                            "cancel"
+                          ]
                         }
                       },
                       "response": []

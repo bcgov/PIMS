@@ -180,8 +180,8 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
             service.Setup(m => m.Project.Add(It.IsAny<Entity.Project>())).Returns(project);
-            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.NotificationQueue[0]);
-            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>())).Returns(new Entity.NotificationQueue[0]);
+            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()));
             var model = mapper.Map<Model.ProjectModel>(project);
 
             // Act
@@ -192,8 +192,8 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(201, actionResult.StatusCode);
             var actualProject = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             service.Verify(m => m.Project.Add(It.IsAny<Entity.Project>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once());
+            service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
+            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
         #endregion
 
@@ -210,8 +210,8 @@ namespace Pims.Api.Test.Controllers
             var project = EntityHelper.CreateProject(1);
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
             service.Setup(m => m.Project.Update(It.IsAny<Entity.Project>())).Returns(project);
-            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.NotificationQueue[0]);
-            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>())).Returns(new Entity.NotificationQueue[0]);
+            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()));
             var model = mapper.Map<Model.ProjectModel>(project);
 
             // Act
@@ -223,14 +223,14 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             service.Verify(m => m.Project.Get(project.Id), Times.Once());
             service.Verify(m => m.Project.Update(It.IsAny<Entity.Project>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once());
+            service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
         #endregion
 
         #region DeleteProject
         [Fact]
-        public void DeleteProject_Success()
+        public async void DeleteProject_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -239,18 +239,18 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
-            service.Setup(m => m.Project.Remove(It.IsAny<Entity.Project>()));
+            service.Setup(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>()));
             var modelToDelete = mapper.Map<Model.ProjectModel>(project);
 
             // Act
-            var result = controller.DeleteProject(project.ProjectNumber, modelToDelete);
+            var result = await controller.DeleteProjectAsync(project.ProjectNumber, modelToDelete);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Project.Remove(It.IsAny<Entity.Project>()), Times.Once());
+            service.Verify(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>()), Times.Once());
         }
         #endregion
 
@@ -265,18 +265,17 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
-            var workflow = EntityHelper.CreateWorkflow(1, "test", "TEST");
+            var workflow = EntityHelper.CreateWorkflow(1, "test", "TEST", new[] { project.Status });
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
-            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.NotificationQueue[0]);
-            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>())).ReturnsAsync(project);
+            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>())).Returns(new Entity.NotificationQueue[0]);
+            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()));
+            service.Setup(m => m.ProjectStatus.Get(It.IsAny<int>())).Returns(project.Status);
             var model = mapper.Map<Model.ProjectModel>(project);
-            var workflowCode = "TEST";
-            var statusId = 1;
 
             // Act
-            var result = await controller.SetStatusAsync(workflowCode, statusId, model);
+            var result = await controller.SetStatusAsync(workflow.Code, project.StatusId, model);
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
@@ -285,11 +284,11 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             actualResult.WorkflowId.Should().Be(1);
             actualResult.StatusId.Should().Be(1);
-            service.Verify(m => m.Workflow.Get(workflowCode), Times.Once());
+            service.Verify(m => m.Workflow.Get(workflow.Code), Times.Once());
             service.Verify(m => m.Project.Get(project.Id), Times.Once());
-            service.Verify(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), workflowCode), Times.Once());
-            service.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once());
+            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());
+            service.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Theory]
@@ -303,7 +302,7 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
-            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<string>())).ReturnsAsync(project);
             var model = mapper.Map<Model.ProjectModel>(project);
 
             // Act
@@ -326,7 +325,7 @@ namespace Pims.Api.Test.Controllers
             workflow.Status.Add(new Entity.WorkflowProjectStatus(workflow, status));
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
-            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<string>())).ReturnsAsync(project);
             var model = mapper.Map<Model.ProjectModel>(project);
             var workflowCode = "code";
             var statusCode = "test";
@@ -352,9 +351,9 @@ namespace Pims.Api.Test.Controllers
             workflow.Status.Add(new Entity.WorkflowProjectStatus(workflow, status));
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
-            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new Entity.NotificationQueue[0]);
-            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>())).ReturnsAsync(project);
+            service.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>())).Returns(new Entity.NotificationQueue[0]);
+            service.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()));
             var model = mapper.Map<Model.ProjectModel>(project);
             var workflowCode = "code";
             var statusCode = "code";
@@ -368,9 +367,10 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Project.Get(It.IsAny<int>()), Times.Once());
-            service.Verify(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), workflowCode), Times.Once());
-            service.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once());
-            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once());
+            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());
+            service.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Entity.Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            service.Verify(m => m.Project.GenerateWatchNotificationsAsync(It.IsAny<IEnumerable<Entity.ProjectAgencyResponse>>()), Times.Never());
+            service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Theory]
@@ -384,7 +384,7 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
-            service.Setup(m => m.Project.SetStatus(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(project);
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<string>())).ReturnsAsync(project);
             var model = mapper.Map<Model.ProjectModel>(project);
 
             // Act

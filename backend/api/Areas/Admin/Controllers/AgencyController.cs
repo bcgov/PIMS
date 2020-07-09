@@ -97,7 +97,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// PUT - Update the agency in the datasource.
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="model">The agency model.</param>
         /// <returns>The agency updated.</returns>
         [HttpPut("{id}")]
@@ -117,7 +116,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// DELETE - Delete the agency from the datasource.
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="model">The agency model.</param>
         /// <returns>The agency who was deleted.</returns>
         [HttpDelete("{id}")]

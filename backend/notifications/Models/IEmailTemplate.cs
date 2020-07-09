@@ -1,3 +1,6 @@
+using Pims.Core.Converters;
+using System.Text.Json.Serialization;
+
 namespace Pims.Notifications.Models
 {
     /// <summary>
@@ -13,6 +16,7 @@ namespace Pims.Notifications.Models
         /// <summary>
         /// get/set - The email body type.
         /// </summary>
+        [JsonConverter(typeof(EnumValueJsonConverter<EmailBodyTypes>))]
         EmailBodyTypes BodyType { get; set; }
 
         /// <summary>
