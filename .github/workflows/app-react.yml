@@ -4,7 +4,7 @@ on:
   push:
     branches: [master, dev]
   pull_request:
-    branches: [master, dev]
+    branches: [master, dev, actions]
 
 jobs:
   build:
@@ -13,11 +13,9 @@ jobs:
       CI: true
       working-directory: ./frontend
       codeCov-token: ${{ secrets.CodeCov }}
-
     strategy:
       matrix:
         node-version: [10.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -45,3 +43,49 @@ jobs:
           env_vars: javascript
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           fail_ci_if_error: true
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: ${{ env.working-directory }}/coverage/lcov.info
+      - name: Archive test run report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: ${{ env.working-directory }}/test-report.xml
+  sonarqube-on-pr:
+    needs: build
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: code-coverage-report
+          path: ${{ env.working-directory }}/coverage
+      - name: Download test run report
+        uses: actions/download-artifact@v2
+        with:
+          name: test-report
+          path: ${{ env.working-directory }}
+      - name: Use Node.js 10
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - run: npm i typescript@3.7.5
+        working-directory: ${{env.working-directory}}
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v1
+      - name: Run sonar scan
+        working-directory: ${{ env.working-directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: sonar-scanner
+          -Dsonar.host.url=${{ secrets.SONAR_URL }}
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.projectKey=pims-frontend-pr-${{ github.event.pull_request.number }}
+          -Dsonar.projectName='PR-${{ github.event.pull_request.number }} (frontend)'
