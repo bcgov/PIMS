@@ -106,6 +106,23 @@ objects:
     stringData:
       KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
       KEYCLOAK_SERVICE_ACCOUNT_SECRET: ${KEYCLOAK_SERVICE_ACCOUNT_SECRET}
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ENV_NAME}${ID}-ches-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "CHES client secrets"
+      labels:
+        name: ${APP_NAME}-${ENV_NAME}${ID}-ches-secret
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    stringData:
+      CHES_USERNAME: ${CHES_USERNAME}
+      CHES_PASSWORD: ${CHES_PASSWORD}
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -249,6 +266,16 @@ objects:
                     secretKeyRef:
                       name: ${APP_NAME}-${ENV_NAME}${ID}-sso-secret
                       key: KEYCLOAK_SERVICE_ACCOUNT_SECRET
+                - name: Ches__Username
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-ches-secret
+                      key: CHES_USERNAME
+                - name: Ches__Password
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-ches-secret
+                      key: CHES_PASSWORD
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
@@ -359,6 +386,15 @@ parameters:
   - name: KEYCLOAK_SERVICE_ACCOUNT_SECRET
     displayName: Keycloak Service Account client secret.
     description: The Keycloak SSO Service Account client secret.
+
+  - name: CHES_USERNAME
+    displayName: CHES Username.
+    description: The Common Hosted Email Service username.
+    required: true
+  - name: CHES_PASSWORD
+    displayName: CHES Username password.
+    description: The Common Hosted Email Service password.
+    required: true
 
   - name: HEALTH_SCHEME
     displayName: Health Scheme
