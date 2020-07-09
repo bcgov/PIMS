@@ -44,7 +44,8 @@ $contentheading-height: 60px;
 
   .TableToolbar {
     display: flex;
-    flex-direction: row;
+    justify-content: flex-end;
+    margin-left: auto;
     padding-bottom: 1rem;
   }
 

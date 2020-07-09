@@ -1,7 +1,7 @@
 import './ProjectListView.scss';
 
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import _ from 'lodash';
 import * as API from 'constants/API';
@@ -16,13 +16,17 @@ import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col, Form } from 'react-bootstrap';
-import { Input } from 'components/common/form';
+import { Input, Button, AutoCompleteText, Select } from 'components/common/form';
 import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
-import { ReviewWorkflowStatus } from '../common';
+import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import { ENVIRONMENT } from 'constants/environment';
+import queryString from 'query-string';
+import download from 'utils/download';
+import { mapLookupCode, mapStatuses } from 'utils';
 
 interface IProjectFilterState {
   active?: boolean;
@@ -30,7 +34,16 @@ interface IProjectFilterState {
   name?: string;
   statusId?: number;
   assessWorkflow?: boolean;
+  agencyId?: number;
 }
+
+const getProjectReportUrl = (filter: IProjectFilter) =>
+  `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
+
+const getProjectFinancialReportUrl = (filter: IProjectFilter) =>
+  `${ENVIRONMENT.apiUrl}/reports/projects/surplus/properties/list?${
+    filter ? queryString.stringify(filter) : ''
+  }`;
 
 const initialQuery: IProjectFilter = {
   page: 1,
@@ -78,9 +91,12 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       }),
     [lookupCodes],
   );
+  const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
   const keycloak = useKeycloakWrapper();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
+  const agencyOptions = (agencies ?? []).map(c => mapLookupCode(c, null));
+  const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -146,11 +162,31 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     },
     [setData, setPageCount, mode],
   );
+  const dispatch = useDispatch();
+  const route = history.location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
+    route === '/projects/list' && dispatch(fetchProjectStatuses());
     fetchData({ pageIndex, pageSize, filter, agencyIds });
-  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch, route]);
+
+  const fetch = (accept: 'csv' | 'excel', reportType: 'generic' | 'spl') => {
+    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+    return dispatch(
+      download({
+        url:
+          reportType === 'generic'
+            ? getProjectReportUrl({ ...query, all: true })
+            : getProjectFinancialReportUrl({ ...query, all: true }),
+        fileName: `projects.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        actionType: 'projects-report',
+        headers: {
+          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+        },
+      }),
+    );
+  };
 
   const handleDelete = async () => {
     const project = data.find(p => p.projectNumber === deleteId);
@@ -203,15 +239,12 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
-        {filterable ? (
+        {filterable && (
           <FilterBar<IProjectFilterState>
             initialValues={filter}
             onSearch={values => setFilter(values)}
             onReset={() => setFilter({})}
           >
-            <Col>
-              <h4>{title}</h4>
-            </Col>
             <Col className="bar-item">
               <Form.Group>
                 <Form.Label>Active Projects:&nbsp;</Form.Label>
@@ -225,13 +258,20 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               </Form.Group>
             </Col>
             <Col className="bar-item">
+              <Select field="statusId" options={statuses} placeholder="Select a project status" />
+            </Col>
+            <Col className="bar-item">
+              <AutoCompleteText
+                autoSetting="off"
+                field="agencies"
+                options={agencyOptions}
+                placeholder="Enter an agency"
+              />
+            </Col>
+            <Col className="bar-item">
               <Input field="name" placeholder="Search by project name" />
             </Col>
           </FilterBar>
-        ) : (
-          <div className="title">
-            <h4>{title}</h4>
-          </div>
         )}
       </div>
       <div className="ScrollContainer">
@@ -246,6 +286,16 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             message="Are you sure that you want to delete this project?"
           />
         )}
+        <Container fluid className="TableToolbar">
+          <h3 className="mr-auto">{title}</h3>
+          <Button className="mr-2" onClick={() => fetch('excel', 'generic')}>
+            Export Generic Report
+          </Button>
+          <Button className="mr-2" onClick={() => fetch('csv', 'generic')}>
+            Export CSV
+          </Button>
+          <Button onClick={() => fetch('excel', 'spl')}>Export SPL Report</Button>
+        </Container>
         <Table<IProject>
           name="projectsTable"
           columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}
@@ -279,4 +329,4 @@ export const ProjectApprovalRequestListView = () => {
   );
 };
 
-export default () => <ProjectListView filterable={true} title="My Agency's Projects" />;
+export default () => <ProjectListView title="My Agency's Projects" filterable={true} />;

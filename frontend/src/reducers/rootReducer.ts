@@ -18,6 +18,7 @@ import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice
 import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
 import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
 import splTabSlice from 'features/projects/spl/slices/splTabSlice';
+import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -32,6 +33,7 @@ export const reducerObject = {
   [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,
   [ProjectReducers.WORKFLOW_TASKS]: ProjectWorkflowTasksSlice.reducer,
   [ProjectReducers.TASKS]: projectTasksSlice.reducer,
+  [ProjectReducers.STATUSES]: projectStatusesSlice.reducer,
   [ProjectReducers.PROJECT]: projectSlice.reducer,
   [ProjectReducers.ERP_TAB]: erpTabSlice.reducer,
   [ProjectReducers.SPL_TAB]: splTabSlice.reducer,
