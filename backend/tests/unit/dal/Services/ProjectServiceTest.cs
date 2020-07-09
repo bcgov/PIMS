@@ -2232,6 +2232,144 @@ namespace Pims.Dal.Test.Services
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeFalse();
         }
+
+        [Fact]
+        public async void SetStatus_ApproveExemption_NotAuthorizedException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-EXEMPTION", "AS-EXP");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-EXE");
+            project.StatusId = approve.Id; // Submit Status
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
+        }
+
+        [Fact]
+        public async void SetStatus_ApproveExemption_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-EXEMPTION", "AS-EXP");
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = true;
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-EXE");
+            project.StatusId = approve.Id; // Submit Status
+            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void SetStatus_TransferredGreFromApprovedExemption_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-EX-DISPOSAL", "AP-EXE");
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = true;
+            project.AddProperty(parcel);
+            project.ApprovedOn = DateTime.UtcNow;
+            project.TransferredWithinGreOn = DateTime.UtcNow;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var approve = init.ProjectStatus.First(s => s.Code == "T-GRE");
+            project.StatusId = approve.Id; // Submit Status
+            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void SetStatus_ExemptionAddToSpl_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit, Permissions.DisposeApprove).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ASSESS-EXEMPTION", "AS-EXP");
+            var parcel = init.CreateParcel(1);
+            parcel.IsVisibleToOtherAgencies = true;
+            project.AddProperty(parcel);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
+            project.StatusId = approve.Id; // Submit Status
+            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(approve.Id);
+            result.Status.Should().Be(approve);
+            result.DeniedOn.Should().BeNull();
+            result.ApprovedOn.Should().NotBeNull();
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
         #endregion
 
         #region Property Financials
