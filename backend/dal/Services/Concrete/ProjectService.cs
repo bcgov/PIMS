@@ -602,7 +602,6 @@ namespace Pims.Dal.Services
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId) ?? throw new KeyNotFoundException();
 
-            IEnumerable<int> incompleteTaskIds = new List<int>();
             if (fromStatus.StatusId != toStatus.Id)
             {
                 var fromWorkflow = fromStatus.ToStatus.FirstOrDefault(s => s.ToStatusId == project.StatusId);
@@ -614,7 +613,7 @@ namespace Pims.Dal.Services
                 {
                     // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
                     var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
-                    incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
+                    var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
                     var statusTaskIds = fromStatus.Status.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
                     if(toStatus.IsTerminal)
                     {

@@ -136,7 +136,7 @@ export const Select: React.FC<SelectProps> = ({
         {renderPlaceholder()}
         {renderOptions()}
       </Form.Control>
-      <DisplayError field={field} errorPrompt={true} />
+      <DisplayError field={field} />
     </Form.Group>
   );
 };

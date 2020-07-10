@@ -36,6 +36,8 @@ type OptionalAttributes = {
   multiple?: boolean;
   /** Use React-Bootstrap's custom form elements to replace the browser defaults */
   custom?: boolean;
+  /** force formik errors to display even if this field hasn't been touched */
+  errorPrompt?: boolean;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -60,6 +62,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     outerClassName,
     custom,
     type,
+    errorPrompt,
     formikProps: {
       values,
       errors,
@@ -169,7 +172,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           <PreviousValue />
           {renderOptions()}
         </Form.Control>
-        <DisplayError field={field} errorPrompt={true} />
+        <DisplayError field={field} errorPrompt={errorPrompt} />
       </Form.Group>
     );
   },
