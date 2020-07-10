@@ -4,7 +4,7 @@ on:
   push:
     branches: [master, dev]
   pull_request:
-    branches: [master, dev]
+    branches: [master, dev, actions]
 
 jobs:
   build:
@@ -84,4 +84,47 @@ jobs:
           # Environment variables to tag the upload with (e.g. PYTHON | OS,PYTHON)
           env_vars: C#
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
-          fail_ci_if_error: true
+          fail_ci_if_error: false
+
+        #################################################
+        ##       Steps below run only on PRs           ##
+        #################################################
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Install sonar scanner
+        run: dotnet tool install -g dotnet-sonarscanner --version 4.9.0
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Run sonar-dotnet scan
+        working-directory: ./openshift
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          OC_JOB_NAME: pr-${{ github.event.pull_request.number }}
+          SKIP_OC_LOGIN: 1
+        run: ./player.sh scan-dotnet $OC_JOB_NAME -apply
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Find Comment
+        uses: peter-evans/find-comment@v1.0.1
+        id: fc
+        with:
+          token: ${{ secrets.PR_COMMENT_PAT }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Backend API Sonar Scan Report
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Create or Update comment
+        uses: peter-evans/create-or-update-comment@v1.4.2
+        with:
+          token: ${{ secrets.PR_COMMENT_PAT }}
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ## Backend API Sonar Scan Report
+
+            [![Quality gate](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/quality_gate?project=pims-api-pr-${{ github.event.pull_request.number }})](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-api-pr-${{ github.event.pull_request.number }})
+
+            #### Quality Metrics
+            [![Bugs](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-api-pr-${{ github.event.pull_request.number }}&metric=bugs)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-api-pr-${{ github.event.pull_request.number }})
+            [![Vulnerabilities](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-api-pr-${{ github.event.pull_request.number }}&metric=vulnerabilities)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-api-pr-${{ github.event.pull_request.number }})
+            [![Code Smells](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-api-pr-${{ github.event.pull_request.number }}&metric=code_smells)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-api-pr-${{ github.event.pull_request.number }})
+            [![Coverage](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-api-pr-${{ github.event.pull_request.number }}&metric=coverage)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-api-pr-${{ github.event.pull_request.number }})
