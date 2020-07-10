@@ -95,6 +95,21 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string AgencyResponseNote { get; set; }
 
         /// <summary>
+        /// get/set - Note summerizing offers received.
+        /// </summary>
+        public string OffersNote { get; set; }
+
+        /// <summary>
+        /// get/set - Text field describing project purchaser.
+        /// </summary>
+        public string Purchaser { get; set; }
+
+        /// <summary>
+        /// get/set - Whether or not the contract for the project is conditional
+        /// </summary>
+        public bool? IsContractConditional { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
         public int AgencyId { get; set; }
@@ -175,6 +190,21 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? ClearanceNotificationSentOn { get; set; }
 
         /// <summary>
+        /// get/set - When the project was externally marketed.
+        /// </summary>
+        public DateTime? MarketedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was disposed.
+        /// </summary>
+        public DateTime? DisposedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was disposed.
+        /// </summary>
+        public DateTime? OfferAcceptedOn { get; set; }
+
+        /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
@@ -198,6 +228,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The assessed value which is the sum of the properties.
         /// </summary>
         public decimal Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - Amount offered during SPL
+        /// </summary>
+        public decimal OfferAmount { get; set; }
 
         /// <summary>
         /// get/set - An array of properties associated with this project.

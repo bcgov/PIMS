@@ -3,8 +3,8 @@ import { Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form } from 'components/common/form';
 import { IStepProps } from '../../common/interfaces';
-import { useStepper, UpdateInfoStepYupSchema, StepErrorSummary } from '..';
-import { useStepForm, ProjectNotes, UpdateInfoForm } from '../../common';
+import { useStepper, UpdateInfoStepYupSchema } from '..';
+import { useStepForm, ProjectNotes, UpdateInfoForm, StepErrorSummary } from '../../common';
 
 /**
  * Update property information already associated to this project on a property list view.
@@ -21,7 +21,6 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
   return (
     <Container fluid>
       <Formik
-        enableReinitialize
         initialValues={project}
         validationSchema={UpdateInfoStepYupSchema}
         innerRef={formikRef}

@@ -17,7 +17,7 @@ const getStatusTransitionWorkflow = (
 };
 
 const useProject = () => {
-  const project: any = useSelector<RootState, IProjectWrapper>(state => state.project).project;
+  const project = useSelector<RootState, IProjectWrapper>(state => state.project).project;
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const history = useHistory();
 

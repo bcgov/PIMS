@@ -1,13 +1,6 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import {
-  IProjectWrapper,
-  initialValues,
-  IStatus,
-  fetchProjectTasks,
-  fetchProjectWorkflow,
-} from '../../common';
+import { useDispatch } from 'react-redux';
+import { IStatus, fetchProjectWorkflow } from '../../common';
 
 export const StepperContext = createContext({} as any);
 
@@ -18,26 +11,17 @@ export const StepperContext = createContext({} as any);
 export const StepContextProvider = (props: { children?: any }) => {
   // Use State to keep the values. Initial values are obtained from StepperContextProvider’s props.
   const [currentStatus, setCurrentStatus] = useState<IStatus>();
+  const [disposeWorkflowStatuses, setDisposeWorkflowStatuses] = useState<IStatus[]>();
   // Make the context object (or array)
-  const stepContext = { currentStatus, setCurrentStatus };
+  const stepContext = { currentStatus, setCurrentStatus, disposeWorkflowStatuses };
   const dispatch = useDispatch();
-  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
-  //Load required redux context
-  const project: any =
-    useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
   useEffect(() => {
-    if (project.statusId > 0) {
-      dispatch(fetchProjectTasks(project.statusId));
-    }
-  }, [dispatch, project.statusId]);
-
-  const workflowStatusesLength = workflowStatuses?.length;
-  useEffect(() => {
-    if (!workflowStatusesLength) {
-      dispatch(fetchProjectWorkflow(project.workflowStatusCode));
-    }
-  }, [dispatch, project.statusId, project.workflowStatusCode, workflowStatusesLength]);
-
+    (dispatch(fetchProjectWorkflow('SUBMIT-DISPOSAL')) as any).then(
+      (disposeWorkflowStatuses: IStatus[]) => {
+        setDisposeWorkflowStatuses(disposeWorkflowStatuses);
+      },
+    );
+  }, [dispatch]);
   // Pass the value in Provider and return
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;
 };

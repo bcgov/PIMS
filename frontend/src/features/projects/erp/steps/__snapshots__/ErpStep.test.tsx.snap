@@ -54,14 +54,15 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
     >
       <a
         aria-controls="approvalTabs-tabpane-Project Information"
-        aria-selected={true}
-        className="nav-item nav-link active"
+        aria-selected={false}
+        className="nav-item nav-link"
         data-rb-event-key="Project Information"
         href="#"
         id="approvalTabs-tab-Project Information"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
+        tabIndex={-1}
       >
         Project Information
       </a>
@@ -81,46 +82,103 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
       </a>
       <a
         aria-controls="approvalTabs-tabpane-Enhanced Referral Process"
-        aria-selected={false}
-        className="nav-item nav-link"
+        aria-selected={true}
+        className="nav-item nav-link active"
         data-rb-event-key="Enhanced Referral Process"
         href="#"
         id="approvalTabs-tab-Enhanced Referral Process"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
-        tabIndex={-1}
       >
         Enhanced Referral Process
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-Surplus Properties List"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="Surplus Properties List"
-        href="#"
-        id="approvalTabs-tab-Surplus Properties List"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Surplus Properties List
       </a>
     </nav>
     <div
       className="tab-content"
     >
       <div
-        aria-hidden={false}
+        aria-hidden={true}
         aria-labelledby="approvalTabs-tab-Project Information"
-        className="fade tab-pane active show"
+        className="fade tab-pane"
         id="approvalTabs-tabpane-Project Information"
         role="tabpanel"
       >
         <div
           className="container-fluid"
         >
+          <h3>
+            Project Property Information
+          </h3>
+          <div
+            className="container-fluid"
+          >
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-3"
+              >
+                Manager Names
+              </label>
+              <div
+                className="col-md-2 form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-manager"
+                  name="manager"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                />
+              </div>
+            </div>
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-3"
+              >
+                Reported Fiscal Year
+              </label>
+              <div
+                className="col-md-2 form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-reportedFiscalYear"
+                  name="reportedFiscalYear"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  type="number"
+                />
+              </div>
+            </div>
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-3"
+              >
+                Actual or Forecasted Fiscal Year of Sale
+              </label>
+              <div
+                className="col-md-2 form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-actualFiscalYear"
+                  name="actualFiscalYear"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
           <div
             className="ProjectDraftForm container-fluid"
           >
@@ -130,7 +188,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
               <h3
                 className="col-md-8"
               >
-                Project Property Information
+                
               </h3>
               <span
                 className="col-md-4"
@@ -969,9 +1027,9 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
         </div>
       </div>
       <div
-        aria-hidden={true}
+        aria-hidden={false}
         aria-labelledby="approvalTabs-tab-Enhanced Referral Process"
-        className="fade tab-pane"
+        className="fade tab-pane active show"
         id="approvalTabs-tabpane-Enhanced Referral Process"
         role="tabpanel"
       >
@@ -1547,13 +1605,6 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
           </div>
         </div>
       </div>
-      <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-Surplus Properties List"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-Surplus Properties List"
-        role="tabpanel"
-      />
     </div>
     <div
       style={

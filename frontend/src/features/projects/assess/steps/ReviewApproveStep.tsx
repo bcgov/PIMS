@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useStepper, ReviewApproveActions } from '../../dispose';
+import { ReviewApproveActions } from '../../dispose';
 import { Formik, yupToFormErrors, setIn, validateYupSchema } from 'formik';
 import {
   UpdateInfoStepYupSchema,
@@ -10,8 +10,7 @@ import {
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
 import { ReviewWorkflowStatus, IStepProps } from '../../common/interfaces';
-import StepErrorSummary from '../../dispose/steps/StepErrorSummary';
-import { useStepForm, IProject, IProjectTask } from '../../common';
+import { useStepForm, IProject, IProjectTask, useProject, StepErrorSummary } from '../../common';
 import { ReviewApproveForm } from '..';
 import { useHistory } from 'react-router-dom';
 
@@ -53,7 +52,7 @@ export const validateTasks = (project: IProject) => {
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
-  const { project, goToDisposePath } = useStepper();
+  const { project, goToDisposePath } = useProject();
   const history = useHistory();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
@@ -105,7 +104,6 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       <Formik
         initialValues={initialValues}
         innerRef={formikRef}
-        enableReinitialize={true}
         onSubmit={(values: IProject) => {
           const workflowCode = getNextWorkflowCode(submitStatusCode, values);
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(

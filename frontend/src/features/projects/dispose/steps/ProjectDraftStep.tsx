@@ -4,9 +4,9 @@ import { Formik } from 'formik';
 import { Form } from 'components/common/form';
 import { IStepProps, initialValues } from '../../common/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { ProjectDraftStepYupSchema, useStepper, StepErrorSummary } from '..';
+import { ProjectDraftStepYupSchema, useStepper } from '..';
 
-import { useStepForm, ProjectDraftForm } from '../../common';
+import { useStepForm, ProjectDraftForm, StepErrorSummary } from '../../common';
 import ProjectNotes from '../../common/components/ProjectNotes';
 
 /**
@@ -32,7 +32,6 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
       <Formik
         initialValues={draftFormValues}
         validationSchema={ProjectDraftStepYupSchema}
-        enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={onSubmit}
       >

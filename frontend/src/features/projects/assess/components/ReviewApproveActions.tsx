@@ -56,6 +56,9 @@ export const ReviewApproveActions = ({
             validateForm().then((errors: any) => {
               if (Object.keys(errors).length === 0) {
                 setApproveERP(true);
+              } else {
+                //force formik to display the validation errors.
+                submitForm();
               }
             });
           }}

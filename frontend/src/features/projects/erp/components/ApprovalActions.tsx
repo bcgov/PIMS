@@ -22,11 +22,13 @@ const FlexRight = styled.div`
 export const ApprovalActions = ({
   submitStatusCode,
   setSubmitStatusCode,
+  submitDirectly,
 }: {
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
+  submitDirectly?: Function;
 }) => {
-  const { values, submitForm, validateForm } = useFormikContext<any>();
+  const { values, submitForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
   const { noFetchingProjectRequests } = useStepForm();
   useEffect(() => {
@@ -49,7 +51,7 @@ export const ApprovalActions = ({
             showSubmitting
             isSubmitting={!noFetchingProjectRequests}
             onClick={() => {
-              submitForm();
+              (submitDirectly ?? submitForm)();
             }}
           >
             Save
@@ -64,11 +66,7 @@ export const ApprovalActions = ({
             showSubmitting
             isSubmitting={!noFetchingProjectRequests}
             onClick={() => {
-              validateForm().then((errors: any) => {
-                if (Object.keys(errors).length === 0) {
-                  setCancel(true);
-                }
-              });
+              setCancel(true);
             }}
           >
             Cancel Project

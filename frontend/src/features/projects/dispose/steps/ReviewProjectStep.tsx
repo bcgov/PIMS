@@ -22,7 +22,6 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
     <Container fluid className="ReviewProjectStep">
       <Formik
         initialValues={initialValues}
-        enableReinitialize={true}
         innerRef={formikRef}
         onSubmit={onSubmit}
         validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)

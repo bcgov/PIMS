@@ -242,6 +242,29 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Update the property.StatusId
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="propertyStatusId"></param>
+        /// <returns></returns>
+        public static Entity.Property UpdatePropertyStatus(this Entity.ProjectProperty property, int propertyStatusId)
+        {
+            switch (property.PropertyType)
+            {
+                case (Entity.PropertyTypes.Land):
+                    if (property.Parcel == null) throw new InvalidOperationException("Unable to update parcel status.");
+                    property.Parcel.StatusId = propertyStatusId;
+                    return property.Parcel;
+                case (Entity.PropertyTypes.Building):
+                    if (property.Building == null) throw new InvalidOperationException("Unable to update building status.");
+                    property.Building.StatusId = propertyStatusId;
+                    return property.Building;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Add a tasks to the project.
         /// </summary>
         /// <param name="project"></param>
@@ -306,6 +329,21 @@ namespace Pims.Dal.Helpers.Extensions
             project.Properties.ForEach(p =>
             {
                 context.Update(p.UpdateProjectNumber(null));
+            });
+        }
+
+        /// <summary>
+        /// Dispose properties from project, during the disposed workflow status.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static void DisposeProjectProperties(this PimsContext context, Entity.Project project)
+        {
+            var disposedProjectStatusId = context.PropertyStatus.FirstOrDefault(p => p.Name == "Disposed")?.Id;
+            if (disposedProjectStatusId == null) throw new InvalidOperationException("Failed to load disposed property status from database.");
+            project.Properties.ForEach(p =>
+            {
+                context.Update(p.UpdatePropertyStatus(disposedProjectStatusId.Value));
             });
         }
 

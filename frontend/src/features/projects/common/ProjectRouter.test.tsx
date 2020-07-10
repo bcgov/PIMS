@@ -48,16 +48,16 @@ const match: Match = {
 };
 
 const loc = {
-  pathname: '/projects/assess/properties',
+  pathname: '/projects/assess/properties?projectNumber=SPP-10001',
   search: '?projectNumber=SPP-10001',
   hash: '',
 } as Location;
 
 const store = mockStore({
-  [reducerTypes.ProjectReducers.PROJECT]: {},
+  [reducerTypes.ProjectReducers.PROJECT]: { project: {} },
   [reducerTypes.ProjectReducers.WORKFLOW]: mockWorkflow,
   [reducerTypes.NETWORK]: {
-    [actionTypes.ProjectActions.GET_PROJECT]: {
+    [actionTypes.ProjectActions.GET_PROJECT_WORKFLOW]: {
       isFetching: false,
     },
   },
@@ -77,7 +77,7 @@ describe('project router', () => {
   const onSave = jest.fn();
   beforeAll(() => {
     (useProject as jest.Mock).mockReturnValue({
-      project: { projectNumber: '', statusId: 5 },
+      project: { projectNumber: 'SPP-10001', statusId: 5 },
     });
     (useStepForm as jest.Mock).mockReturnValue({
       noFetchingProjectRequests: true,
@@ -89,7 +89,7 @@ describe('project router', () => {
         then: (func: Function) => func({}),
       }),
     });
-    mockKeycloak([Claims.ADMIN_PROJECTS, Claims.PROJECT_VIEW]);
+    mockKeycloak([Claims.ADMIN_PROJECTS, Claims.PROJECT_VIEW, Claims.DISPOSE_APPROVE]);
   });
   afterAll(() => {
     jest.clearAllMocks();
@@ -129,7 +129,7 @@ describe('project router', () => {
   it('erp approval form at the default correct route', () => {
     history.location.pathname = '/projects/approved';
     const { getByText } = render(uiElement);
-    const stepHeader = getByText('Approved for Surplus Property Program');
+    const stepHeader = getByText('Surplus Property Program Project');
     expect(stepHeader).toBeVisible();
   });
 

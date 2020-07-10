@@ -20,7 +20,7 @@ function useCodeLookups() {
    * @param codes
    * @param lookupCodeId
    */
-  const filterByParent = (codes: ILookupCode[], lookupCodeId: ILookupCode): ILookupCode[] => {
+  const filterByParent = (codes: ILookupCode[], lookupCodeId: number): ILookupCode[] => {
     const filterByCode = _.find(codes, { id: lookupCodeId }) as ILookupCode;
     if (filterByCode?.parentId !== undefined) {
       return [filterByCode];

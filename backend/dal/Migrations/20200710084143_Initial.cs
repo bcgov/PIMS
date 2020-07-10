@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -9,7 +9,7 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreDeploy(migrationBuilder);
-
+            
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -994,6 +994,9 @@ namespace Pims.Dal.Migrations
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Metadata = table.Column<string>(type: "NVARCHAR(MAX)", nullable: true),
                     AgencyResponseNote = table.Column<string>(maxLength: 2000, nullable: true),
+                    OffersNote = table.Column<string>(maxLength: 2000, nullable: true),
+                    Purchaser = table.Column<string>(maxLength: 150, nullable: true),
+                    IsContractConditional = table.Column<bool>(nullable: true),
                     SubmittedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ApprovedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     InitialNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
@@ -1007,6 +1010,7 @@ namespace Pims.Dal.Migrations
                     CancelledOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     MarketedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DisposedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    OfferAcceptedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ExemptionRequested = table.Column<bool>(nullable: false, defaultValue: false),
                     ExemptionRationale = table.Column<string>(maxLength: 2000, nullable: true),
                     NetBook = table.Column<decimal>(type: "MONEY", nullable: false),
@@ -1018,6 +1022,7 @@ namespace Pims.Dal.Migrations
                     GainLoss = table.Column<decimal>(type: "MONEY", nullable: false),
                     OcgFinalStatement = table.Column<decimal>(type: "MONEY", nullable: false),
                     InterestComponent = table.Column<decimal>(type: "MONEY", nullable: false),
+                    OfferAmount = table.Column<decimal>(type: "MONEY", nullable: false),
                     AgencyId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -1,4 +1,4 @@
-import { IApiProject, IProjectProperty, IApiProperty } from './interfaces';
+import { IApiProject, IProjectProperty, IApiProperty, initialValues } from './interfaces';
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
@@ -74,7 +74,8 @@ export const toFlatProject = (project?: IApiProject) => {
     };
     return property;
   });
-  const flatProject: IProject = { ...project, properties: flatProperties };
+  //always copy the project values over initial values, this ensures that formik's requirement of non-undefined fields is satisfied.
+  const flatProject: IProject = { ...initialValues, ...project, properties: flatProperties };
 
   return flatProject;
 };
@@ -171,5 +172,10 @@ export const toApiProject = (project: IProject) => {
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
   };
+  // convert all empty strings (required by formik) to undefined
+  Object.keys(apiProject).forEach(key => {
+    (apiProject as any)[key] =
+      (apiProject as any)[key] === '' ? undefined : (apiProject as any)[key];
+  });
   return apiProject;
 };

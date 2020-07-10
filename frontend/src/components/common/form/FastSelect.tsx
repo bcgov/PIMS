@@ -169,7 +169,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           <PreviousValue />
           {renderOptions()}
         </Form.Control>
-        <DisplayError field={field} />
+        <DisplayError field={field} errorPrompt={true} />
       </Form.Group>
     );
   },

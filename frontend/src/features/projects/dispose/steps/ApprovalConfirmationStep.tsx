@@ -1,12 +1,13 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Form, Container } from 'react-bootstrap';
-import { useStepper, StepErrorSummary, ApprovalConfirmationStepSchema } from '..';
+import { useStepper, ApprovalConfirmationStepSchema } from '..';
 import {
   useStepForm,
   DisposeWorkflowStatus,
   IStepProps,
   ApprovalConfirmationForm,
+  StepErrorSummary,
 } from '../../common';
 
 /**
