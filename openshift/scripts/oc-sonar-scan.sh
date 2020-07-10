@@ -51,8 +51,8 @@ CMD_TEST="npm run coverage"
 CMD_SONAR_SCAN="sonar-scanner \
   -Dsonar.host.url='${SONAR_URL}' \
   ${SONAR_TOKEN:+ -Dsonar.login='${SONAR_TOKEN}'} \
-  -Dsonar.projectKey='pims-frontend-${TARGET}' \
-  -Dsonar.projectName='PIMS Frontend [${TARGET}]'"
+  -Dsonar.projectKey='${SONAR_PROJECT_KEY}' \
+  -Dsonar.projectName='${SONAR_PROJECT_NAME}'"
 
 # Execute commands
 #
