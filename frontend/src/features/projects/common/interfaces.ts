@@ -175,6 +175,7 @@ export enum ReviewWorkflowStatus {
   Denied = 'DE',
   Cancelled = 'CA',
   OnHold = 'ERP-OH',
+  InErp = 'ERP-ON',
   TransferredGRE = 'T-GRE',
 }
 

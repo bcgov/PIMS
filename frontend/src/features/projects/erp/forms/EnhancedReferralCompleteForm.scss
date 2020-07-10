@@ -7,4 +7,14 @@
     height: unset;
     min-height: 48px;
   }
+
+  .justify-content-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    &.add-space-below {
+      margin: 20px;
+    }
+  }
 }
