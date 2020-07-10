@@ -222,49 +222,12 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
     )
 
 ---- ERP
-
 , (
     5 -- ERP
     , 14 -- Approved for ERP
     , 'Begin ERP'
     , 5 -- ERP
     , 30 -- In ERP
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Place on Hold'
-    , 5 -- ERP
-    , 31 -- On Hold
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Transfer within GRE'
-    , 5 -- ERP
-    , 20 -- Transferred within GRE
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Approve for SPL'
-    , 6 -- SPL
-    , 21 -- Approved for SPL
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Approve to not include in SPL'
-    , 5 -- ERP
-    , 22 -- Not in SPL
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Cancel Project'
-    , 5 -- ERP
-    , 23 -- Cancelled
-), (
-    5 -- ERP
-    , 14 -- Approved for ERP
-    , 'Dispose Externally'
-    , 5 -- ERP
-    , 32 -- Disposed
 )
 
 , (
@@ -351,12 +314,6 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
     , 'Begin Pre-Marketing'
     , 6 -- SPL
     , 40 -- Pre-Marketing
-), (
-    6 -- SPL
-    , 21 -- Approved for SPL
-    , 'Cancel Project'
-    , 6 -- SPL
-    , 23 -- Cancelled
 ), (
     6 -- SPL
     , 40 -- Pre-Marketing

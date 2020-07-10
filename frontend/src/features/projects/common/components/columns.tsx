@@ -45,6 +45,7 @@ const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any
       type="number"
       options={classifications}
       field={`properties.${cellInfo.row.id}.classificationId`}
+      errorPrompt={true}
     />
   );
 };

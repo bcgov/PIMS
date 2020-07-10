@@ -24,6 +24,7 @@ const transitionFunction = (promise: any, history: any, toStatusCode: string) =>
 };
 
 const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = props => {
+  debugger;
   const { workflowStatuses } = useProject();
   const project = useSelector<RootState, IProjectWrapper>(state => state.project).project;
   const [isTransitioned, setIsTransitioned] = useState(false);
@@ -38,7 +39,9 @@ const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPagePro
     }
     if (project !== undefined && !isTransitioned) {
       if (toStatus?.length !== 1) {
-        history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);
+        throw Error(
+          "Unable to automatically transition this Project's status, please try reloading it from the Project List",
+        );
       } else {
         const toStatusCode = toStatus[0].code;
         setIsTransitioned(true);
