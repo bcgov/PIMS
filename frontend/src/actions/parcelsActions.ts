@@ -7,6 +7,7 @@ export interface IProperty {
   propertyTypeId: 0 | 1; // 0 = Parcel, 1 = Building
   latitude: number;
   longitude: number;
+  projectNumber?: string;
 }
 
 export interface IStoreParcelsAction {

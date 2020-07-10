@@ -23,6 +23,26 @@ export const buildingIcon = new Icon({
   shadowSize: [41, 41],
 });
 
+// spp icon (purple)
+export const sppIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-violet.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// erp icon (red)
+export const erpIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-red.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 export type PointFeature = Supercluster.PointFeature<{
   propertyId: number;
   propertyTypeId: 0 | 1;
@@ -40,6 +60,7 @@ export const createPoints = (properties: IProperty[]) =>
         cluster: false,
         propertyId: x.id,
         propertyTypeId: x.propertyTypeId,
+        projectNumber: x.projectNumber,
       },
       geometry: {
         type: 'Point',
@@ -69,8 +90,17 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * @param latlng the point position
  */
 export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
-  const { propertyTypeId } = feature?.properties;
-  const icon = propertyTypeId === 0 ? parcelIcon : buildingIcon;
+  const { propertyTypeId, projectNumber } = feature?.properties;
+  const getIconType = () => {
+    if (projectNumber !== undefined) {
+      return sppIcon;
+    } else if (propertyTypeId === 0) {
+      return parcelIcon;
+    } else {
+      return buildingIcon;
+    }
+  };
+  const icon = getIconType();
   return new Marker(latlng, { icon });
 };
 
