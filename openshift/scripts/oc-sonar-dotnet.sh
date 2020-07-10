@@ -29,7 +29,7 @@ export PATH="$PATH:/root/.dotnet/tools"
 #
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-pims-api-${TARGET}}
-SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Backend [${TARGET}]}
+SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-[${TARGET}] Backend API}
 SONAR_URL=${SONAR_URL:-https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca}
 
 BACKEND_DIR="${BACKEND_DIR:-../../backend}"

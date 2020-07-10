@@ -27,7 +27,7 @@ source "$(dirname ${0})/common.sh"
 #
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-pims-frontend-${TARGET}}
-SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Frontend [${TARGET}]}
+SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-[${TARGET}] Frontend}
 SONAR_URL=${SONAR_URL:-https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca}
 
 FRONTEND_DIR="${FRONTEND_DIR:-../../frontend}"
