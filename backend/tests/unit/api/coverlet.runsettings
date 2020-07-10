@@ -6,7 +6,7 @@
         <Configuration>
           <Format>json,opencover</Format>
           <Exclude>[*.Test]*,[*]*Model,[*]*Migrations*</Exclude> <!-- [Assembly-Filter]Type-Filter -->
-          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
           <SingleHit>false</SingleHit>
           <UseSourceLink>true</UseSourceLink>
           <IncludeTestAssembly>false</IncludeTestAssembly>
