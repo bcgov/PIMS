@@ -42,50 +42,47 @@ jobs:
           # Environment variables to tag the upload with (e.g. PYTHON | OS,PYTHON)
           env_vars: javascript
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
-          fail_ci_if_error: true
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: ${{ env.working-directory }}/coverage/lcov.info
-      - name: Archive test run report
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-report
-          path: ${{ env.working-directory }}/test-report.xml
-  sonarqube-on-pr:
-    needs: build
-    if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    env:
-      CI: true
-      working-directory: ./frontend
-    steps:
-      - uses: actions/checkout@v2
-      - name: Download coverage report
-        uses: actions/download-artifact@v2
-        with:
-          name: code-coverage-report
-          path: ${{ env.working-directory }}/coverage
-      - name: Download test run report
-        uses: actions/download-artifact@v2
-        with:
-          name: test-report
-          path: ${{ env.working-directory }}
-      - name: Use Node.js 10
-        uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - run: npm i typescript@3.7.5
-        working-directory: ${{env.working-directory}}
-      - name: Setup sonarqube
+          fail_ci_if_error: false
+
+        #################################################
+        ##       Steps below run only on PRs           ##
+        #################################################
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
-      - name: Run sonar scan
-        working-directory: ${{ env.working-directory }}
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Run sonar scan
+        working-directory: ./openshift
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
-          -Dsonar.host.url=${{ secrets.SONAR_URL }}
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.projectKey=pims-frontend-pr-${{ github.event.pull_request.number }}
-          -Dsonar.projectName='PR-${{ github.event.pull_request.number }} (frontend)'
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          OC_JOB_NAME: pr-${{ github.event.pull_request.number }}
+          SKIP_OC_LOGIN: 1
+        run: ./player.sh scan $OC_JOB_NAME -apply
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Find Comment
+        uses: peter-evans/find-comment@v1.0.1
+        id: fc
+        with:
+          token: ${{ secrets.PR_COMMENT_PAT }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Frontend Sonar Scan Report
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Create or Update comment
+        uses: peter-evans/create-or-update-comment@v1.4.2
+        with:
+          token: ${{ secrets.PR_COMMENT_PAT }}
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ## Frontend Sonar Scan Report
+
+            [![Quality gate](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/quality_gate?project=pims-frontend-pr-${{ github.event.pull_request.number }})](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-frontend-pr-${{ github.event.pull_request.number }})
+
+            #### Quality Metrics
+            [![Bugs](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-frontend-pr-${{ github.event.pull_request.number }}&metric=bugs)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-frontend-pr-${{ github.event.pull_request.number }})
+            [![Vulnerabilities](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-frontend-pr-${{ github.event.pull_request.number }}&metric=vulnerabilities)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-frontend-pr-${{ github.event.pull_request.number }})
+            [![Code Smells](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-frontend-pr-${{ github.event.pull_request.number }}&metric=code_smells)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-frontend-pr-${{ github.event.pull_request.number }})
+            [![Coverage](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/api/project_badges/measure?project=pims-frontend-pr-${{ github.event.pull_request.number }}&metric=coverage)](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/dashboard?id=pims-frontend-pr-${{ github.event.pull_request.number }})

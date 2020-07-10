@@ -37,10 +37,12 @@ source "$(dirname ${0})/envars"
 
 # Verify login
 #
-$(oc whoami &>/dev/null) || {
-  echo -e "\nPlease verify oc login\n"
-  exit 1
-}
+if [ -z "${SKIP_OC_LOGIN:-}" ]; then
+  $(oc whoami &>/dev/null) || {
+    echo -e "\nPlease verify oc login\n"
+    exit 1
+  }
+fi
 
 # Echo commands and dry run warnings
 #
