@@ -6,18 +6,43 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
 >
   <div
     className="filter-container"
-  >
-    <div
-      className="title"
-    >
-      <h4>
-        Surplus Property Program Projects - Approval Requests
-      </h4>
-    </div>
-  </div>
+  />
   <div
     className="ScrollContainer"
   >
+    <div
+      className="TableToolbar container-fluid"
+    >
+      <h3
+        className="mr-auto"
+      >
+        Surplus Property Program Projects - Approval Requests
+      </h3>
+      <button
+        className="Button mr-2 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export Generic Report
+        </div>
+      </button>
+      <button
+        className="Button mr-2 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export CSV
+        </div>
+      </button>
+    </div>
     <div
       className="table"
       role="table"

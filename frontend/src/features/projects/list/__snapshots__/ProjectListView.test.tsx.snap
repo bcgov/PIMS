@@ -16,13 +16,6 @@ exports[`Project list view Matches snapshot 1`] = `
         className="search-bar form-row"
       >
         <div
-          className="col"
-        >
-          <h4>
-            My Agency's Projects
-          </h4>
-        </div>
-        <div
           className="bar-item col"
         >
           <div
@@ -61,6 +54,48 @@ exports[`Project list view Matches snapshot 1`] = `
               onChange={[Function]}
               type="checkbox"
             />
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              className="form-select form-control"
+              id="input-statusId"
+              name="statusId"
+              onBlur={[Function]}
+              onChange={[Function]}
+            >
+              <option
+                value=""
+              >
+                Select a project status
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          className="bar-item col"
+        >
+          <div
+            className="AutoCompleteText"
+          >
+            <div
+              className="form-group"
+            >
+              <input
+                autoComplete="off"
+                className="form-control"
+                id="input-agencies"
+                name="agencies"
+                onChange={[Function]}
+                placeholder="Enter an agency"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -159,6 +194,39 @@ exports[`Project list view Matches snapshot 1`] = `
   <div
     className="ScrollContainer"
   >
+    <div
+      className="TableToolbar container-fluid"
+    >
+      <h3
+        className="mr-auto"
+      >
+        My Agency's Projects
+      </h3>
+      <button
+        className="Button mr-2 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export Generic Report
+        </div>
+      </button>
+      <button
+        className="Button mr-2 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <div
+          className="Button__value"
+        >
+          Export CSV
+        </div>
+      </button>
+    </div>
     <div
       className="table"
       role="table"
