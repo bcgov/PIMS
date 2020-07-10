@@ -11,9 +11,9 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
 import { cleanup } from '@testing-library/react-hooks';
-import { getStore, mockProject } from '../../dispose/testUtils';
+import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
 import { IProject } from '../../common';
-import { ApprovalStep } from '..';
+import { ErpStep } from '..';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -29,11 +29,13 @@ const mockKeycloak = (claims: string[]) => {
 };
 
 const history = createMemoryHistory();
+const mockProject = _.cloneDeep(defaultProject);
+mockProject.statusCode = ReviewWorkflowStatus.ERP;
 
 const getApprovalStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
     <Router history={history}>
-      <ApprovalStep />
+      <ErpStep />
     </Router>
   </Provider>
 );

@@ -102,10 +102,7 @@ export const getLastCompletedStatus = (
  */
 const useStepper = () => {
   const history = useHistory();
-  const { currentStatus, setCurrentStatus } = useContext(StepperContext);
-  const diposeWorkflowStatuses = useSelector<RootState, IStatus[]>(
-    state => state.projectWorkflow as any,
-  );
+  const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
   const project: any =
     useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
   const workflowTasks: IProjectTask[] =
@@ -118,7 +115,7 @@ const useStepper = () => {
   );
 
   useEffect(() => {
-    const lastCompletedStatus = _.findLast(diposeWorkflowStatuses, { id: project?.statusId });
+    const lastCompletedStatus = _.findLast(disposeWorkflowStatuses, { id: project?.statusId });
     if (
       lastCompletedStatus?.sortOrder !== undefined && // TODO: Stop using 'sortOrder' for index positioning.  It'll cause bugs.
       currentStatus?.sortOrder !== undefined &&
@@ -131,19 +128,19 @@ const useStepper = () => {
       project?.statusId !== undefined &&
       project.statusId > 0 &&
       project.statusCode !== ReviewWorkflowStatus.ExemptionReview &&
-      diposeWorkflowStatuses?.length > 0 &&
+      disposeWorkflowStatuses?.length > 0 &&
       updateWorkflowStatusRequest === undefined &&
       currentStatus?.id !== undefined &&
-      _.find(diposeWorkflowStatuses, { id: project.statusId }) === undefined &&
-      _.find(diposeWorkflowStatuses, { id: currentStatus.id })?.sortOrder !== undefined
+      _.find(disposeWorkflowStatuses, { id: project.statusId }) === undefined &&
+      _.find(disposeWorkflowStatuses, { id: currentStatus.id })?.sortOrder !== undefined
     ) {
       throw Error('You cannot edit a project disposal form after it has been submitted');
     }
   }, [
     currentStatus,
+    disposeWorkflowStatuses,
     getProjectRequest,
     project,
-    diposeWorkflowStatuses,
     updateWorkflowStatusRequest,
   ]);
 
@@ -151,17 +148,17 @@ const useStepper = () => {
     currentStatus,
     setCurrentStatus,
     project,
-    workflowStatuses: diposeWorkflowStatuses,
+    workflowStatuses: disposeWorkflowStatuses,
     workflowTasks,
     getStatusById: (statusId: number): IStatus | undefined =>
-      _.find(diposeWorkflowStatuses, { id: statusId }),
+      _.find(disposeWorkflowStatuses, { id: statusId }),
     getStatusByCode: (statusCode: string): IStatus | undefined =>
-      _.find(diposeWorkflowStatuses, { code: statusCode }),
+      _.find(disposeWorkflowStatuses, { code: statusCode }),
     getNextStep: (status?: IStatus) =>
-      getNextWorkflowStatus(diposeWorkflowStatuses, status ?? currentStatus),
+      getNextWorkflowStatus(disposeWorkflowStatuses, status ?? currentStatus),
     goToNextStep: (overrideProject?: IProject): number | undefined => {
       const currentProject = overrideProject ?? project;
-      const nextStatus = getNextWorkflowStatus(diposeWorkflowStatuses, currentStatus);
+      const nextStatus = getNextWorkflowStatus(disposeWorkflowStatuses, currentStatus);
       if (!nextStatus) {
         return undefined;
       }
@@ -170,16 +167,16 @@ const useStepper = () => {
       return nextStatus.id;
     },
     projectStatusCompleted: (status?: IStatus) =>
-      isStatusCompleted(diposeWorkflowStatuses, status, project),
-    canGoToStatus: (status: IStatus) => isStatusNavigable(diposeWorkflowStatuses, status, project),
+      isStatusCompleted(disposeWorkflowStatuses, status, project),
+    canGoToStatus: (status: IStatus) => isStatusNavigable(disposeWorkflowStatuses, status, project),
     getLastCompletedStatus: () =>
-      getLastCompletedStatus(diposeWorkflowStatuses, currentStatus, project),
+      getLastCompletedStatus(disposeWorkflowStatuses, currentStatus, project),
     goToStepById: (statusId: number) => {
-      const status: IStatus | undefined = _.find(diposeWorkflowStatuses, { id: statusId });
+      const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { id: statusId });
       history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToStepByCode: (statusCode: string) => {
-      const status: IStatus | undefined = _.find(diposeWorkflowStatuses, { code: statusCode });
+      const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { code: statusCode });
       history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToDisposePath: (path: string) =>

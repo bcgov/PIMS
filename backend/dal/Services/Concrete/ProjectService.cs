@@ -615,6 +615,10 @@ namespace Pims.Dal.Services
                     var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
                     var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
                     var statusTaskIds = fromStatus.Status.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
+                    if(toStatus.IsTerminal)
+                    {
+                        statusTaskIds.Concat(toStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id));
+                    }
                     var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
                     if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
                 }
@@ -651,6 +655,7 @@ namespace Pims.Dal.Services
                     if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
+                    originalProject.SubmittedOn = DateTime.UtcNow;
                     break;
                 case ("AP-!SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
@@ -671,6 +676,11 @@ namespace Pims.Dal.Services
 
                     // Cancel any pending notifications.
                     await CancelNotificationsAsync(originalProject.Id);
+                    originalProject.DisposedOn = DateTime.UtcNow;
+                    break;
+                case ("DIS"): // DISPOSED
+                    this.Context.DisposeProjectProperties(originalProject);
+                    originalProject.DisposedOn = DateTime.UtcNow;
                     break;
                 case ("ERP-OH"): // OnHold
                     if (project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");

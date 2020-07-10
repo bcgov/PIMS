@@ -114,7 +114,7 @@ export interface IProjectTask extends ITask {
   statusCode: string;
 }
 export interface IProject {
-  id: number;
+  id?: number;
   projectNumber: string;
   name: string;
   description: string;
@@ -125,31 +125,38 @@ export interface IProject {
   publicNote: string;
   privateNote: string;
   agencyResponseNote?: string;
+  offersNote?: string;
   agencyId: number;
   statusId: number;
   status?: IStatus;
   exemptionRationale?: string;
   exemptionRequested?: boolean;
-  statusCode: string;
+  statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;
   confirmation?: boolean;
-  approvedOn?: Date;
-  deniedOn?: Date;
-  cancelledOn?: Date;
-  submittedOn?: Date;
-  initialNotificationSentOn?: Date;
-  thirtyDayNotificationSentOn?: Date;
-  sixtyDayNoficationSentOn?: Date;
-  ninetyDayNotificationSentOn?: Date;
-  onHoldNotificationSentOn?: Date;
-  transferredWithinGreOn?: Date;
-  clearanceNotificationSentOn?: Date;
+  approvedOn?: Date | string;
+  deniedOn?: Date | string;
+  cancelledOn?: Date | string;
+  submittedOn?: Date | string;
+  initialNotificationSentOn?: Date | string;
+  thirtyDayNotificationSentOn?: Date | string;
+  sixtyDayNoficationSentOn?: Date | string;
+  ninetyDayNotificationSentOn?: Date | string;
+  onHoldNotificationSentOn?: Date | string;
+  transferredWithinGreOn?: Date | string;
+  clearanceNotificationSentOn?: Date | string;
+  marketedOn?: Date | string;
+  disposedOn?: Date | string;
+  offerAcceptedOn?: Date | string;
   netBook?: number;
   assessed?: number;
   estimated?: number;
-  workflowCode?: string;
+  workflowCode?: string | '';
+  offerAmount?: number | '';
+  isContractConditional?: boolean;
+  purchaser?: string | '';
 }
 
 export enum DisposeWorkflowStatus {
@@ -169,14 +176,19 @@ export enum ReviewWorkflowStatus {
   ExemptionReview = 'AS-EXE',
   ExemptionProcess = 'AS-EXP',
   ApprovedForErp = 'AP-ERP',
+  OnHold = 'ERP-OH',
+  ERP = 'ERP-ON',
+  TransferredGRE = 'T-GRE',
   ApprovedForSpl = 'AP-SPL',
+  PreMarketing = 'SPL-PM',
+  OnMarket = 'SPL-M',
+  ContractInPlace = 'SPL-CIP',
   NotInSpl = 'AP-!SPL',
   ApprovedForExemption = 'AP-EXE',
   Denied = 'DE',
+  Disposed = 'DIS',
   Cancelled = 'CA',
-  OnHold = 'ERP-OH',
   InErp = 'ERP-ON',
-  TransferredGRE = 'T-GRE',
 }
 
 export enum SPPApprovalTabs {
@@ -203,6 +215,7 @@ export interface IStatus {
   tasks: IProjectTask[];
   isOptional: boolean;
   toStatus?: IStatus[];
+  isActive: boolean;
 }
 
 export interface IStepProps {
@@ -220,7 +233,8 @@ export interface IProjectProperty {
   building?: IApiProperty;
 }
 
-export const initialValues: any = {
+export const initialValues: IProject = {
+  projectNumber: '',
   name: '',
   note: '',
   description: '',
@@ -229,11 +243,37 @@ export const initialValues: any = {
   statusId: 1,
   agencyId: 0,
   tasks: [],
+  projectAgencyResponses: [],
+  publicNote: '',
+  privateNote: '',
+  statusCode: 'DR',
   fiscalYear: getCurrentFiscalYear(),
+  confirmation: false,
+  approvedOn: '',
+  deniedOn: '',
+  cancelledOn: '',
+  submittedOn: '',
+  initialNotificationSentOn: '',
+  thirtyDayNotificationSentOn: '',
+  sixtyDayNoficationSentOn: '',
+  ninetyDayNotificationSentOn: '',
+  onHoldNotificationSentOn: '',
+  transferredWithinGreOn: '',
+  clearanceNotificationSentOn: '',
+  marketedOn: '',
+  disposedOn: '',
+  offerAcceptedOn: '',
+  netBook: 0,
+  assessed: 0,
+  estimated: 0,
+  workflowCode: '',
+  offerAmount: '',
+  isContractConditional: false,
+  purchaser: '',
 };
 
 export interface IApiProject {
-  id: number;
+  id?: number;
   projectNumber: string;
   fiscalYear: number;
   name: string;
@@ -248,21 +288,21 @@ export interface IApiProject {
   exemptionRationale?: string;
   agencyId: number;
   statusId: number;
-  statusCode: string;
+  statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
   rowVersion?: string;
-  approvedOn?: Date;
-  deniedOn?: Date;
-  cancelledOn?: Date;
-  submittedOn?: Date;
-  InitialNotificationSentOn?: Date;
-  ThirtyDayNotificationSentOn?: Date;
-  SixtyDayNoficationSentOn?: Date;
-  NinetyDayNotificationSentOn?: Date;
-  OnHoldNotificationSentOn?: Date;
-  TransferredWithinGreOn?: Date;
-  ClearanceNotificationSentOn?: Date;
+  approvedOn?: Date | string;
+  deniedOn?: Date | string;
+  cancelledOn?: Date | string;
+  submittedOn?: Date | string;
+  InitialNotificationSentOn?: Date | string;
+  ThirtyDayNotificationSentOn?: Date | string;
+  SixtyDayNoficationSentOn?: Date | string;
+  NinetyDayNotificationSentOn?: Date | string;
+  OnHoldNotificationSentOn?: Date | string;
+  TransferredWithinGreOn?: Date | string;
+  ClearanceNotificationSentOn?: Date | string;
 }
 
 export interface IApiProperty {

@@ -7,8 +7,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReviewProjectStep from './ReviewProjectStep';
-import { IProject, IProjectTask } from '..';
-import { DisposeWorkflowStatus, ITask } from '../../common/interfaces';
+import { DisposeWorkflowStatus, ITask, IProject, IProjectTask } from '../../common';
 import { ProjectActions } from 'constants/actionTypes';
 
 const mockStore = configureMockStore([thunk]);

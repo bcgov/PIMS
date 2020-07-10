@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useStepper } from '../../dispose';
 
 import {
   IStepProps,
@@ -9,6 +8,7 @@ import {
   StepStatusIcon,
   ReviewWorkflowStatus,
   updatePimsWarning,
+  useProject,
 } from '../../common';
 
 import { Formik } from 'formik';
@@ -21,7 +21,7 @@ import {
 import { Button } from 'components/common/form';
 import { formatDate } from 'utils';
 import styled from 'styled-components';
-import StepErrorSummary from '../../dispose/steps/StepErrorSummary';
+import StepErrorSummary from '../../common/components/StepErrorSummary';
 import GenericModal from 'components/common/GenericModal';
 import { GreTransferForm } from '..';
 
@@ -48,7 +48,7 @@ const FlexRight = styled.div`
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
 const GreTransferStep = ({ formikRef }: IStepProps) => {
-  const { project } = useStepper();
+  const { project } = useProject();
   const { onSubmitReview, canUserApproveForm, noFetchingProjectRequests } = useStepForm();
   const [updatePims, setUpdatePims] = useState(false);
 
@@ -57,14 +57,13 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
   };
   const canEdit =
     canUserApproveForm() &&
-    (project.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+    (project.statusCode === ReviewWorkflowStatus.ERP ||
       project.statusCode === ReviewWorkflowStatus.OnHold ||
       project.statusCode === ReviewWorkflowStatus.ApprovedForExemption);
   return (
     <Container fluid className="GreTransferStep">
       <Formik
         initialValues={initialValues}
-        enableReinitialize={true}
         innerRef={formikRef}
         validationSchema={GreTransferStepYupSchema}
         onSubmit={(values: IProject) => {

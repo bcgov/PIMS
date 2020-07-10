@@ -11,83 +11,13 @@ import useStepper, {
   isStatusCompleted,
   isStatusNavigable,
   getLastCompletedStatus,
+  getNextWorkflowStatus,
 } from './useStepper';
-import { IStatus, IProject } from '..';
+import { IProject } from 'features/projects/common';
+import { mockWorkflow } from '../testUtils';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
-
-const mockWorkflow: IStatus[] = [
-  {
-    description:
-      'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.',
-    route: '/projects/draft',
-    isMilestone: false,
-    code: 'DR',
-    id: 1,
-    name: 'Draft',
-    sortOrder: 0,
-    workflow: '',
-    tasks: [],
-  },
-  {
-    description: 'Add properties to the project.',
-    route: '/projects/properties',
-    isMilestone: false,
-    code: 'DR-P',
-    id: 2,
-    name: 'Select Properties',
-    sortOrder: 1,
-    workflow: '',
-    tasks: [],
-  },
-  {
-    description: 'Assign tier level, classification and update current financial information.',
-    route: '/projects/information',
-    isMilestone: false,
-    code: 'DR-I',
-    id: 3,
-    name: 'Update Information',
-    sortOrder: 2,
-    workflow: '',
-    tasks: [],
-  },
-  {
-    description:
-      'Required documentation has been completed and sent (Surplus Declaration \u0026 Readiness Checklist, Triple Bottom Line).',
-    route: '/projects/documentation',
-    isMilestone: false,
-    code: 'DR-D',
-    id: 4,
-    name: 'Required Documentation',
-    sortOrder: 3,
-    workflow: '',
-    tasks: [],
-  },
-  {
-    description: 'The project is ready to be approved by owning agency.',
-    route: '/projects/approval',
-    isMilestone: false,
-    code: 'DR-A',
-    id: 5,
-    name: 'Approval',
-    sortOrder: 4,
-    workflow: '',
-    tasks: [],
-  },
-  {
-    description:
-      'The project has been submitted for review to be added to the Surplus Property Program.',
-    route: '/projects/review',
-    isMilestone: false,
-    code: 'DR-RE',
-    id: 6,
-    name: 'Review',
-    sortOrder: 5,
-    workflow: '',
-    tasks: [],
-  },
-];
 
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
@@ -101,9 +31,8 @@ const store = mockStore({
 });
 
 describe('useStepper hook functionality', () => {
-  let hook: any = undefined;
   beforeAll(() => {
-    hook = renderHook(() => useStepper(), {
+    renderHook(() => useStepper(), {
       wrapper: ({ children }) => (
         <Provider store={store}>
           <Router history={history}>{children}</Router>
@@ -114,22 +43,19 @@ describe('useStepper hook functionality', () => {
   afterAll(() => {
     jest.clearAllMocks();
   });
-  describe('getNextStep', () => {
+  describe('getNextWorkflowStatus', () => {
     it('draft step', () => {
-      const { getNextStep } = hook.result.current;
-      const nextStep = getNextStep(mockWorkflow[0]);
+      const nextStep = getNextWorkflowStatus(mockWorkflow, mockWorkflow[0]);
       expect(nextStep).toBe(mockWorkflow[1]);
     });
 
     it('review step', () => {
-      const { getNextStep } = hook.result.current;
-      const nextStep = getNextStep(mockWorkflow[5]);
+      const nextStep = getNextWorkflowStatus(mockWorkflow, mockWorkflow[5]);
       expect(nextStep).toBe(undefined);
     });
 
     it('undefined step', () => {
-      const { getNextStep } = hook.result.current;
-      const nextStep = getNextStep(undefined);
+      const nextStep = getNextWorkflowStatus(mockWorkflow, undefined);
       expect(nextStep).toBe(mockWorkflow[0]);
     });
   });

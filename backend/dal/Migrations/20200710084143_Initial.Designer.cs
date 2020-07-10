@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200706230048_Initial")]
+    [Migration("20200710084143_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1283,6 +1283,9 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("InterestComponent")
                         .HasColumnType("MONEY");
 
+                    b.Property<bool?>("IsContractConditional")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Manager")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
@@ -1314,6 +1317,16 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("OcgFinalStatement")
                         .HasColumnType("MONEY");
 
+                    b.Property<DateTime?>("OfferAcceptedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<decimal>("OfferAmount")
+                        .HasColumnType("MONEY");
+
+                    b.Property<string>("OffersNote")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
                     b.Property<DateTime?>("OnHoldNotificationSentOn")
                         .HasColumnType("DATETIME2");
 
@@ -1332,6 +1345,10 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("PublicNote")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
+
+                    b.Property<string>("Purchaser")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<int>("ReportedFiscalYear")
                         .HasColumnType("int");

@@ -2,10 +2,11 @@ import * as React from 'react';
 import { Tab, Tabs, Spinner } from 'react-bootstrap';
 import { SPPApprovalTabs, initialValues } from '../../common';
 import { useFormikContext } from 'formik';
-import { ProjectInformationTab, DocumentationTab, EnhancedReferralTab } from '..';
+import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
+import { ProjectInformationTab, DocumentationTab } from '../../common';
 
-interface IApprovalFormProps {
+interface IErpTabsProps {
   /** The currently displayed tab */
   currentTab: string;
   /** set the currently displayed tab */
@@ -22,9 +23,9 @@ interface IApprovalFormProps {
 
 /**
  * Tab based formik form for ERP/SPL workflows.
- * @param param0 IApprovalFormProps
+ * @param param0 IErpTabsProps
  */
-const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
+const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
   currentTab,
   setCurrentTab,
   isReadOnly,
@@ -53,10 +54,9 @@ const ApprovalForm: React.FunctionComponent<IApprovalFormProps> = ({
             goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
           />
         </Tab>
-        <Tab eventKey={SPPApprovalTabs.spl} title="Surplus Properties List"></Tab>
       </Tabs>
     </React.Fragment>
   );
 };
 
-export default ApprovalForm;
+export default ErpTabs;

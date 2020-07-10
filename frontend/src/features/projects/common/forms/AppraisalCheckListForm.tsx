@@ -9,6 +9,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 interface IAppraisalCheckListFormProps {
   className?: string;
   isReadOnly?: boolean;
+  taskStatusCode?: string;
 }
 /**
  * Displays a checklist for every task within the AppraisalReview status.
@@ -16,7 +17,9 @@ interface IAppraisalCheckListFormProps {
  */
 const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormProps> = props => {
   const { project } = useProject();
-  const tasks = _.filter(project.tasks, { statusCode: ReviewWorkflowStatus.AppraisalReview });
+  const tasks = _.filter(project.tasks, {
+    statusCode: props.taskStatusCode ?? ReviewWorkflowStatus.AppraisalReview,
+  });
   return (
     <Container fluid className={classNames(props.className)}>
       <h3>

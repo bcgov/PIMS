@@ -11,7 +11,7 @@ interface IStepSuccessIconProps {
   /** label displayed after the icon */
   postIconLabel?: string;
   status?: IStatus;
-  approvedOn?: string;
+  approvedOn?: string | Date;
 }
 
 export enum StatusIcons {
@@ -36,7 +36,7 @@ const getPreIconLabel = (code?: string) =>
     ? 'Approved for Surplus Property Program'
     : 'Submitted';
 
-const getPostIconLabel = (approvedOn?: string, status?: IStatus) => {
+const getPostIconLabel = (approvedOn?: string | Date, status?: IStatus) => {
   switch (status?.code) {
     case ReviewWorkflowStatus.ApprovedForErp:
     case ReviewWorkflowStatus.ApprovedForSpl:

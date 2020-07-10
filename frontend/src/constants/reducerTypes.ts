@@ -36,6 +36,7 @@ export enum ProjectReducers {
   WORKFLOW = 'projectWorkflow',
   WORKFLOW_TASKS = 'projectWorkflowTasks',
   PROJECT = 'project',
-  PROJECT_APPROVAL_TAB = 'projectApprovalTab',
+  ERP_TAB = 'erpTab',
+  SPL_TAB = 'splTab',
   TASKS = 'tasks',
 }
