@@ -213,7 +213,13 @@ INSERT INTO dbo.[ProjectStatusTransitions] (
     , 'Dispose Externally'
     , 4 -- ASSESS-EX-DISPOSAL
     , 32 -- Disposed
-)
+), (
+    4 -- ASSESS-EX-DISPOSAL
+    , 15 -- Approved for Exemption
+    , 'Approve for Enhanced Referral Process'
+    , 5 -- ERP
+    , 14 -- Approved ERP
+    )
 
 ---- ERP
 
