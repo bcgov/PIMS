@@ -75,7 +75,7 @@ const useStepForm = () => {
     formikRef: MutableRefObject<FormikValues | undefined>,
   ) => {
     let promise: Promise<any>;
-    if (project.projectNumber === undefined) {
+    if (project.projectNumber === undefined || project.projectNumber === '') {
       promise = dispatch(createProject(project)) as any;
     } else {
       promise = dispatch(updateProject(project)) as any;

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import { useStepper } from '../../dispose';
 import _ from 'lodash';
+import { PublicNotes, PrivateNotes } from '../../common/components/ProjectNotes';
 import {
-  DisposeWorkflowStatus,
   DocumentationForm,
   AppraisalCheckListForm,
-  FirstNationsCheckListForm,
   ProjectNotes,
-  PublicNotes,
-  PrivateNotes,
+  DisposeWorkflowStatus,
+  FirstNationsCheckListForm,
+  useProject,
 } from '../../common';
 
 interface IDocumentationTabProps {
   isReadOnly?: boolean;
+  appraisalTaskStatusCode?: string;
 }
 
 /**
@@ -22,8 +22,9 @@ interface IDocumentationTabProps {
  */
 const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
   isReadOnly,
+  appraisalTaskStatusCode,
 }: IDocumentationTabProps) => {
-  const { project } = useStepper();
+  const { project } = useProject();
   const documentationTasks = _.filter(project.tasks, {
     statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   });
@@ -31,7 +32,7 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
   return (
     <Container fluid>
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
-      <AppraisalCheckListForm isReadOnly={isReadOnly} />
+      <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
       <ProjectNotes disabled={true} />
       <PublicNotes disabled={isReadOnly} />

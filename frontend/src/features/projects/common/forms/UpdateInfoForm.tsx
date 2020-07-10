@@ -22,6 +22,8 @@ interface IUpdateInfoFormProps {
   goToAddProperties?: Function;
 }
 
+const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
+
 /**
  * Form component of UpdateInfoForm.
  * @param param0 isReadOnly disable editing
@@ -76,7 +78,7 @@ const UpdateInfoForm = ({
         editableClassification
         editableFinancials
         editableZoning
-        classificationLimitLabels={['Surplus Active', 'Surplus Encumbered']}
+        classificationLimitLabels={classificationLimitLabels}
       ></PropertyListViewUpdate>
     </Container>
   );

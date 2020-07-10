@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewApproveForm.scss';
-import { useStepper } from '../../dispose';
 import {
   ReviewWorkflowStatus,
   DisposeWorkflowStatus,
@@ -13,6 +12,7 @@ import {
   ProjectNotes,
   PublicNotes,
   PrivateNotes,
+  useProject,
 } from '../../common';
 import TasksForm from '../../common/forms/TasksForm';
 import _ from 'lodash';
@@ -30,7 +30,7 @@ const ReviewApproveForm = ({
   canEdit: boolean;
   goToAddProperties: Function;
 }) => {
-  const { project } = useStepper();
+  const { project } = useProject();
   const { errors } = useFormikContext();
   const [isReadOnly, setIsReadOnly] = useState(true);
   /** Enter edit mode if allowed and there are errors to display */

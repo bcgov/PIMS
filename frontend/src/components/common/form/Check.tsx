@@ -29,6 +29,12 @@ type OptionalAttributes = {
   custom?: boolean;
   /** style to use for the formgroup wrapping the inner element */
   outerClassName?: string;
+  /** override the display of the component, default is checkbox. Select radio to display this checkbox as two radio buttons. */
+  type?: string;
+  /** label of the first radio button */
+  radioLabelOne?: string;
+  /** label of the second radio button */
+  radioLabelTwo?: string;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -47,7 +53,10 @@ export const Check: React.FC<CheckProps> = ({
   outerClassName,
   required,
   disabled,
+  type,
   custom,
+  radioLabelOne,
+  radioLabelTwo,
   ...rest
 }) => {
   const { values, handleChange, errors, touched } = useFormikContext();
@@ -67,20 +76,43 @@ export const Check: React.FC<CheckProps> = ({
             {!!required && <span className="required">*</span>}
           </Form.Label>
         )}
-        <Form.Check
-          as={asElement}
-          name={field}
-          className={className}
-          required={required}
-          disabled={disabled}
-          custom={custom}
-          defaultChecked={checked}
-          isInvalid={!!touch && !!error}
-          {...rest}
-          value={checked}
-          placeholder={placeholder}
-          onChange={handleChange}
-        />
+        <>
+          <Form.Check
+            label={radioLabelOne}
+            as={asElement}
+            name={field}
+            className={className}
+            required={required}
+            disabled={disabled}
+            custom={custom}
+            defaultChecked={checked}
+            isInvalid={!!touch && !!error}
+            type={type}
+            {...rest}
+            value={checked}
+            placeholder={placeholder}
+            onChange={handleChange}
+          />
+          {type === 'radio' && (
+            <Form.Check
+              label={radioLabelTwo}
+              as={asElement}
+              name={field}
+              className={className}
+              required={required}
+              disabled={disabled}
+              custom={custom}
+              defaultChecked={!checked}
+              isInvalid={!!touch && !!error}
+              type={type}
+              id={`input-${field}-2`}
+              {...rest}
+              value={!checked}
+              placeholder={placeholder}
+              onChange={handleChange}
+            />
+          )}
+        </>
         {!!postLabel && !!required && (
           <>
             <span className="required">*</span>

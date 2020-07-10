@@ -25,11 +25,13 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(100);
 
             builder.Property(m => m.Manager).HasMaxLength(150);
+            builder.Property(m => m.Purchaser).HasMaxLength(150);
             builder.Property(m => m.Description).HasMaxLength(1000);
             builder.Property(m => m.Note).HasMaxLength(2000);
             builder.Property(m => m.PublicNote).HasMaxLength(2000);
             builder.Property(m => m.PrivateNote).HasMaxLength(2000);
             builder.Property(m => m.AgencyResponseNote).HasMaxLength(2000);
+            builder.Property(m => m.OffersNote).HasMaxLength(2000);
 
             builder.Property(m => m.Metadata).HasColumnType("NVARCHAR(MAX)");
 
@@ -49,6 +51,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.ClearanceNotificationSentOn).HasColumnType("DATETIME2");
             builder.Property(m => m.MarketedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.DisposedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.OfferAcceptedOn).HasColumnType("DATETIME2");
 
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");
@@ -59,6 +62,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.GainLoss).HasColumnType("MONEY");
             builder.Property(m => m.OcgFinalStatement).HasColumnType("MONEY");
             builder.Property(m => m.InterestComponent).HasColumnType("MONEY");
+            builder.Property(m => m.OfferAmount).HasColumnType("MONEY");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);

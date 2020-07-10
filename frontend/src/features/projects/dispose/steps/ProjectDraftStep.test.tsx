@@ -55,12 +55,12 @@ describe('Project Draft Step', () => {
   });
 
   it('requires name', async () => {
-    const { container, getByText } = render(uiElement);
+    const { container, findByText } = render(uiElement);
     const form = container.querySelector('form');
     await wait(() => {
       fireEvent.submit(form!);
+      wait(() => expect(findByText('Required')).toBeInTheDocument());
     });
-    expect(getByText('Required')).toBeInTheDocument();
   });
 
   it('submits after required filled', async () => {

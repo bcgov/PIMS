@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { Route, match as Match, useHistory, Redirect, Switch } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { FormikValues } from 'formik';
 import queryString from 'query-string';
@@ -12,7 +11,6 @@ import {
   updateWorkflowStatus,
   IProject,
   useStepForm,
-  IStatus,
   DisposeWorkflowStatus,
   clearProject,
   ProjectWorkflowComponent,
@@ -26,8 +24,14 @@ import { GeneratedDisposeStepper, useStepper, projectWorkflowComponents, StepAct
 const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Location }) => {
   const history = useHistory();
   const formikRef = useRef<FormikValues>();
-  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
-  const { goToNextStep, project, getNextStep, currentStatus, setCurrentStatus } = useStepper();
+  const {
+    goToNextStep,
+    project,
+    getNextStep,
+    currentStatus,
+    setCurrentStatus,
+    workflowStatuses,
+  } = useStepper();
   const {
     onSave,
     addOrUpdateProject,
@@ -110,22 +114,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
 
   //If the current route isn't set, set based on the query project status.
   useEffect(() => {
-    if (location.pathname === '/dispose') {
-      if (project.status?.route !== undefined && projectNumber !== undefined) {
-        historyReplace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
-      } else {
-        dispatch(clearProject());
-      }
+    if (location.pathname === '/dispose' && workflowStatuses?.length > 0) {
+      dispatch(clearProject());
+      historyReplace(`/dispose${workflowStatuses[0].route}`);
     }
-  }, [
-    historyReplace,
-    project.status,
-    project.projectNumber,
-    location.pathname,
-    match.url,
-    dispatch,
-    projectNumber,
-  ]);
+  }, [historyReplace, workflowStatuses, location.pathname, dispatch, projectNumber]);
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (

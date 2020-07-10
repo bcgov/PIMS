@@ -85,6 +85,10 @@ const renderComponent = () => {
   return renderer.create(getUpdateInfoForm());
 };
 
+const initialTouched: any = {
+  properties: [{ classificationId: 'Must select Surplus Active or Surplus Encumbered' }],
+};
+
 const getUpdateInfoForm = () => {
   return (
     <Provider store={store}>
@@ -93,6 +97,7 @@ const getUpdateInfoForm = () => {
           onSubmit={() => {}}
           initialValues={initialValues}
           validationSchema={UpdateInfoStepYupSchema}
+          initialTouched={initialTouched}
         >
           <Form>
             <UpdateInfoForm />
@@ -118,7 +123,7 @@ describe('Update Info Form', () => {
   });
 
   it('displays validation error when not surplus active/encumbered', async () => {
-    const { getAllByText, container } = render(getUpdateInfoForm());
+    const { getByText, container } = render(getUpdateInfoForm());
     const classificationId = container.querySelector(
       'select[name="properties.0.classificationId"]',
     );
@@ -129,7 +134,7 @@ describe('Update Info Form', () => {
         },
       });
     });
-    expect(getAllByText('Must select Surplus Active or Surplus Encumbered')).toHaveLength(1);
+    expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
   });
 
   it('displays financial validation errors correctly', async () => {

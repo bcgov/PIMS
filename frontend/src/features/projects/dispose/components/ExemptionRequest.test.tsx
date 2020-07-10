@@ -3,11 +3,13 @@ import ExemptionRequest from './ExemptionRequest';
 import { useFormikContext, getIn } from 'formik';
 import renderer from 'react-test-renderer';
 import { render } from '@testing-library/react';
+import { noop } from 'lodash';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
   values: {
     exemptionRequested: false,
+    setFieldValue: noop,
   },
 });
 

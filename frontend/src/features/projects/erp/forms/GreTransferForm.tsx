@@ -32,7 +32,7 @@ const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
     [lookupCodes],
   );
   useEffect(() => {
-    values.properties.forEach((property, index) => {
+    values.properties?.forEach((property, index) => {
       if (!isNaN(values.agencyId) && values.agencyId !== initialAgencyId) {
         setFieldValue(`properties.${index}.agencyId`, values.agencyId);
         const agency = _.find(agencies, { id: values.agencyId }) as ILookupCode;

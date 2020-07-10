@@ -20,3 +20,5 @@ export const onTransferredWithinTheGreTooltip =
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
+export const disposeWarning = `Are you sure you want to dispose this project? This will set all properties within the project to inactive.`;
+export const offersReceived = `Review Required for offer(s) in Tier 3 & 4.`;

@@ -111,6 +111,23 @@ namespace Pims.Dal.Entities
         public string AgencyResponseNote { get; set; }
         #endregion
 
+        #region SPL
+        /// <summary>
+        /// get/set - Note summerizing offers received.
+        /// </summary>
+        public string OffersNote { get; set; }
+
+        /// <summary>
+        /// get/set - Text field describing project purchaser.
+        /// </summary>
+        public string Purchaser { get; set; }
+
+        /// <summary>
+        /// get/set - Whether or not the contract for the project is conditional
+        /// </summary>
+        public bool? IsContractConditional { get; set; }
+        #endregion
+
         #region Dates
         /// <summary>
         /// get/set - When the project was submitted.
@@ -176,6 +193,11 @@ namespace Pims.Dal.Entities
         /// get/set - When the project was disposed.
         /// </summary>
         public DateTime? DisposedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was disposed.
+        /// </summary>
+        public DateTime? OfferAcceptedOn { get; set; }
         #endregion
 
         #region Exemption
@@ -235,6 +257,11 @@ namespace Pims.Dal.Entities
         /// get/set - Record the interest component.
         /// </summary>
         public decimal InterestComponent { get; set; }
+
+        /// <summary>
+        /// get/set - Amount offered during SPL
+        /// </summary>
+        public decimal OfferAmount { get; set; }
         #endregion
 
         /// <summary>

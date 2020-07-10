@@ -42,6 +42,7 @@ exports[`renders correctly 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               placeholder="SPP-XXXXXX"
+              value=""
             />
           </span>
         </div>
@@ -625,6 +626,7 @@ exports[`renders correctly 1`] = `
             name="publicNote"
             onBlur={[Function]}
             onChange={[Function]}
+            value=""
           />
         </span>
       </div>

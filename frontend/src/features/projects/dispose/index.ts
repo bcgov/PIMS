@@ -15,7 +15,6 @@ export { default as UpdateInfoStep } from './steps/UpdateInfoStep';
 export { default as DocumentationStep } from './steps/DocumentationStep';
 export { default as ProjectDraftStep } from './steps/ProjectDraftStep';
 export { default as ReviewProjectStep } from './steps/ReviewProjectStep';
-export { default as StepErrorSummary } from './steps/StepErrorSummary';
 
 export { default as ReviewProjectForm } from './forms/ReviewProjectForm';
 
