@@ -42,7 +42,7 @@ exports[`ExemptionEnhancedReferralCompleteForm Should render successfully 1`] = 
               placeholder="--/--/----"
               readOnly={false}
               type="text"
-              value="07/09/2020"
+              value="07/10/2020"
             />
           </div>
         </div>
@@ -108,7 +108,7 @@ exports[`ExemptionEnhancedReferralCompleteForm Should render successfully 1`] = 
               placeholder="--/--/----"
               readOnly={false}
               type="text"
-              value="07/09/2020"
+              value="07/10/2020"
             />
           </div>
         </div>

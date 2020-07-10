@@ -26,10 +26,6 @@ interface IEnhancedReferralCompleteFormProps {
   onClickAddToErp: () => void;
 }
 
-/**
- * Form component of EnhancedReferralCompleteForm. TODO: add button click functionality.
- * @param param0 isReadOnly disable editing
- */
 const ExemptionEnhancedReferralCompleteForm = ({
   isReadOnly,
   onClickGreTransferred,

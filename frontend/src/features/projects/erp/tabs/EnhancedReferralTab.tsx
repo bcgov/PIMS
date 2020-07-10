@@ -28,7 +28,7 @@ const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = 
         onClickProceedToSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
         onClickNotInSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
         onClickGreTransferred={() => goToGreTransferred()}
-        onClickAddToErp={() => setSubmitStatusCode(ReviewWorkflowStatus.InErp)}
+        onClickAddToErp={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)}
       />
     );
   }
