@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsTestProject>false</IsTestProject>
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>C9E630F3-40A8-4BA4-A98E-9E71178F6B88</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.4" />
@@ -18,11 +17,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\api\Pims.Api.csproj" />
     <ProjectReference Include="..\..\core\Pims.Core.csproj" />
     <ProjectReference Include="..\..\dal\Pims.Dal.csproj" />
   </ItemGroup>
-
 </Project>

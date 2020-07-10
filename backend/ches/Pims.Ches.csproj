@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>F5B25F54-BF35-4965-8459-B33F17B31F1F</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -16,9 +15,7 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\core\Pims.Core.csproj" />
   </ItemGroup>
-
 </Project>

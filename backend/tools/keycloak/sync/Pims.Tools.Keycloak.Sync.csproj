@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>BCD4220F-2E42-426B-BB1E-08A06DCF5099</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove=".env" />
     <None Remove="appsettings.development.json" />
@@ -18,7 +17,6 @@
     <None Remove="realm.local.json" />
     <None Remove="realm.test.json" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
@@ -32,7 +30,6 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="appsettings.development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -56,13 +53,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="obj\" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\core\Pims.Tools.Core.csproj" />
   </ItemGroup>
-
 </Project>

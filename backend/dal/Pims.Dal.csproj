@@ -6,8 +6,8 @@
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>667756BD-13BA-4EE2-B354-CA94890367E3</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="1.4.0" />
     <PackageReference Include="Mapster.EFCore" Version="1.0.0" />

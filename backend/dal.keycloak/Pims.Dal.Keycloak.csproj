@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>F045EAEB-CA97-4579-B63F-F78923EA00B9</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />

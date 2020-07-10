@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,6 +8,7 @@
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <ProjectGuid>FA2CFDF0-DB90-4D54-813D-8BAD039A74F6</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".env" />
