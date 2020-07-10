@@ -15,6 +15,10 @@ import {
   AutoCompleteText,
 } from '../common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from 'constants/claims';
+import SppButton from 'components/common/form/SppButton';
+import { noop } from 'lodash';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
@@ -76,6 +80,7 @@ export type MapFilterChangeEvent = {
   classificationId: string;
   minLotSize: string;
   maxLotSize: string;
+  inSurplusPropertyProgram: boolean;
 };
 
 type MapFilterProps = {
@@ -99,6 +104,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   });
   const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const keycloak = useKeycloakWrapper();
 
   return (
     <Formik<MapFilterChangeEvent>
@@ -111,6 +117,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         classificationId: '',
         minLotSize: '',
         maxLotSize: '',
+        inSurplusPropertyProgram: false,
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
@@ -149,6 +156,11 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
               <span className="mx-2">-</span>
               <Input field="maxLotSize" placeholder="Max Lot Size" />
             </Col>
+            {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
+              <Col className="bar-item flex-grow-0">
+                <SppButton handleErpClick={noop} handleSppClick={noop} />
+              </Col>
+            )}
             <Col className="bar-item flex-grow-0">
               <SearchButton disabled={isSubmitting} />
             </Col>

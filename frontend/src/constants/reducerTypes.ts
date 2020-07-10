@@ -39,4 +39,5 @@ export enum ProjectReducers {
   ERP_TAB = 'erpTab',
   SPL_TAB = 'splTab',
   TASKS = 'tasks',
+  STATUSES = 'statuses',
 }
