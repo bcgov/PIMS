@@ -13,6 +13,7 @@ using Pims.Geocoder;
 using Pims.Geocoder.Parameters;
 using Pims.Geocoder.Models;
 using FluentAssertions;
+using System;
 
 namespace Pims.Api.Test.Controllers.Tools
 {
@@ -41,7 +42,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var addresses = new FeatureCollectionModel()
             {
-                Features = new []
+                Features = new[]
                 {
                     new FeatureModel()
                     {
@@ -80,7 +81,46 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Latitude.Should().Be(1d);
             first.Longitude.Should().Be(2d);
         }
+        #endregion
 
+        # region FindParcelPidsAsync
+        [Fact]
+        public async void FindParcelPidsAsync_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<GeocoderController>(Permissions.PropertyEdit);
+
+            var testSiteId = Guid.NewGuid();
+            var response = new SitePidsResponseModel()
+            {
+                SiteID = testSiteId,
+                Pids = new[] { "test1", "test2" }
+            };
+
+            var service = helper.GetService<Mock<IGeocoderService>>();
+            service.Setup(m => m.GetSitePids(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(response);
+
+            // Act
+            var result = await controller.FindSitePidsAsync(testSiteId);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+
+            // TODO: Finish test
+            Assert.True(false, "Partial implementation. This test needs to be completed");
+
+            // var results = Assert.IsAssignableFrom<IEnumerable<Model.AddressModel>>(actionResult.Value);
+            // results.Should().HaveCount(1);
+            // var first = results.First();
+            // first.Score.Should().Be(1);
+            // first.SiteId.Should().Be("test");
+            // first.FullAddress.Should().Be("test");
+            // first.ProvinceCode.Should().Be("test");
+            // first.Address1.Should().Be("test test");
+            // first.Latitude.Should().Be(1d);
+            // first.Longitude.Should().Be(2d);
+        }
         #endregion
         #endregion
     }

@@ -54,8 +54,8 @@ namespace Pims.Geocoder
         /// <summary>
         /// Sends an HTTP request to Geocoder for addresses that match the specified 'address'.
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="outputFormat"></param>
+        /// <param name="address">The address to geocode</param>
+        /// <param name="outputFormat">The output format. Defaults to "json"</param>
         /// <returns></returns>
         public async Task<FeatureCollectionModel> GetSiteAddressesAsync(string address, string outputFormat = "json")
         {
@@ -69,14 +69,29 @@ namespace Pims.Geocoder
         /// <summary>
         /// Sends an HTTP request to Geocoder for addresses that match the specified 'parameters'.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="outputFormat"></param>
+        /// <param name="parameters">The address search paramenters</param>
+        /// <param name="outputFormat">The output format. Defaults to "json"</param>
         /// <returns></returns>
         public async Task<FeatureCollectionModel> GetSiteAddressesAsync(AddressesParameters parameters, string outputFormat = "json")
         {
-            var uri = new Uri($"{GenerateUrl(this.Options.Sites.AddressesUrl, outputFormat)}");
+            var uri = new Uri(GenerateUrl(this.Options.Sites.AddressesUrl, outputFormat));
             var url = QueryHelpers.AddQueryString(uri.AbsoluteUri, parameters.ToQueryStringDictionary());
             return await this.Client.GetAsync<FeatureCollectionModel>(url);
+        }
+
+        /// <summary>
+        /// Sends an HTTP request to Geocoder for PIDs that belong to the specified 'siteId'.
+        /// A 'siteId' is a unique identifier assigned to every site in B.C.
+        /// Valid 'siteId' values for an address are returned by GetSiteAddressesAsync.
+        /// </summary>
+        /// <param name="siteId">The site identifier</param>
+        /// <param name="outputFormat">The output format. Defaults to "json"</param>
+        /// <returns></returns>
+        public async Task<SitePidsResponseModel> GetSitePids(Guid siteId, string outputFormat = "json")
+        {
+            var endpoint = this.Options.Parcels.PidsUrl.Replace("{siteId}", siteId.ToString());
+            var uri = new Uri(GenerateUrl(endpoint, outputFormat));
+            return await this.Client.GetAsync<SitePidsResponseModel>(uri);
         }
         #endregion
     }

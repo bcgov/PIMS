@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,26 @@ namespace Pims.Api.Areas.Tools.Controllers
             parameters.AddressString = address;
             var result = await _geocoderService.GetSiteAddressesAsync(parameters);
             return new JsonResult(_mapper.Map<Model.AddressModel[]>(result.Features));
+        }
+
+        /// <summary>
+        /// Make a request to Data BC Geocoder for PIDs that belong to the specified 'siteId'.
+        /// </summary>
+        /// <param name="siteId">The site identifier for a parcel.</param>
+        /// <returns>An array of PIDs for the supplied 'siteId'.</returns>
+        [HttpGet("parcels/pids/{siteId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.AddressModel>), 200)]
+        [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "tools-geocoder" })]
+        [HasPermission(Permissions.PropertyEdit)]
+        public async Task<IActionResult> FindSitePidsAsync(Guid siteId)
+        {
+            // var parameters = this.Request.QueryString.ParseQueryString<AddressesParameters>();
+            // parameters.AddressString = address;
+            // var result = await _geocoderService.GetSiteAddressesAsync(parameters);
+            // return new JsonResult(_mapper.Map<Model.AddressModel[]>(result.Features));
+            throw new System.NotImplementedException();
         }
         #endregion
     }
