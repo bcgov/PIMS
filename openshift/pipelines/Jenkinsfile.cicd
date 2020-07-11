@@ -145,6 +145,31 @@ pipeline {
       }
     }
 
+    // The ZAP scripts are installed on the root of the jenkins-slave-zap image.
+    // When running ZAP from there the reports will be created in /zap/wrk/ by default.
+    // ZAP has problems with creating the reports directly in the Jenkins
+    // working directory, so they have to be copied over after the fact.
+    stage('OWASP Scan') {
+      agent { label 'owasp-zap' }
+      steps {
+        script {
+          sh "mkdir -p zap-output"
+          def return_code = sh returnStatus: true, script: "/zap/zap-baseline.py -x zap-report.xml -r zap-report.html -t $VANITY_URL"
+          sh "cp /zap/wrk/zap-report.* ./zap-output/"
+          echo "Exit value was - $return_code"
+        }
+      }
+      post {
+        always {
+          publishHTML([
+            allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true,
+            reportDir: '/zap/wrk', reportFiles: 'zap-report.html', reportName: 'OWASP ZAP Scan', reportTitles: 'OWASP ZAP Scan'
+          ])
+          stash name: "zap", includes: "zap-output/*"
+        }
+      }
+    }
+
     stage('Tests') {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
@@ -158,10 +183,15 @@ pipeline {
             script {
               // pull code
               checkout scm
+
+              echo "Preparing the report for the publishing ..."
+              unstash name: "zap"
+
               commonPipeline.runFrontendTests()
+
               sh """
                 cd openshift
-                SONAR_URL=${SONARQUBE_URL_INT} ./player.sh scan ${OC_JOB_NAME} -apply
+                SONAR_URL=${SONARQUBE_URL_INT} ZAP_REPORT=${WORKSPACE}/zap-output/zap-report.xml ./player.sh scan ${OC_JOB_NAME} -apply
               """
               echo 'Frontend lint checks and tests passed'
             }
