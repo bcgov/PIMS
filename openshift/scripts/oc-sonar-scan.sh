@@ -29,6 +29,7 @@ TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-pims-frontend-${TARGET}}
 SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Frontend [${TARGET}]}
 SONAR_URL=${SONAR_URL:-https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca}
+ZAP_REPORT=${ZAP_REPORT:-}
 
 FRONTEND_DIR="${FRONTEND_DIR:-../../frontend}"
 
@@ -49,10 +50,11 @@ CMD_TEST="npm run coverage"
 # Begin analysis
 #
 CMD_SONAR_SCAN="sonar-scanner \
+  -Dsonar.projectKey='pims-frontend-${TARGET}' \
+  -Dsonar.projectName='PIMS Frontend [${TARGET}]' \
   -Dsonar.host.url='${SONAR_URL}' \
   ${SONAR_TOKEN:+ -Dsonar.login='${SONAR_TOKEN}'} \
-  -Dsonar.projectKey='pims-frontend-${TARGET}' \
-  -Dsonar.projectName='PIMS Frontend [${TARGET}]'"
+  ${ZAP_REPORT:+ -Dsonar.zaproxy.reportPath='${ZAP_REPORT}'}"
 
 # Execute commands
 #
