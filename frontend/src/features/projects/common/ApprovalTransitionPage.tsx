@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { useProject, updateWorkflowStatus, IProject, IProjectWrapper } from '.';
+import {
+  useProject,
+  updateWorkflowStatus,
+  IProject,
+  IProjectWrapper,
+  ReviewWorkflowStatus,
+} from '.';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
@@ -37,7 +43,9 @@ const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPagePro
       return;
     }
     if (project !== undefined && !isTransitioned) {
-      if (toStatus?.length !== 1) {
+      if (project.statusCode === ReviewWorkflowStatus.ApprovedForExemption) {
+        history.replace(`erp?projectNumber=${project.projectNumber}`);
+      } else if (toStatus?.length !== 1) {
         history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);
       } else {
         const toStatusCode = toStatus[0].code;

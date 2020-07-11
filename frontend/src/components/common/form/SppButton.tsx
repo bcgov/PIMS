@@ -14,7 +14,7 @@ const SppButton: React.FC<ISppButtonProps> = ({ handleErpClick, handleSppClick }
   const target = useRef(null);
   return (
     <div className="sppButton">
-      <Button ref={target} className="close" onClick={() => setShow(true)}>
+      <Button ref={target} className="close" onClick={() => setShow(!show)}>
         <SppIcon title="spp" />
       </Button>
       <Overlay target={target.current!} show={show} placement="bottom">
