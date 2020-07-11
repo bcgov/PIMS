@@ -1828,7 +1828,7 @@
                       "response": []
                     },
                     {
-                      "name": "Add Role",
+                      "name": "claims",
                       "request": {
                         "method": "POST",
                         "header": [
@@ -1859,7 +1859,7 @@
                       "response": []
                     },
                     {
-                      "name": "Update Role",
+                      "name": "claims/{id}",
                       "request": {
                         "method": "PUT",
                         "header": [
@@ -1872,7 +1872,7 @@
                         ],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\r\n  \"id\": \"e5b2d8f5-67b2-42e0-84d9-e69849d6ec52\",\r\n  \"displayName\": \"Tom\",\r\n  \"firstName\": \"Tom\",\r\n  \"middleName\": null,\r\n  \"lastName\": \"Brady\",\r\n  \"email\": \"tom.brady@email.com\",\r\n  \"createdOn\": \"2020-02-05T06:40:30.9266667\",\r\n  \"updatedOn\": null,\r\n  \"rowVersion\": \"AAAAAAAACEI=\"\r\n}",
+                          "raw": "{\r\n  \"id\": \"5fd96f19-abe1-47e7-8a54-0a707bc3e4a4\",\r\n  \"name\": \"property-add\",\r\n  \"keycloakRoleId\": \"bdaedcde-d7c8-4a65-a1b0-ce475afe741b\",\r\n  \"description\": \"Ability to add properties.\",\r\n  \"isDisabled\": false,\r\n  \"createdOn\": \"2020-07-08T14:45:59.9733333\",\r\n  \"updatedOn\": \"2020-07-08T14:59:54.7944077\",\r\n  \"rowVersion\": \"AAAAAAAAfSY=\"\r\n}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -1895,7 +1895,7 @@
                       "response": []
                     },
                     {
-                      "name": "Delete Role",
+                      "name": "claims/{id}",
                       "request": {
                         "method": "DELETE",
                         "header": [
@@ -3075,11 +3075,11 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/DRAFT-00010",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/DRAFT-00008",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "projects", "disposal", "DRAFT-00010"]
+                          "path": ["api", "projects", "disposal", "DRAFT-00008"]
                         }
                       },
                       "response": []
@@ -3258,7 +3258,7 @@
                       "response": []
                     },
                     {
-                      "name": "/projects/disposal/workflow/{workflowCode}/{statusCode}",
+                      "name": "/projects/disposal/workflows/{workflowCode}/{statusCode}",
                       "event": [
                         {
                           "listen": "test",
@@ -3277,7 +3277,7 @@
                         "header": [],
                         "body": {
                           "mode": "raw",
-                          "raw": "{\"id\":2,\"projectNumber\":\"SPP-10001\",\"name\":\"PIMS Application\",\"reportedFiscalYear\":2021,\"actualFiscalYear\":2021,\"workflowId\":2,\"workflowCode\":\"ASSESS-DISPOSAL\",\"statusId\":7,\"statusCode\":\"AS-I\",\"status\":{\"description\":\"Submitted project property information review.\",\"route\":\"/projects/assess/properties\",\"isTerminal\":false,\"tasks\":[{\"taskId\":0,\"isCompleted\":false,\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"createdOn\":\"2020-07-06T23:01:56.9666667\",\"rowVersion\":\"AAAAAAAACX8=\"}],\"code\":\"AS-I\",\"id\":7,\"name\":\"Submitted\",\"isDisabled\":false,\"sortOrder\":6,\"type\":\"ProjectStatus\",\"createdOn\":\"2020-07-06T23:01:56.9133333\",\"rowVersion\":\"AAAAAAAACVg=\"},\"tierLevelId\":1,\"tierLevel\":\"Tier 1\",\"description\":\"PIMS web React GIS application\",\"note\":\"test\",\"publicNote\":\"test\",\"agencyId\":1,\"agency\":\"AEST\",\"submittedOn\":\"2020-07-07T12:39:53.6765901\",\"exemptionRequested\":false,\"netBook\":357,\"estimated\":257,\"assessed\":0,\"properties\":[{\"id\":3,\"projectNumber\":\"SPP-10001\",\"propertyType\":\"Land\",\"parcelId\":110,\"parcel\":{\"id\":110,\"parcelId\":110,\"pid\":\"000-002-000\",\"projectNumber\":\"\",\"latitude\":54.0533334,\"longitude\":-128.6522222,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Kitimat foreshore station\",\"address\":{\"id\":487,\"line1\":\"Kitimat Village Foreshore , Kitimat\",\"cityId\":142,\"postal\":\"\",\"provinceId\":\"British Columbia\"},\"zoning\":\"testzone\",\"agency\":\"AEST\",\"subAgency\":\"University of Victoria\",\"agencyId\":35,\"isSensitive\":false,\"landArea\":0.1,\"landLegalDescription\":\"Kitimat Village\",\"buildings\":[],\"evaluations\":[{\"parcelId\":110,\"value\":17000,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAnNc=\",\"key\":\"Assessed\"},{\"parcelId\":110,\"value\":0,\"date\":\"2020-07-07T00:00:00\",\"rowVersion\":\"AAAAAAAAnNg=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"parcelId\":110,\"value\":123,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNk=\",\"key\":\"NetBook\"},{\"parcelId\":110,\"value\":23,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNo=\",\"key\":\"Estimated\"}]}},{\"id\":4,\"projectNumber\":\"SPP-10001\",\"propertyType\":\"Building\",\"buildingId\":1029,\"building\":{\"id\":1029,\"buildingId\":1029,\"pid\":\"\",\"projectNumber\":\"\",\"latitude\":48.3790292,\"longitude\":-123.5960639,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Metchosin Property - Caretaker's House\",\"address\":{\"id\":1238,\"line1\":\"4970 Barrow Rd , Metchosin\",\"cityId\":176,\"postal\":\"\",\"provinceId\":\"British Columbia\"},\"agency\":\"AEST\",\"subAgency\":\"Camosun College\",\"agencyId\":38,\"isSensitive\":false,\"landArea\":64.75,\"buildings\":[],\"evaluations\":[{\"buildingId\":1029,\"value\":138000,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAnNM=\",\"key\":\"Assessed\"},{\"buildingId\":1029,\"value\":0,\"date\":\"2020-07-07T00:00:00\",\"rowVersion\":\"AAAAAAAAnNQ=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"buildingId\":1029,\"value\":234,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNU=\",\"key\":\"NetBook\"},{\"buildingId\":1029,\"value\":234,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAnNY=\",\"key\":\"Estimated\"}]}}],\"tasks\":[{\"projectId\":\"2\",\"taskId\":1,\"isCompleted\":true,\"completedOn\":\"2020-07-07T12:39:45.259\",\"name\":\"Surplus Declaration & Readiness Checklist completed and sent\",\"description\":\"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-07T11:44:00.5447445\",\"updatedOn\":\"2020-07-07T12:40:41.1900375\",\"rowVersion\":\"AAAAAAAAnNs=\"},{\"projectId\":\"2\",\"taskId\":2,\"isCompleted\":true,\"completedOn\":\"2020-07-07T12:39:45.259\",\"name\":\"Triple Bottom Line completed and sent\",\"description\":\"Triple Bottom Line document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-07T11:44:00.5447448\",\"updatedOn\":\"2020-07-07T12:40:41.1900376\",\"rowVersion\":\"AAAAAAAAnNw=\"},{\"projectId\":\"2\",\"taskId\":3,\"isCompleted\":true,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":7,\"statusCode\":\"AS-I\",\"createdOn\":\"2020-07-07T11:44:00.544745\",\"updatedOn\":\"2020-07-07T12:40:41.1900378\",\"rowVersion\":\"AAAAAAAAnN0=\"},{\"projectId\":\"2\",\"taskId\":4,\"isCompleted\":false,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":8,\"statusCode\":\"AS-EXE\",\"createdOn\":\"2020-07-07T11:44:00.5447452\",\"updatedOn\":\"2020-07-07T12:40:41.1900381\",\"rowVersion\":\"AAAAAAAAnN4=\"},{\"projectId\":\"2\",\"taskId\":5,\"isCompleted\":true,\"name\":\"Documents received and review completed\",\"description\":\"Documents have been received, reviewed and approved.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":10,\"statusCode\":\"AS-D\",\"createdOn\":\"2020-07-07T11:44:00.5447454\",\"updatedOn\":\"2020-07-07T12:40:41.1900383\",\"rowVersion\":\"AAAAAAAAnN8=\"},{\"projectId\":\"2\",\"taskId\":6,\"isCompleted\":false,\"name\":\"Appraisal ordered\",\"description\":\"An appraisal has been ordered.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447456\",\"updatedOn\":\"2020-07-07T12:40:41.1900385\",\"rowVersion\":\"AAAAAAAAnOA=\"},{\"projectId\":\"2\",\"taskId\":7,\"isCompleted\":false,\"name\":\"Appraisal received\",\"description\":\"An appraisal has been received.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447458\",\"updatedOn\":\"2020-07-07T12:40:41.1900387\",\"rowVersion\":\"AAAAAAAAnOE=\"},{\"projectId\":\"2\",\"taskId\":8,\"isCompleted\":false,\"name\":\"Appraisal completed\",\"description\":\"An appraisal has been reviewed and completed.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-07T11:44:00.5447461\",\"updatedOn\":\"2020-07-07T12:40:41.1900389\",\"rowVersion\":\"AAAAAAAAnOI=\"},{\"projectId\":\"2\",\"taskId\":9,\"isCompleted\":false,\"name\":\"Preparation and due diligence\",\"description\":\"First Nations consulatation preparation and due diligence.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447463\",\"updatedOn\":\"2020-07-07T12:40:41.1900391\",\"rowVersion\":\"AAAAAAAAnOM=\"},{\"projectId\":\"2\",\"taskId\":10,\"isCompleted\":false,\"name\":\"Consultation underway\",\"description\":\"First Nations consulation is underway.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447465\",\"updatedOn\":\"2020-07-07T12:40:41.1900393\",\"rowVersion\":\"AAAAAAAAnOQ=\"},{\"projectId\":\"2\",\"taskId\":11,\"isCompleted\":false,\"name\":\"Consultation complete\",\"description\":\"First Nations consultation is complete.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-07T11:44:00.5447467\",\"updatedOn\":\"2020-07-07T12:40:41.1900395\",\"rowVersion\":\"AAAAAAAAnOU=\"},{\"projectId\":\"2\",\"taskId\":12,\"isCompleted\":false,\"name\":\"Notification to confirm exemption request sent to agency ADM\",\"description\":\"ADM has been notified of request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-07T11:44:00.5447469\",\"updatedOn\":\"2020-07-07T12:40:41.1900397\",\"rowVersion\":\"AAAAAAAAnOY=\"},{\"projectId\":\"2\",\"taskId\":13,\"isCompleted\":false,\"name\":\"Confirmation has been received from agency ADM\",\"description\":\"ADM has confirmed request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-07T11:44:00.5447472\",\"updatedOn\":\"2020-07-07T12:40:41.1900398\",\"rowVersion\":\"AAAAAAAAnOc=\"}],\"projectAgencyResponses\":[],\"createdOn\":\"2020-07-07T11:44:00.5447411\",\"updatedOn\":\"2020-07-07T12:40:41.1900352\",\"rowVersion\":\"AAAAAAAAnOg=\",\"confirmation\":true}",
+                          "raw": "{\"id\":4,\"projectNumber\":\"DRAFT-00004\",\"name\":\"PIMS Application\",\"reportedFiscalYear\":2021,\"actualFiscalYear\":2021,\"workflowId\":1,\"workflowCode\":\"SUBMIT-DISPOSAL\",\"statusId\":6,\"statusCode\":\"DR-RE\",\"status\":{\"description\":\"The project has been submitted for review to be added to the Surplus Property Program.\",\"route\":\"/projects/review\",\"isTerminal\":false,\"tasks\":[],\"code\":\"DR-RE\",\"id\":6,\"name\":\"Review\",\"isDisabled\":false,\"sortOrder\":5,\"type\":\"ProjectStatus\",\"createdOn\":\"2020-07-09T12:09:00.3366667\",\"rowVersion\":\"AAAAAAAACV4=\"},\"tierLevelId\":1,\"tierLevel\":\"Tier 1\",\"description\":\"\",\"note\":\"\",\"agencyId\":1,\"agency\":\"AEST\",\"exemptionRequested\":false,\"netBook\":24,\"estimated\":24,\"assessed\":0,\"properties\":[{\"id\":13,\"projectNumber\":\"DRAFT-00004\",\"propertyType\":\"Building\",\"buildingId\":290,\"building\":{\"id\":290,\"buildingId\":290,\"pid\":\"\",\"projectNumber\":\"\",\"latitude\":49.155316,\"longitude\":-123.971004,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Duncan Student Residence\",\"address\":{\"id\":377,\"line1\":\"900 Fifth Street , Nanaimo\",\"cityId\":185,\"postal\":\"V9R 5S5\",\"provinceId\":\"British Columbia\"},\"agency\":\"AEST\",\"subAgency\":\"Vancouver Island University\",\"agencyId\":33,\"isSensitive\":false,\"landArea\":34.74,\"buildings\":[],\"evaluations\":[{\"buildingId\":290,\"value\":1179108,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAggs=\",\"key\":\"Assessed\"},{\"buildingId\":290,\"value\":0,\"date\":\"2020-07-09T00:00:00\",\"rowVersion\":\"AAAAAAAAggw=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"buildingId\":290,\"value\":12,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAgg8=\",\"key\":\"NetBook\"},{\"buildingId\":290,\"value\":12,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAghA=\",\"key\":\"Estimated\"}]}},{\"id\":14,\"projectNumber\":\"DRAFT-00004\",\"propertyType\":\"Building\",\"buildingId\":291,\"building\":{\"id\":291,\"buildingId\":291,\"pid\":\"\",\"projectNumber\":\"\",\"latitude\":49.155316,\"longitude\":-123.971004,\"statusId\":1,\"propertyStatus\":\"\",\"classificationId\":2,\"description\":\"Electrical Technology\",\"address\":{\"id\":378,\"line1\":\"900 Fifth Street , Nanaimo\",\"cityId\":185,\"postal\":\"V9R 5S5\",\"provinceId\":\"British Columbia\"},\"agency\":\"AEST\",\"subAgency\":\"Vancouver Island University\",\"agencyId\":33,\"isSensitive\":false,\"landArea\":34.74,\"buildings\":[],\"evaluations\":[{\"buildingId\":291,\"value\":276126,\"date\":\"2018-01-01T00:00:00\",\"rowVersion\":\"AAAAAAAAgg0=\",\"key\":\"Assessed\"},{\"buildingId\":291,\"value\":0,\"date\":\"2020-07-09T00:00:00\",\"rowVersion\":\"AAAAAAAAgg4=\",\"key\":\"Appraised\"}],\"fiscals\":[{\"buildingId\":291,\"value\":12,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAghE=\",\"key\":\"NetBook\"},{\"buildingId\":291,\"value\":12,\"fiscalYear\":2021,\"rowVersion\":\"AAAAAAAAghI=\",\"key\":\"Estimated\"}]}}],\"tasks\":[{\"projectId\":\"4\",\"taskId\":1,\"isCompleted\":true,\"completedOn\":\"2020-07-09T14:04:22.807\",\"name\":\"Surplus Declaration & Readiness Checklist completed and sent\",\"description\":\"Surplus Declaration & Readiness Checklist document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-09T13:06:41.4050063\",\"updatedOn\":\"2020-07-09T14:04:25.3823169Z\",\"rowVersion\":\"AAAAAAAAghM=\"},{\"projectId\":\"4\",\"taskId\":2,\"isCompleted\":true,\"completedOn\":\"2020-07-09T14:04:22.807\",\"name\":\"Triple Bottom Line completed and sent\",\"description\":\"Triple Bottom Line document emailed to SRES.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":4,\"statusCode\":\"DR-D\",\"createdOn\":\"2020-07-09T13:06:41.4050066\",\"updatedOn\":\"2020-07-09T14:04:25.3823186Z\",\"rowVersion\":\"AAAAAAAAghQ=\"},{\"projectId\":\"4\",\"taskId\":3,\"isCompleted\":false,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":7,\"statusCode\":\"AS-I\",\"createdOn\":\"2020-07-09T13:06:41.4050067\",\"updatedOn\":\"2020-07-09T14:04:25.3823202Z\",\"rowVersion\":\"AAAAAAAAghU=\"},{\"projectId\":\"4\",\"taskId\":4,\"isCompleted\":false,\"name\":\"Review completed\",\"description\":\"Project property information has been reviewed\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":8,\"statusCode\":\"AS-EXE\",\"createdOn\":\"2020-07-09T13:06:41.4050069\",\"updatedOn\":\"2020-07-09T14:04:25.3823219Z\",\"rowVersion\":\"AAAAAAAAghY=\"},{\"projectId\":\"4\",\"taskId\":5,\"isCompleted\":false,\"name\":\"Documents received and review completed\",\"description\":\"Documents have been received, reviewed and approved.\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":0,\"statusId\":10,\"statusCode\":\"AS-D\",\"createdOn\":\"2020-07-09T13:06:41.4050071\",\"updatedOn\":\"2020-07-09T14:04:25.3823261Z\",\"rowVersion\":\"AAAAAAAAghc=\"},{\"projectId\":\"4\",\"taskId\":6,\"isCompleted\":false,\"name\":\"Appraisal ordered\",\"description\":\"An appraisal has been ordered.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-09T13:06:41.4050072\",\"updatedOn\":\"2020-07-09T14:04:25.3823274Z\",\"rowVersion\":\"AAAAAAAAghg=\"},{\"projectId\":\"4\",\"taskId\":7,\"isCompleted\":false,\"name\":\"Appraisal received\",\"description\":\"An appraisal has been received.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-09T13:06:41.4050074\",\"updatedOn\":\"2020-07-09T14:04:25.3823287Z\",\"rowVersion\":\"AAAAAAAAghk=\"},{\"projectId\":\"4\",\"taskId\":8,\"isCompleted\":false,\"name\":\"Appraisal completed\",\"description\":\"An appraisal has been reviewed and completed.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":11,\"statusCode\":\"AS-AP\",\"createdOn\":\"2020-07-09T13:06:41.4050075\",\"updatedOn\":\"2020-07-09T14:04:25.38233Z\",\"rowVersion\":\"AAAAAAAAgho=\"},{\"projectId\":\"4\",\"taskId\":9,\"isCompleted\":false,\"name\":\"Preparation and due diligence\",\"description\":\"First Nations consulatation preparation and due diligence.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-09T13:06:41.4050077\",\"updatedOn\":\"2020-07-09T14:04:25.3823313Z\",\"rowVersion\":\"AAAAAAAAghs=\"},{\"projectId\":\"4\",\"taskId\":10,\"isCompleted\":false,\"name\":\"Consultation underway\",\"description\":\"First Nations consulation is underway.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-09T13:06:41.4050078\",\"updatedOn\":\"2020-07-09T14:04:25.3823326Z\",\"rowVersion\":\"AAAAAAAAghw=\"},{\"projectId\":\"4\",\"taskId\":11,\"isCompleted\":false,\"name\":\"Consultation complete\",\"description\":\"First Nations consultation is complete.\",\"isOptional\":true,\"isDisabled\":false,\"sortOrder\":3,\"statusId\":12,\"statusCode\":\"AS-FNC\",\"createdOn\":\"2020-07-09T13:06:41.405008\",\"updatedOn\":\"2020-07-09T14:04:25.3823339Z\",\"rowVersion\":\"AAAAAAAAgh0=\"},{\"projectId\":\"4\",\"taskId\":12,\"isCompleted\":false,\"name\":\"Notification to confirm exemption request sent to agency ADM\",\"description\":\"ADM has been notified of request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":1,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-09T13:06:41.4050081\",\"updatedOn\":\"2020-07-09T14:04:25.3823352Z\",\"rowVersion\":\"AAAAAAAAgh4=\"},{\"projectId\":\"4\",\"taskId\":13,\"isCompleted\":false,\"name\":\"Confirmation has been received from agency ADM\",\"description\":\"ADM has confirmed request for exemption\",\"isOptional\":false,\"isDisabled\":false,\"sortOrder\":2,\"statusId\":13,\"statusCode\":\"AS-EXP\",\"createdOn\":\"2020-07-09T13:06:41.4050083\",\"updatedOn\":\"2020-07-09T14:04:25.3823366Z\",\"rowVersion\":\"AAAAAAAAgh8=\"}],\"projectAgencyResponses\":[],\"createdOn\":\"2020-07-09T13:06:41.4050058\",\"updatedOn\":\"2020-07-09T14:04:25.3822904Z\",\"rowVersion\":\"AAAAAAAAgiA=\",\"confirmation\":true}",
                           "options": {
                             "raw": {
                               "language": "json"
@@ -3285,7 +3285,7 @@
                           }
                         },
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/workflow/ERP/AP-ERP",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/projects/disposal/workflows/ASSESS-DISPOSAL/AS-I",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -3293,9 +3293,9 @@
                             "api",
                             "projects",
                             "disposal",
-                            "workflow",
-                            "ERP",
-                            "AP-ERP"
+                            "workflows",
+                            "ASSESS-DISPOSAL",
+                            "AS-I"
                           ]
                         }
                       },
@@ -3395,7 +3395,7 @@
                             },
                             {
                               "key": "projectNumber",
-                              "value": "test",
+                              "value": "DRAFT-00002",
                               "disabled": true
                             },
                             {
@@ -3738,7 +3738,7 @@
                           }
                         ],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/4/projects/1?to=Jeremy Foster <jeremy.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/templates/1/projects/1?to=Jeremy Foster <jeremy.3.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
@@ -3746,14 +3746,14 @@
                             "api",
                             "notifications",
                             "templates",
-                            "4",
+                            "1",
                             "projects",
                             "1"
                           ],
                           "query": [
                             {
                               "key": "to",
-                              "value": "Jeremy Foster <jeremy.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>"
+                              "value": "Jeremy Foster <jeremy.3.foster@fosol.ca>; Jeremy Michael <jeremymfoster@hotmail.com>"
                             }
                           ]
                         }
@@ -3786,15 +3786,24 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue?quantity=50",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue?quantity=10&tag=SPP",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
                           "path": ["api", "notifications", "queue"],
                           "query": [
                             {
+                              "key": "page",
+                              "value": "17",
+                              "disabled": true
+                            },
+                            {
                               "key": "quantity",
-                              "value": "50"
+                              "value": "10"
+                            },
+                            {
+                              "key": "tag",
+                              "value": "SPP"
                             }
                           ]
                         }
@@ -3904,11 +3913,45 @@
                         "method": "PUT",
                         "header": [],
                         "url": {
-                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/89",
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/8",
                           "protocol": "{{scheme}}",
                           "host": ["{{host}}"],
                           "port": "{{port}}",
-                          "path": ["api", "notifications", "queue", "89"]
+                          "path": ["api", "notifications", "queue", "8"]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "/notifications/queue/{id}/resend",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "id": "74f5d01f-afda-407e-a595-238af31cb921",
+                            "exec": [
+                              "var jsonData = JSON.parse(responseBody);\r",
+                              "postman.setEnvironmentVariable(\"row-version\", jsonData.rowVersion);"
+                            ],
+                            "type": "text/javascript"
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{scheme}}://{{host}}:{{port}}/api/notifications/queue/8/resend",
+                          "protocol": "{{scheme}}",
+                          "host": ["{{host}}"],
+                          "port": "{{port}}",
+                          "path": [
+                            "api",
+                            "notifications",
+                            "queue",
+                            "8",
+                            "resend"
+                          ]
                         }
                       },
                       "response": []

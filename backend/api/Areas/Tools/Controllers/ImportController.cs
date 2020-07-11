@@ -68,6 +68,33 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             return new JsonResult(parcels);
         }
+
+
+        /// <summary>
+        /// POST - Add an array of new properties to the datasource.
+        /// Determines if the property is a parcel or a building and then adds or updates appropriately.
+        /// This will also add new lookup items to the following; cities, agencies, building construction types, building predominate uses.
+        /// </summary>
+        /// <param name="models">An array of property models.</param>
+        /// <param name="stopOnError">Whether to throw an error if a failture occurs.</param>
+        /// <param name="defaults">A semi-colon separated list of key=value pairs of default values for properties if they are null or not provided.</param>
+        /// <returns>The properties added.</returns>
+        [HttpPost("projects")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.ProjectModel>), 200)]
+        [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "tools-import" })]
+        [HasPermission(Permissions.SystemAdmin)]
+        public IActionResult ImportProjects([FromBody] Model.ImportProjectModel[] models, bool stopOnError = true, string defaults = null)
+        {
+            if (models.Count() > 100) return BadRequest("Must not submit more than 100 projects in a single request.");
+
+            var helper = new ImportProjectsHelper(_pimsAdminService, _logger);
+            var entities = helper.AddUpdateProjects(models, stopOnError, defaults?.Split(";"));
+            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
+
+            return new JsonResult(parcels);
+        }
         #endregion
     }
 }

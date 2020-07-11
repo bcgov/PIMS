@@ -107,7 +107,7 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
-        /// Creates an instance of a service of the specified 'T' type and initializes it with the specified 'user'.
+        /// Creates an instance of a service of the specified 'T' type and initializes it with the specified arguments.
         /// Will use any 'args' passed in instead of generating defaults.
         /// Once you create a service you can no longer add to the services collection.
         /// </summary>
@@ -119,6 +119,24 @@ namespace Pims.Core.Test
         {
             helper.MockConstructorArguments<T>(args);
 
+            helper.BuildServiceProvider();
+            var service = helper.CreateInstance<T>();
+
+            return service;
+        }
+
+        /// <summary>
+        /// Creates an instance of a service of the specified 'T' type and initializes it with the specified arguments.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// Once you create a service you can no longer add to the services collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static T Create<T>(this TestHelper helper, params object[] args) where T : class
+        {
+            helper.MockConstructorArguments<T>(args);
             helper.BuildServiceProvider();
             var service = helper.CreateInstance<T>();
 

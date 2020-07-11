@@ -57,11 +57,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Baseline_Integrity_Check")]
         [CsvHelper.Configuration.Attributes.Name("Baseline_Integrity_Check")]
-        public decimal BaselineIntegrityCheck { get; set; }
+        public decimal? BaselineIntegrityCheck { get; set; }
 
         [DisplayName("Status")]
         [CsvHelper.Configuration.Attributes.Name("Status")]
-        public string StatusColour { get; set; }
+        public string Risk { get; set; }
 
         [DisplayName("Marketing_Start")]
         [CsvHelper.Configuration.Attributes.Name("Marketing_Start")]
@@ -69,7 +69,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Comp_Date")]
         [CsvHelper.Configuration.Attributes.Name("Comp_Date")]
-        public DateTime? DisposedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
 
         [DisplayName("Comment_Weekly_Review")]
         [CsvHelper.Configuration.Attributes.Name("Comment_Weekly_Review")]
@@ -85,7 +85,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Weekly_Integrity_Check")]
         [CsvHelper.Configuration.Attributes.Name("Weekly_Integrity_Check")]
-        public string WeeklyIntegrityCheck { get; set; }
+        public decimal? WeeklyIntegrityCheck { get; set; }
 
         [DisplayName("Program_Cost")]
         [CsvHelper.Configuration.Attributes.Name("Program_Cost")]
@@ -95,9 +95,9 @@ namespace Pims.Api.Areas.Reports.Models.Project
         [CsvHelper.Configuration.Attributes.Name("Gain_(Loss)")]
         public decimal GainLoss { get; set; }
 
-        [DisplayName("OcgFinalStatement")]
-        [CsvHelper.Configuration.Attributes.Name("OcgFinalStatement")]
-        public decimal OcgFinalStatement { get; set; }
+        [DisplayName("OCG_Fin_Stmts")]
+        [CsvHelper.Configuration.Attributes.Name("OCG_Fin_Stmts")]
+        public decimal? OcgFinancialStatement { get; set; }
 
         [DisplayName("Interest_Component")]
         [CsvHelper.Configuration.Attributes.Name("Interest_Component")]
@@ -112,7 +112,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("SLIP")]
         [CsvHelper.Configuration.Attributes.Name("SLIP")]
-        public string Slip { get; set; }
+        public bool Slip { get; set; }
 
         [DisplayName("Manager")]
         [CsvHelper.Configuration.Attributes.Name("Manager")]

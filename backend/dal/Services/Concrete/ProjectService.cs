@@ -11,6 +11,7 @@ using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Pims.Dal.Services
@@ -92,6 +93,7 @@ namespace Pims.Dal.Services
             var project = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.TierLevel)
+                .Include(p => p.Risk)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
@@ -156,6 +158,38 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
+        /// Get the project for the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public Project Get(int id, params Expression<Func<Project, object>>[] includes)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
+
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+
+            var query = this.Context.Projects.AsQueryable();
+
+            var project = includes.Aggregate(query, (current, include) => current.Include(include.Name))
+                .FirstOrDefault(p => p.Id == id &&
+                    (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
+
+
+            // Remove any sensitive properties from the results if the user is not allowed to view them.
+            if (!viewSensitive)
+            {
+                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
+                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
+            }
+
+            return project;
+        }
+
+        /// <summary>
         /// Get the project for the specified 'projectNumber'.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
@@ -177,6 +211,7 @@ namespace Pims.Dal.Services
             var project = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.TierLevel)
+                .Include(p => p.Risk)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Tasks)
@@ -237,6 +272,39 @@ namespace Pims.Dal.Services
                 project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
             }
             this.Context.Entry(project).State = EntityState.Detached;
+            return project;
+        }
+
+        /// <summary>
+        /// Get the project for the specified 'projectNumber'.
+        /// </summary>
+        /// <param name="projectNumber"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes)
+        {
+            if (String.IsNullOrWhiteSpace(projectNumber)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(projectNumber));
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
+
+            // Check if user has the ability to view sensitive properties.
+            var userAgencies = this.User.GetAgencies();
+            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
+            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+
+            var query = this.Context.Projects.AsQueryable();
+
+            var project = includes.Aggregate(query, (current, include) => current.Include(include.Name))
+                .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
+                    (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
+
+
+            // Remove any sensitive properties from the results if the user is not allowed to view them.
+            if (!viewSensitive)
+            {
+                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
+                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
+            }
+
             return project;
         }
 
@@ -315,6 +383,7 @@ namespace Pims.Dal.Services
             project.Workflow = workflow;
             project.StatusId = status.StatusId;
             project.Status = status.Status;
+            project.Risk = this.Context.ProjectRisks.Find(1); // TODO: Provide a way for users to set this value.
 
             // If the tasks haven't been specified, generate them.
             var taskIds = project.Tasks.Select(t => t.TaskId).ToArray();
@@ -676,11 +745,11 @@ namespace Pims.Dal.Services
 
                     // Cancel any pending notifications.
                     await CancelNotificationsAsync(originalProject.Id);
-                    originalProject.DisposedOn = DateTime.UtcNow;
                     break;
                 case ("DIS"): // DISPOSED
                     this.Context.DisposeProjectProperties(originalProject);
                     originalProject.DisposedOn = DateTime.UtcNow;
+                    originalProject.CompletedOn = DateTime.UtcNow;
                     break;
                 case ("ERP-OH"): // OnHold
                     if (project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");

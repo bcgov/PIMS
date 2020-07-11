@@ -9,19 +9,29 @@ namespace Pims.Dal
     public interface IPimsService : IService
     {
         #region Properties
-        IPropertyService Property { get; }
-        IBuildingService Building { get; }
-        IProjectService Project { get; }
         ClaimsPrincipal Principal { get; }
         ILookupService Lookup { get; }
-        IParcelService Parcel { get; }
+
         IUserService User { get; }
-        ITaskService Task { get; }
-        IWorkflowService Workflow { get; }
+
+        #region Properties
+        IPropertyService Property { get; }
+        IBuildingService Building { get; }
+        IParcelService Parcel { get; }
+        #endregion
+
+        #region Notifications
         INotificationTemplateService NotificationTemplate { get; }
+        INotificationQueueService NotificationQueue { get; }
+        #endregion
+
+        #region Projects
+        IProjectService Project { get; }
         IProjectNotificationService ProjectNotification { get; }
         IProjectStatusService ProjectStatus { get; }
-        INotificationQueueService NotificationQueue { get; }
+        ITaskService Task { get; }
+        IWorkflowService Workflow { get; }
+        #endregion
         #endregion
 
         #region Methods

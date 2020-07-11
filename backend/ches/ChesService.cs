@@ -13,6 +13,7 @@ using Pims.Core.Http.Models;
 using System.Security.Claims;
 using Pims.Core.Extensions;
 using System.Linq;
+using System.Web;
 
 namespace Pims.Ches
 {
@@ -202,25 +203,30 @@ namespace Pims.Ches
 
             email.From = this.Options.From ?? email.From;
 
-            if (this.Options.OverrideTo)
+            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
             {
-                email.To = new[] { _user.GetEmail() };
+                email.To = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
                 email.Cc = new string[0];
                 email.Bcc = new string[0];
             }
             if (this.Options.BccUser)
             {
-                email.Bcc = email.Bcc?.Concat(new[] { _user.GetEmail() });
+                email.Bcc = new[] { _user.GetEmail() }.Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
             }
             if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
             {
-                email.Bcc = email.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
+                email.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
             }
 
             // Make sure there are no blank CC or BCC;
+            email.To = email.To.NotNullOrWhiteSpace();
             email.Cc = email.Cc.NotNullOrWhiteSpace();
             email.Bcc = email.Bcc.NotNullOrWhiteSpace();
-            return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
+
+            if (this.Options.EmailEnabled)
+                return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
+
+            return new EmailResponseModel();
         }
 
         /// <summary>
@@ -234,39 +240,44 @@ namespace Pims.Ches
 
             email.From = this.Options.From ?? email.From;
 
-            if (this.Options.OverrideTo)
+            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
             {
-                var address = _user.GetEmail();
+                var address = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
                 email.Contexts.ForEach(c =>
                 {
-                    c.To = new[] { address };
+                    c.To = address;
                     c.Cc = new string[0];
                     c.Bcc = new string[0];
                 });
             }
             if (this.Options.BccUser)
             {
-                var address = _user.GetEmail();
+                var address = new[] { _user.GetEmail() };
                 email.Contexts.ForEach(c =>
                 {
-                    c.Bcc = c.Bcc?.Concat(new[] { _user.GetEmail() });
+                    c.Bcc = address.Concat(c.Bcc?.Any() ?? false ? c.Bcc : new string[0]);
                 });
             }
             if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
             {
                 email.Contexts.ForEach(c =>
                 {
-                    c.Bcc = c.Bcc?.Concat(new[] { this.Options.AlwaysBcc });
+                    c.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(c.Bcc?.Any() ?? false ? c.Bcc : new string[0]);
                 });
             }
 
             // Make sure there are no blank CC or BCC;
             email.Contexts.ForEach(c =>
             {
+                c.To = c.To.NotNullOrWhiteSpace();
                 c.Cc = c.Cc.NotNullOrWhiteSpace();
                 c.Bcc = c.Bcc.NotNullOrWhiteSpace();
             });
-            return await SendAsync<EmailResponseModel, IEmailMerge>("/emailMerge", HttpMethod.Post, email);
+
+            if (this.Options.EmailEnabled)
+                return await SendAsync<EmailResponseModel, IEmailMerge>("/emailMerge", HttpMethod.Post, email);
+
+            return new EmailResponseModel();
         }
 
         /// <summary>
@@ -289,13 +300,13 @@ namespace Pims.Ches
             if (filter == null) throw new ArgumentNullException(nameof(filter));
             if (!filter.MessageId.HasValue && !filter.TransactionId.HasValue && String.IsNullOrWhiteSpace(filter.Status) && String.IsNullOrWhiteSpace(filter.Tag)) throw new ArgumentException("At least one parameter must be specified.");
 
-            var query = new StringBuilder("?");
-            if (filter.MessageId.HasValue) query.Append($"msgId={filter.MessageId}");
-            if (!String.IsNullOrEmpty(filter.Status)) query.Append($"&status={filter.Status}");
-            if (!String.IsNullOrEmpty(filter.Tag)) query.Append($"&tag={filter.Tag}");
-            if (filter.TransactionId.HasValue) query.Append($"&txId={filter.TransactionId.HasValue}");
+            var query = HttpUtility.ParseQueryString(String.Empty);
+            if (filter.MessageId.HasValue) query.Add("msgId", $"{ filter.MessageId }");
+            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{ filter.Status }");
+            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{ filter.Tag }");
+            if (filter.TransactionId.HasValue) query.Add("txId", $"{ filter.TransactionId }");
 
-            return await SendAsync<IEnumerable<StatusResponseModel>>($"/status{query}", HttpMethod.Get);
+            return await SendAsync<IEnumerable<StatusResponseModel>>($"/status?{query}", HttpMethod.Get);
         }
 
         /// <summary>
@@ -319,13 +330,13 @@ namespace Pims.Ches
             if (filter == null) throw new ArgumentNullException(nameof(filter));
             if (!filter.MessageId.HasValue && !filter.TransactionId.HasValue && String.IsNullOrWhiteSpace(filter.Status) && String.IsNullOrWhiteSpace(filter.Tag)) throw new ArgumentException("At least one parameter must be specified.");
 
-            var query = new StringBuilder("?");
-            if (filter.MessageId.HasValue) query.Append($"msgId={filter.MessageId}");
-            if (!String.IsNullOrEmpty(filter.Status)) query.Append($"&status={filter.Status}");
-            if (!String.IsNullOrEmpty(filter.Tag)) query.Append($"&tag={filter.Tag}");
-            if (filter.TransactionId.HasValue) query.Append($"&txId={filter.TransactionId.HasValue}");
+            var query = HttpUtility.ParseQueryString(String.Empty);
+            if (filter.MessageId.HasValue) query.Add("msgId", $"{ filter.MessageId }");
+            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{ filter.Status }");
+            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{ filter.Tag }");
+            if (filter.TransactionId.HasValue) query.Add("txId", $"{ filter.TransactionId }");
 
-            await SendAsync($"/cancel{query}", HttpMethod.Delete);
+            await SendAsync($"/cancel?{query}", HttpMethod.Delete);
             return await GetStatusAsync(filter);
         }
         #endregion

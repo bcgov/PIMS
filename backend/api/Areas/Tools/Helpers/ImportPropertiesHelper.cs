@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
-using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Services.Admin;
 using Entity = Pims.Dal.Entities;
 

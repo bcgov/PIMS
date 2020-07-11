@@ -127,6 +127,7 @@ namespace Pims.Core.Test
             context.AddRange(EntityHelper.CreateDefaultBuildingOccupantTypes());
             context.AddRange(EntityHelper.CreateDefaultAgencies());
             context.AddRange(EntityHelper.CreateDefaultTierLevels());
+            context.AddRange(EntityHelper.CreateDefaultProjectRisks());
             context.SaveChanges();
             return context;
         }

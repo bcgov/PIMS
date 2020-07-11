@@ -1,6 +1,8 @@
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Pims.Dal.Services
 {
@@ -12,7 +14,9 @@ namespace Pims.Dal.Services
         int Count();
         Paged<Project> GetPage(ProjectFilter filter);
         Project Get(int id);
+        Project Get(int id, params Expression<Func<Project, object>>[] includes);
         Project Get(string projectNumber);
+        Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes);
         Paged<NotificationQueue> GetNotificationsInQueue(ProjectNotificationFilter filter);
         Project Add(Project project);
         Project Update(Project project);

@@ -192,6 +192,10 @@ namespace Pims.Api
             services.AddDbContext<PimsContext>(options =>
             {
                 options.UseSqlServer(builder.ConnectionString).UseLoggerFactory(debugLoggerFactory);
+                if (!this.Environment.IsProduction())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
             });
 
             services.AddHttpClient();

@@ -68,6 +68,18 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
+        public HttpClientRequestException(HttpResponseMessage response, string message) : base(message)
+        {
+            this.Response = response ??
+                throw new ArgumentNullException(nameof(response)); // TODO: Extract error response details into innerException.
+            this.StatusCode = response.StatusCode;
+        }
+
+        /// <summary>
+        /// Creates a new instance of an HttpClientRequestException class, initializes it with the specified arguments.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public HttpClientRequestException(HttpResponseMessage response, Exception innerException) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed", innerException)
         {
             this.Response = response ??

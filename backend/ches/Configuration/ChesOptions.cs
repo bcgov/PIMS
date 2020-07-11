@@ -32,10 +32,19 @@ namespace Pims.Ches.Configuration
         public string Password { get; set; }
 
         /// <summary>
-        /// get/set - Send emails only to the currently logged in user.
-        /// This is helpful to stop sending emails to agencies when doing testing.
+        /// get/set - Whether to send email to CHES.
         /// </summary>
-        public bool OverrideTo { get; set; }
+        public bool EmailEnabled { get; set; }
+
+        /// <summary>
+        /// get/set - When not authorized, email will only be sent to the current user.
+        /// </summary>
+        public bool EmailAuthorized { get; set; }
+
+        /// <summary>
+        /// get/set - Send all emails to this email address instead of their original recipients.
+        /// </summary>
+        public string OverrideTo { get; set; }
 
         /// <summary>
         /// get/set - Send emails to the currently user as Bcc.
