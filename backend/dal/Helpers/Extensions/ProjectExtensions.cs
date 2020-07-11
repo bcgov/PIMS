@@ -649,6 +649,21 @@ namespace Pims.Dal.Helpers.Extensions
             });
         }
 
+        /// <summary>
+        /// Add responses to the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="responses"></param>
+        /// <returns></returns>
+        public static Entity.Project AddResponses(this Entity.Project project, params Entity.ProjectAgencyResponse[] responses)
+        {
+            responses.ForEach(r =>
+            {
+                project.Responses.Add(r);
+            });
+            return project;
+        }
+
         /// Get a collection of responses that have changed from the original to the updated project.
         /// </summary>
         /// <param name="originalProject"></param>

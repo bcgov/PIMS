@@ -120,17 +120,13 @@ exports[`Project Draft Step renders correctly 1`] = `
         >
           Notes
         </label>
-        <span
-          className="col-md-5"
-        >
-          <textarea
-            className="form-control"
-            id="input-note"
-            name="note"
-            onBlur={[Function]}
-            onChange={[Function]}
-          />
-        </span>
+        <textarea
+          className="col-md-5 form-control"
+          id="input-note"
+          name="note"
+          onBlur={[Function]}
+          onChange={[Function]}
+        />
       </div>
     </div>
     <div

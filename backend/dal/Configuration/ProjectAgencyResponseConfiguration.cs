@@ -17,12 +17,16 @@ namespace Pims.Dal.Configuration
             builder.HasKey(m => new { m.ProjectId, m.AgencyId });
             builder.Property(m => m.ProjectId).ValueGeneratedNever();
             builder.Property(m => m.AgencyId).ValueGeneratedNever();
+            builder.Property(m => m.OfferAmount).HasColumnType("MONEY");
 
             builder.HasOne(m => m.Project).WithMany(m => m.Responses).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(m => m.Agency).WithMany(m => m.ProjectResponses).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientCascade);
-            builder.HasOne(m => m.Notification).WithMany(m => m.Responses).HasForeignKey(m => m.NotificationId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(m => m.Notification).WithMany(m => m.Responses).HasForeignKey(m => m.NotificationId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
 
-            builder.HasIndex(m => new { m.ProjectId, m.AgencyId, m.Response });
+            builder.Property(m => m.Note).HasMaxLength(2000);
+            builder.Property(m => m.BusinessCaseReceivedOn).HasColumnType("DATETIME2");
+
+            builder.HasIndex(m => new { m.ProjectId, m.AgencyId, m.Response, m.BusinessCaseReceivedOn, m.Note });
 
             base.Configure(builder);
         }

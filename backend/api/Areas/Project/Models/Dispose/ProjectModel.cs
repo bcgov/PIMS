@@ -100,11 +100,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string PrivateNote { get; set; }
 
         /// <summary>
-        /// get/set - Notes summerizing agency responses to notifications.
-        /// </summary>
-        public string AgencyResponseNote { get; set; }
-
-        /// <summary>
         /// get/set - Note summerizing offers received.
         /// </summary>
         public string OffersNote { get; set; }

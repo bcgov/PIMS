@@ -647,16 +647,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   <div
                     className="form-group"
                   >
-                    <span>
-                      <input
-                        className="form-control"
-                        id="input-properties.0.zoning"
-                        name="properties.0.zoning"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value=""
-                      />
-                    </span>
+                    <input
+                      className="form-control"
+                      id="input-properties.0.zoning"
+                      name="properties.0.zoning"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
                   </div>
                 </div>
                 <div
@@ -680,16 +678,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   <div
                     className="form-group"
                   >
-                    <span>
-                      <input
-                        className="form-control"
-                        id="input-properties.0.zoningPotential"
-                        name="properties.0.zoningPotential"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        value=""
-                      />
-                    </span>
+                    <input
+                      className="form-control"
+                      id="input-properties.0.zoningPotential"
+                      name="properties.0.zoningPotential"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
                   </div>
                 </div>
                 <div

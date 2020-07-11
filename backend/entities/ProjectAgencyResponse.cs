@@ -29,6 +29,11 @@ namespace Pims.Dal.Entities
         public Agency Agency { get; set; }
 
         /// <summary>
+        /// get/set - amount offered by an agency for the project.
+        /// </summary>
+        public decimal OfferAmount { get; set; }
+
+        /// <summary>
         /// get/set - Foreign key to the notification queue.
         /// </summary>
         public int? NotificationId { get; set; }
@@ -44,9 +49,14 @@ namespace Pims.Dal.Entities
         public NotificationResponses Response { get; set; }
 
         /// <summary>
-        /// get/set - When the response was received.  This will most often be the same as created.
+        /// get/set - The date SRES received a business case from this agency.
         /// </summary>
-        public DateTime ReceivedOn { get; set; }
+        public DateTime? BusinessCaseReceivedOn { get; set; }
+
+        /// <summary>
+        /// get/set - An agency specific note viewable/editable by SRES only.
+        /// </summary>
+        public string Note { get; set; }
         #endregion
 
         #region Constructors

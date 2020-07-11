@@ -1,4 +1,10 @@
-import { IApiProject, IProjectProperty, IApiProperty, initialValues } from './interfaces';
+import {
+  IApiProject,
+  IProjectProperty,
+  IApiProperty,
+  initialValues,
+  AgencyResponses,
+} from './interfaces';
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
@@ -166,9 +172,20 @@ export const toApiProject = (project: IProject) => {
     return projectProperty;
   });
 
+  const projectAgencyResponses = _.filter(
+    project.projectAgencyResponses,
+    par =>
+      par.rowVersion !== undefined ||
+      (par.offerAmount !== undefined && par.offerAmount > 0) ||
+      par.response !== AgencyResponses.Ignore ||
+      par.note !== undefined ||
+      par.businessCaseReceivedOn !== undefined,
+  );
+
   const apiProject: IApiProject = {
     ...project,
     properties: properties,
+    projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
   };

@@ -32,7 +32,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.PublicNote, src => src.PublicNote)
                 .Map(dest => dest.PrivateNote, src => src.PrivateNote)
-                .Map(dest => dest.AgencyResponseNote, src => src.AgencyResponseNote)
             #endregion
 
             #region Exemption

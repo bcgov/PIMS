@@ -61,7 +61,6 @@ namespace Pims.Core.Test
                 UpdatedBy = user,
                 PublicNote = $"publicNote-{id}",
                 PrivateNote = $"privateNote-{id}",
-                AgencyResponseNote = $"agencyResponseNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };

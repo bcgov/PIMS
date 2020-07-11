@@ -1028,7 +1028,6 @@ namespace Pims.Dal.Migrations
                     PublicNote = table.Column<string>(maxLength: 2000, nullable: true),
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Metadata = table.Column<string>(type: "NVARCHAR(MAX)", nullable: true),
-                    AgencyResponseNote = table.Column<string>(maxLength: 2000, nullable: true),
                     OffersNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Purchaser = table.Column<string>(maxLength: 150, nullable: true),
                     IsContractConditional = table.Column<bool>(nullable: true),
@@ -1665,9 +1664,15 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    OfferAmount = table.Column<decimal>(type: "MONEY", nullable: false),
                     NotificationId = table.Column<int>(nullable: true),
                     Response = table.Column<int>(nullable: false),
+<<<<<<< HEAD:backend/dal/Migrations/20200710231715_Initial.cs
                     ReceivedOn = table.Column<DateTime>(nullable: false)
+=======
+                    BusinessCaseReceivedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    Note = table.Column<string>(maxLength: 2000, nullable: true)
+>>>>>>> PIMS-2630 agency interest component added to SPL or ERP.:backend/dal/Migrations/20200711013926_Initial.cs
                 },
                 constraints: table =>
                 {
@@ -2279,9 +2284,9 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectAgencyResponses_ProjectId_AgencyId_Response",
+                name: "IX_ProjectAgencyResponses_ProjectId_AgencyId_Response_BusinessCaseReceivedOn_Note",
                 table: "ProjectAgencyResponses",
-                columns: new[] { "ProjectId", "AgencyId", "Response" });
+                columns: new[] { "ProjectId", "AgencyId", "Response", "BusinessCaseReceivedOn", "Note" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectNotes_CreatedById",

@@ -33,6 +33,7 @@ export default function ProjectNotes({
   return (
     <Form.Row className="ProjectNotes">
       <TextArea
+        fast
         disabled={disabled}
         tooltip={tooltip}
         label={label ?? 'Notes'}

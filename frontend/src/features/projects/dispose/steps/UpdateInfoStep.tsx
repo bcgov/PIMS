@@ -25,6 +25,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validationSchema={UpdateInfoStepYupSchema}
         innerRef={formikRef}
         onSubmit={onSubmit}
+        enableReinitialize={true}
       >
         <Form>
           <UpdateInfoForm
