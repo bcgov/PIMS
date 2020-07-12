@@ -83,9 +83,9 @@ namespace Pims.Api.Test.Controllers.Tools
         }
         #endregion
 
-        # region FindParcelPidsAsync
+        # region FindPidsAsync
         [Fact]
-        public async void FindParcelPidsAsync_Success()
+        public async void FindPidsAsync_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -99,27 +99,17 @@ namespace Pims.Api.Test.Controllers.Tools
             };
 
             var service = helper.GetService<Mock<IGeocoderService>>();
-            service.Setup(m => m.GetSitePids(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(response);
+            service.Setup(m => m.GetPids(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(response);
 
             // Act
-            var result = await controller.FindSitePidsAsync(testSiteId);
+            var result = await controller.FindPidsAsync(testSiteId);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
-
-            // TODO: Finish test
-            Assert.True(false, "Partial implementation. This test needs to be completed");
-
-            // var results = Assert.IsAssignableFrom<IEnumerable<Model.AddressModel>>(actionResult.Value);
-            // results.Should().HaveCount(1);
-            // var first = results.First();
-            // first.Score.Should().Be(1);
-            // first.SiteId.Should().Be("test");
-            // first.FullAddress.Should().Be("test");
-            // first.ProvinceCode.Should().Be("test");
-            // first.Address1.Should().Be("test test");
-            // first.Latitude.Should().Be(1d);
-            // first.Longitude.Should().Be(2d);
+            var results = Assert.IsAssignableFrom<Model.SitePidsResponseModel>(actionResult.Value);
+            results.SiteId.Should().Be(testSiteId);
+            results.Pids.Should().HaveCount(2);
+            results.Pids.First().Should().Be("test1");
         }
         #endregion
         #endregion

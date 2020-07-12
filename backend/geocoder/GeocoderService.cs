@@ -80,14 +80,14 @@ namespace Pims.Geocoder
         }
 
         /// <summary>
-        /// Sends an HTTP request to Geocoder for PIDs that belong to the specified 'siteId'.
+        /// Sends an HTTP request to Geocoder for all parcel identifiers (PIDs) associated with an individual site.
         /// A 'siteId' is a unique identifier assigned to every site in B.C.
         /// Valid 'siteId' values for an address are returned by GetSiteAddressesAsync.
         /// </summary>
         /// <param name="siteId">The site identifier</param>
         /// <param name="outputFormat">The output format. Defaults to "json"</param>
         /// <returns></returns>
-        public async Task<SitePidsResponseModel> GetSitePids(Guid siteId, string outputFormat = "json")
+        public async Task<SitePidsResponseModel> GetPids(Guid siteId, string outputFormat = "json")
         {
             var endpoint = this.Options.Parcels.PidsUrl.Replace("{siteId}", siteId.ToString());
             var uri = new Uri(GenerateUrl(endpoint, outputFormat));

@@ -78,13 +78,10 @@ namespace Pims.Api.Areas.Tools.Controllers
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-geocoder" })]
         [HasPermission(Permissions.PropertyEdit)]
-        public async Task<IActionResult> FindSitePidsAsync(Guid siteId)
+        public async Task<IActionResult> FindPidsAsync(Guid siteId)
         {
-            // var parameters = this.Request.QueryString.ParseQueryString<AddressesParameters>();
-            // parameters.AddressString = address;
-            // var result = await _geocoderService.GetSiteAddressesAsync(parameters);
-            // return new JsonResult(_mapper.Map<Model.AddressModel[]>(result.Features));
-            throw new System.NotImplementedException();
+            var result = await _geocoderService.GetPids(siteId);
+            return new JsonResult(_mapper.Map<Model.SitePidsResponseModel[]>(result));
         }
         #endregion
     }
