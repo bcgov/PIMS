@@ -446,38 +446,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
                           }
                         }
                         title=""
-                      >
-                        <div
-                          className="form-group"
-                        >
-                          <span
-                            className=""
-                          />
-                          <div
-                            className="react-datepicker-wrapper"
-                          >
-                            <div
-                              className="react-datepicker__input-container"
-                            >
-                              <input
-                                autoComplete="off"
-                                className="form-control date-picker"
-                                disabled={false}
-                                name="projectAgencyResponses.0.businessCaseReceivedOn"
-                                onBlur={[Function]}
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                onFocus={[Function]}
-                                onKeyDown={[Function]}
-                                placeholder="--/--/----"
-                                readOnly={false}
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      />
                       <div
                         className="td"
                         onClick={[Function]}
@@ -495,19 +464,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
                           }
                         }
                         title=""
-                      >
-                        <div
-                          className="form-group"
-                        >
-                          <textarea
-                            className="form-control"
-                            id="input-projectAgencyResponses.0.note"
-                            name="projectAgencyResponses.0.note"
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                          />
-                        </div>
-                      </div>
+                      />
                       <div
                         className="td"
                         onClick={[Function]}
@@ -526,31 +483,7 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
                         }
                         title=""
                       >
-                        <div
-                          className="form-group"
-                        >
-                          <select
-                            className="form-select form-control"
-                            id="input-projectAgencyResponses.0.response"
-                            name="projectAgencyResponses.0.response"
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            value="Ignore"
-                          >
-                            <option
-                              className="option"
-                              value="Ignore"
-                            >
-                              Ignore
-                            </option>
-                            <option
-                              className="option"
-                              value="Watch"
-                            >
-                              Watch
-                            </option>
-                          </select>
-                        </div>
+                        Ignore
                       </div>
                     </div>
                   </div>
