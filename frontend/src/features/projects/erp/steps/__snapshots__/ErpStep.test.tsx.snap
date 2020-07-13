@@ -446,7 +446,9 @@ exports[`ERP/SPL Approval Step renders correctly 1`] = `
                           }
                         }
                         title=""
-                      />
+                      >
+                        
+                      </div>
                       <div
                         className="td"
                         onClick={[Function]}
