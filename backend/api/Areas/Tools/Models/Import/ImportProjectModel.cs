@@ -32,7 +32,6 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public string Manager { get; set; }
         public bool SaleWithLeaseInPlace { get; set; }
         public string FinancialNote { get; set; }
-        public string AgencyResponseNote { get; set; }
         public DateTime? AgencyResponseDate { get; set; }
         #endregion
     }

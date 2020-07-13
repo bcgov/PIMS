@@ -135,7 +135,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 project.PrivateNote = model.PrivateNote;
 
                 // The data doesn't provide the purchasing agency information so the response will be the current owning agency.
-                if (!String.IsNullOrWhiteSpace(model.AgencyResponseNote) || model.AgencyResponseDate.HasValue)
+                if (model.AgencyResponseDate.HasValue)
                 {
                     var response = project.Responses.FirstOrDefault(r => r.AgencyId == project.AgencyId);
                     if (response == null)
