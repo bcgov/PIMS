@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Pims.Geocoder.Models
 {
@@ -7,7 +6,7 @@ namespace Pims.Geocoder.Models
     {
         #region Properties
         public Guid SiteID { get; set; }
-        public IEnumerable<string> Pids { get; set; }
+        public string Pids { get; set; }
         #endregion
     }
 }

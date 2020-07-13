@@ -81,7 +81,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         public async Task<IActionResult> FindPidsAsync(Guid siteId)
         {
             var result = await _geocoderService.GetPids(siteId);
-            return new JsonResult(_mapper.Map<Model.SitePidsResponseModel[]>(result));
+            return new JsonResult(_mapper.Map<Model.SitePidsResponseModel>(result));
         }
         #endregion
     }
