@@ -15,7 +15,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.NotificationId, src => src.NotificationId)
                 .Map(dest => dest.Response, src => src.Response)
                 .Map(dest => dest.Note, src => src.Note)
-                .Map(dest => dest.BusinessCaseReceivedOn, src => src.BusinessCaseReceivedOn)
+                .Map(dest => dest.ReceivedOn, src => src.ReceivedOn)
                 .Map(dest => dest.OfferAmount, src => src.OfferAmount)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -25,7 +25,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.NotificationId, src => src.NotificationId)
                 .Map(dest => dest.Response, src => src.Response)
                 .Map(dest => dest.Note, src => src.Note)
-                .Map(dest => dest.BusinessCaseReceivedOn, src => src.BusinessCaseReceivedOn)
+                .Map(dest => dest.ReceivedOn, src => src.ReceivedOn)
                 .Map(dest => dest.OfferAmount, src => src.OfferAmount)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }

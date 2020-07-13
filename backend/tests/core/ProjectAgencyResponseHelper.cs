@@ -23,7 +23,7 @@ namespace Pims.Core.Test
                 ProjectId = projectId,
                 AgencyId = agencyId,
                 Note = "NOTE",
-                BusinessCaseReceivedOn = DateTime.UtcNow,
+                ReceivedOn = DateTime.UtcNow,
                 Response = Entity.NotificationResponses.Watch,
             };
         }
@@ -56,7 +56,7 @@ namespace Pims.Core.Test
                 ProjectId = projectId,
                 AgencyId = agencyId,
                 Note = "NOTE",
-                BusinessCaseReceivedOn = DateTime.UtcNow,
+                ReceivedOn = DateTime.UtcNow,
                 Response = Entity.NotificationResponses.Watch,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,

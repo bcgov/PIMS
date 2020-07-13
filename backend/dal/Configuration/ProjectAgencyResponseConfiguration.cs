@@ -24,9 +24,9 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Notification).WithMany(m => m.Responses).HasForeignKey(m => m.NotificationId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
 
             builder.Property(m => m.Note).HasMaxLength(2000);
-            builder.Property(m => m.BusinessCaseReceivedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.ReceivedOn).HasColumnType("DATETIME2");
 
-            builder.HasIndex(m => new { m.ProjectId, m.AgencyId, m.Response, m.BusinessCaseReceivedOn, m.Note });
+            builder.HasIndex(m => new { m.ProjectId, m.AgencyId, m.Response, m.ReceivedOn, m.Note });
 
             base.Configure(builder);
         }

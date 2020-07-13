@@ -37,7 +37,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The date SRES received a business case from this agency.
         /// </summary>
-        public DateTime? BusinessCaseReceivedOn { get; set; }
+        public DateTime? ReceivedOn { get; set; }
 
         /// <summary>
         /// get/set - An agency specific note viewable/editable by SRES only.

@@ -3,7 +3,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 
 import React from 'react';
 import { CellProps } from 'react-table';
-import { formatMoney, formatNumber } from 'utils';
+import { formatMoney, formatNumber, formatDate } from 'utils';
 import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
 import { useFormikContext } from 'formik';
 import {
@@ -268,11 +268,11 @@ export const getProjectAgencyResponseColumns = ({
     },
     {
       Header: 'Business Case Received Date',
-      accessor: 'businessCaseReceivedOn',
+      accessor: 'receivedOn',
       maxWidth: 60,
       align: 'left',
       Cell: disabled
-        ? (cellInfo: any) => cellInfo.value ?? null
+        ? (cellInfo: any) => formatDate(cellInfo.value) ?? null
         : getEditableDatePickerCell('projectAgencyResponses'),
     },
     {

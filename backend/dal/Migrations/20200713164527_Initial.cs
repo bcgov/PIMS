@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
 
@@ -1028,6 +1028,7 @@ namespace Pims.Dal.Migrations
                     PublicNote = table.Column<string>(maxLength: 2000, nullable: true),
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Metadata = table.Column<string>(type: "NVARCHAR(MAX)", nullable: true),
+                    MarketedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     OffersNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Purchaser = table.Column<string>(maxLength: 150, nullable: true),
                     IsContractConditional = table.Column<bool>(nullable: true),
@@ -1042,7 +1043,6 @@ namespace Pims.Dal.Migrations
                     ClearanceNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DeniedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     CancelledOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    MarketedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     OfferAcceptedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DisposedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     CompletedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
@@ -1667,12 +1667,8 @@ namespace Pims.Dal.Migrations
                     OfferAmount = table.Column<decimal>(type: "MONEY", nullable: false),
                     NotificationId = table.Column<int>(nullable: true),
                     Response = table.Column<int>(nullable: false),
-<<<<<<< HEAD:backend/dal/Migrations/20200710231715_Initial.cs
-                    ReceivedOn = table.Column<DateTime>(nullable: false)
-=======
-                    BusinessCaseReceivedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    ReceivedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     Note = table.Column<string>(maxLength: 2000, nullable: true)
->>>>>>> PIMS-2630 agency interest component added to SPL or ERP.:backend/dal/Migrations/20200711013926_Initial.cs
                 },
                 constraints: table =>
                 {
@@ -2284,9 +2280,9 @@ namespace Pims.Dal.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectAgencyResponses_ProjectId_AgencyId_Response_BusinessCaseReceivedOn_Note",
+                name: "IX_ProjectAgencyResponses_ProjectId_AgencyId_Response_ReceivedOn_Note",
                 table: "ProjectAgencyResponses",
-                columns: new[] { "ProjectId", "AgencyId", "Response", "BusinessCaseReceivedOn", "Note" });
+                columns: new[] { "ProjectId", "AgencyId", "Response", "ReceivedOn", "Note" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectNotes_CreatedById",

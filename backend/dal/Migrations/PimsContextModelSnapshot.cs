@@ -1427,9 +1427,6 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("AgencyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("BusinessCaseReceivedOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1445,11 +1442,11 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("NotificationId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReceivedOn")
-                        .HasColumnType("datetime2");
-                    
                     b.Property<decimal>("OfferAmount")
                         .HasColumnType("MONEY");
+
+                    b.Property<DateTime?>("ReceivedOn")
+                        .HasColumnType("DATETIME2");
 
                     b.Property<int>("Response")
                         .HasColumnType("int");
@@ -1475,7 +1472,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("ProjectId", "AgencyId", "Response", "BusinessCaseReceivedOn", "Note");
+                    b.HasIndex("ProjectId", "AgencyId", "Response", "ReceivedOn", "Note");
 
                     b.ToTable("ProjectAgencyResponses");
                 });

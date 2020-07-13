@@ -425,7 +425,9 @@ namespace Pims.Dal.Helpers.Extensions
         public static void Merge(this Entity.Project originalProject, Entity.Project updatedProject, PimsContext context)
         {
             // Update a project
+            var agency = originalProject.Agency;
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
+            originalProject.Agency = agency; // TODO: this should not be necessary.
             context.SetOriginalRowVersion(originalProject);
 
             var agencies = originalProject.Agency.ParentId.HasValue ? new[] { originalProject.AgencyId } : context.Agencies.Where(a => a.ParentId == originalProject.AgencyId || a.Id == originalProject.AgencyId).Select(a => a.Id).ToArray();

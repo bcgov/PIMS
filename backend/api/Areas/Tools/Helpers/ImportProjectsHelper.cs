@@ -133,7 +133,6 @@ namespace Pims.Api.Areas.Tools.Helpers
                 project.CompletedOn = model.CompletedOn;
 
                 project.PrivateNote = model.PrivateNote;
-                project.AgencyResponseNote = model.AgencyResponseNote;
 
                 // The data doesn't provide the purchasing agency information so the response will be the current owning agency.
                 if (!String.IsNullOrWhiteSpace(model.AgencyResponseNote) || model.AgencyResponseDate.HasValue)

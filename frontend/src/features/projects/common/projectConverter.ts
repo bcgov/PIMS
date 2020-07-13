@@ -179,7 +179,7 @@ export const toApiProject = (project: IProject) => {
       (par.offerAmount !== undefined && par.offerAmount > 0) ||
       par.response !== AgencyResponses.Ignore ||
       par.note !== undefined ||
-      par.businessCaseReceivedOn !== undefined,
+      par.receivedOn !== undefined,
   );
 
   const apiProject: IApiProject = {
