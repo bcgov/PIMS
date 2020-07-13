@@ -95,7 +95,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var response = new SitePidsResponseModel()
             {
                 SiteID = testSiteId,
-                Pids = new[] { "test1", "test2" }
+                Pids = "test1,test2"
             };
 
             var service = helper.GetService<Mock<IGeocoderService>>();
