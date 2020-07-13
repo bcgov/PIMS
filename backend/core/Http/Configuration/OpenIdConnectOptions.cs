@@ -1,5 +1,5 @@
-using System;
 using Pims.Core.Exceptions;
+using System;
 
 namespace Pims.Core.Http.Configuration
 {

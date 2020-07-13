@@ -1,7 +1,7 @@
-using Xunit;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
 
 namespace Pims.Dal.Test.Helpers.Extensions
 {

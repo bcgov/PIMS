@@ -1,6 +1,6 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
+using System;
 
 namespace Pims.Dal.Migrations
 {

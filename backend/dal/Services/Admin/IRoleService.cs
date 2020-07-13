@@ -1,6 +1,6 @@
-using System;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
+using System;
 
 namespace Pims.Dal.Services.Admin
 {

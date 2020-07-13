@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
 using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
 

@@ -1,15 +1,15 @@
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
-using Pims.Dal.Security;
-using Pims.Dal.Keycloak;
-using Pims.Api.Policies;
-using Model = Pims.Api.Areas.Keycloak.Models.User;
-using AdminModels = Pims.Api.Areas.Admin.Models.User;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
 using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using Pims.Api.Policies;
+using Pims.Dal.Keycloak;
+using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AdminModels = Pims.Api.Areas.Admin.Models.User;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
 
 namespace Pims.Api.Areas.Keycloak.Controllers
 {

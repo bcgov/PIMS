@@ -1,13 +1,13 @@
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Ches.Models;
 using Pims.Api.Policies;
+using Pims.Ches;
 using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
-using Pims.Ches;
-using System.Threading.Tasks;
 using System;
-using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Model = Pims.Ches.Models;
 
 namespace Pims.Api.Areas.Tools.Controllers
 {

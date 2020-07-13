@@ -240,10 +240,10 @@ namespace Pims.Dal.Services
             {
                 // Generate a notification for all enabled agencies that have not turned of emails, or indicated they are not interested in the project.
                 var agencies = (from a in this.Context.Agencies
-                               join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
-                               from n in g.DefaultIfEmpty()
-                               where !a.IsDisabled && a.SendEmail && (n == null || n.Response != NotificationResponses.Ignore)
-                               select a).ToArray();
+                                join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
+                                from n in g.DefaultIfEmpty()
+                                where !a.IsDisabled && a.SendEmail && (n == null || n.Response != NotificationResponses.Ignore)
+                                select a).ToArray();
 
                 foreach (var agency in agencies)
                 {
@@ -254,13 +254,13 @@ namespace Pims.Dal.Services
             {
                 // Generate a notification for all enabled parent agencies that have not turned of emails, or asked to ignore the project.
                 var agencies = (from a in this.Context.Agencies
-                               join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
-                               from n in g.DefaultIfEmpty()
-                               where a.ParentId == null
-                                && !a.IsDisabled
-                                && a.SendEmail
-                                && (n == null || n.Response != NotificationResponses.Ignore)
-                               select a).ToArray();
+                                join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
+                                from n in g.DefaultIfEmpty()
+                                where a.ParentId == null
+                                 && !a.IsDisabled
+                                 && a.SendEmail
+                                 && (n == null || n.Response != NotificationResponses.Ignore)
+                                select a).ToArray();
 
                 foreach (var agency in agencies)
                 {
@@ -276,13 +276,13 @@ namespace Pims.Dal.Services
             {
                 // Generate a notification for agencies that have expressed interest.
                 var agencies = (from a in this.Context.Agencies
-                               join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
-                               from n in g.DefaultIfEmpty()
-                               where !a.IsDisabled
-                                && a.SendEmail
-                                && n != null
-                                && n.Response == NotificationResponses.Watch
-                               select a).ToArray();
+                                join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
+                                from n in g.DefaultIfEmpty()
+                                where !a.IsDisabled
+                                 && a.SendEmail
+                                 && n != null
+                                 && n.Response == NotificationResponses.Watch
+                                select a).ToArray();
 
                 foreach (var agency in agencies)
                 {

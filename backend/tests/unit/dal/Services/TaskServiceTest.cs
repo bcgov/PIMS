@@ -44,7 +44,7 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            
+
             var init = helper.CreatePimsContext(user, true);
             var status1 = EntityHelper.CreateProjectStatus(1, "DRAFT", "DRAFT");
             var status2 = EntityHelper.CreateProjectStatus(2, "SUBMIT", "SUBMIT");

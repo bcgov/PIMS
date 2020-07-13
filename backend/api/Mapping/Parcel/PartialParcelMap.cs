@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Models.Parcel;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Mapping.Parcel
 {

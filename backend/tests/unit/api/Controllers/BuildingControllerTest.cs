@@ -1,18 +1,18 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models.Building;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Pims.Api.Controllers;
+using Pims.Core.Comparers;
 using Pims.Core.Test;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
 using System;
-using Xunit;
-using Pims.Core.Comparers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Building;
 
 namespace Pims.Api.Test.Controllers
 {

@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Pims.Dal.Entities;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Admin.Models.User
 {

@@ -22,7 +22,7 @@ namespace Pims.Dal.Configuration
 
             builder.HasOne(m => m.User).WithMany().HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.Status});
+            builder.HasIndex(m => new { m.Status });
 
             base.Configure(builder);
         }

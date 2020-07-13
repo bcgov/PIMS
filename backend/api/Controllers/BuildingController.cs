@@ -1,17 +1,11 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models.Building;
-using Pims.Api.Helpers.Extensions;
 using Pims.Api.Policies;
 using Pims.Dal;
-using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
-using System;
-using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
-using Pims.Api.Helpers.Exceptions;
+using Model = Pims.Api.Models.Building;
 
 namespace Pims.Api.Controllers
 {

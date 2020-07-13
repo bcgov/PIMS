@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -11,6 +7,10 @@ using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -75,7 +75,7 @@ namespace Pims.Dal.Services.Admin
                 if (filter.Page < 1) filter.Page = 1;
                 if (filter.Quantity < 1) filter.Quantity = 1;
                 if (filter.Quantity > 50) filter.Quantity = 50;
-                if (filter.Sort == null) filter.Sort = new string[] {};
+                if (filter.Sort == null) filter.Sort = new string[] { };
 
                 if (!string.IsNullOrWhiteSpace(filter.Username))
                     query = query.Where(u => EF.Functions.Like(u.Username, $"%{filter.Username}%"));

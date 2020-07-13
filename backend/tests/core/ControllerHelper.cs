@@ -1,10 +1,10 @@
-using System.Security.Claims;
-using System;
 using Microsoft.AspNetCore.Mvc;
-using Pims.Dal.Security;
-using System.Diagnostics.CodeAnalysis;
-using Pims.Dal;
 using Microsoft.Extensions.Options;
+using Pims.Dal;
+using Pims.Dal.Security;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace Pims.Core.Test
 {

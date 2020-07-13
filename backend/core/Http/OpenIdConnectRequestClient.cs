@@ -1,15 +1,15 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Exceptions;
 using Pims.Core.Extensions;
+using Pims.Core.Http.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Pims.Core.Http.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json;
-using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Pims.Core.Http
 {

@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +9,13 @@ using Microsoft.IdentityModel.Tokens;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Helpers.Middleware
 {

@@ -1,6 +1,6 @@
-using System;
 using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
+using System;
 
 namespace Pims.Dal.Helpers.Extensions
 {

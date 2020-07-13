@@ -1,16 +1,16 @@
 using FluentAssertions;
 using Moq;
+using Pims.Ches;
+using Pims.Ches.Models;
+using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Notifications;
 using Pims.Notifications.Models;
-using Pims.Core.Test;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
-using Pims.Ches;
-using Pims.Ches.Models;
-using Pims.Core.Extensions;
 
 namespace Pims.Dal.Test.Libraries
 {
@@ -22,7 +22,7 @@ namespace Pims.Dal.Test.Libraries
     {
         #region Data
         public static IEnumerable<object[]> BadBuild = new List<object[]>(
-            new [] {
+            new[] {
                 new object[] { null, new EmailTemplate(), typeof(ArgumentException) },
                 new object[] { "", new EmailTemplate(), typeof(ArgumentException) },
                 new object[] { " ", new EmailTemplate(), typeof(ArgumentException) },
@@ -90,7 +90,7 @@ namespace Pims.Dal.Test.Libraries
                 From = "from",
                 To = new[] { "To" },
                 Cc = new[] { "Cc" },
-                Bcc = new [] { "Bcc" },
+                Bcc = new[] { "Bcc" },
                 Encoding = Notifications.Models.EmailEncodings.Utf8,
                 Priority = Notifications.Models.EmailPriorities.High,
                 BodyType = Notifications.Models.EmailBodyTypes.Html,

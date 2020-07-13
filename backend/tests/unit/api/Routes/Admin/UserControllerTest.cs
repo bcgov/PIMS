@@ -1,12 +1,12 @@
-using Model = Pims.Api.Areas.Admin.Models.User;
 using Pims.Api.Areas.Admin.Controllers;
-using Pims.Core.Test;
 using Pims.Core.Extensions;
-using Pims.Dal.Security;
-using Xunit;
+using Pims.Core.Test;
 using Pims.Dal.Entities.Models;
+using Pims.Dal.Security;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
+using Model = Pims.Api.Areas.Admin.Models.User;
 
 namespace Pims.Api.Test.Routes.Admin
 {

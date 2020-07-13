@@ -1,9 +1,9 @@
-using Pims.Core.Test;
-using Pims.Core.Extensions;
-using Xunit;
-using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Project.Controllers;
+using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Dal.Security;
+using System.Diagnostics.CodeAnalysis;
+using Xunit;
 
 namespace Pims.Api.Test.Routes.Project
 {

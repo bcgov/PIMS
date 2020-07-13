@@ -1,6 +1,6 @@
+using Pims.Core.Exceptions;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Pims.Core.Exceptions;
 
 namespace Pims.Core.Http.Configuration
 {

@@ -1,12 +1,12 @@
-using System.Linq;
-using System;
-using Pims.Core.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using MapsterMapper;
 using Mapster;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
+using MapsterMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Pims.Core.Extensions;
 using Pims.Dal.Configuration.Generators;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Pims.Core.Test
 {

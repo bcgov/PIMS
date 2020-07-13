@@ -1,13 +1,13 @@
 using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Entities.Views;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Pims.Core.Extensions;
-using Pims.Dal.Entities.Models;
-using System.Collections.Generic;
 
 namespace Pims.Dal.Services
 {

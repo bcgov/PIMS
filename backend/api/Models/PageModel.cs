@@ -15,12 +15,12 @@ namespace Pims.Api.Models
         /// <summary>
         /// get/set - The items on the page.
         /// </summary>
-        public IEnumerable<T> Items { get; set;  }
+        public IEnumerable<T> Items { get; set; }
 
         /// <summary>
         /// get/set - The page number.
         /// </summary>
-        public int Page { get; set;  }
+        public int Page { get; set; }
 
         /// <summary>
         /// get/set - The requested number of item per page.

@@ -1,14 +1,13 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Areas.Admin.Models.Claim;
 using Pims.Api.Policies;
 using Pims.Dal.Entities;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using System;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Claim;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -24,7 +23,6 @@ namespace Pims.Api.Areas.Admin.Controllers
     public class ClaimController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<ClaimController> _logger;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         #endregion
@@ -33,12 +31,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// Creates a new instance of a ClaimController class, initializes it with the specified arguments.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public ClaimController(ILogger<ClaimController> logger, IPimsAdminService pimsAdminService, IMapper mapper)
+        public ClaimController(IPimsAdminService pimsAdminService, IMapper mapper)
         {
-            _logger = logger;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
         }

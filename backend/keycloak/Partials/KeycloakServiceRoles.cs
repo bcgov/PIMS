@@ -1,9 +1,9 @@
+using Pims.Core.Extensions;
+using Pims.Keycloak.Extensions;
 using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Pims.Core.Extensions;
-using Pims.Keycloak.Extensions;
 
 namespace Pims.Keycloak
 {

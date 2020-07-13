@@ -1,6 +1,6 @@
+using Pims.Dal.Security;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Pims.Dal.Security;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -19,7 +19,7 @@ namespace Pims.Dal.Helpers.Extensions
             var enumType = typeof(Permissions);
             var memberInfos = enumType.GetMember(permission.ToString());
             var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
-            var attribute = (DisplayAttribute) enumValueMemberInfo.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault();
+            var attribute = (DisplayAttribute)enumValueMemberInfo.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault();
             return attribute.Name;
         }
     }

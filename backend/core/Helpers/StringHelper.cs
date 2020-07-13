@@ -23,7 +23,7 @@ namespace Pims.Core.Helpers
         {
             if (length < 2) throw new ArgumentException("Length must be greater than or equal to 2.", nameof(length));
 
-            var constonants = new [] { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "t", "v", "w", "x" };
+            var constonants = new[] { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "t", "v", "w", "x" };
             var vowels = new[] { "a", "e", "i", "o", "u", "y" };
             var numbers = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
             var symbols = new[] { "_", "+", "-", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "?" };

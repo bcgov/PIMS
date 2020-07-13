@@ -1,8 +1,8 @@
 using Mapster;
-using System;
-using Model = Pims.Api.Models.Parcel;
-using Entity = Pims.Dal.Entities;
 using Pims.Core.Extensions;
+using System;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Mapping.Parcel
 {

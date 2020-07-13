@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Areas.Tools.Models.Geocoder;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
-using Swashbuckle.AspNetCore.Annotations;
 using Pims.Geocoder;
-using System.Threading.Tasks;
-using Pims.Geocoder.Parameters;
 using Pims.Geocoder.Extensions;
-using Microsoft.AspNetCore.Authorization;
+using Pims.Geocoder.Parameters;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Model = Pims.Api.Areas.Tools.Models.Geocoder;
 
 namespace Pims.Api.Areas.Tools.Controllers
 {

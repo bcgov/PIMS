@@ -1,9 +1,9 @@
-using Pims.Core.Test;
-using Pims.Core.Extensions;
-using Xunit;
-using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Notification.Controllers;
+using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Dal.Security;
+using System.Diagnostics.CodeAnalysis;
+using Xunit;
 using Model = Pims.Api.Areas.Notification.Models.Template;
 
 namespace Pims.Api.Test.Routes.Project

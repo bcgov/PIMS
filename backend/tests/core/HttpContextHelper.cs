@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.IdentityModel.Tokens;
+using Moq;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.IdentityModel.Tokens;
-using Moq;
 
 namespace Pims.Core.Test
 {

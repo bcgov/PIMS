@@ -1,16 +1,15 @@
-using Xunit;
-using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Pims.Api.Areas.Project.Controllers;
+using Pims.Core.Comparers;
+using Pims.Core.Test;
 using Pims.Dal;
 using Pims.Dal.Security;
-using Pims.Core.Test;
-using Pims.Api.Areas.Project.Controllers;
-using Moq;
+using System.Diagnostics.CodeAnalysis;
+using Xunit;
 using Model = Pims.Api.Areas.Project.Models.Status;
-using Microsoft.AspNetCore.Mvc;
-using MapsterMapper;
-using FluentAssertions;
-using Pims.Core.Comparers;
-using System.Linq;
 
 namespace Pims.Api.Test.Controllers
 {

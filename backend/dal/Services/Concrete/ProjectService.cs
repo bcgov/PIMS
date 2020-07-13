@@ -244,7 +244,8 @@ namespace Pims.Dal.Services
                     .Include(p => p.Agency)
                     .Include(p => p.Agency).ThenInclude(a => a.Parent)
                     .Load();
-                } else
+                }
+                else
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
@@ -686,7 +687,7 @@ namespace Pims.Dal.Services
                     var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
                     var incompleteTaskIds = originalProject.Tasks.Where(t => !t.IsCompleted && !completedTaskIds.Contains(t.TaskId)).Select(t => t.TaskId);
                     var statusTaskIds = fromStatus.Status.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
-                    if(toStatus.IsTerminal)
+                    if (toStatus.IsTerminal)
                     {
                         statusTaskIds = statusTaskIds.Concat(toStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id));
                     }

@@ -1,8 +1,8 @@
 using Mapster;
+using System;
+using System.Text;
 using GModel = Pims.Geocoder.Models;
 using Model = Pims.Api.Areas.Tools.Models.Geocoder;
-using System.Text;
-using System;
 
 namespace Pims.Api.Areas.Tools.Mapping.Geocoder
 {

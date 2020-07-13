@@ -1,12 +1,12 @@
-using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Pims.Api.Areas.Keycloak.Controllers;
-using AdminModels = Pims.Api.Areas.Admin.Models.User;
-using Pims.Core.Test;
 using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Dal.Security;
-using Xunit;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
+using AdminModels = Pims.Api.Areas.Admin.Models.User;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
 
 namespace Pims.Api.Test.Routes.Keycloak
 {

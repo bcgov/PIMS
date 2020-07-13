@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Helpers.Middleware
 {

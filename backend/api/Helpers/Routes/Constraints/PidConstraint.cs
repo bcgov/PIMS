@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 namespace Pims.Api.Helpers.Routes.Constraints
 {

@@ -1,7 +1,7 @@
 using Mapster;
-using Model = Pims.Api.Areas.Reports.Models.Project;
-using Entity = Pims.Dal.Entities;
 using Pims.Api.Mapping.Converters;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Reports.Models.Project;
 
 namespace Pims.Api.Areas.Reports.Mapping.Project
 {

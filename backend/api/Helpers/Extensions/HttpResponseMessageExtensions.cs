@@ -1,10 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Pims.Api.Helpers.Extensions
 {
@@ -28,7 +28,7 @@ namespace Pims.Api.Helpers.Extensions
                 var data = await JsonSerializer.DeserializeAsync<T>(responseStream);
                 return new JsonResult(data)
                 {
-                    StatusCode = (int) response.StatusCode
+                    StatusCode = (int)response.StatusCode
                 };
             }
             else
@@ -45,7 +45,7 @@ namespace Pims.Api.Helpers.Extensions
                     var data = await JsonSerializer.DeserializeAsync<object>(responseStream);
                     var result = new JsonResult(data)
                     {
-                        StatusCode = (int) response.StatusCode
+                        StatusCode = (int)response.StatusCode
                     };
                     return result;
                 }
@@ -53,7 +53,7 @@ namespace Pims.Api.Helpers.Extensions
                 {
                     var result = new JsonResult(new Models.ErrorResponseModel(error, null))
                     {
-                    StatusCode = (int) response.StatusCode
+                        StatusCode = (int)response.StatusCode
                     };
                     return result;
                 }
