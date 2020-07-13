@@ -1,9 +1,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 
 namespace Pims.Core.Test
@@ -14,6 +16,21 @@ namespace Pims.Core.Test
     [ExcludeFromCodeCoverage]
     public static class HttpContextHelper
     {
+        #region Variables
+        private static readonly string _issuer = Guid.NewGuid().ToString();
+        private static readonly SecurityKey _securityKey;
+        private static readonly SigningCredentials _signingCredentials;
+        private static readonly byte[] _key = new byte[32];
+        #endregion
+
+        #region constructors
+        static HttpContextHelper()
+        {
+            _securityKey = new SymmetricSecurityKey(_key) { KeyId = Guid.NewGuid().ToString() };
+            _signingCredentials = new SigningCredentials(_securityKey, SecurityAlgorithms.HmacSha256);
+        }
+        #endregion
+
         /// <summary>
         /// Provides a quick way to create a new HttpContext and initialize it with the specified properties.
         /// </summary>
@@ -52,6 +69,70 @@ namespace Pims.Core.Test
             contextAccess.Setup(m => m.HttpContext).Returns(context.Object);
 
             return context.Object;
+        }
+
+        /// <summary>
+        /// Generate a JWT access token for the specified 'identity'.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="identity"></param>
+        /// <returns></returns>
+        public static string GenerateAccessToken(this TestHelper helper, ClaimsIdentity identity)
+        {
+            var tokenHandler = helper.GetService<JwtSecurityTokenHandler>();
+            var token = helper.GenerateJwtToken(identity);
+            return tokenHandler.WriteToken(token);
+        }
+
+        /// <summary>
+        /// Generate a JWT access token for the current user.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <returns></returns>
+        public static string GenerateAccessToken(this TestHelper helper)
+        {
+            var user = helper.GetService<ClaimsPrincipal>();
+            return helper.GenerateAccessToken(user.Identity as ClaimsIdentity);
+        }
+
+        /// <summary>
+        /// Generate a JWT token for the specified 'identity'.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="identity"></param>
+        /// <param name="issuer"></param>
+        /// <param name="audience"></param>
+        /// <param name="notBefore"></param>
+        /// <param name="expires"></param>
+        /// <param name="issuedAt"></param>
+        /// <param name="signingCredentials"></param>
+        /// <returns></returns>
+        public static JwtSecurityToken GenerateJwtToken(this TestHelper helper, ClaimsIdentity identity, string issuer = null, string audience = null, DateTime? notBefore = null, DateTime? expires = null, DateTime? issuedAt = null, SigningCredentials signingCredentials = null)
+        {
+            var tokenHandler = helper.GetService<JwtSecurityTokenHandler>();
+            return tokenHandler.CreateJwtSecurityToken(issuer: issuer ?? _issuer, audience: audience ?? _issuer, subject: identity, notBefore: notBefore ?? DateTime.UtcNow, expires: expires ?? DateTime.UtcNow.AddMinutes(20), issuedAt: issuedAt, signingCredentials: signingCredentials ?? _signingCredentials);
+        }
+
+        /// <summary>
+        /// Generate a JWT token for the specified 'user'.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static JwtSecurityToken GenerateJwtToken(this TestHelper helper, ClaimsPrincipal user)
+        {
+            return helper.GenerateJwtToken(user.Identity as ClaimsIdentity);
+        }
+
+        /// <summary>
+        /// Generate a JWT token for the current user.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <returns></returns>
+        public static JwtSecurityToken GenerateJwtToken(this TestHelper helper)
+        {
+            var user = helper.GetService<ClaimsPrincipal>();
+            return helper.GenerateJwtToken(user);
         }
     }
 }

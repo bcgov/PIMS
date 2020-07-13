@@ -42,6 +42,11 @@ namespace Pims.Dal.Entities
         /// get/set - The agencies response to the project [ignore, watch].
         /// </summary>
         public NotificationResponses Response { get; set; }
+
+        /// <summary>
+        /// get/set - When the response was received.  This will most often be the same as created.
+        /// </summary>
+        public DateTime ReceivedOn { get; set; }
         #endregion
 
         #region Constructors
@@ -57,15 +62,29 @@ namespace Pims.Dal.Entities
         /// <param name="agency"></param>
         /// <param name="notification"></param>
         /// <param name="response"></param>
-        public ProjectAgencyResponse(Project project, Agency agency, NotificationQueue notification, NotificationResponses response)
+        /// <param name="receivedOn"></param>
+        public ProjectAgencyResponse(Project project, Agency agency, NotificationQueue notification, NotificationResponses response, DateTime? receivedOn = null)
+            : this(project, agency, response, receivedOn)
+        {
+            this.NotificationId = notification?.Id ?? throw new ArgumentNullException(nameof(notification));
+            this.Notification = notification;
+        }
+
+        /// <summary>
+        /// Create a new instance of a ProjectAgencyResponse class, initializes with specified arguments.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="agency"></param>
+        /// <param name="response"></param>
+        /// <param name="receivedOn"></param>
+        public ProjectAgencyResponse(Project project, Agency agency, NotificationResponses response, DateTime? receivedOn = null)
         {
             this.ProjectId = project?.Id ?? throw new ArgumentNullException(nameof(project));
             this.Project = project;
             this.AgencyId = agency?.Id ?? throw new ArgumentNullException(nameof(agency));
             this.Agency = agency;
-            this.NotificationId = notification?.Id ?? throw new ArgumentNullException(nameof(notification));
-            this.Notification = notification;
             this.Response = response;
+            this.ReceivedOn = receivedOn ?? DateTime.UtcNow;
         }
         #endregion
     }

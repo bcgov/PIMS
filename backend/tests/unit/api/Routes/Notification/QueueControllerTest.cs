@@ -96,6 +96,19 @@ namespace Pims.Api.Test.Routes.Project
         }
 
         [Fact]
+        public void ResendNotificationStatusAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(QueueController).FindMethod(nameof(QueueController.ResendNotificationAsync), typeof(int));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPut("{id}/resend");
+            endpoint.HasPermissions(Permissions.SystemAdmin);
+        }
+
+        [Fact]
         public void CancelNotificationAsync_Route()
         {
             // Arrange

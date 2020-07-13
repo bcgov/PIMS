@@ -23,6 +23,11 @@ namespace Pims.Dal.Services.Admin
         IPropertyClassificationService PropertyClassification { get; }
         IPropertyStatusService PropertyStatus { get; }
         IPropertyTypeService PropertyType { get; }
+        IProjectService Project { get; }
+        IProjectStatusService ProjectStatus { get; }
+        IProjectRiskService ProjectRisk { get; }
+        ITierLevelService TierLevel { get; }
+        IWorkflowService Workflow { get; }
         #endregion
 
         #region Methods

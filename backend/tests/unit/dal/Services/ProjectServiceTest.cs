@@ -481,7 +481,8 @@ namespace Pims.Dal.Test.Services
             var agency = init.Agencies.Find(1);
             var tier = init.TierLevels.Find(1);
             var status = init.Workflows.Find(1).Status.First();
-            var project = EntityHelper.CreateProject(1, agency, tier, status);
+            var risk = init.ProjectRisks.Find(1);
+            var project = EntityHelper.CreateProject(1, agency, tier, status, risk);
             project.ProjectNumber = "test-generation-override";
             project.PrivateNote = "private note";
             project.PublicNote = "public note";
@@ -492,7 +493,6 @@ namespace Pims.Dal.Test.Services
             project.ApprovedOn = DateTime.Now.AddDays(2);
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
-            helper.CreatePimsContext(user).AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status).AddAndSaveChanges(project.TierLevel);
             var service = helper.CreateService<ProjectService>(user, options);
 
             // Act
@@ -526,7 +526,8 @@ namespace Pims.Dal.Test.Services
             var agency = init.Agencies.Find(1);
             var tier = init.TierLevels.Find(1);
             var status = init.Workflows.Find(1).Status.First();
-            var project = EntityHelper.CreateProject(1, agency, tier, status);
+            var risk = init.ProjectRisks.Find(1);
+            var project = EntityHelper.CreateProject(1, agency, tier, status, risk);
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);

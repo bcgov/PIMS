@@ -39,6 +39,7 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.UpdatedBy)
                 .Include(p => p.Status)
                 .Include(p => p.TierLevel)
+                .Include(p => p.Risk)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Notes)

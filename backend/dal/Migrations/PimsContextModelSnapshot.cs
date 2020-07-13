@@ -15,7 +15,7 @@ namespace Pims.Dal.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -1242,6 +1242,9 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("ClearanceNotificationSentOn")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1312,7 +1315,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<decimal>("OcgFinalStatement")
+                    b.Property<decimal?>("OcgFinancialStatement")
                         .HasColumnType("MONEY");
 
                     b.Property<DateTime?>("OfferAcceptedOn")
@@ -1351,10 +1354,16 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("ReportedFiscalYear")
                         .HasColumnType("int");
 
+                    b.Property<int>("RiskId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<bool>("SaleWithLeaseInPlace")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("SalesCost")
                         .HasColumnType("MONEY");
@@ -1397,6 +1406,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("ProjectNumber")
                         .IsUnique();
 
+                    b.HasIndex("RiskId");
+
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TierLevelId");
@@ -1430,6 +1441,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<int?>("NotificationId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ReceivedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Response")
                         .HasColumnType("int");
@@ -1595,6 +1609,140 @@ namespace Pims.Dal.Migrations
                         .HasFilter("[ParcelId] IS NOT NULL AND [BuildingId] IS NOT NULL");
 
                     b.ToTable("ProjectProperties");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectRisk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDisabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("IsDisabled", "Code", "Name", "SortOrder");
+
+                    b.ToTable("ProjectRisks");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectSnapshot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Assessed")
+                        .HasColumnType("MONEY");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<decimal>("Estimated")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("GainLoss")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("InterestComponent")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("NetBook")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("NetProceeds")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal?>("OcgFinancialStatement")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal>("ProgramCost")
+                        .HasColumnType("MONEY");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<bool>("SaleWithLeaseInPlace")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("SalesCost")
+                        .HasColumnType("MONEY");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("ProjectId", "CreatedOn");
+
+                    b.ToTable("ProjectSnapshots");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ProjectStatus", b =>
@@ -2889,6 +3037,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.Agency", "Agency")
                         .WithMany()
                         .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.Agency", null)
@@ -2899,6 +3048,12 @@ namespace Pims.Dal.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
+                    b.HasOne("Pims.Dal.Entities.ProjectRisk", "Risk")
+                        .WithMany("Projects")
+                        .HasForeignKey("RiskId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
                     b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -2908,6 +3063,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.TierLevel", "TierLevel")
                         .WithMany()
                         .HasForeignKey("TierLevelId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
@@ -2992,6 +3148,34 @@ namespace Pims.Dal.Migrations
 
                     b.HasOne("Pims.Dal.Entities.Project", "Project")
                         .WithMany("Properties")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectRisk", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectSnapshot", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Project", "Project")
+                        .WithMany("Snapshots")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Text;
 
 namespace Pims.Core.Extensions
@@ -60,6 +61,22 @@ namespace Pims.Core.Extensions
                 return char.ToLower(word[0]) + (word.Length > 1 ? word.Substring(1) : null);
             }
             return word;
+        }
+
+        /// <summary>
+        /// Determine what HTTP method to use.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <return></return>
+        public static HttpMethod GetHttpMethod(this string method)
+        {
+            return (method?.ToLower()) switch
+            {
+                ("get") => HttpMethod.Get,
+                ("delete") => HttpMethod.Delete,
+                ("put") => HttpMethod.Put,
+                _ => HttpMethod.Post,
+            };
         }
     }
 }

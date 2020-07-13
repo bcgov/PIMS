@@ -32,10 +32,11 @@ namespace Pims.Core.Test
         /// <param name="tierLevel"></param>
         /// <param name="workflowStatus"></param>
         /// <returns></returns>
-        public static Entity.Project CreateProject(int id, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null)
+        public static Entity.Project CreateProject(int id, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null, Entity.ProjectRisk risk = null)
         {
             agency ??= EntityHelper.CreateAgency(id);
             tierLevel ??= EntityHelper.CreateTierLevel(id, "tierLevel");
+            risk ??= EntityHelper.CreateProjectRisk(id, "risk", "risk", 1);
             var status = workflowStatus?.Status ?? EntityHelper.CreateProjectStatus("Draft", "DR");
             var workflow = workflowStatus?.Workflow ?? EntityHelper.CreateWorkflow(id, "Submit", "SUBMIT-DISPOSAL", new[] { status });
 
@@ -44,6 +45,8 @@ namespace Pims.Core.Test
             {
                 ReportedFiscalYear = DateTime.UtcNow.GetFiscalYear(),
                 ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
+                Risk = risk,
+                RiskId = risk.Id,
                 Agency = agency,
                 AgencyId = agency.Id,
                 Workflow = workflow,
@@ -72,13 +75,14 @@ namespace Pims.Core.Test
         /// <param name="agency"></param>
         /// <param name="tierLevel"></param>
         /// <param name="workflowStatus"></param>
+        /// <param name="risk"></param>
         /// <returns></returns>
-        public static List<Entity.Project> CreateProjects(int startId, int count, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null)
+        public static List<Entity.Project> CreateProjects(int startId, int count, Entity.Agency agency = null, Entity.TierLevel tierLevel = null, Entity.WorkflowProjectStatus workflowStatus = null, Entity.ProjectRisk risk = null)
         {
             var projects = new List<Entity.Project>(count);
             for (var i = startId; i < (startId + count); i++)
             {
-                projects.Add(CreateProject(i, agency, tierLevel, workflowStatus));
+                projects.Add(CreateProject(i, agency, tierLevel, workflowStatus, risk));
             }
             return projects;
         }
@@ -103,10 +107,12 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="agency"></param>
         /// <param name="workflowStatus"></param>
+        /// <param name="risk"></param>
         /// <returns></returns>
-        public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null)
+        public static Entity.Project CreateProject(this PimsContext context, int id, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null, Entity.ProjectRisk risk = null)
         {
             agency ??= context.Agencies.OrderBy(a => a.Id).FirstOrDefault() ?? EntityHelper.CreateAgency(1);
+            risk ??= context.ProjectRisks.FirstOrDefault() ?? EntityHelper.CreateProjectRisk(1, "risk", "risk", 1);
             workflowStatus ??= context.WorkflowProjectStatus.FirstOrDefault(ws => ws.WorkflowId == 1 && ws.StatusId == 1);
             if (workflowStatus == null)
             {
@@ -117,7 +123,7 @@ namespace Pims.Core.Test
 
             var tierLevel = context.TierLevels.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreateTierLevel("tierLevel");
 
-            var project = EntityHelper.CreateProject(id, agency, tierLevel, workflowStatus);
+            var project = EntityHelper.CreateProject(id, agency, tierLevel, workflowStatus, risk);
             context.Projects.Add(project);
             return project;
         }
@@ -130,10 +136,12 @@ namespace Pims.Core.Test
         /// <param name="count"></param>
         /// <param name="agency"></param>
         /// <param name="workflowStatus"></param>
+        /// <param name="risk"></param>
         /// <returns></returns>
-        public static List<Entity.Project> CreateProjects(this PimsContext context, int startId, int count, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null)
+        public static List<Entity.Project> CreateProjects(this PimsContext context, int startId, int count, Entity.Agency agency = null, Entity.WorkflowProjectStatus workflowStatus = null, Entity.ProjectRisk risk = null)
         {
             agency ??= context.Agencies.FirstOrDefault(a => a.Id == 1) ?? EntityHelper.CreateAgency(startId);
+            risk ??= context.ProjectRisks.FirstOrDefault() ?? EntityHelper.CreateProjectRisk(1, "risk", "risk", 1);
             workflowStatus ??= context.WorkflowProjectStatus.FirstOrDefault(ws => ws.WorkflowId == 1 && ws.StatusId == 1);
             if (workflowStatus == null)
             {
@@ -145,7 +153,7 @@ namespace Pims.Core.Test
             var projects = new List<Entity.Project>(count);
             for (var i = startId; i < (startId + count); i++)
             {
-                projects.Add(context.CreateProject(i, agency, workflowStatus));
+                projects.Add(context.CreateProject(i, agency, workflowStatus, risk));
             }
             return projects;
         }

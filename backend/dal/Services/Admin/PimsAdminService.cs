@@ -19,86 +19,97 @@ namespace Pims.Dal.Services.Admin
         /// <summary>
         /// get - The user service.
         /// </summary>
-        /// <value></value>
         public IUserService User { get { return _serviceProvider.GetService<IUserService>(); } }
 
         /// <summary>
         /// get - The role service.
         /// </summary>
-        /// <value></value>
         public IRoleService Role { get { return _serviceProvider.GetService<IRoleService>(); } }
 
         /// <summary>
         /// get - The claim service.
         /// </summary>
-        /// <value></value>
         public IClaimService Claim { get { return _serviceProvider.GetService<IClaimService>(); } }
 
         /// <summary>
         /// get - The agency service.
         /// </summary>
-        /// <value></value>
         public IAgencyService Agency { get { return _serviceProvider.GetService<IAgencyService>(); } }
 
         /// <summary>
         /// get - The parcel service.
         /// </summary>
-        /// <value></value>
         public IParcelService Parcel { get { return _serviceProvider.GetService<IParcelService>(); } }
 
         /// <summary>
         /// get - The building service.
         /// </summary>
-        /// <value></value>
         public IBuildingService Building { get { return _serviceProvider.GetService<IBuildingService>(); } }
 
         /// <summary>
         /// get - The address service.
         /// </summary>
-        /// <value></value>
         public IAddressService Address { get { return _serviceProvider.GetService<IAddressService>(); } }
 
         /// <summary>
         /// get - The province service.
         /// </summary>
-        /// <value></value>
         public IProvinceService Province { get { return _serviceProvider.GetService<IProvinceService>(); } }
 
         /// <summary>
         /// get - The city service.
         /// </summary>
-        /// <value></value>
         public ICityService City { get { return _serviceProvider.GetService<ICityService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The building construction type service.
         /// </summary>
-        /// <value></value>
         public IBuildingConstructionTypeService BuildingConstructionType { get { return _serviceProvider.GetService<IBuildingConstructionTypeService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The building predominate use service.
         /// </summary>
-        /// <value></value>
         public IBuildingPredominateUseService BuildingPredominateUse { get { return _serviceProvider.GetService<IBuildingPredominateUseService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The property classification service.
         /// </summary>
-        /// <value></value>
         public IPropertyClassificationService PropertyClassification { get { return _serviceProvider.GetService<IPropertyClassificationService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The property status service.
         /// </summary>
-        /// <value></value>
         public IPropertyStatusService PropertyStatus { get { return _serviceProvider.GetService<IPropertyStatusService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The property type service.
         /// </summary>
-        /// <value></value>
         public IPropertyTypeService PropertyType { get { return _serviceProvider.GetService<IPropertyTypeService>(); } }
+
+        /// <summary>
+        /// get - The project service.
+        /// </summary>
+        public IProjectService Project { get { return _serviceProvider.GetService<IProjectService>(); } }
+
+        /// <summary>
+        /// get - The project status service.
+        /// </summary>
+        public IProjectStatusService ProjectStatus { get { return _serviceProvider.GetService<IProjectStatusService>(); } }
+
+        /// <summary>
+        /// get - The project risk service.
+        /// </summary>
+        public IProjectRiskService ProjectRisk { get { return _serviceProvider.GetService<IProjectRiskService>(); } }
+
+        /// <summary>
+        /// get - The project tier level service.
+        /// </summary>
+        public ITierLevelService TierLevel { get { return _serviceProvider.GetService<ITierLevelService>(); } }
+
+        /// <summary>
+        /// get - The project workflow service.
+        /// </summary>
+        public IWorkflowService Workflow { get { return _serviceProvider.GetService<IWorkflowService>(); } }
         #endregion
 
         #region Constructors
