@@ -222,6 +222,18 @@ namespace Pims.Core.Extensions
                 && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
                 && type.Attributes.HasFlag(TypeAttributes.NotPublic);
         }
+
+        /// <summary>
+        /// Create a default value for the specified 'type'.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object GetDefault(this Type type)
+        {
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+            return null;
+        }
         #endregion
     }
 }

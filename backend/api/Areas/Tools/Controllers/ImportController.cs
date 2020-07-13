@@ -91,7 +91,7 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             var helper = new ImportProjectsHelper(_pimsAdminService, _logger);
             var entities = helper.AddUpdateProjects(models, stopOnError, defaults?.Split(";"));
-            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
+            var parcels = _mapper.Map<Model.ProjectModel[]>(entities);
 
             return new JsonResult(parcels);
         }

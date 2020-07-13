@@ -3,6 +3,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
     public class ImportPropertyModel
     {
         #region Properties
+        public string Title { get; set; }
         public string Status { get; set; }
         public string FiscalYear { get; set; }
         public string Agency { get; set; }

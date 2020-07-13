@@ -56,10 +56,10 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public HttpClientRequestException(HttpResponseMessage response) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed")
+        public HttpClientRequestException(HttpResponseMessage response) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed")
         {
-            this.Response = response ??
-                throw new ArgumentNullException(nameof(response)); // TODO: Extract error response details into innerException.
+            this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
+            // TODO: Extract error response details into innerException.
             this.StatusCode = response.StatusCode;
         }
 
@@ -70,8 +70,8 @@ namespace Pims.Core.Exceptions
         /// <returns></returns>
         public HttpClientRequestException(HttpResponseMessage response, string message) : base(message)
         {
-            this.Response = response ??
-                throw new ArgumentNullException(nameof(response)); // TODO: Extract error response details into innerException.
+            this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
+            // TODO: Extract error response details into innerException.
             this.StatusCode = response.StatusCode;
         }
 
@@ -80,10 +80,10 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public HttpClientRequestException(HttpResponseMessage response, Exception innerException) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed", innerException)
+        public HttpClientRequestException(HttpResponseMessage response, Exception innerException) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed", innerException)
         {
-            this.Response = response ??
-                throw new ArgumentNullException(nameof(response)); // TODO: Extract error response details into innerException.
+            this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
+            // TODO: Extract error response details into innerException.
             this.StatusCode = response.StatusCode;
         }
         #endregion

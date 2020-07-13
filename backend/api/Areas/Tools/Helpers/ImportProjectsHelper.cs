@@ -55,7 +55,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var projects = models.Select(p => Merge(_service.Project.Get(p.ProjectNumber), p, stopOnError, defaults)).NotNull();
 
-            return _service.Project.Add(projects);
+            return _service.Project.Add(projects).ToArray();
         }
         #endregion
 
@@ -83,7 +83,8 @@ namespace Pims.Api.Areas.Tools.Helpers
                         if (keyValue.Length < 2) throw new ArgumentException($"Argument '{kv}' is not valid.");
 
                         var prop = props.FirstOrDefault(p => String.Compare(p.Name, keyValue[0], true) == 0);
-                        if (prop != null && prop.GetValue(model) == null)
+                        var modelValue = prop?.GetValue(model);
+                        if (modelValue == null || modelValue.Equals(prop.PropertyType.GetDefault()))
                         {
                             var value = Convert.ChangeType(keyValue[1], prop.PropertyType);
                             prop.SetValue(model, value);
@@ -108,7 +109,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 project.WorkflowId = project.Workflow.Id;
                 project.Status = GetStatus(model.Status);
                 project.StatusId = project.Status.Id;
-                project.TierLevel = GetTier(model.Estimated, 1); // TODO: Need to import or link project properties.
+                project.TierLevel = GetTier(model.Estimated, project.Properties.Count()); // TODO: Need to import or link project properties.
                 project.TierLevelId = project.TierLevel.Id;
                 project.Risk = GetRisk(model.Risk);
                 project.RiskId = project.Risk.Id;
@@ -134,22 +135,32 @@ namespace Pims.Api.Areas.Tools.Helpers
                 project.PrivateNote = model.PrivateNote;
                 project.AgencyResponseNote = model.AgencyResponseNote;
 
-                //The data doesn't provide the purchasing agency information so the response will be the current owning agency.
-                var response = project.Responses.FirstOrDefault(r => r.AgencyId == project.AgencyId);
-                if (response == null)
+                // The data doesn't provide the purchasing agency information so the response will be the current owning agency.
+                if (!String.IsNullOrWhiteSpace(model.AgencyResponseNote) || model.AgencyResponseDate.HasValue)
                 {
-                    project.Responses.Add(new Entity.ProjectAgencyResponse(project, project.Agency, Entity.NotificationResponses.Watch, model.AgencyResponseDate));
-                }
-                else
-                {
-                    response.Response = Entity.NotificationResponses.Watch;
-                    response.ReceivedOn = model.AgencyResponseDate ?? response.ReceivedOn;
+                    var response = project.Responses.FirstOrDefault(r => r.AgencyId == project.AgencyId);
+                    if (response == null)
+                    {
+                        project.Responses.Add(new Entity.ProjectAgencyResponse(project, project.Agency, Entity.NotificationResponses.Watch, model.AgencyResponseDate));
+                    }
+                    else
+                    {
+                        response.Response = Entity.NotificationResponses.Watch;
+                        response.ReceivedOn = model.AgencyResponseDate ?? response.ReceivedOn;
+                    }
                 }
 
                 if (!String.IsNullOrWhiteSpace(model.FinancialNote))
                 {
-                    var financialNote = project.Notes.FirstOrDefault(n => n.NoteType == Entity.NoteTypes.Financial) ?? new Entity.ProjectNote(project, Entity.NoteTypes.Financial, model.FinancialNote);
-                    financialNote.Note = model.FinancialNote;
+                    var financialNote = project.Notes.FirstOrDefault(n => n.NoteType == Entity.NoteTypes.Financial);
+                    if (financialNote == null)
+                    {
+                        project.Notes.Add(new Entity.ProjectNote(project, Entity.NoteTypes.Financial, model.FinancialNote));
+                    }
+                    else
+                    {
+                        financialNote.Note = model.FinancialNote;
+                    }
                 }
 
                 _logger.LogDebug($"Parsed project '{project.ProjectNumber}' - '{project.Status.Code}'", project);
@@ -195,16 +206,16 @@ namespace Pims.Api.Areas.Tools.Helpers
         }
 
         /// <summary>
-        /// Get the tier level based on the assessed value and the number of properties.
+        /// Get the tier level based on the value and the number of properties.
         /// </summary>
-        /// <param name="assessed"></param>
+        /// <param name="value"></param>
         /// <param name="properties"></param>
         /// <returns></returns>
-        private Entity.TierLevel GetTier(decimal assessed, int properties)
+        private Entity.TierLevel GetTier(decimal value, int properties)
         {
-            if (assessed >= 10000000m && properties > 1) return _tiers.FirstOrDefault(t => t.Id == 4);
-            else if (assessed >= 10000000m) return _tiers.FirstOrDefault(t => t.Id == 3);
-            else if (assessed >= 1000000m) return _tiers.FirstOrDefault(t => t.Id == 2);
+            if (value >= 10000000m && properties > 1) return _tiers.FirstOrDefault(t => t.Id == 4);
+            else if (value >= 10000000m) return _tiers.FirstOrDefault(t => t.Id == 3);
+            else if (value >= 1000000m) return _tiers.FirstOrDefault(t => t.Id == 2);
             return _tiers.FirstOrDefault(t => t.Id == 1);
         }
 
