@@ -12,7 +12,6 @@ namespace Pims.Api.Areas.Project.Mapping.Search
     {
         public void Register(TypeAdapterConfig config)
         {
-
             config.NewConfig<ProjectProperty, ProjectPropertyModel>()
                 .Map(dest => dest.PropertyTypeId,
                     src => src.Building != null ? PropertyTypes.Building : PropertyTypes.Land)

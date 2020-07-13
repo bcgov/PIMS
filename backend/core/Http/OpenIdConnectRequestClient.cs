@@ -112,7 +112,7 @@ namespace Pims.Core.Http
             else
             {
                 // We have a valid token, keep on using it.
-                return $"Bearer {_accessToken.AccessToken}";
+                return $"Bearer {_accessToken.AccessToken}"; // NOSONAR
             }
 
             // Extract the JWT token to use when making the request.

@@ -249,10 +249,9 @@ namespace Pims.Api.Areas.Tools.Helpers
                 double.TryParse(property.Longitude, out double longitude);
                 float.TryParse(property.LandArea, out float landArea);
 
-                p_e.AgencyId = agency?.Id ??
-                    throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
+                p_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
-                p_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
+                p_e.Name = property.Title ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 p_e.Description = property.Description;
                 p_e.Latitude = latitude != 0 ? latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
                 p_e.Longitude = longitude != 0 ? longitude : p_e.Longitude;
@@ -261,9 +260,9 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 // Find foreign key.
                 var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
-                    throw new InvalidOperationException($"Property Classification '{property.Classification}' does not exist.");
+                    throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
                 var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
-                    throw new InvalidOperationException($"Property Status '{property.Status}' does not exist.");
+                    throw new KeyNotFoundException($"Property Status '{property.Status}' does not exist.");
 
                 p_e.ClassificationId = propClassification.Id;
                 p_e.Classification = propClassification;
@@ -356,11 +355,9 @@ namespace Pims.Api.Areas.Tools.Helpers
                 int.TryParse(property.BuildingFloorCount, out int floorCount);
 
                 // Copy properties over to entity.
-                b_e.AgencyId = agency?.Id ??
-                    throw new InvalidOperationException($"Agency '{property.Agency}' does not exist.");
+                b_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 b_e.Agency = agency;
-                b_e.ParcelId = parcel?.Id ??
-                    throw new InvalidOperationException($"Parcel '{property.ParcelId}' does not exist.");
+                b_e.ParcelId = parcel?.Id ?? throw new KeyNotFoundException($"Parcel '{property.ParcelId}' does not exist.");
                 b_e.LocalId = property.LocalId;
                 b_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 b_e.Description = property.Description;
@@ -373,9 +370,9 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 // Find foreign key.
                 var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
-                    throw new InvalidOperationException($"Property Classification '{property.Classification}' does not exist.");
+                    throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
                 var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
-                    throw new InvalidOperationException($"Property Status '{property.Status}' does not exist.");
+                    throw new KeyNotFoundException($"Property Status '{property.Status}' does not exist.");
 
                 b_e.ClassificationId = propClassification.Id;
                 b_e.Classification = propClassification;

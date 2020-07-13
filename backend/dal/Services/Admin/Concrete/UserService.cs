@@ -242,12 +242,7 @@ namespace Pims.Dal.Services.Admin
         public Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null,
             AccessRequestStatus status = AccessRequestStatus.OnHold)
         {
-            var sortArray = new string[] { };
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                sortArray[0] = sort;
-            }
-
+            var sortArray = !string.IsNullOrWhiteSpace(sort) ? new[] { sort } : new string[0];
             var filter = new AccessRequestFilter(page, quantity, sortArray, null, null, null, status);
             return GetAccessRequests(filter);
         }

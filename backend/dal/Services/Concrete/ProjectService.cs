@@ -686,7 +686,7 @@ namespace Pims.Dal.Services
                     var statusTaskIds = fromStatus.Status.Tasks.Where(t => !t.IsOptional).Select(t => t.Id);
                     if(toStatus.IsTerminal)
                     {
-                        statusTaskIds.Concat(toStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id));
+                        statusTaskIds = statusTaskIds.Concat(toStatus.Tasks.Where(t => !t.IsOptional).Select(t => t.Id));
                     }
                     var incompleteStatusTaskIds = statusTaskIds.Any() && (project.Tasks.Any() || originalProject.Tasks.Any()) ? incompleteTaskIds.Intersect(statusTaskIds) : statusTaskIds;
                     if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");

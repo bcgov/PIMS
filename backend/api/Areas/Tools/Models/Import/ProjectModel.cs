@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Tools.Models.Import
 {
@@ -240,7 +241,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// <summary>
         /// get/set - OCG final statement.
         /// </summary>
-        public decimal OcgFinalStatement { get; set; }
+        public decimal OcgFinancialStatement { get; set; }
 
         /// <summary>
         /// get/set - Record the interest component.
@@ -253,10 +254,15 @@ namespace Pims.Api.Areas.Tools.Models.Import
         ///// </summary>
         //public IEnumerable<ProjectProperty> Properties { get; set; }
 
-        ///// <summary>
-        ///// get - A collection of notes for this project.
-        ///// </summary>
-        //public IEnumerable<ProjectNote> Notes { get; set; }
+        /// <summary>
+        /// get - A collection of notes for this project.
+        /// </summary>
+        public IEnumerable<ProjectNoteModel> Notes { get; set; }
+
+        /// <summary>
+        /// get - A collection of responses for this project.
+        /// </summary>
+        public IEnumerable<ProjectAgencyResponseModel> Responses { get; set; }
         #endregion
     }
 }
