@@ -182,7 +182,7 @@ namespace Pims.Dal.Services
             if (existingBuilding.AgencyId != building.AgencyId && !isAdmin) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
 
             // Do not allow making property visible through this service.
-            if (existingBuilding.IsVisibleToOtherAgencies != existingBuilding.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
+            if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
             this.Context.Buildings.ThrowIfNotUnique(building);
 

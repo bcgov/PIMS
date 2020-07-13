@@ -9,6 +9,9 @@ using Model = Pims.Api.Areas.Project.Models.Workflow;
 using Microsoft.AspNetCore.Mvc;
 using MapsterMapper;
 using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -18,6 +21,15 @@ namespace Pims.Api.Test.Controllers
     [ExcludeFromCodeCoverage]
     public class WorkflowControllerTest
     {
+        #region Variables
+        public static IEnumerable<object[]> BadWorkflow = new List<object[]>(
+        new[] {
+            new object[] { null },
+            new object[] { "" },
+            new object[] { " " }
+        });
+        #endregion
+
         #region Constructors
         public WorkflowControllerTest()
         {
@@ -25,9 +37,9 @@ namespace Pims.Api.Test.Controllers
         #endregion
 
         #region Tests
-        #region GetWorkflow
+        #region GetWorkflowStatus
         [Fact]
-        public void GetWorkflow_Success()
+        public void GetWorkflowStatus_Success()
         {
             // Arrange
             var helper = new TestHelper();
@@ -52,6 +64,52 @@ namespace Pims.Api.Test.Controllers
                 .Excluding(o => o.UpdatedOn)
                 .Excluding(o => o.CreatedOn));
             service.Verify(m => m.Workflow.Get("SUBMIT"), Times.Once());
+        }
+
+        [Theory]
+        [MemberData(nameof(BadWorkflow))]
+        public void GetWorkflowStatus_ArgumentException(string workflowCode)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => controller.GetWorkflowStatus(workflowCode));
+        }
+        #endregion
+
+        #region GetWorkflowTasks
+        [Fact]
+        public void GetWorkflowTasks_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<WorkflowController>(Permissions.ProjectView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var status = EntityHelper.CreateProjectStatus(0, 6);
+            var workflow = EntityHelper.CreateWorkflow(0, "Submit", "SUBMIT", status);
+            var tasks = new[]
+            {
+                EntityHelper.CreateTask("task 1", status.Next(0)),
+                EntityHelper.CreateTask("task 2", status.Next(2))
+            };
+            service.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(tasks);
+
+            // Act
+            var result = controller.GetWorkflowTasks("SUBMIT");
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsType<Model.TaskModel[]>(actionResult.Value);
+            Assert.Null(actionResult.StatusCode);
+            actualResult.Should().HaveCount(2);
+            service.Verify(m => m.Task.GetForWorkflow("SUBMIT"), Times.Once());
         }
         #endregion
         #endregion

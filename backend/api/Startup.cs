@@ -188,12 +188,13 @@ namespace Pims.Api
             {
                 builder.Password = pwd;
             }
-            ILoggerFactory debugLoggerFactory = LoggerFactory.Create(builder => { builder.AddDebug(); });
             services.AddDbContext<PimsContext>(options =>
             {
-                options.UseSqlServer(builder.ConnectionString).UseLoggerFactory(debugLoggerFactory);
+                var sql = options.UseSqlServer(builder.ConnectionString);
                 if (!this.Environment.IsProduction())
                 {
+                    var debugLoggerFactory = LoggerFactory.Create(builder => { builder.AddDebug(); }); // NOSONAR
+                    sql.UseLoggerFactory(debugLoggerFactory);
                     options.EnableSensitiveDataLogging();
                 }
             });

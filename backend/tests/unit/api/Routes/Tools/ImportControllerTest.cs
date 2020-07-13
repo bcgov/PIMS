@@ -55,6 +55,19 @@ namespace Pims.Api.Test.Routes.Project
             endpoint.HasPost("properties");
             endpoint.HasPermissions(Permissions.SystemAdmin);
         }
+
+        [Fact]
+        public void ImportProjects_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ImportController).FindMethod(nameof(ImportController.ImportProjects), typeof(Model.ImportProjectModel[]), typeof(bool), typeof(string));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("projects");
+            endpoint.HasPermissions(Permissions.SystemAdmin);
+        }
         #endregion
     }
 }
