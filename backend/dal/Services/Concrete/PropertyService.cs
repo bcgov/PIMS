@@ -44,7 +44,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<Property> Get(AllPropertyFilter filter)
+        public IEnumerable<ProjectProperty> Get(AllPropertyFilter filter)
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             filter.ThrowIfNull(nameof(filter));
@@ -63,8 +63,22 @@ namespace Pims.Dal.Services
             }
 
             var query = this.Context.GenerateQuery(this.User, filter);
+            var properties = query.Select(x => new ProjectProperty(x)).ToArray();
 
-            return query.ToArray();
+            var projectNumbers = properties.Select(p => p.ProjectNumber).Distinct().ToArray();
+            var statuses = from p in this.Context.ProjectProperties
+                where projectNumbers.Contains(p.Project.ProjectNumber)
+                select new { p.Project.ProjectNumber, p.Project.Status };
+
+            foreach (var status in statuses)
+            {
+                foreach (var projectProperty in properties.Where(property => property.ProjectNumber == status.ProjectNumber))
+                {
+                    projectProperty.ProjectStatus = status.Status.Code;
+                }
+            }
+
+            return properties;
         }
 
         /// <summary>

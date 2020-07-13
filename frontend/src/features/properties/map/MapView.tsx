@@ -77,6 +77,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       minLotSize,
       maxLotSize,
       inSurplusPropertyProgram,
+      inEnhancedReferralProcess,
     } = e.filter ?? {};
 
     const ne = e.bounds.getNorthEast();
@@ -94,6 +95,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       minLandArea: minLotSize ?? null,
       maxLandArea: maxLotSize ?? null,
       inSurplusPropertyProgram: inSurplusPropertyProgram ?? null,
+      inEnhancedReferralProcess,
     };
     return apiParams;
   };

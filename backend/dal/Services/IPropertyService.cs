@@ -10,7 +10,7 @@ namespace Pims.Dal.Services
     public interface IPropertyService : IService
     {
         int Count();
-        IEnumerable<Property> Get(AllPropertyFilter filter);
+        IEnumerable<ProjectProperty> Get(AllPropertyFilter filter);
         Paged<Property> GetPage(AllPropertyFilter filter);
     }
 }

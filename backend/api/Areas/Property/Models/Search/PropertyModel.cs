@@ -74,6 +74,11 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string ProjectNumber { get; set; }
 
         /// <summary>
+        /// get/set - The property project status.
+        /// </summary>
+        public string ProjectStatus { get; set; }
+
+        /// <summary>
         /// get/set - Whether the property is sensitive data.
         /// </summary>
         public bool IsSensitive { get; set; }
