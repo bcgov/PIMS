@@ -617,10 +617,15 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
-            var init = helper.CreatePimsContext(user);
-            var project = EntityHelper.CreateProject(1);
 
-            init.AddAndSaveChanges(project.Agency).AddAndSaveChanges(project.Status);
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
 
             var response = EntityHelper.CreateResponse(project.Id, project.AgencyId);
             project.Responses.Add(response);
@@ -940,13 +945,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.AddResponses(response);
             var result = service.Update(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
-            projectToUpdate.Should().BeEquivalentTo(result);
-            result.Responses.Should().BeEquivalentTo(new List<ProjectAgencyResponse>() { response });
+            result.Responses.Should().HaveCount(1);
         }
 
         /**
