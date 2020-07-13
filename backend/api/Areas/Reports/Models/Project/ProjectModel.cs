@@ -1,19 +1,13 @@
 using System;
-using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Reports.Models.Project
 {
     /// <summary>
     /// ProjectModel class, provides a model to represent the project.
     /// </summary>
-    public class ProjectModel : Api.Models.BaseModel
+    public class ProjectModel
     {
         #region Properties
-        /// <summary>
-        /// get/set - The primary key to identify the project.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// get/set - A unique project number to identify the project.
         /// </summary>
@@ -23,6 +17,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// get/set - The name to identify the project.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// get/set - The project description.
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// get/set - The reported fiscal year this project.
@@ -35,24 +34,19 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public int ActualFiscalYear { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the project status.
+        /// get/set - The current workflow code.
         /// </summary>
-        public int StatusId { get; set; }
+        public string WorkflowCode { get; set; }
 
         /// <summary>
-        /// get/set - The code name of the status code.
+        /// get/set - The current status code.
         /// </summary>
         public string StatusCode { get; set; }
 
         /// <summary>
-        /// get/set - The status of the project.
+        /// get/set - The status label.
         /// </summary>
         public string Status { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the tier level.
-        /// </summary>
-        public int TierLevelId { get; set; }
 
         /// <summary>
         /// get/set - The tier level of the project.
@@ -60,10 +54,115 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public string TierLevel { get; set; }
 
         /// <summary>
-        /// get/set - The project description.
+        /// get/set - The project risk.
         /// </summary>
-        public string Description { get; set; }
+        public string Risk { get; set; }
 
+        /// <summary>
+        /// get/set - The owning agency code.
+        /// </summary>
+        public string AgencyCode { get; set; }
+
+        /// <summary>
+        /// get/set - The owning subagency name.
+        /// </summary>
+        public string SubAgency { get; set; }
+
+        /// <summary>
+        /// get/set - The owning subagency code.
+        /// </summary>
+        public string SubAgencyCode { get; set; }
+
+        /// <summary>
+        /// get/set - User name
+        /// </summary>
+        public string UpdatedBy { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was last updated.
+        /// </summary>
+        public DateTime? UpdatedOn { get; set; }
+
+        /// <summary>
+        /// get/set - User name
+        /// </summary>
+        public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// get/set - when the project was created.
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
+
+        #region Exemption
+        /// <summary>
+        /// get/set - Whether an exemption was requested for the ERP.
+        /// </summary>
+        public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The rational for the exemption from ERP.
+        /// </summary>
+        public string ExemptionRationale { get; set; }
+        #endregion
+
+        #region Financial
+        /// <summary>
+        /// get/set - The netbook value which is the sum of the properties.
+        /// </summary>
+        public decimal NetBook { get; set; }
+
+        /// <summary>
+        /// get/set - The estimated value which is the sum of the properties.
+        /// </summary>
+        public decimal Estimated { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value which is the sum of the properties.
+        /// </summary>
+        public decimal Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - The sales cost.
+        /// </summary>
+        public decimal SalesCost { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The net proceeds
+        /// </summary>
+        public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The program cost.
+        /// </summary>
+        public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The gain or loss from selling the properties.
+        /// </summary>
+        public decimal GainLoss { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - OCG final statement.
+        /// </summary>
+        public decimal? OcgFinancialStatement { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - Record the interest component.
+        /// </summary>
+        public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - Amount offered during SPL
+        /// </summary>
+        public decimal OfferAmount { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the sale includes a lease in place (SLIP).
+        /// </summary>
+        public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
+        #endregion
+
+        #region Notes
         /// <summary>
         /// get/set - The project note.
         /// </summary>
@@ -83,66 +182,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// get/set - Note summerizing agency responses to notifications.
         /// </summary>
         public string AgencyResponseNote { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the owning agency.
-        /// </summary>
-        public int AgencyId { get; set; }
-
-        /// <summary>
-        /// get/set - The owning agency name.
-        /// </summary>
-        public string Agency { get; set; }
-
-        /// <summary>
-        /// get/set - The owning agency code.
-        /// </summary>
-        public string AgencyCode { get; set; }
-
-        /// <summary>
-        /// get/set - The owning subagency name.
-        /// </summary>
-        public string SubAgency { get; set; }
-
-        /// <summary>
-        /// get/set - The owning subagency code.
-        /// </summary>
-        public string SubAgencyCode { get; set; }
-
-        /// <summary>
-        /// get/set - Whether an exemption was requested for the ERP.
-        /// </summary>
-        public bool ExemptionRequested { get; set; }
-
-        /// <summary>
-        /// get/set - The rational for the exemption from ERP.
-        /// </summary>
-        public string ExemptionRationale { get; set; }
-
-        /// <summary>
-        /// get/set - The netbook value which is the sum of the properties.
-        /// </summary>
-        public decimal NetBook { get; set; }
-
-        /// <summary>
-        /// get/set - The estimated value which is the sum of the properties.
-        /// </summary>
-        public decimal Estimated { get; set; }
-
-        /// <summary>
-        /// get/set - The assessed value which is the sum of the properties.
-        /// </summary>
-        public decimal Assessed { get; set; }
-
-        /// <summary>
-        /// get/set - User Id
-        /// </summary>
-        public string UpdatedBy { get; set; }
-
-        /// <summary>
-        /// get/set - User Id
-        /// </summary>
-        public string CreatedBy { get; set; }
+        #endregion
 
         #region Dates
         /// <summary>
@@ -199,6 +239,39 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// get/set - When the project was cancelled.
         /// </summary>
         public DateTime? CancelledOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was disposed.
+        /// </summary>
+        public DateTime? DisposedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was completed.
+        /// </summary>
+        public DateTime? CompletedOn { get; set; }
+        #endregion
+
+        #region SPL
+        /// <summary>
+        /// get/set - When the project was externally marketed.
+        /// </summary>
+        public DateTime? MarketedOn { get; set; } // TODO: Move to metadata property.
+
+
+        /// <summary>
+        /// get/set - Note summerizing offers received.
+        /// </summary>
+        public string OffersNote { get; set; }
+
+        /// <summary>
+        /// get/set - Text field describing project purchaser.
+        /// </summary>
+        public string Purchaser { get; set; }
+
+        /// <summary>
+        /// get/set - Whether or not the contract for the project is conditional
+        /// </summary>
+        public bool? IsContractConditional { get; set; }
         #endregion
         #endregion
     }

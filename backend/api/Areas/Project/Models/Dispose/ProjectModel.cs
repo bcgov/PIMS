@@ -60,6 +60,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public ProjectStatusModel Status { get; set; }
 
         /// <summary>
+        /// get/set - The foreign key to the project risk.
+        /// </summary>
+        public int RiskId { get; set; }
+
+        /// <summary>
+        /// get/set - The project risk name.
+        /// </summary>
+        public string Risk { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the tier level.
         /// </summary>
         public int TierLevelId { get; set; }

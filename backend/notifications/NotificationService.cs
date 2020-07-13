@@ -55,7 +55,6 @@ namespace Pims.Notifications
             if (String.IsNullOrWhiteSpace(templateKey)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(templateKey));
             if (template == null) throw new ArgumentNullException(nameof(template));
 
-            if (String.IsNullOrWhiteSpace(templateKey)) templateKey = $"{Guid.NewGuid()}";
             CompileTemplate<TModel>(templateKey, template);
 
             Merge(templateKey, template, model);
@@ -73,7 +72,6 @@ namespace Pims.Notifications
         /// <returns></returns>
         public async Task<Model.EmailResponse> SendNotificationAsync<TModel>(string templateKey, Model.IEmail email, TModel model)
         {
-            if (String.IsNullOrWhiteSpace(templateKey)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(templateKey));
             Build(templateKey, email, model);
             return await SendNotificationAsync(email);
         }
@@ -85,6 +83,7 @@ namespace Pims.Notifications
         /// <returns></returns>
         public async Task<Model.EmailResponse> SendNotificationAsync(Model.IEmail email)
         {
+            if (email == null) throw new ArgumentNullException(nameof(email));
             var response = await this.Ches.SendEmailAsync(new Ches.Models.EmailModel()
             {
                 From = email.From,

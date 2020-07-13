@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Pims.Dal.Entities;
+
+namespace Pims.Dal.Services.Admin
+{
+    /// <summary>
+    /// IProjectService interface, provides a service layer to administer projects within the datasource.
+    /// </summary>
+    public interface IProjectService : IBaseService<Project>
+    {
+        Project Get(int id);
+        Project Get(int id, params Expression<Func<Project, object>>[] includes);
+        Project Get(string projectNumber);
+        Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes);
+        IEnumerable<Project> Add(IEnumerable<Project> projects);
+    }
+}

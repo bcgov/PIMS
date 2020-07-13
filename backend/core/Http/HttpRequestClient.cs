@@ -34,10 +34,10 @@ namespace Pims.Core.Http
         /// <param name="clientFactory"></param>
         /// <param name="options"></param>
         /// <param name="logger"></param>
-        public HttpRequestClient(IHttpClientFactory clientFactory, IOptions<JsonSerializerOptions> options, ILogger<HttpRequestClient> logger)
+        public HttpRequestClient(IHttpClientFactory clientFactory, IOptionsMonitor<JsonSerializerOptions> options, ILogger<HttpRequestClient> logger)
         {
             this.Client = clientFactory.CreateClient();
-            _serializeOptions = options?.Value ?? new JsonSerializerOptions()
+            _serializeOptions = options?.CurrentValue ?? new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

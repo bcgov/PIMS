@@ -15,7 +15,7 @@ The PIMS technical architecture stack continues to grow as features and enhancem
 - [Backend API](../backend/README.md)
   - [Swagger](https://pims-dev.pathfinder.gov.bc.ca/api-docs/index.html)
 - [Frontend APP](../frontend/README.md)
-- [Security](./SECURITY.md)
+- [Security](./SECURITY-INFO.md)
 - [OpenShift](../openshift/README.md)
 - [DevOps CI/CD](./DEVOPS.md)
 - [Code Quality](./CODE-QUALITY.md)

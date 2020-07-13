@@ -5,21 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Configuration;
 using Pims.Dal.Entities;
-using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal
 {
     /// <summary>
-    /// PimsContext class, provides a data context to manage the datasource for the Geo-spatial application.
+    /// PimsContext class, provides a data context to manage the datasource for the PIMS application.
     /// </summary>
     public class PimsContext : DbContext
     {
         #region Properties
         #region Tables
         public DbSet<AccessRequest> AccessRequests { get; set; }
-        public DbSet<Address> Addresses { get; set; }
         public DbSet<Agency> Agencies { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Pims.Dal.Entities.Claim> Claims { get; set; }
+
+        #region Properties
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<BuildingEvaluation> BuildingEvaluations { get; set; }
         public DbSet<BuildingFiscal> BuildingFiscals { get; set; }
@@ -32,9 +36,16 @@ namespace Pims.Dal
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
         public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<City> Cities { get; set; }
+        #endregion
+
+        #region Projects
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectNumber> ProjectNumbers { get; set; }
+        public DbSet<ProjectSnapshot> ProjectSnapshots { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
+        public DbSet<ProjectRisk> ProjectRisks { get; set; }
         public DbSet<ProjectProperty> ProjectProperties { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<TierLevel> TierLevels { get; set; }
@@ -46,11 +57,7 @@ namespace Pims.Dal
         public DbSet<ProjectStatusTransition> ProjectStatusTransitions { get; set; }
         public DbSet<ProjectAgencyResponse> ProjectAgencyResponses { get; set; }
         public DbSet<NotificationQueue> NotificationQueue { get; set; }
-        public DbSet<Province> Provinces { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Pims.Dal.Entities.Claim> Claims { get; set; }
+        #endregion
         #endregion
 
         #region Views

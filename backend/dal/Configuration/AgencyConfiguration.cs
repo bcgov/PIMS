@@ -5,7 +5,7 @@ using Pims.Dal.Entities;
 namespace Pims.Dal.Configuration
 {
     /// <summary>
-    /// AgencyConfiguration class, provides a way to configure addresses in the database.
+    /// AgencyConfiguration class, provides a way to configure agencies in the database.
     ///</summary>
     public class AgencyConfiguration : CodeEntityConfiguration<Agency, int>
     {

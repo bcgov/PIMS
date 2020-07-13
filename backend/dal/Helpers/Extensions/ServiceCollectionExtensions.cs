@@ -64,6 +64,11 @@ namespace Pims.Dal
             services.AddScoped<Services.Admin.IPropertyClassificationService, Services.Admin.PropertyClassificationService>();
             services.AddScoped<Services.Admin.IPropertyStatusService, Services.Admin.PropertyStatusService>();
             services.AddScoped<Services.Admin.IPropertyTypeService, Services.Admin.PropertyTypeService>();
+            services.AddScoped<Services.Admin.IProjectService, Services.Admin.ProjectService>();
+            services.AddScoped<Services.Admin.IProjectStatusService, Services.Admin.ProjectStatusService>();
+            services.AddScoped<Services.Admin.IProjectRiskService, Services.Admin.ProjectRiskService>();
+            services.AddScoped<Services.Admin.ITierLevelService, Services.Admin.TierLevelService>();
+            services.AddScoped<Services.Admin.IWorkflowService, Services.Admin.WorkflowService>();
             return services; // TODO: Use reflection to find all services.
         }
     }

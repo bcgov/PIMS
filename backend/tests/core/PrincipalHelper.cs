@@ -47,7 +47,8 @@ namespace Pims.Core.Test
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Email, "test@test.com")
             };
 
             foreach (var claim in permission)

@@ -52,6 +52,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.MarketedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.DisposedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.OfferAcceptedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.CompletedOn).HasColumnType("DATETIME2");
 
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");
@@ -60,14 +61,15 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.NetProceeds).HasColumnType("MONEY");
             builder.Property(m => m.ProgramCost).HasColumnType("MONEY");
             builder.Property(m => m.GainLoss).HasColumnType("MONEY");
-            builder.Property(m => m.OcgFinalStatement).HasColumnType("MONEY");
+            builder.Property(m => m.OcgFinancialStatement).HasColumnType("MONEY");
             builder.Property(m => m.InterestComponent).HasColumnType("MONEY");
             builder.Property(m => m.OfferAmount).HasColumnType("MONEY");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
-            builder.HasOne(m => m.TierLevel).WithMany().HasForeignKey(m => m.TierLevelId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(m => m.TierLevel).WithMany().HasForeignKey(m => m.TierLevelId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(m => m.Workflow).WithMany(m => m.Projects).HasForeignKey(m => m.WorkflowId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(m => m.Risk).WithMany(m => m.Projects).HasForeignKey(m => m.RiskId).OnDelete(DeleteBehavior.ClientCascade);
 
             builder.HasIndex(m => m.ProjectNumber).IsUnique();
             builder.HasIndex(m => new { m.Name, m.StatusId, m.TierLevelId, m.AgencyId });

@@ -90,6 +90,16 @@ namespace Pims.Dal.Entities
         public TierLevel TierLevel { get; set; }
 
         /// <summary>
+        /// get/set - Foreign key to the risk level of the project.
+        /// </summary>
+        public int RiskId { get; set; }
+
+        /// <summary>
+        /// get/set - The risk level of the project.
+        /// </summary>
+        public ProjectRisk Risk { get; set; }
+
+        /// <summary>
         /// get/set - A shared note between SRES and agency.
         /// </summary>
         public string PublicNote { get; set; }
@@ -112,6 +122,11 @@ namespace Pims.Dal.Entities
         #endregion
 
         #region SPL
+        /// <summary>
+        /// get/set - When the project was externally marketed.
+        /// </summary>
+        public DateTime? MarketedOn { get; set; } // TODO: Move to metadata property.
+
         /// <summary>
         /// get/set - Note summerizing offers received.
         /// </summary>
@@ -140,39 +155,39 @@ namespace Pims.Dal.Entities
         public DateTime? ApprovedOn { get; set; }
 
         /// <summary>
+        /// get/set - When the on hold enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? OnHoldNotificationSentOn { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
         /// get/set - When the initial enhanced referral notification was sent.
         /// </summary>
-        public DateTime? InitialNotificationSentOn { get; set; }
+        public DateTime? InitialNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 30 day enhanced referral notification was sent.
         /// </summary>
-        public DateTime? ThirtyDayNotificationSentOn { get; set; }
+        public DateTime? ThirtyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 60 day enhanced referral notification was sent.
         /// </summary>
-        public DateTime? SixtyDayNotificationSentOn { get; set; }
+        public DateTime? SixtyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 90 day enhanced referral notification was sent.
         /// </summary>
-        public DateTime? NinetyDayNotificationSentOn { get; set; }
-
-        /// <summary>
-        /// get/set - When the on hold enhanced referral notification was sent.
-        /// </summary>
-        public DateTime? OnHoldNotificationSentOn { get; set; }
+        public DateTime? NinetyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the project was transferred within the GRE.
         /// </summary>
-        public DateTime? TransferredWithinGreOn { get; set; }
+        public DateTime? TransferredWithinGreOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the clearance enhanced referral notification was sent.
         /// </summary>
-        public DateTime? ClearanceNotificationSentOn { get; set; }
+        public DateTime? ClearanceNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the project was denied.
@@ -185,31 +200,32 @@ namespace Pims.Dal.Entities
         public DateTime? CancelledOn { get; set; }
 
         /// <summary>
-        /// get/set - When the project was externally marketed.
+        /// get/set - When the offer was accepted on.
         /// </summary>
-        public DateTime? MarketedOn { get; set; }
+        public DateTime? OfferAcceptedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the project was disposed.
         /// </summary>
-        public DateTime? DisposedOn { get; set; }
+        public DateTime? DisposedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
-        /// get/set - When the project was disposed.
+        /// get/set - When the project was completed.
         /// </summary>
-        public DateTime? OfferAcceptedOn { get; set; }
+        /// <value></value>
+        public DateTime? CompletedOn { get; set; }
         #endregion
 
         #region Exemption
         /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
-        public bool ExemptionRequested { get; set; }
+        public bool ExemptionRequested { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The rational for the exemption from ERP.
         /// </summary>
-        public string ExemptionRationale { get; set; }
+        public string ExemptionRationale { get; set; } // TODO: Move to metadata property.
         #endregion
 
         #region Financials
@@ -231,37 +247,42 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The sales cost.
         /// </summary>
-        public decimal SalesCost { get; set; }
+        public decimal SalesCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
-        public decimal NetProceeds { get; set; }
+        public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
-        public decimal ProgramCost { get; set; }
+        public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
-        public decimal GainLoss { get; set; }
+        public decimal GainLoss { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
         /// </summary>
-        public decimal OcgFinalStatement { get; set; }
+        public decimal? OcgFinancialStatement { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
-        public decimal InterestComponent { get; set; }
+        public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
         public decimal OfferAmount { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the sale includes a lease in place (SLIP).
+        /// </summary>
+        public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
         #endregion
 
         /// <summary>
@@ -288,6 +309,11 @@ namespace Pims.Dal.Entities
         /// get - A collection of notes for this project.
         /// </summary>
         public ICollection<ProjectNote> Notes { get; } = new List<ProjectNote>();
+
+        /// <summary>
+        /// get - A collection of snapshots of this project.
+        /// </summary>
+        public ICollection<ProjectSnapshot> Snapshots { get; } = new List<ProjectSnapshot>();
         #endregion
 
         #region Constructors
@@ -297,7 +323,7 @@ namespace Pims.Dal.Entities
         public Project() { }
 
         /// <summary>
-        /// Create a new instance of a Project class.
+        /// Create a new instance of a Project class, initializes with specified arguments
         /// </summary>
         /// <param name="projectNumber"></param>
         /// <param name="name"></param>
