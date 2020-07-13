@@ -106,6 +106,11 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const keycloak = useKeycloakWrapper();
 
+  const handleRowClick = (submitHandler: Function, setValue: Function, field: string) => {
+    setValue(field, true);
+    submitHandler();
+  };
+
   return (
     <Formik<MapFilterChangeEvent>
       initialValues={{
@@ -130,7 +135,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, handleReset }) => (
+      {({ isSubmitting, handleReset, handleSubmit, setFieldValue }) => (
         <Form>
           <Form.Row className="map-filter-bar">
             <Col className="bar-item">
@@ -158,7 +163,12 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
             </Col>
             {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
               <Col className="bar-item flex-grow-0">
-                <SppButton handleErpClick={noop} handleSppClick={noop} />
+                <SppButton
+                  handleErpClick={noop}
+                  handleSppClick={() =>
+                    handleRowClick(handleSubmit, setFieldValue, 'inSurplusPropertyProgram')
+                  }
+                />
               </Col>
             )}
             <Col className="bar-item flex-grow-0">

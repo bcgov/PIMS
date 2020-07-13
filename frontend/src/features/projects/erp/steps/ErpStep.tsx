@@ -63,7 +63,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const canUserEdit =
     canUserApproveForm() &&
     (project?.statusCode === ReviewWorkflowStatus.ERP ||
-      project?.statusCode === ReviewWorkflowStatus.OnHold);
+      project?.statusCode === ReviewWorkflowStatus.OnHold ||
+      project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption);
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };
