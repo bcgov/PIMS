@@ -3,10 +3,16 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import { ProjectNotes, agencyResponsesNoteTooltip } from '../../common';
+import { FormikTable } from '../../common';
+import { getProjectAgencyResponseColumns } from 'features/projects/common/components/columns';
 
 interface IAgencyResponseFormProps {
   isReadOnly?: boolean;
+}
+
+export interface IAgencyResponseColumns {
+  offerAmount?: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -61,12 +67,11 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
           field="ninetyDayNotificationSentOn"
         />
       </Form.Row>
-      <ProjectNotes
-        field="agencyResponseNote"
-        label="Agency Responses"
-        outerClassName="col-md-12"
-        tooltip={agencyResponsesNoteTooltip}
-        disabled={isReadOnly}
+      <h3>Agency Interest</h3>
+      <FormikTable
+        columns={getProjectAgencyResponseColumns({ offerAmount: false, disabled: isReadOnly })}
+        name="ProjectAgencyResponses"
+        field="projectAgencyResponses"
       />
     </Container>
   );

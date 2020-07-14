@@ -347,4 +347,8 @@ export interface IProjectAgencyResponse {
   agencyId: number;
   agencyCode?: string;
   projectId: number;
+  receivedOn?: string;
+  note?: string;
+  rowVersion?: string;
+  offerAmount?: number;
 }

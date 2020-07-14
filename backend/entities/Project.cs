@@ -114,13 +114,6 @@ namespace Pims.Dal.Entities
         /// </summary>
         public string Metadata { get; set; }
 
-        #region ERP
-        /// <summary>
-        /// get/set - Note summerizing agency responses to notifications.
-        /// </summary>
-        public string AgencyResponseNote { get; set; }
-        #endregion
-
         #region SPL
         /// <summary>
         /// get/set - When the project was externally marketed.

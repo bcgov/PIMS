@@ -3,10 +3,9 @@ import renderer from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus } from '../../common/interfaces';
+import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
 import { render, act, screen } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
-import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
@@ -14,6 +13,7 @@ import { cleanup } from '@testing-library/react-hooks';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
 import { IProject } from '../../common';
 import { ErpStep } from '..';
+import Claims from 'constants/claims';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -29,6 +29,7 @@ const mockKeycloak = (claims: string[]) => {
 };
 
 const history = createMemoryHistory();
+const mockAxios = new MockAdapter(axios);
 const mockProject = _.cloneDeep(defaultProject);
 mockProject.statusCode = ReviewWorkflowStatus.ERP;
 
@@ -48,7 +49,6 @@ describe('ERP/SPL Approval Step', () => {
     cleanup();
   });
   beforeAll(() => {
-    const mockAxios = new MockAdapter(axios);
     mockAxios.onAny().reply(200, {});
   });
   it('renders correctly', () => {
@@ -230,6 +230,37 @@ describe('ERP/SPL Approval Step', () => {
       const errorSummary = await screen.findByText(/The following tabs have errors/);
       expect(errorSummary).toBeVisible();
       done();
+    });
+    it('filters agency responses on save', async (done: any) => {
+      const project = _.cloneDeep(mockProject);
+      project.projectAgencyResponses = [
+        {
+          projectId: project.id,
+          agencyId: project.agencyId,
+          response: AgencyResponses.Ignore,
+        },
+      ];
+
+      render(getApprovalStep(getStore(project)));
+      const saveButton = screen.getByText(/Save/);
+      mockAxios
+        .onPut()
+        .reply((config: any) => {
+          if (JSON.parse(config.data).projectAgencyResponses?.length === 0) {
+            done();
+          } else {
+            done.fail('projectAgencyResponses was not equal to []');
+          }
+          return [200, Promise.resolve({})];
+        })
+        .onAny()
+        .reply((config: any) => {
+          return [200, Promise.resolve({})];
+        });
+
+      await act(async () => {
+        saveButton.click();
+      });
     });
   });
 });

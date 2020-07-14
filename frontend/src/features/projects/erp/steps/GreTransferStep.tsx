@@ -66,6 +66,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         initialValues={initialValues}
         innerRef={formikRef}
         validationSchema={GreTransferStepYupSchema}
+        enableReinitialize={true}
         onSubmit={(values: IProject) => {
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}

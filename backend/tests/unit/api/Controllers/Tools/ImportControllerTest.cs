@@ -162,7 +162,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -201,7 +200,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -259,7 +257,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -297,7 +294,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -357,7 +353,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -395,7 +390,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -490,7 +484,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -584,7 +577,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -676,7 +668,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -727,7 +718,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -765,7 +755,6 @@ namespace Pims.Api.Test.Controllers.Tools
             first.ReportedFiscalYear.Should().Be(expectedResult.ReportedFiscalYear);
             first.Agency.Should().Be(expectedResult.Agency);
             first.AgencyCode.Should().Be(expectedResult.Agency);
-            first.AgencyResponseNote.Should().Be(expectedResult.AgencyResponseNote);
             first.Manager.Should().Be(expectedResult.Manager);
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
@@ -825,7 +814,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -884,7 +872,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -943,7 +930,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
@@ -1002,7 +988,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    AgencyResponseNote = "Agency Response Note",
                     Path = "Path",
                     ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),

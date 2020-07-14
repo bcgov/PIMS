@@ -84,6 +84,10 @@
     font-family: 'BCSans-Bold', Fallback, sans-serif;
   }
 
+  .table textarea {
+    min-width: 250px;
+  }
+
   .step-content {
     padding: 0;
     overflow-x: auto;

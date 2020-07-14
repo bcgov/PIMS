@@ -24,6 +24,7 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         initialValues={initialValues}
         innerRef={formikRef}
         onSubmit={onSubmit}
+        enableReinitialize={true}
         validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)
           .concat(SelectProjectPropertiesStepYupSchema)
           .concat(EnhancedReferralExemptionSchema)}

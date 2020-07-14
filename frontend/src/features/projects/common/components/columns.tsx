@@ -3,20 +3,22 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 
 import React from 'react';
 import { CellProps } from 'react-table';
-import { formatMoney, formatNumber } from 'utils';
+import { formatMoney, formatNumber, formatDate } from 'utils';
 import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
 import { useFormikContext } from 'formik';
 import {
   FastCurrencyInput,
-  Input,
   FastSelect,
-  Check,
   Select,
   SelectOption,
+  FastInput,
+  TextArea,
+  FastDatePicker,
 } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import _ from 'lodash';
+import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyResponseForm';
 
 const sumFinancialRows = (properties: IProperty[], key: string): string => {
   const sum = formatNumber(_.reduce(_.map(properties, key), (acc, val) => acc + val) ?? 0);
@@ -25,12 +27,12 @@ const sumFinancialRows = (properties: IProperty[], key: string): string => {
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
-const EditableMoneyCell = (cellInfo: any) => {
+const getEditableMoneyCell = (namespace: string = 'properties') => (cellInfo: any) => {
   const context = useFormikContext();
   return (
     <FastCurrencyInput
       formikProps={context}
-      field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}
+      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
     ></FastCurrencyInput>
   );
 };
@@ -56,18 +58,39 @@ const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any
  * @param cellInfo provided by react table
  */
 const EditableParcelInputCell = (cellInfo: any) => {
+  const formikProps = useFormikContext();
   if (cellInfo.row.original.propertyTypeId === 1) {
     return cellInfo.value ?? null;
   }
-  return <Input field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}></Input>;
+  return (
+    <FastInput
+      formikProps={formikProps}
+      field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}
+    ></FastInput>
+  );
 };
 
-const CheckCell = (cellInfo: any) => {
+/**
+ * Create a formik text area using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ */
+const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo: any) => {
+  return <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>;
+};
+
+/**
+ * Create a formik date picker using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ */
+const getEditableDatePickerCell = (namespace: string = 'properties') => (cellInfo: any) => {
+  const formikProps = useFormikContext();
   return (
-    <Check
-      disabled={true}
-      field={`projectAgencyResponses.${cellInfo.row.id}.${cellInfo.column.id}`}
-    />
+    <FastDatePicker
+      formikProps={formikProps}
+      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+    ></FastDatePicker>
   );
 };
 
@@ -76,11 +99,11 @@ const responseOptions: SelectOption[] = [
   { label: AgencyResponses.Watch, value: AgencyResponses.Watch },
 ];
 
-const EditableSelect = (cellInfo: any) => {
+const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
   return (
     <Select
       options={responseOptions}
-      field={`projectAgencyResponses.${cellInfo.row.id}.${cellInfo.column.id}`}
+      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
     />
   );
 };
@@ -182,7 +205,7 @@ export const getColumns = ({
   {
     Header: 'Netbook Value',
     accessor: 'netBook',
-    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
@@ -196,7 +219,7 @@ export const getColumns = ({
   {
     Header: 'Estimated Value',
     accessor: 'estimated',
-    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
@@ -210,7 +233,7 @@ export const getColumns = ({
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
-    Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
+    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
@@ -233,23 +256,54 @@ export const getColumns = ({
   },
 ];
 
-export const getProjectAgencyResponseColumns = (editable?: boolean): any => [
-  {
-    Header: 'Agency',
-    accessor: 'agencyCode', // accessor is the "key" in the data
-    align: 'left',
-  },
-  {
-    Header: 'Notification Sent?',
-    accessor: 'notificationId',
-    align: 'left',
-    Cell: CheckCell,
-  },
-  {
-    Header: 'Response',
-    accessor: 'response',
-    maxWidth: 170,
-    align: 'left',
-    Cell: EditableSelect,
-  },
-];
+export const getProjectAgencyResponseColumns = ({
+  offerAmount,
+  disabled,
+}: IAgencyResponseColumns): any => {
+  const cols = [
+    {
+      Header: 'Agency',
+      accessor: 'agencyCode', // accessor is the "key" in the data
+      align: 'left',
+    },
+    {
+      Header: 'Business Case Received Date',
+      accessor: 'receivedOn',
+      maxWidth: 60,
+      align: 'left',
+      Cell: disabled
+        ? (cellInfo: any) => formatDate(cellInfo.value) ?? null
+        : getEditableDatePickerCell('projectAgencyResponses'),
+    },
+    {
+      Header: 'Note',
+      accessor: 'note',
+      align: 'left',
+      Cell: disabled
+        ? (cellInfo: any) => cellInfo.value ?? null
+        : getEditableTextAreaCell('projectAgencyResponses'),
+    },
+    {
+      Header: 'Response',
+      accessor: 'response',
+      maxWidth: 60,
+      align: 'left',
+      Cell: disabled
+        ? (cellInfo: any) => cellInfo.value ?? null
+        : getEditableSelectCell('projectAgencyResponses'),
+    },
+  ];
+
+  if (offerAmount === true) {
+    cols.push({
+      Header: 'Offer',
+      accessor: 'offerAmount',
+      maxWidth: 60,
+      align: 'left',
+      Cell: offerAmount
+        ? getEditableMoneyCell('projectAgencyResponses')
+        : (cellInfo: any) => cellInfo.value ?? null,
+    });
+  }
+  return cols;
+};

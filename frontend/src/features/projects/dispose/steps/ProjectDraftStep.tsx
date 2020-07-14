@@ -34,6 +34,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validationSchema={ProjectDraftStepYupSchema}
         innerRef={formikRef}
         onSubmit={onSubmit}
+        enableReinitialize={true}
       >
         {() => (
           <Form className="ProjectDraftForm">

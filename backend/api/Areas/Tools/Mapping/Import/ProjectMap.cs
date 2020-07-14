@@ -32,7 +32,6 @@ namespace Pims.Api.Areas.Tools.Mapping.Import
                 .Map(dest => dest.PublicNote, src => src.PublicNote)
                 .Map(dest => dest.PrivateNote, src => src.PrivateNote)
                 .Map(dest => dest.Metadata, src => src.Metadata)
-                .Map(dest => dest.AgencyResponseNote, src => src.AgencyResponseNote)
                 .Map(dest => dest.SubmittedOn, src => src.SubmittedOn)
                 .Map(dest => dest.ApprovedOn, src => src.ApprovedOn)
                 .Map(dest => dest.InitialNotificationSentOn, src => src.InitialNotificationSentOn)

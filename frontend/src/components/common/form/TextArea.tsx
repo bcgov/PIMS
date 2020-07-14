@@ -1,9 +1,13 @@
 import React from 'react';
 import { useFormikContext, getIn } from 'formik';
 import { Input, InputProps } from './Input';
+import { FastInput } from '.';
 
 // only "field" is required for <Input>, the rest are optional
-export type TextProps = InputProps;
+export type TextProps = InputProps & {
+  /** use FastInput instead of Input */
+  fast?: boolean;
+};
 
 /**
  * Formik-connected <Input> form control
@@ -16,13 +20,31 @@ export const TextArea: React.FC<TextProps> = ({
   required,
   disabled,
   custom,
+  fast,
   ...rest
 }) => {
-  const { values, handleChange, errors, touched } = useFormikContext();
+  const formikProps = useFormikContext();
+  const { values, handleChange, errors, touched } = formikProps;
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
 
-  return (
+  return fast ? (
+    <FastInput
+      formikProps={formikProps}
+      label={label}
+      as="textarea"
+      field={field}
+      className={className}
+      required={required}
+      disabled={disabled}
+      custom={custom}
+      isInvalid={!!touch && !!error}
+      {...rest}
+      value={getIn(values, field)}
+      placeholder={placeholder}
+      onChange={handleChange}
+    />
+  ) : (
     <Input
       label={label}
       as="textarea"

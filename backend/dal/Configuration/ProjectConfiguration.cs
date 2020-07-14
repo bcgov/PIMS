@@ -30,7 +30,6 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Note).HasMaxLength(2000);
             builder.Property(m => m.PublicNote).HasMaxLength(2000);
             builder.Property(m => m.PrivateNote).HasMaxLength(2000);
-            builder.Property(m => m.AgencyResponseNote).HasMaxLength(2000);
             builder.Property(m => m.OffersNote).HasMaxLength(2000);
 
             builder.Property(m => m.Metadata).HasColumnType("NVARCHAR(MAX)");
