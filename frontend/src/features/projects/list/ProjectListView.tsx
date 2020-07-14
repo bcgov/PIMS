@@ -15,9 +15,8 @@ import service from '../apiService';
 import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
-import { Col, Form } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import { Input, Button, AutoCompleteText, Select } from 'components/common/form';
-import { Field } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
@@ -29,13 +28,17 @@ import download from 'utils/download';
 import { mapLookupCode, mapStatuses } from 'utils';
 
 interface IProjectFilterState {
-  active?: boolean;
-  createdByMe?: boolean;
   name?: string;
-  statusId?: number;
+  statusId?: string;
+  agencyId?: string;
   assessWorkflow?: boolean;
-  agencyId?: number;
 }
+
+const initialValues = {
+  name: '',
+  statusId: '',
+  agencyId: '',
+};
 
 const getProjectReportUrl = (filter: IProjectFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
@@ -119,6 +122,15 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       setPageIndex(pageIndex);
     },
     [setPageSize, setPageIndex],
+  );
+
+  // Update internal state whenever the filter bar state changes
+  const handleFilterChange = useCallback(
+    (value: IProjectFilterState) => {
+      setFilter({ ...value });
+      setPageIndex(0); // Go to first page of results when filter changes
+    },
+    [setFilter, setPageIndex],
   );
 
   const fetchData = useCallback(
@@ -243,26 +255,13 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       <div className="filter-container">
         {filterable && (
           <FilterBar<IProjectFilterState>
-            initialValues={filter}
-            onSearch={values => setFilter(values)}
-            onReset={() => setFilter({})}
+            initialValues={initialValues}
+            onChange={handleFilterChange}
           >
-            <Col className="bar-item">
-              <Form.Group>
-                <Form.Label>Active Projects:&nbsp;</Form.Label>
-                <Field name="active" label="Active Projects" type="checkbox" />
-              </Form.Group>
-            </Col>
-            <Col className="bar-item">
-              <Form.Group>
-                <Form.Label>My projects:&nbsp;</Form.Label>
-                <Field name="createdByMe" type="checkbox" />
-              </Form.Group>
-            </Col>
-            <Col className="bar-item">
+            <Col xs={2} className="bar-item">
               <Select field="statusId" options={statuses} placeholder="Select a project status" />
             </Col>
-            <Col className="bar-item">
+            <Col xs={2} className="bar-item">
               <AutoCompleteText
                 autoSetting="off"
                 field="agencies"
@@ -270,7 +269,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 placeholder="Enter an agency"
               />
             </Col>
-            <Col className="bar-item">
+            <Col xs={2} className="bar-item">
               <Input field="name" placeholder="Search by project name" />
             </Col>
           </FilterBar>

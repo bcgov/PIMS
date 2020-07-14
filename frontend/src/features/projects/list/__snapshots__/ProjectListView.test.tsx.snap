@@ -16,48 +16,7 @@ exports[`Project list view Matches snapshot 1`] = `
         className="search-bar form-row"
       >
         <div
-          className="bar-item col"
-        >
-          <div
-            className="form-group"
-          >
-            <label
-              className="form-label"
-            >
-              Active Projects: 
-            </label>
-            <input
-              checked={false}
-              label="Active Projects"
-              name="active"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="checkbox"
-            />
-          </div>
-        </div>
-        <div
-          className="bar-item col"
-        >
-          <div
-            className="form-group"
-          >
-            <label
-              className="form-label"
-            >
-              My projects: 
-            </label>
-            <input
-              checked={false}
-              name="createdByMe"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="checkbox"
-            />
-          </div>
-        </div>
-        <div
-          className="bar-item col"
+          className="bar-item col-2"
         >
           <div
             className="form-group"
@@ -68,6 +27,7 @@ exports[`Project list view Matches snapshot 1`] = `
               name="statusId"
               onBlur={[Function]}
               onChange={[Function]}
+              value=""
             >
               <option
                 value=""
@@ -78,7 +38,7 @@ exports[`Project list view Matches snapshot 1`] = `
           </div>
         </div>
         <div
-          className="bar-item col"
+          className="bar-item col-2"
         >
           <div
             className="AutoCompleteText"
@@ -99,7 +59,7 @@ exports[`Project list view Matches snapshot 1`] = `
           </div>
         </div>
         <div
-          className="bar-item col"
+          className="bar-item col-2"
         >
           <div
             className="form-group"
@@ -112,6 +72,7 @@ exports[`Project list view Matches snapshot 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 placeholder="Search by project name"
+                value=""
               />
             </span>
           </div>

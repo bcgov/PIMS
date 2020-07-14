@@ -158,7 +158,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                 autoSetting="off"
                 field="agencies"
                 options={agencies}
-                placeholder="Type an agency"
+                placeholder="Enter an agency"
               />
             </Col>
             <Col className="bar-item">
