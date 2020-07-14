@@ -8,13 +8,11 @@ import {
   IProject,
   TasksForm,
   disposeWarning,
-  FormikTable,
 } from '../../common';
 import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
 import GenericModal from 'components/common/GenericModal';
-import { getProjectAgencyResponseColumns } from 'features/projects/common/components/columns';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -41,10 +39,9 @@ const SurplusPropertyListForm = ({
 
   return (
     <Container fluid className="SurplusPropertyListForm">
-      <h3>Enhanced Referral Process Complete</h3>
       <Form.Row>
         <Form.Label column md={3}>
-          Date of Entering Marketing
+          Date Entered Market
           <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastDatePicker
@@ -67,14 +64,13 @@ const SurplusPropertyListForm = ({
           {formikProps.values.statusCode === ReviewWorkflowStatus.OnMarket}
         </div>
       </Form.Row>
-      <Form.Row>
-        <h3>Agency Interest</h3>
-        <FormikTable
-          columns={getProjectAgencyResponseColumns({ offerAmount: true, disabled: isReadOnly })}
-          name="ProjectAgencyResponses"
-          field="projectAgencyResponses"
-        />
-      </Form.Row>
+      <ProjectNotes
+        label="Offers Received"
+        tooltip="Review Required for offer(s) in Tier 3 & 4"
+        field="offersNote"
+        outerClassName="col-md-12"
+        disabled={isReadOnly}
+      />
       <Form.Row>
         <Form.Label column md={3}>
           Contract in Place

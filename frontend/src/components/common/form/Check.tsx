@@ -59,7 +59,7 @@ export const Check: React.FC<CheckProps> = ({
   radioLabelTwo,
   ...rest
 }) => {
-  const { values, handleChange, errors, touched } = useFormikContext();
+  const { values, setFieldValue, errors, touched } = useFormikContext();
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
@@ -85,13 +85,13 @@ export const Check: React.FC<CheckProps> = ({
             required={required}
             disabled={disabled}
             custom={custom}
-            defaultChecked={checked}
+            defaultChecked={!!checked}
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
-            value={checked}
+            value={!!checked}
             placeholder={placeholder}
-            onChange={handleChange}
+            onChange={() => setFieldValue(field, !checked)}
           />
           {type === 'radio' && (
             <Form.Check
@@ -109,7 +109,7 @@ export const Check: React.FC<CheckProps> = ({
               {...rest}
               value={!checked}
               placeholder={placeholder}
-              onChange={handleChange}
+              onChange={() => setFieldValue(field, !checked)}
             />
           )}
         </>

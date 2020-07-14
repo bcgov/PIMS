@@ -475,13 +475,13 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                     >
                       <input
                         className="form-check-input position-static"
-                        defaultChecked={1}
+                        defaultChecked={true}
                         disabled={true}
                         id="input-statusId"
                         name="statusId"
                         onChange={[Function]}
                         type="checkbox"
-                        value={1}
+                        value={true}
                       />
                     </div>
                   </div>
