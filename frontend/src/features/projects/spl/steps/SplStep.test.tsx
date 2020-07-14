@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { cleanup } from '@testing-library/react-hooks';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
 import { IProject } from '../../common';
-import { ErpStep } from '..';
+import { SplStep } from '..';
 import Claims from 'constants/claims';
 
 jest.mock('@react-keycloak/web');
@@ -31,17 +31,19 @@ const mockKeycloak = (claims: string[]) => {
 const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 const mockProject = _.cloneDeep(defaultProject);
-mockProject.statusCode = ReviewWorkflowStatus.ERP;
+mockProject.statusCode = ReviewWorkflowStatus.PreMarketing;
+mockProject.approvedOn = new Date();
+mockProject.submittedOn = new Date();
 
 const getApprovalStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
     <Router history={history}>
-      <ErpStep />
+      <SplStep />
     </Router>
   </Provider>
 );
 
-describe('ERP Approval Step', () => {
+describe('SPL Approval Step', () => {
   afterAll(() => {
     jest.clearAllMocks();
   });
@@ -73,18 +75,6 @@ describe('ERP Approval Step', () => {
       expect(cancelButton).toBeVisible();
       expect(cancelButton).not.toBeDisabled();
     });
-    it('Proceed to SPL button is visible and disabled', () => {
-      const { getByText } = render(getApprovalStep());
-      const proceedToSplButton = getByText(/Proceed to SPL/);
-      expect(proceedToSplButton).toBeVisible();
-      expect(proceedToSplButton).toBeDisabled();
-    });
-    it('Not in SPL button is visible and disabled', () => {
-      const { getByText } = render(getApprovalStep());
-      const proceedToSplButton = getByText(/Not Included in the SPL/);
-      expect(proceedToSplButton).toBeVisible();
-      expect(proceedToSplButton).toBeDisabled();
-    });
     it('form fields are not disabled', () => {
       const { queryAllByRole } = render(getApprovalStep());
       const textboxes = queryAllByRole('textbox');
@@ -101,24 +91,14 @@ describe('ERP Approval Step', () => {
       mockKeycloak([]);
     });
     it('save button is not rendered', () => {
-      const component = render(getApprovalStep());
-      const saveButton = component.queryByText(/Save/);
+      const { queryByText } = render(getApprovalStep());
+      const saveButton = queryByText(/Save/);
       expect(saveButton).toBeNull();
     });
     it('cancel button is not rendered', () => {
-      const component = render(getApprovalStep());
-      const cancelButton = component.queryByText(/Cancel Project/);
+      const { queryByText } = render(getApprovalStep());
+      const cancelButton = queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
-    });
-    it('Proceed to SPL button is disabled', () => {
-      const component = render(getApprovalStep());
-      const proceedToSplButton = component.queryByText(/Proceed to SPL/);
-      expect(proceedToSplButton).toBeDisabled();
-    });
-    it('Not in SPL button is disabled', () => {
-      const component = render(getApprovalStep());
-      const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
-      expect(proceedToSplButton).toBeDisabled();
     });
     it('form fields are disabled', () => {
       const component = render(getApprovalStep());
@@ -136,26 +116,15 @@ describe('ERP Approval Step', () => {
       project = _.cloneDeep(mockProject);
       project.statusCode = ReviewWorkflowStatus.Cancelled;
     });
-
-    it('save button is not rendered', () => {
-      const component = render(getApprovalStep(getStore(project)));
-      const saveButton = component.queryByText(/Save/);
+    it('save button is visible and disabled', () => {
+      const { queryByText } = render(getApprovalStep(getStore(project)));
+      const saveButton = queryByText(/Save/);
       expect(saveButton).toBeNull();
     });
-    it('cancel button is not rendered', () => {
-      const component = render(getApprovalStep(getStore(project)));
-      const cancelButton = component.queryByText(/Cancel Project/);
+    it('cancel button is visible and disabled', () => {
+      const { queryByText } = render(getApprovalStep(getStore(project)));
+      const cancelButton = queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
-    });
-    it('Proceed to SPL button is disabled', () => {
-      const component = render(getApprovalStep(getStore(project)));
-      const proceedToSplButton = component.queryByText(/Proceed to SPL/);
-      expect(proceedToSplButton).toBeDisabled();
-    });
-    it('Not in SPL button is disabled', () => {
-      const component = render(getApprovalStep(getStore(project)));
-      const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
-      expect(proceedToSplButton).toBeDisabled();
     });
     it('form fields are disabled', () => {
       const component = render(getApprovalStep(getStore(project)));
@@ -170,29 +139,23 @@ describe('ERP Approval Step', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
-    it('enables on hold button when on hold date entered', () => {
+    it('enables Change status to marketing when date entered', () => {
       const project = _.cloneDeep(mockProject);
-      project.onHoldNotificationSentOn = new Date();
+      project.marketedOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
-      const onHoldButton = getByText(/Place Project On Hold/);
-      expect(onHoldButton).not.toBeDisabled();
+      const marketingButton = getByText(/Change Status to Marketing/);
+      expect(marketingButton).not.toBeDisabled();
     });
-    it('enables proceed to SPL button when clearance date entered', () => {
+    it('enables change status to contract in place button when date entered', () => {
       const project = _.cloneDeep(mockProject);
+      project.statusCode = ReviewWorkflowStatus.OnMarket;
+      project.offerAmount = 12345;
       project.clearanceNotificationSentOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
-      const proceedToSplButton = getByText(/Proceed to SPL/);
-      expect(proceedToSplButton).not.toBeDisabled();
-    });
-    it('enables not in SPL button when clearance date entered', () => {
-      const project = _.cloneDeep(mockProject);
-      project.clearanceNotificationSentOn = new Date();
-
-      const { getByText } = render(getApprovalStep(getStore(project)));
-      const proceedToSplButton = getByText(/Not Included in the SPL/);
-      expect(proceedToSplButton).not.toBeDisabled();
+      const contractInPlaceButton = getByText(/Change Status to Contract in Place/);
+      expect(contractInPlaceButton).not.toBeDisabled();
     });
     it('displays modal when cancel button clicked', async (done: any) => {
       const component = render(getApprovalStep());
@@ -204,20 +167,26 @@ describe('ERP Approval Step', () => {
       expect(cancelModel).toBeVisible();
       done();
     });
-    it('displays modal when proceed to SPL button clicked', async (done: any) => {
+    it('displays modal when proceed to change status to disposed externally button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
-      project.clearanceNotificationSentOn = new Date();
+      project.disposedOn = new Date();
+      project.statusCode = ReviewWorkflowStatus.ContractInPlace;
+      project.offerAcceptedOn = new Date();
+      project.purchaser = 'purchaser';
+      project.offerAmount = 12345;
+      project.isContractConditional = true;
+      project.marketedOn = new Date();
 
       const component = render(getApprovalStep(getStore(project)));
-      const proceedToSplButton = component.getByText(/Proceed to SPL/);
+      const disposedButton = component.getByText(/Change Status to Disposed Externally/);
       act(() => {
-        proceedToSplButton.click();
+        disposedButton.click();
       });
-      const proceedModal = await screen.findByText(/Really Proceed to SPL/);
+      const proceedModal = await screen.findByText(/Really Dispose Project/);
       expect(proceedModal).toBeVisible();
       done();
     });
-    it('performs validation on save', async (done: any) => {
+    it('spl performs no validation on save', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.tasks[0].isOptional = false;
 
@@ -227,11 +196,26 @@ describe('ERP Approval Step', () => {
         saveButton.click();
       });
 
+      const errorSummary = await screen.queryByText(/The following tabs have errors/);
+      expect(errorSummary).toBeNull();
+      done();
+    });
+    it('performs validation on dispose', async (done: any) => {
+      const project = _.cloneDeep(mockProject);
+      project.disposedOn = new Date();
+      project.statusCode = ReviewWorkflowStatus.ContractInPlace;
+
+      const component = render(getApprovalStep(getStore(project)));
+      const disposeButton = component.getByText(/Change Status to Disposed Externally/);
+      act(async () => {
+        disposeButton.click();
+      });
+
       const errorSummary = await screen.findByText(/The following tabs have errors/);
       expect(errorSummary).toBeVisible();
       done();
     });
-    it('filters agency responses on save', async (done: any) => {
+    it('spl filters agency responses on save', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.projectAgencyResponses = [
         {
