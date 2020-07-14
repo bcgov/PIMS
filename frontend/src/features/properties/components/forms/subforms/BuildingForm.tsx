@@ -114,7 +114,6 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
 
   const handleGeocoderChanges = (data: IGeocoderResponse) => {
     if (data) {
-      console.log(props.values);
       const newValues = {
         ...(props.values as any),
       };
