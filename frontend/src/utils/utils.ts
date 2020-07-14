@@ -135,3 +135,11 @@ export const formatDate = (date?: string | Date) => {
 export const formatDateTime = (date: string | undefined) => {
   return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
 };
+
+export const formatDateFiscal = (date: string | undefined) => {
+  return !!date
+    ? `${moment(date)
+        .subtract('years', 1)
+        .format('YYYY')}/${moment(date).format('YYYY')}`
+    : '';
+};

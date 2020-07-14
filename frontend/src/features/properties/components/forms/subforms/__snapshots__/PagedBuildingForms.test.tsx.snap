@@ -620,11 +620,13 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 >
                   <input
                     className="form-check-input position-static"
+                    defaultChecked={false}
                     disabled={false}
                     id="input-buildings.0.sensitiveBuilding"
                     name="buildings.0.sensitiveBuilding"
                     onChange={[Function]}
                     type="checkbox"
+                    value={false}
                   />
                 </div>
               </div>
