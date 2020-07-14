@@ -88,6 +88,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validateOnChange={false}
         validateOnBlur={true}
         validationSchema={SelectProjectPropertiesStepYupSchema}
+        enableReinitialize={true}
       >
         <SelectProjectPropertiesForm
           {...{

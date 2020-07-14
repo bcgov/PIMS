@@ -42,17 +42,23 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
     <React.Fragment>
       <Tabs activeKey={currentTab} id="approvalTabs" onSelect={(key: string) => setCurrentTab(key)}>
         <Tab eventKey={SPPApprovalTabs.projectInformation} title="Project Information">
-          <ProjectInformationTab isReadOnly={isReadOnly} />
+          {currentTab === SPPApprovalTabs.projectInformation && (
+            <ProjectInformationTab isReadOnly={isReadOnly} />
+          )}
         </Tab>
         <Tab eventKey={SPPApprovalTabs.documentation} title="Documentation">
-          <DocumentationTab isReadOnly={isReadOnly} />
+          {currentTab === SPPApprovalTabs.documentation && (
+            <DocumentationTab isReadOnly={isReadOnly} />
+          )}
         </Tab>
         <Tab eventKey={SPPApprovalTabs.erp} title="Enhanced Referral Process">
-          <EnhancedReferralTab
-            isReadOnly={isReadOnly}
-            setSubmitStatusCode={setSubmitStatusCode}
-            goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
-          />
+          {currentTab === SPPApprovalTabs.erp && (
+            <EnhancedReferralTab
+              isReadOnly={isReadOnly}
+              setSubmitStatusCode={setSubmitStatusCode}
+              goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
+            />
+          )}
         </Tab>
       </Tabs>
     </React.Fragment>

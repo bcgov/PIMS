@@ -87,7 +87,6 @@ const useStepForm = () => {
         throw Error('axios request failed');
       })
       .finally(() => {
-        formikRef.current?.setSubmitting(false);
         dispatch(clear(ProjectActions.UPDATE_PROJECT));
         dispatch(clear(ProjectActions.ADD_PROJECT));
       });

@@ -649,6 +649,8 @@ namespace Pims.Dal.Services
 
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency).ThenInclude(p => p.Parent)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties)

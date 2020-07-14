@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
-import {
-  Form,
-  FastDatePicker,
-  TextArea,
-  FastInput,
-  FastCurrencyInput,
-  Check,
-} from 'components/common/form';
+import { Form, FastDatePicker, FastInput, FastCurrencyInput, Check } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import TooltipIcon from 'components/common/TooltipIcon';
 import {
   ProjectNotes,
   ReviewWorkflowStatus,
   IProject,
-  offersReceived,
   TasksForm,
   disposeWarning,
+  FormikTable,
 } from '../../common';
 import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
 import GenericModal from 'components/common/GenericModal';
+import { getProjectAgencyResponseColumns } from 'features/projects/common/components/columns';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -75,11 +68,12 @@ const SurplusPropertyListForm = ({
         </div>
       </Form.Row>
       <Form.Row>
-        <Form.Label column md={3}>
-          Offers Received
-          <TooltipIcon toolTipId="offersReceived" toolTip={offersReceived} />
-        </Form.Label>
-        <TextArea outerClassName="col-md-4" disabled={isReadOnly} field="offersNote" />
+        <h3>Agency Interest</h3>
+        <FormikTable
+          columns={getProjectAgencyResponseColumns({ offerAmount: true, disabled: isReadOnly })}
+          name="ProjectAgencyResponses"
+          field="projectAgencyResponses"
+        />
       </Form.Row>
       <Form.Row>
         <Form.Label column md={3}>

@@ -8,6 +8,7 @@ export { default as StepErrorSummary } from './components/StepErrorSummary';
 export { default as ProjectNotes, PrivateNotes, PublicNotes } from './components/ProjectNotes';
 export { default as EditButton } from './components/EditButton';
 export { default as SelectProjectPropertiesPage } from './components/SelectProjectPropertiesPage';
+export { default as FormikTable } from './components/FormikTable';
 export { default as ApprovalTransitionPage } from './ApprovalTransitionPage';
 
 export { default as projectSlice } from './slices/projectSlice';
@@ -25,6 +26,7 @@ export { default as TasksForm } from './forms/TasksForm';
 
 export { default as useStepForm } from './hooks/useStepForm';
 export { default as useProject } from './hooks/useProject';
+export { default as useAgencyResponseTable } from './hooks/useAgencyResponseTable';
 
 export * from './slices/projectSlice';
 export * from './slices/projectTasksSlice';

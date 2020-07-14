@@ -5,6 +5,7 @@ using Moq;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
+using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
@@ -250,7 +251,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(project.ProjectNumber);
             Assert.NotNull(project.PrivateNote);
             Assert.NotNull(project.PublicNote);
-            Assert.NotNull(project.AgencyResponseNote);
             Assert.NotNull(project.SubmittedOn);
             Assert.NotNull(project.ApprovedOn);
             Assert.NotNull(project.DeniedOn);
@@ -612,6 +612,39 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Add_DefaultResponses()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var agency = init.Agencies.Find(1);
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
+
+            var response = EntityHelper.CreateResponse(project.Id, project.AgencyId);
+            project.Responses.Add(response);
+
+
+            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var result = service.Add(project);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(project, result);
+            Assert.Equal(1, result.StatusId);
+            result.Responses.Should().BeEquivalentTo(new List<ProjectAgencyResponse>() { response });
+        }
+
+        [Fact]
         public void Add_NoProject_Throws_ArgumentNullException()
         {
             // Arrange
@@ -892,6 +925,31 @@ namespace Pims.Dal.Test.Services
             .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumber);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
+        }
+
+        [Fact]
+        public void Update_Response()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var project = init.CreateProject(1);
+            var response = init.CreateResponse(project.Id, project.AgencyId);
+            init.AddAndSaveChanges(response);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            var result = service.Update(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            result.Responses.Should().HaveCount(1);
         }
 
         /**

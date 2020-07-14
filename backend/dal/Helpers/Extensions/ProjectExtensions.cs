@@ -425,7 +425,9 @@ namespace Pims.Dal.Helpers.Extensions
         public static void Merge(this Entity.Project originalProject, Entity.Project updatedProject, PimsContext context)
         {
             // Update a project
+            var agency = originalProject.Agency;
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
+            originalProject.Agency = agency; // TODO: this should not be necessary.
             context.SetOriginalRowVersion(originalProject);
 
             var agencies = originalProject.Agency.ParentId.HasValue ? new[] { originalProject.AgencyId } : context.Agencies.Where(a => a.ParentId == originalProject.AgencyId || a.Id == originalProject.AgencyId).Select(a => a.Id).ToArray();
@@ -647,6 +649,21 @@ namespace Pims.Dal.Helpers.Extensions
                     context.Parcels.Update(p.Parcel);
                 }
             });
+        }
+
+        /// <summary>
+        /// Add responses to the project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="responses"></param>
+        /// <returns></returns>
+        public static Entity.Project AddResponses(this Entity.Project project, params Entity.ProjectAgencyResponse[] responses)
+        {
+            responses.ForEach(r =>
+            {
+                project.Responses.Add(r);
+            });
+            return project;
         }
 
         /// Get a collection of responses that have changed from the original to the updated project.

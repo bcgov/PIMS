@@ -19,6 +19,7 @@ import {
   handleValidate,
   ValidationGroup,
   DisposeWorkflowStatus,
+  useAgencyResponseTable,
 } from '../../common';
 import { saveErpTab, ErpTabs, ApprovalActions } from '..';
 import {
@@ -60,6 +61,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
     useSelector<RootState, string | null>(state => state.erpTab) ?? SPPApprovalTabs.erp;
   const dispatch = useDispatch();
   const history = useHistory();
+  const { projectAgencyResponses } = useAgencyResponseTable();
+  const initialValues: IProject = { ...project, projectAgencyResponses: projectAgencyResponses };
   const canUserEdit =
     canUserApproveForm() &&
     (project?.statusCode === ReviewWorkflowStatus.ERP ||
@@ -74,8 +77,9 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   return (
     <Container fluid>
       <Formik
-        initialValues={project}
-        onSubmit={(values: IProject) =>
+        initialValues={initialValues}
+        enableReinitialize={true}
+        onSubmit={(values: IProject) => {
           onSubmitReview(
             values,
             formikRef,
@@ -85,8 +89,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
             if (project.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
             }
-          })
-        }
+          });
+        }}
         validate={(values: IProject) => handleValidate(values, validationGroups)}
       >
         <Form>
