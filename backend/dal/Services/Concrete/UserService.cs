@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +7,10 @@ using Pims.Dal.Entities.Comparers;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Pims.Dal.Services
 {

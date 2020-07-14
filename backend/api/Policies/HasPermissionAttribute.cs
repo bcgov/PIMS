@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Pims.Dal.Security;
+using System;
+using System.Linq;
 
 namespace Pims.Api.Policies
 {

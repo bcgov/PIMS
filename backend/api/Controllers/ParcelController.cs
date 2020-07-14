@@ -1,14 +1,13 @@
-using System.Linq;
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Models.Parcel;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Controllers
 {
@@ -74,7 +73,7 @@ namespace Pims.Api.Controllers
         public IActionResult IsPidAvailable(int parcelId, int pid)
         {
             var result = new Model.CheckPidAvailabilityResponseModel
-                {Available = _pimsService.Parcel.IsPidAvailable(parcelId, pid)};
+            { Available = _pimsService.Parcel.IsPidAvailable(parcelId, pid) };
             return new JsonResult(result);
         }
 

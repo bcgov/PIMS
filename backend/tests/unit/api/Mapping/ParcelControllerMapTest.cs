@@ -1,6 +1,6 @@
-using Xunit;
-using System.Diagnostics.CodeAnalysis;
 using Pims.Core.Test;
+using System.Diagnostics.CodeAnalysis;
+using Xunit;
 using Model = Pims.Api.Models.Parcel;
 
 namespace PimsApi.Test.Controllers

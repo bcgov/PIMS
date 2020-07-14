@@ -1,8 +1,8 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Pims.Api.Models.Membership;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Helpers.Authorization
 {

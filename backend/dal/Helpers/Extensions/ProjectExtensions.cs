@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -634,7 +634,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="context"></param>
         /// <param name="project"></param>
         /// <param name="visibility"></param>
-        public static void SetProjectPropertiesVisiblity(this PimsContext context, Entity.Project project,  bool visibility)
+        public static void SetProjectPropertiesVisiblity(this PimsContext context, Entity.Project project, bool visibility)
         {
             project.Properties.ForEach(p =>
             {

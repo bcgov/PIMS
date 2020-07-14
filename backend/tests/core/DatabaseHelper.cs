@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -9,6 +5,10 @@ using Moq;
 using Pims.Core.Helpers;
 using Pims.Dal;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace Pims.Core.Test
 {

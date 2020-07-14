@@ -1,7 +1,7 @@
 using Mapster;
 using System;
-using Model = Pims.Api.Areas.Tools.Models.Import;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Tools.Models.Import;
 
 namespace Pims.Api.Areas.Tools.Mapping.Import
 {

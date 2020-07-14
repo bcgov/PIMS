@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using Mapster;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,16 +15,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Pims.Api.Helpers.Authorization;
+using Pims.Api.Helpers.Mapping;
 using Pims.Api.Helpers.Middleware;
 using Pims.Api.Helpers.Routes.Constraints;
+using Pims.Ches;
+using Pims.Core.Converters;
+using Pims.Core.Http;
 using Pims.Dal;
-using Pims.Dal.Keycloak;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Keycloak;
+using Pims.Geocoder;
+using Pims.Notifications;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -33,16 +43,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Mapster;
-using Pims.Api.Helpers.Mapping;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Pims.Core.Http;
-using Pims.Geocoder;
-using Pims.Ches;
-using Pims.Notifications;
-using Pims.Core.Converters;
 
 namespace Pims.Api
 {
@@ -247,7 +247,7 @@ namespace Pims.Api
                 {
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Description =  "Please enter into field the word 'Bearer' following by space and JWT",
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT",
                     Type = SecuritySchemeType.ApiKey
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement()

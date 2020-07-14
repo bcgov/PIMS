@@ -1,9 +1,9 @@
-using System;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
+using System;
+using System.Linq;
+using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions

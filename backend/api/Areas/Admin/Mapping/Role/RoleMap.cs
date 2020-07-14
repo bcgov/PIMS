@@ -1,8 +1,8 @@
 using Mapster;
-using Model = Pims.Api.Areas.Admin.Models.Role;
-using Entity = Pims.Dal.Entities;
 using System;
 using System.Linq;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Role;
 
 namespace Pims.Api.Areas.Admin.Mapping.Role
 {

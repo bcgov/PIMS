@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Notification.Models.Template;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Notification.Models.Template;
 
 namespace Pims.Api.Areas.Project.Mapping.Template
 {

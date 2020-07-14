@@ -1,13 +1,13 @@
-using Xunit;
+using FluentAssertions;
+using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
-using System.Diagnostics.CodeAnalysis;
-using Pims.Core.Test;
-using Pims.Core.Extensions;
-using System;
-using System.Linq;
-using FluentAssertions;
 using Pims.Dal.Security;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Xunit;
 
 namespace Pims.Dal.Test.Helpers.Extensions
 {
@@ -104,13 +104,14 @@ namespace Pims.Dal.Test.Helpers.Extensions
                 if (property.BuildingId.HasValue)
                 {
                     property.Building.IsVisibleToOtherAgencies.Should().BeFalse();
-                } else if (property.ParcelId.HasValue)
+                }
+                else if (property.ParcelId.HasValue)
                 {
                     property.Parcel.IsVisibleToOtherAgencies.Should().BeFalse();
                 }
             }
         }
         #endregion
-    #endregion
+        #endregion
     }
 }

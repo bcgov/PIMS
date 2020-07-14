@@ -54,8 +54,7 @@ namespace Pims.Api.Helpers.Exceptions
         /// <returns></returns>
         public ApiHttpRequestException(HttpResponseMessage response) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed")
         {
-            this.Response = response ??
-                throw new ArgumentNullException(nameof(response));
+            this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
             this.StatusCode = response.StatusCode;
         }
         #endregion

@@ -88,7 +88,7 @@ namespace Pims.Dal.Entities
         /// get - A collection of evaluations for this building.
         /// </summary>
         /// <typeparam name="BuildingEvaluation"></typeparam>
-        public ICollection<BuildingEvaluation> Evaluations { get; private set; } = new List<BuildingEvaluation> ();
+        public ICollection<BuildingEvaluation> Evaluations { get; private set; } = new List<BuildingEvaluation>();
 
         /// <summary>
         /// get - A collection of fiscal values for this building.
@@ -106,7 +106,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Create a new instance of a Building class.
         /// </summary>
-        public Building () { }
+        public Building() { }
 
         /// <summary>
         /// Create a new instance of a Building class.
@@ -114,7 +114,7 @@ namespace Pims.Dal.Entities
         /// <param name="parcel"></param>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
-        public Building (Parcel parcel, double latitude, double longitude) : base(latitude, longitude)
+        public Building(Parcel parcel, double latitude, double longitude) : base(latitude, longitude)
         {
             this.Parcel = parcel ?? throw new ArgumentNullException(nameof(parcel));
             this.ParcelId = parcel.Id;

@@ -1,12 +1,11 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models.Lookup;
 using Pims.Dal;
-using System.Linq;
-using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using Model = Pims.Api.Models.Lookup;
 
 namespace Pims.Api.Controllers
 {

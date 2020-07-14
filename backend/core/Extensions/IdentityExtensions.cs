@@ -16,7 +16,7 @@ namespace Pims.Core.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static Guid GetUserId(this ClaimsPrincipal user) 
+        public static Guid GetUserId(this ClaimsPrincipal user)
         {
             var value = user?.FindFirstValue(ClaimTypes.NameIdentifier);
             return String.IsNullOrWhiteSpace(value) ? Guid.Empty : new Guid(value);

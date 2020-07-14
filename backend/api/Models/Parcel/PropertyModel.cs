@@ -30,7 +30,7 @@ namespace Pims.Api.Models.Parcel
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
-        
+
         public bool IsSensitive { get; set; }
 
         public bool IsVisibleToOtherAgencies { get; set; }

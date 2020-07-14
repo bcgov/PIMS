@@ -1,18 +1,18 @@
 using Microsoft.Extensions.Options;
-using Pims.Core.Http;
 using Pims.Ches.Configuration;
 using Pims.Ches.Models;
+using Pims.Core.Exceptions;
+using Pims.Core.Extensions;
+using Pims.Core.Http;
+using Pims.Core.Http.Models;
 using System;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using Pims.Core.Exceptions;
-using Pims.Core.Http.Models;
-using System.Security.Claims;
-using Pims.Core.Extensions;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Pims.Ches
@@ -182,7 +182,7 @@ namespace Pims.Ches
             var content = new FormUrlEncodedContent(form);
 
             try
-            { 
+            {
                 return await this.Client.SendAsync<TokenModel>(this.Options.AuthUrl, HttpMethod.Post, headers, content);
             }
             catch (HttpClientRequestException ex)

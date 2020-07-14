@@ -1,5 +1,5 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
+using System.Reflection;
 
 namespace Pims.Api.Models.Health
 {

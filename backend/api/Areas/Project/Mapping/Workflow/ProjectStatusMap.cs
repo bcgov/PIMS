@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Project.Models.Workflow;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Project.Models.Workflow;
 
 namespace Pims.Api.Areas.Project.Mapping.Workflow
 {

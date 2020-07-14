@@ -6,9 +6,9 @@ using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
+using IUserService = Pims.Dal.Services.IUserService;
 using Model = Pims.Api.Areas.Admin.Models.User;
 using PModel = Pims.Api.Models;
-using IUserService = Pims.Dal.Services.IUserService;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -56,7 +56,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(PModel.PageModel<Model.AccessRequestModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] {"admin-access-requests"})]
+        [SwaggerOperation(Tags = new[] { "admin-access-requests" })]
         public IActionResult GetPage(int page = 1, int quantity = 10, string sort = null,
             string searchText = null, string role = null, string agency = null,
             Entity.AccessRequestStatus status = Entity.AccessRequestStatus.OnHold)
@@ -65,7 +65,7 @@ namespace Pims.Api.Areas.Admin.Controllers
             if (quantity < 1) quantity = 1;
             if (quantity > 20) quantity = 20;
 
-            var filter = new EModel.AccessRequestFilter(page, quantity, new [] {sort }, searchText, role, agency, status);
+            var filter = new EModel.AccessRequestFilter(page, quantity, new[] { sort }, searchText, role, agency, status);
 
             var result = _pimsAdminService.User.GetAccessRequests(filter);
             var models = _mapper.Map<Model.AccessRequestModel[]>(result.Items);

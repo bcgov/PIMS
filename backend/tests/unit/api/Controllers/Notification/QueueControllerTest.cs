@@ -1,20 +1,20 @@
-using Xunit;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
-using Pims.Dal;
-using Pims.Dal.Security;
-using Pims.Dal.Entities.Models;
-using Pims.Core.Test;
-using Pims.Core.Comparers;
-using Pims.Api.Helpers.Exceptions;
-using Pims.Api.Areas.Notification.Controllers;
-using Moq;
-using Model = Pims.Api.Areas.Notification.Models.Queue;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using MapsterMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Pims.Api.Areas.Notification.Controllers;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Core.Comparers;
+using Pims.Core.Test;
+using Pims.Dal;
+using Pims.Dal.Entities.Models;
+using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Xunit;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Notification.Models.Queue;
 
 namespace Pims.Api.Test.Controllers
 {

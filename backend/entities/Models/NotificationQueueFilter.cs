@@ -1,6 +1,6 @@
+using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
-using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
 {

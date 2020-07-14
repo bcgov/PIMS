@@ -1,6 +1,6 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Security.Claims;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Pims.Dal.Services.Admin
 {

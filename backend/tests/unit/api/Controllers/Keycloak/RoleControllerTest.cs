@@ -1,17 +1,17 @@
-using Xunit;
-using System;
-using Pims.Core.Test;
-using Pims.Api.Areas.Keycloak.Controllers;
-using Moq;
-using Model = Pims.Api.Areas.Keycloak.Models.Role;
-using Microsoft.AspNetCore.Mvc;
-using Entity = Pims.Dal.Entities;
 using MapsterMapper;
-using Pims.Dal.Keycloak;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Pims.Api.Areas.Keycloak.Controllers;
 using Pims.Core.Comparers;
+using Pims.Core.Test;
+using Pims.Dal.Keycloak;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Xunit;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Keycloak.Models.Role;
 
 namespace PimsApi.Test.Keycloak.Controllers
 {

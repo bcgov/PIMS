@@ -41,7 +41,7 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Tag).HasMaxLength(50);
 
-            builder.HasIndex(m => m.Name ).IsUnique();
+            builder.HasIndex(m => m.Name).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.Tag });
 
             base.Configure(builder);

@@ -179,7 +179,7 @@ namespace Pims.Dal.Services
                     Encoding = notification.Encoding.ConvertTo<NotificationEncodings, Notifications.Models.EmailEncodings>(),
                     BodyType = notification.BodyType.ConvertTo<NotificationBodyTypes, Notifications.Models.EmailBodyTypes>(),
                     Priority = notification.Priority.ConvertTo<NotificationPriorities, Notifications.Models.EmailPriorities>(),
-                    Subject = notification.Subject, 
+                    Subject = notification.Subject,
                     Body = notification.Body,
                     Tag = notification.Tag,
                     SendOn = notification.SendOn,

@@ -1,17 +1,17 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Pims.Api.Areas.Notification.Models.Template;
 using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal;
-using Entity = Pims.Dal.Entities;
 using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using Microsoft.Extensions.Options;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Areas.Notification.Controllers
 {

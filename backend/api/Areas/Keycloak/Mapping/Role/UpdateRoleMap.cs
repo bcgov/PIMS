@@ -1,7 +1,7 @@
 using Mapster;
-using Model = Pims.Api.Areas.Keycloak.Models.Role;
-using Entity = Pims.Dal.Entities;
 using System;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Keycloak.Models.Role;
 
 namespace Pims.Api.Areas.Admin.Keycloak.Role
 {

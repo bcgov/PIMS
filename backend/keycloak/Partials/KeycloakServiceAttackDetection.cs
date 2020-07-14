@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Pims.Core.Exceptions;
+using System.Threading.Tasks;
 
 namespace Pims.Keycloak
 {

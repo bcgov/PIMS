@@ -3,8 +3,8 @@ using Pims.Core.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using Entity = Pims.Dal.Entities;
 using CModel = Pims.Ches.Models;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Test.Core.Extensions
 {

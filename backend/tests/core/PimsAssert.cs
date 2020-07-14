@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -11,6 +6,11 @@ using Pims.Api.Policies;
 using Pims.Core.Comparers;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace Pims.Core.Test

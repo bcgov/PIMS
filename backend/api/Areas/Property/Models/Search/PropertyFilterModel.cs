@@ -1,8 +1,8 @@
+using Pims.Core.Extensions;
+using Pims.Dal.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pims.Core.Extensions;
-using Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Areas.Property.Models.Search
 {

@@ -1,4 +1,3 @@
-using Castle.Core.Internal;
 using Pims.Core.Extensions;
 using Pims.Dal;
 using Pims.Dal.Helpers.Extensions;
@@ -66,7 +65,7 @@ namespace Pims.Core.Test
             var erp = workflows.First(w => w.Code == "ERP");
             var spl = workflows.First(w => w.Code == "SPL");
 
-             // SUBMIT-DISPOSE
+            // SUBMIT-DISPOSE
             var start = draft.AddStatus(status.First(s => s.Code == "DR"), 0);
             var select = start.AddTransition("Select Properties", draft, status.First(s => s.Code == "DR-P"), 1);
             var update = select.AddTransition("Update Information", draft, status.First(s => s.Code == "DR-I"), 2);

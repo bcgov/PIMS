@@ -1,10 +1,10 @@
 using Pims.Api.Areas.Keycloak.Controllers;
-using Pims.Core.Test;
 using Pims.Core.Extensions;
+using Pims.Core.Test;
 using Pims.Dal.Security;
-using Xunit;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
 
 namespace Pims.Api.Test.Routes.Keycloak
 {
