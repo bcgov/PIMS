@@ -114,10 +114,23 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(p => p.Assessed <= filter.MaxAssessedValue);
 
+            if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
+            {
+                var statuses = context.Workflows.Where(w => w.Code == "ERP")
+                    .SelectMany(w => w.Status).Where(x => !x.Status.IsTerminal)
+                    .Select(x => x.StatusId).Distinct().ToArray();
+
+                query = query.Where(property =>
+                    context.Projects.Any(project =>
+                        statuses.Any(st => st == project.StatusId)
+                            && project.ProjectNumber == property.ProjectNumber));
+            }
+
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
             else
                 query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
+
 
             return query;
         }

@@ -53,6 +53,12 @@ namespace Pims.Dal.Entities.Models
         public bool? InSurplusPropertyProgram { get; set; }
 
         /// <summary>
+        /// get/set - Flag indicating to show only properties that are in en enhanced referral program.
+        /// </summary>
+        /// <value></value>
+        public bool? InEnhancedReferralProcess { get; set; }
+
+        /// <summary>
         /// get/set - Building classification Id.
         /// </summary>
         /// <value></value>

@@ -8,6 +8,7 @@ export interface IProperty {
   latitude: number;
   longitude: number;
   projectNumber?: string;
+  projectStatus?: string;
 }
 
 export interface IStoreParcelsAction {

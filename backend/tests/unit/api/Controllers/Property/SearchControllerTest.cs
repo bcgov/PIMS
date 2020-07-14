@@ -107,7 +107,8 @@ namespace Pims.Api.Test.Controllers.Property
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
-            var items = parcels.Select(p => new Entity.Views.Property(p)).Concat(buildings.Select(b => new Entity.Views.Property(b)));
+            var items = parcels.Select(p => new Entity.Views.Property(p))
+                .Concat(buildings.Select(b => new Entity.Views.Property(b))).Select(x => new ProjectProperty(x));
             service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
@@ -141,7 +142,7 @@ namespace Pims.Api.Test.Controllers.Property
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
-            var items = parcels.Select(p => new Entity.Views.Property(p));
+            var items = parcels.Select(p => new ProjectProperty(new Entity.Views.Property(p)));
             service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
@@ -173,7 +174,7 @@ namespace Pims.Api.Test.Controllers.Property
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
-            var items = buildings.Select(p => new Entity.Views.Property(p));
+            var items = buildings.Select(p => new ProjectProperty(new Entity.Views.Property(p)));
             service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
@@ -211,7 +212,8 @@ namespace Pims.Api.Test.Controllers.Property
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
 
-            var items = parcels.Select(p => new Entity.Views.Property(p)).Concat(buildings.Select(b => new Entity.Views.Property(b)));
+            var items = parcels.Select(p => new ProjectProperty(new Entity.Views.Property(p)))
+                .Concat(buildings.Select(b => new ProjectProperty(new Entity.Views.Property(b))));
             service.Setup(m => m.Property.Get(It.IsAny<AllPropertyFilter>())).Returns(items);
 
             // Act
@@ -220,7 +222,7 @@ namespace Pims.Api.Test.Controllers.Property
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = parcels.Select(p => mapper.Map<PropertyModel>(p)).Concat(buildings.Select(b => mapper.Map<PropertyModel>(b)));
+            var expectedResult = mapper.Map<PropertyModel[]>(items);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }

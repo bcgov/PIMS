@@ -2,6 +2,7 @@ import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'le
 import { ICluster } from '../types';
 import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
+import { ReviewWorkflowStatus } from 'features/projects/common';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
@@ -61,6 +62,7 @@ export const createPoints = (properties: IProperty[]) =>
         propertyId: x.id,
         propertyTypeId: x.propertyTypeId,
         projectNumber: x.projectNumber,
+        projectStatus: x.projectStatus,
       },
       geometry: {
         type: 'Point',
@@ -90,9 +92,17 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * @param latlng the point position
  */
 export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
-  const { propertyTypeId, projectNumber } = feature?.properties;
+  const { propertyTypeId, projectNumber, projectStatus } = feature?.properties;
   const getIconType = () => {
-    if (projectNumber !== undefined) {
+    if (
+      [
+        ReviewWorkflowStatus.ERP,
+        ReviewWorkflowStatus.OnHold,
+        ReviewWorkflowStatus.ApprovedForErp,
+      ].includes(projectStatus)
+    ) {
+      return erpIcon;
+    } else if (projectNumber !== undefined) {
       return sppIcon;
     } else if (propertyTypeId === 0) {
       return parcelIcon;

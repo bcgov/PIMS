@@ -18,7 +18,6 @@ import { FaUndo, FaSearch } from 'react-icons/fa';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
-import { noop } from 'lodash';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
@@ -81,6 +80,7 @@ export type MapFilterChangeEvent = {
   minLotSize: string;
   maxLotSize: string;
   inSurplusPropertyProgram: boolean;
+  inEnhancedReferralProcess?: boolean;
 };
 
 type MapFilterProps = {
@@ -105,6 +105,13 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const keycloak = useKeycloakWrapper();
+  let formikRef = React.useRef<any>() as any;
+
+  const applyEnhancedReferralFilter = () => {
+    const values: MapFilterChangeEvent = formikRef!.values;
+    values.inEnhancedReferralProcess = true;
+    onFilterChange(values);
+  };
 
   const handleRowClick = (submitHandler: Function, setValue: Function, field: string) => {
     setValue(field, true);
@@ -126,11 +133,16 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
+        setSubmitting(true);
+        delete values.inEnhancedReferralProcess;
+        delete values.inSurplusPropertyProgram;
         onFilterChange?.({ ...values });
         setSubmitting(false);
       }}
+      innerRef={ref => (formikRef = ref)}
       onReset={(values, { setSubmitting }) => {
-        setSubmitting(true);
+        delete values.inEnhancedReferralProcess;
+        delete values.inSurplusPropertyProgram;
         onFilterChange?.({ ...values });
         setSubmitting(false);
       }}
@@ -164,7 +176,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
             {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
               <Col className="bar-item flex-grow-0">
                 <SppButton
-                  handleErpClick={noop}
+                  handleErpClick={applyEnhancedReferralFilter}
                   handleSppClick={() =>
                     handleRowClick(handleSubmit, setFieldValue, 'inSurplusPropertyProgram')
                   }
