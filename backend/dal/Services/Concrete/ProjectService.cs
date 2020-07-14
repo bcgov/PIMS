@@ -110,7 +110,7 @@ namespace Pims.Dal.Services
             this.Context.Entry(project)
                 .Collection(p => p.Properties)
                 .Load();
-            foreach (ProjectProperty pp in project.Properties)
+            foreach (Entities.ProjectProperty pp in project.Properties)
             {
                 if (pp.PropertyType == PropertyTypes.Land)
                 {
@@ -228,7 +228,7 @@ namespace Pims.Dal.Services
             this.Context.Entry(project)
                 .Collection(p => p.Properties)
                 .Load();
-            foreach (ProjectProperty pp in project.Properties)
+            foreach (Entities.ProjectProperty pp in project.Properties)
             {
                 if (pp.PropertyType == PropertyTypes.Land)
                 {
@@ -458,7 +458,7 @@ namespace Pims.Dal.Services
             this.Context.Entry(originalProject)
                 .Collection(p => p.Properties)
                 .Load();
-            foreach (ProjectProperty pp in originalProject.Properties)
+            foreach (Entities.ProjectProperty pp in originalProject.Properties)
             {
                 if (pp.PropertyType == PropertyTypes.Land)
                 {

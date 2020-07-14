@@ -9,4 +9,5 @@ export type ICluster<
 export type PointFeature = Supercluster.PointFeature<{
   propertyId: number;
   propertyTypeId: 0 | 1;
+  projectStatus?: string;
 }>;

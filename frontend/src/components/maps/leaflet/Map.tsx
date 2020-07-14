@@ -30,6 +30,7 @@ export type MapViewportChangeEvent = {
     minLotSize: number | null;
     maxLotSize: number | null;
     inSurplusPropertyProgram: boolean | null;
+    inEnhancedReferralProcess?: boolean;
   };
 };
 
@@ -81,6 +82,7 @@ const Map: React.FC<MapProps> = ({
     minLotSize: '',
     maxLotSize: '',
     inSurplusPropertyProgram: false,
+    inEnhancedReferralProcess: false,
   });
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
@@ -132,6 +134,7 @@ const Map: React.FC<MapProps> = ({
       minLotSize,
       maxLotSize,
       inSurplusPropertyProgram,
+      inEnhancedReferralProcess,
     } = filter;
     const e: MapViewportChangeEvent = {
       bounds,
@@ -144,6 +147,7 @@ const Map: React.FC<MapProps> = ({
         minLotSize: floatOrNull(minLotSize),
         maxLotSize: floatOrNull(maxLotSize),
         inSurplusPropertyProgram,
+        inEnhancedReferralProcess,
       },
     };
     onViewportChanged?.(e);

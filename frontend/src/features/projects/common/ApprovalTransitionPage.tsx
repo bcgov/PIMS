@@ -38,7 +38,7 @@ const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPagePro
   const toStatus = _.find(workflowStatuses, { code: project?.statusCode })?.toStatus;
 
   useEffect(() => {
-    if (toStatus === undefined) {
+    if (!!project && toStatus === undefined) {
       dispatch(fetchProjectWorkflow(project?.workflowCode));
       return;
     }
