@@ -86,7 +86,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             id="input-agencies"
             name="agencies"
             onChange={[Function]}
-            placeholder="Type an agency"
+            placeholder="Enter an agency"
             value=""
           />
         </div>

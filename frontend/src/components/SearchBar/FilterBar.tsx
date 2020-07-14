@@ -20,8 +20,7 @@ const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
 
 interface IProps<T extends object = {}> {
   initialValues: T;
-  onSearch: (filter: T) => void;
-  onReset: () => void;
+  onChange: (value: any) => void;
 }
 
 const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) => {
@@ -30,12 +29,12 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
       initialValues={props.initialValues}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        props.onSearch({ ...values });
+        props.onChange?.({ ...values });
         setSubmitting(false);
       }}
       onReset={(values, { setSubmitting }) => {
         setSubmitting(true);
-        props.onReset();
+        props.onChange?.({ ...values });
         setSubmitting(false);
       }}
     >
