@@ -4,6 +4,7 @@ using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using Pims.Api.Areas.Tools.Controllers;
 using Pims.Dal.Security;
+using System;
 
 namespace Pims.Api.Test.Routes.Project
 {
@@ -52,6 +53,19 @@ namespace Pims.Api.Test.Routes.Project
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasGet("addresses");
+            endpoint.HasPermissions(Permissions.PropertyEdit);
+        }
+
+        [Fact]
+        public void FindPidsAsync_Route()
+        {
+            // Arrange
+            var endpoint = typeof(GeocoderController).FindMethod(nameof(GeocoderController.FindPidsAsync), typeof(Guid));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasGet("parcels/pids/{siteId}");
             endpoint.HasPermissions(Permissions.PropertyEdit);
         }
         #endregion
