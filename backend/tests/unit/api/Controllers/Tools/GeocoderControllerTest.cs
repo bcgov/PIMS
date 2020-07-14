@@ -13,6 +13,7 @@ using Pims.Geocoder;
 using Pims.Geocoder.Parameters;
 using Pims.Geocoder.Models;
 using FluentAssertions;
+using System;
 
 namespace Pims.Api.Test.Controllers.Tools
 {
@@ -41,7 +42,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var addresses = new FeatureCollectionModel()
             {
-                Features = new []
+                Features = new[]
                 {
                     new FeatureModel()
                     {
@@ -80,7 +81,36 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Latitude.Should().Be(1d);
             first.Longitude.Should().Be(2d);
         }
+        #endregion
 
+        # region FindPidsAsync
+        [Fact]
+        public async void FindPidsAsync_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<GeocoderController>(Permissions.PropertyEdit);
+
+            var testSiteId = Guid.NewGuid();
+            var response = new SitePidsResponseModel()
+            {
+                SiteID = testSiteId,
+                Pids = "test1,test2"
+            };
+
+            var service = helper.GetService<Mock<IGeocoderService>>();
+            service.Setup(m => m.GetPids(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(response);
+
+            // Act
+            var result = await controller.FindPidsAsync(testSiteId);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            var results = Assert.IsAssignableFrom<Model.SitePidsResponseModel>(actionResult.Value);
+            results.SiteId.Should().Be(testSiteId);
+            results.Pids.Should().HaveCount(2);
+            results.Pids.First().Should().Be("test1");
+        }
         #endregion
         #endregion
     }
