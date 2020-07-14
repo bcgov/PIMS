@@ -1,7 +1,7 @@
 import { Fragment, useCallback } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { FormikProps, getIn } from 'formik';
+import { FormikProps } from 'formik';
 import * as API from 'constants/API';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -131,22 +131,21 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               options={agencies}
               disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
               getValueDisplay={(val: SelectOption) => val.code!}
+              agencyType="parent"
             />
           </Form.Row>
-          {getIn(props.values, withNameSpace('subAgency')) && (
-            <Form.Row>
-              <Form.Label column md={2}>
-                Sub-Agency
-              </Form.Label>
-              <FastInput
-                formikProps={props}
-                disabled={true}
-                type="string"
-                outerClassName="col-md-10"
-                field={withNameSpace('subAgency')}
-              />
-            </Form.Row>
-          )}
+          <Form.Row>
+            <Form.Label column md={2}>
+              Sub-Agency
+            </Form.Label>
+            <AutoCompleteText
+              field={withNameSpace('agencyId')}
+              options={agencies}
+              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
+              getValueDisplay={(val: SelectOption) => val.code!}
+              agencyType="child"
+            />
+          </Form.Row>
         </Col>
         <Col md={6}>
           <Form.Row>

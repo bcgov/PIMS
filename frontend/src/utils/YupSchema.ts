@@ -100,7 +100,7 @@ export const Building = Yup.object().shape({
     .required('Required'),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   rentableArea: Yup.number()
-    .min(1, 'Rentable Area must be a positive number')
+    .min(0, 'Rentable Area must be a positive number')
     .required('Required'),
   agencyId: Yup.number().required('Required'),
   isSensitive: Yup.boolean(),
@@ -141,7 +141,7 @@ export const LandSchema = Yup.object().shape({
     .max(180, 'Invalid Longitude')
     .required('Required'),
   landArea: Yup.number()
-    .min(1, 'Land Area must be a positive number')
+    .min(0, 'Land Area must be a positive number')
     .required('Required')
     .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
 });
