@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ERP Approval Step renders correctly 1`] = `
+exports[`ERP/SPL Approval Step renders correctly 1`] = `
 <div
   className="container-fluid"
 >
