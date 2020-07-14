@@ -20,7 +20,7 @@ namespace Pims.Api.Helpers.Authorization
         /// Creates a new instance of a RealmAccessRoleRequirment class.
         /// </summary>
         /// <param name="role"></param>
-        public RealmAccessRoleRequirement (string role)
+        public RealmAccessRoleRequirement(string role)
         {
             this.Role = role;
         }

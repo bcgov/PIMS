@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Pims.Ches;
 using Pims.Ches.Configuration;
@@ -17,7 +16,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text;
 using System.Web;
 using Xunit;
@@ -212,9 +210,9 @@ namespace Pims.Dal.Test.Libraries
             };
             var email = new EmailModel()
             {
-                To = new [] { "remove@test.com", null },
-                Cc = new [] { "remove@test.com", null },
-                Bcc = new [] { "remove@test.com", null}
+                To = new[] { "remove@test.com", null },
+                Cc = new[] { "remove@test.com", null },
+                Bcc = new[] { "remove@test.com", null }
             };
             var response = new EmailResponseModel();
 
@@ -463,7 +461,7 @@ namespace Pims.Dal.Test.Libraries
 
             var email = new EmailMergeModel()
             {
-                Contexts = new []
+                Contexts = new[]
                 {
                     new EmailContextModel()
                     {
@@ -569,7 +567,7 @@ namespace Pims.Dal.Test.Libraries
             };
             var email = new EmailMergeModel()
             {
-                Contexts = new []
+                Contexts = new[]
                 {
                     new EmailContextModel()
                     {

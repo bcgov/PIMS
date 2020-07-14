@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Pims.Api.Helpers.Authorization
 {
@@ -15,17 +15,17 @@ namespace Pims.Api.Helpers.Authorization
         /// <param name="context"></param>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        protected override Task HandleRequirementAsync (AuthorizationHandlerContext context, RealmAccessRoleRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RealmAccessRoleRequirement requirement)
         {
-            if (!context.User.HasClaim (c => c.Type == "realm_access"))
+            if (!context.User.HasClaim(c => c.Type == "realm_access"))
             {
                 return Task.CompletedTask;
             }
 
-            var claim = context.User.Claims.First (c => c.Type == "realm_access");
-            if (claim.Value.Contains ($"\"{requirement.Role}\""))
+            var claim = context.User.Claims.First(c => c.Type == "realm_access");
+            if (claim.Value.Contains($"\"{requirement.Role}\""))
             {
-                context.Succeed (requirement);
+                context.Succeed(requirement);
             }
 
             return Task.CompletedTask;

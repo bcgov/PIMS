@@ -1,18 +1,17 @@
-using Xunit;
-using System.Diagnostics.CodeAnalysis;
+using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Pims.Api.Areas.Notification.Controllers;
+using Pims.Core.Comparers;
+using Pims.Core.Test;
 using Pims.Dal;
 using Pims.Dal.Security;
-using Pims.Core.Test;
-using Pims.Core.Comparers;
-using Pims.Api.Areas.Notification.Controllers;
-using Moq;
-using Model = Pims.Api.Areas.Notification.Models.Template;
-using Microsoft.AspNetCore.Mvc;
-using MapsterMapper;
-using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Xunit;
 using Entity = Pims.Dal.Entities;
-using Microsoft.Extensions.Options;
+using Model = Pims.Api.Areas.Notification.Models.Template;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -203,7 +202,7 @@ namespace Pims.Api.Test.Controllers
             var helper = new TestHelper();
             var options = helper.CreateDefaultPimsOptions();
             var controller = helper.CreateController<TemplateController>(Permissions.SystemAdmin, options);
-            
+
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var template = EntityHelper.CreateNotificationTemplate(1, "test");

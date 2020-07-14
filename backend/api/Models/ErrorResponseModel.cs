@@ -1,7 +1,7 @@
-using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Pims.Core.Extensions;
+using System;
 
 namespace Pims.Api.Models
 {

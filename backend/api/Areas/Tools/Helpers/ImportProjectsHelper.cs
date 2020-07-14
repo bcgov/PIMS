@@ -1,11 +1,11 @@
-using Model = Pims.Api.Areas.Tools.Models.Import;
+using Microsoft.Extensions.Logging;
+using Pims.Core.Extensions;
+using Pims.Dal.Services.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pims.Dal.Services.Admin;
-using Microsoft.Extensions.Logging;
 using Entity = Pims.Dal.Entities;
-using System;
-using Pims.Core.Extensions;
+using Model = Pims.Api.Areas.Tools.Models.Import;
 
 namespace Pims.Api.Areas.Tools.Helpers
 {
@@ -84,7 +84,7 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                         var prop = props.FirstOrDefault(p => String.Compare(p.Name, keyValue[0], true) == 0);
                         var modelValue = prop?.GetValue(model);
-                        if (modelValue == null || modelValue.Equals(prop.PropertyType.GetDefault()))
+                        if (prop != null && modelValue == null || modelValue.Equals(prop.PropertyType.GetDefault()))
                         {
                             var value = Convert.ChangeType(keyValue[1], prop.PropertyType);
                             prop.SetValue(model, value);

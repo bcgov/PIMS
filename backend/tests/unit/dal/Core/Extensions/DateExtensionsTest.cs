@@ -1,9 +1,9 @@
 using FluentAssertions;
 using Pims.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using System;
 
 namespace Pims.Api.Test.Core.Extensions
 {

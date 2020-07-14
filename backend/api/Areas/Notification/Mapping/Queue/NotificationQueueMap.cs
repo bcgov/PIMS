@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Notification.Models.Queue;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Notification.Models.Queue;
 
 namespace Pims.Api.Areas.Project.Mapping.Queue
 {

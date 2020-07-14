@@ -1,27 +1,25 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
-using KModel = Pims.Keycloak.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models.User;
+using Microsoft.Extensions.Options;
 using Moq;
 using Pims.Api.Controllers;
-using Pims.Core.Test;
-using Pims.Core.Comparers;
-using Pims.Dal.Services;
-using Pims.Keycloak;
-using System.Net.Http;
-using System.Net;
-using System.Threading.Tasks;
-using Xunit;
-using Microsoft.Extensions.Options;
-using System;
 using Pims.Api.Helpers.Exceptions;
+using Pims.Core.Comparers;
+using Pims.Core.Http;
+using Pims.Core.Http.Configuration;
+using Pims.Core.Test;
+using Pims.Dal;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Pims.Core.Http.Configuration;
-using Pims.Core.Http;
-using Pims.Dal;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Xunit;
+using Entity = Pims.Dal.Entities;
+using KModel = Pims.Keycloak.Models;
+using Model = Pims.Api.Models.User;
 
 namespace PimsApi.Test.Controllers
 {

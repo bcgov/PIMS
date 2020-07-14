@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Admin.Models.Claim;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Claim;
 
 namespace Pims.Api.Areas.Admin.Mapping.Claim
 {

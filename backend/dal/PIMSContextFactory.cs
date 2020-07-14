@@ -1,11 +1,11 @@
-using System;
-using System.Data.SqlClient;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
+using System;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace Pims.Dal
 {
@@ -31,7 +31,7 @@ namespace Pims.Dal
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Pims.Api", LogLevel.Debug)
                     .AddConsole();
-                    // .AddEventLog();
+                // .AddEventLog();
             });
             _logger = loggerFactory.CreateLogger<PimsContextFactory>();
         }

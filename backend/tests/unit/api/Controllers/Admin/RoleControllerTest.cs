@@ -1,16 +1,16 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Areas.Admin.Models.Role;
 using Moq;
 using Pims.Api.Areas.Admin.Controllers;
+using Pims.Core.Comparers;
 using Pims.Core.Test;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using System;
-using Xunit;
-using Pims.Core.Comparers;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Role;
 
 namespace PimsApi.Test.Admin.Controllers
 {
@@ -72,7 +72,7 @@ namespace PimsApi.Test.Admin.Controllers
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
-            var actualResult = Assert.IsType< Pims.Api.Models.PageModel<Model.RoleModel>>(actionResult.Value);
+            var actualResult = Assert.IsType<Pims.Api.Models.PageModel<Model.RoleModel>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.RoleModel[]>(roles), actualResult.Items, new DeepPropertyCompare());
             service.Verify(m => m.Role.Get(1, 10, "test"), Times.Once());
         }

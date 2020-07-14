@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Admin.Models.Agency;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Agency;
 
 namespace Pims.Api.Areas.Admin.Mapping.Agency
 {

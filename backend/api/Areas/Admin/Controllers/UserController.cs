@@ -1,15 +1,15 @@
 using MapsterMapper;
-using EModel = Pims.Dal.Entities.Models;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Areas.Admin.Models.User;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
-using System;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using EModel = Pims.Dal.Entities.Models;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.User;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {

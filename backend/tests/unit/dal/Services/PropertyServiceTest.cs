@@ -265,7 +265,8 @@ namespace Pims.Dal.Test.Services
 
             var buildings01 = init.CreateBuildings(parcels.Next(7), 100, 10);
             var status01 = init.PropertyStatus.First(s => s.Id == 1);
-            buildings01.ForEach(b => {
+            buildings01.ForEach(b =>
+            {
                 b.ChangeStatus(status01);
             });
             buildings.AddRange(buildings01);

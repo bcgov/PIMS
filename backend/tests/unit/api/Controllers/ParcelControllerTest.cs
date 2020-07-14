@@ -1,19 +1,19 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Model = Pims.Api.Models.Parcel;
 using Moq;
 using Pims.Api.Controllers;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
+using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
-using Pims.Dal;
-using System.Collections.Generic;
 using System;
-using Xunit;
-using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Xunit;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Parcel;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -220,7 +220,7 @@ namespace Pims.Api.Test.Controllers
             var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
 
             var service = helper.GetService<Mock<IPimsService>>();
-            var expectedResults = new Model.CheckPidAvailabilityResponseModel {Available = true};
+            var expectedResults = new Model.CheckPidAvailabilityResponseModel { Available = true };
             service.Setup(m => m.Parcel.IsPidAvailable(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(true);
 

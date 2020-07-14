@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Authentication;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 
 namespace Pims.Api.Helpers.Authorization
 {
@@ -36,7 +36,7 @@ namespace Pims.Api.Helpers.Authorization
                 var realm_access_claim = principal.Claims.First(c => c.Type == REALM_ACCESS);
                 var value = realm_access_claim.Value.Replace("\\", "");
                 var realm_access = JsonSerializer.Deserialize<RealmAccess>(value, _options);
-                var identity = ((ClaimsIdentity) principal.Identity);
+                var identity = ((ClaimsIdentity)principal.Identity);
                 foreach (var role in realm_access.Roles)
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, role));

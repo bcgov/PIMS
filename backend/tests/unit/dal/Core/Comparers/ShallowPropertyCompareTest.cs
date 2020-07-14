@@ -1,6 +1,5 @@
 using Pims.Core.Comparers;
 using Pims.Core.Test;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Entity = Pims.Dal.Entities;

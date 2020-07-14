@@ -1,8 +1,8 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pims.Api.Models;
 using Pims.Api.Areas.Project.Models.Status;
+using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Security;

@@ -1,11 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Pims.Core.Extensions;
+using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Pims.Core.Extensions;
-using Pims.Dal.Exceptions;
-using Pims.Dal.Security;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -71,7 +70,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (filter.IgnorePropertiesInProjects == true)
                 query = query.Where(p => p.ProjectNumber == null);
-            if(filter.InSurplusPropertyProgram == true)
+            if (filter.InSurplusPropertyProgram == true)
                 query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumber));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));

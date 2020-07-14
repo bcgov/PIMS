@@ -1,6 +1,6 @@
 using Mapster;
-using Model = Pims.Api.Areas.Keycloak.Models.User;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Keycloak.Models.User;
 
 namespace Pims.Api.Areas.Keycloak.Mapping.User
 {

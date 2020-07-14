@@ -1,7 +1,7 @@
 using Mapster;
-using Model = Pims.Api.Models.Lookup;
-using Entity = Pims.Dal.Entities;
 using System;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.Lookup;
 
 namespace Pims.Api.Mapping.Lookup
 {

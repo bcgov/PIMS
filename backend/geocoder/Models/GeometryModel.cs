@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Pims.Geocoder.Models
 {
     public class GeometryModel

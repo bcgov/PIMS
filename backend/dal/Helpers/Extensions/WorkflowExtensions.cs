@@ -33,7 +33,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="toStatus">The project status that will be transitions to.</param>
         /// <param name="sortOrder">The order that the workflow project status is in.</param>
         /// <returns></returns>
-        public static WorkflowProjectStatus AddTransition(this WorkflowProjectStatus workflowStatus, string action,ProjectStatus toStatus, int sortOrder)
+        public static WorkflowProjectStatus AddTransition(this WorkflowProjectStatus workflowStatus, string action, ProjectStatus toStatus, int sortOrder)
         {
             var toWorkflowStatus = workflowStatus.Workflow.AddStatus(toStatus, sortOrder);
             workflowStatus.AddTransition(action, toWorkflowStatus);

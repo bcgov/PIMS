@@ -1,12 +1,11 @@
 using MapsterMapper;
-using Entity = Pims.Dal.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Model = Pims.Api.Areas.Admin.Models.Agency;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Areas.Admin.Models.Agency;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -22,7 +21,6 @@ namespace Pims.Api.Areas.Admin.Controllers
     public class AgencyController : ControllerBase
     {
         #region Variables
-        private readonly ILogger<AgencyController> _logger;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         #endregion
@@ -31,12 +29,10 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <summary>
         /// Creates a new instance of a AgencyController class.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public AgencyController(ILogger<AgencyController> logger, IPimsAdminService pimsAdminService, IMapper mapper)
+        public AgencyController(IPimsAdminService pimsAdminService, IMapper mapper)
         {
-            _logger = logger;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
         }

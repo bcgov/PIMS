@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pims.Dal.Helpers.Migrations
 {
@@ -59,9 +59,8 @@ namespace Pims.Dal.Helpers.Migrations
         /// <param name="migrationBuilder"></param>
         protected void PreDeploy(MigrationBuilder migrationBuilder)
         {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
             migrationBuilder.Sql($"PRINT 'PreDeploy Scripts'");
-            if (migrationBuilder == null)
-                throw new ArgumentNullException(nameof(migrationBuilder));
 
             ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PreDeploy"));
         }
@@ -72,9 +71,8 @@ namespace Pims.Dal.Helpers.Migrations
         /// <param name="migrationBuilder"></param>
         protected void PostDeploy(MigrationBuilder migrationBuilder)
         {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
             migrationBuilder.Sql($"PRINT 'PostDeploy Scripts'");
-            if (migrationBuilder == null)
-                throw new ArgumentNullException(nameof(migrationBuilder));
 
             ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PostDeploy"));
         }
@@ -86,11 +84,8 @@ namespace Pims.Dal.Helpers.Migrations
         /// <param name="path"></param>
         protected void ScriptDeploy(MigrationBuilder migrationBuilder, string path)
         {
-            if (migrationBuilder == null)
-                throw new ArgumentNullException(nameof(migrationBuilder));
-
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            if (path == null) throw new ArgumentNullException(nameof(path));
 
             if (!Directory.Exists(path) && !File.Exists(path))
             {

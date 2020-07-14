@@ -1,7 +1,7 @@
 using Mapster;
-using Model = Pims.Api.Models.User;
-using Entity = Pims.Dal.Entities;
 using System;
+using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.User;
 
 namespace Pims.Api.Mapping.User
 {

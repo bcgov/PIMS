@@ -1,9 +1,9 @@
+using Pims.Core.Exceptions;
+using Pims.Core.Extensions;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pims.Core.Exceptions;
-using Pims.Core.Extensions;
 
 namespace Pims.Keycloak.Extensions
 {

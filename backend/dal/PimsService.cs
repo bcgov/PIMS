@@ -1,7 +1,7 @@
-using System;
-using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using Pims.Dal.Services;
+using System;
+using System.Security.Claims;
 
 namespace Pims.Dal
 {

@@ -1,14 +1,14 @@
 using Microsoft.Extensions.Options;
-using Pims.Notifications.Configuration;
-using Model = Pims.Notifications.Models;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Pims.Ches;
+using Pims.Core.Extensions;
+using Pims.Notifications.Configuration;
 using RazorEngine;
 using RazorEngine.Templating;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Pims.Core.Extensions;
+using System.Threading.Tasks;
+using Model = Pims.Notifications.Models;
 
 namespace Pims.Notifications
 {
