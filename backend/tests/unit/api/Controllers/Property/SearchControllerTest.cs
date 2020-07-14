@@ -63,6 +63,7 @@ namespace Pims.Api.Test.Controllers.Property
         {
             new object [] { new Uri("http://host/api/properties?Agencies=1,2"), true, true },
             new object [] { new Uri("http://host/api/properties?StatusId=2"), true, true },
+            new object [] { new Uri("http://host/api/properties?InSurplusPropertyProgram=true"), true, true },
             new object [] { new Uri("http://host/api/properties?ClassificationId=1"), true, true },
             new object [] { new Uri("http://host/api/properties?Address=Address"), true, true },
             new object [] { new Uri("http://host/api/properties?ProjectNumber=ProjectNumber"), true, true },
