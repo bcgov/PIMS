@@ -130,4 +130,46 @@ describe('Project list view', () => {
     const noResults = await findByText('No rows to display');
     expect(noResults).toBeInTheDocument();
   });
+
+  it('Displays appropriate buttons by default', async () => {
+    mockedService.getProjectList.mockResolvedValueOnce({
+      quantity: 0,
+      total: 0,
+      page: 1,
+      pageIndex: 0,
+      items: [],
+    });
+
+    const { getByText, queryByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ProjectListView />
+        </Router>
+      </Provider>,
+    );
+    expect(getByText('Export Generic Report')).toBeInTheDocument();
+    expect(getByText('Export CSV')).toBeInTheDocument();
+    expect(queryByText('Export SPL Report')).toBeNull();
+  });
+
+  it('Displays appropriate buttons by default', async () => {
+    mockedService.getProjectList.mockResolvedValueOnce({
+      quantity: 0,
+      total: 0,
+      page: 1,
+      pageIndex: 0,
+      items: [],
+    });
+
+    const { getByText, queryByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ProjectListView />
+        </Router>
+      </Provider>,
+    );
+    expect(getByText('Export Generic Report')).toBeInTheDocument();
+    expect(getByText('Export CSV')).toBeInTheDocument();
+    expect(queryByText('Export SPL Report')).toBeNull();
+  });
 });

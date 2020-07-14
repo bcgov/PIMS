@@ -5,7 +5,26 @@ import ExemptionEnhancedReferralCompleteForm from './ExemptionEnhancedReferralCo
 import renderer from 'react-test-renderer';
 import { noop } from 'lodash';
 import { render, wait, fireEvent } from '@testing-library/react';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme, { mount } from 'enzyme';
+import { Button } from 'react-bootstrap';
+import GenericModal from 'components/common/GenericModal';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
+Enzyme.configure({ adapter: new Adapter() });
+const history = createMemoryHistory();
+
+const element = (func: Function) => (
+  <Router history={history}>
+    <FormComponent
+      addToErp={noop}
+      onClickGreTransferred={noop}
+      onClickNotInSpl={noop}
+      onClickProceedToSpl={func}
+    />
+  </Router>
+);
 const testProject: IProject = {
   id: 1,
   projectNumber: 'SPP-10000',
@@ -108,5 +127,26 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     const notInSplButton = getByText('Not Included in the SPL');
     await wait(() => fireEvent.click(notInSplButton));
     expect(onClickNotInSpl).toHaveBeenCalledTimes(1);
+  });
+  const splClick = jest.fn();
+  const component = mount(element(splClick));
+  it('displays confirmation when clicking proceed to spl', () => {
+    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+      return node.type() === Button && node.text() === 'Proceed to SPL';
+    });
+    button.simulate('click');
+    return Promise.resolve().then(() => {
+      expect(component.find(GenericModal)).toHaveLength(1);
+    });
+  });
+
+  it('calls the appropriate function', () => {
+    const confirm = component
+      .find(GenericModal)
+      .findWhere((node: { type: () => any; text: () => string }) => {
+        return node.type() === Button && node.text() === 'Proceed to SPL';
+      });
+    confirm.simulate('click');
+    expect(splClick).toHaveBeenCalledTimes(1);
   });
 });
