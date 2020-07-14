@@ -67,10 +67,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
 
   //validate form and tasks, skipping validation in the case of deny and save.
   const handleValidate = (values: IProject) => {
-    if (
-      submitStatusCode !== ReviewWorkflowStatus.ApprovedForErp &&
-      submitStatusCode !== ReviewWorkflowStatus.ApprovedForExemption
-    ) {
+    if (submitStatusCode === ReviewWorkflowStatus.Denied) {
       return Promise.resolve({});
     }
     let taskErrors = validateTasks(values);
@@ -99,6 +96,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       return values.workflowCode;
     }
   };
+
   return (
     <Container fluid className="ReviewApproveStep">
       <Formik
@@ -137,6 +135,8 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
                 submitStatusCode,
                 setSubmitStatusCode,
                 isSubmitting: !noFetchingProjectRequests,
+                submitDirectly: (values: IProject) =>
+                  onSubmitReview(values, formikRef, submitStatusCode, values.workflowCode),
               }}
             />
           ) : null}

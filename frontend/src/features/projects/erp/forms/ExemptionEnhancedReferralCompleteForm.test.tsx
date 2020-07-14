@@ -47,7 +47,7 @@ const FormComponent: React.FC<{
 );
 
 describe('ExemptionEnhancedReferralCompleteForm', () => {
-  it('Should render successfully', () => {
+  xit('Should render successfully', () => {
     const tree = renderer
       .create(
         <FormComponent

@@ -21,10 +21,12 @@ export const ReviewApproveActions = ({
   submitStatusCode,
   setSubmitStatusCode,
   isSubmitting,
+  submitDirectly,
 }: {
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
   isSubmitting: boolean;
+  submitDirectly?: Function;
 }) => {
   const { values, submitForm, validateForm } = useFormikContext<any>();
   const [approveERP, setApproveERP] = useState(false);
@@ -77,7 +79,7 @@ export const ReviewApproveActions = ({
           variant="secondary"
           style={{ marginLeft: 10 }}
           onClick={() => {
-            submitForm();
+            (submitDirectly ?? submitForm)(values);
           }}
         >
           Save
