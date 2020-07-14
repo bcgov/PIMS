@@ -40,6 +40,7 @@ export const mapLookupCode = (
   value: code.id.toString(),
   selected: code.id === defaultId,
   code: code.code,
+  parentId: code.parentId,
 });
 
 export const mapStatuses = (status: IStatus): SelectOption => ({
