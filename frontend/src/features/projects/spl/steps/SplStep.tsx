@@ -20,7 +20,6 @@ import {
   handleValidate,
   ValidationGroup,
   DisposeWorkflowStatus,
-  useAgencyResponseTable,
 } from '../../common';
 import {
   saveSplTab,
@@ -70,8 +69,6 @@ const SplStep = ({ formikRef }: IStepProps) => {
     dispatch(saveSplTab(tabName));
   };
   let initialValues = copyAppraisalTasks(project);
-  const { projectAgencyResponses } = useAgencyResponseTable();
-  initialValues = { ...initialValues, projectAgencyResponses: projectAgencyResponses };
 
   const splValidationGroups: ValidationGroup[] = [
     {

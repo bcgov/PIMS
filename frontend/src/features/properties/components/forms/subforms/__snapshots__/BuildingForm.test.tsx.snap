@@ -556,11 +556,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <input
                 className="form-check-input position-static"
+                defaultChecked={false}
                 disabled={false}
                 id="input-sensitiveBuilding"
                 name="sensitiveBuilding"
                 onChange={[Function]}
                 type="checkbox"
+                value={false}
               />
             </div>
           </div>

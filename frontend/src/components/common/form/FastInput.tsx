@@ -4,6 +4,7 @@ import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
+import TooltipIcon from '../TooltipIcon';
 
 type RequiredAttributes = {
   /** The field name */
@@ -31,6 +32,8 @@ type OptionalAttributes = {
   outerClassName?: string;
   /** Run the following formatter on value during onBlur */
   onBlurFormatter?: Function;
+  /** tooltip to display after label */
+  tooltip?: string;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -53,6 +56,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     custom,
     type,
     onBlurFormatter,
+    tooltip,
     formikProps: {
       values,
       errors,
@@ -80,7 +84,13 @@ export const FastInput: React.FC<FastInputProps> = memo(
         controlId={`input-${field}`}
         className={classNames(!!required ? 'required' : '', outerClassName)}
       >
-        {!!label && <Form.Label>{label}</Form.Label>}
+        {!!label && (
+          <Form.Label>
+            {label}
+            {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+          </Form.Label>
+        )}
+
         {!!required && <span className="required">*</span>}
 
         <Form.Control

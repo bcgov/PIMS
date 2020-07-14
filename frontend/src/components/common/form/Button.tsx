@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
           size="sm"
           role="status"
           as="span"
-          style={{ marginLeft: '.5rem' }}
+          style={{ marginLeft: '.5rem', padding: '.5rem' }}
         />
       )}
     </ButtonBase>

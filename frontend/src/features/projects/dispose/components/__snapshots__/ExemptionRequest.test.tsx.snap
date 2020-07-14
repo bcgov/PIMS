@@ -42,10 +42,13 @@ Array [
         >
           <input
             className="form-check-input position-static"
+            defaultChecked={false}
             disabled={false}
             id="input-testFieldOne"
             name="testFieldOne"
+            onChange={[Function]}
             type="checkbox"
+            value={false}
           />
         </div>
       </div>

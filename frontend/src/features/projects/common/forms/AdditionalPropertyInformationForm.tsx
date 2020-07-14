@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Form, FastInput } from 'components/common/form';
+import { Form, FastInput, FastFiscalYearInput } from 'components/common/form';
 import { useFormikContext } from 'formik';
 
 interface IAdditionalPropertyInformationFormProps {
@@ -32,11 +32,10 @@ const AdditionalPropertyInformationForm = ({
         <Form.Label column md={3}>
           Reported Fiscal Year
         </Form.Label>
-        <FastInput
+        <FastFiscalYearInput
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
-          type="number"
           field="reportedFiscalYear"
         />
       </Form.Row>
@@ -44,11 +43,10 @@ const AdditionalPropertyInformationForm = ({
         <Form.Label column md={3}>
           Actual or Forecasted Fiscal Year of Sale
         </Form.Label>
-        <FastInput
+        <FastFiscalYearInput
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
-          type="number"
           field="actualFiscalYear"
         />
       </Form.Row>
