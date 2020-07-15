@@ -157,6 +157,14 @@ describe('SPL Approval Step', () => {
       const contractInPlaceButton = getByText(/Change Status to Contract in Place/);
       expect(contractInPlaceButton).not.toBeDisabled();
     });
+    it('toggles change status to pre-marketing when status is contract in place', () => {
+      const project = _.cloneDeep(mockProject);
+      project.statusCode = ReviewWorkflowStatus.ContractInPlace;
+
+      const { getByText } = render(getApprovalStep(getStore(project)));
+      const preMarketingButton = getByText(/Change Status to Pre-Marketing/);
+      expect(preMarketingButton).not.toBeDisabled();
+    });
     it('displays modal when cancel button clicked', async (done: any) => {
       const component = render(getApprovalStep());
       const cancelButton = component.getByText(/Cancel Project/);

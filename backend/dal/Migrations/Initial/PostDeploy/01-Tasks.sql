@@ -143,7 +143,7 @@ INSERT INTO dbo.[Tasks] (
     , 'Bid Rigging, Collusion and Bias'
     , 0
     , 'I confirm I have reviewed the offer and to the best of my knowledge confirm there is no identifiable opportunity for bid rigging, collusion and bias'
-    , 42 --Contract in Place
+    , 32 --Disposed
     , 0
     , 4
 )

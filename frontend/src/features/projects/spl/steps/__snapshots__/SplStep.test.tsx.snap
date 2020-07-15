@@ -1366,18 +1366,17 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 value=""
               />
             </div>
+            <button
+              className="btn btn-primary"
+              disabled={true}
+              onClick={[Function]}
+              type="button"
+            >
+              Change Status to Contract in Place
+            </button>
             <div
               className="col-md-6"
-            >
-              <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
-                type="button"
-              >
-                Change Status to Contract in Place
-              </button>
-            </div>
+            />
           </div>
           <div
             className="ProjectNotes form-row"

@@ -18,6 +18,7 @@ interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
   onClickMarketedOn: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickContractInPlace: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickPreMarketing: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickDisposedExternally: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
@@ -29,11 +30,13 @@ const SurplusPropertyListForm = ({
   isReadOnly,
   onClickMarketedOn,
   onClickContractInPlace,
+  onClickPreMarketing,
   onClickDisposedExternally,
 }: ISurplusPropertyListFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const contractTasks = _.filter(formikProps.values.tasks, {
-    statusCode: ReviewWorkflowStatus.ContractInPlace,
+    statusCode: ReviewWorkflowStatus.Disposed,
+    name: 'Bid Rigging, Collusion and Bias',
   });
   const [dispose, setDispose] = useState(false);
 
@@ -118,18 +121,12 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           formikProps={formikProps}
         />
-        <div className="col-md-6">
-          <Button
-            disabled={
-              isReadOnly ||
-              !formikProps.values.offerAmount ||
-              formikProps.values.statusCode !== ReviewWorkflowStatus.OnMarket
-            }
-            onClick={onClickContractInPlace}
-          >
-            Change Status to Contract in Place
-          </Button>
-        </div>
+        <ToggleContractOrPreMarketing
+          isReadOnly={isReadOnly}
+          onClickContractInPlace={onClickContractInPlace}
+          onClickPreMarketing={onClickPreMarketing}
+        />
+        <div className="col-md-6"></div>
       </Form.Row>
       <TasksForm tasks={contractTasks} />
       <ProjectNotes outerClassName="col-md-12" disabled={true} />
@@ -186,6 +183,34 @@ const SurplusPropertyListForm = ({
         </div>
       </Form.Row>
     </Container>
+  );
+};
+
+const ToggleContractOrPreMarketing = ({
+  isReadOnly,
+  onClickContractInPlace,
+  onClickPreMarketing,
+}: {
+  isReadOnly?: boolean;
+  onClickContractInPlace: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickPreMarketing: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}) => {
+  const formikProps = useFormikContext<IProject>();
+  return formikProps.values.statusCode === ReviewWorkflowStatus.ContractInPlace ? (
+    <Button disabled={isReadOnly} onClick={onClickPreMarketing}>
+      Change Status to Pre-Marketing
+    </Button>
+  ) : (
+    <Button
+      disabled={
+        isReadOnly ||
+        !formikProps.values.offerAmount ||
+        formikProps.values.statusCode !== ReviewWorkflowStatus.OnMarket
+      }
+      onClick={onClickContractInPlace}
+    >
+      Change Status to Contract in Place
+    </Button>
   );
 };
 
