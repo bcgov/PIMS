@@ -24,13 +24,7 @@ export const UsersFilterBar: React.FC<IProps> = ({
   const roleOptions = rolesLookups.map(rl => ({ label: rl.name, value: rl.name } as SelectOption));
 
   return (
-    <FilterBar<IUsersFilter>
-      initialValues={value}
-      onSearch={onChange}
-      onReset={() => {
-        onChange({});
-      }}
-    >
+    <FilterBar<IUsersFilter> initialValues={value} onChange={onChange}>
       <Col className="bar-item">
         <Input field="username" placeholder="IDIR/BCeID" />
       </Col>

@@ -38,6 +38,11 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
   const option = options.find(x => Number(x.value) === value);
 
   useEffect(() => {
+    // to handle reset
+    if (value === null || value === undefined || value === '') {
+      setText('');
+      setSuggestions([]);
+    }
     if (value && options.length > 0) {
       if (getValueDisplay && option && !agencyType) {
         setText(getValueDisplay(options.find(x => Number(x.value) === value)));
