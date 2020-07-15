@@ -729,11 +729,14 @@ namespace Pims.Dal.Services
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     originalProject.SubmittedOn = DateTime.UtcNow;
                     break;
-                case ("AP-!SPL"): // Approve for SPL
+                case ("AP-!SPL"): // Not in SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
+                    break;
+                case ("SPL-M"): // Marketing
+                    if (project.MarketedOn == null) throw new InvalidOperationException("Marketing status requires Marketed On date.");
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
@@ -750,6 +753,7 @@ namespace Pims.Dal.Services
                     await CancelNotificationsAsync(originalProject.Id);
                     break;
                 case ("DIS"): // DISPOSED
+                    if (project.DisposedOn == null) throw new InvalidOperationException("Disposed status requires Disposed Notification Sent date.");
                     this.Context.DisposeProjectProperties(originalProject);
                     originalProject.DisposedOn = DateTime.UtcNow;
                     originalProject.CompletedOn = DateTime.UtcNow;
