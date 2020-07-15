@@ -13,17 +13,8 @@ $contentheading-height: 60px;
   .filter-container {
     padding: 0;
     background-color: var(--light);
-
-    .title {
-      padding-top: 10px;
-      text-align: left;
-      margin-left: 2rem;
-    }
-
-    .map-filter-bar {
-      align-items: center;
-      padding: 1rem 0;
-
+    .search-bar {
+      justify-content: center;
       .bar-item {
         .form-group {
           padding: 0;
