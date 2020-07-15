@@ -6,7 +6,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 
 export interface IGeocoderResponse {
-  siteId: number;
+  siteId: string;
   fullAddress: string;
   address1: string;
   city: string;
@@ -16,13 +16,18 @@ export interface IGeocoderResponse {
   score: number;
 }
 
+export interface IGeocoderPidsResponse {
+  siteId: string;
+  pids: string[];
+}
+
 export interface PimsAPI extends AxiosInstance {
   isPidAvailable: (
     parcelId: number | '' | undefined,
     pid: string | undefined,
   ) => Promise<{ available: boolean }>;
-
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
+  getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -63,6 +68,13 @@ export const useApi = (): PimsAPI => {
       `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
     );
     return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
+  };
+
+  axios.getSitePids = async (siteId: string): Promise<IGeocoderPidsResponse> => {
+    const { data } = await axios.get<IGeocoderPidsResponse>(
+      `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
+    );
+    return data;
   };
 
   return axios;

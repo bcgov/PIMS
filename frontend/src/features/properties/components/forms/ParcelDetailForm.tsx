@@ -65,7 +65,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const api = useApi();
-  let formikRef = React.useRef<any>() as any;
+  const formikRef = React.useRef<FormikProps<any>>();
 
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -198,14 +198,14 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     return available;
   };
 
-  const handleGeocoderChanges = (data: IGeocoderResponse) => {
-    if (!!formikRef && data) {
+  const handleGeocoderChanges = async (data: IGeocoderResponse) => {
+    if (!!formikRef?.current && data) {
       const newValues = {
-        ...formikRef.values,
+        ...formikRef.current.values,
         latitude: data.latitude,
         longitude: data.longitude,
         address: {
-          ...formikRef.values.address,
+          ...formikRef.current.values.address,
           line1: data.fullAddress,
         },
       };
@@ -232,7 +232,16 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         newValues.address.province = province.name;
       }
 
-      formikRef.setValues(newValues);
+      // Ask geocoder for PIDs associated with this address
+      let parcelPid: string = '';
+      if (data.siteId) {
+        const { pids } = await api.getSitePids(data.siteId);
+        parcelPid = pids && pids.length > 0 ? pids[0] : '';
+      }
+      newValues.pid = parcelPid;
+
+      // update form with values returned from geocoder
+      formikRef.current.setValues(newValues);
     }
   };
 
@@ -241,7 +250,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       <Col>
         <Formik
           innerRef={instance => {
-            formikRef = instance;
+            formikRef.current = instance;
           }}
           initialValues={initialValues}
           validateOnChange={false}
