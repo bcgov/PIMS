@@ -96,7 +96,13 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.PROJECT_VIEW}
-            path={['/projects/summary', '/projects/transferred', '/projects/disposed']}
+            path={[
+              '/projects/summary',
+              '/projects/transferred',
+              '/projects/disposed',
+              '/projects/denied',
+              '/projects/cancelled',
+            ]}
             component={() => <ProjectSummaryView formikRef={formikRef} />}
           />
           {/** Due to the use of dynamic routes within the project workflows, manually redirect to not found if no valid /projects route exists */}

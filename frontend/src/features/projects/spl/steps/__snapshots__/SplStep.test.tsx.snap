@@ -39,7 +39,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
       <h5
         className="sc-AxirZ fNvkmM"
       >
-        Approval Date 2020-07-14
+        Approval Date 2020-07-15
       </h5>
     </div>
     <div
@@ -151,7 +151,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                       placeholder="--/--/----"
                       readOnly={false}
                       type="text"
-                      value="07/14/2020"
+                      value="07/15/2020"
                     />
                   </div>
                 </div>
@@ -195,7 +195,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                       placeholder="--/--/----"
                       readOnly={false}
                       type="text"
-                      value="07/14/2020"
+                      value="07/15/2020"
                     />
                   </div>
                 </div>
