@@ -2098,6 +2098,234 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public async void SetStatusAsync_PreMarketing_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "ERP", "AP-!SPL");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.ClearanceNotificationSentOn = DateTime.Now; // required for Not in SPL.
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-!SPL");
+            project.StatusId = clearanceNotificationSentOn.Id; // Not in SPL status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(clearanceNotificationSentOn.Id);
+            result.Status.Should().Be(clearanceNotificationSentOn);
+            result.ClearanceNotificationSentOn.Should().NotBeNull();
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().Be(2);
+            property.ClassificationId.Should().Be(2);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void SetStatusAsync_Marketing_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "SPL-M");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.MarketedOn = DateTime.Now; // required for Marketed.
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var marketed = init.ProjectStatus.First(s => s.Code == "SPL-M");
+            project.StatusId = marketed.Id; // Marketed status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(marketed.Id);
+            result.Status.Should().Be(marketed);
+            result.MarketedOn.Should().NotBeNull();
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().Be(2);
+            property.ClassificationId.Should().Be(2);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void SetStatusAsync_Marketing_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "SPL-M");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var marketed = init.ProjectStatus.First(s => s.Code == "SPL-M");
+            project.StatusId = marketed.Id; // Marketing status.
+
+            // Act
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
+        }
+
+        [Fact]
+        public async void SetStatusAsync_ContractInPlace_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "SPL-CIP");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var contractInPlace = init.ProjectStatus.First(s => s.Code == "SPL-CIP");
+            project.StatusId = contractInPlace.Id; // Contract in Place status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(contractInPlace.Id);
+            result.Status.Should().Be(contractInPlace);
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().Be(2);
+            property.ClassificationId.Should().Be(2);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void SetStatusAsync_Disposed_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "DIS");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            project.DisposedOn = DateTime.Now; // required for Marketed.
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var disposed = init.ProjectStatus.First(s => s.Code == "DIS");
+            project.StatusId = disposed.Id; // Marketed status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(disposed.Id);
+            result.Status.Should().Be(disposed);
+            result.DisposedOn.Should().NotBeNull();
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().Be(2);
+            property.ClassificationId.Should().Be(2);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void SetStatusAsync_Disposed_InvalidOperationException()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "DIS");
+            var parcel = init.CreateParcel(1);
+            project.AddProperty(parcel);
+            parcel.ProjectNumber = project.ProjectNumber;
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var marketed = init.ProjectStatus.First(s => s.Code == "DIS");
+            project.StatusId = marketed.Id; // Marketing status.
+
+            // Act
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
+        }
+
+        [Fact]
         public async void SetStatus_Submit_NotAuthorizedException()
         {
             // Arrange
