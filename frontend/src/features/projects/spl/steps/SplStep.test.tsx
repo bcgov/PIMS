@@ -32,8 +32,8 @@ const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 const mockProject = _.cloneDeep(defaultProject);
 mockProject.statusCode = ReviewWorkflowStatus.PreMarketing;
-mockProject.approvedOn = '2020-07-14';
-mockProject.submittedOn = '2020-07-14';
+mockProject.approvedOn = '2020-07-15';
+mockProject.submittedOn = '2020-07-15';
 
 const getApprovalStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
