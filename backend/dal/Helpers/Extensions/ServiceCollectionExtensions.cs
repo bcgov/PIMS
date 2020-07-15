@@ -62,7 +62,6 @@ namespace Pims.Dal
             services.AddScoped<Services.Admin.IBuildingConstructionTypeService, Services.Admin.BuildingConstructionTypeService>();
             services.AddScoped<Services.Admin.IBuildingPredominateUseService, Services.Admin.BuildingPredominateUseService>();
             services.AddScoped<Services.Admin.IPropertyClassificationService, Services.Admin.PropertyClassificationService>();
-            services.AddScoped<Services.Admin.IPropertyStatusService, Services.Admin.PropertyStatusService>();
             services.AddScoped<Services.Admin.IPropertyTypeService, Services.Admin.PropertyTypeService>();
             services.AddScoped<Services.Admin.IProjectService, Services.Admin.ProjectService>();
             services.AddScoped<Services.Admin.IProjectStatusService, Services.Admin.ProjectStatusService>();

@@ -77,11 +77,6 @@ namespace Pims.Dal.Services.Admin
         public IPropertyClassificationService PropertyClassification { get { return _serviceProvider.GetService<IPropertyClassificationService>(); } }
 
         /// <summary>
-        /// get - The property status service.
-        /// </summary>
-        public IPropertyStatusService PropertyStatus { get { return _serviceProvider.GetService<IPropertyStatusService>(); } }
-
-        /// <summary>
         /// get - The property type service.
         /// </summary>
         public IPropertyTypeService PropertyType { get { return _serviceProvider.GetService<IPropertyTypeService>(); } }

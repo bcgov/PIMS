@@ -128,12 +128,6 @@ Array [
                   >
                     Classification
                   </option>
-                  <option
-                    className="option"
-                    value="1"
-                  >
-                    classificationVal
-                  </option>
                 </select>
               </div>
             </div>

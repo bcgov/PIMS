@@ -69,7 +69,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     FiscalYear = "2020",
                     AssessedValue = "0",
                     Classification = "Classification",
-                    Status = "Status",
+                    Status = "Active",
                     CivicAddress = "test",
                     City = "test",
                     Postal = "T9T9T9",
@@ -85,7 +85,6 @@ namespace Pims.Api.Test.Controllers.Tools
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new Entity.BuildingConstructionType[0]);
             service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new Entity.BuildingPredominateUse[0]);
-            service.Setup(m => m.PropertyStatus.GetAll()).Returns(new[] { new Entity.PropertyStatus(1, "Status") });
             service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
             service.Setup(m => m.City.GetAll()).Returns(new Entity.City[0]);
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
@@ -100,7 +99,6 @@ namespace Pims.Api.Test.Controllers.Tools
             Assert.Equal(properties.First().ParcelId, data.First().PID);
             service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
             service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
-            service.Verify(m => m.PropertyStatus.GetAll(), Times.Once());
             service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
             service.Verify(m => m.City.GetAll(), Times.Once());
             service.Verify(m => m.Agency.GetAll(), Times.Once());

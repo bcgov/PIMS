@@ -305,7 +305,6 @@ namespace Pims.Api.Areas.Property.Models.Search
                 SWLongitude = model.SWLongitude,
 
                 ProjectNumber = model.ProjectNumber,
-                StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 
@@ -342,7 +341,6 @@ namespace Pims.Api.Areas.Property.Models.Search
                 SWLongitude = model.SWLongitude,
 
                 ProjectNumber = model.ProjectNumber,
-                StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 
@@ -389,7 +387,6 @@ namespace Pims.Api.Areas.Property.Models.Search
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
                 InSurplusPropertyProgram = model.InSurplusPropertyProgram,
                 InEnhancedReferralProcess = model.InEnhancedReferralProcess,
-                StatusId = model.StatusId,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 

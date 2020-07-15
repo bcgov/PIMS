@@ -135,6 +135,12 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             Surplus Encumbered
           </option>
+          <option
+            className="option"
+            value="4"
+          >
+            Disposed
+          </option>
         </select>
       </div>
     </div>

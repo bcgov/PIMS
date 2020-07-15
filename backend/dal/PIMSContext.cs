@@ -34,7 +34,6 @@ namespace Pims.Dal
         public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }
         public DbSet<ParcelFiscal> ParcelFiscals { get; set; }
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
-        public DbSet<PropertyStatus> PropertyStatus { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }

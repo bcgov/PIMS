@@ -133,8 +133,6 @@ namespace Pims.Dal.Services.Admin
 
             if (entity.Agency != null)
                 this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-            if (entity.Status != null)
-                this.Context.Entry(entity.Status).State = EntityState.Unchanged;
             if (entity.Classification != null)
                 this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
             if (entity.BuildingConstructionType != null)
@@ -166,8 +164,6 @@ namespace Pims.Dal.Services.Admin
             {
                 if (building.Agency != null)
                     this.Context.Entry(building.Agency).State = EntityState.Unchanged;
-                if (building.Status != null)
-                    this.Context.Entry(building.Status).State = EntityState.Unchanged;
                 if (building.Classification != null)
                     this.Context.Entry(building.Classification).State = EntityState.Unchanged;
                 if (building.BuildingConstructionType != null)
@@ -197,7 +193,7 @@ namespace Pims.Dal.Services.Admin
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingBuilding = this.Context.Buildings
-                .Include(b => b.Status)
+                .Include(b => b.Classification)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 

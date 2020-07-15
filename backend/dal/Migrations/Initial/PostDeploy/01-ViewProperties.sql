@@ -4,8 +4,6 @@ CREATE VIEW dbo.[View_Properties] AS
 SELECT
     p.[Id]
     , [PropertyTypeId] = 0
-    , p.[StatusId]
-    , [Status] = s.[Name]
     , p.[ClassificationId]
     , [Classification] = c.[Name]
     , p.[AgencyId]
@@ -68,7 +66,6 @@ SELECT
     , [NetBook] = ISNULL(fn.[Value], 0)
     , [NetBookFiscalYear] = fn.[FiscalYear]
 FROM dbo.[Parcels] p
-JOIN dbo.[PropertyStatus] s ON p.[StatusId] = s.[Id]
 JOIN dbo.[PropertyClassifications] c ON p.[ClassificationId] = c.[Id]
 JOIN dbo.[Agencies] a ON p.[AgencyId] = a.[Id]
 LEFT JOIN dbo.[Agencies] pa ON a.[ParentId] = pa.[Id]
@@ -115,8 +112,6 @@ UNION
 SELECT
     b.[Id]
     , [PropertyTypeId] = 1
-    , b.[StatusId]
-    , [Status] = s.[Name]
     , b.[ClassificationId]
     , [Classification] = c.[Name]
     , b.[AgencyId]
@@ -180,7 +175,6 @@ SELECT
     , [NetBookFiscalYear] = fn.[FiscalYear]
 FROM dbo.[Buildings] b
 JOIN dbo.[Parcels] p ON b.[ParcelId] = p.[Id]
-JOIN dbo.[PropertyStatus] s ON b.[StatusId] = s.[Id]
 JOIN dbo.[PropertyClassifications] c ON b.[ClassificationId] = c.[Id]
 JOIN dbo.[Agencies] a ON b.[AgencyId] = a.[Id]
 LEFT JOIN dbo.[Agencies] pa ON a.[ParentId] = pa.[Id]

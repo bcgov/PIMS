@@ -19,7 +19,6 @@ import {
 import { mapLookupCode } from 'utils';
 import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
-import TooltipIcon from 'components/common/TooltipIcon';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 
@@ -42,8 +41,6 @@ export const defaultLandValues: IParcel = {
   zoningPotential: '',
   municipality: '',
   landArea: '',
-  statusId: 1,
-  propertyStatus: undefined,
   classification: undefined,
   classificationId: '',
   isSensitive: false,
@@ -53,7 +50,9 @@ export const defaultLandValues: IParcel = {
   buildings: [],
   fiscals: [],
 };
+
 const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
+  const keycloak = useKeycloakWrapper();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
@@ -65,13 +64,17 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
     [props.nameSpace],
   );
 
+  const isAdmin = keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
   const classifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
+    return (
+      lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME &&
+      (isAdmin || !!lookupCode.isVisible)
+    );
   }).map(mapLookupCode);
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const keycloak = useKeycloakWrapper();
+
   return (
     <Fragment>
       <Form.Row className="landForm">
@@ -148,20 +151,6 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           </Form.Row>
         </Col>
         <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Active&nbsp;
-              <TooltipIcon
-                toolTipId="land-status"
-                toolTip="Check this box to set the land status to active."
-              />
-            </Form.Label>
-            <Check
-              disabled={props.disabled}
-              outerClassName="col-md-10"
-              field={withNameSpace('statusId')}
-            />
-          </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Municipality

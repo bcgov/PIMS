@@ -58,7 +58,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   });
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
+    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
   });
 
   const lotSizes = fetchLotSizes();

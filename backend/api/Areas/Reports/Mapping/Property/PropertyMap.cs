@@ -10,7 +10,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
         {
             config.NewConfig<Entity.Views.Property, Model.PropertyModel>()
                 .Map(dest => dest.Type, src => src.PropertyTypeId)
-                .Map(dest => dest.Status, src => src.Status)
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Agency, src => src.Agency)

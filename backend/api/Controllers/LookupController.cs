@@ -105,7 +105,6 @@ namespace Pims.Api.Controllers
         public IActionResult GetAll()
         {
             var agencyCodes = _mapper.Map<Models.CodeModel<int>[]>(_pimsService.Lookup.GetAgencies());
-            var propertyStatusCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyStatus());
             var propertyClassificationCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyClassifications());
             var roleCodes = _mapper.Map<Model.RoleModel[]>(_pimsService.Lookup.GetRoles());
             var provinceCodes = _mapper.Map<Models.LookupModel<string>[]>(_pimsService.Lookup.GetProvinces());
@@ -118,7 +117,6 @@ namespace Pims.Api.Controllers
             var codes = new List<object>();
             codes.AddRange(roleCodes);
             codes.AddRange(agencyCodes);
-            codes.AddRange(propertyStatusCodes);
             codes.AddRange(propertyClassificationCodes);
             codes.AddRange(provinceCodes);
             codes.AddRange(cityCodes);

@@ -31,7 +31,6 @@ namespace Pims.Core.Test
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
             var classification = EntityHelper.CreatePropertyClassification("classification");
-            var status = EntityHelper.CreatePropertyStatus("status");
 
             return new Entity.Building(parcel, lat, lng)
             {
@@ -45,8 +44,6 @@ namespace Pims.Core.Test
                 Classification = classification,
                 ClassificationId = classification.Id,
                 Description = $"description-{id}",
-                Status = status,
-                StatusId = status.Id,
                 BuildingPredominateUse = predominateUse,
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
@@ -99,7 +96,6 @@ namespace Pims.Core.Test
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingOccupantType("occupant");
             var classification = context.PropertyClassifications.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreatePropertyClassification("classification");
-            var status = context.PropertyStatus.FirstOrDefault(b => b.Id == 0) ?? EntityHelper.CreatePropertyStatus("status");
 
             var building = new Entity.Building(parcel, lat, lng)
             {
@@ -113,8 +109,6 @@ namespace Pims.Core.Test
                 Classification = classification,
                 ClassificationId = classification.Id,
                 Description = $"description-{id}",
-                Status = status,
-                StatusId = status.Id,
                 BuildingPredominateUse = predominateUse,
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,
@@ -148,33 +142,6 @@ namespace Pims.Core.Test
                 context.CreateBuilding(parcel, i);
             }
             return parcel.Buildings.ToList();
-        }
-
-        /// <summary>
-        /// Change the status of the building.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="building"></param>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        public static Entity.Building ChangeStatus(this PimsContext context, Entity.Building building, int statusId)
-        {
-            building.StatusId = statusId;
-            building.Status = context.PropertyStatus.First(s => s.Id == statusId);
-            return building;
-        }
-
-        /// <summary>
-        /// Change the status of the building.
-        /// </summary>
-        /// <param name="building"></param>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        public static Entity.Building ChangeStatus(this Entity.Building building, Entity.PropertyStatus status)
-        {
-            building.Status = status;
-            building.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
-            return building;
         }
     }
 }

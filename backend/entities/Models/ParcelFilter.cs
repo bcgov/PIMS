@@ -60,7 +60,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
-        /// <param name="statusId"></param>
         /// <param name="classificationId"></param>
         /// <param name="minLandArea"></param>
         /// <param name="maxLandArea"></param>
@@ -70,8 +69,8 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public ParcelFilter(string address, int? agencyId, int? statusId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-            : base(address, agencyId, statusId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
+        public ParcelFilter(string address, int? agencyId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+            : base(address, agencyId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
         {
             this.MinLandArea = minLandArea;
             this.MaxLandArea = maxLandArea;

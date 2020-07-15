@@ -118,7 +118,6 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var parcel = this.Context.Parcels
-                .Include(p => p.Status)
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
@@ -164,7 +163,6 @@ namespace Pims.Dal.Services
             parcel.Agency = agency;
             parcel.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
-            parcel.Status = this.Context.PropertyStatus.Find(parcel.StatusId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;
 
@@ -173,7 +171,6 @@ namespace Pims.Dal.Services
                 b.Parcel = parcel;
                 b.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
                 b.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
-                b.Status = this.Context.PropertyStatus.Find(parcel.StatusId);
                 b.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
                 b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Find(b.BuildingConstructionTypeId);
                 b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Find(b.BuildingOccupantTypeId);
@@ -198,7 +195,6 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingParcel = this.Context.Parcels
-                .Include(p => p.Status)
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
@@ -218,7 +214,8 @@ namespace Pims.Dal.Services
             // Do not allow making property visible through this service.
             if (existingParcel.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) throw new InvalidOperationException("Parcel cannot be made visible to other agencies through this service.");
 
-            this.Context.Parcels.ThrowIfPidPinUpdated(parcel);
+            // Only administrators can dispose a property.
+            if (parcel.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed.");
 
             // Update a parcel and all child collections
             this.ThrowIfNotAllowedToUpdate(existingParcel, _options.Project);
@@ -361,7 +358,6 @@ namespace Pims.Dal.Services
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
             var existingParcel = this.Context.Parcels
-                .Include(p => p.Status)
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)

@@ -6,8 +6,6 @@ export interface IProperty {
   propertyTypeId: number;
   pid: string;
   pin?: string;
-  statusId: number;
-  status: string;
   classificationId: number;
   classification: string;
   description: string;
@@ -72,7 +70,6 @@ export interface IPropertyFilter {
   municipality?: string;
   projectNumber?: string;
   classificationId?: number;
-  statusId?: number;
   agencies?: number | number[];
   minLandArea?: number;
   maxLandArea?: number;
