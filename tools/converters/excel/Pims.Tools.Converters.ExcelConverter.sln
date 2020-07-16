@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Tools.Converters.Excel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Core", "..\..\..\backend\core\Pims.Core.csproj", "{A74A0719-A721-4D3A-B957-0BEFDA074F87}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pims.Geocoder", "..\..\..\backend\geocoder\Pims.Geocoder.csproj", "{BF7450E8-B3C5-46FB-BEC1-C5FC1C5964DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A74A0719-A721-4D3A-B957-0BEFDA074F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A74A0719-A721-4D3A-B957-0BEFDA074F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A74A0719-A721-4D3A-B957-0BEFDA074F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF7450E8-B3C5-46FB-BEC1-C5FC1C5964DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF7450E8-B3C5-46FB-BEC1-C5FC1C5964DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF7450E8-B3C5-46FB-BEC1-C5FC1C5964DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF7450E8-B3C5-46FB-BEC1-C5FC1C5964DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

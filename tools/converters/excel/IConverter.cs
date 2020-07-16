@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Pims.Tools.Converters.ExcelConverter
 {
@@ -11,6 +12,6 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// Run each configured source and convert the supplied 'file' to the output.
         /// </summary>
         /// <returns></returns>
-        void Run();
+        Task RunAsync();
     }
 }

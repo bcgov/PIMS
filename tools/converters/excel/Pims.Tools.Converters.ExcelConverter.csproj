@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\backend\core\Pims.Core.csproj" />
+    <ProjectReference Include="..\..\..\backend\geocoder\Pims.Geocoder.csproj" />
   </ItemGroup>
 
 </Project>
