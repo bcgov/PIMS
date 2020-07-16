@@ -2,6 +2,7 @@ using FluentAssertions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using Pims.Api.Areas.Project.Controllers;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
@@ -165,6 +166,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(project.TierLevelId, actualResult.TierLevelId);
             Assert.Equal(project.AgencyId, actualResult.AgencyId);
             Assert.Equal(project.Properties.Count(), actualResult.Properties.Count());
+            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
         }
         #endregion
 
@@ -191,6 +193,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(201, actionResult.StatusCode);
             var actualProject = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            actualProject.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
             service.Verify(m => m.Project.Add(It.IsAny<Entity.Project>()), Times.Once());
             service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
             service.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
@@ -221,6 +224,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
             service.Verify(m => m.Project.Get(project.Id), Times.Once());
             service.Verify(m => m.Project.Update(It.IsAny<Entity.Project>()), Times.Once());
             service.Verify(m => m.NotificationQueue.GenerateNotifications(project, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
@@ -249,6 +253,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
+            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>()), Times.Once());
         }
@@ -284,6 +289,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             actualResult.WorkflowId.Should().Be(1);
             actualResult.StatusId.Should().Be(1);
+            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
             service.Verify(m => m.Workflow.Get(workflow.Code), Times.Once());
             service.Verify(m => m.Project.Get(project.Id), Times.Once());
             service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());

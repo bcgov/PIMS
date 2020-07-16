@@ -62,6 +62,7 @@ namespace Pims.Core.Test
                 PublicNote = $"publicNote-{id}",
                 PrivateNote = $"privateNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
+                Metadata = "{offerAmount: 123}",
                 RowVersion = new byte[] { 12, 13, 14 }
             };
         }

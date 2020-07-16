@@ -1,4 +1,5 @@
 using Mapster;
+using Newtonsoft.Json;
 using Pims.Api.Mapping.Converters;
 using Pims.Core.Extensions;
 using System.Linq;
@@ -37,7 +38,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear.FiscalYear())
                 .Map(dest => dest.Manager, src => src.Manager)
                 .Map(dest => dest.Slip, src => src.SaleWithLeaseInPlace)
-                .Map(dest => dest.FinancialNote, src => src.Notes.LastOrDefault(n => n.NoteType == Entity.NoteTypes.Financial));  // TODO: Not ideal to return all notes, but other options will require far too much effort.
+                .Map(dest => dest.FinancialNote, src => src.Notes.LastOrDefault(n => n.NoteType == Entity.NoteTypes.Financial))  // TODO: Not ideal to return all notes, but other options will require far too much effort.
+                .BeforeMapping((src, dest) => JsonConvert.PopulateObject(src.Metadata ?? "{}", src));
                 //.Map(dest => dest.AgencyResponseDate, src => src.InterestReceivedOn); // TODO: Form doesn't have a place to enter this value.
         }
 

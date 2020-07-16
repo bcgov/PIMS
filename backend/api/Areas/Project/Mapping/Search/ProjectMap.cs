@@ -1,4 +1,5 @@
 using Mapster;
+using Newtonsoft.Json;
 using Pims.Api.Mapping.Converters;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Search;
@@ -39,6 +40,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.CreatedOn, src => src.CreatedOn)
                 .Map(dest => dest.CreatedBy,
                     src => src.CreatedById != null ? src.CreatedBy.DisplayName : null)
+                .BeforeMapping((src, dest) => JsonConvert.PopulateObject(src.Metadata ?? "{}", src))
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
         }
     }
