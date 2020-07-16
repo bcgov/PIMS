@@ -10,7 +10,7 @@ def notify
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
   options {
     disableResume()
     buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
@@ -35,7 +35,6 @@ pipeline {
   }
   stages {
     stage("Initialize") {
-      agent any
       steps {
         script {
           // load supporting functions from external script files
@@ -61,7 +60,6 @@ pipeline {
       }
     }
     stage("Wait for Approval") {
-      agent any
       options {
         timeout(time: 1, unit: "HOURS")
       }
@@ -74,7 +72,6 @@ pipeline {
       }
     }
     stage("Deploy API To TEST") {
-      agent any
       options {
         timeout(time: 5, unit: "MINUTES")
       }
@@ -103,7 +100,6 @@ pipeline {
       }
     }
     stage("Deploy FRONTEND To TEST") {
-      agent any
       options {
         timeout(time: 5, unit: "MINUTES")
       }
