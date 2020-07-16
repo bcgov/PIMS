@@ -203,12 +203,6 @@ namespace Pims.Ches
 
             email.From = this.Options.From ?? email.From;
 
-            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
-            {
-                email.To = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
-                email.Cc = new string[0];
-                email.Bcc = new string[0];
-            }
             if (this.Options.BccUser)
             {
                 email.Bcc = new[] { _user.GetEmail() }.Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
@@ -216,6 +210,12 @@ namespace Pims.Ches
             if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
             {
                 email.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
+            }
+            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
+            {
+                email.To = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
+                email.Cc = new string[0];
+                email.Bcc = new string[0];
             }
 
             // Make sure there are no blank CC or BCC;
@@ -240,16 +240,6 @@ namespace Pims.Ches
 
             email.From = this.Options.From ?? email.From;
 
-            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
-            {
-                var address = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
-                email.Contexts.ForEach(c =>
-                {
-                    c.To = address;
-                    c.Cc = new string[0];
-                    c.Bcc = new string[0];
-                });
-            }
             if (this.Options.BccUser)
             {
                 var address = new[] { _user.GetEmail() };
@@ -263,6 +253,16 @@ namespace Pims.Ches
                 email.Contexts.ForEach(c =>
                 {
                     c.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(c.Bcc?.Any() ?? false ? c.Bcc : new string[0]);
+                });
+            }
+            if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
+            {
+                var address = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
+                email.Contexts.ForEach(c =>
+                {
+                    c.To = address;
+                    c.Cc = new string[0];
+                    c.Bcc = new string[0];
                 });
             }
 
