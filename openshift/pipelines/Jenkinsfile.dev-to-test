@@ -131,29 +131,17 @@ pipeline {
         echo "[ci/cd]  ${COMP_NAME.toUpperCase()} deployment complete!"
       }
     }
-    stage("Send Notifications") {
-      agent any
-      steps {
-        script {
-          notify.deploySuccess(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-      }
-    }
   }
   post {
-    aborted {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ABORTED", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-    }
+    success {
+      script {
+        notify.success(APP_NAME.toUpperCase(), SOURCE, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
     }
     failure {
-      node('master') {
-        script {
-          notify.deployFailure(APP_NAME.toUpperCase(), DESTINATION.toUpperCase(), "PIPELINE ERROR", VANITY_URL, ROCKET_DEPLOY_WEBHOOK)
-        }
-    }
+      script {
+        notify.failure(APP_NAME.toUpperCase(), SOURCE, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
     }
   }
 }
