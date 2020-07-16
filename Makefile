@@ -85,7 +85,7 @@ database-clean: ## Re-creates an empty docker database - ready for seeding
 
 database-seed:
 	@echo "$(P) Seeding docker database..."
-	@cd backend/tools/import; make run
+	@cd tools/import; make run
 
 database-refresh: | server-run pause-30 database-clean database-seed ## Refreshes the docker database
 
