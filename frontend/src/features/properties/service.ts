@@ -19,12 +19,25 @@ const getPropertyList = async (filter: IPropertyFilter): Promise<IPagedItems<IPr
   return response.data;
 };
 
+const loadBuildings = async (parcelId: number): Promise<IPagedItems<IProperty>> => {
+  const filter: IPropertyFilter = {
+    page: 1,
+    quantity: 10,
+    parcelId: parcelId,
+    propertyType: '1',
+  };
+  const url = API_ENDPOINTS.propertiesSearch(filter);
+  const response = await CustomAxios().get<IPagedItems<IProperty>>(url);
+  return response.data;
+};
+
 // TODO: Refactor later
 const getPropertyReport = async (filter: IPropertyFilter): Promise<any> => {
   return Promise.reject('Not implemented yet');
 };
 
 export default {
+  loadBuildings,
   getPropertyList,
   getPropertyReport,
 };

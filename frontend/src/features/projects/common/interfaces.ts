@@ -49,9 +49,9 @@ export interface IProperty {
   // Parcel Properties
   landArea: number;
   landLegalDescription: string;
-  municipality: string;
-  zoning: string;
-  zoningPotential: string;
+  municipality?: string;
+  zoning?: string;
+  zoningPotential?: string;
 
   // Building Properties
   parcelId?: number;
