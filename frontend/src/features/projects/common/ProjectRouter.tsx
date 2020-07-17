@@ -60,38 +60,43 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
             layout={ProjectLayout}
             claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
             path="/projects/assess/properties/update"
-            component={() => SelectProjectPropertiesPage()}
+            component={SelectProjectPropertiesPage}
           />
           <PrivateRoute
             layout={ProjectLayout}
             claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
             exact
             path="/projects/assess/properties"
-            component={() => ReviewApproveStep({ formikRef })}
+            component={ReviewApproveStep}
+            componentProps={{ formikRef }}
           />
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
             path="/projects/gretransfer"
-            component={() => GreTransferStep({ formikRef })}
+            component={GreTransferStep}
+            componentProps={{ formikRef }}
           />
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
             path={['/projects/approved']}
-            component={() => ApprovalTransitionPage({})}
+            component={ApprovalTransitionPage}
+            componentProps={{ formikRef }}
           />
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
             path={['/projects/onHold', '/projects/erp']}
-            component={() => ErpStep({ formikRef })}
+            component={ErpStep}
+            componentProps={{ formikRef }}
           />
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
             path={['/projects/premarketing', '/projects/marketing', '/projects/contractinplace']}
-            component={() => SplStep({ formikRef })}
+            component={SplStep}
+            componentProps={{ formikRef }}
           />
           <PrivateRoute
             layout={ProjectLayout}
@@ -103,7 +108,8 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
               '/projects/denied',
               '/projects/cancelled',
             ]}
-            component={() => <ProjectSummaryView formikRef={formikRef} />}
+            component={ProjectSummaryView}
+            componentProps={{ formikRef }}
           />
           {/** Due to the use of dynamic routes within the project workflows, manually redirect to not found if no valid /projects route exists */}
           <AppRoute
