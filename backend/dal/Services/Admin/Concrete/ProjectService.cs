@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -120,6 +121,18 @@ namespace Pims.Dal.Services.Admin
                     this.Context.Entry(r.Agency).State = EntityState.Unchanged;
             });
 
+            project.Tasks.ForEach(t =>
+            {
+                if (t.Task != null)
+                {
+                    var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
+                    if (task == null)
+                        this.Context.Entry(t.Task).State = EntityState.Unchanged;
+                    else
+                        t.Task = task;
+                }
+            });
+
             return base.Add(project);
         }
 
@@ -147,10 +160,23 @@ namespace Pims.Dal.Services.Admin
                     this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
                 if (project.Risk != null)
                     this.Context.Entry(project.Risk).State = EntityState.Unchanged;
+
                 project.Responses.ForEach(r =>
                 {
                     if (r.Agency != null)
                         this.Context.Entry(r.Agency).State = EntityState.Unchanged;
+                });
+
+                project.Tasks.ForEach(t =>
+                {
+                    if (t.Task != null)
+                    {
+                        var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
+                        if (task == null)
+                            this.Context.Entry(t.Task).State = EntityState.Unchanged;
+                        else
+                            t.Task = task;
+                    }
                 });
 
                 if (project.Id == 0)

@@ -68,10 +68,11 @@ namespace Pims.Dal.Services
                         join t in this.Context.Tasks on ws.StatusId equals t.StatusId into gt
                         from at in gt.DefaultIfEmpty()
                         where w.Code == workflowCode
+                            && at != null
                         orderby ws.SortOrder, at.SortOrder, at.Name
                         select at;
 
-            return tasks.ToArray();
+            return tasks.Distinct().ToArray();
         }
         #endregion
     }

@@ -62,17 +62,19 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="paramName"></param>
         /// <param name="user"></param>
         /// <param name="permission"></param>
+        /// <param name="requireAll"></param>
         /// <param name="message"></param>
         /// <typeparam name="T"></typeparam>
         /// <exception type="ArgumentNullException">Entity argument cannot be null.</exception>
         /// <exception type="RowVersionMissingException">Entity.RowVersion cannot be null.</exception>
         /// <exception type="NotAuthorizedException">User must have specified 'role'.</exception>
         /// <returns></returns>
-        public static T ThrowIfNotAllowedToEdit<T>(this T entity, string paramName, ClaimsPrincipal user, Permissions[] permission, string message = null) where T : BaseEntity
+        public static T ThrowIfNotAllowedToEdit<T>(this T entity, string paramName, ClaimsPrincipal user, Permissions[] permission, bool requireAll = false, string message = null) where T : BaseEntity
         {
             entity.ThrowIfNull(paramName);
             entity.ThrowIfRowVersionNull(paramName);
-            user.ThrowIfNotAuthorized(permission, message);
+            if (requireAll) user.ThrowIfNotAllAuthorized(permission);
+            else user.ThrowIfNotAuthorized(permission, message);
 
             return entity;
         }
