@@ -48,7 +48,7 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
         exemptionLabel="Apply for Enhanced Referral Process exemption"
         tooltip="To fill later"
         rationaleInstruction="Please provide your rationale below for exemption request"
-        isReadOnly={isReadOnly || !canEdit}
+        isReadOnly={!canEdit}
       />
     </Fragment>
   );

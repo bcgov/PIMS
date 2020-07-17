@@ -3,9 +3,10 @@
  */
 export interface IProperty {
   id: number;
+  propertyType: string;
   propertyTypeId: number;
   pid: string;
-  pin?: string;
+  pin?: number;
   classificationId: number;
   classification: string;
   description: string;
@@ -22,6 +23,7 @@ export interface IProperty {
   addressId: number;
   address: string;
   city: string;
+  cityId: number;
   province: string;
   postal: string;
 
@@ -76,4 +78,6 @@ export interface IPropertyFilter {
   minLotArea?: number;
   maxLotArea?: number;
   all?: boolean;
+  parcelId?: number;
+  propertyType?: string;
 }
