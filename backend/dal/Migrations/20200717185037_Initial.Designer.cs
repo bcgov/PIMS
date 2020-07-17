@@ -10,7 +10,11 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
+<<<<<<< HEAD:backend/dal/Migrations/20200717185037_Initial.Designer.cs
     [Migration("20200717185037_Initial")]
+=======
+    [Migration("20200717174606_Initial")]
+>>>>>>> PIMS-2898 Return to Pre-Marketing:backend/dal/Migrations/20200717174606_Initial.Designer.cs
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1745,9 +1749,6 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<bool>("ValidateTasks")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
@@ -1857,6 +1858,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<bool>("ValidateTasks")
+                        .HasColumnType("bit");
 
                     b.HasKey("FromWorkflowId", "FromStatusId", "ToWorkflowId", "ToStatusId");
 
