@@ -10,11 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-<<<<<<< HEAD:backend/dal/Migrations/20200717185037_Initial.Designer.cs
-    [Migration("20200717185037_Initial")]
-=======
-    [Migration("20200717174606_Initial")]
->>>>>>> PIMS-2898 Return to Pre-Marketing:backend/dal/Migrations/20200717174606_Initial.Designer.cs
+    [Migration("20200717191911_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
