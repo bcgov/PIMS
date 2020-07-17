@@ -10,13 +10,18 @@ namespace Pims.Dal.Configuration
         where TBase : CodeEntity<TKey>
     {
         #region Methods
-        public override void Configure(EntityTypeBuilder<TBase> builder)
+        protected void CodeConfigure(EntityTypeBuilder<TBase> builder)
         {
             builder.Property(m => m.Code).IsRequired();
 
             builder.HasIndex(m => new { m.Code }).IsUnique();
 
             base.Configure(builder);
+        }
+
+        public override void Configure(EntityTypeBuilder<TBase> builder)
+        {
+            CodeConfigure(builder);
         }
         #endregion
     }

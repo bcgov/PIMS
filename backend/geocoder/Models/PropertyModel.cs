@@ -14,11 +14,13 @@ namespace Pims.Geocoder.Models
         public IEnumerable<FaultModel> Faults { get; set; }
         public string SiteName { get; set; }
         public string UnitDesignator { get; set; }
+        [JsonConverter(typeof(Int32ToStringJsonConverter))]
         public string UnitNumber { get; set; }
         public string UnitNumberSuffix { get; set; }
         [JsonConverter(typeof(Int32ToStringJsonConverter))]
         public string CivicNumber { get; set; }
         public string CivicNumberSuffix { get; set; }
+        [JsonConverter(typeof(Int32ToStringJsonConverter))]
         public string StreetName { get; set; }
         public string StreetType { get; set; }
         [JsonConverter(typeof(BooleanJsonConverter))]

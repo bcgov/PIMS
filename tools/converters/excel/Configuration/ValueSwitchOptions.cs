@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Pims.Tools.Converters.ExcelConverter
+namespace Pims.Tools.Converters.ExcelConverter.Configuration
 {
     /// <summary>
     /// ValueSwitchOptions class, provides a way to configure how the Excel columsn are converted to JSON.

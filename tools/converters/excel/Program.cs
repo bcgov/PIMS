@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Pims.Geocoder;
+using Pims.Tools.Converters.ExcelConverter.Configuration;
+using Pims.Tools.Converters.ExcelConverter.Converters;
 
 namespace Pims.Tools.Converters.ExcelConverter
 {
@@ -28,6 +31,7 @@ namespace Pims.Tools.Converters.ExcelConverter
             var services = new ServiceCollection()
                 .AddSingleton<IConfiguration>(config)
                 .Configure<ConverterOptions>(config.GetSection("Converter"))
+                .Configure<GeocoderOptions>(config.GetSection("Geocoder"))
                 .Configure<JsonSerializerOptions>(options =>
                 {
                     if (Boolean.TryParse(config["Serialization:Json:IgnoreNullValues"], out bool ignoreNullValues))
@@ -48,8 +52,12 @@ namespace Pims.Tools.Converters.ExcelConverter
                 {
                     options.MinLevel = LogLevel.Information;
                 })
+                .AddGeocoderService(config.GetSection("Geocoder"))
+                .AddSingleton<IGeoLocationConverter, GeoLocationConverter>()
                 .AddTransient<IConverter, Converter>()
                 .AddTransient<Startup>();
+
+            services.AddHttpClient("Pims.Tools.Conveter", client => { });
 
             var provider = services.BuildServiceProvider();
             var logger = provider.GetService<ILogger<Startup>>();

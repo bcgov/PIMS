@@ -272,9 +272,6 @@ namespace Pims.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ParentId");

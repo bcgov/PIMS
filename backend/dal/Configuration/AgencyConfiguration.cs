@@ -34,7 +34,7 @@ namespace Pims.Dal.Configuration
             builder.HasIndex(m => new { m.Code, m.ParentId }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.Code, m.Name, m.ParentId, m.SortOrder });
 
-            base.Configure(builder);
+            base.LookupConfigure(builder);
         }
         #endregion
     }

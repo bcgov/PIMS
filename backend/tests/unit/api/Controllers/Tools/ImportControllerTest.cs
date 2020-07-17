@@ -64,16 +64,16 @@ namespace Pims.Api.Test.Controllers.Tools
                     ParcelId = "123-123-123",
                     LocalId = "test",
                     PropertyType = "Land",
-                    Agency = "AEST",
+                    AgencyCode = "AEST",
                     SubAgency = "School",
-                    FiscalYear = "2020",
-                    AssessedValue = "0",
+                    FiscalYear = 2020,
+                    Assessed = 0,
                     Classification = "Classification",
                     Status = "Active",
                     CivicAddress = "test",
                     City = "test",
                     Postal = "T9T9T9",
-                    LandArea = "45.55"
+                    LandArea = 45.55f
                 }
             };
 

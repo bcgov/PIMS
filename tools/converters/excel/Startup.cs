@@ -33,15 +33,15 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// <param name="args"></param>
         /// <return></return>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not implemented yet.")]
-        public Task<int> Run(string[] args)
+        public async Task<int> Run(string[] args)
         {
             _logger.LogInformation("Converter Started");
 
-            _converter.Run();
+            await _converter.RunAsync();
 
             _logger.LogInformation("Converter Stopping");
 
-            return Task.FromResult(0);
+            return 0;
         }
         #endregion
     }

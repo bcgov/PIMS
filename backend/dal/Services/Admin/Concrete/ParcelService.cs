@@ -193,22 +193,33 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
-            if (entity.Agency != null)
+            if (entity.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == entity.AgencyId))
                 this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-            if (entity.Classification != null)
+            if (entity.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == entity.ClassificationId))
                 this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
+
+            entity.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == entity.AgencyId);
+            entity.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == entity.ClassificationId);
 
             entity.Buildings.ForEach(b =>
             {
                 this.Context.Buildings.Add(b);
-                if (b.Classification != null)
+                if (b.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == b.AgencyId))
+                    this.Context.Entry(b.Agency).State = EntityState.Unchanged;
+                if (b.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == b.ClassificationId))
                     this.Context.Entry(b.Classification).State = EntityState.Unchanged;
-                if (b.BuildingConstructionType != null)
+                if (b.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == b.BuildingConstructionTypeId))
                     this.Context.Entry(b.BuildingConstructionType).State = EntityState.Unchanged;
-                if (b.BuildingPredominateUse != null)
+                if (b.BuildingPredominateUse != null && !this.Context.BuildingPredominateUses.Local.Any(a => a.Id == b.BuildingPredominateUseId))
                     this.Context.Entry(b.BuildingPredominateUse).State = EntityState.Unchanged;
-                if (b.BuildingOccupantType != null)
+                if (b.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == b.BuildingOccupantTypeId))
                     this.Context.Entry(b.BuildingOccupantType).State = EntityState.Unchanged;
+
+                b.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == b.AgencyId);
+                b.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == b.ClassificationId);
+                b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == b.BuildingConstructionTypeId);
+                b.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == b.BuildingPredominateUseId);
+                b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == b.BuildingOccupantTypeId);
 
                 b.Evaluations.ForEach(e =>
                 {
@@ -258,22 +269,33 @@ namespace Pims.Dal.Services.Admin
             {
                 if (entity == null) throw new ArgumentNullException();
 
-                if (entity.AgencyId != 0)
+                if (entity.AgencyId != 0 && !this.Context.Agencies.Local.Any(a => a.Id == entity.AgencyId))
                     this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-                if (entity.Classification != null)
+                if (entity.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == entity.ClassificationId))
                     this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
+
+                entity.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == entity.AgencyId);
+                entity.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == entity.ClassificationId);
 
                 entity.Buildings.ForEach(b =>
                 {
                     this.Context.Buildings.Add(b);
-                    if (b.Classification != null)
+                    if (b.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == b.AgencyId))
+                        this.Context.Entry(b.Agency).State = EntityState.Unchanged;
+                    if (b.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == b.ClassificationId))
                         this.Context.Entry(b.Classification).State = EntityState.Unchanged;
-                    if (b.BuildingConstructionType != null)
+                    if (b.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == b.BuildingConstructionTypeId))
                         this.Context.Entry(b.BuildingConstructionType).State = EntityState.Unchanged;
-                    if (b.BuildingPredominateUse != null)
+                    if (b.BuildingPredominateUse != null && !this.Context.BuildingPredominateUses.Local.Any(a => a.Id == b.BuildingPredominateUseId))
                         this.Context.Entry(b.BuildingPredominateUse).State = EntityState.Unchanged;
-                    if (b.BuildingOccupantType != null)
+                    if (b.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == b.BuildingOccupantTypeId))
                         this.Context.Entry(b.BuildingOccupantType).State = EntityState.Unchanged;
+
+                    b.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == b.AgencyId);
+                    b.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == b.ClassificationId);
+                    b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == b.BuildingConstructionTypeId);
+                    b.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == b.BuildingPredominateUseId);
+                    b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == b.BuildingOccupantTypeId);
 
                     b.Evaluations.ForEach(e =>
                     {
