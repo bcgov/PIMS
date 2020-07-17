@@ -11,12 +11,17 @@ namespace Pims.Dal.Configuration
         where TBase : LookupEntity<TKey>
     {
         #region Methods
-        public override void Configure(EntityTypeBuilder<TBase> builder)
+        protected void LookupConfigure(EntityTypeBuilder<TBase> builder)
         {
             builder.Property(m => m.SortOrder).HasDefaultValue(0);
             builder.Property(m => m.IsDisabled).HasDefaultValue(false);
 
             base.Configure(builder);
+        }
+
+        public override void Configure(EntityTypeBuilder<TBase> builder)
+        {
+            LookupConfigure(builder);
         }
         #endregion
     }

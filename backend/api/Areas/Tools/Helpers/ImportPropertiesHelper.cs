@@ -62,24 +62,11 @@ namespace Pims.Api.Areas.Tools.Helpers
             var entities = new List<Entity.Parcel>();
             foreach (var property in properties)
             {
-                _logger.LogDebug($"Add/Update property pid:{property.ParcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
+                var parcelId = property.ParcelId ?? property.PID;
+                _logger.LogDebug($"Add/Update property pid:{parcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
 
-                var validPid = int.TryParse(property.ParcelId?.Replace("-", ""), out int pid);
+                var validPid = int.TryParse(parcelId?.Replace("-", ""), out int pid);
                 if (!validPid) continue;
-
-                // Change the agency code.
-                switch (property.Agency)
-                {
-                    case "AVED":
-                        property.Agency = "AEST";
-                        break;
-                    case "TRAN":
-                        property.Agency = "MOTI";
-                        break;
-                    case "MTICS":
-                        property.Agency = "CITZ";
-                        break;
-                }
 
                 // Fix postal.
                 property.Postal = new string(property.Postal?.Replace(" ", "").Take(6).ToArray());
@@ -110,25 +97,22 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Agency GetOrCreateAgency(Model.ImportPropertyModel property)
         {
-            // Find the agency or create a new one.
-            var agency = _agencies.FirstOrDefault(a => a.Code == property.Agency.Trim());
+            // Find the parent agency.
+            var agency = _agencies.FirstOrDefault(a => a.Code == property.AgencyCode) ?? throw new KeyNotFoundException($"Agency does not exist '{property.AgencyCode}'");
 
-            if (agency == null)
-            {
-                agency = new Entity.Agency(property.Agency.Trim(), property.Agency);
-                _pimsAdminService.Agency.Add(agency);
-                _agencies.Add(agency);
-                _logger.LogDebug($"Adding agency '{agency.Code}' - '{agency.Name}'.");
-            }
-
+            // Find or create a sub-agency.
             if (!String.IsNullOrWhiteSpace(property.SubAgency))
             {
-                var code = new string(property.SubAgency.GetFirstLetterOfEachWord(true).Take(6).ToArray());
-                var subAgency = _agencies.FirstOrDefault(a => a.Code == code.Trim() && a.ParentId == agency.Id);
+                var createCode = new string(property.SubAgency.GetFirstLetterOfEachWord(true).Take(6).ToArray()).Trim();
+                var subAgency = _agencies.FirstOrDefault(a =>
+                    (a.ParentId == agency.Id && a.Name == property.SubAgency)
+                    || (a.ParentId == agency.Id && a.Code == createCode)
+                    || a.Code == property.SubAgency
+                    || a.Name == property.SubAgency);
 
                 if (subAgency == null)
                 {
-                    subAgency = new Entity.Agency(code.Trim(), property.SubAgency)
+                    subAgency = new Entity.Agency(createCode, property.SubAgency)
                     {
                         ParentId = agency.Id,
                         Parent = agency
@@ -232,7 +216,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
-            var fiscalYear = int.Parse(property.FiscalYear);
+            var fiscalYear = property.FiscalYear;
             var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Copy properties over to entity.
@@ -245,24 +229,20 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Only want to update the properties with the latest information.
             if (p_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
             {
-                double.TryParse(property.Latitude, out double latitude);
-                double.TryParse(property.Longitude, out double longitude);
-                float.TryParse(property.LandArea, out float landArea);
-
                 p_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
-                p_e.Name = property.Title ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
+                p_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 p_e.Description = property.Description;
-                p_e.Latitude = latitude != 0 ? latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
-                p_e.Longitude = longitude != 0 ? longitude : p_e.Longitude;
-                p_e.LandArea = landArea != 0 ? landArea : p_e.LandArea;
+                p_e.Latitude = property.Latitude != 0 ? property.Latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
+                p_e.Longitude = property.Longitude != 0 ? property.Longitude : p_e.Longitude;
+                p_e.LandArea = property.LandArea != 0 ? property.LandArea : p_e.LandArea;
                 p_e.LandLegalDescription = property.LandLegalDescription;
 
                 PropertyClassification propClassification;
                 if (String.Compare("Active", property.Status, true) == 0)
                 {
-                    propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
-                    throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
+                    propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0)
+                        ?? throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
                 }
                 else
                 {
@@ -277,7 +257,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 // Add/Update the address.
                 if (p_e.AddressId == 0)
                 {
-                    _logger.LogDebug($"Adding address for parcel '{property.ParcelId}'.");
+                    _logger.LogDebug($"Adding address for parcel '{property.PID}'.");
 
                     var address = new Entity.Address(property.CivicAddress, null, city.Id, "BC", property.Postal);
                     p_e.Address = address;
@@ -293,27 +273,25 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Add a new fiscal values for each year.
             if (!p_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
             {
-                if (decimal.TryParse(property.NetBookValue, out decimal netBookValue))
-                    p_e.Fiscals.Add(new Entity.ParcelFiscal(p_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
+                p_e.Fiscals.Add(new Entity.ParcelFiscal(p_e, fiscalYear, Entity.FiscalKeys.NetBook, property.NetBook));
             }
 
             // Add a new evaluation if new.
             if (!p_e.Evaluations.Any(e => e.Date == evaluationDate))
             {
-                if (decimal.TryParse(property.AssessedValue, out decimal assessedValue))
-                    p_e.Evaluations.Add(new Entity.ParcelEvaluation(p_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
+                p_e.Evaluations.Add(new Entity.ParcelEvaluation(p_e, evaluationDate, Entity.EvaluationKeys.Assessed, property.Assessed));
             }
 
             // A new parcel.
             if (p_e.Id == 0)
             {
                 _pimsAdminService.Parcel.Add(p_e);
-                _logger.LogDebug($"Adding parcel '{property.ParcelId}'");
+                _logger.LogDebug($"Adding parcel '{property.PID}'");
             }
             else
             {
                 _pimsAdminService.Parcel.Update(p_e);
-                _logger.LogDebug($"Updating parcel '{property.ParcelId}'");
+                _logger.LogDebug($"Updating parcel '{property.PID}'");
             }
 
             return p_e;
@@ -331,43 +309,36 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var lid = property.LocalId;
             var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
-            var fiscalYear = int.Parse(property.FiscalYear);
-            var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
+            var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel
             var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
 
             // Determine if the last evaluation or fiscal values are older than the one currently being imported.
-            var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > fiscalYear);
+            var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > property.FiscalYear);
             var evaluationAssessed = b_e.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == Entity.EvaluationKeys.Assessed && e.Date > evaluationDate);
 
             // If the parcel doesn't exist yet we'll need to create a temporary one.
             if (parcel == null)
             {
-                property.Classification = "Core Operational";
                 parcel = AddUpdateParcel(property, pid, agency);
-                _logger.LogWarning($"Parcel '{property.ParcelId}' was generated for a building that had no parcel.");
+                _logger.LogWarning($"Parcel '{property.PID}' was generated for a building that had no parcel.");
             }
 
             // Only want to update the properties with the latest information.
             if (b_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
             {
-                double.TryParse(property.Latitude, out double latitude);
-                double.TryParse(property.Longitude, out double longitude);
-                float.TryParse(property.BuildingRentableArea, out float rentableArea);
-                int.TryParse(property.BuildingFloorCount, out int floorCount);
-
                 // Copy properties over to entity.
                 b_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 b_e.Agency = agency;
-                b_e.ParcelId = parcel?.Id ?? throw new KeyNotFoundException($"Parcel '{property.ParcelId}' does not exist.");
+                b_e.ParcelId = parcel?.Id ?? throw new KeyNotFoundException($"Parcel '{property.PID}' does not exist.");
                 b_e.LocalId = property.LocalId;
                 b_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
                 b_e.Description = property.Description;
-                b_e.Latitude = latitude;
-                b_e.Longitude = longitude;
-                b_e.RentableArea = rentableArea;
-                b_e.BuildingFloorCount = floorCount;
+                b_e.Latitude = property.Latitude;
+                b_e.Longitude = property.Longitude;
+                b_e.RentableArea = property.BuildingRentableArea;
+                b_e.BuildingFloorCount = property.BuildingFloorCount;
                 b_e.BuildingTenancy = property.BuildingTenancy;
                 b_e.TransferLeaseOnSale = false;
 
@@ -417,7 +388,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 // Add/Update the address.
                 if (b_e.AddressId == 0)
                 {
-                    _logger.LogDebug($"Adding address for building '{property.ParcelId}'-''{property.LocalId}'.");
+                    _logger.LogDebug($"Adding address for building '{property.PID}'-''{property.LocalId}'.");
 
                     var address = new Entity.Address(property.CivicAddress, null, city.Id, "BC", property.Postal);
                     b_e.Address = address;
@@ -430,31 +401,28 @@ namespace Pims.Api.Areas.Tools.Helpers
                 }
             }
 
-
             // Add a new fiscal values for each year.
-            if (!b_e.Fiscals.Any(e => e.FiscalYear == fiscalYear))
+            if (!b_e.Fiscals.Any(e => e.FiscalYear == property.FiscalYear))
             {
-                if (decimal.TryParse(property.NetBookValue, out decimal netBookValue))
-                    b_e.Fiscals.Add(new Entity.BuildingFiscal(b_e, fiscalYear, Entity.FiscalKeys.NetBook, netBookValue));
+                b_e.Fiscals.Add(new Entity.BuildingFiscal(b_e, property.FiscalYear, Entity.FiscalKeys.NetBook, property.NetBook));
             }
 
             // Add a new evaluation if new.
             if (!b_e.Evaluations.Any(e => e.Date == evaluationDate))
             {
-                if (decimal.TryParse(property.AssessedValue, out decimal assessedValue))
-                    b_e.Evaluations.Add(new Entity.BuildingEvaluation(b_e, evaluationDate, Entity.EvaluationKeys.Assessed, assessedValue));
+                b_e.Evaluations.Add(new Entity.BuildingEvaluation(b_e, evaluationDate, Entity.EvaluationKeys.Assessed, property.Assessed));
             }
 
             // A new building.
             if (b_e.Id == 0)
             {
                 _pimsAdminService.Building.Add(b_e);
-                _logger.LogDebug($"Adding building '{property.LocalId}' to parcel '{property.ParcelId}'");
+                _logger.LogDebug($"Adding building '{property.LocalId}' to parcel '{property.PID}'");
             }
             else
             {
                 _pimsAdminService.Building.Update(b_e);
-                _logger.LogDebug($"Updating building '{property.LocalId}' to parcel '{property.ParcelId}'");
+                _logger.LogDebug($"Updating building '{property.LocalId}' to parcel '{property.PID}'");
             }
 
             return parcel;

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
@@ -131,16 +132,22 @@ namespace Pims.Dal.Services.Admin
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            if (entity.Agency != null)
+            if (entity.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == entity.AgencyId))
                 this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-            if (entity.Classification != null)
+            if (entity.Classification != null && !this.Context.PropertyClassifications.Local.Any(c => c.Id == entity.ClassificationId))
                 this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
-            if (entity.BuildingConstructionType != null)
+            if (entity.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == entity.BuildingConstructionTypeId))
                 this.Context.Entry(entity.BuildingConstructionType).State = EntityState.Unchanged;
-            if (entity.BuildingPredominateUse != null)
+            if (entity.BuildingPredominateUse != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == entity.BuildingPredominateUseId))
                 this.Context.Entry(entity.BuildingPredominateUse).State = EntityState.Unchanged;
-            if (entity.BuildingOccupantType != null)
+            if (entity.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == entity.BuildingOccupantTypeId))
                 this.Context.Entry(entity.BuildingOccupantType).State = EntityState.Unchanged;
+
+            entity.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == entity.AgencyId);
+            entity.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == entity.ClassificationId);
+            entity.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == entity.BuildingConstructionTypeId);
+            entity.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == entity.BuildingPredominateUseId);
+            entity.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == entity.BuildingOccupantTypeId);
 
             this.Context.Addresses.Add(entity.Address);
             this.Context.BuildingEvaluations.AddRange(entity.Evaluations);
@@ -162,16 +169,22 @@ namespace Pims.Dal.Services.Admin
             var userId = this.User.GetUserId();
             buildings.ForEach((building) =>
             {
-                if (building.Agency != null)
+                if (building.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == building.BuildingOccupantTypeId))
                     this.Context.Entry(building.Agency).State = EntityState.Unchanged;
-                if (building.Classification != null)
+                if (building.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == building.ClassificationId))
                     this.Context.Entry(building.Classification).State = EntityState.Unchanged;
-                if (building.BuildingConstructionType != null)
+                if (building.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == building.BuildingConstructionTypeId))
                     this.Context.Entry(building.BuildingConstructionType).State = EntityState.Unchanged;
-                if (building.BuildingPredominateUse != null)
+                if (building.BuildingPredominateUse != null && !this.Context.BuildingPredominateUses.Local.Any(a => a.Id == building.BuildingPredominateUseId))
                     this.Context.Entry(building.BuildingPredominateUse).State = EntityState.Unchanged;
-                if (building.BuildingOccupantType != null)
+                if (building.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == building.BuildingOccupantTypeId))
                     this.Context.Entry(building.BuildingOccupantType).State = EntityState.Unchanged;
+
+                building.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == building.AgencyId);
+                building.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == building.ClassificationId);
+                building.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == building.BuildingConstructionTypeId);
+                building.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == building.BuildingPredominateUseId);
+                building.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == building.BuildingOccupantTypeId);
 
                 this.Context.Addresses.Add(building.Address);
                 this.Context.BuildingEvaluations.AddRange(building.Evaluations);

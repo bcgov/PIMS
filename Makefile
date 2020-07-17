@@ -83,10 +83,18 @@ database-clean: ## Re-creates an empty docker database - ready for seeding
 	@echo "$(P) Refreshing the database..."
 	@cd backend/dal; dotnet ef database drop --force; dotnet ef database update
 
-database-seed:
+database-seed: ## Imports a JSON file of properties into PIMS
 	@echo "$(P) Seeding docker database..."
 	@cd tools/import; make run
 
-database-refresh: | server-run pause-30 database-clean database-seed ## Refreshes the docker database
+keycloak-sync: ## Syncs accounts with Keycloak and PIMS
+	@echo "$(P) Syncing keycloak with PIMS..."
+	@cd tools/keycloak/sync; make run
 
-.PHONY: local restart run stop build clean client-test server-test pause-30 server-run database-run database-clean database-seed database-refresh
+database-refresh: | server-run pause-30 database-clean database-seed keycloak-sync ## Refreshes the docker database
+
+convert: ## Convert Excel files to JSON
+	@echo "$(P) Convert Excel files to JSON..."
+	@cd tools/converters/excel; make run
+
+.PHONY: local restart run stop build clean client-test server-test pause-30 server-run database-run database-clean database-seed keycloak-sync database-refresh
