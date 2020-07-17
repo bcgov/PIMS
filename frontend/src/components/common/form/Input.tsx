@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -69,6 +69,19 @@ export const Input: React.FC<InputProps> = ({
     pattern?.test(val) && setRestricted(val);
     handleChange(event);
   };
+  // run the formatter logic when the input field is updated programmatically via formik values
+  useEffect(() => {
+    // to handle reset
+    if (value === null || value === undefined || value === '') {
+      setRestricted('');
+      return;
+    }
+
+    if (onBlurFormatter && pattern && value !== restricted) {
+      setRestricted(onBlurFormatter(value));
+      setFieldValue(field, onBlurFormatter(value));
+    }
+  }, [field, onBlurFormatter, pattern, restricted, setFieldValue, value]);
   return (
     <Form.Group
       controlId={`input-${field}`}
