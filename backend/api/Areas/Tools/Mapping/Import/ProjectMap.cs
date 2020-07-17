@@ -1,4 +1,5 @@
 using Mapster;
+using Newtonsoft.Json;
 using Pims.Api.Mapping.Converters;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Tools.Models.Import;
@@ -58,6 +59,7 @@ namespace Pims.Api.Areas.Tools.Mapping.Import
                 .Map(dest => dest.InterestComponent, src => src.InterestComponent)
                 .Map(dest => dest.Notes, src => src.Notes)
                 .Map(dest => dest.Responses, src => src.Responses)
+                .BeforeMapping((src, dest) => JsonConvert.PopulateObject(src.Metadata ?? "{}", src))
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
         }
     }

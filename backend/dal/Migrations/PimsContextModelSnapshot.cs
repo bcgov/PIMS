@@ -1222,9 +1222,6 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("CancelledOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<DateTime?>("ClearanceNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<DateTime?>("CompletedOn")
                         .HasColumnType("DATETIME2");
 
@@ -1243,9 +1240,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<DateTime?>("DisposedOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<decimal>("Estimated")
                         .HasColumnType("MONEY");
 
@@ -1258,24 +1252,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<decimal>("GainLoss")
-                        .HasColumnType("MONEY");
-
-                    b.Property<DateTime?>("InitialNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
-                    b.Property<decimal>("InterestComponent")
-                        .HasColumnType("MONEY");
-
-                    b.Property<bool?>("IsContractConditional")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Manager")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
-
-                    b.Property<DateTime?>("MarketedOn")
-                        .HasColumnType("DATETIME2");
 
                     b.Property<string>("Metadata")
                         .HasColumnType("NVARCHAR(MAX)");
@@ -1288,38 +1267,17 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("NetProceeds")
-                        .HasColumnType("MONEY");
-
-                    b.Property<DateTime?>("NinetyDayNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
-
-                    b.Property<decimal?>("OcgFinancialStatement")
-                        .HasColumnType("MONEY");
-
-                    b.Property<DateTime?>("OfferAcceptedOn")
-                        .HasColumnType("DATETIME2");
-
-                    b.Property<decimal>("OfferAmount")
-                        .HasColumnType("MONEY");
 
                     b.Property<string>("OffersNote")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<DateTime?>("OnHoldNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<string>("PrivateNote")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
-
-                    b.Property<decimal>("ProgramCost")
-                        .HasColumnType("MONEY");
 
                     b.Property<string>("ProjectNumber")
                         .IsRequired()
@@ -1329,10 +1287,6 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("PublicNote")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
-
-                    b.Property<string>("Purchaser")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
 
                     b.Property<int>("ReportedFiscalYear")
                         .HasColumnType("int");
@@ -1345,29 +1299,14 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<bool>("SaleWithLeaseInPlace")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("SalesCost")
-                        .HasColumnType("MONEY");
-
-                    b.Property<DateTime?>("SixtyDayNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("SubmittedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<DateTime?>("ThirtyDayNotificationSentOn")
-                        .HasColumnType("DATETIME2");
-
                     b.Property<int>("TierLevelId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("TransferredWithinGreOn")
-                        .HasColumnType("DATETIME2");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");

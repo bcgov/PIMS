@@ -1,4 +1,5 @@
 using Mapster;
+using Newtonsoft.Json;
 using Pims.Api.Mapping.Converters;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
@@ -57,6 +58,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.OfferAmount, src => src.OfferAmount)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Map(dest => dest.ProjectAgencyResponses, src => src.Responses)
+                .BeforeMapping((src, dest) => JsonConvert.PopulateObject(src.Metadata ?? "{}", src)) //use the metadata object to populate fields not stored in DB.
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.ProjectModel, Entity.Project>()
@@ -100,6 +102,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.OfferAmount, src => src.OfferAmount)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Map(dest => dest.Responses, src => src.ProjectAgencyResponses)
+                .AfterMapping((src, dest) => dest.Metadata = JsonConvert.SerializeObject(dest)) //Map all non-ignored fields into the metadata.
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }
     }

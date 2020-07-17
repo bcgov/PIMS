@@ -25,7 +25,6 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).HasMaxLength(100);
 
             builder.Property(m => m.Manager).HasMaxLength(150);
-            builder.Property(m => m.Purchaser).HasMaxLength(150);
             builder.Property(m => m.Description).HasMaxLength(1000);
             builder.Property(m => m.Note).HasMaxLength(2000);
             builder.Property(m => m.PublicNote).HasMaxLength(2000);
@@ -41,28 +40,11 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.DeniedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.CancelledOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.InitialNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.ThirtyDayNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.SixtyDayNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.NinetyDayNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.OnHoldNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.TransferredWithinGreOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.ClearanceNotificationSentOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.MarketedOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.DisposedOn).HasColumnType("DATETIME2");
-            builder.Property(m => m.OfferAcceptedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.CompletedOn).HasColumnType("DATETIME2");
 
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");
             builder.Property(m => m.Assessed).HasColumnType("MONEY");
-            builder.Property(m => m.SalesCost).HasColumnType("MONEY");
-            builder.Property(m => m.NetProceeds).HasColumnType("MONEY");
-            builder.Property(m => m.ProgramCost).HasColumnType("MONEY");
-            builder.Property(m => m.GainLoss).HasColumnType("MONEY");
-            builder.Property(m => m.OcgFinancialStatement).HasColumnType("MONEY");
-            builder.Property(m => m.InterestComponent).HasColumnType("MONEY");
-            builder.Property(m => m.OfferAmount).HasColumnType("MONEY");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientCascade);

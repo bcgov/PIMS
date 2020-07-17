@@ -1,6 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
 using Pims.Dal.Helpers.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pims.Dal.Migrations
 {
@@ -998,37 +998,17 @@ namespace Pims.Dal.Migrations
                     PublicNote = table.Column<string>(maxLength: 2000, nullable: true),
                     PrivateNote = table.Column<string>(maxLength: 2000, nullable: true),
                     Metadata = table.Column<string>(type: "NVARCHAR(MAX)", nullable: true),
-                    MarketedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     OffersNote = table.Column<string>(maxLength: 2000, nullable: true),
-                    Purchaser = table.Column<string>(maxLength: 150, nullable: true),
-                    IsContractConditional = table.Column<bool>(nullable: true),
                     SubmittedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ApprovedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    OnHoldNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    InitialNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    ThirtyDayNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    SixtyDayNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    NinetyDayNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    TransferredWithinGreOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    ClearanceNotificationSentOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     DeniedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     CancelledOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    OfferAcceptedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    DisposedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     CompletedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     ExemptionRequested = table.Column<bool>(nullable: false, defaultValue: false),
                     ExemptionRationale = table.Column<string>(maxLength: 2000, nullable: true),
                     NetBook = table.Column<decimal>(type: "MONEY", nullable: false),
                     Estimated = table.Column<decimal>(type: "MONEY", nullable: false),
                     Assessed = table.Column<decimal>(type: "MONEY", nullable: false),
-                    SalesCost = table.Column<decimal>(type: "MONEY", nullable: false),
-                    NetProceeds = table.Column<decimal>(type: "MONEY", nullable: false),
-                    ProgramCost = table.Column<decimal>(type: "MONEY", nullable: false),
-                    GainLoss = table.Column<decimal>(type: "MONEY", nullable: false),
-                    OcgFinancialStatement = table.Column<decimal>(type: "MONEY", nullable: true),
-                    InterestComponent = table.Column<decimal>(type: "MONEY", nullable: false),
-                    OfferAmount = table.Column<decimal>(type: "MONEY", nullable: false),
-                    SaleWithLeaseInPlace = table.Column<bool>(nullable: false),
                     AgencyId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

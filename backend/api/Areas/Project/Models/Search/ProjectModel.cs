@@ -104,16 +104,6 @@ namespace Pims.Api.Areas.Project.Models.Search
         public string SubAgencyCode { get; set; }
 
         /// <summary>
-        /// get/set - Whether an exemption was requested for the ERP.
-        /// </summary>
-        public bool ExemptionRequested { get; set; }
-
-        /// <summary>
-        /// get/set - The rational for the exemption from ERP.
-        /// </summary>
-        public string ExemptionRationale { get; set; }
-
-        /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
         public decimal NetBook { get; set; }
