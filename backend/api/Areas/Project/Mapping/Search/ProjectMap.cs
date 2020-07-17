@@ -28,8 +28,6 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
-                .Map(dest => dest.ExemptionRequested, src => src.ExemptionRequested)
-                .Map(dest => dest.ExemptionRationale, src => src.ExemptionRationale)
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.Estimated, src => src.Estimated)
                 .Map(dest => dest.Assessed, src => src.Assessed)
@@ -40,7 +38,6 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.CreatedOn, src => src.CreatedOn)
                 .Map(dest => dest.CreatedBy,
                     src => src.CreatedById != null ? src.CreatedBy.DisplayName : null)
-                .BeforeMapping((src, dest) => JsonConvert.PopulateObject(src.Metadata ?? "{}", src))
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
         }
     }

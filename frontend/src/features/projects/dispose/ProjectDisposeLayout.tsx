@@ -134,7 +134,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
               <Switch>
-                )}
                 {projectWorkflowComponents.map(wfc => (
                   <Route
                     key={wfc.workflowStatus.toString()}

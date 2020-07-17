@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace Pims.Dal.Entities
 {
     /// <summary>
     /// Project class, provides an entity for the datamodel to manage projects.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
+    [DataContractAttribute]
     public class Project : BaseEntity
     {
         #region Properties
@@ -123,7 +122,7 @@ namespace Pims.Dal.Entities
         /// get/set - When the project was externally marketed.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? MarketedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
@@ -135,14 +134,14 @@ namespace Pims.Dal.Entities
         /// get/set - Text field describing project purchaser.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public string Purchaser { get; set; }
 
         /// <summary>
         /// get/set - Whether or not the contract for the project is conditional
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public bool? IsContractConditional { get; set; }
         #endregion
 
@@ -161,49 +160,49 @@ namespace Pims.Dal.Entities
         /// get/set - When the on hold enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? OnHoldNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the initial enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? InitialNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 30 day enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? ThirtyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 60 day enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? SixtyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the 90 day enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? NinetyDayNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the project was transferred within the GRE.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? TransferredWithinGreOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the clearance enhanced referral notification was sent.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? ClearanceNotificationSentOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
@@ -220,14 +219,14 @@ namespace Pims.Dal.Entities
         /// get/set - When the offer was accepted on.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? OfferAcceptedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - When the project was disposed.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public DateTime? DisposedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
@@ -242,14 +241,14 @@ namespace Pims.Dal.Entities
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public bool ExemptionRequested { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The rational for the exemption from ERP.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public string ExemptionRationale { get; set; } // TODO: Move to metadata property.
         #endregion
 
@@ -273,56 +272,56 @@ namespace Pims.Dal.Entities
         /// get/set - The sales cost.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal SalesCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal GainLoss { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal? OcgFinancialStatement { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public decimal OfferAmount { get; set; }
 
         /// <summary>
         /// get/set - Whether the sale includes a lease in place (SLIP).
         /// </summary>
         [NotMapped]
-        [JsonProperty]
+        [DataMemberAttribute]
         public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
         #endregion
 
