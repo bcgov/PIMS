@@ -102,6 +102,8 @@ describe('FilterBar', () => {
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',
+      parcelId: '',
+      propertyType: '0',
     });
   });
 });
