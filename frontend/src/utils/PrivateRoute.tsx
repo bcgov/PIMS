@@ -7,6 +7,7 @@ interface IPrivateRouteProps extends RouteProps {
   layout: React.ComponentType<any>;
   role?: string | Array<string>;
   claim?: string | Array<string>;
+  componentProps?: any;
 }
 
 /**
@@ -28,7 +29,7 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
           ) {
             return (
               <Layout>
-                <Component {...props} />
+                <Component {...props} {...rest.componentProps} />
               </Layout>
             );
           } else {
