@@ -243,29 +243,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Update the property.StatusId
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="propertyStatusId"></param>
-        /// <returns></returns>
-        public static Entity.Property UpdatePropertyStatus(this Entity.ProjectProperty property, int propertyStatusId)
-        {
-            switch (property.PropertyType)
-            {
-                case (Entity.PropertyTypes.Land):
-                    if (property.Parcel == null) throw new InvalidOperationException("Unable to update parcel status.");
-                    property.Parcel.StatusId = propertyStatusId;
-                    return property.Parcel;
-                case (Entity.PropertyTypes.Building):
-                    if (property.Building == null) throw new InvalidOperationException("Unable to update building status.");
-                    property.Building.StatusId = propertyStatusId;
-                    return property.Building;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Add a tasks to the project.
         /// </summary>
         /// <param name="project"></param>
@@ -323,6 +300,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <summary>
         /// Release properties from project, such as during the deny or cancelled statuses
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="project"></param>
         /// <returns></returns>
         public static void ReleaseProjectProperties(this PimsContext context, Entity.Project project)
@@ -336,21 +314,34 @@ namespace Pims.Dal.Helpers.Extensions
         /// <summary>
         /// Dispose properties from project, during the disposed workflow status.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="project"></param>
         /// <returns></returns>
         public static void DisposeProjectProperties(this PimsContext context, Entity.Project project)
         {
-            var disposedProjectStatusId = context.PropertyStatus.FirstOrDefault(p => p.Name == "Disposed")?.Id;
-            if (disposedProjectStatusId == null) throw new InvalidOperationException("Failed to load disposed property status from database.");
+            var disposed = context.PropertyClassifications.Find(4) ?? throw new KeyNotFoundException("Classification 'Disposed' not found.");
             project.Properties.ForEach(p =>
             {
-                context.Update(p.UpdatePropertyStatus(disposedProjectStatusId.Value));
+                switch (p.PropertyType)
+                {
+                    case (Entity.PropertyTypes.Land):
+                        if (p.Parcel == null) throw new InvalidOperationException("Unable to update parcel status.");
+                        p.Parcel.ClassificationId = disposed.Id;
+                        break;
+                    case (Entity.PropertyTypes.Building):
+                        if (p.Building == null) throw new InvalidOperationException("Unable to update building status.");
+                        p.Building.ClassificationId = disposed.Id;
+                        break;
+                }
+                context.Update(p);
             });
         }
 
         /// <summary>
         /// Transfer Project properties to a new agency with updated classifications
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="originalProject"></param>
         /// <param name="project"></param>
         /// <returns></returns>
         public static void TransferProjectProperties(this PimsContext context, Entity.Project originalProject, Entity.Project project)

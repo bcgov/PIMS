@@ -50,7 +50,6 @@ const getServerQuery = (state: {
     agencies: parsedAgencies,
     minLandArea: decimalOrUndefined(minLotSize),
     maxLandArea: decimalOrUndefined(maxLotSize),
-    statusId: undefined, // TODO: this field is not yet implemented in FilterBar
     page: pageIndex + 1,
     quantity: pageSize,
   };

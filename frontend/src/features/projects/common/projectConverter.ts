@@ -40,8 +40,6 @@ export const toFlatProject = (project?: IApiProject) => {
       projectPropertyId: pp.id,
       parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
-      statusId: apiProperty.statusId,
-      status: apiProperty.propertyStatus ?? '',
       description: apiProperty.description,
       landLegalDescription: apiProperty.landLegalDescription,
       zoning: apiProperty.zoning,
@@ -96,8 +94,6 @@ const toApiProperty = (property: IProperty): IApiProperty => {
     projectNumber: property.projectNumber ?? '',
     latitude: property.latitude,
     longitude: property.longitude,
-    statusId: property.statusId,
-    propertyStatus: property.status,
     classificationId: property.classificationId,
     description: property.description,
     address: {

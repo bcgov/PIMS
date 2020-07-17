@@ -1,6 +1,6 @@
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pims.Dal.Helpers.Migrations;
-using System;
 
 namespace Pims.Dal.Migrations
 {
@@ -446,7 +446,8 @@ namespace Pims.Dal.Migrations
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(maxLength: 150, nullable: false),
                     IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
+                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0),
+                    IsVisible = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -459,37 +460,6 @@ namespace Pims.Dal.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PropertyClassifications_Users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PropertyStatus",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false),
-                    CreatedById = table.Column<Guid>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    UpdatedById = table.Column<Guid>(nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    Name = table.Column<string>(maxLength: 150, nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false, defaultValue: false),
-                    SortOrder = table.Column<int>(nullable: false, defaultValue: 0)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PropertyStatus", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PropertyStatus_Users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PropertyStatus_Users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -1185,7 +1155,6 @@ namespace Pims.Dal.Migrations
                     ProjectNumber = table.Column<string>(maxLength: 50, nullable: true),
                     Name = table.Column<string>(maxLength: 150, nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    StatusId = table.Column<int>(nullable: false),
                     ClassificationId = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: true),
                     AddressId = table.Column<int>(nullable: false),
@@ -1227,12 +1196,6 @@ namespace Pims.Dal.Migrations
                         name: "FK_Parcels_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Parcels_PropertyStatus_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "PropertyStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1492,7 +1455,6 @@ namespace Pims.Dal.Migrations
                     ProjectNumber = table.Column<string>(maxLength: 50, nullable: true),
                     Name = table.Column<string>(maxLength: 150, nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    StatusId = table.Column<int>(nullable: false),
                     ClassificationId = table.Column<int>(nullable: false),
                     AgencyId = table.Column<int>(nullable: true),
                     AddressId = table.Column<int>(nullable: false),
@@ -1561,12 +1523,6 @@ namespace Pims.Dal.Migrations
                         name: "FK_Buildings_Parcels_ParcelId",
                         column: x => x.ParcelId,
                         principalTable: "Parcels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Buildings_PropertyStatus_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "PropertyStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2074,19 +2030,14 @@ namespace Pims.Dal.Migrations
                 column: "ParcelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_StatusId",
-                table: "Buildings",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Buildings_UpdatedById",
                 table: "Buildings",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_StatusId_ClassificationId_ProjectNumber_BuildingConstructionTypeId~",
+                name: "IX_Buildings_Latitude_Longitude_LocalId_IsSensitive_AgencyId_ClassificationId_ProjectNumber_BuildingConstructionTypeId_Building~",
                 table: "Buildings",
-                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
+                columns: new[] { "Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",
@@ -2238,11 +2189,6 @@ namespace Pims.Dal.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_StatusId",
-                table: "Parcels",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Parcels_UpdatedById",
                 table: "Parcels",
                 column: "UpdatedById");
@@ -2255,9 +2201,9 @@ namespace Pims.Dal.Migrations
                 filter: "[PIN] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_Latitude_Longitude_StatusId_IsSensitive_AgencyId_ClassificationId_ProjectNumber_LandArea_Municipality_Zoning_ZoningP~",
+                name: "IX_Parcels_Latitude_Longitude_IsSensitive_AgencyId_ClassificationId_ProjectNumber_LandArea_Municipality_Zoning_ZoningPotential_~",
                 table: "Parcels",
-                columns: new[] { "Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
+                columns: new[] { "Latitude", "Longitude", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectAgencyResponses_AgencyId",
@@ -2529,27 +2475,6 @@ namespace Pims.Dal.Migrations
                 name: "IX_PropertyClassifications_IsDisabled_Name",
                 table: "PropertyClassifications",
                 columns: new[] { "IsDisabled", "Name" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyStatus_CreatedById",
-                table: "PropertyStatus",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyStatus_Name",
-                table: "PropertyStatus",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyStatus_UpdatedById",
-                table: "PropertyStatus",
-                column: "UpdatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyStatus_IsDisabled_Name_SortOrder",
-                table: "PropertyStatus",
-                columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyTypes_CreatedById",
@@ -2892,9 +2817,6 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "PropertyClassifications");
-
-            migrationBuilder.DropTable(
-                name: "PropertyStatus");
 
             migrationBuilder.DropTable(
                 name: "Cities");

@@ -32,7 +32,7 @@ let classificationDropdown = shallow(
 );
 it('Displays item for all classifications given', () => {
   const items = classificationDropdown.find(Dropdown.Item);
-  expect(items.length).toBe(5);
+  expect(items.length).toBe(6);
 });
 
 let agencyDropdown = shallow(

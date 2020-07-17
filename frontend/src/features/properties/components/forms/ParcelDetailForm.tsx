@@ -122,7 +122,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
     values.pin = values?.pin ? values.pin : undefined;
     values.pid = values?.pid ? values.pid : undefined;
-    values.statusId = values.statusId ? 1 : 0;
     const allFinancials = filterEmptyFinancials(values.financials);
 
     values.evaluations = _.filter(allFinancials, financial =>

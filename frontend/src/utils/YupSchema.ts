@@ -111,7 +111,6 @@ export const Building = Yup.object().shape({
     .of(Financial),
 });
 export const LandSchema = Yup.object().shape({
-  statusId: Yup.boolean().required('Required'),
   classificationId: Yup.string()
     .required('Required')
     .matches(/\d*/, 'Invalid Classification')

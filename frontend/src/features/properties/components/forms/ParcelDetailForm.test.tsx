@@ -123,7 +123,6 @@ describe('ParcelDetailForm', () => {
       zoningPotential: 'zoningPotentialVal',
       municipality: 'municipalityVal',
       landArea: 1234,
-      statusId: 1,
       classificationId: 1,
       isSensitive: false,
       latitude: 0,

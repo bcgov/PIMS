@@ -73,14 +73,6 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get all property status sorted by SortOrder and Name
-        /// </summary>
-        public IEnumerable<PropertyStatus> GetPropertyStatus()
-        {
-            return this.Context.PropertyStatus.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
-        }
-
-        /// <summary>
         /// Get all property types sorted by SortOrder and Name
         /// </summary>
         public IEnumerable<PropertyType> GetPropertyTypes()

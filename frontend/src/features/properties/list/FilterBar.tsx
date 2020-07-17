@@ -95,7 +95,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
     value: code.id.toString(),
   });
   const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
-  const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const classifications = (propertyClassifications ?? [])
+    .filter(i => !!i.isVisible)
+    .map(c => mapLookupCode(c));
 
   return (
     <Formik<IFilterBarState>

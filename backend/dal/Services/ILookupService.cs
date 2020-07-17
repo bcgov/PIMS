@@ -11,7 +11,6 @@ namespace Pims.Dal.Services
         IEnumerable<Agency> GetAgencies();
         IEnumerable<City> GetCities();
         IEnumerable<Province> GetProvinces();
-        IEnumerable<PropertyStatus> GetPropertyStatus();
         IEnumerable<PropertyClassification> GetPropertyClassifications();
         IEnumerable<PropertyType> GetPropertyTypes();
         IEnumerable<BuildingConstructionType> GetBuildingConstructionTypes();

@@ -91,7 +91,6 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
             var project = this.Context.Projects
-                .Include(p => p.Status)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Risk)
                 .Include(p => p.Agency)
@@ -116,7 +115,6 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Parcel).Query()
-                    .Include(p => p.Status)
                     .Include(p => p.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(p => p.Classification)
@@ -132,7 +130,6 @@ namespace Pims.Dal.Services
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
                     .Include(b => b.Parcel)
-                    .Include(b => b.Status)
                     .Include(b => b.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(b => b.Classification)
@@ -234,7 +231,6 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Parcel).Query()
-                    .Include(p => p.Status)
                     .Include(p => p.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(p => p.Classification)
@@ -250,7 +246,6 @@ namespace Pims.Dal.Services
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
                     .Include(b => b.Parcel)
-                    .Include(b => b.Status)
                     .Include(b => b.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(b => b.Classification)
@@ -464,7 +459,7 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Parcel).Query()
-                    .Include(p => p.Status)
+                    .Include(p => p.Classification)
                     .Include(p => p.Evaluations)
                     .Include(p => p.Fiscals)
                     .Load();
@@ -473,8 +468,8 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
+                    .Include(p => p.Classification)
                     .Include(b => b.Parcel)
-                    .Include(b => b.Status)
                     .Include(b => b.Evaluations)
                     .Include(p => p.Fiscals)
                     .Load();

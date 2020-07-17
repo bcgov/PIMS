@@ -29,20 +29,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Make a query to determine if the parcel PID and PIN have been updated on a pre-existing parcel
-        /// - once created the unique PID or PIN of a parcel should not be updated.
-        /// </summary>
-        /// <param name="parcels"></param>
-        /// <param name="parcel"></param>
-        /// <exception type="DbUpdateException">The PID and PIN may not be updated.</exception>
-        public static void ThrowIfPidPinUpdated(this DbSet<Entity.Parcel> parcels, Entity.Parcel parcel)
-        {
-            var pidPinUpdated = parcels.Any(p => p.Id == parcel.Id && ((parcel.PID > 0 && p.PID != parcel.PID) || (parcel.PIN != null && p.PIN != parcel.PIN)));
-
-            if (pidPinUpdated) throw new DbUpdateException("PID and PIN may not be updated.");
-        }
-
-        /// <summary>
         /// Generate a query for the specified 'filter'.
         /// </summary>
         /// <param name="context"></param>
@@ -88,8 +74,6 @@ namespace Pims.Dal.Helpers.Extensions
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Description))

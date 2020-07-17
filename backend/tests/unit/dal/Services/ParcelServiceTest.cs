@@ -484,7 +484,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(parcel.Address);
             Assert.NotNull(parcel.Address.City);
             Assert.NotNull(parcel.Address.Province);
-            Assert.NotNull(parcel.Status);
             Assert.NotNull(parcel.Classification);
             Assert.NotNull(parcel.Agency);
             Assert.NotNull(parcel.Address);
@@ -519,7 +518,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(parcel.Address);
             Assert.NotNull(parcel.Address.City);
             Assert.NotNull(parcel.Address.Province);
-            Assert.NotNull(parcel.Status);
             Assert.NotNull(parcel.Classification);
             Assert.NotNull(parcel.Agency);
             Assert.NotNull(parcel.Address);

@@ -25,16 +25,6 @@ namespace Pims.Dal.Entities.Views
         public string ProjectNumber { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the property status.
-        /// </summary>
-        public int StatusId { get; set; }
-
-        /// <summary>
-        /// get/set - The status for this property.
-        /// </summary>
-        public string Status { get; set; }
-
-        /// <summary>
         /// get/set - The foreign key to the property classification.
         /// </summary>
         public int ClassificationId { get; set; }
@@ -303,8 +293,6 @@ namespace Pims.Dal.Entities.Views
         {
             this.Id = property.Id;
             this.ProjectNumber = property.ProjectNumber;
-            this.StatusId = property.StatusId;
-            this.Status = property.Status?.Name;
             this.ClassificationId = property.ClassificationId;
             this.Classification = property.Classification?.Name;
 

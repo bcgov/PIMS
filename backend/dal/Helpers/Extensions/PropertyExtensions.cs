@@ -32,7 +32,9 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = context.Properties.AsNoTracking();
+            var query = context.Properties
+                .AsNoTracking()
+                .Where(p => p.ClassificationId != 4); // Disposed properties are not visible.
 
             // Only allowed to see user's own agency properties.
             if (!isAdmin)
@@ -64,8 +66,6 @@ namespace Pims.Dal.Helpers.Extensions
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (filter.IgnorePropertiesInProjects == true)

@@ -12,14 +12,11 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Parcel, Model.ParcelModel>()
-                .IgnoreNonMapped(true)
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
-                .Map(dest => dest.StatusId, src => src.StatusId)
-                .Map(dest => dest.Status, src => src.Status.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification.Name)
@@ -42,12 +39,10 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
 
 
             config.NewConfig<Model.ParcelModel, Entity.Parcel>()
-                .IgnoreNonMapped(true)
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)

@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200713164527_Initial")]
+    [Migration("20200715213618_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -382,9 +382,6 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TransferLeaseOnSale")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -414,11 +411,9 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("ParcelId");
 
-                    b.HasIndex("StatusId");
-
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "StatusId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -1076,9 +1071,6 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1103,15 +1095,13 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("StatusId");
-
                     b.HasIndex("UpdatedById");
 
                     b.HasIndex("PID", "PIN")
                         .IsUnique()
                         .HasFilter("[PIN] IS NOT NULL");
 
-                    b.HasIndex("Latitude", "Longitude", "StatusId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
+                    b.HasIndex("Latitude", "Longitude", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
 
                     b.ToTable("Parcels");
                 });
@@ -2007,6 +1997,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)")
@@ -2040,59 +2033,6 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("IsDisabled", "Name");
 
                     b.ToTable("PropertyClassifications");
-                });
-
-            modelBuilder.Entity("Pims.Dal.Entities.PropertyStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<int>("SortOrder")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("UpdatedById");
-
-                    b.HasIndex("IsDisabled", "Name", "SortOrder");
-
-                    b.ToTable("PropertyStatus");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyType", b =>
@@ -2840,11 +2780,6 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("ParcelId")
                         .IsRequired();
 
-                    b.HasOne("Pims.Dal.Entities.PropertyStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .IsRequired();
-
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
@@ -2992,11 +2927,6 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("Pims.Dal.Entities.PropertyStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
@@ -3275,17 +3205,6 @@ namespace Pims.Dal.Migrations
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.PropertyClassification", b =>
-                {
-                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById");
-                });
-
-            modelBuilder.Entity("Pims.Dal.Entities.PropertyStatus", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()

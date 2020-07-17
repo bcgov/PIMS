@@ -32,7 +32,6 @@ namespace Pims.Api.Test.Controllers.Admin
                 new object[] { new ParcelFilter(50, 25, 50, 20) },
                 new object[] { new ParcelFilter(50, 25, 50, 25) },
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } } },
-                new object[] { new ParcelFilter() { StatusId = 2 } },
                 new object[] { new ParcelFilter() { ClassificationId = 2 } },
                 new object[] { new ParcelFilter() { Description = "test" } },
                 new object[] { new ParcelFilter() { Municipality = "test" } },
@@ -352,7 +351,6 @@ namespace Pims.Api.Test.Controllers.Admin
             Assert.Equal(existingParcel.Id, actualResult.Id);
             Assert.Equal(existingParcel.ParcelIdentity, actualResult.PID);
             Assert.Equal(existingParcel.PIN, actualResult.PIN);
-            Assert.Equal(existingParcel.StatusId, actualResult.StatusId);
             Assert.Equal(existingParcel.ClassificationId, actualResult.ClassificationId);
             Assert.Equal(existingParcel.AgencyId, actualResult.AgencyId);
             Assert.Equal(existingParcel.Description, actualResult.Description);

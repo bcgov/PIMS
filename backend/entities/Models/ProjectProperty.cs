@@ -1,4 +1,4 @@
-﻿namespace Pims.Dal.Entities.Models
+namespace Pims.Dal.Entities.Models
 {
     public class ProjectProperty :  Pims.Dal.Entities.Views.Property
     {
@@ -14,8 +14,6 @@
             ProjectNumber = property.ProjectNumber;
             Name = property.Name;
             Description = property.Description;
-            StatusId = property.StatusId;
-            Status = property.Status;
             ClassificationId = property.ClassificationId;
             Classification = property.Classification;
             Agency = property.Agency;

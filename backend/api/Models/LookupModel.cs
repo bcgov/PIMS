@@ -26,6 +26,11 @@ namespace Pims.Api.Models
         public bool IsDisabled { get; set; }
 
         /// <summary>
+        /// get/set - Whether this item is visible.
+        /// </summary>
+        public bool? IsVisible { get; set; }
+
+        /// <summary>
         /// get/set - The item's sort order.
         /// </summary>
         /// <value></value>

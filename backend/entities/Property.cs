@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -27,16 +25,6 @@ namespace Pims.Dal.Entities
         /// get/set - The property description.
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// get/set - The foreign key to the property status.
-        /// </summary>
-        public int StatusId { get; set; }
-
-        /// <summary>
-        /// get/set - The status for this property.
-        /// </summary>
-        public PropertyStatus Status { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property classification.

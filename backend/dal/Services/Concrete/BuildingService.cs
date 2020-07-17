@@ -184,6 +184,9 @@ namespace Pims.Dal.Services
             // Do not allow making property visible through this service.
             if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
+            // Only administrators can dispose a property.
+            if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
+
             this.Context.Buildings.ThrowIfNotUnique(building);
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);

@@ -37,7 +37,6 @@ namespace PimsApi.Test.Controllers
             Assert.Equal(1, result.Latitude);
             Assert.Equal(1, result.Longitude);
             Assert.Equal("description-99", result.Description);
-            Assert.Equal(1, result.StatusId);
             Assert.Equal(1, result.ClassificationId);
             Assert.Equal(1, result.AgencyId);
             // TODO: test all other properties.

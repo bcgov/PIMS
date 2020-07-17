@@ -149,10 +149,7 @@ namespace Pims.Api.Test.Controllers
             var agency = EntityHelper.CreateAgency();
             service.Setup(m => m.Lookup.GetAgencies()).Returns(new[] { agency });
 
-            var propertyStatus = EntityHelper.CreatePropertyStatus("status");
-            service.Setup(m => m.Lookup.GetPropertyStatus()).Returns(new[] { propertyStatus });
-
-            var propertyClassification = EntityHelper.CreatePropertyClassification("class");
+            var propertyClassification = EntityHelper.CreatePropertyClassification("class", true);
             service.Setup(m => m.Lookup.GetPropertyClassifications()).Returns(new[] { propertyClassification });
 
             var province = EntityHelper.CreateProvince("BC", "British Columbia");
@@ -181,14 +178,13 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsAssignableFrom<IEnumerable<object>>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.RoleModel>(role), actualResult.First(), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.CodeModel<int>>(agency), actualResult.Next(1), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyStatus), actualResult.Next(2), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyClassification), actualResult.Next(3), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<string>>(province), actualResult.Next(4), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.CodeModel<int>>(city), actualResult.Next(5), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingConstructionType), actualResult.Next(6), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingPredominateUse), actualResult.Next(7), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingOccupantType), actualResult.Next(8), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.LookupModel<int>>(tierLevel), actualResult.Next(9), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyClassification), actualResult.Next(2), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<string>>(province), actualResult.Next(3), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.CodeModel<int>>(city), actualResult.Next(4), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingConstructionType), actualResult.Next(5), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingPredominateUse), actualResult.Next(6), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingOccupantType), actualResult.Next(7), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.LookupModel<int>>(tierLevel), actualResult.Next(8), new ShallowPropertyCompare());
         }
         #endregion
     }

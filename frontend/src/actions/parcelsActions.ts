@@ -95,8 +95,6 @@ export interface IParcel {
   projectNumber?: string;
   latitude: number | '';
   longitude: number | '';
-  statusId: number | '';
-  propertyStatus?: string;
   classification?: string;
   classificationId: number | '';
   description: string;

@@ -555,7 +555,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(building.Address);
             Assert.NotNull(building.Address.City);
             Assert.NotNull(building.Address.Province);
-            Assert.NotNull(building.Status);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);
             Assert.NotNull(building.Address);
@@ -591,7 +590,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(building.Address);
             Assert.NotNull(building.Address.City);
             Assert.NotNull(building.Address.Province);
-            Assert.NotNull(building.Status);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);
             Assert.NotNull(building.Address);
@@ -627,7 +625,6 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(building.Address);
             Assert.NotNull(building.Address.City);
             Assert.NotNull(building.Address.Province);
-            Assert.NotNull(building.Status);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);
             Assert.NotNull(building.Address);

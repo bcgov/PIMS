@@ -48,8 +48,8 @@ namespace Pims.Api.Test.Helpers
         public void Equal_DifferentObjects()
         {
             // Arrange
-            var o1 = EntityHelper.CreatePropertyStatus("test");
-            var o2 = new { Id = 1, Name = "test", IsDisabled = false, SortOrder = 0, o1.CreatedById, o1.CreatedOn, o1.UpdatedById, o1.UpdatedOn, o1.RowVersion };
+            var o1 = EntityHelper.CreatePropertyClassification("test");
+            var o2 = new { Id = 1, Name = "test", IsVisible = true, IsDisabled = false, SortOrder = 0, o1.CreatedById, o1.CreatedOn, o1.UpdatedById, o1.UpdatedOn, o1.RowVersion };
 
             var comparer = new ShallowPropertyCompare();
 
