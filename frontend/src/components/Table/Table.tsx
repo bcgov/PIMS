@@ -405,7 +405,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       {!props.hideToolbar && (
         <div className="table-toolbar">
           {props.pageSize !== -1 && <TablePagination<T> instance={instance} />}
-          {!props.lockPageSize && props.data.length > 0 && (
+          {!props.lockPageSize && props.data.length > 0 && !props.lockPageSize && (
             <TablePageSizeSelector
               options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
               value={props.pageSize || DEFAULT_PAGE_SIZE}

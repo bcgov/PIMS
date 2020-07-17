@@ -74,6 +74,8 @@ export interface IFilterBarState {
   classificationId: string;
   minLotSize: string;
   maxLotSize: string;
+  parcelId?: string;
+  propertyType?: string;
 }
 
 type FilterBarProps = {
@@ -110,6 +112,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
         classificationId: '',
         minLotSize: '',
         maxLotSize: '',
+        parcelId: '',
+        propertyType: '0',
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);

@@ -64,6 +64,8 @@ namespace Pims.Dal.Helpers.Extensions
                 var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
+            if(filter.ParcelId.HasValue)
+                query = query.Where(p => p.ParcelId == filter.ParcelId);
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))

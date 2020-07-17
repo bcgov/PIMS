@@ -1,5 +1,6 @@
 using Pims.Core.Extensions;
 using Pims.Dal.Entities.Models;
+using Pims.Dal.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,6 +157,18 @@ namespace Pims.Api.Areas.Property.Models.Search
         public int? PredominateUseId { get; set; }
 
         /// <summary>
+        /// get/set - Parent Parcel Id.
+        /// </summary>
+        /// <value></value>
+        public int? ParcelId {get; set;}
+
+        /// <summary>
+        /// get/set - Parent Property Type Id.
+        /// </summary>
+        /// <value></value>
+        public PropertyTypes? PropertyType {get; set;}
+
+        /// <summary>
         /// get/set - Building floor count Id.
         /// </summary>
         /// <value></value>
@@ -259,6 +272,8 @@ namespace Pims.Api.Areas.Property.Models.Search
 
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
+            this.ParcelId = filter.GetIntNullValue(nameof(this.ParcelId));
+            this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
@@ -387,6 +402,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
                 InSurplusPropertyProgram = model.InSurplusPropertyProgram,
                 InEnhancedReferralProcess = model.InEnhancedReferralProcess,
+                ParcelId = model.ParcelId,
+                PropertyType = model.PropertyType,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 

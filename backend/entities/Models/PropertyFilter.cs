@@ -59,6 +59,12 @@ namespace Pims.Dal.Entities.Models
         public bool? InEnhancedReferralProcess { get; set; }
 
         /// <summary>
+        /// get/set - The parcelId for the property
+        /// </summary>
+        /// <value></value>
+        public int? ParcelId { get; set;}
+
+        /// <summary>
         /// get/set - Building classification Id.
         /// </summary>
         /// <value></value>
