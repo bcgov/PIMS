@@ -524,6 +524,7 @@ namespace Pims.Dal.Services
             }
 
             originalProject.Merge(project, this.Context);
+            originalProject.Metadata = project.Metadata;
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
@@ -775,6 +776,7 @@ namespace Pims.Dal.Services
             // Update a project
             originalProject.StatusId = toStatus.Id;
             originalProject.Status = toStatus;
+            originalProject.Metadata = project.Metadata;
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 
