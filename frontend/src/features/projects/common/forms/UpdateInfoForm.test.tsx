@@ -54,8 +54,6 @@ const mockProject = {
         propertyTypeId: 0,
         province: 'British Columbia',
         rentableArea: 0,
-        status: 'Active',
-        statusId: 1,
         transferLeaseOnSale: false,
         zoning: '',
         zoningPotential: '',

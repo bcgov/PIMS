@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
+using Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.BuildingConstructionType> _buildingConstructionTypes;
         private readonly IList<Entity.BuildingPredominateUse> _buildingPredominateUses;
         private readonly IList<Entity.PropertyClassification> _propertyClassifications;
-        private readonly IList<Entity.PropertyStatus> _propertyStatus;
         private readonly IList<Entity.City> _cities;
         private readonly IList<Entity.Agency> _agencies;
         #endregion
@@ -40,7 +41,6 @@ namespace Pims.Api.Areas.Tools.Helpers
             // Preload lookup lists so that they can be references quickly.
             _buildingConstructionTypes = _pimsAdminService.BuildingConstructionType.GetAll().ToList();
             _buildingPredominateUses = _pimsAdminService.BuildingPredominateUse.GetAll().ToList();
-            _propertyStatus = _pimsAdminService.PropertyStatus.GetAll().ToList();
             _propertyClassifications = _pimsAdminService.PropertyClassification.GetAll().ToList();
             _cities = _pimsAdminService.City.GetAll().ToList();
             _agencies = _pimsAdminService.Agency.GetAll().ToList();
@@ -258,16 +258,19 @@ namespace Pims.Api.Areas.Tools.Helpers
                 p_e.LandArea = landArea != 0 ? landArea : p_e.LandArea;
                 p_e.LandLegalDescription = property.LandLegalDescription;
 
-                // Find foreign key.
-                var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
+                PropertyClassification propClassification;
+                if (String.Compare("Active", property.Status, true) == 0)
+                {
+                    propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
                     throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
-                var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
-                    throw new KeyNotFoundException($"Property Status '{property.Status}' does not exist.");
+                }
+                else
+                {
+                    propClassification = _propertyClassifications.FirstOrDefault(pc => pc.Name == "Disposed") ?? throw new KeyNotFoundException($"Property Classification '{property.Status}' does not exist.");
+                }
 
                 p_e.ClassificationId = propClassification.Id;
                 p_e.Classification = propClassification;
-                p_e.StatusId = propStatus.Id;
-                p_e.Status = propStatus;
 
                 var city = GetOrCreateCity(property.City);
 
@@ -368,16 +371,19 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.BuildingTenancy = property.BuildingTenancy;
                 b_e.TransferLeaseOnSale = false;
 
-                // Find foreign key.
-                var propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
+                PropertyClassification propClassification;
+                if (String.Compare("Active", property.Status, true) == 0)
+                {
+                    propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
                     throw new KeyNotFoundException($"Property Classification '{property.Classification}' does not exist.");
-                var propStatus = _propertyStatus.FirstOrDefault(ps => String.Compare(ps.Name, property.Status, true) == 0) ??
-                    throw new KeyNotFoundException($"Property Status '{property.Status}' does not exist.");
+                }
+                else
+                {
+                    propClassification = _propertyClassifications.FirstOrDefault(pc => pc.Name == "Disposed") ?? throw new KeyNotFoundException($"Property Classification '{property.Status}' does not exist.");
+                }
 
                 b_e.ClassificationId = propClassification.Id;
                 b_e.Classification = propClassification;
-                b_e.StatusId = propStatus.Id;
-                b_e.Status = propStatus;
 
                 // Find foreign key.
                 var build_type = _buildingConstructionTypes.FirstOrDefault(bct => String.Compare(bct.Name, property.BuildingConstructionType, true) == 0);

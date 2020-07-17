@@ -38,7 +38,6 @@ namespace Pims.Core.Test
             agency ??= EntityHelper.CreateAgency(pid);
             var address = EntityHelper.CreateAddress(pid, "1234 Street", null, "V9C9C9");
             var classification = EntityHelper.CreatePropertyClassification("classification");
-            var status = EntityHelper.CreatePropertyStatus("status");
 
             return new Entity.Parcel(pid, lat, lng)
             {
@@ -50,8 +49,6 @@ namespace Pims.Core.Test
                 Classification = classification,
                 ClassificationId = classification.Id,
                 Description = $"description-{pid}",
-                Status = status,
-                StatusId = status.Id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
@@ -102,7 +99,6 @@ namespace Pims.Core.Test
             agency ??= context.Agencies.FirstOrDefault() ?? EntityHelper.CreateAgency(pid);
             var address = context.CreateAddress(pid, "1234 Street", null, "V9C9C9");
             var classification = context.PropertyClassifications.FirstOrDefault(s => s.Id == 1) ?? EntityHelper.CreatePropertyClassification("classification");
-            var status = context.PropertyStatus.FirstOrDefault(s => s.Id == 0) ?? EntityHelper.CreatePropertyStatus("status");
 
             var parcel = new Entity.Parcel(pid, lat, lng)
             {
@@ -114,8 +110,6 @@ namespace Pims.Core.Test
                 Classification = classification,
                 ClassificationId = classification.Id,
                 Description = $"description-{pid}",
-                Status = status,
-                StatusId = status.Id,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
@@ -143,33 +137,6 @@ namespace Pims.Core.Test
                 parcels.Add(context.CreateParcel(i, 0, 0, agency));
             }
             return parcels;
-        }
-
-        /// <summary>
-        /// Change the status of the parcel.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="parcel"></param>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        public static Entity.Parcel ChangeStatus(this PimsContext context, Entity.Parcel parcel, int statusId)
-        {
-            parcel.StatusId = statusId;
-            parcel.Status = context.PropertyStatus.First(s => s.Id == statusId);
-            return parcel;
-        }
-
-        /// <summary>
-        /// Change the status of the parcel.
-        /// </summary>
-        /// <param name="parcel"></param>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        public static Entity.Parcel ChangeStatus(this Entity.Parcel parcel, Entity.PropertyStatus status)
-        {
-            parcel.Status = status;
-            parcel.StatusId = status?.Id ?? throw new ArgumentNullException(nameof(status));
-            return parcel;
         }
     }
 }

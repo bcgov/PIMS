@@ -74,8 +74,6 @@ namespace Pims.Dal.Helpers.Extensions
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Description))

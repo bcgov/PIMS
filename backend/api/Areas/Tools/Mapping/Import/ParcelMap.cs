@@ -7,16 +7,12 @@ namespace Pims.Api.Areas.Tools.Mapping.Import
 {
     public class ParcelMap : IRegister
     {
-
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Parcel, Model.ParcelModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.StatusId, src => src.StatusId)
-                .Map(dest => dest.Status, src => src.Status.Name)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
@@ -38,13 +34,10 @@ namespace Pims.Api.Areas.Tools.Mapping.Import
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
-
             config.NewConfig<Model.ParcelModel, Entity.Parcel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)

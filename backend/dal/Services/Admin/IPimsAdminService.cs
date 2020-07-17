@@ -21,7 +21,6 @@ namespace Pims.Dal.Services.Admin
         IBuildingConstructionTypeService BuildingConstructionType { get; }
         IBuildingPredominateUseService BuildingPredominateUse { get; }
         IPropertyClassificationService PropertyClassification { get; }
-        IPropertyStatusService PropertyStatus { get; }
         IPropertyTypeService PropertyType { get; }
         IProjectService Project { get; }
         IProjectStatusService ProjectStatus { get; }

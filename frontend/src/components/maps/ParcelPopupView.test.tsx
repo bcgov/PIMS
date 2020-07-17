@@ -27,8 +27,6 @@ const mockParcel = (agencyId: number, projectNumber?: string) => {
     pin: 1,
     latitude: 1,
     longitude: 1,
-    statusId: 1,
-    propertyStatus: 'Test Property Status',
     municipality: 'Test Municipality',
     projectNumber: projectNumber,
     classification: 'Test Classification',

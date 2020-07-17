@@ -7,10 +7,6 @@ namespace Pims.Api.Models.Parcel
 
         public string ProjectNumber { get; set; }
 
-        public int StatusId { get; set; }
-
-        public string Status { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

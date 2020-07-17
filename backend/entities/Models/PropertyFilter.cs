@@ -65,12 +65,6 @@ namespace Pims.Dal.Entities.Models
         public int? ClassificationId { get; set; }
 
         /// <summary>
-        /// get/set - Building status Id.
-        /// </summary>
-        /// <value></value>
-        public int? StatusId { get; set; }
-
-        /// <summary>
         /// get/set - The property description.
         /// </summary>
         public string Description { get; set; }
@@ -138,7 +132,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
-        /// <param name="statusId"></param>
         /// <param name="classificationId"></param>
         /// <param name="minEstimatedValue"></param>
         /// <param name="maxEstimatedValue"></param>
@@ -146,10 +139,9 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public PropertyFilter(string address, int? agencyId, int? statusId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+        public PropertyFilter(string address, int? agencyId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
-            this.StatusId = statusId;
             this.ClassificationId = classificationId;
             this.MinEstimatedValue = minEstimatedValue;
             this.MaxEstimatedValue = maxEstimatedValue;
@@ -178,7 +170,6 @@ namespace Pims.Dal.Entities.Models
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
             this.Address = filter.GetStringValue(nameof(this.Address));
-            this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
             this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
@@ -212,7 +203,6 @@ namespace Pims.Dal.Entities.Models
                 || this.MinEstimatedValue.HasValue
                 || this.MaxEstimatedValue.HasValue
                 || this.Agencies?.Any() == true
-                || this.StatusId.HasValue
                 || this.ClassificationId.HasValue;
         }
         #endregion

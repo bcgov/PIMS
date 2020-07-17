@@ -11,8 +11,6 @@ export interface IProperty {
   propertyType: string;
   pid: string;
   pin?: number;
-  statusId: number;
-  status?: string;
   classificationId: number;
   classification: string;
   description: string;
@@ -85,7 +83,6 @@ export interface IPropertyFilter {
   ignorePropertiesInProjects?: boolean;
   inSurplusPropertyProgram?: boolean;
   classificationId?: number;
-  statusId?: number;
   agencies?: number | number[];
   minLandArea?: number;
   maxLandArea?: number;
@@ -315,8 +312,6 @@ export interface IApiProperty {
   projectNumber: string;
   latitude: number;
   longitude: number;
-  statusId: number;
-  propertyStatus?: string;
   classification?: string;
   classificationId: number;
   description: string;

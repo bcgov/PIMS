@@ -2,6 +2,7 @@ using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 namespace Pims.Core.Comparers
@@ -37,14 +38,17 @@ namespace Pims.Core.Comparers
 
             var props = obj.GetType().GetCachedProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
 
-            foreach (var p in props)
+            foreach (var p in props.OrderBy(p => p.Name))
             {
+                var value = p.GetValue(obj);
+
+                if (value == null) continue;
                 if (p.PropertyType.IsValueType || p.PropertyType == typeof(string) || p.PropertyType.IsNullableType())
-                    hash.Add(p.GetValue(obj));
+                    hash.Add(value);
                 else if (p.PropertyType == typeof(byte[]))
                 {
-                    var value = (byte[])p.GetValue(obj);
-                    value.ForEach(v => hash.Add(v));
+                    var data = (byte[])p.GetValue(obj);
+                    data.ForEach(v => hash.Add(v));
                 }
             }
 

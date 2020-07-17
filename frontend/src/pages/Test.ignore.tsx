@@ -13,7 +13,7 @@ const Test = () => {
   const fetch = (accept: 'csv' | 'excel') =>
     dispatch(
       download({
-        url: ENVIRONMENT.apiUrl + '/reports/properties?statusId=1',
+        url: ENVIRONMENT.apiUrl + '/reports/properties?classificationId=1',
         fileName: `properties.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {

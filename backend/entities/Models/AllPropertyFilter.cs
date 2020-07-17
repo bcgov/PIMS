@@ -106,7 +106,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
-        /// <param name="statusId"></param>
         /// <param name="classificationId"></param>
         /// <param name="minEstimatedValue"></param>
         /// <param name="maxEstimatedValue"></param>
@@ -114,8 +113,8 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public AllPropertyFilter(string address, int? agencyId, int? statusId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-            : base(address, agencyId, statusId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
+        public AllPropertyFilter(string address, int? agencyId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+            : base(address, agencyId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
         {
         }
 
@@ -124,7 +123,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
-        /// <param name="statusId"></param>
         /// <param name="classificationId"></param>
         /// <param name="minLandArea"></param>
         /// <param name="maxLandArea"></param>
@@ -134,8 +132,8 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public AllPropertyFilter(string address, int? agencyId, int? statusId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-            : base(address, agencyId, statusId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
+        public AllPropertyFilter(string address, int? agencyId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+            : base(address, agencyId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
         {
             this.MinLandArea = minLandArea;
             this.MaxLandArea = maxLandArea;
@@ -240,7 +238,6 @@ namespace Pims.Dal.Entities.Models
                 SWLongitude = filter.SWLongitude,
 
                 ProjectNumber = filter.ProjectNumber,
-                StatusId = filter.StatusId,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
 
@@ -279,7 +276,6 @@ namespace Pims.Dal.Entities.Models
                 SWLongitude = filter.SWLongitude,
 
                 ProjectNumber = filter.ProjectNumber,
-                StatusId = filter.StatusId,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
 

@@ -8,8 +8,10 @@ export interface ILookupCode {
   id: string;
   isDisabled: boolean;
   isPublic?: boolean;
+  isVisible?: boolean;
   type: string;
   parentId?: number;
+  sortOrder?: number;
 }
 
 export interface IStoreLookupCodeAction {

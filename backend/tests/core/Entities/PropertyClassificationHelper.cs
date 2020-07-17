@@ -13,20 +13,22 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="isVisible"></param>
         /// <returns></returns>
-        public static Entity.PropertyClassification CreatePropertyClassification(int id, string name)
+        public static Entity.PropertyClassification CreatePropertyClassification(int id, string name, bool isVisible = true)
         {
-            return new Entity.PropertyClassification(id, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            return new Entity.PropertyClassification(id, name, isVisible) { RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
         /// Create a new instance of a PropertyClassification.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="isVisible"></param>
         /// <returns></returns>
-        public static Entity.PropertyClassification CreatePropertyClassification(string name)
+        public static Entity.PropertyClassification CreatePropertyClassification(string name, bool isVisible = true)
         {
-            return new Entity.PropertyClassification(1, name) { RowVersion = new byte[] { 12, 13, 14 } };
+            return new Entity.PropertyClassification(1, name, isVisible) { RowVersion = new byte[] { 12, 13, 14 } };
         }
 
         /// <summary>
@@ -40,7 +42,8 @@ namespace Pims.Core.Test
                 new Entity.PropertyClassification(0, "Core Operational") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.PropertyClassification(1, "Core Strategic") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.PropertyClassification(2, "Surplus Active") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.PropertyClassification(3, "Surplus Encumbered") { RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.PropertyClassification(3, "Surplus Encumbered") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.PropertyClassification(4, "Disposed", false) { RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
     }

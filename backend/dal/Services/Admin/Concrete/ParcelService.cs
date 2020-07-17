@@ -66,8 +66,6 @@ namespace Pims.Dal.Services.Admin
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
-            if (filter.StatusId.HasValue)
-                query = query.Where(p => p.StatusId == filter.StatusId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Description))
@@ -138,7 +136,6 @@ namespace Pims.Dal.Services.Admin
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Parcels
-                .Include(p => p.Status)
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
@@ -168,7 +165,6 @@ namespace Pims.Dal.Services.Admin
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             return this.Context.Parcels
-                .Include(p => p.Status)
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
@@ -199,16 +195,12 @@ namespace Pims.Dal.Services.Admin
 
             if (entity.Agency != null)
                 this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-            if (entity.Status != null)
-                this.Context.Entry(entity.Status).State = EntityState.Unchanged;
             if (entity.Classification != null)
                 this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
 
             entity.Buildings.ForEach(b =>
             {
                 this.Context.Buildings.Add(b);
-                if (b.Status != null)
-                    this.Context.Entry(b.Status).State = EntityState.Unchanged;
                 if (b.Classification != null)
                     this.Context.Entry(b.Classification).State = EntityState.Unchanged;
                 if (b.BuildingConstructionType != null)
@@ -268,16 +260,12 @@ namespace Pims.Dal.Services.Admin
 
                 if (entity.AgencyId != 0)
                     this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-                if (entity.Status != null)
-                    this.Context.Entry(entity.Status).State = EntityState.Unchanged;
                 if (entity.Classification != null)
                     this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
 
                 entity.Buildings.ForEach(b =>
                 {
                     this.Context.Buildings.Add(b);
-                    if (b.Status != null)
-                        this.Context.Entry(b.Status).State = EntityState.Unchanged;
                     if (b.Classification != null)
                         this.Context.Entry(b.Classification).State = EntityState.Unchanged;
                     if (b.BuildingConstructionType != null)

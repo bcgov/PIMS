@@ -45,8 +45,6 @@ namespace Pims.Dal.Configuration.Views
                         {
                             Id = b.Id,
                             PropertyTypeId = PropertyTypes.Building,
-                            StatusId = b.StatusId,
-                            Status = b.Status.Name,
                             ClassificationId = b.ClassificationId,
                             Classification = b.Classification.Name,
                             Name = b.Name,
@@ -100,8 +98,6 @@ namespace Pims.Dal.Configuration.Views
                             {
                                 Id = p.Id,
                                 PropertyTypeId = PropertyTypes.Land,
-                                StatusId = p.StatusId,
-                                Status = p.Status.Name,
                                 ClassificationId = p.ClassificationId,
                                 Classification = p.Classification.Name,
                                 Name = p.Name,

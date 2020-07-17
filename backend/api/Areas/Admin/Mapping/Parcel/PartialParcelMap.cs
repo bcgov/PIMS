@@ -15,7 +15,6 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.StatusId, src => src.StatusId)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Latitude, src => src.Latitude)
                 .Map(dest => dest.Longitude, src => src.Longitude)

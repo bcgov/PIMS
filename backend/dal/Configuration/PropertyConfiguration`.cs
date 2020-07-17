@@ -21,7 +21,6 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.IsSensitive).HasDefaultValue(false);
             builder.Property(m => m.IsVisibleToOtherAgencies).HasDefaultValue(false);
 
-            builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Classification).WithMany().HasForeignKey(m => m.ClassificationId).IsRequired().OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Address).WithMany().HasForeignKey(m => m.AddressId).OnDelete(DeleteBehavior.ClientSetNull);
 

@@ -67,10 +67,10 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, StatusId = 1 }, new[] { 1, 3 }, 10, 10 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, StatusId = 1 }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 3 }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 3 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, new[] { 1, 3 }, 11, 5 },
-                new object[] { new AllPropertyFilter() { Quantity = 2, StatusId = 1 }, new[] { 1, 3 }, 11, 2 },
+                new object[] { new AllPropertyFilter() { Quantity = 2, ClassificationId = 3 }, new[] { 1, 3 }, 11, 2 },
                 new object[] { new AllPropertyFilter(), new[] { 3 }, 7, 7 },
             };
         #endregion
@@ -244,7 +244,10 @@ namespace Pims.Dal.Test.Services
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             parcels.Next(7).LandArea = 5500.55f;
-            init.ChangeStatus(parcels.Next(8), 1);
+
+            var classification = init.PropertyClassifications.Find(3);
+            parcels.Next(8).Classification = classification;
+            parcels.Next(8).ClassificationId = classification.Id;
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
             buildings.Next(0).Latitude = 50;
@@ -264,10 +267,10 @@ namespace Pims.Dal.Test.Services
             buildings.AddRange(init.CreateBuildings(parcels.Next(4), 61, 10));
 
             var buildings01 = init.CreateBuildings(parcels.Next(7), 100, 10);
-            var status01 = init.PropertyStatus.First(s => s.Id == 1);
             buildings01.ForEach(b =>
             {
-                b.ChangeStatus(status01);
+                b.Classification = classification;
+                b.ClassificationId = classification.Id;
             });
             buildings.AddRange(buildings01);
 
