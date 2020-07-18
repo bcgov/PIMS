@@ -1,5 +1,5 @@
 import './EnhancedReferralCompleteForm.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import styled from 'styled-components';
@@ -36,6 +36,18 @@ const ExemptionEnhancedReferralCompleteForm = ({
   const formikProps = useFormikContext<IProject>();
   const [proceedToSpl, setProceedToSpl] = useState(false);
 
+  const {
+    setFieldValue,
+    values: { clearanceNotificationSentOn },
+  } = formikProps;
+
+  // clear out GRE date when clearance notification date is empty
+  useEffect(() => {
+    if (!clearanceNotificationSentOn) {
+      setFieldValue('transferredWithinGreOn', '');
+    }
+  }, [clearanceNotificationSentOn, setFieldValue]);
+
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <Form.Row>
@@ -62,12 +74,16 @@ const ExemptionEnhancedReferralCompleteForm = ({
         <FastDatePicker
           outerClassName="col-md-2"
           formikProps={formikProps}
-          disabled={isReadOnly}
+          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
           field="transferredWithinGreOn"
         />
         <div className="col-md-6">
           <Button
-            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+            disabled={
+              isReadOnly ||
+              !formikProps.values.clearanceNotificationSentOn ||
+              !formikProps.values.transferredWithinGreOn
+            }
             onClick={onClickGreTransferred}
           >
             Update Property Information
@@ -111,7 +127,10 @@ const ExemptionEnhancedReferralCompleteForm = ({
       <h3>Option 3: Add to Enhanced Referral Process</h3>
       <Form.Row>
         <div className="justify-content-center add-space-below">
-          <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
+          <Button
+            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+            onClick={() => onClickAddToErp()}
+          >
             Add to Enhanced Referral Process
           </Button>
         </div>
