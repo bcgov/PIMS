@@ -41,7 +41,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
             var roles = permission.Select(r => r.GetName()).ToArray();
-            return user.Claims.All(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
+            return user.Claims.Where(c => c.Type == ClaimTypes.Role).All(c => roles.Contains(c.Value));
         }
 
         /// <summary>
@@ -95,6 +95,33 @@ namespace Pims.Dal.Helpers.Extensions
         public static ClaimsPrincipal ThrowIfNotAuthorized(this ClaimsPrincipal user, params Permissions[] permission)
         {
             if (user == null || !user.HasPermission(permission)) throw new NotAuthorizedException();
+            return user;
+        }
+
+        /// <summary>
+        /// If the user does not have the all specified 'permission' throw a NotAuthorizedException.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <param name="message"></param>
+        /// <exception type="NotAuthorizedException">User does not have the specified 'permission'.</exception>
+        /// <returns></returns>
+        public static ClaimsPrincipal ThrowIfNotAllAuthorized(this ClaimsPrincipal user, Permissions permission, string message = null)
+        {
+            if (user == null || !user.HasPermissions(permission)) throw new NotAuthorizedException(message);
+            return user;
+        }
+
+        /// <summary>
+        /// If the user does not have all of the specified 'permission' throw a NotAuthorizedException.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permission"></param>
+        /// <exception type="NotAuthorizedException">User does not have the specified 'role'.</exception>
+        /// <returns></returns>
+        public static ClaimsPrincipal ThrowIfNotAllAuthorized(this ClaimsPrincipal user, params Permissions[] permission)
+        {
+            if (user == null || !user.HasPermissions(permission)) throw new NotAuthorizedException();
             return user;
         }
 

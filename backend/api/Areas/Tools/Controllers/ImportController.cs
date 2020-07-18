@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Policies;
+using Pims.Dal;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
@@ -25,6 +26,7 @@ namespace Pims.Api.Areas.Tools.Controllers
     {
         #region Variables
         private readonly ILogger<ImportController> _logger;
+        private readonly IPimsService _pimsService;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         #endregion
@@ -34,11 +36,13 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// Creates a new instance of a ImportController class.
         /// </summary>
         /// <param name="logger"></param>
+        /// <param name="pimsService"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public ImportController(ILogger<ImportController> logger, IPimsAdminService pimsAdminService, IMapper mapper)
+        public ImportController(ILogger<ImportController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper)
         {
             _logger = logger;
+            _pimsService = pimsService;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
         }
@@ -89,7 +93,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 projects in a single request.");
 
-            var helper = new ImportProjectsHelper(_pimsAdminService, _logger);
+            var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _logger);
             var entities = helper.AddUpdateProjects(models, stopOnError, defaults?.Split(";"));
             var parcels = _mapper.Map<Model.ProjectModel[]>(entities);
 

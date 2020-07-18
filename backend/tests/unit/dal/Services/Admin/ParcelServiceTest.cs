@@ -260,7 +260,7 @@ namespace Pims.Dal.Test.Services.Admin
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.PropertyDelete, Permissions.AdminProperties);
             var find = EntityHelper.CreateParcel(1, 1, 1, 1);
             var parcel = EntityHelper.CreateParcel(2, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
@@ -282,29 +282,7 @@ namespace Pims.Dal.Test.Services.Admin
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
-
-            var service = helper.CreateService<ParcelService>(user);
-            var context = helper.GetService<PimsContext>();
-
-            // Act
-            service.Remove(parcel);
-
-            // Assert
-            Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
-        }
-
-        /// <summary>
-        /// Parcel found.
-        /// </summary>
-        [Fact]
-        public void Remove_AgencyAdmin()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.AgencyAdmin).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.PropertyDelete, Permissions.AdminProperties).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -326,7 +304,7 @@ namespace Pims.Dal.Test.Services.Admin
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.SensitiveView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin, Permissions.PropertyDelete, Permissions.AdminProperties).AddAgency(1);
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);

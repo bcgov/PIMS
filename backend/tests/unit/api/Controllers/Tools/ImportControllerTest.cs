@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Pims.Api.Areas.Tools.Controllers;
 using Pims.Core.Test;
+using Pims.Dal;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -132,9 +133,12 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var project = new Entity.Project();
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -187,6 +191,14 @@ namespace Pims.Api.Test.Controllers.Tools
             Assert.NotNull(result);
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ProjectModel>>(actionResult.Value);
+            service.Verify(m => m.Project.Get(projects.First().ProjectNumber), Times.Once());
+            service.Verify(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()), Times.Once());
+            service.Verify(m => m.Workflow.GetAll(), Times.Once());
+            service.Verify(m => m.ProjectStatus.GetAll(), Times.Once());
+            service.Verify(m => m.ProjectRisk.GetAll(), Times.Once());
+            service.Verify(m => m.Agency.GetAll(), Times.Once());
+            service.Verify(m => m.TierLevel.GetAll(), Times.Once());
+            pimsService.Verify(m => m.Task.GetForWorkflow(It.IsAny<string>()), Times.Exactly(4));
             data.Should().HaveCount(1);
             var expectedResult = projects.First();
             var first = data.First();
@@ -220,6 +232,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
             project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -227,9 +240,12 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var project = new Entity.Project();
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -313,6 +329,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().BeEmpty();
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -320,12 +337,15 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
             project.Responses.Add(new ProjectAgencyResponse(project, agency, NotificationResponses.Ignore, DateTime.UtcNow.AddDays(-1)));
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -409,6 +429,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().BeEmpty();
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -416,11 +437,14 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -501,6 +525,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -508,12 +533,15 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
             project.Notes.Add(new ProjectNote(project, NoteTypes.Financial, "some note"));
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -594,6 +622,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -601,11 +630,14 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -683,6 +715,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.Should().BeEmpty();
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
+            project.Tasks.Should().BeEmpty();
         }
         #endregion
 
@@ -692,9 +725,12 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var project = new Entity.Project();
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new[] { new Entity.Task("test") });
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -775,6 +811,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
             project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
+            project.Tasks.Should().HaveCount(1);
         }
         #endregion
 
@@ -1268,11 +1305,14 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -1323,6 +1363,7 @@ namespace Pims.Api.Test.Controllers.Tools
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ProjectModel>>(actionResult.Value);
             data.First().TierLevelId.Should().Be(1);
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -1330,11 +1371,14 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -1385,6 +1429,7 @@ namespace Pims.Api.Test.Controllers.Tools
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ProjectModel>>(actionResult.Value);
             data.First().TierLevelId.Should().Be(2);
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -1392,11 +1437,14 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -1447,6 +1495,7 @@ namespace Pims.Api.Test.Controllers.Tools
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ProjectModel>>(actionResult.Value);
             data.First().TierLevelId.Should().Be(3);
+            project.Tasks.Should().BeEmpty();
         }
 
         [Fact]
@@ -1454,13 +1503,16 @@ namespace Pims.Api.Test.Controllers.Tools
         {
             // Arrange
             var helper = new TestHelper();
-            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
             project.AddProperty(EntityHelper.CreateParcel(1));
             project.AddProperty(EntityHelper.CreateParcel(2));
+
+            var pimsService = helper.GetService<Mock<IPimsService>>();
+            pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
@@ -1511,6 +1563,7 @@ namespace Pims.Api.Test.Controllers.Tools
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ProjectModel>>(actionResult.Value);
             data.First().TierLevelId.Should().Be(4);
+            project.Tasks.Should().BeEmpty();
         }
         #endregion
         #endregion

@@ -62,7 +62,7 @@ namespace Pims.Dal.Entities
 
             this.TaskId = task?.Id ??
                 throw new ArgumentNullException(nameof(task));
-            this.Task = Task;
+            this.Task = task;
         }
         #endregion
     }
