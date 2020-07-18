@@ -191,6 +191,7 @@ namespace Pims.Dal.Services.Admin
         public override Parcel Add(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
             if (entity.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == entity.AgencyId))
@@ -341,7 +342,7 @@ namespace Pims.Dal.Services.Admin
         public override Parcel Update(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            entity.ThrowIfNotAllowedToEdit(nameof(entity), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 
@@ -361,7 +362,7 @@ namespace Pims.Dal.Services.Admin
         public override void Remove(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
-            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+            entity.ThrowIfNotAllowedToEdit(nameof(entity), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var parcel = this.Context.Parcels.Find(entity.Id) ?? throw new KeyNotFoundException();
 

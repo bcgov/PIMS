@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
+using Pims.Dal;
+using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Services.Admin;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,8 @@ namespace Pims.Api.Areas.Tools.Helpers
     public class ImportProjectsHelper
     {
         #region Variables
-        private readonly IPimsAdminService _service;
+        private readonly IPimsService _service;
+        private readonly IPimsAdminService _adminService;
         private readonly ILogger _logger;
         private readonly IList<Entity.Workflow> _workflows;
         private readonly IList<Entity.ProjectStatus> _status;
@@ -29,17 +32,19 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// Creates a new instance of a ImportProjectsHelper, initializes with specified arguments.
         /// </summary>
         /// <param name="service"></param>
+        /// <param name="adminService"></param>
         /// <param name="logger"></param>
-        public ImportProjectsHelper(IPimsAdminService service, ILogger logger)
+        public ImportProjectsHelper(IPimsService service, IPimsAdminService adminService, ILogger logger)
         {
             _service = service;
+            _adminService = adminService;
             _logger = logger;
 
-            _workflows = _service.Workflow.GetAll().ToArray();
-            _status = _service.ProjectStatus.GetAll().ToArray();
-            _risks = _service.ProjectRisk.GetAll().ToArray();
-            _agencies = _service.Agency.GetAll().ToArray();
-            _tiers = _service.TierLevel.GetAll().ToArray();
+            _workflows = adminService.Workflow.GetAll().ToArray();
+            _status = adminService.ProjectStatus.GetAll().ToArray();
+            _risks = adminService.ProjectRisk.GetAll().ToArray();
+            _agencies = adminService.Agency.GetAll().ToArray();
+            _tiers = adminService.TierLevel.GetAll().ToArray();
         }
         #endregion
 
@@ -53,9 +58,9 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         public IEnumerable<Entity.Project> AddUpdateProjects(IEnumerable<Model.ImportProjectModel> models, bool stopOnError = true, string[] defaults = null)
         {
-            var projects = models.Select(p => Merge(_service.Project.Get(p.ProjectNumber), p, stopOnError, defaults)).NotNull();
+            var projects = models.Select(p => Merge(_adminService.Project.Get(p.ProjectNumber), p, stopOnError, defaults)).NotNull();
 
-            return _service.Project.Add(projects).ToArray();
+            return _adminService.Project.Add(projects).ToArray();
         }
         #endregion
 
@@ -160,6 +165,17 @@ namespace Pims.Api.Areas.Tools.Helpers
                     {
                         financialNote.Note = model.FinancialNote;
                     }
+                }
+
+                // Add tasks if they haven't been added already.
+                if (!project.Tasks.Any())
+                {
+                    // Assumption we'll need to add all tasks from Submit to SPL.
+                    var tasks = _service.Task.GetForWorkflow("SUBMIT-DISPOSAL");
+                    tasks = tasks.Concat(_service.Task.GetForWorkflow("ASSESS-DISPOSAL"));
+                    tasks = tasks.Concat(_service.Task.GetForWorkflow("ERP"));
+                    tasks = tasks.Concat(_service.Task.GetForWorkflow("SPL"));
+                    project.AddTask(tasks.DistinctBy(t => t.Id).ToArray());
                 }
 
                 _logger.LogDebug($"Parsed project '{project.ProjectNumber}' - '{project.Status.Code}'", project);

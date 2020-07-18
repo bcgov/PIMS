@@ -202,23 +202,12 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public override Building Update(Building building)
         {
-            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
-            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var existingBuilding = this.Context.Buildings
                 .Include(b => b.Classification)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
-
-            var userAgencies = this.User.GetAgencies();
-            var originalAgencyId = (int)this.Context.Entry(existingBuilding).OriginalValues[nameof(Building.AgencyId)];
-            if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
-
-            // Do not allow switching agencies through this method.
-            if (originalAgencyId != building.AgencyId) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
-
-            // Do not allow making property visible through this service.
-            if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
             return base.Update(existingBuilding);
