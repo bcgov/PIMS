@@ -47,8 +47,8 @@ export interface IParcelDetailParams {
   id: number;
 }
 
-export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/parcels/${params.id}`;
-export const PARCEL_ROOT = `/parcels`;
+export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/properties/parcels/${params.id}`;
+export const PARCEL_ROOT = `/properties/parcels`;
 
 export interface IUserDetailParams {
   id: string;
@@ -59,7 +59,8 @@ export const KEYCLOAK_USER_UPDATE = (params: IUserDetailParams) => `/keycloak/us
 export interface IBuildingDetailParams {
   id: number;
 }
-export const BUILDING_DETAIL = (params: IBuildingDetailParams) => `/buildings/${params.id}`;
+export const BUILDING_DETAIL = (params: IBuildingDetailParams) =>
+  `/properties/buildings/${params.id}`;
 
 // Lookup Codes
 export const LOOKUP_CODE = () => `/lookup`;

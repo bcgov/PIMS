@@ -25,7 +25,7 @@ const getPropertyReportUrl = (filter: IPropertyFilter) =>
 const initialQuery: IPropertyFilter = {
   page: 1,
   quantity: 10,
-  agencies: [1, 2, 3, 4, 5, 6], // TODO: connect this to current user agency
+  agencies: [],
   propertyType: '0',
 };
 
@@ -38,7 +38,6 @@ const getServerQuery = (state: {
   const {
     pageIndex,
     pageSize,
-    agencyIds,
     filter: {
       address,
       municipality,
@@ -52,8 +51,7 @@ const getServerQuery = (state: {
     },
   } = state;
 
-  // show properties for all agencies if none selected in the agency filter
-  let parsedAgencies = [...agencyIds];
+  let parsedAgencies: number[] = [];
   if (agencies !== null && agencies !== undefined && agencies !== '') {
     parsedAgencies = [parseInt(agencies, 10)];
   }

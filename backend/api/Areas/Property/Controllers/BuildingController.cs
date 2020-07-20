@@ -15,8 +15,9 @@ namespace Pims.Api.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/buildings")]
-    [Route("buildings")]
+    [Area("properties")]
+    [Route("v{version:apiVersion}/[area]/buildings")]
+    [Route("[area]/buildings")]
     public class BuildingController : ControllerBase
     {
         #region Variables
