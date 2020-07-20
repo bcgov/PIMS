@@ -1,13 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Pims.Core.Exceptions;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
-using Pims.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,23 +97,23 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Updates the status for the notification in the queue specified for the 'id', with the status of the message in CHES.
+        /// Update the speicified 'notification' in the data source.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task<NotificationQueue> UpdateStatusAsync(int id)
+        /// <param name="notification"></param>
+        public void Update(NotificationQueue notification)
         {
-            var notification = this.Context.NotificationQueue.Find(id) ?? throw new KeyNotFoundException();
+            this.Context.Update(notification);
+            this.Context.CommitTransaction();
+        }
 
-            if (!notification.Status.In(NotificationStatus.Completed, NotificationStatus.Cancelled) && notification.ChesMessageId.HasValue)
-            {
-                var response = await _notifyService.GetStatusAsync(notification.ChesMessageId.Value);
-                notification.Status = (NotificationStatus)Enum.Parse(typeof(NotificationStatus), response.Status, true);
-
-                this.Context.CommitTransaction();
-            }
-
-            return notification;
+        /// <summary>
+        /// Update the speicified 'notifications' in the data source.
+        /// </summary>
+        /// <param name="notifications"></param>
+        public void Update(IEnumerable<NotificationQueue> notifications)
+        {
+            this.Context.Update(notifications);
+            this.Context.CommitTransaction();
         }
 
         /// <summary>
@@ -125,54 +123,11 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public async System.Threading.Tasks.Task<NotificationQueue> CancelNotificationAsync(int id)
         {
-            var notification = this.Context.NotificationQueue.Find(id) ?? throw new KeyNotFoundException();
-
-            if (notification.Status.In(NotificationStatus.Accepted, NotificationStatus.Pending) && notification.ChesMessageId.HasValue)
-            {
-                try
-                {
-                    var response = await _notifyService.CancelNotificationAsync(notification.ChesMessageId.Value);
-                    notification.Status = (NotificationStatus)Enum.Parse(typeof(NotificationStatus), response.Status, true);
-                }
-                catch (HttpClientRequestException ex)
-                {
-                    // Ignore 409 - as these have already been cancelled.
-                    if (ex.StatusCode != System.Net.HttpStatusCode.Conflict)
-                        throw;
-                }
-
-                this.Context.CommitTransaction();
-            }
+            var notification = Get(id);
+            await _notifyService.CancelAsync(notification);
+            Update(notification);
 
             return notification;
-        }
-
-        /// <summary>
-        /// Cancel the the specified 'notifications'.
-        /// </summary>
-        /// <param name="notifications"></param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task CancelNotificationsAsync(IEnumerable<NotificationQueue> notifications)
-        {
-            foreach (var notification in notifications)
-            {
-                if (notification.Status.In(NotificationStatus.Accepted, NotificationStatus.Pending) && notification.ChesMessageId.HasValue)
-                {
-                    try
-                    {
-                        var response = await _notifyService.CancelNotificationAsync(notification.ChesMessageId.Value);
-                        notification.Status = (NotificationStatus)Enum.Parse(typeof(NotificationStatus), response.Status, true);
-                    }
-                    catch (HttpClientRequestException ex)
-                    {
-                        // Ignore 409 - as these have already been cancelled.
-                        if (ex.StatusCode != System.Net.HttpStatusCode.Conflict)
-                            throw;
-                    }
-                }
-            }
-
-            this.Context.CommitTransaction();
         }
 
         #region Project Notifications
@@ -194,6 +149,23 @@ namespace Pims.Dal.Services
                 .Where(n => !n.Template.IsDisabled
                     && (n.FromStatusId == fromStatusId || (includeOnlyTo && n.FromStatusId == null))
                     && n.ToStatusId == toStatusId).ToArray();
+
+            var parcelIds = project.Properties.Where(p => p.PropertyType == PropertyTypes.Land).Select(p => p.ParcelId).ToArray();
+            this.Context.Parcels
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Classification)
+                .Where(p => parcelIds.Contains(p.Id)).Load();
+
+            var buildingIds = project.Properties.Where(p => p.PropertyType == PropertyTypes.Building).Select(p => p.BuildingId).ToArray();
+            this.Context.Buildings
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Classification)
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.BuildingPredominateUse)
+                .Where(p => buildingIds.Contains(p.Id)).Load();
 
             var queue = new List<NotificationQueue>();
             foreach (var o in options)
@@ -290,7 +262,7 @@ namespace Pims.Dal.Services
                 }
             }
 
-            return notifications;
+            return notifications.NotNull();
         }
 
         /// <summary>
@@ -310,6 +282,34 @@ namespace Pims.Dal.Services
             var env = new EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
             return GenerateNotification(options, new ProjectNotificationModel(Guid.NewGuid(), env, project, agency), sendOn);
         }
+
+        /// <summary>
+        /// Generate a notification for the specified 'project' and 'templateName'.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="templateName"></param>
+        /// <returns></returns>
+        public NotificationQueue GenerateNotification(Project project, string templateName)
+        {
+            var template = this.Context.NotificationTemplates.FirstOrDefault(n => n.Name == templateName) ?? throw new InvalidOperationException($"Notification template '{templateName}' does not exist.");
+            return GenerateNotification(project, template);
+        }
+
+        /// <summary>
+        /// Generate a notification for the specified 'project' and 'template'.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public NotificationQueue GenerateNotification(Project project, NotificationTemplate template)
+        {
+            if (project == null) throw new ArgumentNullException(nameof(project));
+            if (template == null) throw new ArgumentNullException(nameof(template));
+
+            var env = new EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
+            var model = new ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency);
+            return GenerateNotification(project.Agency.Email, template, model);
+        }
         #endregion
 
         /// <summary>
@@ -328,33 +328,13 @@ namespace Pims.Dal.Services
                 if (this.Context.Entry(notification).State == EntityState.Detached) this.Context.NotificationQueue.Add(notification);
                 try
                 {
-                    // Send notifications to CHES.
-                    var messages = await _notifyService.SendNotificationAsync(new Notifications.Models.Email()
-                    {
-                        To = notification.To.Split(";"),
-                        Cc = notification.Cc?.Split(";"),
-                        Bcc = notification.Bcc?.Split(";"),
-                        Encoding = (Notifications.Models.EmailEncodings)Enum.Parse(typeof(Notifications.Models.EmailEncodings), notification.Encoding.ToString()),
-                        BodyType = (Notifications.Models.EmailBodyTypes)Enum.Parse(typeof(Notifications.Models.EmailBodyTypes), notification.BodyType.ToString()),
-                        Priority = (Notifications.Models.EmailPriorities)Enum.Parse(typeof(Notifications.Models.EmailPriorities), notification.Priority.ToString()),
-                        Subject = notification.Subject,
-                        Body = notification.Body,
-                        SendOn = notification.SendOn,
-                        Tag = notification.Tag,
-                    });
-                    notification.ChesTransactionId = messages.TransactionId;
-                    notification.ChesMessageId = messages.Messages.First().MessageId;
-                }
-                catch (HttpClientRequestException ex)
-                {
-                    notification.Status = NotificationStatus.Failed;
-                    var data = await ex.Response.Content.ReadAsStringAsync();
-                    this.Logger.LogError(ex, $"Failed to send email to CHES - Template:{notification.TemplateId}{Environment.NewLine}CHES StatusCode:{ex.StatusCode}{Environment.NewLine}{ex.Message}{Environment.NewLine}{data}");
+                    await _notifyService.SendAsync(notification);
                 }
                 catch (Exception ex)
                 {
-                    notification.Status = NotificationStatus.Failed;
-                    this.Logger.LogError(ex, $"Failed to send email to CHES - notification:{notification.Id}, template:{notification.TemplateId}{Environment.NewLine}{ex.Message}");
+                    this.Logger.LogError(ex, $"Failed to send notification '{notification.Id}'.");
+                    if (_options.Notifications.ThrowExceptions)
+                        throw;
                 }
             }
 
@@ -376,14 +356,7 @@ namespace Pims.Dal.Services
             if (template == null) throw new ArgumentNullException(nameof(template));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var email = new Notifications.Models.EmailTemplate()
-            {
-                Subject = template.Subject,
-                BodyType = (Notifications.Models.EmailBodyTypes)Enum.Parse(typeof(Notifications.Models.EmailBodyTypes), template.BodyType.ToString()),
-                Body = template.Body,
-            };
-            _notifyService.Build($"{template.Id}-{template.RowVersion.ConvertRowVersion()}", email, model);
-            return new NotificationQueue(template, to, email.Subject, email.Body)
+            var notification = new NotificationQueue(template, to, template.Subject, template.Body)
             {
                 Key = Guid.NewGuid(),
                 Status = NotificationStatus.Pending,
@@ -392,6 +365,19 @@ namespace Pims.Dal.Services
                 Cc = template.Cc,
                 Bcc = template.Bcc
             };
+
+            try
+            {
+                _notifyService.Generate(notification, model);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, $"Failed to generate notification for template '{template.Id}'.");
+                if (_options.Notifications.ThrowExceptions)
+                    throw;
+                return null;
+            }
+            return notification;
         }
         #endregion
 
@@ -411,13 +397,6 @@ namespace Pims.Dal.Services
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (options.Template == null) throw new ArgumentNullException(nameof(options), "Argument property 'Template' is cannot be null.");
 
-            var template = new Notifications.Models.EmailTemplate()
-            {
-                Subject = options.Template.Subject,
-                BodyType = (Notifications.Models.EmailBodyTypes)Enum.Parse(typeof(Notifications.Models.EmailBodyTypes), options.Template.BodyType.ToString()),
-                Body = options.Template.Body,
-            };
-            _notifyService.Build($"{options.TemplateId}-{options.Template.RowVersion.ConvertRowVersion()}", template, model);
             var now = DateTime.UtcNow;
             sendOn ??= options.Delay switch
             {
@@ -427,7 +406,7 @@ namespace Pims.Dal.Services
                 NotificationDelays.SetDate => sendOn,
                 _ => now
             };
-            return new NotificationQueue(options.Template, model.Project, model.ToAgency, template.Subject, template.Body)
+            var notification = new NotificationQueue(options.Template, model.Project, model.ToAgency, options.Template.Subject, options.Template.Body)
             {
                 Key = model.NotificationKey,
                 Status = NotificationStatus.Pending,
@@ -437,6 +416,19 @@ namespace Pims.Dal.Services
                 Cc = options.Template.Cc,
                 Bcc = options.Template.Bcc
             };
+
+            try
+            {
+                _notifyService.Generate(notification, model);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, $"Failed to generate notification for template '{options.TemplateId}'.");
+                if (_options.Notifications.ThrowExceptions)
+                    throw;
+                return null;
+            }
+            return notification;
         }
         #endregion
     }

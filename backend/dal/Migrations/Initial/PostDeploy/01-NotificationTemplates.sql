@@ -996,6 +996,25 @@ INSERT INTO dbo.[NotificationTemplates] (
 <html><head><title>@Model.Environment.Title</title></head>
 <body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>'
     , 'Access Request'
+), (
+    16
+    , 'Project Shared Note Changed'
+    , 'The shared note has been updated and the owning agency should be notified.'
+    , 0
+    , ''
+    , ''
+    , ''
+    , 'Default'
+    , 'Utf8'
+    , 'Html'
+    , 'High'
+    , 'PIMS - Project Note Updated - @Model.Project.ProjectNumber'
+    , '
+@using System.Linq
+@using Pims.Dal.Entities
+<html><head><title>@Model.Environment.Title</title></head>
+<body><p>Dear @Model.Project.Manager,</p><p>Your project @Model.Project.ProjectNumber has been updated with the following note;</p><p>@Model.Project.PublicNote</p></body></html>'
+    , 'SPP'
 )
 
 SET IDENTITY_INSERT dbo.[NotificationTemplates] OFF

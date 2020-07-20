@@ -10,9 +10,11 @@ using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
+using Pims.Notifications;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Threading.Tasks;
+using Entity = Pims.Dal.Entities;
 
 namespace Pims.Api.Areas.Notification.Controllers
 {
@@ -29,6 +31,7 @@ namespace Pims.Api.Areas.Notification.Controllers
     {
         #region Variables
         private readonly IPimsService _pimsService;
+        private readonly INotificationService _notifyService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -37,10 +40,12 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// Creates a new instance of a QueueController class, initializes it with the specified arguments.
         /// </summary>
         /// <param name="pimsService"></param>
+        /// <param name="notifyService"></param>
         /// <param name="mapper"></param>
-        public QueueController(IPimsService pimsService, IMapper mapper)
+        public QueueController(IPimsService pimsService, INotificationService notifyService, IMapper mapper)
         {
             _pimsService = pimsService;
+            _notifyService = notifyService;
             _mapper = mapper;
         }
         #endregion
@@ -113,7 +118,11 @@ namespace Pims.Api.Areas.Notification.Controllers
         [SwaggerOperation(Tags = new[] { "notification" })]
         public async Task<IActionResult> UpdateNotificationStatusAsync(int id)
         {
-            var notification = await _pimsService.NotificationQueue.UpdateStatusAsync(id);
+            var notification = _pimsService.NotificationQueue.Get(id);
+            if (!notification.ChesMessageId.HasValue) throw new InvalidOperationException("Notification does not exist in CHES.");
+            var response = await _notifyService.GetStatusAsync(notification.ChesMessageId.Value);
+            notification.Status = (Entity.NotificationStatus)Enum.Parse(typeof(Entity.NotificationStatus), response.Status, true);
+            _pimsService.NotificationQueue.Update(notification);
             return new JsonResult(_mapper.Map<NotificationQueueModel>(notification));
         }
 

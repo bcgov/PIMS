@@ -236,7 +236,11 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var notification = EntityHelper.CreateNotificationQueue(1, template);
-            service.Setup(m => m.NotificationQueue.UpdateStatusAsync(It.IsAny<int>())).ReturnsAsync(notification);
+            notification.ChesMessageId = Guid.NewGuid();
+            service.Setup(m => m.NotificationQueue.Get(It.IsAny<int>())).Returns(notification);
+            service.Setup(m => m.NotificationQueue.Update(It.IsAny<Entity.NotificationQueue>()));
+            var notifyService = helper.GetService<Mock<Pims.Notifications.INotificationService>>();
+            notifyService.Setup(m => m.GetStatusAsync(It.IsAny<Guid>())).ReturnsAsync(new Pims.Notifications.Models.StatusResponse() { Status = "Completed" });
 
             // Act
             var result = await controller.UpdateNotificationStatusAsync(notification.Id);
@@ -246,7 +250,9 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.NotificationQueueModel>(actionResult.Value);
             Assert.Null(actionResult.StatusCode);
             Assert.Equal(mapper.Map<Model.NotificationQueueModel>(notification), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.NotificationQueue.UpdateStatusAsync(notification.Id), Times.Once());
+            service.Verify(m => m.NotificationQueue.Get(notification.Id), Times.Once());
+            service.Verify(m => m.NotificationQueue.Update(notification), Times.Once());
+            notifyService.Verify(m => m.GetStatusAsync(It.IsAny<Guid>()), Times.Once());
         }
 
         [Fact]
@@ -260,8 +266,11 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var notification = EntityHelper.CreateNotificationQueue(1, template);
-
-            service.Setup(m => m.NotificationQueue.UpdateStatusAsync(It.IsAny<int>())).ReturnsAsync(notification);
+            notification.ChesMessageId = Guid.NewGuid();
+            service.Setup(m => m.NotificationQueue.Get(It.IsAny<int>())).Returns(notification);
+            service.Setup(m => m.NotificationQueue.Update(It.IsAny<Entity.NotificationQueue>()));
+            var notifyService = helper.GetService<Mock<Pims.Notifications.INotificationService>>();
+            notifyService.Setup(m => m.GetStatusAsync(It.IsAny<Guid>())).ReturnsAsync(new Pims.Notifications.Models.StatusResponse() { Status = "Completed" });
 
             // Act
             var result = await controller.UpdateNotificationStatusAsync(notification.Id);

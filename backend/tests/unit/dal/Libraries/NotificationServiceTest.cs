@@ -4,6 +4,7 @@ using Pims.Ches;
 using Pims.Ches.Models;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
+using Pims.Dal.Entities;
 using Pims.Notifications;
 using Pims.Notifications.Models;
 using System;
@@ -105,7 +106,7 @@ namespace Pims.Dal.Test.Libraries
             ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
-            var result = await service.SendNotificationAsync("key", email, model);
+            var result = await service.SendAsync("key", email, model);
 
             // Assert
             Assert.NotNull(result);
@@ -136,7 +137,7 @@ namespace Pims.Dal.Test.Libraries
 
             // Act
             // Assert
-            await Assert.ThrowsAsync(exceptionType, async () => await service.SendNotificationAsync(key, email, model));
+            await Assert.ThrowsAsync(exceptionType, async () => await service.SendAsync(key, email, model));
         }
 
         [Fact]
@@ -166,7 +167,7 @@ namespace Pims.Dal.Test.Libraries
             ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
-            var result = await service.SendNotificationAsync(email);
+            var result = await service.SendAsync(email);
 
             // Assert
             Assert.NotNull(result);
@@ -194,7 +195,7 @@ namespace Pims.Dal.Test.Libraries
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SendNotificationAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SendAsync((NotificationQueue)null));
         }
         #endregion
 
@@ -227,7 +228,7 @@ namespace Pims.Dal.Test.Libraries
             ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmailMerge>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
-            var result = await service.SendNotificationsAsync(emails);
+            var result = await service.SendAsync(emails);
 
             // Assert
             Assert.NotNull(result);
@@ -257,7 +258,7 @@ namespace Pims.Dal.Test.Libraries
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SendNotificationsAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SendAsync((NotificationQueue)null));
         }
         #endregion
 
@@ -298,7 +299,7 @@ namespace Pims.Dal.Test.Libraries
             ches.Setup(m => m.CancelEmailAsync(It.IsAny<Guid>())).ReturnsAsync(new StatusResponseModel());
 
             // Act
-            var result = await service.CancelNotificationAsync(messageId);
+            var result = await service.CancelAsync(messageId);
 
             // Assert
             Assert.NotNull(result);

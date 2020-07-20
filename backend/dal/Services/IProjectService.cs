@@ -18,13 +18,11 @@ namespace Pims.Dal.Services
         Project Get(string projectNumber);
         Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes);
         Paged<NotificationQueue> GetNotificationsInQueue(ProjectNotificationFilter filter);
-        Project Add(Project project);
-        Project Update(Project project);
+        System.Threading.Tasks.Task<Project> AddAsync(Project project);
+        System.Threading.Tasks.Task<Project> UpdateAsync(Project project);
         System.Threading.Tasks.Task RemoveAsync(Project project);
         System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow);
         System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, string workflowCode);
-        System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id);
-        System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id, int agencyId);
-        System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> GenerateWatchNotificationsAsync(IEnumerable<ProjectAgencyResponse> responses);
+        System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null);
     }
 }
