@@ -170,3 +170,16 @@ export const ParcelSchema = Yup.object()
     [['pin', 'pid']],
   )
   .concat(LandSchema);
+
+export const FilterBarSchema = Yup.object().shape({
+  minLotSize: Yup.number()
+    .typeError('Invalid')
+    .positive('Invalid')
+    .max(200000, 'Invalid'),
+  maxLotSize: Yup.number()
+    .typeError('Invalid')
+    .positive('Invalid')
+    .max(200000, 'Invalid')
+    /* Reference minLotSize field in validating maxLotSize value */
+    .moreThan(Yup.ref('minLotSize'), 'Invalid'),
+});

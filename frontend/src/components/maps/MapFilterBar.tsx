@@ -18,6 +18,7 @@ import { FaUndo, FaSearch } from 'react-icons/fa';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
+import { FilterBarSchema } from 'utils/YupSchema';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
@@ -131,6 +132,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         maxLotSize: '',
         inSurplusPropertyProgram: false,
       }}
+      validationSchema={FilterBarSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         setSubmitting(true);
@@ -149,7 +151,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
     >
       {({ isSubmitting, handleReset, handleSubmit, setFieldValue }) => (
         <Form>
-          <Form.Row className="map-filter-bar">
+          <Form.Row className="map-filter-bar align-items-start">
             <Col className="bar-item">
               <SearchBar />
             </Col>
@@ -168,9 +170,9 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                 options={classifications}
               />
             </Col>
-            <Col className="bar-item d-flex align-items-center">
+            <Col className="bar-item d-flex align-items-start">
               <Input field="minLotSize" placeholder="Min Lot Size" />
-              <span className="mx-2">-</span>
+              <span className="mx-2 align-self-center">-</span>
               <Input field="maxLotSize" placeholder="Max Lot Size" />
             </Col>
             {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
