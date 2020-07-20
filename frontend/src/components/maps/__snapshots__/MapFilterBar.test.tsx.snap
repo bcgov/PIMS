@@ -7,7 +7,7 @@ exports[`MapFilterBar renders correctly 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="map-filter-bar form-row"
+    className="map-filter-bar align-items-start form-row"
   >
     <div
       className="bar-item col"
@@ -145,7 +145,7 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="bar-item d-flex align-items-center col"
+      className="bar-item d-flex align-items-start col"
     >
       <div
         className="form-group"
@@ -163,7 +163,7 @@ exports[`MapFilterBar renders correctly 1`] = `
         </span>
       </div>
       <span
-        className="mx-2"
+        className="mx-2 align-self-center"
       >
         -
       </span>
