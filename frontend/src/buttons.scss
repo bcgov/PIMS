@@ -34,7 +34,11 @@
 }
 .btn:disabled,
 .btn:hover:disabled {
-  opacity: 0.45;
+  color: #959da5;
+  background-color: #fafbfc;
+  border-color: rgba(27, 31, 35, 0.15);
+  user-select: none;
+  pointer-events: none;
   cursor: not-allowed;
 }
 

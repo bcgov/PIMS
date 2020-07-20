@@ -61,12 +61,12 @@ type FormikMemoProps = {
  * @param param1 params from current render
  */
 export const formikFieldMemo = (
-  { formikProps: currentProps, field: currField }: FormikMemoProps,
-  { formikProps: prevProps, field: prevField }: FormikMemoProps,
+  { formikProps: currentProps, field: currField, disabled: currentDisabled }: FormikMemoProps,
+  { formikProps: prevProps, field: prevField, disabled: prevDisabled }: FormikMemoProps,
 ) => {
   return !(
     currField !== prevField ||
-    currentProps.disabled !== prevProps.disabled ||
+    currentDisabled !== prevDisabled ||
     getIn(currentProps.values, prevField) !== getIn(prevProps.values, prevField) ||
     getIn(currentProps.errors, prevField) !== getIn(prevProps.errors, prevField) ||
     getIn(currentProps.touched, prevField) !== getIn(prevProps.touched, prevField) ||
