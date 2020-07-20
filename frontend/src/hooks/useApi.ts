@@ -59,7 +59,9 @@ export const useApi = (): PimsAPI => {
         .join(''),
     )}`;
     let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
-    const { data } = await axios.get(`${ENVIRONMENT.apiUrl}/parcels/check/pid-available?${params}`);
+    const { data } = await axios.get(
+      `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
+    );
     return data;
   };
 

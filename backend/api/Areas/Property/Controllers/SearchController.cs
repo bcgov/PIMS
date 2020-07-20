@@ -14,7 +14,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pims.Dal.Helpers.Extensions;
 
 namespace Pims.Api.Areas.Property.Controllers
 {

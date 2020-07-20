@@ -12,6 +12,7 @@ namespace Pims.Api.Test.Routes
     /// </summary>
     [Trait("category", "unit")]
     [Trait("category", "api")]
+    [Trait("group", "property")]
     [Trait("group", "building")]
     [Trait("group", "route")]
     [ExcludeFromCodeCoverage]
@@ -35,8 +36,9 @@ namespace Pims.Api.Test.Routes
             // Assert
             var type = typeof(BuildingController);
             type.HasAuthorize();
-            type.HasRoute("buildings");
-            type.HasRoute("v{version:apiVersion}/buildings");
+            type.HasArea("properties");
+            type.HasRoute("[area]/buildings");
+            type.HasRoute("v{version:apiVersion}/[area]/buildings");
             type.HasApiVersion("1.0");
         }
 

@@ -314,6 +314,7 @@ namespace Pims.Api
             });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            app.UseMiddleware(typeof(ResponseTimeMiddleware));
 
             //app.UseHttpsRedirection();
 

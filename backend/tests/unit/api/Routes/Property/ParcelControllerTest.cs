@@ -13,6 +13,7 @@ namespace Pims.Api.Test.Routes
     /// </summary>
     [Trait("category", "unit")]
     [Trait("category", "api")]
+    [Trait("group", "property")]
     [Trait("group", "parcel")]
     [Trait("group", "route")]
     [ExcludeFromCodeCoverage]
@@ -36,8 +37,9 @@ namespace Pims.Api.Test.Routes
             // Assert
             var type = typeof(ParcelController);
             type.HasAuthorize();
-            type.HasRoute("parcels");
-            type.HasRoute("v{version:apiVersion}/parcels");
+            type.HasArea("properties");
+            type.HasRoute("[area]/parcels");
+            type.HasRoute("v{version:apiVersion}/[area]/parcels");
             type.HasApiVersion("1.0");
         }
 
