@@ -218,6 +218,9 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       if (city) {
         newValues.address.cityId = city.id;
         newValues.address.city = city.name;
+      } else {
+        newValues.address.cityId = '';
+        newValues.address.city = '';
       }
 
       const province = data.provinceCode
@@ -234,8 +237,12 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       // Ask geocoder for PIDs associated with this address
       let parcelPid: string = '';
       if (data.siteId) {
-        const { pids } = await api.getSitePids(data.siteId);
-        parcelPid = pids && pids.length > 0 ? pids[0] : '';
+        try {
+          const { pids } = await api.getSitePids(data.siteId);
+          parcelPid = pids && pids.length > 0 ? pids[0] : '';
+        } catch (error) {
+          console.log('Failed to get pids');
+        }
       }
       newValues.pid = parcelPid;
 
