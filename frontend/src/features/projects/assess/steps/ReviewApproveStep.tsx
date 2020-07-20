@@ -19,28 +19,22 @@ export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
 ).concat(SelectProjectPropertiesStepYupSchema);
 
 export const validateTasks = (project: IProject) => {
-  const statusTasks = _.filter(
-    project.tasks,
-    task =>
-      task.statusCode === ReviewWorkflowStatus.PropertyReview ||
-      task.statusCode === ReviewWorkflowStatus.DocumentReview,
-  );
+  const statusTasks = !project.exemptionRequested
+    ? _.filter(
+        project.tasks,
+        task =>
+          task.statusCode === ReviewWorkflowStatus.PropertyReview ||
+          task.statusCode === ReviewWorkflowStatus.DocumentReview,
+      )
+    : _.filter(
+        project.tasks,
+        task =>
+          task.statusCode === ReviewWorkflowStatus.ExemptionProcess ||
+          task.statusCode === ReviewWorkflowStatus.DocumentReview ||
+          task.statusCode === ReviewWorkflowStatus.ExemptionReview,
+      );
   return statusTasks.reduce((errors: any, task: IProjectTask, index: number) => {
-    if (
-      !task.isCompleted &&
-      !task.isOptional &&
-      task.statusCode !== ReviewWorkflowStatus.ExemptionProcess &&
-      !project.exemptionRequested
-    ) {
-      errors = setIn(errors, `tasks.${project.tasks.indexOf(task)}.isCompleted`, 'Required');
-    }
-    if (
-      !task.isCompleted &&
-      !task.isOptional &&
-      task.statusCode !== ReviewWorkflowStatus.PropertyReview &&
-      task.statusCode === ReviewWorkflowStatus.ExemptionProcess &&
-      project.exemptionRequested
-    ) {
+    if (!task.isCompleted && !task.isOptional) {
       errors = setIn(errors, `tasks.${project.tasks.indexOf(task)}.isCompleted`, 'Required');
     }
     return errors;

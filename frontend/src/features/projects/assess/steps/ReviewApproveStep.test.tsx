@@ -15,6 +15,14 @@ import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ReviewApproveStep } from '..';
+import { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+import { Button } from 'react-bootstrap';
+import GenericModal from 'components/common/GenericModal';
+import { IProperty } from 'features/properties/list/interfaces';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -36,7 +44,7 @@ const mockTasks: IProjectTask[] = [
   {
     projectNumber: 123,
     taskId: 1,
-    isOptional: true,
+    isOptional: false,
     isCompleted: true,
     name: 'task-0',
     description: 'one',
@@ -49,10 +57,26 @@ const mockTasks: IProjectTask[] = [
   {
     projectNumber: 123,
     taskId: 2,
-    isOptional: true,
+    isOptional: false,
     isCompleted: true,
     name: 'task-1',
     description: 'two',
+    taskType: 1,
+    sortOrder: 0,
+    completedOn: new Date(),
+    statusId: 0,
+    statusCode: ReviewWorkflowStatus.DocumentReview,
+  },
+];
+
+const incompleteTask: IProjectTask[] = [
+  {
+    projectNumber: 123,
+    taskId: 1,
+    isOptional: false,
+    isCompleted: false,
+    name: 'task-0',
+    description: 'one',
     taskType: 1,
     sortOrder: 0,
     completedOn: new Date(),
@@ -61,22 +85,54 @@ const mockTasks: IProjectTask[] = [
   },
 ];
 
-const mockProject: IProject = {
-  projectNumber: 'test-01',
-  name: 'my project',
-  description: 'my project description',
-  privateNote: 'private note',
-  publicNote: 'public note',
-  properties: [],
-  agencyId: 1,
-  statusId: 0,
-  statusCode: ReviewWorkflowStatus.PropertyReview,
-  tierLevelId: 1,
-  tasks: mockTasks,
-  note: 'my notes',
-  id: 1,
-  fiscalYear: 2020,
-  projectAgencyResponses: [],
+const mockProperty: IProperty = {
+  id: 0,
+  propertyTypeId: 0,
+  propertyType: 'Land',
+  latitude: 23,
+  longitude: 23,
+  pid: '123-123-123',
+  classificationId: 2,
+  classification: 'Surplus Active',
+  description: 'test',
+  isSensitive: false,
+  agencyId: 0,
+  agency: 'test',
+  agencyCode: 'TST',
+  address: '1234 Test St',
+  addressId: 1,
+  city: 'Victoria',
+  cityId: 1,
+  province: 'BC',
+  postal: 'A1A 1A1',
+  estimated: 123,
+  netBook: 223,
+  assessed: 123,
+  appraised: 1000,
+  landArea: 123,
+  landLegalDescription: 'test',
+};
+
+const mockProject = (tasks: any) => {
+  return {
+    projectNumber: 'test-01',
+    name: 'my project',
+    description: 'my project description',
+    privateNote: 'private note',
+    publicNote: 'public note',
+    properties: [mockProperty],
+    agencyId: 1,
+    statusId: 0,
+    statusCode: ReviewWorkflowStatus.PropertyReview,
+    exemptionRequested: true,
+    exemptionRationale: 'rationale',
+    tierLevelId: 1,
+    tasks: tasks,
+    note: 'my notes',
+    id: 1,
+    fiscalYear: 2020,
+    projectAgencyResponses: [],
+  } as IProject;
 };
 
 export const tasks: ITask[] = [
@@ -96,17 +152,19 @@ export const tasks: ITask[] = [
   },
 ];
 
-const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-  [reducerTypes.ProjectReducers.PROJECT]: { project: mockProject },
-  [reducerTypes.ProjectReducers.TASKS]: tasks,
-  [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
-  },
-});
+const store = (project: IProject) => {
+  return mockStore({
+    [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
+    [reducerTypes.ProjectReducers.PROJECT]: { project },
+    [reducerTypes.ProjectReducers.TASKS]: tasks,
+    [reducerTypes.NETWORK]: {
+      [ProjectActions.GET_PROJECT]: {},
+    },
+  });
+};
 
 const getReviewApproveStep = (storeOverride?: any) => (
-  <Provider store={storeOverride ?? store}>
+  <Provider store={storeOverride ?? store(mockProject(mockTasks))}>
     <Router history={history}>
       <ReviewApproveStep />
     </Router>
@@ -136,5 +194,27 @@ describe('Review Approve Step', () => {
     const { queryByText } = render(getReviewApproveStep());
     const editButton = queryByText(/Edit/);
     expect(editButton).toBeFalsy();
+  });
+});
+
+describe('Review approve modal behaviour', () => {
+  it('confirmation popup does not appear when there are incomplete tasks', () => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: [1],
+          roles: Claims.ADMIN_PROJECTS,
+        },
+        subject: 'test',
+      },
+    });
+    const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
+    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+      return node.type() === Button && node.text() === 'Approve';
+    });
+    button.simulate('click');
+    return Promise.resolve().then(() => {
+      expect(component.find(GenericModal)).toHaveLength(0);
+    });
   });
 });
