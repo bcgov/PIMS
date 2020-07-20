@@ -15,6 +15,15 @@ nav.map-nav {
   }
 
   .navbar-nav {
+    margin-left: 20px;
+    .home-button {
+      color: white;
+      cursor: pointer;
+      padding-top: 10px;
+      height: 30px;
+      width: 30px;
+    }
+
     .nav-item {
       height: 100%;
     }

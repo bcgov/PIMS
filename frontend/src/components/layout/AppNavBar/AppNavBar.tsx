@@ -6,6 +6,7 @@ import profileUrl from 'assets/images/profile.svg';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
+import { FaHome } from 'react-icons/fa';
 
 /**
  * Nav bar with with role-based functionality.
@@ -21,6 +22,9 @@ function AppNavBar() {
       <Navbar.Toggle aria-controls="collapse" className="navbar-dark mr-auto" />
       <Navbar.Collapse className="links mr-auto">
         <Nav>
+          <Nav.Item className="home-button" onClick={() => history.push('/mapview')}>
+            <FaHome size={20} />
+          </Nav.Item>
           <AdminDropdown />
           <PropertyDropdown />
           <ViewProjects />
