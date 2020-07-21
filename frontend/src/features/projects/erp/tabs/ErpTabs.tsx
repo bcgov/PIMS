@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tab, Tabs, Spinner } from 'react-bootstrap';
-import { SPPApprovalTabs, initialValues } from '../../common';
+import { SPPApprovalTabs, initialValues, ReviewWorkflowStatus } from '../../common';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
@@ -51,7 +51,14 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
             <DocumentationTab isReadOnly={isReadOnly} />
           )}
         </Tab>
-        <Tab eventKey={SPPApprovalTabs.erp} title="Enhanced Referral Process">
+        <Tab
+          eventKey={SPPApprovalTabs.erp}
+          title={`${
+            (values as any).statusCode === ReviewWorkflowStatus.ApprovedForExemption
+              ? 'Exemption from the Enhanced Referral Process'
+              : 'Enhanced Referral Process'
+          }`}
+        >
           {currentTab === SPPApprovalTabs.erp && (
             <EnhancedReferralTab
               isReadOnly={isReadOnly}

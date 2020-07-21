@@ -8,8 +8,10 @@ import { RootState } from 'reducers/rootReducer';
 import { NEW_PIMS_USER } from 'actionCreators/usersActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as actionTypes from 'constants/actionTypes';
+import { useQuery } from 'hooks/use-query';
 
 const Login = () => {
+  const { redirect } = useQuery();
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
   const activated = useSelector<RootState, IGenericNetworkAction>(
@@ -22,7 +24,7 @@ const Login = () => {
     if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
       return <Redirect to={{ pathname: '/access/request' }} />;
     }
-    return <Redirect to={{ pathname: '/mapview' }} />;
+    return <Redirect to={{ pathname: (redirect as string) || '/mapview' }} />;
   }
 
   return (
