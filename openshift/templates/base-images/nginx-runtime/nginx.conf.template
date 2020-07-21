@@ -46,6 +46,11 @@ http {
         add_header X-XSS-Protection 1;
         add_header X-Frame-Options DENY;
 
+        # disable web caching as per ZAP Recommended Solution
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        add_header Pragma "no-cache";
+        add_header Expires "0";
+
         location /api {
             proxy_pass          %API_URL%;
         }
