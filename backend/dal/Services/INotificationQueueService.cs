@@ -14,14 +14,16 @@ namespace Pims.Dal.Services
         NotificationQueue Get(int id);
         void Add(IEnumerable<NotificationQueue> notifications);
         void Add(NotificationQueue notification);
+        void Update(NotificationQueue notification);
+        void Update(IEnumerable<NotificationQueue> notifications);
+        System.Threading.Tasks.Task<NotificationQueue> CancelNotificationAsync(int id);
+        NotificationQueue GenerateNotification(Project project, string templateName);
+        NotificationQueue GenerateNotification(Project project, NotificationTemplate template);
         IEnumerable<NotificationQueue> GenerateNotifications(Project project, int? fromStatusId, int? toStatusId, bool includeOnlyTo = true);
         IEnumerable<NotificationQueue> GenerateNotifications(Project project, int projectStatusNotificationId);
         IEnumerable<NotificationQueue> GenerateNotifications(Project project, ProjectStatusNotification options, DateTime? sendOn = null);
         NotificationQueue GenerateNotification(Project project, ProjectStatusNotification options, Agency agency, DateTime? sendOn = null);
         NotificationQueue GenerateNotification<T>(string to, NotificationTemplate template, T model, DateTime? sendOn = null);
-        System.Threading.Tasks.Task<NotificationQueue> UpdateStatusAsync(int id);
-        System.Threading.Tasks.Task<NotificationQueue> CancelNotificationAsync(int id);
-        System.Threading.Tasks.Task CancelNotificationsAsync(IEnumerable<NotificationQueue> notifications);
         System.Threading.Tasks.Task SendNotificationsAsync(IEnumerable<NotificationQueue> notifications, bool saveChanges = true);
     }
 }

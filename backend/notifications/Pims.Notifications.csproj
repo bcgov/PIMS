@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ches\Pims.Ches.csproj" />
     <ProjectReference Include="..\core\Pims.Core.csproj" />
+    <ProjectReference Include="..\dal\Pims.Dal.csproj" />
   </ItemGroup>
 
 </Project>

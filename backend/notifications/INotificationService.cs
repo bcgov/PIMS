@@ -5,13 +5,13 @@ using Model = Pims.Notifications.Models;
 
 namespace Pims.Notifications
 {
-    public interface INotificationService
+    public interface INotificationService : Dal.Services.INotificationService
     {
         void Build<TModel>(string templateKey, Model.IEmailTemplate template, TModel model);
-        Task<Model.EmailResponse> SendNotificationAsync<TModel>(string templateKey, Model.IEmail email, TModel model);
-        Task<Model.EmailResponse> SendNotificationAsync(Model.IEmail notification);
-        Task<Model.EmailResponse> SendNotificationsAsync(IEnumerable<Model.IEmail> notifications);
+        Task<Model.EmailResponse> SendAsync<TModel>(string templateKey, Model.IEmail email, TModel model);
+        Task<Model.EmailResponse> SendAsync(Model.IEmail notification);
+        Task<Model.EmailResponse> SendAsync(IEnumerable<Model.IEmail> notifications);
         Task<Model.StatusResponse> GetStatusAsync(Guid messageId);
-        Task<Model.StatusResponse> CancelNotificationAsync(Guid messageId);
+        Task<Model.StatusResponse> CancelAsync(Guid messageId);
     }
 }

@@ -428,13 +428,14 @@ namespace Pims.Dal.Helpers.Extensions
             // Update all properties
             foreach (var property in updatedProject.Properties)
             {
-                var existingProperty = originalProject.Properties.FirstOrDefault(b => b.PropertyType == Entity.PropertyTypes.Land
-                && b.ParcelId == property.ParcelId
-                && b.ProjectId == updatedProject.Id
-                ||
-                b.PropertyType == Entity.PropertyTypes.Building
-                && b.ProjectId == updatedProject.Id
-                && b.BuildingId == property.BuildingId);
+                var existingProperty = originalProject.Properties
+                    .FirstOrDefault(b => b.PropertyType == Entity.PropertyTypes.Land
+                    && b.ParcelId == property.ParcelId
+                    && b.ProjectId == updatedProject.Id
+                    ||
+                    b.PropertyType == Entity.PropertyTypes.Building
+                    && b.ProjectId == updatedProject.Id
+                    && b.BuildingId == property.BuildingId);
 
                 if (existingProperty == null)
                 {
@@ -476,6 +477,7 @@ namespace Pims.Dal.Helpers.Extensions
                         existingProperty.Parcel.ProjectNumber = updatedProject.ProjectNumber;
                         if (property.Parcel != null)
                         {
+                            context.Entry(existingProperty.Parcel).Collection(p => p.Evaluations).Load();
                             existingProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
                             existingProperty.Parcel.Zoning = property.Parcel.Zoning;
                             existingProperty.Parcel.ZoningPotential = property.Parcel.ZoningPotential;
@@ -493,6 +495,8 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
+
+                            context.Entry(existingProperty.Parcel).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Parcel.Fiscals)
                             {
                                 var existingFiscal = existingProperty.Parcel.Fiscals
@@ -512,6 +516,7 @@ namespace Pims.Dal.Helpers.Extensions
                     else if (property.PropertyType == Entity.PropertyTypes.Building)
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
+                        context.Entry(existingProperty.Building).Collection(p => p.Evaluations).Load();
                         existingProperty.Building.ProjectNumber = updatedProject.ProjectNumber;
                         if (property.Building != null)
                         {
@@ -530,6 +535,8 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
+
+                            context.Entry(existingProperty.Building).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Building.Fiscals)
                             {
                                 var existingFiscal = existingProperty.Building.Fiscals

@@ -23,6 +23,7 @@ namespace Pims.Dal.Services
     {
         #region Variables
         private readonly PimsOptions _options;
+        private readonly INotificationService _notifyService;
         #endregion
 
         #region Constructors
@@ -32,10 +33,13 @@ namespace Pims.Dal.Services
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="service"></param>
+        /// <param name="notifyService"></param>
+        /// <param name="options"></param>
         /// <param name="logger"></param>
-        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
+        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, INotificationService notifyService, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.Value;
+            _notifyService = notifyService;
         }
         #endregion
 
@@ -352,7 +356,7 @@ namespace Pims.Dal.Services
         /// <exception cref="KeyNotFoundException">Default status does not exist.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to add project.</exception>
         /// <returns></returns>
-        public Project Add(Project project)
+        public async System.Threading.Tasks.Task<Project> AddAsync(Project project)
         {
             project.ThrowIfNull(nameof(project));
             this.User.ThrowIfNotAuthorized(Permissions.ProjectAdd);
@@ -418,6 +422,10 @@ namespace Pims.Dal.Services
 
             this.Context.Projects.Update(project);
             this.Context.CommitTransaction();
+
+            var notifications = this.Self.NotificationQueue.GenerateNotifications(project, null, project.StatusId);
+            await this.Self.NotificationQueue.SendNotificationsAsync(notifications);
+
             return project;
         }
 
@@ -433,7 +441,7 @@ namespace Pims.Dal.Services
         /// <exception cref="NotAuthorizedException">User does not have permission to edit project.</exception>
         /// <exception cref="NotAuthorizedException">Project cannot be transfered to another agency.</exception>
         /// <returns></returns>
-        public Project Update(Project project)
+        public async System.Threading.Tasks.Task<Project> UpdateAsync(Project project)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
@@ -523,15 +531,22 @@ namespace Pims.Dal.Services
                 if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && incompleteStatusTaskIds.Contains(t.TaskId))) throw new InvalidOperationException("Not all required tasks have been completed.");
             }
 
+            // Determine if there are any response changes.
+            var responses = project.GetResponseChanges(project);
+
+            // If the note was changed generate a notification for it.
+            var noteChanged = originalProject.PublicNote != project.PublicNote;
+
             originalProject.Merge(project, this.Context);
             originalProject.Metadata = project.Metadata;
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
+
+            await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+
             return Get(originalProject.Id);
         }
-
-
 
         /// <summary>
         /// Remove the specified project from the datasource.
@@ -692,6 +707,12 @@ namespace Pims.Dal.Services
                 }
             }
 
+            // Determine if there are any response changes.
+            var responses = project.GetResponseChanges(project);
+
+            // If the note was changed generate a notification for it.
+            var noteChanged = originalProject.PublicNote != project.PublicNote;
+
             originalProject.Merge(project, this.Context);
 
             // Hardcoded logic to handle milestone project status transitions.
@@ -780,35 +801,28 @@ namespace Pims.Dal.Services
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 
+            await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+
             return Get(originalProject.Id);
         }
 
         #region Notifications
         /// <summary>
-        /// Cancel any pending notifications for the specified project 'id'.
+        /// Cancel all the pending notifications for the specified 'projectId' and 'agencyId'.
+        /// This function does not update the data source.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id)
-        {
-            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = id, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
-            await this.Self.NotificationQueue.CancelNotificationsAsync(page);
-            return page;
-        }
-
-        /// <summary>
-        /// Cancel any pending notifications for the specified project 'id' and agency 'agencyId'.
-        /// </summary>
-        /// <param name="id"></param>
+        /// <param name="projectId"></param>
         /// <param name="agencyId"></param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<Paged<NotificationQueue>> CancelNotificationsAsync(int id, int agencyId)
+        public async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null)
         {
-            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = id, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
-            await this.Self.NotificationQueue.CancelNotificationsAsync(page);
+            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = projectId, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } }); // TODO: Handle paging.
+            await _notifyService.CancelAsync(page);
             return page;
         }
+        #endregion
 
+        #region Helpers
         /// <summary>
         /// Generates new notifications for response that have shown interested.
         /// Additionally cancels any future dated notifications for responses that have indicated they are not interested in a project.
@@ -818,7 +832,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="responses"></param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> GenerateWatchNotificationsAsync(IEnumerable<ProjectAgencyResponse> responses)
+        private async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> GenerateWatchNotificationsAsync(IEnumerable<ProjectAgencyResponse> responses)
         {
             var notifications = new List<NotificationQueue>();
             foreach (var response in responses)
@@ -826,7 +840,7 @@ namespace Pims.Dal.Services
                 switch (response.Response)
                 {
                     case (NotificationResponses.Ignore):
-                        // Any future dated notifications need to be cancelled for the specified agency.
+                        // Cancel all outstanding notifications.
                         await CancelNotificationsAsync(response.ProjectId, response.AgencyId);
                         break;
                     case (NotificationResponses.Watch):
@@ -857,6 +871,36 @@ namespace Pims.Dal.Services
             }
 
             return notifications;
+        }
+
+        /// <summary>
+        /// Generate and send notifications for the specified 'project'.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="fromStatusId"></param>
+        /// <param name="responses"></param>
+        /// <param name="noteChanged"></param>
+        /// <returns></returns>
+        private async System.Threading.Tasks.Task SendNotificationsAsync(Project project, int? fromStatusId, IEnumerable<ProjectAgencyResponse> responses, bool noteChanged)
+        {
+            var notifications = new List<NotificationQueue>();
+            if (noteChanged)
+            {
+                notifications.Add(this.Self.NotificationQueue.GenerateNotification(project, "Project Shared Note Changed"));
+            }
+
+            // If the status did not change, do not send notifications.
+            if (fromStatusId != project.StatusId)
+            {
+                notifications.AddRange(this.Self.NotificationQueue.GenerateNotifications(project, fromStatusId, project.StatusId));
+            }
+
+            // Send/Cancel notifications based on responses.
+            if (responses.Any())
+            {
+                notifications.AddRange(await GenerateWatchNotificationsAsync(responses));
+            }
+            await this.Self.NotificationQueue.SendNotificationsAsync(notifications);
         }
         #endregion
         #endregion

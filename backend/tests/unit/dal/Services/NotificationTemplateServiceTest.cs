@@ -4,7 +4,6 @@ using Pims.Core.Test;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using Pims.Dal.Services;
-using Pims.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -273,18 +272,12 @@ namespace Pims.Dal.Test.Services
             init.SaveChanges();
 
             var service = helper.CreateService<NotificationTemplateService>(user);
-
-            var response = new Notifications.Models.EmailResponse()
-            {
-                Messages = new[] { new Notifications.Models.MessageResponse() { MessageId = Guid.NewGuid() } },
-                TransactionId = Guid.NewGuid()
-            };
             var project = init.CreateProject(1);
             init.SaveChanges();
 
             var notifyService = helper.GetService<Mock<INotificationService>>();
             var pimsService = helper.GetService<Mock<IPimsService>>();
-            notifyService.Setup(m => m.SendNotificationAsync(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), It.IsAny<Entity.Project>())).ReturnsAsync(response);
+            notifyService.Setup(m => m.SendAsync(It.IsAny<Entity.NotificationQueue>()));
 
             // Act
             var result = await service.SendNotificationAsync(template.Id, "test@test.com", project);
@@ -302,8 +295,6 @@ namespace Pims.Dal.Test.Services
             result.Tag.Should().Be(template.Tag);
             result.SendOn.Should().BeOnOrBefore(DateTime.UtcNow);
             result.Status.Should().Be(Entity.NotificationStatus.Pending);
-            result.ChesMessageId.Should().Be(response.Messages.First().MessageId);
-            result.ChesTransactionId.Should().Be(response.TransactionId);
         }
 
         [Fact]
@@ -328,7 +319,7 @@ namespace Pims.Dal.Test.Services
             init.SaveChanges();
 
             var notifyService = helper.GetService<Mock<INotificationService>>();
-            notifyService.Setup(m => m.SendNotificationAsync(It.IsAny<string>(), It.IsAny<Notifications.Models.IEmail>(), It.IsAny<Entity.Project>())).ThrowsAsync(new Exception());
+            notifyService.Setup(m => m.SendAsync(It.IsAny<Entity.NotificationQueue>())).ThrowsAsync(new Exception());
 
             // Act
             await Assert.ThrowsAsync<Exception>(async () => await service.SendNotificationAsync(template.Id, "test@test.com", project));

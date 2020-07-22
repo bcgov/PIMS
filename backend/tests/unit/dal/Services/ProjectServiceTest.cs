@@ -402,7 +402,7 @@ namespace Pims.Dal.Test.Services
         /// User with appropriate permission successfully adds new project. Project Number is auto-generated.
         /// </summary>
         [Fact]
-        public void Add_Project()
+        public async void Add_Project()
         {
             // Arrange
             var helper = new TestHelper();
@@ -420,17 +420,23 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
             Assert.NotNull(result.ProjectNumber);
             Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Fact]
-        public void Add_Financials()
+        public async void Add_Financials()
         {
             // Arrange
             var helper = new TestHelper();
@@ -456,8 +462,12 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
@@ -465,10 +475,12 @@ namespace Pims.Dal.Test.Services
             project.Estimated.Should().Be(10);
             project.NetBook.Should().Be(10);
             project.Assessed.Should().Be(10);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Fact]
-        public void Add_Project_SimpleFields()
+        public async void Add_Project_SimpleFields()
         {
             // Arrange
             var helper = new TestHelper();
@@ -495,8 +507,12 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            service.Add(project);
+            await service.AddAsync(project);
             var result = service.Get(project.Id);
 
             // Assert
@@ -510,10 +526,12 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(project.SubmittedOn, result.SubmittedOn);
             Assert.Equal(project.DeniedOn, result.DeniedOn);
             Assert.Equal(project.ApprovedOn, result.ApprovedOn);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Fact]
-        public void Add_DraftStatus()
+        public async void Add_DraftStatus()
         {
             // Arrange
             var helper = new TestHelper();
@@ -532,17 +550,23 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(project, result);
             Assert.Equal(1, result.StatusId);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Fact]
-        public void Add_AddTasks()
+        public async void Add_AddTasks()
         {
             // Arrange
             var helper = new TestHelper();
@@ -569,18 +593,24 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(project, result);
             Assert.Equal(1, result.StatusId);
             Assert.Single(result.Tasks);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Add_DefaultTasks()
+        public async void Add_DefaultTasks()
         {
             // Arrange
             var helper = new TestHelper();
@@ -601,18 +631,24 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(project, result);
             Assert.Equal(1, result.StatusId);
             Assert.Equal(tasks.Count(), result.Tasks.Count());
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Add_DefaultResponses()
+        public async void Add_DefaultResponses()
         {
             // Arrange
             var helper = new TestHelper();
@@ -634,18 +670,24 @@ namespace Pims.Dal.Test.Services
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { NumberFormat = "TEST-{0:00000}" } });
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
-            var result = service.Add(project);
+            var result = await service.AddAsync(project);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(project, result);
             Assert.Equal(1, result.StatusId);
             result.Responses.Should().BeEquivalentTo(new List<ProjectAgencyResponse>() { response });
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Add_NoProject_Throws_ArgumentNullException()
+        public async void Add_NoProject_Throws_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -655,11 +697,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.Add(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.AddAsync(null));
         }
 
         [Fact]
-        public void Add_Permission_Throws_NotAuthorized()
+        public async void Add_Permission_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -673,11 +715,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.AddAsync(project));
         }
 
         [Fact]
-        public void Add_NoAgency_Throws_NotAuthorized()
+        public async void Add_NoAgency_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -691,11 +733,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.AddAsync(project));
         }
 
         [Fact]
-        public void Add_Agency_Throws_NotAuthorized()
+        public async void Add_Agency_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -709,13 +751,13 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Add(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.AddAsync(project));
         }
         #endregion
 
         #region Update
         [Fact]
-        public void Update()
+        public async void Update()
         {
             // Arrange
             var helper = new TestHelper();
@@ -732,19 +774,25 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Description = "A new description";
-            var result = service.Update(projectToUpdate);
+            var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
             result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_Financials()
+        public async void Update_Financials()
         {
             // Arrange
             var helper = new TestHelper();
@@ -772,12 +820,16 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.Id);
             parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
-            var result = service.Update(projectToUpdate);
+            var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
@@ -785,10 +837,12 @@ namespace Pims.Dal.Test.Services
             project.Estimated.Should().Be(15);
             project.NetBook.Should().Be(15);
             project.Assessed.Should().Be(15);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_SimpleFields()
+        public async void Update_SimpleFields()
         {
             // Arrange
             var helper = new TestHelper();
@@ -805,6 +859,10 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Description = "A new description";
@@ -814,7 +872,7 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.ApprovedOn = new DateTime().AddDays(1);
             projectToUpdate.DeniedOn = new DateTime().AddDays(2);
 
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(projectToUpdate.Id);
 
             // Assert
@@ -826,10 +884,12 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(projectToUpdate.SubmittedOn, result.SubmittedOn);
             Assert.Equal(projectToUpdate.ApprovedOn, result.ApprovedOn);
             Assert.Equal(projectToUpdate.DeniedOn, result.DeniedOn);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_AsAdmin()
+        public async void Update_AsAdmin()
         {
             // Arrange
             var helper = new TestHelper();
@@ -846,20 +906,26 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Description = "A new description";
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
             projectToUpdate.Should().BeEquivalentTo(result, options => options.Excluding(x => x.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_Task()
+        public async void Update_Task()
         {
             // Arrange
             var helper = new TestHelper();
@@ -877,19 +943,25 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddTask(task);
-            var result = service.Update(projectToUpdate);
+            var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
             projectToUpdate.Should().BeEquivalentTo(result);
             Assert.Single(result.Tasks);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_AddParcel()
+        public async void Update_AddParcel()
         {
             // Arrange
             var helper = new TestHelper();
@@ -908,11 +980,15 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(parcel);
             parcel.ProjectNumber = null;
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -925,10 +1001,12 @@ namespace Pims.Dal.Test.Services
             .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumber);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_Response()
+        public async void Update_Response()
         {
             // Arrange
             var helper = new TestHelper();
@@ -943,20 +1021,26 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
-            var result = service.Update(projectToUpdate);
+            var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
             result.Responses.Should().HaveCount(1);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         /**
          * Only financials and classifications will be updated by the service. Other updates should be ignored.
          */
         [Fact]
-        public void Update_UpdateParcel_IgnoredField()
+        public async void Update_UpdateParcel_IgnoredField()
         {
             // Arrange
             var helper = new TestHelper();
@@ -973,11 +1057,15 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             updatedParcel.Description = "updated";
             projectToUpdate.Properties.First().Parcel = updatedParcel;
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -985,13 +1073,15 @@ namespace Pims.Dal.Test.Services
             Assert.Single(result.Properties);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
             Assert.Equal("description-1", result.Properties.First().Parcel.Description);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         /**
          * Classification and financials are the only supported update fields
          */
         [Fact]
-        public void Update_UpdateParcel_Supported()
+        public async void Update_UpdateParcel_Supported()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1008,11 +1098,15 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Properties.First().Parcel.ClassificationId = 2;
             projectToUpdate.Properties.First().Parcel.Evaluations.Add(parcelEvaluation);
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -1021,10 +1115,12 @@ namespace Pims.Dal.Test.Services
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Land);
             result.Properties.First().Parcel.ClassificationId.Should().Be(2);
             result.Properties.First().Parcel.Evaluations.Should().HaveCount(2);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_AddBuilding()
+        public async void Update_AddBuilding()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1043,11 +1139,15 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.AddProperty(building);
             building.ProjectNumber = null;
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -1062,13 +1162,15 @@ namespace Pims.Dal.Test.Services
             .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Building.ProjectNumber);
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         /**
          * Only financials and classifications will be updated by the service. Other updates should be ignored.
          */
         [Fact]
-        public void Update_UpdateBuilding_IgnoredField()
+        public async void Update_UpdateBuilding_IgnoredField()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1086,11 +1188,15 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             newBuilding.Description = "updated";
             projectToUpdate.Properties.First().Building = newBuilding;
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -1098,13 +1204,15 @@ namespace Pims.Dal.Test.Services
             result.Properties.Should().HaveCount(1);
             result.Properties.First().PropertyType.Should().Equals(Entity.PropertyTypes.Building);
             result.Properties.First().Building.Description.Should().Equals("description-20");
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         /**
          * Classification and financials are the only supported update fields
          */
         [Fact]
-        public void Update_UpdateBuilding_Supported()
+        public async void Update_UpdateBuilding_Supported()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1123,12 +1231,16 @@ namespace Pims.Dal.Test.Services
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Properties.First().Building.Classification = newClassification;
             projectToUpdate.Properties.First().Building.ClassificationId = 2;
             projectToUpdate.Properties.First().Building.Evaluations.Add(parcelEvaluation);
-            service.Update(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
@@ -1137,10 +1249,12 @@ namespace Pims.Dal.Test.Services
             result.Properties.First().PropertyType.Should().Equals(Entity.PropertyTypes.Building);
             result.Properties.First().Building.ClassificationId.Should().Equals(2);
             result.Properties.First().Building.Evaluations.Should().HaveCount(2);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
-        public void Update_NoProject_Throws_ArgumentNullException()
+        public async void Update_NoProject_Throws_ArgumentNullException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1150,11 +1264,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.Update(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.UpdateAsync(null));
         }
 
         [Fact]
-        public void Update_Permission_Throws_NotAuthorized()
+        public async void Update_Permission_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1169,11 +1283,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.UpdateAsync(project));
         }
 
         [Fact]
-        public void Update_NoAgency_Throws_NotAuthorized()
+        public async void Update_NoAgency_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1188,11 +1302,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.UpdateAsync(project));
         }
 
         [Fact]
-        public void Update_Agency_Throws_NotAuthorized()
+        public async void Update_Agency_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1207,11 +1321,11 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(project));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.UpdateAsync(project));
         }
 
         [Fact]
-        public void Update_ChangeAgency_Throws_NotAuthorized()
+        public async void Update_ChangeAgency_Throws_NotAuthorized()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1229,11 +1343,11 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AgencyId = 2;
 
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(projectToUpdate));
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.UpdateAsync(projectToUpdate));
         }
 
         [Fact]
-        public void Update_ProjectParcelAgencyMismatch_Throws_BusinessException()
+        public async void Update_ProjectParcelAgencyMismatch_Throws_BusinessException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1254,11 +1368,11 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AddProperty(parcel);
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
         }
 
         [Fact]
-        public void Update_ProjectBuildingAgencyMismatch_Throws_BusinessException()
+        public async void Update_ProjectBuildingAgencyMismatch_Throws_BusinessException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1280,11 +1394,11 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AddProperty(building);
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
         }
 
         [Fact]
-        public void Update_ParcelInProject_Throws_BusinessException()
+        public async void Update_ParcelInProject_Throws_BusinessException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1310,11 +1424,11 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AddProperty(parcel);
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
         }
 
         [Fact]
-        public void Update_BuildingInProject_Throws_BusinessException()
+        public async void Update_BuildingInProject_Throws_BusinessException()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1341,9 +1455,8 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AddProperty(building);
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => service.Update(projectToUpdate));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
         }
-
         #endregion
 
         #region Remove
@@ -1424,15 +1537,15 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
-            var pimsService = helper.GetService<Mock<IPimsService>>();
-            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            var notifyService = helper.GetService<Mock<INotificationService>>();
+            notifyService.Setup(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
 
             // Act
             await service.RemoveAsync(project);
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
-            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
+            notifyService.Verify(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
         }
 
         /// <summary>
@@ -1475,15 +1588,15 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
             var context = helper.GetService<PimsContext>();
-            var pimsService = helper.GetService<Mock<IPimsService>>();
-            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            var notifyService = helper.GetService<Mock<INotificationService>>();
+            notifyService.Setup(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
 
             // Act
             await service.RemoveAsync(project);
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(project).State);
-            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
+            notifyService.Verify(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
 
         }
         #endregion
@@ -1771,6 +1884,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var deny = init.ProjectStatus.First(s => s.Code == "DE");
             project.StatusId = deny.Id; // Deny Status
 
@@ -1784,6 +1901,8 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(deny);
             result.DeniedOn.Should().NotBeNull();
             parcel.ProjectNumber.Should().BeNull();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -1805,8 +1924,12 @@ namespace Pims.Dal.Test.Services
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
-            var pimsService = helper.GetService<Mock<IPimsService>>();
-            pimsService.Setup(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+            var notifyService = helper.GetService<Mock<INotificationService>>();
+            notifyService.Setup(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()));
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             var cancel = init.ProjectStatus.First(s => s.Code == "CA");
             project.StatusId = cancel.Id; // Cancel Status
@@ -1820,7 +1943,9 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(cancel);
             result.CancelledOn.Should().NotBeNull();
             parcel.ProjectNumber.Should().BeNull();
-            pimsService.Verify(m => m.NotificationQueue.CancelNotificationsAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
+            notifyService.Verify(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -1844,6 +1969,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var onHold = init.ProjectStatus.First(s => s.Code == "ERP-OH");
             project.StatusId = onHold.Id; // On Hold Status
 
@@ -1855,6 +1984,8 @@ namespace Pims.Dal.Test.Services
             result.StatusId.Should().Be(onHold.Id);
             result.Status.Should().Be(onHold);
             result.OnHoldNotificationSentOn.Should().NotBeNull();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -1905,6 +2036,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "T-GRE");
             project.StatusId = transferredWithinGre.Id; // Transferred within GRE Status
 
@@ -1926,6 +2061,8 @@ namespace Pims.Dal.Test.Services
             property.ProjectNumber.Should().BeNull();
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -1976,6 +2113,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = clearanceNotificationSentOn.Id; // Approved for SPL status
 
@@ -1997,6 +2138,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2047,6 +2190,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-!SPL");
             project.StatusId = clearanceNotificationSentOn.Id; // Not in SPL status
 
@@ -2068,6 +2215,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2118,6 +2267,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var clearanceNotificationSentOn = init.ProjectStatus.First(s => s.Code == "AP-!SPL");
             project.StatusId = clearanceNotificationSentOn.Id; // Not in SPL status
 
@@ -2139,6 +2292,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2162,6 +2317,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var marketed = init.ProjectStatus.First(s => s.Code == "SPL-M");
             project.StatusId = marketed.Id; // Marketed status
 
@@ -2183,6 +2342,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2232,6 +2393,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var contractInPlace = init.ProjectStatus.First(s => s.Code == "SPL-CIP");
             project.StatusId = contractInPlace.Id; // Contract in Place status
 
@@ -2252,6 +2417,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2275,6 +2442,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var disposed = init.ProjectStatus.First(s => s.Code == "DIS");
             project.StatusId = disposed.Id; // Marketed status
 
@@ -2296,6 +2467,8 @@ namespace Pims.Dal.Test.Services
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(4);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2377,6 +2550,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var submit = init.ProjectStatus.First(s => s.Code == "AS-I");
             project.StatusId = submit.Id; // Submit Status
 
@@ -2391,6 +2568,8 @@ namespace Pims.Dal.Test.Services
             result.SubmittedOn.Should().NotBeNull();
             result.ProjectNumber.Should().StartWith("SPP-");
             parcel.ProjectNumber.Should().Be(project.ProjectNumber);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2441,6 +2620,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var approve = init.ProjectStatus.First(s => s.Code == "AP-ERP");
             project.StatusId = approve.Id; // Submit Status
 
@@ -2454,6 +2637,8 @@ namespace Pims.Dal.Test.Services
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2504,6 +2689,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
             project.ClearanceNotificationSentOn = DateTime.UtcNow;
@@ -2518,6 +2707,8 @@ namespace Pims.Dal.Test.Services
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2568,6 +2759,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var approve = init.ProjectStatus.First(s => s.Code == "AP-EXE");
             project.StatusId = approve.Id; // Submit Status
             project.ClearanceNotificationSentOn = DateTime.UtcNow;
@@ -2582,6 +2777,8 @@ namespace Pims.Dal.Test.Services
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2606,6 +2803,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var approve = init.ProjectStatus.First(s => s.Code == "T-GRE");
             project.StatusId = approve.Id; // Submit Status
             project.ClearanceNotificationSentOn = DateTime.UtcNow;
@@ -2620,6 +2821,8 @@ namespace Pims.Dal.Test.Services
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -2642,6 +2845,10 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
             project.ClearanceNotificationSentOn = DateTime.UtcNow;
@@ -2656,6 +2863,8 @@ namespace Pims.Dal.Test.Services
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
             parcel.IsVisibleToOtherAgencies.Should().BeFalse();
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
         #endregion
 
