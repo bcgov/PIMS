@@ -22,7 +22,7 @@ INSERT INTO dbo.[Tasks] (
     2
     , 'Triple Bottom Line completed and sent'
     , 0
-    , 'Triple Bottom Line document emailed to SRES.'
+    , 'Triple Bottom Line document emailed to SRES OR Project is in Tier 1.'
     , 4
     , 0
     , 2
