@@ -15,9 +15,9 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
   const { goToDisposePath } = useProject();
   return (
     <Container fluid>
-      <SurplusPropertyListApprovalForm />
+      <SurplusPropertyListApprovalForm isReadOnly={isReadOnly} />
       <h3>Project Property Information</h3>
-      <AdditionalPropertyInformationForm />
+      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
       <ProjectDraftForm isReadOnly={isReadOnly} title="" />
       <UpdateInfoForm
         isReadOnly={isReadOnly}

@@ -141,7 +141,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     <input
                       autoComplete="off"
                       className="form-control date-picker"
-                      disabled={false}
+                      disabled={true}
                       name="submittedOn"
                       onBlur={[Function]}
                       onChange={[Function]}
@@ -185,7 +185,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     <input
                       autoComplete="off"
                       className="form-control date-picker"
-                      disabled={false}
+                      disabled={true}
                       name="approvedOn"
                       onBlur={[Function]}
                       onChange={[Function]}
@@ -221,6 +221,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   id="input-manager"
                   name="manager"
                   onBlur={[Function]}
@@ -241,6 +242,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="reportedFiscalYear"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -262,6 +264,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="actualFiscalYear"
                   onBlur={[Function]}
                   onChange={[Function]}
