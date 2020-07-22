@@ -831,7 +831,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void Update_Financials()
+        public async void Update_Financials()
         {
             // Arrange
             var helper = new TestHelper();
@@ -868,7 +868,8 @@ namespace Pims.Dal.Test.Services
             parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
-            var result = service.UpdateAsync(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
+            var result = service.Get(projectToUpdate.Id);
 
             // Assert
             Assert.NotNull(result);
