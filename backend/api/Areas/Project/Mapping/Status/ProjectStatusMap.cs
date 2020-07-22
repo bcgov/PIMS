@@ -12,7 +12,6 @@ namespace Pims.Api.Areas.Project.Mapping.Status
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.IsMilestone, src => src.IsMilestone)
                 .Map(dest => dest.IsTerminal, src => src.IsTerminal)
-                .Map(dest => dest.ValidateTasks, src => src.ValidateTasks)
                 .Map(dest => dest.Route, src => src.Route)
                 .Inherits<Entity.CodeEntity<int>, Api.Models.CodeModel<int>>();
 
@@ -21,7 +20,6 @@ namespace Pims.Api.Areas.Project.Mapping.Status
                 .Map(dest => dest.Description, src => src.Status.Description)
                 .Map(dest => dest.IsMilestone, src => src.Status.IsMilestone)
                 .Map(dest => dest.IsTerminal, src => src.Status.IsTerminal)
-                .Map(dest => dest.ValidateTasks, src => src.Status.ValidateTasks)
                 .Map(dest => dest.Route, src => src.Status.Route)
                 .Map(dest => dest.IsOptional, src => src.IsOptional)
                 .Map(dest => dest.Name, src => src.Status.Name)

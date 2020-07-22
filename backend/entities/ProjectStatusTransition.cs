@@ -39,6 +39,11 @@ namespace Pims.Dal.Entities
         public int ToStatusId { get; set; }
 
         /// <summary>
+        /// get/set - Whether this status requires validating prior tasks before transitioning.
+        /// </summary>
+        public bool ValidateTasks { get; set; } = true;
+
+        /// <summary>
         /// get/set - The workflow project status this goes to.
         /// </summary>
         public WorkflowProjectStatus ToWorkflowStatus { get; set; }

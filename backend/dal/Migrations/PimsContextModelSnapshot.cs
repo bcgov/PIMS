@@ -1743,9 +1743,6 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<bool>("ValidateTasks")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
@@ -1855,6 +1852,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<bool>("ValidateTasks")
+                        .HasColumnType("bit");
 
                     b.HasKey("FromWorkflowId", "FromStatusId", "ToWorkflowId", "ToStatusId");
 

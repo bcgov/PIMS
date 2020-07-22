@@ -673,7 +673,7 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
-
+             
             // Only allow valid project status transitions.
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
             var fromStatus = this.Context.WorkflowProjectStatus
@@ -685,14 +685,14 @@ namespace Pims.Dal.Services
                 .Include(s => s.Tasks)
                 .FirstOrDefault(s => s.Id == project.StatusId) ?? throw new KeyNotFoundException();
 
-            if (fromStatus.StatusId != toStatus.Id)
+            if (fromStatus.StatusId != toStatus.Id && (fromStatus.Status.SortOrder <= toStatus.SortOrder || toStatus.IsTerminal))
             {
                 var fromWorkflow = fromStatus.ToStatus.FirstOrDefault(s => s.ToStatusId == project.StatusId);
                 if (fromWorkflow == null) throw new InvalidOperationException($"Invalid project status transitions from '{fromStatus.Status.Name}' to '{toStatus?.Name}'.");
                 project.WorkflowId = fromWorkflow.ToWorkflowId; // Transition to the new workflow if required.
 
                 // TODO: Ideally this would handle scenarios where some tasks would need to be performed for termnating a project.
-                if (toStatus.ValidateTasks)
+                if (fromWorkflow.ValidateTasks)
                 {
                     // Validate that all required tasks have been completed for the current status before allowing transition from one status to another.
                     var completedTaskIds = project.Tasks.Where(t => t.IsCompleted).Select(t => t.TaskId);
