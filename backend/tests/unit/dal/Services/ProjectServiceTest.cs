@@ -818,7 +818,7 @@ namespace Pims.Dal.Test.Services
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
             projectToUpdate.Description = "A new description";
-            var result = service.Update(projectToUpdate);
+            var result = service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
@@ -864,7 +864,7 @@ namespace Pims.Dal.Test.Services
             parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
-            var result = await service.UpdateAsync(projectToUpdate);
+            var result = service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
