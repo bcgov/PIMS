@@ -4,7 +4,6 @@ using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
-using Pims.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,25 +170,8 @@ namespace Pims.Dal.Services
 
             try
             {
-                var email = new Notifications.Models.Email()
-                {
-                    To = notification.To.Split(";"),
-                    Cc = notification.Cc?.Split(";"),
-                    Bcc = notification.Bcc?.Split(";"),
-                    Encoding = notification.Encoding.ConvertTo<NotificationEncodings, Notifications.Models.EmailEncodings>(),
-                    BodyType = notification.BodyType.ConvertTo<NotificationBodyTypes, Notifications.Models.EmailBodyTypes>(),
-                    Priority = notification.Priority.ConvertTo<NotificationPriorities, Notifications.Models.EmailPriorities>(),
-                    Subject = notification.Subject,
-                    Body = notification.Body,
-                    Tag = notification.Tag,
-                    SendOn = notification.SendOn,
-                };
-                var response = await _notifyService.SendNotificationAsync($"{templateId}-{template.RowVersion.ConvertRowVersion()}", email, model);
-
-                notification.ChesTransactionId = response.TransactionId;
-                notification.ChesMessageId = response.Messages.First().MessageId;
-                notification.Subject = email.Subject;
-                notification.Body = email.Body;
+                _notifyService.Generate(notification, model);
+                await _notifyService.SendAsync(notification);
             }
             catch (Exception ex)
             {

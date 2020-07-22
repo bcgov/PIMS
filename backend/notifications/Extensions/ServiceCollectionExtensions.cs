@@ -16,6 +16,7 @@ namespace Pims.Notifications
         public static IServiceCollection AddNotificationsService(this IServiceCollection services)
         {
             return services
+                .AddScoped<Dal.Services.INotificationService, NotificationService>()
                 .AddScoped<INotificationService, NotificationService>();
         }
 
@@ -29,6 +30,7 @@ namespace Pims.Notifications
         {
             return services
                 .Configure<Configuration.NotificationOptions>(section)
+                .AddScoped<Dal.Services.INotificationService, NotificationService>()
                 .AddScoped<INotificationService, NotificationService>();
         }
     }

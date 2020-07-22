@@ -6,12 +6,14 @@ using Microsoft.Extensions.Options;
 using Pims.Api.Areas.Project.Models.Dispose;
 using Pims.Api.Models;
 using Pims.Api.Policies;
+using Pims.Core.Exceptions;
 using Pims.Core.Extensions;
 using Pims.Dal;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using Pims.Notifications;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,7 @@ namespace Pims.Api.Areas.Project.Controllers
     {
         #region Variables
         private readonly IPimsService _pimsService;
+        private readonly INotificationService _notifyService;
         private readonly IMapper _mapper;
         private readonly PimsOptions _options;
         #endregion
@@ -45,11 +48,13 @@ namespace Pims.Api.Areas.Project.Controllers
         /// </summary>
         /// <param name="options"></param>
         /// <param name="pimsService"></param>
+        /// <param name="notifyService"></param>
         /// <param name="mapper"></param>
-        public DisposeController(IOptionsMonitor<PimsOptions> options, IPimsService pimsService, IMapper mapper)
+        public DisposeController(IOptionsMonitor<PimsOptions> options, IPimsService pimsService, INotificationService notifyService, IMapper mapper)
         {
             _options = options.CurrentValue;
             _pimsService = pimsService;
+            _notifyService = notifyService;
             _mapper = mapper;
         }
         #endregion
@@ -102,10 +107,7 @@ namespace Pims.Api.Areas.Project.Controllers
         [SwaggerOperation(Tags = new[] { "project" })]
         public async Task<IActionResult> AddProjectAsync(ProjectModel model)
         {
-            var project = _pimsService.Project.Add(_mapper.Map<Entity.Project>(model));
-            var notifications = _pimsService.NotificationQueue.GenerateNotifications(project, null, project.StatusId);
-            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
-
+            var project = await _pimsService.Project.AddAsync(_mapper.Map<Entity.Project>(model));
             return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
         }
 
@@ -124,30 +126,7 @@ namespace Pims.Api.Areas.Project.Controllers
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/{projectNumber})")]
         public async Task<IActionResult> UpdateProjectAsync(string projectNumber, ProjectModel model)
         {
-            var project = _pimsService.Project.Get(model.Id);
-            var fromStatusId = project.StatusId;
-            var updatedProject = _mapper.Map<Entity.Project>(model);
-
-            // Determine if there are any response changes.
-            var responses = project.GetResponseChanges(updatedProject);
-
-            project = _pimsService.Project.Update(updatedProject);
-
-            var notifications = new List<NotificationQueue>();
-            // If the status did not change, do not send notifications.
-            if (fromStatusId != model.StatusId)
-            {
-                notifications.AddRange(_pimsService.NotificationQueue.GenerateNotifications(project, fromStatusId, model.StatusId));
-            }
-
-            // Send/Cancel notifications based on responses.
-            if (responses.Any())
-            {
-                notifications.AddRange(await _pimsService.Project.GenerateWatchNotificationsAsync(responses));
-            }
-
-            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
-
+            var project = await _pimsService.Project.UpdateAsync(_mapper.Map<Entity.Project>(model));
             return new JsonResult(_mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
         }
 
@@ -187,33 +166,12 @@ namespace Pims.Api.Areas.Project.Controllers
             if (String.IsNullOrWhiteSpace(model.WorkflowCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(model.WorkflowCode));
             if (String.IsNullOrWhiteSpace(model.StatusCode)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(model.StatusCode));
 
-            var project = _pimsService.Project.Get(model.Id);
-            var fromStatusId = project.StatusId;
-            var updatedProject = _mapper.Map<Entity.Project>(model);
-
-            // Determine if there are any response changes.
-            var responses = project.GetResponseChanges(updatedProject);
-
+            var project = _mapper.Map<Entity.Project>(model);
             var workflow = _pimsService.Workflow.Get(model.WorkflowCode);
             var status = workflow.Status.FirstOrDefault(s => s.Status.Code == model.StatusCode) ?? throw new KeyNotFoundException();
-            updatedProject.WorkflowId = workflow.Id;
-            updatedProject.StatusId = status.StatusId;
-            project = await _pimsService.Project.SetStatusAsync(updatedProject, workflow);
-
-            var notifications = new List<NotificationQueue>();
-            // If the status did not change, do not send notifications.
-            if (fromStatusId != status.StatusId)
-            {
-                notifications.AddRange(_pimsService.NotificationQueue.GenerateNotifications(project, fromStatusId, status.StatusId));
-            }
-
-            // Send/Cancel notifications based on responses.
-            if (responses.Any())
-            {
-                notifications.AddRange(await _pimsService.Project.GenerateWatchNotificationsAsync(responses));
-            }
-
-            await _pimsService.NotificationQueue.SendNotificationsAsync(notifications);
+            project.WorkflowId = workflow.Id;
+            project.StatusId = status.StatusId;
+            project = await _pimsService.Project.SetStatusAsync(project, workflow);
 
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
@@ -297,10 +255,12 @@ namespace Pims.Api.Areas.Project.Controllers
         public async Task<IActionResult> GetProjectNotificationsAsync(ProjectNotificationFilter filter)
         {
             var page = _pimsService.Project.GetNotificationsInQueue(filter);
-            foreach (var notification in page.Items.Where(n => n.Status.In(NotificationStatus.Accepted, NotificationStatus.Pending)))
+            foreach (var notification in page.Items.Where(n => n.ChesMessageId.HasValue && n.Status.In(NotificationStatus.Accepted, NotificationStatus.Pending)))
             {
-                await _pimsService.NotificationQueue.UpdateStatusAsync(notification.Id);
+                var response = await _notifyService.GetStatusAsync(notification.ChesMessageId.Value);
+                notification.Status = (Entity.NotificationStatus)Enum.Parse(typeof(Entity.NotificationStatus), response.Status, true);
             }
+            _pimsService.NotificationQueue.Update(page);
 
             return new JsonResult(_mapper.Map<PageModel<NModel.NotificationQueueModel>>(page));
         }
@@ -314,13 +274,14 @@ namespace Pims.Api.Areas.Project.Controllers
         [HttpPut("{id}/notifications/cancel")]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(PageModel<NModel.NotificationQueueModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<NModel.NotificationQueueModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project", "notification" })]
         public async Task<IActionResult> CancelProjectNotificationsAsync(int id)
         {
-            var page = await _pimsService.Project.CancelNotificationsAsync(id);
-            return new JsonResult(_mapper.Map<PageModel<NModel.NotificationQueueModel>>(page));
+            var notifications = await _pimsService.Project.CancelNotificationsAsync(id);
+            _pimsService.NotificationQueue.Update(notifications);
+            return new JsonResult(_mapper.Map<IEnumerable<NModel.NotificationQueueModel>>(notifications));
         }
         #endregion
         #endregion

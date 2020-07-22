@@ -11,23 +11,28 @@ namespace Pims.Dal
         /// <summary>
         /// get/set - Service account configuration details.
         /// </summary>
-        public ServiceAccountOptions ServiceAccount { get; set; }
+        public ServiceAccountOptions ServiceAccount { get; set; } = new ServiceAccountOptions();
 
         /// <summary>
         /// get/set - Global project configuration settings.
         /// </summary>
-        public ProjectOptions Project { get; set; }
+        public ProjectOptions Project { get; set; } = new ProjectOptions();
 
         /// <summary>
         /// get/set - Environmental configuration settings.
         /// These are included in the notifications model.
         /// </summary>
-        public EnvironmentOptions Environment { get; set; }
+        public EnvironmentOptions Environment { get; set; } = new EnvironmentOptions();
 
         /// <summary>
         /// get/set - Access request configuration settings.
         /// </summary>
-        public AccessRequestOptions AccessRequest { get; set; }
+        public AccessRequestOptions AccessRequest { get; set; } = new AccessRequestOptions();
+
+        /// <summary>
+        /// get/set - Notification configuration settings.
+        /// </summary>
+        public NotificationOptions Notifications { get; set; } = new NotificationOptions();
         #endregion
     }
 }
