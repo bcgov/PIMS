@@ -414,7 +414,6 @@ namespace Pims.Dal.Migrations
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     IsMilestone = table.Column<bool>(nullable: false, defaultValue: false),
                     IsTerminal = table.Column<bool>(nullable: false, defaultValue: false),
-                    ValidateTasks = table.Column<bool>(nullable: false),
                     Route = table.Column<string>(maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -1390,7 +1389,8 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    Action = table.Column<string>(maxLength: 100, nullable: true)
+                    Action = table.Column<string>(maxLength: 100, nullable: true),
+                    ValidateTasks = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -30,11 +30,6 @@ namespace Pims.Dal.Entities
         public bool IsTerminal { get; set; }
 
         /// <summary>
-        /// get/set - Whether to validate the tasks before accepting a transition to this status.
-        /// </summary>
-        public bool ValidateTasks { get; set; } = true;
-
-        /// <summary>
         /// get/set - The route to the component/page that represents this status.
         /// </summary>
         public string Route { get; set; }

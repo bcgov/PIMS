@@ -27,11 +27,6 @@ namespace Pims.Api.Areas.Project.Models.Status
         public bool IsTerminal { get; set; }
 
         /// <summary>
-        /// get/set - Whether this status requires validating prior tasks before transitioning.
-        /// </summary>
-        public bool ValidateTasks { get; set; }
-
-        /// <summary>
         /// get/set - Whether this status is optional.
         /// </summary>
         public bool? IsOptional { get; set; }

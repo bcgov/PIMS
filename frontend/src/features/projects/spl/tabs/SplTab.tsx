@@ -21,6 +21,7 @@ const SplTab: React.FunctionComponent<ISplTabProps> = ({
         isReadOnly={isReadOnly}
         onClickMarketedOn={() => setSubmitStatusCode(ReviewWorkflowStatus.OnMarket)}
         onClickContractInPlace={() => setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlace)}
+        onClickPreMarketing={() => setSubmitStatusCode(ReviewWorkflowStatus.PreMarketing)}
         onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
       />
     </>
