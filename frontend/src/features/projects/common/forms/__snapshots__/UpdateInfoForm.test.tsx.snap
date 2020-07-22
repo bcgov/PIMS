@@ -265,15 +265,15 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "140 0 auto",
+                    "flex": "100 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "140px",
+                    "width": "100px",
                   }
                 }
               >
-                Classification
+                Civic Address
               </div>
               <div
                 className="th"
@@ -285,15 +285,15 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "140 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "140px",
                   }
                 }
               >
-                Civic Address
+                Classification
               </div>
               <div
                 className="th"
@@ -571,6 +571,26 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   
                 </div>
                 <div
+                  className="td clickable"
+                  onClick={[Function]}
+                  role="cell"
+                  style={
+                    Object {
+                      "alignItems": "flex-start",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                  title="Click to view property details"
+                >
+                  Test, Alert Bay
+                </div>
+                <div
                   className="td"
                   onClick={[Function]}
                   role="cell"
@@ -605,26 +625,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       />
                     </select>
                   </div>
-                </div>
-                <div
-                  className="td clickable"
-                  onClick={[Function]}
-                  role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                  title="Click to view property details"
-                >
-                  Test, Alert Bay
                 </div>
                 <div
                   className="td"
@@ -938,11 +938,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "140 0 auto",
+                    "flex": "100 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "140px",
+                    "width": "100px",
                   }
                 }
               >
@@ -957,11 +957,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "140 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "140px",
                   }
                 }
               >

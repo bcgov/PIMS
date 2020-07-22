@@ -53,12 +53,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
       role="tablist"
     >
       <a
-        aria-controls="approvalTabs-tabpane-Project Information"
+        aria-controls="approvalTabs-tabpane-projectInformation"
         aria-selected={false}
         className="nav-item nav-link"
-        data-rb-event-key="Project Information"
+        data-rb-event-key="projectInformation"
         href="#"
-        id="approvalTabs-tab-Project Information"
+        id="approvalTabs-tab-projectInformation"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
@@ -67,12 +67,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
         Project Information
       </a>
       <a
-        aria-controls="approvalTabs-tabpane-Documentation"
+        aria-controls="approvalTabs-tabpane-documentation"
         aria-selected={false}
         className="nav-item nav-link"
-        data-rb-event-key="Documentation"
+        data-rb-event-key="documentation"
         href="#"
-        id="approvalTabs-tab-Documentation"
+        id="approvalTabs-tab-documentation"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
@@ -81,12 +81,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
         Documentation
       </a>
       <a
-        aria-controls="approvalTabs-tabpane-Enhanced Referral Process"
+        aria-controls="approvalTabs-tabpane-enhancedReferralProcess"
         aria-selected={true}
         className="nav-item nav-link active"
-        data-rb-event-key="Enhanced Referral Process"
+        data-rb-event-key="enhancedReferralProcess"
         href="#"
-        id="approvalTabs-tab-Enhanced Referral Process"
+        id="approvalTabs-tab-enhancedReferralProcess"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="tab"
@@ -99,23 +99,23 @@ exports[`ERP Approval Step renders correctly 1`] = `
     >
       <div
         aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-Project Information"
+        aria-labelledby="approvalTabs-tab-projectInformation"
         className="fade tab-pane"
-        id="approvalTabs-tabpane-Project Information"
+        id="approvalTabs-tabpane-projectInformation"
         role="tabpanel"
       />
       <div
         aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-Documentation"
+        aria-labelledby="approvalTabs-tab-documentation"
         className="fade tab-pane"
-        id="approvalTabs-tabpane-Documentation"
+        id="approvalTabs-tabpane-documentation"
         role="tabpanel"
       />
       <div
         aria-hidden={false}
-        aria-labelledby="approvalTabs-tab-Enhanced Referral Process"
+        aria-labelledby="approvalTabs-tab-enhancedReferralProcess"
         className="fade tab-pane active show"
-        id="approvalTabs-tabpane-Enhanced Referral Process"
+        id="approvalTabs-tabpane-enhancedReferralProcess"
         role="tabpanel"
       >
         <div

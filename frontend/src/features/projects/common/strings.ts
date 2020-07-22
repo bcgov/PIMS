@@ -22,3 +22,4 @@ export const updatePimsWarning =
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
 export const disposeWarning = `Are you sure you want to dispose this project? This will set all properties within the project to inactive.`;
 export const offersReceived = `Review Required for offer(s) in Tier 3 & 4.`;
+export const projectComments = `Please provide any variances between appraised, assessed, and sale price.`;

@@ -25,6 +25,7 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Value).HasColumnType("MONEY");
             builder.Property(m => m.Note).HasMaxLength(500);
+            builder.Property(m => m.Firm).HasMaxLength(150);
 
             builder.HasOne(m => m.Parcel).WithMany(m => m.Evaluations).HasForeignKey(m => m.ParcelId).OnDelete(DeleteBehavior.ClientCascade);
 

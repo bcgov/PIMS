@@ -41,9 +41,11 @@ export interface IProperty {
 
   assessed: number;
   assessedDate?: Date | string;
+  assessedFirm?: string;
   assessedRowVersion?: string;
   appraised: number;
   appraisedDate?: Date | string;
+  appraisedFirm?: string;
   appraisedRowVersion?: string;
 
   // Parcel Properties
@@ -120,6 +122,7 @@ export interface IProject {
   properties: IProperty[];
   projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
+  notes: IProjectNote[];
   publicNote: string;
   privateNote: string;
   agencyResponseNote?: string;
@@ -147,14 +150,55 @@ export interface IProject {
   clearanceNotificationSentOn?: Date | string;
   marketedOn?: Date | string;
   disposedOn?: Date | string;
+  assessedOn?: Date | string;
+  adjustedOn?: Date | string;
   offerAcceptedOn?: Date | string;
-  netBook?: number;
-  assessed?: number;
+  preliminaryFormSignedOn?: Date | string;
+  finalFormSignedOn?: Date | string;
+  netBook?: number | '';
+  netBookOverride?: boolean;
+  assessed?: number | '';
+  assessedOverride?: boolean;
+  appraised?: number | '';
   estimated?: number;
-  workflowCode?: string | '';
-  offerAmount?: number | '';
+  workflowCode?: string;
   isContractConditional?: boolean;
-  purchaser?: string | '';
+  purchaser?: string;
+  manager?: string;
+  actualFiscalYear?: string;
+  plannedFutureUse?: string;
+  remediation?: string;
+  preliminaryFormSignedBy?: string;
+  finalFormSignedBy?: string;
+  offerAmount?: number | '';
+  interestComponent?: number | '';
+  ocgFinancialStatement?: number | '';
+  salesCost?: number | '';
+  salesProceeds?: number | '';
+  gainBeforeSpp?: number | '';
+  gainAfterSpp?: number | '';
+  programCost?: number | '';
+  priorYearAdjustmentAmount?: number | '';
+}
+
+export enum NoteTypes {
+  General = 0,
+  Public = 1,
+  Private = 2,
+  Exemption = 3,
+  AgencyInterest = 4,
+  Financial = 5,
+  PreMarketing = 6,
+  Marketing = 7,
+  ContractInPlace = 8,
+  Reporting = 9,
+  LoanTerms = 10,
+  Adjustment = 11,
+  SppCost = 12,
+  SppGain = 13,
+  SalesHistory = 14,
+  CloseOut = 15,
+  Comments = 16,
 }
 
 export enum DisposeWorkflowStatus {
@@ -190,10 +234,11 @@ export enum ReviewWorkflowStatus {
 }
 
 export enum SPPApprovalTabs {
-  projectInformation = 'Project Information',
-  documentation = 'Documentation',
-  erp = 'Enhanced Referral Process',
-  spl = 'Surplus Properties List',
+  projectInformation = 'projectInformation',
+  documentation = 'documentation',
+  erp = 'enhancedReferralProcess',
+  spl = 'surplusPropertyList',
+  closeOutForm = 'closeOutForm',
 }
 
 export interface ProjectWorkflowComponent {
@@ -235,6 +280,7 @@ export const initialValues: IProject = {
   projectNumber: '',
   name: '',
   note: '',
+  notes: [],
   description: '',
   properties: [],
   tierLevelId: 1,
@@ -261,13 +307,32 @@ export const initialValues: IProject = {
   marketedOn: '',
   disposedOn: '',
   offerAcceptedOn: '',
+  assessedOn: '',
+  adjustedOn: '',
+  preliminaryFormSignedOn: '',
+  finalFormSignedOn: '',
   netBook: 0,
   assessed: 0,
+  appraised: 0,
   estimated: 0,
   workflowCode: '',
   offerAmount: '',
   isContractConditional: false,
   purchaser: '',
+  manager: '',
+  actualFiscalYear: '',
+  plannedFutureUse: '',
+  remediation: '',
+  preliminaryFormSignedBy: '',
+  finalFormSignedBy: '',
+  interestComponent: '',
+  ocgFinancialStatement: '',
+  salesCost: '',
+  salesProceeds: '',
+  gainBeforeSpp: '',
+  gainAfterSpp: '',
+  programCost: '',
+  priorYearAdjustmentAmount: '',
 };
 
 export interface IApiProject {
@@ -301,6 +366,15 @@ export interface IApiProject {
   OnHoldNotificationSentOn?: Date | string;
   TransferredWithinGreOn?: Date | string;
   ClearanceNotificationSentOn?: Date | string;
+  notes: IProjectNote[];
+}
+
+export interface IProjectNote {
+  id?: number;
+  noteType: string | NoteTypes;
+  note?: string;
+  rowVersion?: string;
+  projectId?: number;
 }
 
 export interface IApiProperty {

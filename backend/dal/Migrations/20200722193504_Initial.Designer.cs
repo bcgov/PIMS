@@ -10,7 +10,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20200717191911_Initial")]
+    [Migration("20200722193504_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1121,6 +1121,10 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Firm")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")

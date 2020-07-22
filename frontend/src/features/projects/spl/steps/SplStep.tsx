@@ -26,6 +26,7 @@ import {
   SplTabs,
   SurplusPropertyInformationYupSchema,
   SurplusPropertyListYupSchema,
+  CloseOutFormValidationSchema,
 } from '..';
 import { ApprovalActions } from 'features/projects/erp';
 import './SplStep.scss';
@@ -56,15 +57,19 @@ const SplStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
-  const currentTab =
-    useSelector<RootState, string | null>(state => state.splTab) ?? SPPApprovalTabs.spl;
+  const defaultTab =
+    project?.statusCode === ReviewWorkflowStatus.Disposed
+      ? SPPApprovalTabs.closeOutForm
+      : SPPApprovalTabs.spl;
+  const currentTab = useSelector<RootState, string | null>(state => state.splTab) ?? defaultTab;
   const dispatch = useDispatch();
   const canUserEdit =
     canUserApproveForm() &&
     (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
       project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
       project?.statusCode === ReviewWorkflowStatus.OnMarket ||
-      project?.statusCode === ReviewWorkflowStatus.ContractInPlace);
+      project?.statusCode === ReviewWorkflowStatus.ContractInPlace ||
+      currentTab === SPPApprovalTabs.closeOutForm);
   const setCurrentTab = (tabName: string) => {
     dispatch(saveSplTab(tabName));
   };
@@ -73,41 +78,55 @@ const SplStep = ({ formikRef }: IStepProps) => {
   const splValidationGroups: ValidationGroup[] = [
     {
       schema: SurplusPropertyInformationYupSchema,
-      tab: SPPApprovalTabs.projectInformation,
+      tab: 'Project Information',
       statusCode: DisposeWorkflowStatus.Draft,
     },
     {
       schema: DocumentationStepSchema,
-      tab: SPPApprovalTabs.documentation,
+      tab: 'Documentation',
       statusCode: ReviewWorkflowStatus.Disposed,
     },
     {
       schema: SurplusPropertyListYupSchema,
-      tab: SPPApprovalTabs.spl,
+      tab: 'Surplus Properties List',
       statusCode: ReviewWorkflowStatus.ContractInPlace,
     },
+    {
+      schema: CloseOutFormValidationSchema,
+      tab: 'Close Out Form',
+      statusCode: ReviewWorkflowStatus.Disposed,
+    },
   ];
+  const getValidationGroups = (statusCode?: string) => {
+    // Do not validate the close out form when transitioning statuses.
+    if (statusCode !== undefined) {
+      return splValidationGroups.slice(0, splValidationGroups.length - 1);
+    } else {
+      return splValidationGroups;
+    }
+  };
+
   return (
     <Container fluid>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
-        onSubmit={(values: IProject) =>
-          onSubmitReview(
+        onSubmit={(values: IProject) => {
+          return onSubmitReview(
             values,
             formikRef,
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
-          )
-        }
+          );
+        }}
         //only perform validation if the user is attempting to dispose the project.
         validate={(values: IProject) =>
           submitStatusCode === ReviewWorkflowStatus.Disposed || submitStatusCode === undefined
-            ? handleValidate(values, splValidationGroups)
+            ? handleValidate(values, getValidationGroups(submitStatusCode))
             : Promise.resolve({})
         }
       >
-        {({ values }) => (
+        {({ values, errors, touched }) => (
           <Form>
             <StepStatusIcon
               preIconLabel="Approved for Surplus Property Program"
@@ -123,14 +142,18 @@ const SplStep = ({ formikRef }: IStepProps) => {
               <ApprovalActions
                 submitStatusCode={submitStatusCode}
                 setSubmitStatusCode={setSubmitStatusCode}
-                submitDirectly={() =>
-                  onSubmitReview(
-                    values,
-                    formikRef,
-                    submitStatusCode,
-                    getStatusTransitionWorkflow(submitStatusCode),
-                  )
-                }
+                disableCancel={project?.statusCode === ReviewWorkflowStatus.Disposed}
+                submitDirectly={() => {
+                  //do not perform yup schema validation on save, but don't allow form submit if there are edited fields in error.
+                  if (_.intersection(Object.keys(errors), Object.keys(touched)).length === 0) {
+                    onSubmitReview(
+                      values,
+                      formikRef,
+                      submitStatusCode,
+                      getStatusTransitionWorkflow(submitStatusCode),
+                    );
+                  }
+                }}
               />
             )}
           </Form>

@@ -4,16 +4,16 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen } from '@testing-library/react';
+import { render, act, screen, cleanup } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
-import { cleanup } from '@testing-library/react-hooks';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
-import { IProject } from '../../common';
+import { IProject, SPPApprovalTabs } from '../../common';
 import { SplStep } from '..';
 import Claims from 'constants/claims';
+import { fillInput } from 'utils/testUtils';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -35,7 +35,7 @@ mockProject.statusCode = ReviewWorkflowStatus.PreMarketing;
 mockProject.approvedOn = '2020-07-15';
 mockProject.submittedOn = '2020-07-15';
 
-const getApprovalStep = (storeOverride?: any) => (
+const getSplStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
     <Router history={history}>
       <SplStep />
@@ -55,7 +55,7 @@ describe('SPL Approval Step', () => {
   });
   it('renders correctly', () => {
     mockKeycloak([]);
-    const tree = renderer.create(getApprovalStep()).toJSON();
+    const tree = renderer.create(getSplStep()).toJSON();
     expect(tree).toMatchSnapshot();
   });
   describe('Display when user has required claims', () => {
@@ -64,19 +64,19 @@ describe('SPL Approval Step', () => {
     });
 
     it('save button is visible and not disabled', () => {
-      const { getByText } = render(getApprovalStep());
+      const { getByText } = render(getSplStep());
       const saveButton = getByText(/Save/);
       expect(saveButton).toBeVisible();
       expect(saveButton).not.toBeDisabled();
     });
     it('cancel button is visible and not disabled', () => {
-      const { getByText } = render(getApprovalStep());
+      const { getByText } = render(getSplStep());
       const cancelButton = getByText(/Cancel Project/);
       expect(cancelButton).toBeVisible();
       expect(cancelButton).not.toBeDisabled();
     });
     it('form fields are not disabled', () => {
-      const { queryAllByRole } = render(getApprovalStep());
+      const { queryAllByRole } = render(getSplStep());
       const textboxes = queryAllByRole('textbox');
       textboxes.forEach(textbox => {
         expect(textbox).toBeVisible();
@@ -91,17 +91,17 @@ describe('SPL Approval Step', () => {
       mockKeycloak([]);
     });
     it('save button is not rendered', () => {
-      const { queryByText } = render(getApprovalStep());
+      const { queryByText } = render(getSplStep());
       const saveButton = queryByText(/Save/);
       expect(saveButton).toBeNull();
     });
     it('cancel button is not rendered', () => {
-      const { queryByText } = render(getApprovalStep());
+      const { queryByText } = render(getSplStep());
       const cancelButton = queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
     });
     it('form fields are disabled', () => {
-      const component = render(getApprovalStep());
+      const component = render(getSplStep());
       const textboxes = component.queryAllByRole('textbox');
       textboxes.forEach(textbox => {
         expect(textbox).toBeVisible();
@@ -117,17 +117,17 @@ describe('SPL Approval Step', () => {
       project.statusCode = ReviewWorkflowStatus.Cancelled;
     });
     it('save button is visible and disabled', () => {
-      const { queryByText } = render(getApprovalStep(getStore(project)));
+      const { queryByText } = render(getSplStep(getStore(project)));
       const saveButton = queryByText(/Save/);
       expect(saveButton).toBeNull();
     });
     it('cancel button is visible and disabled', () => {
-      const { queryByText } = render(getApprovalStep(getStore(project)));
+      const { queryByText } = render(getSplStep(getStore(project)));
       const cancelButton = queryByText(/Cancel Project/);
       expect(cancelButton).toBeNull();
     });
     it('form fields are disabled', () => {
-      const component = render(getApprovalStep(getStore(project)));
+      const component = render(getSplStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
       textboxes.forEach(textbox => {
         expect(textbox).toBeVisible();
@@ -143,7 +143,7 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.marketedOn = new Date();
 
-      const { getByText } = render(getApprovalStep(getStore(project)));
+      const { getByText } = render(getSplStep(getStore(project)));
       const marketingButton = getByText(/Change Status to Marketing/);
       expect(marketingButton).not.toBeDisabled();
     });
@@ -153,7 +153,7 @@ describe('SPL Approval Step', () => {
       project.offerAmount = 12345;
       project.clearanceNotificationSentOn = new Date();
 
-      const { getByText } = render(getApprovalStep(getStore(project)));
+      const { getByText } = render(getSplStep(getStore(project)));
       const contractInPlaceButton = getByText(/Change Status to Contract in Place/);
       expect(contractInPlaceButton).not.toBeDisabled();
     });
@@ -161,12 +161,12 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.statusCode = ReviewWorkflowStatus.ContractInPlace;
 
-      const { getByText } = render(getApprovalStep(getStore(project)));
+      const { getByText } = render(getSplStep(getStore(project)));
       const preMarketingButton = getByText(/Change Status to Pre-Marketing/);
       expect(preMarketingButton).not.toBeDisabled();
     });
     it('displays modal when cancel button clicked', async (done: any) => {
-      const component = render(getApprovalStep());
+      const component = render(getSplStep());
       const cancelButton = component.getByText(/Cancel Project/);
       act(() => {
         cancelButton.click();
@@ -185,7 +185,7 @@ describe('SPL Approval Step', () => {
       project.isContractConditional = true;
       project.marketedOn = new Date();
 
-      const component = render(getApprovalStep(getStore(project)));
+      const component = render(getSplStep(getStore(project)));
       const disposedButton = component.getByText(/Change Status to Disposed Externally/);
       act(() => {
         disposedButton.click();
@@ -198,7 +198,7 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.tasks[0].isOptional = false;
 
-      render(getApprovalStep(getStore(project)));
+      render(getSplStep(getStore(project)));
       const saveButton = screen.getByText(/Save/);
       act(() => {
         saveButton.click();
@@ -213,9 +213,9 @@ describe('SPL Approval Step', () => {
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlace;
 
-      const component = render(getApprovalStep(getStore(project)));
+      const component = render(getSplStep(getStore(project)));
       const disposeButton = component.getByText(/Change Status to Disposed Externally/);
-      act(async () => {
+      act(() => {
         disposeButton.click();
       });
 
@@ -233,7 +233,7 @@ describe('SPL Approval Step', () => {
         },
       ];
 
-      render(getApprovalStep(getStore(project)));
+      render(getSplStep(getStore(project)));
       const saveButton = screen.getByText(/Save/);
       mockAxios
         .onPut()
@@ -247,6 +247,85 @@ describe('SPL Approval Step', () => {
         })
         .onAny()
         .reply((config: any) => {
+          return [200, Promise.resolve({})];
+        });
+
+      await act(async () => {
+        saveButton.click();
+      });
+    });
+  });
+
+  describe('close out form tab', () => {
+    beforeAll(() => {
+      jest.clearAllMocks();
+      cleanup();
+      mockKeycloak([Claims.ADMIN_PROJECTS]);
+    });
+    afterEach(() => {
+      mockAxios.reset();
+    });
+    const store = getStore(mockProject, SPPApprovalTabs.closeOutForm);
+    it('renders correctly', () => {
+      const tree = renderer.create(getSplStep(store)).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
+    it('displays close out form tab by default if project disposed', () => {
+      const project = _.cloneDeep(mockProject);
+      project.statusCode = ReviewWorkflowStatus.Disposed;
+      const { getByText } = render(getSplStep(getStore(project)));
+      expect(getByText('Financing Information')).toBeVisible();
+    });
+
+    it('displays close out notes', () => {
+      const { getByText } = render(getSplStep(store));
+      expect(getByText('loanterms')).toBeVisible();
+      expect(getByText('adjustment')).toBeVisible();
+      expect(getByText('comments')).toBeVisible();
+      expect(getByText('saleshistory')).toBeVisible();
+    });
+
+    it('net book override set when netbook value changed', async (done: any) => {
+      const { container } = render(getSplStep(store));
+      const saveButton = screen.getByText(/Save/);
+      await fillInput(container, 'netBook', '1234');
+      mockAxios
+        .onPut()
+        .reply((config: any) => {
+          if (JSON.parse(config.data).netBookOverride) {
+            done();
+          } else {
+            done.fail('netBookOverride was not equal to true');
+          }
+          return [200, Promise.resolve({})];
+        })
+        .onAny()
+        .reply(() => {
+          return [200, Promise.resolve({})];
+        });
+
+      await act(async () => {
+        saveButton.click();
+      });
+    });
+
+    it('assessed override set when assessed value changed', async (done: any) => {
+      const { container } = render(getSplStep(store));
+      const saveButton = screen.getByText(/Save/);
+      await fillInput(container, 'assessed', '1234');
+      mockAxios
+        .onPut()
+        .reply((config: any) => {
+          if (JSON.parse(config.data).assessedOverride) {
+            done();
+          } else {
+            done.fail('assessedOverride was not equal to true');
+          }
+          return [200, Promise.resolve({})];
+        })
+        .onAny()
+        .reply(() => {
           return [200, Promise.resolve({})];
         });
 

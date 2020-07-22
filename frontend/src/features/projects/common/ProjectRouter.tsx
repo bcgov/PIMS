@@ -94,7 +94,12 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
-            path={['/projects/premarketing', '/projects/marketing', '/projects/contractinplace']}
+            path={[
+              '/projects/premarketing',
+              '/projects/marketing',
+              '/projects/contractinplace',
+              '/projects/disposed',
+            ]}
             component={SplStep}
             componentProps={{ formikRef }}
           />
@@ -104,9 +109,12 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
             path={[
               '/projects/summary',
               '/projects/transferred',
-              '/projects/disposed',
               '/projects/denied',
               '/projects/cancelled',
+              '/projects/premarketing',
+              '/projects/marketing',
+              '/projects/contractinplace',
+              '/projects/disposed',
             ]}
             component={ProjectSummaryView}
             componentProps={{ formikRef }}

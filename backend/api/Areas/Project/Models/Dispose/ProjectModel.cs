@@ -35,6 +35,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public int ActualFiscalYear { get; set; }
 
         /// <summary>
+        /// get/set - The netbook fiscal year.
+        /// </summary>
+        public int NetBookFiscalYear { get; set; }
+
+        /// <summary>
+        /// get/set - The project manager name(s).
+        /// </summary>
+        public string Manager { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the workflow.
         /// </summary>
         public int WorkflowId { get; set; }
@@ -103,6 +113,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - Note summerizing offers received.
         /// </summary>
         public string OffersNote { get; set; }
+
+        /// <summary>
+        /// get/set - Note for comments.
+        /// </summary>
+        public string Comments { get; set; }
 
         /// <summary>
         /// get/set - Text field describing project purchaser.
@@ -210,6 +225,31 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? OfferAcceptedOn { get; set; }
 
         /// <summary>
+        /// get/set - When the project was assessed.
+        /// </summary>
+        public DateTime? AssessedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project had its sale adjusted.
+        /// </summary>
+        public DateTime? AdjustedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the preliminary form was signed on.
+        /// </summary>
+        public DateTime? PreliminaryFormSignedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the final form was signed on.
+        /// </summary>
+        public DateTime? FinalFormSignedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the prior year adjustment sale date occurred on.
+        /// </summary>
+        public DateTime? PriorYearAdjustmentOn { get; set; }
+
+        /// <summary>
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
@@ -225,6 +265,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal NetBook { get; set; }
 
         /// <summary>
+        /// get/set - Whether the calculated netbook value should be overriden with a static value.
+        /// </summary>
+        public bool NetBookOverride { get; set; } = false;
+
+        /// <summary>
         /// get/set - The estimated value which is the sum of the properties.
         /// </summary>
         public decimal Estimated { get; set; }
@@ -235,9 +280,119 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal Assessed { get; set; }
 
         /// <summary>
+        /// get/set - Whether the calculated assessed value should be overriden with a static value.
+        /// </summary>
+        public bool AssessedOverride { get; set; } = false;
+
+        /// <summary>
+        /// get/set - The sales cost.
+        /// </summary>
+        public decimal SalesCost { get; set; }
+
+        /// <summary>
+        /// get/set - The net proceeds
+        /// </summary>
+        public decimal NetProceeds { get; set; }
+
+        /// <summary>
+        /// get/set - The sales proceeds
+        /// </summary>
+        public decimal SalesProceeds { get; set; }
+
+        /// <summary>
+        /// get/set - The program cost.
+        /// </summary>
+        public decimal ProgramCost { get; set; }
+
+        /// <summary>
+        /// get/set - The gain or loss from selling the properties.
+        /// </summary>
+        public decimal GainLoss { get; set; }
+
+        /// <summary>
+        /// get/set - The SPP Capitalization value.
+        /// </summary>
+        public decimal SppCapitalization { get; set; }
+
+        /// <summary>
+        /// get/set - The gain before SPP.
+        /// </summary>
+        public decimal GainBeforeSpp { get; set; }
+
+        /// <summary>
+        /// get/set - The gain after SPP.
+        /// </summary>
+        public decimal GainAfterSpp { get; set; }
+
+        /// <summary>
+        /// get/set - OCG final statement.
+        /// </summary>
+        public decimal? OcgFinancialStatement { get; set; }
+
+        /// <summary>
+        /// get/set - Record the interest component.
+        /// </summary>
+        public decimal InterestComponent { get; set; }
+
+        /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
         public decimal OfferAmount { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the sale includes a lease in place (SLIP).
+        /// </summary>
+        public bool SaleWithLeaseInPlace { get; set; }
+
+        /// <summary>
+        /// get/set - Whether an adjustment to prior year sale is required.
+        /// </summary>
+        public bool PriorYearAdjustment { get; set; }
+
+        /// <summary>
+        /// get/set - Whether an adjustment to prior year sale is required.
+        /// </summary>
+        public decimal PriorYearAdjustmentAmount { get; set; }
+
+        /// <summary>
+        /// get/set - Remediation.
+        /// </summary>
+        public string Remediation { get; set; }
+
+        /// <summary>
+        /// get/set - Remediation.
+        /// </summary>
+        public string PlannedFutureUse { get; set; }
+
+        /// <summary>
+        /// get/set - the real estate agent
+        /// </summary>
+        public string Realtor { get; set; }
+
+        /// <summary>
+        /// get/set - the real estate agent's rate for this project
+        /// </summary>
+        public string RealtorRate { get; set; }
+
+        /// <summary>
+        /// get/set - the real estate agent's commission for this project
+        /// </summary>
+        public decimal RealtorCommission { get; set; }
+
+        /// <summary>
+        /// get/set - who signed the preliminary form.
+        /// </summary>
+        public string PreliminaryFormSignedBy { get; set; }
+
+        /// <summary>
+        /// get/set - who signed the final form.
+        /// </summary>
+        public string FinalFormSignedBy { get; set; }
+
+        /// <summary>
+        /// get/set - An array of project notes.
+        /// </summary>
+        public IEnumerable<ProjectNoteModel> Notes { get; set; } = new List<ProjectNoteModel>();
 
         /// <summary>
         /// get/set - An array of properties associated with this project.

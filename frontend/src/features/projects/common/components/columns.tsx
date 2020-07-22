@@ -5,7 +5,7 @@ import React from 'react';
 import { CellProps } from 'react-table';
 import { formatMoney, formatNumber, formatDate } from 'utils';
 import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
-import { useFormikContext } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import {
   FastCurrencyInput,
   FastSelect,
@@ -84,12 +84,19 @@ const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo:
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-const getEditableDatePickerCell = (namespace: string = 'properties') => (cellInfo: any) => {
+const getEditableDatePickerCell = (namespace: string = 'properties', minDate: boolean = false) => (
+  cellInfo: any,
+) => {
   const formikProps = useFormikContext();
   return (
     <FastDatePicker
       formikProps={formikProps}
       field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+      minDate={
+        minDate
+          ? getIn(formikProps.values, `${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`)
+          : undefined
+      }
     ></FastDatePicker>
   );
 };
@@ -145,13 +152,7 @@ const useProjectFinancialValues = (project: IProject, editable?: boolean) => {
   return !editable && project.statusCode === DisposeWorkflowStatus.Review;
 };
 
-export const getColumns = ({
-  project,
-  editableClassification,
-  editableFinancials,
-  editableZoning,
-  limitLabels,
-}: IDisposeColumnOptions): any => [
+export const defaultPropertyColumns: any[] = [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
@@ -172,77 +173,125 @@ export const getColumns = ({
     clickable: true,
   },
   {
-    Header: 'Classification',
-    accessor: 'classification',
-    width: 140,
-    align: 'left',
-    Cell: editableClassification
-      ? getEditableClassificationCell(limitLabels)
-      : (cellInfo: any) => cellInfo.value,
-    clickable: !editableClassification,
-  },
-  {
     Header: 'Civic Address',
     accessor: 'address',
     align: 'left',
     clickable: true,
   },
+];
+
+export const getColumns = ({
+  project,
+  editableClassification,
+  editableFinancials,
+  editableZoning,
+  limitLabels,
+}: IDisposeColumnOptions): any =>
+  defaultPropertyColumns.concat([
+    {
+      Header: 'Classification',
+      accessor: 'classification',
+      width: 140,
+      align: 'left',
+      Cell: editableClassification
+        ? getEditableClassificationCell(limitLabels)
+        : (cellInfo: any) => cellInfo.value,
+      clickable: !editableClassification,
+    },
+    {
+      Header: 'Current Zoning Code',
+      accessor: 'zoning',
+      align: 'left',
+      clickable: !editableZoning,
+      Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
+    },
+    {
+      Header: 'Potential Zoning Code',
+      accessor: 'zoningPotential',
+      align: 'left',
+      clickable: !editableZoning,
+      Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
+      Footer: () => <span>Sum</span>,
+    },
+    {
+      Header: 'Netbook Value',
+      accessor: 'netBook',
+      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      minWidth: 145,
+      align: 'left',
+      Footer: ({ properties }: { properties: IProperty[] }) => (
+        <span>
+          {useProjectFinancialValues(project, editableFinancials)
+            ? formatMoney(project.netBook)
+            : sumFinancialRows(properties, 'netBook')}
+        </span>
+      ),
+    },
+    {
+      Header: 'Estimated Value',
+      accessor: 'estimated',
+      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      minWidth: 145,
+      align: 'left',
+      Footer: ({ properties }: { properties: IProperty[] }) => (
+        <span>
+          {useProjectFinancialValues(project, editableFinancials)
+            ? formatMoney(project.estimated)
+            : sumFinancialRows(properties, 'estimated')}
+        </span>
+      ),
+    },
+    {
+      Header: 'Assessed Value',
+      accessor: 'assessed',
+      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      minWidth: 145,
+      align: 'left',
+      Footer: ({ properties }: { properties: IProperty[] }) => (
+        <span>
+          {useProjectFinancialValues(project, editableFinancials)
+            ? formatMoney(project.assessed)
+            : sumFinancialRows(properties, 'assessed')}
+        </span>
+      ),
+    },
+    {
+      Header: 'Type',
+      accessor: 'propertyTypeId',
+      width: 60,
+      clickable: true,
+      Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
+        const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
+        return icon;
+      },
+    },
+  ]);
+
+export const getAppraisedColumns = (): any[] => [
   {
-    Header: 'Current Zoning Code',
-    accessor: 'zoning',
+    Header: 'Property Name',
+    accessor: 'description',
+    maxWidth: 170,
     align: 'left',
-    clickable: !editableZoning,
-    Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
+    clickable: true,
   },
   {
-    Header: 'Potential Zoning Code',
-    accessor: 'zoningPotential',
+    Header: 'Street Address',
+    accessor: 'address',
     align: 'left',
-    clickable: !editableZoning,
-    Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
-    Footer: () => <span>Sum</span>,
+    clickable: true,
   },
   {
-    Header: 'Netbook Value',
-    accessor: 'netBook',
-    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
-    minWidth: 145,
+    Header: 'City',
+    accessor: 'city',
     align: 'left',
-    Footer: ({ properties }: { properties: IProperty[] }) => (
-      <span>
-        {useProjectFinancialValues(project, editableFinancials)
-          ? formatMoney(project.netBook)
-          : sumFinancialRows(properties, 'netBook')}
-      </span>
-    ),
+    clickable: true,
   },
   {
-    Header: 'Estimated Value',
-    accessor: 'estimated',
-    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
-    minWidth: 145,
+    Header: 'Municipality',
+    accessor: 'municipality',
     align: 'left',
-    Footer: ({ properties }: { properties: IProperty[] }) => (
-      <span>
-        {useProjectFinancialValues(project, editableFinancials)
-          ? formatMoney(project.estimated)
-          : sumFinancialRows(properties, 'estimated')}
-      </span>
-    ),
-  },
-  {
-    Header: 'Assessed Value',
-    accessor: 'assessed',
-    Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
-    minWidth: 145,
-    align: 'left',
-    Footer: ({ properties }: { properties: IProperty[] }) => (
-      <span>
-        {useProjectFinancialValues(project, editableFinancials)
-          ? formatMoney(project.assessed)
-          : sumFinancialRows(properties, 'assessed')}
-      </span>
-    ),
+    clickable: true,
   },
   {
     Header: 'Type',
@@ -253,6 +302,27 @@ export const getColumns = ({
       const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
       return icon;
     },
+  },
+  {
+    Header: 'Appraised Value',
+    accessor: 'appraised',
+    Cell: getEditableMoneyCell(),
+    minWidth: 145,
+    align: 'left',
+  },
+  {
+    Header: 'Appraised Value',
+    accessor: 'appraisedDate',
+    Cell: getEditableDatePickerCell('properties', true),
+    minWidth: 145,
+    align: 'left',
+  },
+  {
+    Header: 'Appraisal Firm',
+    accessor: 'appraisedFirm',
+    Cell: EditableParcelInputCell,
+    minWidth: 145,
+    align: 'left',
   },
 ];
 
