@@ -792,7 +792,7 @@ namespace Pims.Dal.Test.Services
         }        
 
         [Fact]
-        public void Update_Notes()
+        public async void Update_Notes()
         {
             // Arrange
             var helper = new TestHelper();
@@ -803,22 +803,26 @@ namespace Pims.Dal.Test.Services
             init.SaveChanges();
 
             var project = init.CreateProject(1);
-            var projectNote = new ProjectNote()
-            {
-                Note = "test note",
-                NoteType = NoteTypes.LoanTerms,
-            };
-            project.Notes.Add(projectNote);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             options.Value.Project.NumberFormat = "TEST-{0:00000}";
             var service = helper.CreateService<ProjectService>(user, options);
 
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
             // Act
             var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.Description = "A new description";
-            var result = service.UpdateAsync(projectToUpdate);
+            var projectNote = new ProjectNote()
+            {
+                Note = "test note",
+                NoteType = NoteTypes.LoanTerms,
+            };
+            projectToUpdate.Notes.Add(projectNote);
+            await service.UpdateAsync(projectToUpdate);
+            var result = service.Get(projectToUpdate.Id);
 
             // Assert
             Assert.NotNull(result);
