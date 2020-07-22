@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { Route, Redirect, RouteProps, useLocation } from 'react-router-dom';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 interface IPrivateRouteProps extends RouteProps {
@@ -15,6 +15,7 @@ interface IPrivateRouteProps extends RouteProps {
  * @param props - Properties to pass { component, role, claim }
  */
 const PrivateRoute = (props: IPrivateRouteProps) => {
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   let { component: Component, layout: Layout, ...rest } = props;
   return (
@@ -37,7 +38,8 @@ const PrivateRoute = (props: IPrivateRouteProps) => {
           }
         } else {
           if (props.location.pathname !== '/login') {
-            return <Redirect to={{ pathname: '/login', state: { referer: props.location } }} />;
+            const redirectTo = encodeURI(`${location.pathname}${location.search}`);
+            return <Redirect to={`/login?redirect=${redirectTo}`} />;
           }
         }
       }}
