@@ -9,7 +9,6 @@ using Pims.Tools.Keycloak.Sync.Configuration.Realm;
 using SKModel = Pims.Tools.Keycloak.Sync.Models.Keycloak;
 using KModel = Pims.Tools.Core.Keycloak.Models;
 using Pims.Core.Exceptions;
-using System;
 
 namespace Pims.Tools.Keycloak.Sync
 {

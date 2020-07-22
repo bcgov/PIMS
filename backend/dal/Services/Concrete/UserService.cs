@@ -63,8 +63,8 @@ namespace Pims.Dal.Services
 
             var id = this.User.GetUserId();
 
-            var entity = this.Context.Users.Find(id);
-            var exists = entity != null;
+            var user = this.Context.Users.Find(id);
+            var exists = user != null;
             if (!exists)
             {
                 var username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
@@ -78,18 +78,18 @@ namespace Pims.Dal.Services
 
                 this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
 
-                entity = new User(id, username, email, givenName, surname);
-                this.Context.Users.Add(entity);
+                user = new User(id, username, email, givenName, surname);
+                this.Context.Users.Add(user);
             }
             else
             {
-                entity.LastLogin = DateTime.UtcNow;
-                this.Context.Entry(entity).State = EntityState.Modified;
+                user.LastLogin = DateTime.UtcNow;
+                this.Context.Entry(user).State = EntityState.Modified;
             }
 
             this.Context.CommitTransaction();
-            if (!exists) this.Logger.LogInformation($"User Activated: '{id}' - '{entity.Username}'.");
-            return entity;
+            if (!exists) this.Logger.LogInformation($"User Activated: '{id}' - '{user.Username}'.");
+            return user;
         }
 
         #region Access Requests
