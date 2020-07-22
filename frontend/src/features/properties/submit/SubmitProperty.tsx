@@ -14,7 +14,7 @@ import queryString from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { LeafletMouseEvent } from 'leaflet';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
 import { fetchParcelDetail, deleteParcel } from 'actionCreators/parcelsActionCreator';
 import * as actionTypes from 'constants/actionTypes';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -81,15 +81,16 @@ const SubmitProperty = (props: any) => {
     cachedParcelDetail?.agencyId &&
     !formDisabled &&
     !keycloak.hasAgency(cachedParcelDetail?.agencyId) &&
+    !keycloak.agencyIds.some(a => cachedParcelDetail?.buildings.some(b => b.agencyId === a)) &&
     !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
   ) {
-    setFormDisabled(true); //if the user doesn't belong to this properties agency, display a read only view.
-  }
-  if (
+    setFormDisabled(true); // if the user doesn't belong to this properties agency, display a read only view.
+  } else if (
     parsedQuery.disabled === undefined &&
-    formDisabled === true &&
+    !!formDisabled &&
     cachedParcelDetail?.agencyId &&
-    keycloak.hasAgency(cachedParcelDetail?.agencyId)
+    (keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
+      keycloak.agencyIds.some(a => cachedParcelDetail?.buildings.some(b => b.agencyId === a)))
   ) {
     setFormDisabled(false);
   }
@@ -274,6 +275,15 @@ const CloseButton = ({ formDisabled, setShowSaveDraftDialog, history }: any) => 
   </Button>
 );
 
+interface IEditButtonParams {
+  keycloak: IKeycloak;
+  cachedParcelDetail?: IParcel | null;
+  parcelId: any;
+  formDisabled: boolean;
+  readonly: boolean;
+  setFormDisabled: any;
+}
+
 const EditButton = ({
   keycloak,
   cachedParcelDetail,
@@ -281,8 +291,9 @@ const EditButton = ({
   formDisabled,
   readonly,
   setFormDisabled,
-}: any) => {
-  return keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
+}: IEditButtonParams) => {
+  return keycloak.hasAgency(cachedParcelDetail?.agencyId as number) ||
+    keycloak.agencyIds.some(a => cachedParcelDetail?.buildings.some(b => b.agencyId === a)) ||
     keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
     <Button
       disabled={!formDisabled || !parcelId || readonly}

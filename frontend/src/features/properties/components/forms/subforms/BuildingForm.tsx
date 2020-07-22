@@ -63,6 +63,7 @@ interface BuildingProps {
   nameSpace?: string;
   index?: number;
   disabled?: boolean;
+  allowEdit?: boolean;
 }
 const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   const keycloak = useKeycloakWrapper();

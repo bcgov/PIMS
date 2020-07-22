@@ -98,7 +98,7 @@ describe('PagedBuildingForms functionality', () => {
     return (
       <Provider store={store}>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          <PagedBuildingForms></PagedBuildingForms>
+          <PagedBuildingForms allowEdit={true}></PagedBuildingForms>
         </Formik>
       </Provider>
     );

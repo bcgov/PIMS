@@ -12,6 +12,7 @@ import PaginatedFormErrors from './PaginatedFormErrors';
 interface PagedBuildingFormsProps {
   /** controls whether this form can be interacted with */
   disabled?: boolean;
+  allowEdit?: boolean;
 }
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 1;
 
@@ -49,6 +50,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
   };
   // the current paginated page.
   const [currentPage, setCurrentPage] = useState<number>(0);
+
   return (
     <Col>
       <h3>Buildings</h3>
@@ -57,7 +59,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
         render={arrayHelpers => (
           <div>
             <span className="buildingPaginate">
-              {!props.disabled && (
+              {!props.disabled && !!props.allowEdit && (
                 <>
                   <Button
                     className="pagedBuildingButton page-link"
@@ -106,6 +108,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                 <BuildingForm
                   {...(formikProps as any)}
                   disabled={props.disabled}
+                  allowEdit={props.allowEdit}
                   nameSpace="buildings"
                   index={currentPage}
                 />
