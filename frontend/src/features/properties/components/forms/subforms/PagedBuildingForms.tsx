@@ -104,7 +104,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
             <div>
               {!!buildings.length && (
                 <BuildingForm
-                  {...formikProps}
+                  {...(formikProps as any)}
                   disabled={props.disabled}
                   nameSpace="buildings"
                   index={currentPage}
