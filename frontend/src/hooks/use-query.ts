@@ -3,5 +3,5 @@ import queryString from 'querystring';
 
 export const useQuery = () => {
   const location = useLocation();
-  return queryString.parse(location.search.replace('?', ''));
+  return queryString.parse(location.search.replace('?', '')) as any;
 };
