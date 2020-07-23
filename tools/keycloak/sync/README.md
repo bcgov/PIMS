@@ -86,9 +86,24 @@ First login to Keycloak, create the `pims-service-account` Client and apply the 
 
 4. Copy the Client Secret and place it in your `.env` file. And update the environment value to the appropiate one _[Local, Development, Test, Production]_.\_
 
+   Modify the `/tools/keycloak/sync/.env`
+
    ```conf
    ASPNETCORE_ENVIRONMENT=Local
    Auth__Keycloak__Secret={Keycloak client secret}
+   ```
+
+   Modify the `/tools/import/.env`
+
+   ```conf
+   ASPNETCORE_ENVIRONMENT=Local
+   Auth__Keycloak__Secret={Keycloak client secret}
+   ```
+
+   Modify the `/backend/api/.env`
+
+   ```conf
+   Keycloak__ServiceAccount__Secret={Keycloak client secret}
    ```
 
 5. Run the Keycloak Sync Tool
@@ -98,3 +113,10 @@ First login to Keycloak, create the `pims-service-account` Client and apply the 
    ```
 
 > NOTE - If you have users in your pims database that have `agencies` attributes of non-existing agencies, you will receive errors in the last portion of the sync when attempting to reconcile users. You can ignore these errors for the most part, but realize that the users will need to be manually updated with correct agency values when you login to PIMS (using a **System Administrator** account).
+
+6. Add users to Keycloak
+
+   - Login to Keycloak and select the **PIMS Realm**
+   - Go to **Manage - Users**
+   - Click **Add user** button and fill out form, click **Save** button
+   - Go to the new user's **Credentials** tab and enter a password
