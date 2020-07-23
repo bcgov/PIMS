@@ -53,7 +53,7 @@ In addition to integrating with **CHES** it will require developing the followin
 The primary benefit of integrating with **CHES** is that we don't have to support or build an email notification solution.
 Additionally **CHES** is supported and used by other projects with the Lab, which means internal support and knowledge sharing.
 
-Some of the consequenes would/might be;
+Some of the consequences would/might be;
 
 - No SLA
 - No UI application to support
