@@ -35,11 +35,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public int ActualFiscalYear { get; set; }
 
         /// <summary>
-        /// get/set - The netbook fiscal year.
-        /// </summary>
-        public int NetBookFiscalYear { get; set; }
-
-        /// <summary>
         /// get/set - The project manager name(s).
         /// </summary>
         public string Manager { get; set; }

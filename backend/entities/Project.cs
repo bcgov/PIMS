@@ -53,13 +53,6 @@ namespace Pims.Dal.Entities
         public int ActualFiscalYear { get; set; }
 
         /// <summary>
-        /// get/set - The netbook fiscal year.
-        /// </summary>
-        [NotMapped]
-        [DataMemberAttribute]
-        public int NetBookFiscalYear { get; set; }
-
-        /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
         public int AgencyId { get; set; }
