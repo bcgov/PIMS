@@ -4,14 +4,13 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen } from '@testing-library/react';
+import { render, act, screen, cleanup } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
-import { cleanup } from '@testing-library/react-hooks';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
-import { IProject } from '../../common';
+import { IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
 
@@ -170,6 +169,9 @@ describe('ERP Approval Step', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
+    afterEach(() => {
+      cleanup();
+    });
     it('enables on hold button when on hold date entered', () => {
       const project = _.cloneDeep(mockProject);
       project.onHoldNotificationSentOn = new Date();
@@ -217,21 +219,35 @@ describe('ERP Approval Step', () => {
       expect(proceedModal).toBeVisible();
       done();
     });
-    it('performs validation on save', async (done: any) => {
+    it('displays modal when not in SPL button clicked', async (done: any) => {
+      const project = _.cloneDeep(mockProject);
+      project.clearanceNotificationSentOn = new Date();
+
+      const component = render(getApprovalStep(getStore(project)));
+      const notInSplButton = component.getByText(/Not Included in the SPL/);
+      act(() => {
+        notInSplButton.click();
+      });
+      const proceedModal = await screen.findByText(/Really Not in SPL/);
+      expect(proceedModal).toBeVisible();
+      done();
+    });
+    it('performs validation when updating status', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.tasks[0].isOptional = false;
+      project.clearanceNotificationSentOn = new Date();
 
       render(getApprovalStep(getStore(project)));
-      const saveButton = screen.getByText(/Save/);
+      const proceedToSplButton = screen.getByText(/Proceed to SPL/);
       act(() => {
-        saveButton.click();
+        proceedToSplButton.click();
       });
 
       const errorSummary = await screen.findByText(/The following tabs have errors/);
       expect(errorSummary).toBeVisible();
       done();
     });
-    it('filters agency responses on save', async (done: any) => {
+    it('erp filters agency responses on save', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.projectAgencyResponses = [
         {
@@ -241,8 +257,8 @@ describe('ERP Approval Step', () => {
         },
       ];
 
-      render(getApprovalStep(getStore(project)));
-      const saveButton = screen.getByText(/Save/);
+      const { getByText } = render(getApprovalStep(getStore(project)));
+      const saveButton = getByText(/Save/);
       mockAxios
         .onPut()
         .reply((config: any) => {
@@ -261,6 +277,35 @@ describe('ERP Approval Step', () => {
       await act(async () => {
         saveButton.click();
       });
+    });
+  });
+
+  describe('ERP close out form tab', () => {
+    beforeAll(() => {
+      jest.clearAllMocks();
+      cleanup();
+      mockKeycloak([Claims.ADMIN_PROJECTS]);
+    });
+    afterEach(() => {
+      mockAxios.reset();
+    });
+    const project = _.cloneDeep(mockProject);
+    project.statusCode = ReviewWorkflowStatus.NotInSpl;
+    const store = getStore(project, SPPApprovalTabs.closeOutForm);
+
+    it('renders correctly', () => {
+      const tree = renderer.create(getApprovalStep(store)).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
+    it('displays close out form tab by default if project not in spl', () => {
+      const { getByText } = render(getApprovalStep(store));
+      expect(getByText('Financing Information')).toBeVisible();
+    });
+
+    it('hides close out form tab otherwise', () => {
+      const { queryByText } = render(getApprovalStep(getStore(mockProject)));
+      expect(queryByText('Financing Information')).toBeNull();
     });
   });
 });

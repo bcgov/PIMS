@@ -365,6 +365,7 @@ export interface IApiProject {
   OnHoldNotificationSentOn?: Date | string;
   TransferredWithinGreOn?: Date | string;
   ClearanceNotificationSentOn?: Date | string;
+  disposedOn?: Date | string;
   notes: IProjectNote[];
 }
 

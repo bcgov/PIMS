@@ -71,6 +71,21 @@ const EditableParcelInputCell = (cellInfo: any) => {
 };
 
 /**
+ * Create a formik input using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ */
+const EditableInputCell = (cellInfo: any) => {
+  const formikProps = useFormikContext();
+  return (
+    <FastInput
+      formikProps={formikProps}
+      field={`properties.${cellInfo.row.id}.${cellInfo.column.id}`}
+    ></FastInput>
+  );
+};
+
+/**
  * Create a formik text area using the passed cellinfo to get the associated data.
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
@@ -83,14 +98,19 @@ const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo:
  * Create a formik date picker using the passed cellinfo to get the associated data.
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
+ * @param minDate restrict the minimum date that can be selected
+ * @param oldDateWarning warn if the user selects an old date
  */
-const getEditableDatePickerCell = (namespace: string = 'properties', minDate: boolean = false) => (
-  cellInfo: any,
-) => {
+const getEditableDatePickerCell = (
+  namespace: string = 'properties',
+  minDate: boolean = false,
+  oldDateWarning?: boolean,
+) => (cellInfo: any) => {
   const formikProps = useFormikContext();
   return (
     <FastDatePicker
       formikProps={formikProps}
+      oldDateWarning={oldDateWarning}
       field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
       minDate={
         minDate
@@ -126,7 +146,7 @@ export interface IDisposeColumnOptions {
 export const getColumnsWithRemove = (
   columnOptions: IDisposeColumnOptions & { setProperties: Function },
 ) => {
-  const cols = getColumns(columnOptions);
+  const cols = getPropertyColumns(columnOptions);
   cols.unshift({
     Header: '',
     align: 'left',
@@ -180,7 +200,7 @@ export const defaultPropertyColumns: any[] = [
   },
 ];
 
-export const getColumns = ({
+export const getPropertyColumns = ({
   project,
   editableClassification,
   editableFinancials,
@@ -273,31 +293,26 @@ export const getAppraisedColumns = (project: IProject): any[] => [
     accessor: 'description',
     maxWidth: 170,
     align: 'left',
-    clickable: true,
   },
   {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
-    clickable: true,
   },
   {
     Header: 'City',
     accessor: 'city',
     align: 'left',
-    clickable: true,
   },
   {
     Header: 'Municipality',
     accessor: 'municipality',
     align: 'left',
-    clickable: true,
   },
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
     width: 60,
-    clickable: true,
     Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
       const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
       return icon;
@@ -320,14 +335,14 @@ export const getAppraisedColumns = (project: IProject): any[] => [
   {
     Header: 'Appraised Date',
     accessor: 'appraisedDate',
-    Cell: getEditableDatePickerCell('properties', true),
+    Cell: getEditableDatePickerCell('properties', undefined, true),
     minWidth: 145,
     align: 'left',
   },
   {
     Header: 'Appraisal Firm',
     accessor: 'appraisedFirm',
-    Cell: EditableParcelInputCell,
+    Cell: EditableInputCell,
     minWidth: 145,
     align: 'left',
   },
@@ -348,7 +363,7 @@ export const getAppraisedColumns = (project: IProject): any[] => [
   {
     Header: 'Assessed Date',
     accessor: 'assessedDate',
-    Cell: getEditableDatePickerCell('properties', true),
+    Cell: getEditableDatePickerCell('properties', undefined, true),
     minWidth: 145,
     align: 'left',
   },

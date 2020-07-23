@@ -12,7 +12,7 @@ import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import useTable from '../../dispose/hooks/useTable';
 import { useHistory } from 'react-router-dom';
-import { getColumns, getColumnsWithRemove } from './columns';
+import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import useCodeLookups from 'hooks/useLookupCodes';
 
 type RequiredAttributes = {
@@ -78,7 +78,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   if (project === undefined) {
     throw Error('unable to load project data');
   }
-  const columns = useMemo(() => getColumns({ project: project }), [project]);
+  const columns = useMemo(() => getPropertyColumns({ project: project }), [project]);
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);

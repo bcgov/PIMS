@@ -43,7 +43,10 @@ const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPagePro
       return;
     }
     if (project !== undefined && !isTransitioned) {
-      if (project.statusCode === ReviewWorkflowStatus.ApprovedForExemption) {
+      if (
+        project.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+        project.statusCode === ReviewWorkflowStatus.NotInSpl
+      ) {
         history.replace(`erp?projectNumber=${project.projectNumber}`);
       } else if (toStatus?.length !== 1) {
         history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);

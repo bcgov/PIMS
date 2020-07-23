@@ -1,10 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus } from '../../common/interfaces';
+import { ReviewWorkflowStatus, IProject } from '../../common/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState, useEffect } from 'react';
 import { Button } from 'components/common/form';
+import { validateFormikWithCallback } from 'utils';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -28,7 +29,8 @@ export const ReviewApproveActions = ({
   isSubmitting: boolean;
   submitDirectly?: Function;
 }) => {
-  const { values, submitForm, validateForm } = useFormikContext<any>();
+  const formikProps = useFormikContext<IProject>();
+  const { values, submitForm } = formikProps;
   const [approveERP, setApproveERP] = useState(false);
   const [denyERP, setDenyERP] = useState(false);
   useEffect(() => {
@@ -54,16 +56,7 @@ export const ReviewApproveActions = ({
             isSubmitting
           }
           style={{ marginLeft: 10 }}
-          onClick={() => {
-            validateForm().then((errors: any) => {
-              if (Object.keys(errors).length === 0) {
-                setApproveERP(true);
-              } else {
-                //force formik to display the validation errors.
-                submitForm();
-              }
-            });
-          }}
+          onClick={() => validateFormikWithCallback(formikProps, () => setApproveERP(true))}
         >
           Approve
         </Button>

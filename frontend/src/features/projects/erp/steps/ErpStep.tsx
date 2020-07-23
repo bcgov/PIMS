@@ -28,6 +28,7 @@ import {
   DocumentationStepSchema,
 } from 'features/projects/dispose';
 import * as Yup from 'yup';
+import _ from 'lodash';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -37,7 +38,7 @@ const CenterBoldText = styled.div`
 
 export const validationGroups: ValidationGroup[] = [
   {
-    schema: ProjectDraftStepYupSchema && UpdateInfoStepYupSchema,
+    schema: ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema),
     tab: SPPApprovalTabs.projectInformation,
     statusCode: DisposeWorkflowStatus.Draft,
   },
@@ -57,8 +58,11 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
-  const currentTab =
-    useSelector<RootState, string | null>(state => state.erpTab) ?? SPPApprovalTabs.erp;
+  const defaultTab =
+    project.statusCode === ReviewWorkflowStatus.NotInSpl
+      ? SPPApprovalTabs.closeOutForm
+      : SPPApprovalTabs.erp;
+  const currentTab = useSelector<RootState, string | null>(state => state.erpTab) ?? defaultTab;
   const dispatch = useDispatch();
   const history = useHistory();
   const { projectAgencyResponses } = useAgencyResponseTable();
@@ -67,7 +71,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
     canUserApproveForm() &&
     (project?.statusCode === ReviewWorkflowStatus.ERP ||
       project?.statusCode === ReviewWorkflowStatus.OnHold ||
-      project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption);
+      project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+      currentTab === SPPApprovalTabs.closeOutForm);
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };
@@ -86,32 +91,45 @@ const ErpStep = ({ formikRef }: IStepProps) => {
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
           ).then((project: IProject) => {
-            if (project.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
+            if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
             }
           });
         }}
         validate={(values: IProject) => handleValidate(values, validationGroups)}
       >
-        <Form>
-          <StepStatusIcon
-            preIconLabel="Approved for Surplus Property Program"
-            postIconLabel={`Approval Date ${formatDate(project?.approvedOn)}`}
-          />
-          <CenterBoldText>{project?.status?.name ?? 'Unknown'}</CenterBoldText>
-          <ErpTabs
-            isReadOnly={canUserEdit !== true}
-            goToGreTransferred={goToGreTransferred}
-            {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
-          />
-          <StepErrorSummary />
-          {canUserEdit && (
-            <ApprovalActions
-              submitStatusCode={submitStatusCode}
-              setSubmitStatusCode={setSubmitStatusCode}
+        {({ values, errors, touched }) => (
+          <Form>
+            <StepStatusIcon
+              preIconLabel="Approved for Surplus Property Program"
+              postIconLabel={`Approval Date ${formatDate(project?.approvedOn)}`}
             />
-          )}
-        </Form>
+            <CenterBoldText>{project?.status?.name ?? 'Unknown'}</CenterBoldText>
+            <ErpTabs
+              isReadOnly={canUserEdit !== true}
+              goToGreTransferred={goToGreTransferred}
+              {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
+            />
+            <StepErrorSummary />
+            {canUserEdit && (
+              <ApprovalActions
+                submitStatusCode={submitStatusCode}
+                setSubmitStatusCode={setSubmitStatusCode}
+                submitDirectly={() => {
+                  //do not perform yup schema validation on save, but don't allow form submit if there are edited fields in error.
+                  if (_.intersection(Object.keys(errors), Object.keys(touched)).length === 0) {
+                    onSubmitReview(
+                      values,
+                      formikRef,
+                      submitStatusCode,
+                      getStatusTransitionWorkflow(submitStatusCode),
+                    );
+                  }
+                }}
+              />
+            )}
+          </Form>
+        )}
       </Formik>
     </Container>
   );

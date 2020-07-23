@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Tab, Tabs, Spinner } from 'react-bootstrap';
-import { SPPApprovalTabs, initialValues, ReviewWorkflowStatus } from '../../common';
+import { SPPApprovalTabs, initialValues, ReviewWorkflowStatus, IProject } from '../../common';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
 import { ProjectInformationTab, DocumentationTab } from '../../common';
+import { CloseOutFormTab } from 'features/projects/spl';
 
 interface IErpTabsProps {
   /** The currently displayed tab */
@@ -32,7 +33,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
   setSubmitStatusCode,
   goToGreTransferred,
 }) => {
-  const { submitForm, values } = useFormikContext();
+  const { submitForm, values } = useFormikContext<IProject>();
 
   if (isEqual(values, initialValues)) {
     return <Spinner animation="border" />;
@@ -54,7 +55,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
         <Tab
           eventKey={SPPApprovalTabs.erp}
           title={`${
-            (values as any).statusCode === ReviewWorkflowStatus.ApprovedForExemption
+            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption
               ? 'Exemption from the Enhanced Referral Process'
               : 'Enhanced Referral Process'
           }`}
@@ -67,6 +68,13 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
             />
           )}
         </Tab>
+        {values.statusCode === ReviewWorkflowStatus.NotInSpl && (
+          <Tab eventKey={SPPApprovalTabs.closeOutForm} title="Close Out Form">
+            {currentTab === SPPApprovalTabs.closeOutForm && (
+              <CloseOutFormTab isReadOnly={isReadOnly} />
+            )}
+          </Tab>
+        )}
       </Tabs>
     </React.Fragment>
   );

@@ -1,10 +1,14 @@
-import React, { FunctionComponent, memo, useEffect } from 'react';
+import React, { FunctionComponent, memo, useEffect, useState } from 'react';
 import { ErrorMessage, getIn, FormikProps } from 'formik';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import moment from 'moment';
 import { FormGroup, FormControlProps } from 'react-bootstrap';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
+import GenericModal from '../GenericModal';
+import _ from 'lodash';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { appraisalDateWarning } from 'features/projects/common';
 
 type RequiredAttributes = {
   /** The field name */
@@ -20,6 +24,8 @@ type OptionalAttributes = {
   outerClassName?: string;
   /** The minimum data allowable to be chosen in the datepicker */
   minDate?: Date;
+  /** warn the user if they select a date that is older then the current date */
+  oldDateWarning?: boolean;
 };
 
 export type FastDatePickerProps = FormControlProps &
@@ -36,19 +42,23 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   disabled,
   outerClassName,
   minDate,
+  oldDateWarning,
   formikProps: {
     values,
+    initialValues,
     errors,
     touched,
     setFieldValue,
     registerField,
     unregisterField,
-    handleBlur,
+    setFieldTouched,
   },
   ...rest
 }) => {
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
+  const initialValue = getIn(initialValues, field);
+  const [oldDate, setOldDate] = useState<string | undefined>(undefined);
   let value = getIn(values, field);
   if (value === '') {
     value = null;
@@ -74,15 +84,35 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         className={classNames('form-control', 'date-picker', isInvalid, isValid)}
         dateFormat="MM/dd/yyyy"
         selected={(value && new Date(value)) || null}
-        onBlur={handleBlur}
         disabled={disabled}
         minDate={moment(minDate, 'YYYY-MM-DD').toDate()}
         {...rest}
-        onChange={(val: any) => {
-          setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
+        onChange={(val: any, e) => {
+          if (oldDateWarning && initialValue && moment(value).isAfter(moment(val))) {
+            setOldDate(val);
+          } else {
+            setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
+            setFieldTouched(field);
+          }
         }}
       />
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
+      {!!oldDate && (
+        <GenericModal
+          display={!!oldDate}
+          cancelButtonText={`Use ${moment(oldDate).format('MM/DD/YYYY')}`}
+          okButtonText={`Use ${moment(value).format('MM/DD/YYYY')}`}
+          handleOk={(e: any) => {
+            setOldDate(undefined);
+          }}
+          handleCancel={() => {
+            setFieldValue(field, moment(oldDate).format('YYYY-MM-DD'));
+            setOldDate(undefined);
+          }}
+          title="Older Date Entered"
+          message={appraisalDateWarning}
+        />
+      )}
     </FormGroup>
   );
 };
