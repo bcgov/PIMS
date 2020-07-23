@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
@@ -44,10 +44,13 @@ interface MapViewProps {
   showParcelBoundaries?: boolean;
   onMarkerClick?: (obj: IProperty) => void;
   onMarkerPopupClosed?: (obj: IPropertyDetail) => void;
+  /** to avoid the marker disappearing while zooming in the process of submitting a property */
+  submittingProperty?: boolean;
 }
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
+  const [loadedProperties, setLoadedProperties] = useState(false);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
     state => state.parcel.parcelDetail,
   );
@@ -135,11 +138,22 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       }
       onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-        const apiParams = getApiParams(mapFilterModel);
-        const action = fetchParcels(apiParams);
-        _.throttle(() => {
-          dispatch(action);
-        }, 250)();
+        if (!props.submittingProperty) {
+          const apiParams = getApiParams(mapFilterModel);
+          const action = fetchParcels(apiParams);
+          _.throttle(() => {
+            dispatch(action);
+          }, 250)();
+        } else {
+          if (!loadedProperties) {
+            const apiParams = getApiParams(mapFilterModel);
+            const action = fetchParcels(apiParams);
+            _.throttle(() => {
+              dispatch(action);
+            }, 250)();
+            setLoadedProperties(true);
+          }
+        }
       }}
       onMapClick={saveLatLng}
       disableMapFilterBar={props.disableMapFilterBar}
