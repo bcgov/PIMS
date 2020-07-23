@@ -9,14 +9,14 @@
 ## Context
 
 PIMS requires a database to store all property information.
-The data is relational, requiring contraints and must run within a linux docker container on OpenShift.
+The data is relational, requiring constraints and must run within a Linux docker container on OpenShift.
 Additionally it must be supported by Entity Framework Core 3.1.
 
 ## Decision
 
 Originally the database generated for the SWU was with PostgreSQL, after further consideration it made more sense to tightly couple both MS-SQL with .NET Core.
 This will give us better performance and tighter integration with Entity Framework Core.
-It was decided to create a linux docker container to host the MS-SQL 2019 database.
+It was decided to create a Linux docker container to host the MS-SQL 2019 database.
 
 ## Consequences
 

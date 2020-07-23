@@ -8,7 +8,7 @@
 
 ## Context
 
-Presently when submiting new properties or editing existing properties within inventory the only way to set the latitude and longitude values is manually.
+Presently when submitting new properties or editing existing properties within inventory the only way to set the latitude and longitude values is manually.
 Ideally the inventory would use GIS location values that are pulled from Data BC (better source of truth).
 
 Providing a way through the property address to pull valid GIS coordinates from Data BC Geocoder would improve the data and the user experience.
@@ -29,7 +29,7 @@ If the user selects one of the matches it will be used to set the address and GI
 
 ## Consequences
 
-Submiting new properties and editing existing properties will be easier and less error prone.
+Submitting new properties and editing existing properties will be easier and less error prone.
 
 GIS coordinates will be more tightly integrated with a single source of truth, and therefore more consistent and authentic.
 

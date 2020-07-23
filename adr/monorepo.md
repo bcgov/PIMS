@@ -13,9 +13,9 @@ This includes at present the following;
 
 - Frontend GUI Web Application
 - Backend RESTful API
-- Frontend GIS compontents
+- Frontend GIS components
 - Backend database
-- KeyCloak integration
+- Keycloak integration
 - OpenShift integration
 - Docker integration
 - ETL tools
@@ -26,8 +26,8 @@ The Exchange Lab's practice is to use the monorepo solution.
 
 ## Consequences
 
-SonarCube doesn't natively support monorepos with different programming languages.
+SonarQube doesn't natively support monorepos with different programming languages.
 
 DevOps is more complicated with a monorepo.
 
-A benefit of the monorepo is that it is easier to maintain and perfrom rapid iterations.
+A benefit of the monorepo is that it is easier to maintain and perform rapid iterations.
