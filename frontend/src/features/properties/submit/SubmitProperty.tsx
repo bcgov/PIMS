@@ -200,6 +200,7 @@ const SubmitProperty = (props: any) => {
             disabled={formDisabled || readonly}
             showParcelBoundaries={false}
             onMarkerClick={() => {}}
+            submittingProperty={true}
             onMarkerPopupClosed={() => {}}
           />
         )}

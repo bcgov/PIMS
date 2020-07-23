@@ -66,7 +66,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const history = useHistory();
   const api = useApi();
   const formikRef = React.useRef<FormikProps<any>>();
-
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -312,22 +311,24 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               </Row>
               <Row noGutters>
                 <Col>
-                  {<LandForm {...formikProps} disabled={props.disabled}></LandForm>}
+                  <LandForm {...formikProps} disabled={props.disabled}></LandForm>
                   <h4>Total values for parcel inclusive of existing building(s)</h4>
                   <Form.Row className="sumFinancialsForm">
                     <SumFinancialsForm formikProps={formikProps} showAppraisal={showAppraisal} />
                   </Form.Row>
                   <h4>Valuation Information</h4>
-                  <EvaluationForm
-                    {...formikProps}
-                    isParcel={true}
-                    showAppraisal={showAppraisal}
-                    disabled={props.disabled}
-                    nameSpace="financials"
-                  />
+                  <div key={props.disabled?.toString()}>
+                    <EvaluationForm
+                      {...(formikProps as any)}
+                      isParcel={true}
+                      showAppraisal={showAppraisal}
+                      disabled={props.disabled}
+                      nameSpace="financials"
+                    />
+                  </div>
                 </Col>
               </Row>
-              <Row noGutters>
+              <Row noGutters key={props.disabled?.toString()}>
                 <PagedBuildingForms disabled={props.disabled} />
               </Row>
               <div style={{ textAlign: 'right' }}>
