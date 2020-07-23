@@ -40,6 +40,7 @@ Follow the instructions below to setup all the components required to run PIMS i
 1. [Pipelines](./PIPELINES.md)
 1. [SonarQube](./SONARQUBE.md)
 1. [ZAP](./ZAP.md)
+1. [SSL Certificates](./SSL_CERTIFICATES.md) - for top level domains (e.g. https://pims.gov.bc.ca)
 
 ### Multiple Instances
 
@@ -87,7 +88,9 @@ To make a remote connection to a container in OpenShift you will need to open a 
    \$CONTAINERPORT = The port open on the container that communicates with the database.
 
 6. Configure your client to connect to the \$LOCALPORT you have selected with the host name/ip of `127.0.0.1`
+
    - Please note that _localhost_ will not work, you have to use `127.0.0.1`.
+
 7. Cancel the command to close the connection.
 
 ### Troubleshooting template files
