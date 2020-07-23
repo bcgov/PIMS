@@ -81,7 +81,41 @@ Please use the same key labels (e.g. `ca-chain-certificate`, `ca-root-certificat
 
 You can create secured routes using the web console or the CLI.
 
-Using the command line, the following example creates a secured HTTPS route named `pims-gove-bc-ca` that directs traffic to the `frontend` service:
+:bulb: **IMPORTANT** - PIMS relies on configuring individual OpenShift routes to the backend pod and the frontend pod. Due to the naming of the routes and how routing works in OpenShift, the **order of creation if important** - the more specific route for the backend `pims.gov.bc.ca/api` needs to be created before the broader frontend route `pims.gov.bc.ca/`. Failure to do so will result in the API returning network errors and the app failing to work consistently.
+
+#### 3.1 Create API route first
+
+Using the command line, the following example creates a secured HTTPS route named `pims-gov-bc-ca-api` that directs traffic to the `backend` service. Note that the route path is set to `/api`:
+
+```bash
+oc -n jcxjin-prod create route edge pims-gov-bc-ca-api \
+ --service=pims-api-prod \
+ --cert=pims.gov.bc.ca.txt \
+ --key=pims.gov.bc.ca.key \
+ --ca-cert=L1KChain.txt \
+ --hostname=pims.gov.bc.ca \
+ --path=/api \
+ --insecure-policy=Redirect
+```
+
+**Windows workstations**
+
+Windows `git bash` may have issues with the above command (e.g. forward slashes in `/api`), so you may need to run the command as below. Note that the path has a double slash to avoid expansion by `git bash`:
+
+```bash
+oc -n jcxjin-prod create route edge pims-gov-bc-ca-api \
+ --service=pims-api-prod \
+ --cert=pims.gov.bc.ca.txt \
+ --key=pims.gov.bc.ca.key \
+ --ca-cert=L1KChain.txt \
+ --hostname=pims.gov.bc.ca \
+ --path=//api \
+ --insecure-policy=Redirect
+```
+
+#### 3.2 Create web route
+
+Using the command line, the following example creates a secured HTTPS route named `pims-gov-bc-ca` that directs traffic to the `frontend` service:
 
 ```bash
 oc -n jcxjin-prod create route edge pims-gov-bc-ca \
