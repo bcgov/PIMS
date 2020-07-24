@@ -18,6 +18,9 @@ case "${1:-}" in
     restore)
         echo "Not implemented yet"
         ;;
+    migrate)
+        ./oc-migrate.sh ${ARGV}
+        ;;
     build)
         ./oc-build.sh ${ARGV}
         ;;
