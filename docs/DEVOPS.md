@@ -1,4 +1,4 @@
-# DevOps Continuous Integration / Continous Deployment
+# DevOps Continuous Integration / Continuous Deployment
 
 First it was [Waterfall](https://en.wikipedia.org/wiki/Waterfall_model), next it was [Agile](https://en.wikipedia.org/wiki/Agile_software_development), and now it's [DevOps](https://aws.amazon.com/devops/what-is-devops/). This is how modern developers approach building great products. With the rise of DevOps has come the new methods of Continuous Integration, Continuous Delivery, (CI/CD) and Continuous Deployment. Conventional software development and delivery methods are rapidly becoming obsolete. Historically, in the agile age, most companies would deploy/ship software in monthly, quarterly, bi-annual, or even annual releases. Now we build and deploy multiple times a day.
 
@@ -8,7 +8,7 @@ First it was [Waterfall](https://en.wikipedia.org/wiki/Waterfall_model), next it
 
 The PIMS project currently uses [GitHub Actions](https://github.com/features/actions), [OpenShift](https://www.openshift.com/) and [Jenkins](https://www.jenkins.io/) to support CI/CD.
 
-The general highlevel workflow is as follows;
+The general high-level workflow is as follows;
 
 1. Fork Repo
 1. Clone Repo
@@ -65,7 +65,7 @@ As changes are merged the CI/CD pipeline build and deploy to the [DEV](https://p
 
 The CI/CD process determines if changes were made. If they were not, it will ask if you want to force a rebuild. If the build, test and scan process completed successfully it will deploy the new build and spin up new containers.
 
-This makes the **DEV** branch unstable, as it can change mulitple times per day.
+This makes the **DEV** branch unstable, as it can change multiple times per day.
 
 Initial QA testing is performed in the **DEV** environment.
 
@@ -73,7 +73,7 @@ Initial QA testing is performed in the **DEV** environment.
 
 Additionally to support a more stable QA process, the images tagged with `dev` can be deployed to the [TEST](https://pims-test.pathfinder.gov.bc.ca) environment.
 
-Within OpenShift there is a pipeline that can be initalized to automate this process.
+Within OpenShift there is a pipeline that can be initialized to automate this process.
 
 The purpose of this is to allow QA or UAT to choose when they want to receive a new build (features, enhancements and bug fixes).
 
@@ -114,7 +114,7 @@ During a Sprint there will be numerous commits to the `dev` branch. These will t
 Every Sprint a new releasable increment is developed.
 These new releases will follow our [versioning](./VERSIONS.md) strategy (`1.0.0` = `[major.minor.patch]`).
 
-When a releaseable increment is ready a PR will be created to merge the `dev` branch into the `master` branch. Upon review and acceptance the `master` branch will be updated, which will inform the Jenkins pipeline to automatically build and deploy a new release to the **TEST** environment.
+When a releasable increment is ready a PR will be created to merge the `dev` branch into the `master` branch. Upon review and acceptance the `master` branch will be updated, which will inform the Jenkins pipeline to automatically build and deploy a new release to the **TEST** environment.
 
 During the pipeline execution it will prompt a request for a _tag_ name. The tag should be the version number selected for the release (i.e. `1.2.4-alpha`). The pipeline will build, test and review the release and also add the `test` tag. The result will be deployed to the **TEST** environment.
 
