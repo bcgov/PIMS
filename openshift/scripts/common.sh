@@ -72,3 +72,36 @@ fatal_error() {
 _log() {
   echo "$@"
 }
+
+start_build() {
+  BUILD_NAME=${1:-}
+  [ "${BUILD_NAME}" ] || {
+    fatal_error "start_build(): BUILD_NAME parameter is required"
+  }
+
+  # Cancel non complete builds and start a new build (apply or don't run)
+  #
+  OC_CANCEL_BUILD="oc -n ${PROJ_TOOLS} cancel-build bc/${BUILD_NAME}"
+  OC_START_BUILD="oc -n ${PROJ_TOOLS} start-build ${BUILD_NAME} --wait --follow"
+
+  # Execute commands
+  #
+  if [ "${APPLY}" ]; then
+    eval "${OC_CANCEL_BUILD}"
+    eval "${OC_START_BUILD}"
+    # Get the most recent build version
+    BUILD_LAST=$(oc -n ${PROJ_TOOLS} get bc/${BUILD_NAME} -o 'jsonpath={.status.lastVersion}')
+    # Command to get the build result
+    BUILD_RESULT=$(oc -n ${PROJ_TOOLS} get build/${BUILD_NAME}-${BUILD_LAST} -o 'jsonpath={.status.phase}')
+
+    # Make sure that result is a successful completion
+    if [ "${BUILD_RESULT}" != "Complete" ]; then
+      echo "Build result: ${BUILD_RESULT}"
+      fatal_error "Build did not complete!"
+    fi
+  fi
+
+  # Provide oc command instruction
+  #
+  display_helper "${OC_CANCEL_BUILD}" "${OC_START_BUILD}"
+}
