@@ -267,7 +267,7 @@ export const getColumns = ({
     },
   ]);
 
-export const getAppraisedColumns = (): any[] => [
+export const getAppraisedColumns = (project: IProject): any[] => [
   {
     Header: 'Property Name',
     accessor: 'description',
@@ -309,9 +309,16 @@ export const getAppraisedColumns = (): any[] => [
     Cell: getEditableMoneyCell(),
     minWidth: 145,
     align: 'left',
+    Footer: ({ properties }: { properties: IProperty[] }) => (
+      <span>
+        {useProjectFinancialValues(project, true)
+          ? formatMoney(project.appraised)
+          : sumFinancialRows(properties, 'appraised')}
+      </span>
+    ),
   },
   {
-    Header: 'Appraised Value',
+    Header: 'Appraised Date',
     accessor: 'appraisedDate',
     Cell: getEditableDatePickerCell('properties', true),
     minWidth: 145,
@@ -321,6 +328,27 @@ export const getAppraisedColumns = (): any[] => [
     Header: 'Appraisal Firm',
     accessor: 'appraisedFirm',
     Cell: EditableParcelInputCell,
+    minWidth: 145,
+    align: 'left',
+  },
+  {
+    Header: 'Assessed Value',
+    accessor: 'assessed',
+    Cell: getEditableMoneyCell(),
+    minWidth: 145,
+    align: 'left',
+    Footer: ({ properties }: { properties: IProperty[] }) => (
+      <span>
+        {useProjectFinancialValues(project, true)
+          ? formatMoney(project.assessed)
+          : sumFinancialRows(properties, 'assessed')}
+      </span>
+    ),
+  },
+  {
+    Header: 'Assessed Date',
+    accessor: 'assessedDate',
+    Cell: getEditableDatePickerCell('properties', true),
     minWidth: 145,
     align: 'left',
   },

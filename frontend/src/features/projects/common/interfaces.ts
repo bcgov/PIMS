@@ -156,9 +156,8 @@ export interface IProject {
   preliminaryFormSignedOn?: Date | string;
   finalFormSignedOn?: Date | string;
   netBook?: number | '';
-  netBookOverride?: boolean;
+  closeOutNetbook?: number | '';
   assessed?: number | '';
-  assessedOverride?: boolean;
   appraised?: number | '';
   estimated?: number;
   workflowCode?: string;

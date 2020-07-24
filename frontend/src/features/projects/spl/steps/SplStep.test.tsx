@@ -13,7 +13,6 @@ import { getStore, mockProject as defaultProject } from '../../dispose/testUtils
 import { IProject, SPPApprovalTabs } from '../../common';
 import { SplStep } from '..';
 import Claims from 'constants/claims';
-import { fillInput } from 'utils/testUtils';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -284,54 +283,6 @@ describe('SPL Approval Step', () => {
       expect(getByText('adjustment')).toBeVisible();
       expect(getByText('comments')).toBeVisible();
       expect(getByText('saleshistory')).toBeVisible();
-    });
-
-    it('net book override set when netbook value changed', async (done: any) => {
-      const { container } = render(getSplStep(store));
-      const saveButton = screen.getByText(/Save/);
-      await fillInput(container, 'netBook', '1234');
-      mockAxios
-        .onPut()
-        .reply((config: any) => {
-          if (JSON.parse(config.data).netBookOverride) {
-            done();
-          } else {
-            done.fail('netBookOverride was not equal to true');
-          }
-          return [200, Promise.resolve({})];
-        })
-        .onAny()
-        .reply(() => {
-          return [200, Promise.resolve({})];
-        });
-
-      await act(async () => {
-        saveButton.click();
-      });
-    });
-
-    it('assessed override set when assessed value changed', async (done: any) => {
-      const { container } = render(getSplStep(store));
-      const saveButton = screen.getByText(/Save/);
-      await fillInput(container, 'assessed', '1234');
-      mockAxios
-        .onPut()
-        .reply((config: any) => {
-          if (JSON.parse(config.data).assessedOverride) {
-            done();
-          } else {
-            done.fail('assessedOverride was not equal to true');
-          }
-          return [200, Promise.resolve({})];
-        })
-        .onAny()
-        .reply(() => {
-          return [200, Promise.resolve({})];
-        });
-
-      await act(async () => {
-        saveButton.click();
-      });
     });
   });
 });

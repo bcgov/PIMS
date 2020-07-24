@@ -97,6 +97,12 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
         .required('Required'),
       appraisedDate: Yup.date(),
       appraisedFirm: Yup.string().max(150, 'Manager must be less then 150 characters'),
+      assessed: Yup.number()
+        .required()
+        .min(1, 'Minimum value is $1')
+        .max(1000000000, 'Maximum value is $1,000,000,000')
+        .required('Required'),
+      assessedDate: Yup.date(),
     }),
   ),
 });

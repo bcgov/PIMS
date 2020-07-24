@@ -294,23 +294,17 @@ namespace Pims.Dal.Entities
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - Whether the calculated netbook value should be overriden with a static value.
+        /// get/set - A static netbook value used on the close out form.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public bool NetBookOverride { get; set; } = false; // TODO: Move to metadata property.
+        public decimal CloseOutNetbook { get; set; }
+
 
         /// <summary>
         /// get/set - The estimated value which is the sum of the properties.
         /// </summary>
         public decimal Estimated { get; set; }
-
-        /// <summary>
-        /// get/set - Whether the calculated assessed value should be overriden with a static value.
-        /// </summary>
-        [NotMapped]
-        [DataMemberAttribute]
-        public bool AssessedOverride { get; set; } = false; // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The assessed value which is the sum of the properties.

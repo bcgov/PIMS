@@ -28,7 +28,14 @@ const FormikTable: React.FC<IFormikTableProps> = ({
       <div className="ScrollContainer">
         {useMemo(
           () => (
-            <Table<any> name={name} columns={columns} data={data} pageCount={1} hideToolbar />
+            <Table<any>
+              name={name}
+              columns={columns}
+              data={data}
+              pageCount={1}
+              hideToolbar
+              footer
+            />
           ),
           // eslint-disable-next-line react-hooks/exhaustive-deps
           [data.length, name],

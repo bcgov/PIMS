@@ -362,28 +362,20 @@ namespace Pims.Dal.Helpers.Extensions
         /// Note - This requires that the referenced project includes all properties and their evaluations and fiscals.
         /// </summary>
         /// <param name="project"></param>
-        public static void UpdateProjectFinancials(this Entity.Project project, bool netBookOverride = false, bool assessedOverride = false)
+        public static void UpdateProjectFinancials(this Entity.Project project)
         {
-            netBookOverride |= project.NetBookOverride;
-            assessedOverride |= project.AssessedOverride;
             var date = project.GetProjectFinancialDate();
             var year = date.Year;
             var fiscalYear = date.GetFiscalYear(); // TODO: Unclear if this should be 'Reported' or 'Actual', or current year.  Using the most recent fiscal year based on financial data in project.
 
             // Sum up parcel values for the project year.
             // Sum up building values for the project year.
-            if (!netBookOverride)
-            {
-                project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
-                project.NetBook += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
-            }
+            project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
+            project.NetBook += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
             project.Estimated = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
             project.Estimated += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
-            if (!assessedOverride)
-            {
-                project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
-                project.Assessed += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
-            }
+            project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
+            project.Assessed += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
         }
 
         /// <summary>
@@ -650,7 +642,7 @@ namespace Pims.Dal.Helpers.Extensions
             // Update project financials if the project is still active.
             if (!updatedProject.IsProjectClosed())
             {
-                originalProject.UpdateProjectFinancials(updatedProject.NetBookOverride, updatedProject.AssessedOverride);
+                originalProject.UpdateProjectFinancials();
             }
         }
 

@@ -1933,6 +1933,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            className="col-md-6"
+          >
             <div
               className="form-row"
             >
@@ -1953,71 +1957,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   placeholder="YYYY/YYYY"
                   value=""
                 />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Value
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Year
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
-                >
-                  <div
-                    className="react-datepicker__input-container"
-                  >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={false}
-                      name="assessedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
               </div>
             </div>
             <div
@@ -2074,7 +2013,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       Object {
                         "display": "flex",
                         "flex": "1 0 auto",
-                        "minWidth": "585px",
+                        "minWidth": "875px",
                       }
                     }
                   >
@@ -2216,7 +2155,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         }
                       }
                     >
-                      Appraised Value
+                      Appraised Date
                     </div>
                     <div
                       className="th"
@@ -2237,6 +2176,46 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       }
                     >
                       Appraisal Firm
+                    </div>
+                    <div
+                      className="th"
+                      colSpan={1}
+                      onClick={[Function]}
+                      role="columnheader"
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "boxSizing": "border-box",
+                          "display": "flex",
+                          "flex": "145 0 auto",
+                          "justifyContent": "flex-start",
+                          "minWidth": "145px",
+                          "textAlign": "left",
+                          "width": "145px",
+                        }
+                      }
+                    >
+                      Assessed Value
+                    </div>
+                    <div
+                      className="th"
+                      colSpan={1}
+                      onClick={[Function]}
+                      role="columnheader"
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "boxSizing": "border-box",
+                          "display": "flex",
+                          "flex": "145 0 auto",
+                          "justifyContent": "flex-start",
+                          "minWidth": "145px",
+                          "textAlign": "left",
+                          "width": "145px",
+                        }
+                      }
+                    >
+                      Assessed Date
                     </div>
                   </div>
                 </div>
@@ -2316,7 +2295,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <input
                   className="form-control"
                   disabled={false}
-                  name="netBook"
+                  name="closeOutNetbook"
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="$0"
@@ -4777,6 +4756,10 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            className="col-md-6"
+          >
             <div
               className="form-row"
             >
@@ -4797,71 +4780,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   placeholder="YYYY/YYYY"
                   value=""
                 />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Value
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Year
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
-                >
-                  <div
-                    className="react-datepicker__input-container"
-                  >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={true}
-                      name="assessedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
               </div>
             </div>
             <div
@@ -4918,7 +4836,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                       Object {
                         "display": "flex",
                         "flex": "1 0 auto",
-                        "minWidth": "585px",
+                        "minWidth": "875px",
                       }
                     }
                   >
@@ -5060,7 +4978,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                         }
                       }
                     >
-                      Appraised Value
+                      Appraised Date
                     </div>
                     <div
                       className="th"
@@ -5081,6 +4999,46 @@ exports[`SPL Approval Step renders correctly 1`] = `
                       }
                     >
                       Appraisal Firm
+                    </div>
+                    <div
+                      className="th"
+                      colSpan={1}
+                      onClick={[Function]}
+                      role="columnheader"
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "boxSizing": "border-box",
+                          "display": "flex",
+                          "flex": "145 0 auto",
+                          "justifyContent": "flex-start",
+                          "minWidth": "145px",
+                          "textAlign": "left",
+                          "width": "145px",
+                        }
+                      }
+                    >
+                      Assessed Value
+                    </div>
+                    <div
+                      className="th"
+                      colSpan={1}
+                      onClick={[Function]}
+                      role="columnheader"
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "boxSizing": "border-box",
+                          "display": "flex",
+                          "flex": "145 0 auto",
+                          "justifyContent": "flex-start",
+                          "minWidth": "145px",
+                          "textAlign": "left",
+                          "width": "145px",
+                        }
+                      }
+                    >
+                      Assessed Date
                     </div>
                   </div>
                 </div>
@@ -5160,7 +5118,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 <input
                   className="form-control"
                   disabled={true}
-                  name="netBook"
+                  name="closeOutNetbook"
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="$0"

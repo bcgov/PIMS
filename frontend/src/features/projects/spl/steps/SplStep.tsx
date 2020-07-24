@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, getIn } from 'formik';
 import _ from 'lodash';
 import { useState } from 'react';
 import { formatDate } from 'utils';
@@ -144,8 +144,13 @@ const SplStep = ({ formikRef }: IStepProps) => {
                 setSubmitStatusCode={setSubmitStatusCode}
                 disableCancel={project?.statusCode === ReviewWorkflowStatus.Disposed}
                 submitDirectly={() => {
+                  getIn(errors, 'test');
                   //do not perform yup schema validation on save, but don't allow form submit if there are edited fields in error.
-                  if (_.intersection(Object.keys(errors), Object.keys(touched)).length === 0) {
+                  const touchedErrors = _.filter(
+                    _.intersection(Object.keys(errors), Object.keys(touched)),
+                    'properties',
+                  );
+                  if (touchedErrors.length === 0) {
                     onSubmitReview(
                       values,
                       formikRef,

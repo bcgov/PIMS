@@ -1,7 +1,7 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
+import { useFormikContext } from 'formik';
 import { Form, FastInput, FastCurrencyInput } from 'components/common/form';
 import { NoteTypes, IProject } from 'features/projects/common';
 
@@ -15,12 +15,6 @@ interface CloseOutFinancialSummaryFormProps {
  */
 const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) => {
   const formikProps = useFormikContext<IProject>();
-  const { touched, setFieldValue } = formikProps;
-  useEffect(() => {
-    if (getIn(touched, 'netBook')) {
-      setFieldValue('netBookOverride', true);
-    }
-  }, [touched, setFieldValue]);
   return (
     <Fragment>
       <h3>Financial Summary</h3>
@@ -56,7 +50,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               formikProps={formikProps}
               disabled={props.isReadOnly}
               outerClassName="col-md-8"
-              field="netBook"
+              field="closeOutNetbook"
             />
           </Form.Row>
           <Form.Row>
