@@ -189,6 +189,25 @@ namespace Pims.Tools.Converters.ExcelConverter
                                 row.Add(name, value);
                             }
                         }
+
+                        // Post actions can further transform data after a row has been created.
+                        // This is useful when one row's data relies on others.
+                        if (options.Row?.PostActions?.Any() ?? false)
+                        {
+                            foreach (var action in options.Row.PostActions)
+                            {
+                                if (!row.ContainsKey(action.Column)) throw new ConfigurationException($"Row action configuration column '{action.Column}' does not exist.");
+                                try
+                                {
+                                    row[action.Column] = await ConvertAsync(row[action.Column], row, action.Converter, action.ConverterArgs);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, $"Unable to perform post action '{action.Column}'.");
+                                    throw;
+                                }
+                            }
+                        }
                         rows.Add(row);
                     }
                 }
@@ -200,6 +219,38 @@ namespace Pims.Tools.Converters.ExcelConverter
 
             var json = JsonSerializer.Serialize(rows, _serialzerOptions);
             ExportJsonFile(json, options.Output);
+        }
+
+        /// <summary>
+        /// Convert the 'sourceColumn' with the specified 'converter'.
+        /// </summary>
+        /// <param name="sourceColumn"></param>
+        /// <param name="row"></param>
+        /// <param name="converter"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private async Task<object> ConvertAsync(object sourceColumn, Dictionary<string, object> row, string converter, params ActionArgumentOptions[] args)
+        {
+            var argValues = args?.Select(a =>
+            {
+                if (!String.IsNullOrWhiteSpace(a.Column))
+                {
+                    if (!row.ContainsKey(a.Column)) throw new ConfigurationException($"Column '{a.Column}' does not exist.");
+                    return row[a.Column];
+                }
+                else if (!String.IsNullOrWhiteSpace(a.Value))
+                {
+                    return a.Value;
+                }
+                return null;
+            }).ToArray();
+            return converter switch
+            {
+                "ConvertToTenancy" => $"{sourceColumn}".ConvertToTenancy(),
+                "GeoLocationConverter" => await _geoConverter.GetLocationAsync($"{argValues[0]}", $"{argValues[1]}"),
+                "ReplaceValues" => $"{sourceColumn}".ReplaceValues(argValues.Select(a => $"{a}").ToArray()),
+                _ => throw new NotImplementedException($"Converter '{converter}' does not exist.")
+            };
         }
 
         /// <summary>
@@ -263,14 +314,11 @@ namespace Pims.Tools.Converters.ExcelConverter
                         || (options.ConvertWhen == ConvertWhenOption.NullOrDefault && providedValue != null && providedValue != destType.GetDefault())
                         )
                     {
-                        return options?.Converter switch
+                        return options.Converter switch
                         {
                             "ConvertToFiscalYear" => $"{item}".ConvertToFiscalYear(nullable && (sourceType.IsDbNull() || item == null)),
                             "ConvertToDate" => $"{item}".ConvertToDate(nullable && (sourceType.IsDbNull() || item == null)),
-                            "ConvertToTenancy" => $"{item}".ConvertToTenancy(),
-                            "GeoLocationConverter" => await _geoConverter.GetLocationAsync($"{row[options.ConverterArgs[0]]}", $"{row[options.ConverterArgs[1]]}"),
-                            "CleanCivicAddress" => $"{item}".CleanCivicAddress($"{row[options.ConverterArgs[0]]}", $"{row[options.ConverterArgs[1]]}", $"{row[options.ConverterArgs[2]]}"),
-                            _ => throw new NotImplementedException()
+                            _ => await ConvertAsync(item, row, options.Converter, options.ConverterArgs?.Select(a => new ActionArgumentOptions() { Column = a }).ToArray())
                         };
                     }
                 }
