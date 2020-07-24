@@ -123,6 +123,22 @@ objects:
     stringData:
       CHES_USERNAME: ${CHES_USERNAME}
       CHES_PASSWORD: ${CHES_PASSWORD}
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ENV_NAME}${ID}-geocoder-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Geocoder client secrets"
+      labels:
+        name: ${APP_NAME}-${ENV_NAME}${ID}-geocoder-secret
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    stringData:
+      GEOCODER_KEY: ${GEOCODER_KEY}
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -276,6 +292,11 @@ objects:
                     secretKeyRef:
                       name: ${APP_NAME}-${ENV_NAME}${ID}-ches-secret
                       key: CHES_PASSWORD
+                - name: Geocoder__Key
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-geocoder-secret
+                      key: GEOCODER_KEY
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
@@ -394,6 +415,11 @@ parameters:
   - name: CHES_PASSWORD
     displayName: CHES Username password.
     description: The Common Hosted Email Service password.
+    required: true
+
+  - name: GEOCODER_KEY
+    displayName: Geocoder Secret Key.
+    description: The Geocoder secret key that must be .
     required: true
 
   - name: HEALTH_SCHEME

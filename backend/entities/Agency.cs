@@ -34,7 +34,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - Whether notifications should be sent to this agency.
         /// </summary>
-        public bool SendEmail { get; set; }
+        public bool SendEmail { get; set; } = true;
 
         /// <summary>
         /// get/set - The name or title of whom the notification should be addressed to.

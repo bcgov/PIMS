@@ -536,7 +536,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
 
             using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1, 1, 1);

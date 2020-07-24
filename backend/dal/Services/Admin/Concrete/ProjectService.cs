@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -105,20 +104,57 @@ namespace Pims.Dal.Services.Admin
             project.ThrowIfNull(nameof(project));
 
             if (project.Workflow != null)
-                this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
+            {
+                var workflow = this.Context.Workflows.Local.FirstOrDefault(w => w.Id == project.WorkflowId);
+                if (workflow != null)
+                    project.Workflow = workflow;
+                else
+                    this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
+            }
             if (project.Status != null)
-                this.Context.Entry(project.Status).State = EntityState.Unchanged;
+            {
+                var status = this.Context.ProjectStatus.Local.FirstOrDefault(w => w.Id == project.StatusId);
+                if (status != null)
+                    project.Status = status;
+                else
+                    this.Context.Entry(project.Status).State = EntityState.Unchanged;
+            }
             if (project.Agency != null)
-                this.Context.Entry(project.Agency).State = EntityState.Unchanged;
+            {
+                var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == project.AgencyId);
+                if (agency != null)
+                    project.Agency = agency;
+                else
+                    this.Context.Entry(project.Agency).State = EntityState.Unchanged;
+            }
             if (project.TierLevel != null)
-                this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
+            {
+                var tier = this.Context.TierLevels.Local.FirstOrDefault(w => w.Id == project.TierLevelId);
+                if (tier != null)
+                    project.TierLevel = tier;
+                else
+                    this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
+
+            }
             if (project.Risk != null)
-                this.Context.Entry(project.Risk).State = EntityState.Unchanged;
+            {
+                var risk = this.Context.ProjectRisks.Local.FirstOrDefault(w => w.Id == project.RiskId);
+                if (risk != null)
+                    project.Risk = risk;
+                else
+                    this.Context.Entry(project.Risk).State = EntityState.Unchanged;
+            }
 
             project.Responses.ForEach(r =>
             {
                 if (r.Agency != null)
-                    this.Context.Entry(r.Agency).State = EntityState.Unchanged;
+                {
+                    var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == r.AgencyId);
+                    if (agency != null)
+                        r.Agency = agency;
+                    else
+                        this.Context.Entry(r.Agency).State = EntityState.Unchanged;
+                }
             });
 
             project.Tasks.ForEach(t =>
@@ -126,10 +162,10 @@ namespace Pims.Dal.Services.Admin
                 if (t.Task != null)
                 {
                     var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
-                    if (task == null)
-                        this.Context.Entry(t.Task).State = EntityState.Unchanged;
-                    else
+                    if (task != null)
                         t.Task = task;
+                    else
+                        this.Context.Entry(t.Task).State = EntityState.Unchanged;
                 }
             });
 
@@ -151,20 +187,56 @@ namespace Pims.Dal.Services.Admin
                 if (project == null) throw new ArgumentNullException();
 
                 if (project.Workflow != null)
-                    this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
+                {
+                    var workflow = this.Context.Workflows.Local.FirstOrDefault(w => w.Id == project.WorkflowId);
+                    if (workflow != null)
+                        project.Workflow = workflow;
+                    else
+                        this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
+                }
                 if (project.Status != null)
-                    this.Context.Entry(project.Status).State = EntityState.Unchanged;
+                {
+                    var status = this.Context.ProjectStatus.Local.FirstOrDefault(w => w.Id == project.StatusId);
+                    if (status != null)
+                        project.Status = status;
+                    else
+                        this.Context.Entry(project.Status).State = EntityState.Unchanged;
+                }
                 if (project.Agency != null)
-                    this.Context.Entry(project.Agency).State = EntityState.Unchanged;
+                {
+                    var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == project.AgencyId);
+                    if (agency != null)
+                        project.Agency = agency;
+                    else
+                        this.Context.Entry(project.Agency).State = EntityState.Unchanged;
+                }
                 if (project.TierLevel != null)
-                    this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
+                {
+                    var tier = this.Context.TierLevels.Local.FirstOrDefault(w => w.Id == project.TierLevelId);
+                    if (tier != null)
+                        project.TierLevel = tier;
+                    else
+                        this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
+                }
                 if (project.Risk != null)
-                    this.Context.Entry(project.Risk).State = EntityState.Unchanged;
+                {
+                    var risk = this.Context.ProjectRisks.Local.FirstOrDefault(w => w.Id == project.RiskId);
+                    if (risk != null)
+                        project.Risk = risk;
+                    else
+                        this.Context.Entry(project.Risk).State = EntityState.Unchanged;
+                }
 
                 project.Responses.ForEach(r =>
                 {
                     if (r.Agency != null)
-                        this.Context.Entry(r.Agency).State = EntityState.Unchanged;
+                    {
+                        var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == r.AgencyId);
+                        if (agency != null)
+                            r.Agency = agency;
+                        else
+                            this.Context.Entry(r.Agency).State = EntityState.Unchanged;
+                    }
                 });
 
                 project.Tasks.ForEach(t =>
@@ -172,10 +244,10 @@ namespace Pims.Dal.Services.Admin
                     if (t.Task != null)
                     {
                         var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
-                        if (task == null)
-                            this.Context.Entry(t.Task).State = EntityState.Unchanged;
-                        else
+                        if (task != null)
                             t.Task = task;
+                        else
+                            this.Context.Entry(t.Task).State = EntityState.Unchanged;
                     }
                 });
 
