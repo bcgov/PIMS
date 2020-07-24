@@ -25,7 +25,7 @@ namespace Pims.Tools.Converters.ExcelConverter.Converters
         private readonly IGeocoderService _service;
         private readonly StreamWriter _writer;
         private Dictionary<string, AddressModel> _cache = new Dictionary<string, AddressModel>();
-        private ILogger _logger;
+        private readonly ILogger _logger;
         #endregion
 
         #region Constructors

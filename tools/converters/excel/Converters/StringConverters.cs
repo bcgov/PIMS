@@ -73,16 +73,20 @@ namespace Pims.Tools.Converters.ExcelConverter.Converters
         }
 
         /// <summary>
-        /// Remove the 'city', 'province' and 'postal' code from the civic address.
+        /// Replace the specified 'replace' values from the 'text'
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="city"></param>
-        /// <param name="province"></param>
-        /// <param name="postal"></param>
+        /// <param name="text"></param>
+        /// <param name="replace"></param>
         /// <returns></returns>
-        public static string CleanCivicAddress(this string address, string city, string province, string postal)
+        public static string ReplaceValues(this string text, params string[] replace)
         {
-            return address?.Replace(city, "").Replace(province, "").Replace(postal, "").Replace(",", "").Trim();
+            if (String.IsNullOrEmpty(text)) return text;
+            var value = text;
+            foreach (var rvalue in replace)
+            {
+                if (!String.IsNullOrEmpty(rvalue)) value = value.Replace(rvalue, "");
+            }
+            return value.Replace(",","").Trim();
         }
     }
 }

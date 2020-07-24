@@ -144,6 +144,8 @@ namespace Pims.Api.Helpers.Middleware
             {
                 code = HttpStatusCode.BadRequest;
                 message = ex.Message;
+
+                _logger.LogError(ex, "Invalid operation or bad request details.");
             }
             else if (ex is ApiHttpRequestException)
             {
@@ -171,6 +173,8 @@ namespace Pims.Api.Helpers.Middleware
                 code = exception.StatusCode;
                 message = exception.Message;
                 details = exception.Detail;
+
+                _logger.LogError(ex, "CHES unhandled exception.");
             }
             else if (ex is HttpClientRequestException || ex is ProxyRequestException)
             {

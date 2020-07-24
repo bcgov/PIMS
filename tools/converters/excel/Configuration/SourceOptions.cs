@@ -40,6 +40,11 @@ namespace Pims.Tools.Converters.ExcelConverter.Configuration
         /// get/set - A dictionary to control the column configuration.
         /// </summary>
         public IDictionary<string, ColumnOptions> Columns { get; set; }
+
+        /// <summary>
+        /// get/set - Configuration optiosn for each row.
+        /// </summary>
+        public RowOptions Row { get; set; }
         #endregion
     }
 }
