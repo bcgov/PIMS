@@ -1357,17 +1357,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
               </span>
             </label>
             <div
-              className="col-md-2 form-group"
+              className="col-md-2 fast-currency-input form-group"
             >
-              <input
-                className="form-control"
-                disabled={true}
-                name="offerAmount"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="$0"
-                value=""
-              />
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  name="offerAmount"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
             </div>
             <button
               className="btn btn-primary"

@@ -254,6 +254,8 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
                                 formikProps={props}
                                 disabled={props.disabled}
                                 field={withNameSpace('value', type, year)}
+                                placeholder={props.disabled ? 'n/a' : ' '}
+                                tooltip="If value not available enter $1 and add notes"
                               />
                             </td>
                             {EvaluationKeys.Assessed === type && props.isParcel && (
