@@ -707,16 +707,20 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="fast-currency-input form-group"
                   >
-                    <input
-                      className="form-control"
-                      name="properties.0.netBook"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder="$0"
-                      value={1}
-                    />
+                    <div
+                      className="input-tooltip-wrapper"
+                    >
+                      <input
+                        className="form-control"
+                        name="properties.0.netBook"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="$0"
+                        value={1}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div
@@ -738,16 +742,20 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="fast-currency-input form-group"
                   >
-                    <input
-                      className="form-control"
-                      name="properties.0.estimated"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder="$0"
-                      value=""
-                    />
+                    <div
+                      className="input-tooltip-wrapper"
+                    >
+                      <input
+                        className="form-control"
+                        name="properties.0.estimated"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="$0"
+                        value=""
+                      />
+                    </div>
                   </div>
                 </div>
                 <div
@@ -769,16 +777,20 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="fast-currency-input form-group"
                   >
-                    <input
-                      className="form-control"
-                      name="properties.0.assessed"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder="$0"
-                      value={1}
-                    />
+                    <div
+                      className="input-tooltip-wrapper"
+                    >
+                      <input
+                        className="form-control"
+                        name="properties.0.assessed"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="$0"
+                        value={1}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div

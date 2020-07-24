@@ -5,6 +5,8 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import Form from 'react-bootstrap/Form';
+import TooltipIcon from '../TooltipIcon';
+import './FastCurrencyInput.scss';
 
 export const defaultMaskOptions = {
   prefix: '$',
@@ -49,6 +51,8 @@ const CurrencyInput = ({
   outerClassName,
   value,
   disabled,
+  placeholder,
+  tooltip,
   formikProps: {
     handleBlur,
     values,
@@ -58,7 +62,7 @@ const CurrencyInput = ({
     registerField,
     unregisterField,
   },
-}: RequiredAttributes & OptionalAttributes) => {
+}: RequiredAttributes & OptionalAttributes & { placeholder?: string; tooltip?: string }) => {
   const currencyMask = createNumberMask({
     ...defaultMaskOptions,
   });
@@ -77,20 +81,23 @@ const CurrencyInput = ({
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
-    <Form.Group className={outerClassName}>
-      <MaskedInput
-        value={value}
-        mask={currencyMask}
-        name={field}
-        onChange={(e: any) => {
-          const cleanValue = e.target.value.replace(/[^0-9.]/g, '');
-          setFieldValue(field, cleanValue ? parseFloat(cleanValue) : '');
-        }}
-        onBlur={handleBlur}
-        className={classNames('form-control', className, isInvalid, isValid)}
-        disabled={disabled}
-        placeholder="$0"
-      />
+    <Form.Group className={classNames(outerClassName, 'fast-currency-input')}>
+      <div className={'input-tooltip-wrapper'}>
+        <MaskedInput
+          value={value}
+          mask={currencyMask}
+          name={field}
+          onChange={(e: any) => {
+            const cleanValue = e.target.value.replace(/[^0-9.]/g, '');
+            setFieldValue(field, cleanValue ? parseFloat(cleanValue) : '');
+          }}
+          onBlur={handleBlur}
+          className={classNames('form-control', className, isInvalid, isValid)}
+          disabled={disabled}
+          placeholder={placeholder || '$0'}
+        />
+        {!!tooltip && <TooltipIcon toolTipId="currency" toolTip={tooltip} />}
+      </div>
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
     </Form.Group>
   );
