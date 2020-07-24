@@ -22,7 +22,7 @@ export interface IUserInfo {
 /**
  * IKeycloak interface, represents the keycloak object for the authenticated user.
  */
-interface IKeycloak {
+export interface IKeycloak {
   obj: any;
   displayName?: string;
   username: string;

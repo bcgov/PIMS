@@ -35,6 +35,8 @@ import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { useApi, IGeocoderResponse } from 'hooks/useApi';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from 'constants/claims';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -62,6 +64,7 @@ export interface IFormParcel extends IParcel {
 const showAppraisal = false;
 
 const ParcelDetailForm = (props: ParcelPropertyProps) => {
+  const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const history = useHistory();
   const api = useApi();
@@ -70,6 +73,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+
+  let allowEdit =
+    keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+    keycloak.hasAgency(props.parcelDetail?.agencyId as number);
 
   const agencies = useMemo(
     () =>
@@ -299,11 +306,11 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 <Col>
                   <h3>Parcel Information</h3>
                   <Form.Row className="pidPinForm">
-                    <PidPinForm disabled={props.disabled} />
+                    <PidPinForm disabled={props.disabled || !allowEdit} />
                     <AddressForm
                       onGeocoderChange={handleGeocoderChanges}
                       {...formikProps}
-                      disabled={props.disabled}
+                      disabled={props.disabled || !allowEdit}
                       nameSpace="address"
                     />
                   </Form.Row>
@@ -311,7 +318,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               </Row>
               <Row noGutters>
                 <Col>
-                  <LandForm {...formikProps} disabled={props.disabled}></LandForm>
+                  <LandForm {...formikProps} disabled={props.disabled || !allowEdit}></LandForm>
                   <h4>Total values for parcel inclusive of existing building(s)</h4>
                   <Form.Row className="sumFinancialsForm">
                     <SumFinancialsForm formikProps={formikProps} showAppraisal={showAppraisal} />
@@ -322,14 +329,14 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                       {...(formikProps as any)}
                       isParcel={true}
                       showAppraisal={showAppraisal}
-                      disabled={props.disabled}
+                      disabled={props.disabled || !allowEdit}
                       nameSpace="financials"
                     />
                   </div>
                 </Col>
               </Row>
               <Row noGutters key={props.disabled?.toString()}>
-                <PagedBuildingForms disabled={props.disabled} />
+                <PagedBuildingForms disabled={props.disabled} allowEdit={allowEdit} />
               </Row>
               <div style={{ textAlign: 'right' }}>
                 {formikProps.status && formikProps.status.msg && (
