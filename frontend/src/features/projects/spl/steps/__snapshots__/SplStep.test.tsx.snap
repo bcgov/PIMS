@@ -1443,17 +1443,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
               </span>
             </label>
             <div
-              className="col-md-2 form-group"
+              className="col-md-2 fast-currency-input form-group"
             >
-              <input
-                className="form-control"
-                disabled={false}
-                name="offerAmount"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="$0"
-                value=""
-              />
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  disabled={false}
+                  name="offerAmount"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
             </div>
             <button
               className="btn btn-primary"
@@ -1831,17 +1835,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Real Estate Commission Paid
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="realtorCommission"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="realtorCommission"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -2246,17 +2254,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Sales Proceeds
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="salesProceeds"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="salesProceeds"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2268,17 +2280,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Cost of Sales
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="salesCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2290,17 +2306,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Net Book Value
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="closeOutNetbook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="closeOutNetbook"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2312,17 +2332,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Gain Before SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="gainBeforeSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="gainBeforeSpp"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2359,17 +2383,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="programCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2403,17 +2431,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Gain after SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="gainAfterSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="gainAfterSpp"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -2447,17 +2479,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Interest Component
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="interestComponent"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="interestComponent"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -2521,17 +2557,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
             OCG Gain / Loss
           </label>
           <div
-            className="col-md-4 form-group"
+            className="col-md-4 fast-currency-input form-group"
           >
-            <input
-              className="form-control"
-              disabled={false}
-              name="ocgFinancialStatement"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="$0"
-              value=""
-            />
+            <div
+              className="input-tooltip-wrapper"
+            >
+              <input
+                className="form-control"
+                disabled={false}
+                name="ocgFinancialStatement"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="$0"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -2755,17 +2795,21 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 Adjustment to Prior Year Sale Amount
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="priorYearAdjustmentAmount"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="priorYearAdjustmentAmount"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -4654,17 +4698,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Real Estate Commission Paid
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="realtorCommission"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="realtorCommission"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -5069,17 +5117,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Sales Proceeds
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="salesProceeds"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="salesProceeds"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5091,17 +5143,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Cost of Sales
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="salesCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5113,17 +5169,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Net Book Value
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="closeOutNetbook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="closeOutNetbook"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5135,17 +5195,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Gain Before SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="gainBeforeSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="gainBeforeSpp"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5182,17 +5246,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="programCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5226,17 +5294,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Gain after SPP Cost
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="gainAfterSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="gainAfterSpp"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -5270,17 +5342,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Interest Component
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="interestComponent"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="interestComponent"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -5344,17 +5420,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
             OCG Gain / Loss
           </label>
           <div
-            className="col-md-4 form-group"
+            className="col-md-4 fast-currency-input form-group"
           >
-            <input
-              className="form-control"
-              disabled={true}
-              name="ocgFinancialStatement"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="$0"
-              value=""
-            />
+            <div
+              className="input-tooltip-wrapper"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                name="ocgFinancialStatement"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="$0"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -5578,17 +5658,21 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 Adjustment to Prior Year Sale Amount
               </label>
               <div
-                className="col-md-8 form-group"
+                className="col-md-8 fast-currency-input form-group"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="priorYearAdjustmentAmount"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    name="priorYearAdjustmentAmount"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="$0"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
