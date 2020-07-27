@@ -75,6 +75,8 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
       } else {
         dynamicSuggestions = options.filter(v => regex.test(v.label));
       }
+    } else {
+      setFieldValue(field, '');
     }
     setSuggestions(dynamicSuggestions);
     setText(val);
