@@ -142,7 +142,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -249,7 +249,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -349,7 +349,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -448,7 +448,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -545,7 +545,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -641,7 +641,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -734,7 +734,8 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
+            service.Setup(m => m.Project.Update(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -827,7 +828,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("NotFound", "NotFound") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -885,7 +886,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("NotFound", "NotFound") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -943,7 +944,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("NotFound", "NotFound", 1) });
@@ -1001,7 +1002,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1063,7 +1064,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("NotFound", "NotFound", 1) });
@@ -1125,7 +1126,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("NotFound", "NotFound") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1187,7 +1188,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("NotFound", "NotFound") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1249,7 +1250,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1316,7 +1317,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1382,7 +1383,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1448,7 +1449,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });
@@ -1516,7 +1517,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
-            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>())).Returns<IEnumerable<Entity.Project>>(m => m);
+            service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("Workflow", "Workflow") });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("Status", "Status") });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("Risk", "Risk", 1) });

@@ -45,7 +45,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override BuildingPredominateUse Update(BuildingPredominateUse entity)
+        public override void Update(BuildingPredominateUse entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -53,7 +53,7 @@ namespace Pims.Dal.Services.Admin
             if (buildingPredominateUse == null) throw new KeyNotFoundException();
 
             this.Context.Entry(buildingPredominateUse).CurrentValues.SetValues(entity);
-            return base.Update(buildingPredominateUse);
+            base.Update(buildingPredominateUse);
         }
 
         /// <summary>

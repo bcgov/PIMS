@@ -57,14 +57,14 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override Workflow Update(Workflow entity)
+        public override void Update(Workflow entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
             var workflow = this.Context.Workflows.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(workflow).CurrentValues.SetValues(entity);
-            return base.Update(workflow);
+            base.Update(workflow);
         }
 
         /// <summary>

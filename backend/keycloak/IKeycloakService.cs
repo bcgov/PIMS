@@ -53,7 +53,7 @@ namespace Pims.Keycloak
         Task<string> DeleteRoleAsync(string name);
         Task<Models.RoleModel> CreateCompositeRoleAsync(string parentName, Models.RoleModel role);
         Task<Models.RoleModel[]> GetCompositeRolesAsync(string parentName);
-        Task<Models.RoleModel[]> DeleteCompositeRoleAsync(string parentName, Models.RoleModel[] roles);
+        Task<Models.RoleModel[]> DeleteCompositeRolesAsync(string parentName, Models.RoleModel[] roles);
         Task<Models.RoleModel[]> GetClientCompositeRolesAsync(string parentName, string clientName);
         Task<Models.RoleModel[]> GetRealmCompositeRolesAsync(string parentName);
         Task<Models.UserModel[]> GetRoleMembersAsync(string parentName, int first = 0, int max = 10);

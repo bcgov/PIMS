@@ -1,4 +1,4 @@
-using CsvHelper.Configuration;
+using Pims.Core.Exceptions;
 using Pims.Core.Http.Configuration;
 using System;
 

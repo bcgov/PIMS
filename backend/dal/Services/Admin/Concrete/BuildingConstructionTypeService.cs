@@ -45,7 +45,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override BuildingConstructionType Update(BuildingConstructionType entity)
+        public override void Update(BuildingConstructionType entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -53,7 +53,7 @@ namespace Pims.Dal.Services.Admin
             if (buildingConstructionType == null) throw new KeyNotFoundException();
 
             this.Context.Entry(buildingConstructionType).CurrentValues.SetValues(entity);
-            return base.Update(buildingConstructionType);
+            base.Update(buildingConstructionType);
         }
 
         /// <summary>

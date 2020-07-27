@@ -45,7 +45,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override PropertyClassification Update(PropertyClassification entity)
+        public override void Update(PropertyClassification entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -53,7 +53,7 @@ namespace Pims.Dal.Services.Admin
             if (propertyClassification == null) throw new KeyNotFoundException();
 
             this.Context.Entry(propertyClassification).CurrentValues.SetValues(entity);
-            return base.Update(propertyClassification);
+            base.Update(propertyClassification);
         }
 
         /// <summary>

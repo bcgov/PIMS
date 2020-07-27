@@ -188,7 +188,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override Parcel Add(Parcel entity)
+        public override void Add(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -253,7 +253,7 @@ namespace Pims.Dal.Services.Admin
                 this.Context.Addresses.Add(entity.Address);
             }
 
-            return base.Add(entity);
+            base.Add(entity);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override Parcel Update(Parcel entity)
+        public override void Update(Parcel entity)
         {
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfNotAllowedToEdit(nameof(entity), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
@@ -351,7 +351,7 @@ namespace Pims.Dal.Services.Admin
             this.Context.Parcels.ThrowIfNotUnique(entity);
 
             // TODO: Update child properties appropriately.
-            return base.Update(parcel);
+            base.Update(parcel);
         }
 
         /// <summary>

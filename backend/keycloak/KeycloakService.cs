@@ -37,8 +37,8 @@ namespace Pims.Keycloak
             _client = client;
             _client.AuthClientOptions.Audience = this.Options.ServiceAccount.Audience ?? this.Options.Audience;
             _client.AuthClientOptions.Authority = this.Options.ServiceAccount.Authority ?? this.Options.Authority;
-            _client.AuthClientOptions.Client = this.Options.ServiceAccount.Client ?? this.Options.Client;
-            _client.AuthClientOptions.Secret = this.Options.ServiceAccount.Secret ?? this.Options.Secret;
+            _client.AuthClientOptions.Client = this.Options.ServiceAccount.Client;
+            _client.AuthClientOptions.Secret = this.Options.ServiceAccount.Secret;
         }
         #endregion
 
