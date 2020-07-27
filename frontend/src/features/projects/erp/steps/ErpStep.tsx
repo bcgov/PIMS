@@ -29,30 +29,13 @@ import {
 } from 'features/projects/dispose';
 import * as Yup from 'yup';
 import _ from 'lodash';
+import './ErpStep.scss';
 
 const CenterBoldText = styled.div`
   text-align: center;
   font-family: 'BCSans-Bold';
   margin-bottom: 1.5rem;
 `;
-
-export const validationGroups: ValidationGroup[] = [
-  {
-    schema: ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema),
-    tab: SPPApprovalTabs.projectInformation,
-    statusCode: DisposeWorkflowStatus.Draft,
-  },
-  {
-    schema: DocumentationStepSchema,
-    tab: SPPApprovalTabs.documentation,
-    statusCode: DisposeWorkflowStatus.RequiredDocumentation,
-  },
-  {
-    schema: Yup.object().shape({}),
-    tab: SPPApprovalTabs.erp,
-    statusCode: ReviewWorkflowStatus.ApprovedForErp,
-  },
-];
 
 const ErpStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
@@ -79,8 +62,27 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const goToGreTransferred = () =>
     history.push(`./gretransfer?projectNumber=${project?.projectNumber}`);
   const goToSpl = () => history.push(`./approved?projectNumber=${project?.projectNumber}`);
+
+  const validationGroups: ValidationGroup[] = [
+    {
+      schema: ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema),
+      tab: SPPApprovalTabs.projectInformation,
+      statusCode: DisposeWorkflowStatus.Draft,
+    },
+    {
+      schema: DocumentationStepSchema,
+      tab: SPPApprovalTabs.documentation,
+      statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+    },
+    {
+      schema: Yup.object().shape({}),
+      tab: SPPApprovalTabs.erp,
+      statusCode: ReviewWorkflowStatus.ApprovedForErp,
+    },
+  ];
+
   return (
-    <Container fluid>
+    <Container fluid className="erpStep">
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -93,6 +95,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
           ).then((project: IProject) => {
             if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
+            } else if (project?.statusCode === ReviewWorkflowStatus.NotInSpl) {
+              setCurrentTab(SPPApprovalTabs.closeOutForm);
             }
           });
         }}

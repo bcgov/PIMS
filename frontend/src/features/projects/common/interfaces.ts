@@ -159,7 +159,7 @@ export interface IProject {
   closeOutNetbook?: number | '';
   assessed?: number | '';
   appraised?: number | '';
-  estimated?: number;
+  estimated?: number | '';
   workflowCode?: string;
   isContractConditional?: boolean;
   purchaser?: string;
@@ -310,10 +310,10 @@ export const initialValues: IProject = {
   adjustedOn: '',
   preliminaryFormSignedOn: '',
   finalFormSignedOn: '',
-  netBook: 0,
-  assessed: 0,
-  appraised: 0,
-  estimated: 0,
+  netBook: '',
+  assessed: '',
+  appraised: '',
+  estimated: '',
   workflowCode: '',
   offerAmount: '',
   isContractConditional: false,

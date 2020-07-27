@@ -63,6 +63,7 @@ const SplStep = ({ formikRef }: IStepProps) => {
       : SPPApprovalTabs.spl;
   const currentTab = useSelector<RootState, string | null>(state => state.splTab) ?? defaultTab;
   const dispatch = useDispatch();
+
   const canUserEdit =
     canUserApproveForm() &&
     (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
@@ -78,28 +79,28 @@ const SplStep = ({ formikRef }: IStepProps) => {
   const splValidationGroups: ValidationGroup[] = [
     {
       schema: SurplusPropertyInformationYupSchema,
-      tab: 'Project Information',
+      tab: SPPApprovalTabs.projectInformation,
       statusCode: DisposeWorkflowStatus.Draft,
     },
     {
       schema: DocumentationStepSchema,
-      tab: 'Documentation',
+      tab: SPPApprovalTabs.documentation,
       statusCode: ReviewWorkflowStatus.Disposed,
     },
     {
       schema: SurplusPropertyListYupSchema,
-      tab: 'Surplus Properties List',
+      tab: SPPApprovalTabs.spl,
       statusCode: ReviewWorkflowStatus.ContractInPlace,
     },
     {
       schema: CloseOutFormValidationSchema,
-      tab: 'Close Out Form',
+      tab: SPPApprovalTabs.closeOutForm,
       statusCode: ReviewWorkflowStatus.Disposed,
     },
   ];
   const getValidationGroups = (statusCode?: string) => {
     // Do not validate the close out form when transitioning statuses.
-    if (statusCode !== undefined) {
+    if (currentTab !== SPPApprovalTabs.closeOutForm) {
       return splValidationGroups.slice(0, splValidationGroups.length - 1);
     } else {
       return splValidationGroups;
@@ -107,9 +108,10 @@ const SplStep = ({ formikRef }: IStepProps) => {
   };
 
   return (
-    <Container fluid>
+    <Container fluid className="splStep">
       <Formik
         initialValues={initialValues}
+        validateOnMount={true}
         enableReinitialize={true}
         onSubmit={(values: IProject) => {
           return onSubmitReview(
@@ -117,7 +119,11 @@ const SplStep = ({ formikRef }: IStepProps) => {
             formikRef,
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
-          );
+          ).then((project: IProject) => {
+            if (project?.statusCode === ReviewWorkflowStatus.Disposed) {
+              setCurrentTab(SPPApprovalTabs.closeOutForm);
+            }
+          });
         }}
         //only perform validation if the user is attempting to dispose the project.
         validate={(values: IProject) =>

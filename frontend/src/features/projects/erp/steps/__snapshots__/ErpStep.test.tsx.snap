@@ -2,7 +2,7 @@
 
 exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
 <div
-  className="container-fluid"
+  className="erpStep container-fluid"
 >
   <form
     action="#"
@@ -112,27 +112,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       className="tab-content"
     >
       <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-projectInformation"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-projectInformation"
-        role="tabpanel"
-      />
-      <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-documentation"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-documentation"
-        role="tabpanel"
-      />
-      <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-enhancedReferralProcess"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-enhancedReferralProcess"
-        role="tabpanel"
-      />
-      <div
         aria-hidden={false}
         aria-labelledby="approvalTabs-tab-closeOutForm"
         className="fade tab-pane active show"
@@ -140,1138 +119,921 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
         role="tabpanel"
       >
         <div
-          className="form-row"
+          className="container-fluid"
         >
           <div
-            className="col-md-6"
+            className="form-row"
           >
             <div
-              className="form-row"
+              className="col-md-6"
             >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Project Number
-              </label>
               <div
-                className="col-md-8 form-group"
+                className="form-row"
               >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-projectNumber"
-                  name="projectNumber"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="test-01"
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Agency
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-agency"
-                  name="agency"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Sub Agency
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-subAgency"
-                  name="subAgency"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Project Manager(s)
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-manager"
-                  name="manager"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <h3>
-          Purchase Information
-        </h3>
-        <div
-          className="form-row"
-        >
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Name of Purchaser
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-purchaser"
-                  name="purchaser"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Real Estate Agent
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-realtor"
-                  name="realtor"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Real Estate Agent Rate
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-realtorRate"
-                  name="realtorRate"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Real Estate Commission Paid
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="realtorCommission"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <h3>
-          Sale Information
-        </h3>
-        <div
-          className="form-row"
-        >
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Sales Completion Date
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Project Number
+                </label>
                 <div
-                  className="react-datepicker-wrapper"
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-projectNumber"
+                    name="projectNumber"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="test-01"
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Agency
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-agency"
+                    name="agency"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Sub Agency
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-subAgency"
+                    name="subAgency"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Project Manager(s)
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-manager"
+                    name="manager"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Purchase Information
+          </h3>
+          <div
+            className="form-row"
+          >
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Name of Purchaser
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-purchaser"
+                    name="purchaser"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Real Estate Agent
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-realtor"
+                    name="realtor"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Real Estate Agent Rate
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-realtorRate"
+                    name="realtorRate"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Real Estate Commission Paid
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
                 >
                   <div
-                    className="react-datepicker__input-container"
+                    className="input-tooltip-wrapper"
                   >
                     <input
-                      autoComplete="off"
-                      className="form-control date-picker"
+                      className="form-control"
                       disabled={false}
-                      name="disposedOn"
+                      name="realtorCommission"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
+                      placeholder="$0"
                       value=""
                     />
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <h3>
+            Sale Information
+          </h3>
+          <div
+            className="form-row"
+          >
             <div
-              className="form-row"
+              className="col-md-6"
             >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Sales Adjustment Date
-              </label>
               <div
-                className="col-md-8 form-group"
+                className="form-row"
               >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
+                <label
+                  className="form-label col-form-label col-md-4"
                 >
+                  Sales Completion Date
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <span
+                    className=""
+                  />
                   <div
-                    className="react-datepicker__input-container"
+                    className="react-datepicker-wrapper"
                   >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={false}
-                      name="adjustedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      className="react-datepicker__input-container"
+                    >
+                      <input
+                        autoComplete="off"
+                        className="form-control date-picker"
+                        disabled={false}
+                        name="disposedOn"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="--/--/----"
+                        readOnly={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Sales Adjustment Date
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <span
+                    className=""
+                  />
+                  <div
+                    className="react-datepicker-wrapper"
+                  >
+                    <div
+                      className="react-datepicker__input-container"
+                    >
+                      <input
+                        autoComplete="off"
+                        className="form-control date-picker"
+                        disabled={false}
+                        name="adjustedOn"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="--/--/----"
+                        readOnly={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div
-              className="form-row"
+              className="col-md-6"
             >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Actual Fiscal Year of Sale
-              </label>
               <div
-                className="col-md-8 form-group"
+                className="form-row"
               >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="actualFiscalYear"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="YYYY/YYYY"
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Value
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                BC Assessment Year
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
+                <label
+                  className="form-label col-form-label col-md-4"
                 >
-                  <div
-                    className="react-datepicker__input-container"
-                  >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={false}
-                      name="assessedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
+                  Actual Fiscal Year of Sale
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    name="actualFiscalYear"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="YYYY/YYYY"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Best Information of Future Planned Use
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-plannedFutureUse"
+                    name="plannedFutureUse"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
                 </div>
               </div>
             </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Best Information of Future Planned Use
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-plannedFutureUse"
-                  name="plannedFutureUse"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
           </div>
-        </div>
-        <h3>
-          Appraisal
-        </h3>
-        <div
-          className="form-row"
-        >
+          <h3>
+            Appraisal
+          </h3>
           <div
-            className="PropertyListView container-fluid"
+            className="form-row"
           >
             <div
-              className="ScrollContainer"
+              className="PropertyListView container-fluid"
             >
               <div
-                className="table"
-                role="table"
-                style={
-                  Object {
-                    "minWidth": undefined,
-                  }
-                }
+                className="ScrollContainer"
               >
                 <div
-                  className="thead thead-light"
-                >
-                  <div
-                    className="tr"
-                    role="row"
-                    style={
-                      Object {
-                        "display": "flex",
-                        "flex": "1 0 auto",
-                        "minWidth": "585px",
-                      }
+                  className="table"
+                  role="table"
+                  style={
+                    Object {
+                      "minWidth": undefined,
                     }
-                  >
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                      Property Name
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                      Street Address
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                      City
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                      Municipality
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Type
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "145 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "145px",
-                          "textAlign": "left",
-                          "width": "145px",
-                        }
-                      }
-                    >
-                      Appraised Value
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "145 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "145px",
-                          "textAlign": "left",
-                          "width": "145px",
-                        }
-                      }
-                    >
-                      Appraised Value
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "145 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "145px",
-                          "textAlign": "left",
-                          "width": "145px",
-                        }
-                      }
-                    >
-                      Appraisal Firm
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="no-rows-message"
-                >
-                  No rows to display
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <h3>
-          Financial Summary
-        </h3>
-        <div
-          className="form-row"
-        >
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Sales Proceeds
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="salesProceeds"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Cost of Sales
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Net Book Value
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="netBook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Gain Before SPP Cost
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="gainBeforeSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Remediation (Not funded throuch COS. TRAN only)
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-remediation"
-                  name="remediation"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                SPP Cost
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                SPP Cost Calculation Notes
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-notes[12].note"
-                  name="notes[12].note"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="sppcost"
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Gain after SPP Cost
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="gainAfterSpp"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Gain after SPP Cost Calculation Notes
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-notes[13].note"
-                  name="notes[13].note"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="sppgain"
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Interest Component
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="interestComponent"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="$0"
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <h3>
-          Financing Information
-        </h3>
-        <div
-          className="ProjectNotes form-row"
-        >
-          <div
-            className="col-md-12 form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-notes[10].note"
-            >
-              Loan Terms
-            </label>
-            <textarea
-              className="col-md-5 form-control"
-              id="input-notes[10].note"
-              name="notes[10].note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="loanterms"
-            />
-          </div>
-        </div>
-        <div
-          className="ProjectNotes form-row"
-        >
-          <div
-            className="col-md-12 form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-notes[15].note"
-            >
-              Notes
-            </label>
-            <textarea
-              className="col-md-5 form-control"
-              id="input-notes[15].note"
-              name="notes[15].note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="closeout"
-            />
-          </div>
-        </div>
-        <h3>
-          OCG
-        </h3>
-        <div
-          className="col-md-12 form-row"
-        >
-          <label
-            className="form-label col-form-label col-md-2"
-          >
-            OCG Gain / Loss
-          </label>
-          <div
-            className="col-md-4 form-group"
-          >
-            <input
-              className="form-control"
-              disabled={false}
-              name="ocgFinancialStatement"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="$0"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          className="ProjectNotes form-row"
-        >
-          <div
-            className="col-md-12 form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-notes[14].note"
-            >
-              Sales History Notes
-            </label>
-            <textarea
-              className="col-md-5 form-control"
-              id="input-notes[14].note"
-              name="notes[14].note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="saleshistory"
-            />
-          </div>
-        </div>
-        <div
-          className="ProjectNotes form-row"
-        >
-          <div
-            className="col-md-12 form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-notes[16].note"
-            >
-              Project Comments
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height={14}
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                size={14}
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
                   }
-                }
-                viewBox="0 0 512 512"
-                width={14}
-                xmlns="http://www.w3.org/2000/svg"
+                >
+                  <div
+                    className="thead thead-light"
+                  >
+                    <div
+                      className="tr"
+                      role="row"
+                      style={
+                        Object {
+                          "display": "flex",
+                          "flex": "1 0 auto",
+                          "minWidth": "875px",
+                        }
+                      }
+                    >
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "100 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "30px",
+                            "textAlign": "left",
+                            "width": "100px",
+                          }
+                        }
+                      >
+                        Property Name
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "100 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "30px",
+                            "textAlign": "left",
+                            "width": "100px",
+                          }
+                        }
+                      >
+                        Street Address
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "100 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "30px",
+                            "textAlign": "left",
+                            "width": "100px",
+                          }
+                        }
+                      >
+                        City
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "100 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "30px",
+                            "textAlign": "left",
+                            "width": "100px",
+                          }
+                        }
+                      >
+                        Municipality
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "60 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "30px",
+                            "textAlign": "left",
+                            "width": "60px",
+                          }
+                        }
+                      >
+                        Type
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "145 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "145px",
+                            "textAlign": "left",
+                            "width": "145px",
+                          }
+                        }
+                      >
+                        Appraised Value
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "145 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "145px",
+                            "textAlign": "left",
+                            "width": "145px",
+                          }
+                        }
+                      >
+                        Appraised Date
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "145 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "145px",
+                            "textAlign": "left",
+                            "width": "145px",
+                          }
+                        }
+                      >
+                        Appraisal Firm
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "145 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "145px",
+                            "textAlign": "left",
+                            "width": "145px",
+                          }
+                        }
+                      >
+                        Assessed Value
+                      </div>
+                      <div
+                        className="th"
+                        colSpan={1}
+                        onClick={[Function]}
+                        role="columnheader"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "boxSizing": "border-box",
+                            "display": "flex",
+                            "flex": "145 0 auto",
+                            "justifyContent": "flex-start",
+                            "minWidth": "145px",
+                            "textAlign": "left",
+                            "width": "145px",
+                          }
+                        }
+                      >
+                        Assessed Date
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="no-rows-message"
+                  >
+                    No rows to display
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Financial Summary
+          </h3>
+          <div
+            className="form-row"
+          >
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
               >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                />
-              </svg>
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Sales Proceeds
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="salesProceeds"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Cost of Sales
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="salesCost"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Net Book Value
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="closeOutNetbook"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Gain Before SPP Cost
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="gainBeforeSpp"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Remediation (Not funded throuch COS. TRAN only)
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-remediation"
+                    name="remediation"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  SPP Cost
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="programCost"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  SPP Cost Calculation Notes
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-notes[12].note"
+                    name="notes[12].note"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="sppcost"
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Gain after SPP Cost
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="gainAfterSpp"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Gain after SPP Cost Calculation Notes
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-notes[13].note"
+                    name="notes[13].note"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="sppgain"
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Interest Component
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
+                >
+                  <div
+                    className="input-tooltip-wrapper"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      name="interestComponent"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      placeholder="$0"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Financing Information
+          </h3>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-notes[10].note"
+              >
+                Loan Terms
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                id="input-notes[10].note"
+                name="notes[10].note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="loanterms"
+              />
+            </div>
+          </div>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-notes[15].note"
+              >
+                Notes
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                id="input-notes[15].note"
+                name="notes[15].note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="closeout"
+              />
+            </div>
+          </div>
+          <h3>
+            OCG
+          </h3>
+          <div
+            className="col-md-12 form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-2"
+            >
+              OCG Gain / Loss
             </label>
-            <textarea
-              className="col-md-5 form-control"
-              id="input-notes[16].note"
-              name="notes[16].note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="comments"
-            />
-          </div>
-        </div>
-        <h3>
-          Signed by Chief Financial Officer
-        </h3>
-        <div
-          className="form-row"
-        >
-          <div
-            className="col-md-6"
-          >
             <div
-              className="form-row"
+              className="col-md-4 fast-currency-input form-group"
             >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Preliminary Form Signed By
-              </label>
               <div
-                className="col-md-8 form-group"
+                className="input-tooltip-wrapper"
               >
                 <input
                   className="form-control"
                   disabled={false}
-                  id="input-preliminaryFormSignedBy"
-                  name="preliminaryFormSignedBy"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Final Form Signed by
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  id="input-finalFormSignedBy"
-                  name="finalFormSignedBy"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Signature Date
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
-                >
-                  <div
-                    className="react-datepicker__input-container"
-                  >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={false}
-                      name="preliminaryFormSignedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Signature Date
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <span
-                  className=""
-                />
-                <div
-                  className="react-datepicker-wrapper"
-                >
-                  <div
-                    className="react-datepicker__input-container"
-                  >
-                    <input
-                      autoComplete="off"
-                      className="form-control date-picker"
-                      disabled={false}
-                      name="finalFormSignedOn"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <h3>
-          Adjustment to Prior Year Sale
-        </h3>
-        <div
-          className="form-row"
-        >
-          <div
-            className="col-md-6"
-          >
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-4"
-              >
-                Adjustment to Prior Year Sale Amount
-              </label>
-              <div
-                className="col-md-8 form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="priorYearAdjustmentAmount"
+                  name="ocgFinancialStatement"
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="$0"
@@ -1281,72 +1043,312 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="col-md-6"
+            className="ProjectNotes form-row"
           >
             <div
-              className="form-row"
-            />
-            <div
-              className="form-row"
+              className="col-md-12 form-group"
             >
               <label
-                className="form-label col-form-label col-md-4"
+                className="form-label"
+                htmlFor="input-notes[14].note"
               >
-                Adjustment to Prior Year Sale Date
+                Sales History Notes
               </label>
-              <div
-                className="col-md-8 form-group"
+              <textarea
+                className="col-md-5 form-control"
+                id="input-notes[14].note"
+                name="notes[14].note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="saleshistory"
+              />
+            </div>
+          </div>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-notes[16].note"
               >
-                <span
-                  className=""
-                />
+                Project Comments
+                <svg
+                  className="tooltip-icon"
+                  fill="currentColor"
+                  height={14}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  onMouseOut={[Function]}
+                  onMouseOver={[Function]}
+                  size={14}
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width={14}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                  />
+                </svg>
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                id="input-notes[16].note"
+                name="notes[16].note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="comments"
+              />
+            </div>
+          </div>
+          <h3>
+            Signed by Chief Financial Officer
+          </h3>
+          <div
+            className="form-row"
+          >
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Preliminary Form Signed By
+                </label>
                 <div
-                  className="react-datepicker-wrapper"
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-preliminaryFormSignedBy"
+                    name="preliminaryFormSignedBy"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Final Form Signed by
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="input-finalFormSignedBy"
+                    name="finalFormSignedBy"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Signature Date
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <span
+                    className=""
+                  />
+                  <div
+                    className="react-datepicker-wrapper"
+                  >
+                    <div
+                      className="react-datepicker__input-container"
+                    >
+                      <input
+                        autoComplete="off"
+                        className="form-control date-picker"
+                        disabled={false}
+                        name="preliminaryFormSignedOn"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="--/--/----"
+                        readOnly={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Signature Date
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <span
+                    className=""
+                  />
+                  <div
+                    className="react-datepicker-wrapper"
+                  >
+                    <div
+                      className="react-datepicker__input-container"
+                    >
+                      <input
+                        autoComplete="off"
+                        className="form-control date-picker"
+                        disabled={false}
+                        name="finalFormSignedOn"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="--/--/----"
+                        readOnly={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Adjustment to Prior Year Sale
+          </h3>
+          <div
+            className="form-row"
+          >
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Adjustment to Prior Year Sale Amount
+                </label>
+                <div
+                  className="col-md-8 fast-currency-input form-group"
                 >
                   <div
-                    className="react-datepicker__input-container"
+                    className="input-tooltip-wrapper"
                   >
                     <input
-                      autoComplete="off"
-                      className="form-control date-picker"
+                      className="form-control"
                       disabled={false}
-                      name="priorYearAdjustmentOn"
+                      name="priorYearAdjustmentAmount"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder="--/--/----"
-                      readOnly={false}
-                      type="text"
+                      placeholder="$0"
                       value=""
                     />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          className="ProjectNotes form-row"
-        >
-          <div
-            className="col-md-12 form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-notes[11].note"
+            <div
+              className="col-md-6"
             >
-              Adjustment to Prior Year Sale Notes
-            </label>
-            <textarea
-              className="col-md-5 form-control"
-              id="input-notes[11].note"
-              name="notes[11].note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="adjustment"
-            />
+              <div
+                className="form-row"
+              />
+              <div
+                className="form-row"
+              >
+                <label
+                  className="form-label col-form-label col-md-4"
+                >
+                  Adjustment to Prior Year Sale Date
+                </label>
+                <div
+                  className="col-md-8 form-group"
+                >
+                  <span
+                    className=""
+                  />
+                  <div
+                    className="react-datepicker-wrapper"
+                  >
+                    <div
+                      className="react-datepicker__input-container"
+                    >
+                      <input
+                        autoComplete="off"
+                        className="form-control date-picker"
+                        disabled={false}
+                        name="priorYearAdjustmentOn"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="--/--/----"
+                        readOnly={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-notes[11].note"
+              >
+                Adjustment to Prior Year Sale Notes
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                id="input-notes[11].note"
+                name="notes[11].note"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="adjustment"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -1404,7 +1406,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
 
 exports[`ERP Approval Step renders correctly 1`] = `
 <div
-  className="container-fluid"
+  className="erpStep container-fluid"
 >
   <form
     action="#"
@@ -1499,20 +1501,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
     <div
       className="tab-content"
     >
-      <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-projectInformation"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-projectInformation"
-        role="tabpanel"
-      />
-      <div
-        aria-hidden={true}
-        aria-labelledby="approvalTabs-tab-documentation"
-        className="fade tab-pane"
-        id="approvalTabs-tabpane-documentation"
-        role="tabpanel"
-      />
       <div
         aria-hidden={false}
         aria-labelledby="approvalTabs-tab-enhancedReferralProcess"

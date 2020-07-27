@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { CLASSIFICATIONS } from 'constants/classifications';
 
 export const SurplusPropertyListYupSchema = Yup.object().shape({
   marketedOn: Yup.date().required('Required'),
@@ -10,7 +9,7 @@ export const SurplusPropertyListYupSchema = Yup.object().shape({
     .required('Required')
     .max(150, 'Purchaser must be less then 150 characters'),
   offerAmount: Yup.number()
-    .min(1, 'Offer amount must be greater then or equal to $1')
+    .min(1, 'Offer amount must be a positive number')
     .required('Required'),
   disposedOn: Yup.date().required('Required'),
 });
@@ -26,12 +25,6 @@ export const SurplusPropertyInformationYupSchema = Yup.object().shape({
   tierLevelId: Yup.number().required('Required'),
   properties: Yup.array().of(
     Yup.object().shape({
-      classificationId: Yup.number().test(
-        'is-valid',
-        'Must select Surplus Active or Surplus Encumbered',
-        (val: any) =>
-          val === CLASSIFICATIONS.SurplusActive || val === CLASSIFICATIONS.SurplusEncumbered,
-      ),
       netBook: Yup.number()
         .required()
         .min(1, 'Minimum value is $1')
@@ -56,32 +49,32 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
   ),
   finalFormSignedBy: Yup.string().max(150, 'Final Form Signed By must be less then 150 characters'),
   interestComponent: Yup.number()
-    .min(1, 'Interest component must be greater then or equal to $1')
+    .min(0, 'Interest component must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   ocgFinancialStatement: Yup.number()
-    .min(1, 'OCG Financial must be greater then or equal to $1')
+    .min(0, 'OCG Financial must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   salesCost: Yup.number()
-    .min(1, 'Sales Cost amount must be greater then or equal to $1')
+    .min(0, 'Sales Cost amount must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   salesProceeds: Yup.number()
-    .min(1, 'Sales Proceeds must be greater then or equal to $1')
+    .min(0, 'Sales Proceeds must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
 
   gainBeforeSpp: Yup.number()
-    .min(1, 'Gain Before Spp Cost must be greater then or equal to $1')
+    .min(0, 'Gain Before Spp Cost must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   gainAfterSpp: Yup.number()
-    .min(1, 'Gain After Spp Cost must be greater then or equal to $1')
+    .min(0, 'Gain After Spp Cost must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   programCost: Yup.number()
-    .min(1, 'SPP Program Cost must be greater then or equal to $1')
+    .min(0, 'SPP Program Cost must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   priorYearAdjustmentAmount: Yup.number()
-    .min(1, 'Prior Year Adjustment Amount must be greater then or equal to $1')
+    .min(0, 'Prior Year Adjustment Amount must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   assessed: Yup.number()
-    .min(1, 'Assessed must be greater then or equal to $1')
+    .min(0, 'Assessed must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   assessedOn: Yup.date(),
   adjustedOn: Yup.date(),
@@ -92,14 +85,14 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
     Yup.object().shape({
       appraised: Yup.number()
         .required()
-        .min(1, 'Minimum value is $1')
+        .min(0, 'Must be a positive number')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
       appraisedDate: Yup.date(),
       appraisedFirm: Yup.string().max(150, 'Manager must be less then 150 characters'),
       assessed: Yup.number()
         .required()
-        .min(1, 'Minimum value is $1')
+        .min(0, 'Must be a positive number')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
       assessedDate: Yup.date(),

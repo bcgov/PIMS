@@ -13,7 +13,9 @@ import { getStore, mockProject as defaultProject } from '../../dispose/testUtils
 import { IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
+import ReactDOM from 'react-dom';
 
+ReactDOM.createPortal = (node: any) => node;
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
   (useKeycloak as jest.Mock).mockReturnValue({
@@ -243,7 +245,7 @@ describe('ERP Approval Step', () => {
         proceedToSplButton.click();
       });
 
-      const errorSummary = await screen.findByText(/The following tabs have errors/);
+      const errorSummary = await screen.findByText(/The form has errors/);
       expect(errorSummary).toBeVisible();
       done();
     });

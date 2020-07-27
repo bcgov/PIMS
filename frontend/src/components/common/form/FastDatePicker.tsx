@@ -6,8 +6,6 @@ import { FormGroup, FormControlProps } from 'react-bootstrap';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import GenericModal from '../GenericModal';
-import _ from 'lodash';
-import { EvaluationKeys } from 'constants/evaluationKeys';
 import { appraisalDateWarning } from 'features/projects/common';
 
 type RequiredAttributes = {
@@ -66,6 +64,9 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   if (typeof value === 'string') {
     value = moment(value, 'YYYY-MM-DD').toDate();
   }
+  if (value && value !== initialValue) {
+    setFieldTouched(field);
+  }
   useEffect(() => {
     registerField(field, {});
     return () => {
@@ -87,12 +88,13 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         disabled={disabled}
         minDate={moment(minDate, 'YYYY-MM-DD').toDate()}
         {...rest}
+        onBlur={() => setFieldTouched(field)}
+        onCalendarClose={() => setFieldTouched(field)}
         onChange={(val: any, e) => {
           if (oldDateWarning && initialValue && moment(value).isAfter(moment(val))) {
             setOldDate(val);
           } else {
             setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
-            setFieldTouched(field);
           }
         }}
       />

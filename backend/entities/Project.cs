@@ -298,7 +298,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal CloseOutNetbook { get; set; }
+        public decimal? CloseOutNetbook { get; set; }
 
 
         /// <summary>
@@ -316,56 +316,56 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal SalesCost { get; set; } // TODO: Move to metadata property.
+        public decimal? SalesCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
+        public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The sales proceeds
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal SalesProceeds { get; set; } // TODO: Move to metadata property.
+        public decimal? SalesProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
+        public decimal? ProgramCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal GainLoss { get; set; } // TODO: Move to metadata property.
+        public decimal? GainLoss { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The SPP Capitalization value.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal SppCapitalization { get; set; } // TODO: Move to metadata property.
+        public decimal? SppCapitalization { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain before SPP.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal GainBeforeSpp { get; set; } // TODO: Move to metadata property.
+        public decimal? GainBeforeSpp { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain after SPP.
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal GainAfterSpp { get; set; } // TODO: Move to metadata property.
+        public decimal? GainAfterSpp { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -379,7 +379,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
+        public decimal? InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Remediation.
@@ -400,7 +400,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal OfferAmount { get; set; }
+        public decimal? OfferAmount { get; set; }
 
         /// <summary>
         /// get/set - Whether the sale includes a lease in place (SLIP).
@@ -421,7 +421,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal PriorYearAdjustmentAmount { get; set; } // TODO: Move to metadata property.
+        public decimal? PriorYearAdjustmentAmount { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - the real estate agent
@@ -442,7 +442,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         [NotMapped]
         [DataMemberAttribute]
-        public decimal RealtorCommission { get; set; } // TODO: Move to metadata property.
+        public decimal? RealtorCommission { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - who signed the preliminary form.

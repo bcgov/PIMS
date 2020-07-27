@@ -218,7 +218,7 @@ describe('SPL Approval Step', () => {
         disposeButton.click();
       });
 
-      const errorSummary = await screen.findByText(/The following tabs have errors/);
+      const errorSummary = await screen.findByText(/The form has errors/);
       expect(errorSummary).toBeVisible();
       done();
     });

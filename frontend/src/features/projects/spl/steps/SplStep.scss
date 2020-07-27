@@ -1,17 +1,9 @@
-.tab-content .container-fluid .container-fluid {
-  padding: 0;
-}
+.splStep {
+  .tab-content .container-fluid .container-fluid {
+    padding: 0;
+  }
 
-#approvalTabs-tabpane-closeOutForm {
-  .col-md-6 {
-    padding-right: 2rem;
-  }
-  .col-md-12.form-group,
-  .col-md-12.form-row {
-    padding-right: 4rem;
-    padding-left: 0;
-  }
-  .form-check-label {
-    padding-right: 1rem;
+  .nav-tabs .nav-item.nav-link {
+    width: 20%;
   }
 }

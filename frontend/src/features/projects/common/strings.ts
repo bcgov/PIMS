@@ -26,3 +26,5 @@ export const offersReceived = `Review Required for offer(s) in Tier 3 & 4.`;
 export const projectComments = `Please provide any variances between appraised, assessed, and sale price.`;
 export const appraisalDateWarning =
   'You have entered an appraisal date that is older then the current appraisal date stored in PIMS. Are you sure that you would like to update PIMS to use this older date?';
+export const tabErrorWarning =
+  'Please correct all of the highlighted errors within the red coloured tab(s) before changing the status to Disposed Externally.';
