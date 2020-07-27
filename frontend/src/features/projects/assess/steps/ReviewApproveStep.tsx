@@ -96,6 +96,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       <Formik
         initialValues={initialValues}
         innerRef={formikRef}
+        enableReinitialize={true}
         onSubmit={(values: IProject) => {
           const workflowCode = getNextWorkflowCode(submitStatusCode, values);
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
