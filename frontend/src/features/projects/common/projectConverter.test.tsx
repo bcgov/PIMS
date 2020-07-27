@@ -20,7 +20,7 @@ describe('projectConverter function tests', () => {
       expect(getMostRecentAppraisal([])).toBeUndefined();
     });
     it('returns undefined if there are no appraisals within a year of the current date', () => {
-      const appraisal = createAppraisal(moment().add(366, 'days'));
+      const appraisal = createAppraisal(moment().add(2, 'years'));
       expect(getMostRecentAppraisal([appraisal])).toBeUndefined();
     });
     it('returns the most recent appraisal if there is an appraisal within a year of the current date', () => {

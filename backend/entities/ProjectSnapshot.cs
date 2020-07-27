@@ -42,22 +42,22 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The sales cost.
         /// </summary>
-        public decimal SalesCost { get; set; } // TODO: Move to metadata property.
+        public decimal? SalesCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
-        public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
+        public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
-        public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
+        public decimal? ProgramCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
-        public decimal GainLoss { get; set; } // TODO: Move to metadata property.
+        public decimal? GainLoss { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -67,7 +67,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
-        public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
+        public decimal? InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Whether the sale includes a lease in place (SLIP).

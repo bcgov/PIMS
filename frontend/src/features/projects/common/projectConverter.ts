@@ -136,28 +136,24 @@ export const toFlatProject = (project?: IApiProject) => {
 /** create api evaluation objects based on flat app evaluation structure */
 const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   const evaluations: IEvaluation[] = [];
-  if (property.appraised && property.appraisedDate) {
-    evaluations.push({
-      parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-      buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-      value: property.appraised,
-      date: property.appraisedDate ?? formatDate(new Date()),
-      rowVersion: property.appraisedRowVersion,
-      key: EvaluationKeys.Appraised,
-      firm: property.appraisedFirm ?? '',
-    });
-  }
-  if (property.assessed && property.assessedDate) {
-    evaluations.push({
-      parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-      buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-      value: property.assessed,
-      date: property.assessedDate ?? formatDate(new Date()),
-      rowVersion: property.assessedRowVersion,
-      key: EvaluationKeys.Assessed,
-      firm: property.assessedFirm ?? '',
-    });
-  }
+  evaluations.push({
+    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
+    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+    value: property.appraised,
+    date: property.appraisedDate ?? formatDate(new Date()),
+    rowVersion: property.appraisedRowVersion,
+    key: EvaluationKeys.Appraised,
+    firm: property.appraisedFirm ?? '',
+  });
+  evaluations.push({
+    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
+    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+    value: property.assessed,
+    date: property.assessedDate ?? formatDate(new Date()),
+    rowVersion: property.assessedRowVersion,
+    key: EvaluationKeys.Assessed,
+    firm: property.assessedFirm ?? '',
+  });
 
   return evaluations;
 };

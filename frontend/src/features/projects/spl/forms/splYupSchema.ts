@@ -86,15 +86,13 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
       appraised: Yup.number()
         .required()
         .min(0, 'Must be a positive number')
-        .max(1000000000, 'Maximum value is $1,000,000,000')
-        .required('Required'),
+        .max(1000000000, 'Maximum value is $1,000,000,000'),
       appraisedDate: Yup.date(),
       appraisedFirm: Yup.string().max(150, 'Manager must be less then 150 characters'),
       assessed: Yup.number()
         .required()
         .min(0, 'Must be a positive number')
-        .max(1000000000, 'Maximum value is $1,000,000,000')
-        .required('Required'),
+        .max(1000000000, 'Maximum value is $1,000,000,000'),
       assessedDate: Yup.date(),
     }),
   ),
