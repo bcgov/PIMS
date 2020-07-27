@@ -5,11 +5,13 @@ import { IProperty } from '../../common';
 
 interface IProps {
   data: IProperty[];
+  hideHeaders?: boolean;
 }
 
-export const Properties: React.FC<IProps> = ({ data }) => {
+export const Properties: React.FC<IProps> = ({ data, hideHeaders }) => {
   return (
     <Table<IProperty>
+      hideHeaders={hideHeaders}
       name="nestedPropertiesTable"
       columns={columns}
       data={data}

@@ -30,6 +30,13 @@ const headerProps = <T extends object>(
   return getStyles(props, true, column);
 };
 
+const noHeaders = <T extends object>(
+  props: any,
+  { column }: { column: ColumnInstanceWithProps<T> },
+) => {
+  return getStyles(props, true, column, true);
+};
+
 const cellProps = <T extends object>(props: any, { cell }: { cell: Cell<T> }) => {
   return getStyles(props, false, cell.column);
 };
@@ -38,6 +45,7 @@ const getStyles = <T extends object>(
   props: any,
   isHeader: boolean,
   column: ColumnInstanceWithProps<T>,
+  hideHeaders?: boolean,
 ) => {
   // override column width when percentage value is provided - react-table deals with pixel values
   const colSize = !!column?.responsive
@@ -53,7 +61,7 @@ const getStyles = <T extends object>(
         justifyContent: column?.align === 'right' ? 'flex-end' : 'flex-start',
         textAlign: column?.align === 'right' ? 'right' : 'left',
         alignItems: isHeader ? 'center' : 'flex-start',
-        display: 'flex',
+        display: isHeader && hideHeaders ? 'none' : 'flex',
         ...colSize,
       },
     },
@@ -71,6 +79,7 @@ interface DetailsOptions<T extends object> {
 
 export interface TableProps<T extends object = {}> extends TableOptions<T> {
   name: string;
+  hideHeaders?: boolean;
   onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
   loading?: boolean; // TODO: Show loading indicator while fetching data from server
   pageCount?: number;
@@ -382,7 +391,9 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               )}
               {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
                 <div
-                  {...column.getHeaderProps(headerProps)}
+                  {...(props.hideHeaders
+                    ? column.getHeaderProps(noHeaders)
+                    : column.getHeaderProps(headerProps))}
                   onClick={() =>
                     props.onSortChange &&
                     column.sortable &&

@@ -28,6 +28,12 @@
           border: none;
         }
       }
+      .tbody {
+        padding-left: 50px;
+        .tr-wrapper {
+          border-bottom: none;
+        }
+      }
     }
   }
 
