@@ -84,6 +84,7 @@ export interface IEvaluation {
   buildingId?: number;
   date?: Date | string;
   key: string;
+  firm?: string;
   value: number | '';
   rowVersion?: string;
 }

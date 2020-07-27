@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { SPPApprovalTabs, ReviewWorkflowStatus } from '../../common';
 import { DocumentationTab } from '../../common';
-import SplTab from './SplTab';
-import { SurplusPropertyInformationTab } from '..';
+import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
 
 interface ISplTabsProps {
   /** The currently displayed tab */
@@ -42,6 +41,9 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
         </Tab>
         <Tab eventKey={SPPApprovalTabs.spl} title="Surplus Properties List">
           <SplTab isReadOnly={isReadOnly} setSubmitStatusCode={setSubmitStatusCode} />
+        </Tab>
+        <Tab eventKey={SPPApprovalTabs.closeOutForm} title="Close Out Form">
+          <CloseOutFormTab isReadOnly={isReadOnly} />
         </Tab>
       </Tabs>
     </React.Fragment>

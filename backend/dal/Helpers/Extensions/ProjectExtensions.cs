@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Security;
@@ -293,6 +294,7 @@ namespace Pims.Dal.Helpers.Extensions
                 .ThenInclude(p => p.Building)
                 .ThenInclude(b => b.Fiscals)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber);
+            JsonConvert.PopulateObject(project.Metadata, project);
 
             project.UpdateProjectFinancials();
         }
@@ -367,13 +369,12 @@ namespace Pims.Dal.Helpers.Extensions
             var fiscalYear = date.GetFiscalYear(); // TODO: Unclear if this should be 'Reported' or 'Actual', or current year.  Using the most recent fiscal year based on financial data in project.
 
             // Sum up parcel values for the project year.
-            project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
-            project.Estimated = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
-            project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
-
             // Sum up building values for the project year.
+            project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
             project.NetBook += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
+            project.Estimated = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
             project.Estimated += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
+            project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
             project.Assessed += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
         }
 
@@ -607,6 +608,21 @@ namespace Pims.Dal.Helpers.Extensions
                 else
                 {
                     context.Entry(originalProjectResponse).CurrentValues.SetValues(response);
+                }
+            }
+
+            // Update notes
+            foreach (var note in updatedProject.Notes)
+            {
+                var originalNote = originalProject.Notes.FirstOrDefault(r => r.Id == note.Id && note.Id > 0);
+
+                if (originalNote == null)
+                {
+                    originalProject.Notes.Add(note);
+                }
+                else
+                {
+                    context.Entry(originalNote).CurrentValues.SetValues(note);
                 }
             }
 

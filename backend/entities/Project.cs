@@ -230,6 +230,41 @@ namespace Pims.Dal.Entities
         public DateTime? DisposedOn { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
+        /// get/set - When the project was assessed.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public DateTime? AssessedOn { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - When the project had its sale adjusted.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public DateTime? AdjustedOn { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - When the preliminary form was signed on.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public DateTime? PreliminaryFormSignedOn { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - When the final form was signed on.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public DateTime? FinalFormSignedOn { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - When the prior year adjustment sale date occurred on.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public DateTime? PriorYearAdjustmentOn { get; set; } // TODO: Move to metadata property.
+        
+        /// <summary>
         /// get/set - When the project was completed.
         /// </summary>
         /// <value></value>
@@ -259,6 +294,14 @@ namespace Pims.Dal.Entities
         public decimal NetBook { get; set; }
 
         /// <summary>
+        /// get/set - A static netbook value used on the close out form.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal CloseOutNetbook { get; set; }
+
+
+        /// <summary>
         /// get/set - The estimated value which is the sum of the properties.
         /// </summary>
         public decimal Estimated { get; set; }
@@ -283,6 +326,13 @@ namespace Pims.Dal.Entities
         public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
+        /// get/set - The sales proceeds
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal SalesProceeds { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
         /// get/set - The program cost.
         /// </summary>
         [NotMapped]
@@ -295,6 +345,27 @@ namespace Pims.Dal.Entities
         [NotMapped]
         [DataMemberAttribute]
         public decimal GainLoss { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The SPP Capitalization value.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal SppCapitalization { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The gain before SPP.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal GainBeforeSpp { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The gain after SPP.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal GainAfterSpp { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -311,6 +382,20 @@ namespace Pims.Dal.Entities
         public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
+        /// get/set - Remediation.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string Remediation { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - Best information of planned future use.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string PlannedFutureUse { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
         [NotMapped]
@@ -323,6 +408,55 @@ namespace Pims.Dal.Entities
         [NotMapped]
         [DataMemberAttribute]
         public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - Whether an adjustment to prior year sale is required.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public bool PriorYearAdjustment { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - Whether an adjustment to prior year sale is required.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal PriorYearAdjustmentAmount { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - the real estate agent
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string Realtor { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - the real estate agent's rate for this project
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string RealtorRate { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - the real estate agent's commission for this project
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public decimal RealtorCommission { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - who signed the preliminary form.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string PreliminaryFormSignedBy { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - who signed the final form.
+        /// </summary>
+        [NotMapped]
+        [DataMemberAttribute]
+        public string FinalFormSignedBy { get; set; } // TODO: Move to metadata property.
         #endregion
 
         /// <summary>

@@ -28,6 +28,12 @@ namespace Pims.Dal.Entities
         public DateTime Date { get; set; }
 
         /// <summary>
+        /// get/set - the firm that performed this evaluation.
+        /// </summary>
+        /// <value></value>
+        public string Firm { get; set; }
+
+        /// <summary>
         /// get/set - The key for this fiscal value.
         /// </summary>
         /// <value></value>

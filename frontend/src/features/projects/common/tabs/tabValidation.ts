@@ -1,10 +1,10 @@
-import { SPPApprovalTabs, IProject, IProjectTask } from '..';
+import { IProject, IProjectTask } from '..';
 import { setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import _ from 'lodash';
 
 export interface ValidationGroup {
   schema: any;
-  tab: SPPApprovalTabs;
+  tab: string;
   statusCode: string;
 }
 

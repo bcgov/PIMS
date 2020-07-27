@@ -4,6 +4,8 @@ import {
   IProject,
   ReviewWorkflowStatus,
   ITask,
+  SPPApprovalTabs,
+  NoteTypes,
 } from '../common';
 import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -46,6 +48,76 @@ export const mockProject: IProject = {
   description: 'my project description',
   privateNote: 'private note',
   publicNote: 'public note',
+  notes: [
+    {
+      noteType: NoteTypes.General,
+      note: 'general',
+    },
+    {
+      noteType: NoteTypes.Public,
+      note: 'public',
+    },
+    {
+      noteType: NoteTypes.Private,
+      note: 'private',
+    },
+    {
+      noteType: NoteTypes.Exemption,
+      note: 'exemption',
+    },
+    {
+      noteType: NoteTypes.AgencyInterest,
+      note: 'agencyinterest',
+    },
+    {
+      noteType: NoteTypes.Financial,
+      note: 'financial',
+    },
+    {
+      noteType: NoteTypes.PreMarketing,
+      note: 'premarketing',
+    },
+    {
+      noteType: NoteTypes.Marketing,
+      note: 'marketing',
+    },
+    {
+      noteType: NoteTypes.ContractInPlace,
+      note: 'contractinplace',
+    },
+    {
+      noteType: NoteTypes.Reporting,
+      note: 'reporting',
+    },
+    {
+      noteType: NoteTypes.LoanTerms,
+      note: 'loanterms',
+    },
+    {
+      noteType: NoteTypes.Adjustment,
+      note: 'adjustment',
+    },
+    {
+      noteType: NoteTypes.SppCost,
+      note: 'sppcost',
+    },
+    {
+      noteType: NoteTypes.SppGain,
+      note: 'sppgain',
+    },
+    {
+      noteType: NoteTypes.SalesHistory,
+      note: 'saleshistory',
+    },
+    {
+      noteType: NoteTypes.CloseOut,
+      note: 'closeout',
+    },
+    {
+      noteType: NoteTypes.Comments,
+      note: 'comments',
+    },
+  ],
   properties: [],
   agencyId: 1,
   statusId: 0,
@@ -197,7 +269,7 @@ export const mockWorkflow = [
 ];
 
 const mockStore = configureMockStore([thunk]);
-export const getStore = (mockProject: IProject) =>
+export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
   mockStore({
     [reducerTypes.LOOKUP_CODE]: {
       lookupCodes: [
@@ -214,4 +286,5 @@ export const getStore = (mockProject: IProject) =>
     [reducerTypes.NETWORK]: {
       [ProjectActions.GET_PROJECT]: {},
     },
+    [reducerTypes.ProjectReducers.SPL_TAB]: tab,
   });
