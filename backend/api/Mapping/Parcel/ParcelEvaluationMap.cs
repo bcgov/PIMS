@@ -16,6 +16,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.Key, src => src.Key)
                 .Map(dest => dest.Value, src => src.Value)
                 .Map(dest => dest.Note, src => src.Note)
+                .Map(dest => dest.Firm, src => src.Firm)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
 
 
@@ -27,6 +28,7 @@ namespace Pims.Api.Mapping.Parcel
                 .Map(dest => dest.Key, src => src.Key)
                 .Map(dest => dest.Value, src => src.Value)
                 .Map(dest => dest.Note, src => src.Note)
+                .Map(dest => dest.Firm, src => src.Firm)
                 .Inherits<Models.BaseModel, Entity.BaseEntity>();
         }
     }

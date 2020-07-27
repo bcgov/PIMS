@@ -14,6 +14,8 @@ namespace Pims.Api.Models.Parcel
         public float Value { get; set; }
 
         public string Note { get; set; }
+
+        public string Firm { get; set; }
         #endregion
     }
 }

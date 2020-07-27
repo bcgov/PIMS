@@ -18,6 +18,8 @@ type OptionalAttributes = {
   disabled?: boolean;
   /** Class name of the input wrapper */
   outerClassName?: string;
+  /** The minimum data allowable to be chosen in the datepicker */
+  minDate?: Date;
 };
 
 export type FastDatePickerProps = FormControlProps &
@@ -33,6 +35,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   field,
   disabled,
   outerClassName,
+  minDate,
   formikProps: {
     values,
     errors,
@@ -73,6 +76,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         selected={(value && new Date(value)) || null}
         onBlur={handleBlur}
         disabled={disabled}
+        minDate={moment(minDate, 'YYYY-MM-DD').toDate()}
         {...rest}
         onChange={(val: any) => {
           setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');

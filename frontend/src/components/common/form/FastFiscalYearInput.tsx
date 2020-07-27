@@ -37,6 +37,7 @@ const FiscalYearInput = ({
   disabled,
   formikProps: {
     handleBlur,
+    handleChange,
     values,
     setFieldValue,
     errors,
@@ -62,16 +63,18 @@ const FiscalYearInput = ({
   return (
     <Form.Group className={outerClassName}>
       <MaskedInput
-        value={formatDateFiscal(value.toString())}
+        value={value >= 0 ? formatDateFiscal(value.toString()) : value}
         mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
         name={field}
         onChange={(e: any) => {
           const cleanValue = e.target.value.replace(/[^0-9/]/g, '');
-          const years = cleanValue.split('/');
+          setFieldValue(field, cleanValue);
+        }}
+        onBlur={(e: any) => {
+          const years = e.target.value.replace(/[^0-9/]/g, '').split('/');
           const upperYear = years.length === 2 ? years[1] : years[0];
           setFieldValue(field, upperYear ? parseInt(upperYear) : '');
         }}
-        onBlur={handleBlur}
         className={classNames('form-control', className, isInvalid, isValid)}
         disabled={disabled}
         placeholder="YYYY/YYYY"

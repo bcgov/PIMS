@@ -1,3 +1,4 @@
+import { NoteTypes, IProjectNote } from 'features/projects/common';
 import {
   IApiProject,
   IProjectProperty,
@@ -23,6 +24,23 @@ export const getMostRecentEvaluation = (
 ): IEvaluation | undefined => {
   const mostRecentEvaluation = _.find(_.orderBy(evaluations, 'date', 'desc'), { key: key });
   return mostRecentEvaluation;
+};
+
+export const getFlatProjectNotes = (project: IApiProject) => {
+  const notes: IProjectNote[] = [];
+  Object.values(NoteTypes)
+    .filter((key: any) => isNaN(Number(NoteTypes[key])))
+    .forEach(type => {
+      const matchingNote = _.find(project.notes, { noteType: type });
+      notes.push({
+        id: matchingNote?.id,
+        noteType: type,
+        note: matchingNote?.note ?? '',
+        projectId: project.id,
+        rowVersion: matchingNote?.rowVersion,
+      });
+    });
+  return notes;
 };
 
 export const toFlatProject = (project?: IApiProject) => {
@@ -62,9 +80,11 @@ export const toFlatProject = (project?: IApiProject) => {
       municipality: apiProperty.municipality,
       assessed: (assessed?.value as number) ?? 0,
       assessedDate: assessed?.date,
+      assessedFirm: assessed?.firm,
       assessedRowVersion: assessed?.rowVersion,
       appraised: (appraised?.value as number) ?? 0,
       appraisedDate: appraised?.date,
+      appraisedFirm: appraised?.firm,
       appraisedRowVersion: appraised?.rowVersion,
       netBook: (netBook?.value as number) ?? 0,
       netBookFiscalYear: netBook?.fiscalYear as number,
@@ -79,8 +99,12 @@ export const toFlatProject = (project?: IApiProject) => {
     return property;
   });
   //always copy the project values over initial values, this ensures that formik's requirement of non-undefined fields is satisfied.
-  const flatProject: IProject = { ...initialValues, ...project, properties: flatProperties };
-
+  const flatProject: IProject = {
+    ...initialValues,
+    ...project,
+    properties: flatProperties,
+    notes: getFlatProjectNotes(project),
+  };
   return flatProject;
 };
 
@@ -121,6 +145,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
         date: property.assessedDate ?? formatDate(new Date()),
         rowVersion: property.assessedRowVersion,
         key: EvaluationKeys.Assessed,
+        firm: property.assessedFirm ?? '',
       },
       {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
@@ -129,6 +154,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
         date: property.appraisedDate ?? formatDate(new Date()),
         rowVersion: property.appraisedRowVersion,
         key: EvaluationKeys.Appraised,
+        firm: property.appraisedFirm ?? '',
       },
     ],
     fiscals: [
@@ -184,6 +210,7 @@ export const toApiProject = (project: IProject) => {
     projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
+    notes: project.notes.filter(note => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined
   Object.keys(apiProject).forEach(key => {

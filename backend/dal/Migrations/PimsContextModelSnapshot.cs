@@ -1120,6 +1120,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("Firm")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);

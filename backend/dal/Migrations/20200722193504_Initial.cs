@@ -1525,6 +1525,7 @@ namespace Pims.Dal.Migrations
                     UpdatedById = table.Column<Guid>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "DATETIME2", nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Firm = table.Column<string>(maxLength: 150, nullable: true),
                     Value = table.Column<decimal>(type: "MONEY", nullable: false),
                     Note = table.Column<string>(maxLength: 500, nullable: true)
                 },

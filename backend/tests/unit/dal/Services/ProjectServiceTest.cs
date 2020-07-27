@@ -789,6 +789,45 @@ namespace Pims.Dal.Test.Services
             Assert.Equal("A new description", result.Description);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
+        }        
+
+        [Fact]
+        public async void Update_Notes()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var project = init.CreateProject(1);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            options.Value.Project.NumberFormat = "TEST-{0:00000}";
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectNote = new ProjectNote()
+            {
+                Note = "test note",
+                NoteType = NoteTypes.LoanTerms,
+            };
+            projectToUpdate.Notes.Add(projectNote);
+            await service.UpdateAsync(projectToUpdate);
+            var result = service.Get(projectToUpdate.Id);
+
+            // Assert
+            Assert.NotNull(result);
+            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
+            result.Notes.Should().Contain(projectNote);
         }
 
         [Fact]
@@ -829,7 +868,8 @@ namespace Pims.Dal.Test.Services
             parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
-            var result = await service.UpdateAsync(projectToUpdate);
+            await service.UpdateAsync(projectToUpdate);
+            var result = service.Get(projectToUpdate.Id);
 
             // Assert
             Assert.NotNull(result);

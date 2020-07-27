@@ -23,10 +23,12 @@ export const ApprovalActions = ({
   submitStatusCode,
   setSubmitStatusCode,
   submitDirectly,
+  disableCancel,
 }: {
   submitStatusCode: string | undefined;
   setSubmitStatusCode: Function;
   submitDirectly?: Function;
+  disableCancel?: boolean;
 }) => {
   const { values, submitForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
@@ -60,7 +62,9 @@ export const ApprovalActions = ({
         <span>
           <Button
             disabled={
-              values.statusCode === ReviewWorkflowStatus.Cancelled || !noFetchingProjectRequests
+              values.statusCode === ReviewWorkflowStatus.Cancelled ||
+              !noFetchingProjectRequests ||
+              disableCancel
             }
             variant="danger"
             showSubmitting

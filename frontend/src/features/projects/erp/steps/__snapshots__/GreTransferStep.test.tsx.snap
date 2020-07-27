@@ -279,15 +279,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "140 0 auto",
+                    "flex": "100 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "140px",
+                    "width": "100px",
                   }
                 }
               >
-                Classification
+                Civic Address
               </div>
               <div
                 className="th"
@@ -299,15 +299,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "140 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "140px",
                   }
                 }
               >
-                Civic Address
+                Classification
               </div>
               <div
                 className="th"
@@ -518,26 +518,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "alignItems": "flex-start",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
-                  title="Click to view property details"
-                >
-                  Core Operational
-                </div>
-                <div
-                  className="td clickable"
-                  onClick={[Function]}
-                  role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
                       "flex": "100 0 auto",
                       "justifyContent": "flex-start",
                       "minWidth": "30px",
@@ -548,6 +528,26 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   title="Click to view property details"
                 >
                   Test, Alert Bay
+                </div>
+                <div
+                  className="td clickable"
+                  onClick={[Function]}
+                  role="cell"
+                  style={
+                    Object {
+                      "alignItems": "flex-start",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "140 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "140px",
+                    }
+                  }
+                  title="Click to view property details"
+                >
+                  Core Operational
                 </div>
                 <div
                   className="td clickable"
@@ -756,11 +756,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "140 0 auto",
+                    "flex": "100 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "140px",
+                    "width": "100px",
                   }
                 }
               >
@@ -775,11 +775,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "100 0 auto",
+                    "flex": "140 0 auto",
                     "justifyContent": "flex-start",
                     "minWidth": "30px",
                     "textAlign": "left",
-                    "width": "100px",
+                    "width": "140px",
                   }
                 }
               >
