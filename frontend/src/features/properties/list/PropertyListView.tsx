@@ -233,7 +233,7 @@ const PropertyListView: React.FC = () => {
           onRequestData={handleRequestData}
           pageCount={pageCount}
           detailsPanel={{
-            render: () => <Properties data={expandData} />,
+            render: () => <Properties hideHeaders={true} data={expandData} />,
             icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
             checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
             onExpand: loadBuildings,
