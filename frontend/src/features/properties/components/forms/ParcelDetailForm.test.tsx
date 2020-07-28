@@ -212,10 +212,8 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'latitude', exampleData.latitude);
       await fillInput(container, 'longitude', exampleData.longitude);
       await fillInput(container, 'landArea', exampleData.landArea);
-      await fillInput(container, 'financials.0.value', exampleData.evaluations[0].value);
       // await fillInput(container, 'financials.1.date', exampleData.evaluations[1].date);
       // TODO: add a function capable of filling this type of field
-      await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
       await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
       const mockAxios = new MockAdapter(axios);
       const submit = form.getByText('Submit');
@@ -256,7 +254,6 @@ describe('ParcelDetailForm', () => {
         throw Error('test message');
       });
 
-      await fillInput(container, 'financials.0.value', exampleData.evaluations[0].value);
       await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
       await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
       await wait(() => {
