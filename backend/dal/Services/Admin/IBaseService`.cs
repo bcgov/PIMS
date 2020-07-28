@@ -23,28 +23,28 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        ET Add(ET entity);
+        void Add(ET entity);
 
         /// <summary>
         /// Add the specified entity to the in-memory collection but do not commit to the datasource.
         /// </summary>
         ///<param name="entity"></param>
         /// <returns></returns>
-        ET AddOne(ET entity);
+        void AddOne(ET entity);
 
         /// <summary>
         /// Update the specified entity in the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        ET Update(ET entity);
+        void Update(ET entity);
 
         /// <summary>
         /// Update the specified entity to the in-memory collection but do not commit to the datasource.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        ET UpdateOne(ET entity);
+        void UpdateOne(ET entity);
 
         /// <summary>
         /// Remove the specified entity from the datasource.

@@ -81,5 +81,24 @@ namespace Pims.Core.Helpers
                 return Activator.CreateInstance<T>();
             }
         }
+
+        /// <summary>
+        /// Provides a simple try+catch wrapper to set a variable.
+        /// This will create a default instance of type 'T' if the 'getter' fails.
+        /// </summary>
+        /// <param name="getter"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T HandleExceptionWithDefault<T>(Func<T> getter)
+        {
+            try
+            {
+                return getter();
+            }
+            catch (Exception)
+            {
+                return Activator.CreateInstance<T>();
+            }
+        }
     }
 }

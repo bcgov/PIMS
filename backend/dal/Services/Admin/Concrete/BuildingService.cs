@@ -127,7 +127,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override Building Add(Building entity)
+        public override void Add(Building entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -152,7 +152,7 @@ namespace Pims.Dal.Services.Admin
             this.Context.Addresses.Add(entity.Address);
             this.Context.BuildingEvaluations.AddRange(entity.Evaluations);
 
-            return base.Add(entity);
+            base.Add(entity);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="building"></param>
         /// <returns></returns>
-        public override Building Update(Building building)
+        public override void Update(Building building)
         {
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
@@ -210,7 +210,7 @@ namespace Pims.Dal.Services.Admin
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-            return base.Update(existingBuilding);
+            base.Update(existingBuilding);
         }
 
         /// <summary>

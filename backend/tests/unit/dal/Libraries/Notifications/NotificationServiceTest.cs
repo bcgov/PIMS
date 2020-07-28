@@ -13,7 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 
-namespace Pims.Dal.Test.Libraries
+namespace Pims.Dal.Test.Libraries.Notifications
 {
     [Trait("category", "unit")]
     [Trait("category", "notification")]
@@ -92,9 +92,9 @@ namespace Pims.Dal.Test.Libraries
                 To = new[] { "To" },
                 Cc = new[] { "Cc" },
                 Bcc = new[] { "Bcc" },
-                Encoding = Notifications.Models.EmailEncodings.Utf8,
-                Priority = Notifications.Models.EmailPriorities.High,
-                BodyType = Notifications.Models.EmailBodyTypes.Html,
+                Encoding = Pims.Notifications.Models.EmailEncodings.Utf8,
+                Priority = Pims.Notifications.Models.EmailPriorities.High,
+                BodyType = Pims.Notifications.Models.EmailBodyTypes.Html,
                 Subject = "Test @Model.Id",
                 Body = "Test @Model.Id",
                 Tag = "tag",
@@ -103,7 +103,7 @@ namespace Pims.Dal.Test.Libraries
             var model = new { Id = 1 };
 
             var ches = helper.GetService<Mock<IChesService>>();
-            ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
+            ches.Setup(m => m.SendEmailAsync(It.IsAny<Pims.Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
             var result = await service.SendAsync("key", email, model);
@@ -111,14 +111,14 @@ namespace Pims.Dal.Test.Libraries
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<EmailResponse>(result);
-            ches.Verify(m => m.SendEmailAsync(It.Is<Ches.Models.IEmail>(a =>
+            ches.Verify(m => m.SendEmailAsync(It.Is<Pims.Ches.Models.IEmail>(a =>
                 a.From == email.From
                 && a.To == email.To
                 && a.Cc == email.Cc
                 && a.Bcc == email.Bcc
-                && a.Encoding == email.Encoding.ConvertTo<Notifications.Models.EmailEncodings, Ches.Models.EmailEncodings>()
-                && a.Priority == email.Priority.ConvertTo<Notifications.Models.EmailPriorities, Ches.Models.EmailPriorities>()
-                && a.BodyType == email.BodyType.ConvertTo<Notifications.Models.EmailBodyTypes, Ches.Models.EmailBodyTypes>()
+                && a.Encoding == email.Encoding.ConvertTo<Pims.Notifications.Models.EmailEncodings, Pims.Ches.Models.EmailEncodings>()
+                && a.Priority == email.Priority.ConvertTo<Pims.Notifications.Models.EmailPriorities, Pims.Ches.Models.EmailPriorities>()
+                && a.BodyType == email.BodyType.ConvertTo<Pims.Notifications.Models.EmailBodyTypes, Pims.Ches.Models.EmailBodyTypes>()
                 && a.Subject == email.Subject
                 && a.Body == email.Body
                 && a.Tag == email.Tag
@@ -127,7 +127,7 @@ namespace Pims.Dal.Test.Libraries
 
         [Theory]
         [MemberData(nameof(BadSendNotification))]
-        public async void SendNotificationAsync_ArgumentException(string key, Notifications.Models.IEmail email, Type exceptionType)
+        public async void SendNotificationAsync_ArgumentException(string key, Pims.Notifications.Models.IEmail email, Type exceptionType)
         {
             // Arrange
             var helper = new TestHelper();
@@ -153,9 +153,9 @@ namespace Pims.Dal.Test.Libraries
                 To = new[] { "To" },
                 Cc = new[] { "Cc" },
                 Bcc = new[] { "Bcc" },
-                Encoding = Notifications.Models.EmailEncodings.Utf8,
-                Priority = Notifications.Models.EmailPriorities.High,
-                BodyType = Notifications.Models.EmailBodyTypes.Html,
+                Encoding = Pims.Notifications.Models.EmailEncodings.Utf8,
+                Priority = Pims.Notifications.Models.EmailPriorities.High,
+                BodyType = Pims.Notifications.Models.EmailBodyTypes.Html,
                 Subject = "Test @Model.Id",
                 Body = "Test @Model.Id",
                 Tag = "tag",
@@ -164,7 +164,7 @@ namespace Pims.Dal.Test.Libraries
             var model = new { Id = 1 };
 
             var ches = helper.GetService<Mock<IChesService>>();
-            ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
+            ches.Setup(m => m.SendEmailAsync(It.IsAny<Pims.Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
             var result = await service.SendAsync(email);
@@ -172,14 +172,14 @@ namespace Pims.Dal.Test.Libraries
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<EmailResponse>(result);
-            ches.Verify(m => m.SendEmailAsync(It.Is<Ches.Models.IEmail>(a =>
+            ches.Verify(m => m.SendEmailAsync(It.Is<Pims.Ches.Models.IEmail>(a =>
                 a.From == email.From
                 && a.To == email.To
                 && a.Cc == email.Cc
                 && a.Bcc == email.Bcc
-                && a.Encoding == email.Encoding.ConvertTo<Notifications.Models.EmailEncodings, Ches.Models.EmailEncodings>()
-                && a.Priority == email.Priority.ConvertTo<Notifications.Models.EmailPriorities, Ches.Models.EmailPriorities>()
-                && a.BodyType == email.BodyType.ConvertTo<Notifications.Models.EmailBodyTypes, Ches.Models.EmailBodyTypes>()
+                && a.Encoding == email.Encoding.ConvertTo<Pims.Notifications.Models.EmailEncodings, Pims.Ches.Models.EmailEncodings>()
+                && a.Priority == email.Priority.ConvertTo<Pims.Notifications.Models.EmailPriorities, Pims.Ches.Models.EmailPriorities>()
+                && a.BodyType == email.BodyType.ConvertTo<Pims.Notifications.Models.EmailBodyTypes, Pims.Ches.Models.EmailBodyTypes>()
                 && a.Subject == email.Subject
                 && a.Body == email.Body
                 && a.Tag == email.Tag
@@ -213,9 +213,9 @@ namespace Pims.Dal.Test.Libraries
                 To = new[] { "To" },
                 Cc = new[] { "Cc" },
                 Bcc = new[] { "Bcc" },
-                Encoding = Notifications.Models.EmailEncodings.Utf8,
-                Priority = Notifications.Models.EmailPriorities.High,
-                BodyType = Notifications.Models.EmailBodyTypes.Html,
+                Encoding = Pims.Notifications.Models.EmailEncodings.Utf8,
+                Priority = Pims.Notifications.Models.EmailPriorities.High,
+                BodyType = Pims.Notifications.Models.EmailBodyTypes.Html,
                 Subject = "Test @Model.Id",
                 Body = "Test @Model.Id",
                 Tag = "tag",
@@ -225,7 +225,7 @@ namespace Pims.Dal.Test.Libraries
             var model = new { Id = 1 };
 
             var ches = helper.GetService<Mock<IChesService>>();
-            ches.Setup(m => m.SendEmailAsync(It.IsAny<Ches.Models.IEmailMerge>())).ReturnsAsync(new EmailResponseModel());
+            ches.Setup(m => m.SendEmailAsync(It.IsAny<Pims.Ches.Models.IEmailMerge>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
             var result = await service.SendAsync(emails);
@@ -233,11 +233,11 @@ namespace Pims.Dal.Test.Libraries
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<EmailResponse>(result);
-            ches.Verify(m => m.SendEmailAsync(It.Is<Ches.Models.IEmailMerge>(a =>
+            ches.Verify(m => m.SendEmailAsync(It.Is<Pims.Ches.Models.IEmailMerge>(a =>
                 a.From == email.From
-                && a.Encoding == email.Encoding.ConvertTo<Notifications.Models.EmailEncodings, Ches.Models.EmailEncodings>()
-                && a.Priority == email.Priority.ConvertTo<Notifications.Models.EmailPriorities, Ches.Models.EmailPriorities>()
-                && a.BodyType == email.BodyType.ConvertTo<Notifications.Models.EmailBodyTypes, Ches.Models.EmailBodyTypes>()
+                && a.Encoding == email.Encoding.ConvertTo<Pims.Notifications.Models.EmailEncodings, Pims.Ches.Models.EmailEncodings>()
+                && a.Priority == email.Priority.ConvertTo<Pims.Notifications.Models.EmailPriorities, Pims.Ches.Models.EmailPriorities>()
+                && a.BodyType == email.BodyType.ConvertTo<Pims.Notifications.Models.EmailBodyTypes, Pims.Ches.Models.EmailBodyTypes>()
                 && a.Subject == "{{ subject }}"
                 && a.Body == "{{ body }}"
                 && a.Contexts.First().To == email.To

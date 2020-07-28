@@ -83,9 +83,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddAgency([FromBody] Model.AgencyModel model)
         {
             var entity = _mapper.Map<Entity.Agency>(model);
-            var addedEntity = _pimsAdminService.Agency.Add(entity);
+            _pimsAdminService.Agency.Add(entity);
 
-            var agency = _mapper.Map<Model.AgencyModel>(addedEntity);
+            var agency = _mapper.Map<Model.AgencyModel>(entity);
 
             return CreatedAtAction(nameof(GetAgency), new { id = agency.Id }, agency);
         }
@@ -103,9 +103,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult UpdateAgency([FromBody] Model.AgencyModel model)
         {
             var entity = _mapper.Map<Entity.Agency>(model);
-            var updatedEntity = _pimsAdminService.Agency.Update(entity);
+            _pimsAdminService.Agency.Update(entity);
 
-            var agency = _mapper.Map<Model.AgencyModel>(updatedEntity);
+            var agency = _mapper.Map<Model.AgencyModel>(entity);
             return new JsonResult(agency);
         }
 

@@ -129,7 +129,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override User Add(User entity)
+        public override void Add(User entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -138,7 +138,6 @@ namespace Pims.Dal.Services.Admin
 
             base.Add(entity);
             this.Context.Detach(entity);
-            return entity;
         }
 
         /// <summary>
@@ -147,7 +146,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override User Update(User entity)
+        public override void Update(User entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -171,7 +170,6 @@ namespace Pims.Dal.Services.Admin
 
             base.Update(entity);
             this.Context.Detach(entity);
-            return entity;
         }
 
         /// <summary>

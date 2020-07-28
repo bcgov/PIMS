@@ -81,7 +81,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override Claim Update(Claim entity)
+        public override void Update(Claim entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.AdminRoles);
@@ -91,7 +91,6 @@ namespace Pims.Dal.Services.Admin
             this.Context.Entry(claim).CurrentValues.SetValues(entity);
             base.Update(claim);
             this.Context.Detach(claim);
-            return claim;
         }
 
         /// <summary>

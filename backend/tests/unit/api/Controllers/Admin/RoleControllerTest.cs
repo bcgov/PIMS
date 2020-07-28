@@ -114,7 +114,7 @@ namespace PimsApi.Test.Admin.Controllers
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var role = EntityHelper.CreateRole("role1");
-            service.Setup(m => m.Role.Add(It.IsAny<Entity.Role>())).Returns(role);
+            service.Setup(m => m.Role.Add(It.IsAny<Entity.Role>()));
             var model = mapper.Map<Model.RoleModel>(role);
 
             // Act
@@ -140,7 +140,7 @@ namespace PimsApi.Test.Admin.Controllers
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var role = EntityHelper.CreateRole("role1");
-            service.Setup(m => m.Role.Update(It.IsAny<Entity.Role>())).Returns(role);
+            service.Setup(m => m.Role.Update(It.IsAny<Entity.Role>()));
             var model = mapper.Map<Model.RoleModel>(role);
 
             // Act

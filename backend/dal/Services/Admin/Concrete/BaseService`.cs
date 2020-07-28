@@ -47,29 +47,23 @@ namespace Pims.Dal.Services.Admin
         /// Add the specified entity to the datasource.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual ET Add(ET entity)
+        public virtual void Add(ET entity)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             this.AddOne(entity);
             this.Context.CommitTransaction();
-
-            return entity;
         }
 
         /// <summary>
         /// Add the specified entity to the in-memory collection but do not commit to the datasource.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual ET AddOne(ET entity)
+        public virtual void AddOne(ET entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
             this.Context.Entry(entity).State = EntityState.Added;
-
-            return entity;
         }
 
         /// <summary>
@@ -77,7 +71,7 @@ namespace Pims.Dal.Services.Admin
         ///</summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual ET Update(ET entity)
+        public virtual void Update(ET entity)
         {
             entity.ThrowIfNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -85,8 +79,6 @@ namespace Pims.Dal.Services.Admin
 
             this.UpdateOne(entity);
             this.Context.CommitTransaction();
-
-            return entity;
         }
 
         /// <summary>
@@ -94,14 +86,12 @@ namespace Pims.Dal.Services.Admin
         ///</summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual ET UpdateOne(ET entity)
+        public virtual void UpdateOne(ET entity)
         {
             entity.ThrowIfNull(nameof(entity));
             entity.ThrowIfRowVersionNull(nameof(entity));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
             this.Context.Entry(entity).State = EntityState.Modified;
-
-            return entity;
         }
 
         /// <summary>

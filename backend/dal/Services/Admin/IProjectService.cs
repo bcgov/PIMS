@@ -14,6 +14,7 @@ namespace Pims.Dal.Services.Admin
         Project Get(int id, params Expression<Func<Project, object>>[] includes);
         Project Get(string projectNumber);
         Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes);
-        IEnumerable<Project> Add(IEnumerable<Project> projects);
+        void Add(IEnumerable<Project> projects);
+        void Update(IEnumerable<Project> projects);
     }
 }

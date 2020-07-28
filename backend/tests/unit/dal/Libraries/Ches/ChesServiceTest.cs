@@ -20,7 +20,7 @@ using System.Text;
 using System.Web;
 using Xunit;
 
-namespace Pims.Dal.Test.Libraries
+namespace Pims.Dal.Test.Libraries.Ches
 {
     [Trait("category", "unit")]
     [Trait("category", "ches")]
