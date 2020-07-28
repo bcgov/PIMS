@@ -215,61 +215,67 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
                       </tr>
                     </thead>
                     <tbody>
-                      {currentPage?.map(year => {
-                        return (
-                          <tr key={type + year}>
-                            <td>
-                              {type === EvaluationKeys.Assessed && (
-                                <Form.Control
-                                  disabled={true}
-                                  readOnly={true}
-                                  type="string"
-                                  value={year.toString()}
-                                />
-                              )}
-                              {isFiscal(type) && (
-                                <Form.Control
-                                  disabled={true}
-                                  readOnly={true}
-                                  type="string"
-                                  value={`${year - 1}/${year}`}
-                                />
-                              )}
-                              {type === EvaluationKeys.Appraised && (
-                                <FastDatePicker
+                      {currentPage
+                        ?.filter(
+                          year =>
+                            type !== EvaluationKeys.Assessed ||
+                            (type === EvaluationKeys.Assessed && year <= moment().year()),
+                        )
+                        .map(year => {
+                          return (
+                            <tr key={type + year}>
+                              <td>
+                                {type === EvaluationKeys.Assessed && (
+                                  <Form.Control
+                                    disabled={true}
+                                    readOnly={true}
+                                    type="string"
+                                    value={year.toString()}
+                                  />
+                                )}
+                                {isFiscal(type) && (
+                                  <Form.Control
+                                    disabled={true}
+                                    readOnly={true}
+                                    type="string"
+                                    value={`${year - 1}/${year}`}
+                                  />
+                                )}
+                                {type === EvaluationKeys.Appraised && (
+                                  <FastDatePicker
+                                    formikProps={props}
+                                    disabled={props.disabled}
+                                    minDate={moment(year, 'YYYY')
+                                      .startOf('year')
+                                      .toDate()}
+                                    maxDate={moment(year, 'YYYY')
+                                      .endOf('year')
+                                      .toDate()}
+                                    field={withNameSpace('date', type, year)}
+                                  />
+                                )}
+                              </td>
+                              <td>
+                                <FastCurrencyInput
                                   formikProps={props}
                                   disabled={props.disabled}
-                                  minDate={moment(year, 'YYYY')
-                                    .startOf('year')
-                                    .toDate()}
-                                  maxDate={moment(year, 'YYYY')
-                                    .endOf('year')
-                                    .toDate()}
-                                  field={withNameSpace('date', type, year)}
+                                  field={withNameSpace('value', type, year)}
+                                  placeholder={props.disabled ? 'n/a' : ' '}
+                                  tooltip="If value not available enter $1 and add notes"
                                 />
+                              </td>
+                              {EvaluationKeys.Assessed === type && props.isParcel && (
+                                <>
+                                  <SumFinancialsForm
+                                    formikProps={props}
+                                    onlyAssesedSums={true}
+                                    year={year}
+                                  />
+                                </>
                               )}
-                            </td>
-                            <td>
-                              <FastCurrencyInput
-                                formikProps={props}
-                                disabled={props.disabled}
-                                field={withNameSpace('value', type, year)}
-                                placeholder={props.disabled ? 'n/a' : ' '}
-                                tooltip="If value not available enter $1 and add notes"
-                              />
-                            </td>
-                            {EvaluationKeys.Assessed === type && props.isParcel && (
-                              <>
-                                <SumFinancialsForm
-                                  formikProps={props}
-                                  onlyAssesedSums={true}
-                                  year={year}
-                                />
-                              </>
-                            )}
-                          </tr>
-                        );
-                      })}
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </Table>
                 </Col>
