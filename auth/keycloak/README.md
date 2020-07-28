@@ -1,20 +1,27 @@
-# Keycloak Information
+# Keycloak
 
+Open Source Identity and Access Management for Modern Applications and Services.
+
+Add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+You'll even get advanced features such as User Federation, Identity Brokering and Social Login.
+
+- [Keycloak](https://www.keycloak.org/)
 - [Docker](https://hub.docker.com/r/jboss/keycloak/)
 - [Github](https://github.com/keycloak/keycloak-containers/tree/master/server)
 
 ## Export Realm Configuration
-
-After configuring Keycloak you can export the configuration to a JSON file so that it can be used to initialize a new Keycloak instance.
-If you use the UI to export it will not contain all the necessary information and settings, thus the need for this CLI option.
-
-More information [here](https://www.keycloak.org/docs/latest/server_admin/index.html#_export_import).
 
 ---
 
 > NOTE - Keycloak exporting no longer works (or is fully supported). You will need to use the Keycloak Sync Tool - [here](../../backend/tools/keycloak/sync/README.md)
 
 ---
+
+After configuring Keycloak you can export the configuration to a JSON file so that it can be used to initialize a new Keycloak instance.
+If you use the UI to export it will not contain all the necessary information and settings, thus the need for this CLI option.
+
+More information [here](https://www.keycloak.org/docs/latest/server_admin/index.html#_export_import).
 
 Once the keycloak container is running, ssh into it and execute the following commands;
 

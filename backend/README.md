@@ -4,55 +4,76 @@ The PIMS API provides an RESTful interface to interact with the configured data-
 
 The API is configured to run in a Docker container and has the following dependencies with other containers; database, keycloak.
 
-## Table of Contents
+For more information refer to documentation [here](https://github.com/bcgov/PIMS/wiki/api/API.md).
 
-- [Setup](./docs/SETUP.md) - How to get up and running.
-- [API](./docs/API.md) - API information.
-- [Database](./docs/DATABASE.md) - How to manage the database and data migrations.
-- [DAL](./docs/DAL.md) - Data Access Layer information.
-- [Tools](./docs/TOOLS.md) - Tooling information.
-- [Versioning](./docs/VERSIONING.md) - Version information.
+To run the API locally you will need to create the appropriate environment variable `.env` files. You can do this through using the prebuilt scripts [here](../../scripts/README.md).
 
-## Health Checks UI
+## API Environment Variables
 
-Health checks are configured to run against /api/live and /api/ready endpoints. These correspond to the kubernetes concepts of liveliness and readiness, see [here](https://docs.openshift.com/container-platform/3.11/dev_guide/application_health.html). 
+The current environment is initialized through the environment variable `ASPNETCORE_ENVIRONMENT`.
 
-Health Checks UI is a UI wrapper around the above health check endpoints. Configuration is provided within appsettings.json. The webhook URI should be provided separately as an environment variable `HealthChecksUI__Webhooks__0__Uri`. See [here](https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks#webhooks-and-failure-notifications) for more information about the structure of the Payload and RestorePayload configuration options.
+When running the solution it applies the configuration setting in the following order;
 
-## Static Code Analysis with SonarQube
+> NOTE: When the environment is Development it will look for your _User Secrets_ file.
 
-[SonarQube](http://www.sonarqube.org/) is an open-source automatic code review tool to detect bugs, vulnerabilities and code smells in your code. It can integrate with your existing workflow to enable continuous code inspection across your project branches and pull requests.
+1. appsettings.json
+2. appsettings.`[environment]`.json
+3. User Secrets `(if environment=Development)`
+4. Environment Variables
 
-##### What does analysis produce?
+To run the solution with docker-compose create a `.env` file within the `/api` directory and populate with the following;
 
-SonarQube can perform analysis on up to 27 different languages. The outcome of this analysis will be quality measures and issues (instances where coding rules were broken).
-
-PIMS SonarQube dashboard is available [here](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/projects)
-
-##### Installing SonarScanner for MSBuild
-
-There are several options to install [SonnarScanner for MSBuild](https://sonarcloud.io/documentation/analysis/scan/sonarscanner-for-msbuild/). 
-
-The simplest way is to install it as global tool for .NET Core;
-
-```bash
-dotnet tool install --global dotnet-sonarscanner
+```conf
+ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://*:8080
+ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+DB_PASSWORD={password}
+ConnectionStrings__PIMS={connection string}
+Keycloak__Secret={secret}
+Keycloak__ServiceAccount__Secret={secret}
 ```
 
-##### Triggering a manual scan on the NET Core backend API
+| Key                                 | Required | Value                              | Description                                                                                                                                                 |
+| ----------------------------------- | :------: | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ASPNETCORE_ENVIRONMENT              |    x     | [Development\|Staging\|Production] | The environment name to run under. This will result in apply different configuration settings.                                                              |
+| ASPNETCORE_URLS                     |    x     | {http://*:8080}                    | The host addresses with ports and protocols that the server will listen to.                                                                                 |
+| ASPNETCORE_FORWARDEDHEADERS_ENABLED |          | [true\|false]                      | Whether to include forwarder headers.                                                                                                                       |
+| DB_PASSWORD                         |    x     | {password}                         | The password to the database. If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/.../.env` file.         |
+| ConnectionStrings\_\_PIMS           |          | {connection string}                | To override the `appsettings.[environment].json` configuration files you can set the connection string value here.                                          |
+| Keycloak\_\_Secret                  |    x     | {secret}                           | Should be the value provided by KeyCloak (_Currently this value can remain blank_)                                                                          |
+| Keycloak\_\_ServiceAccout\_\_Secret |    x     | {secret}                           | Should be the value provided by KeyCloak for the _pims-service-account_ client. This is required for administrative endpoints that integrate with Keycloak. |
 
-Follow the commands below to trigger a manual scan of PIMS API. 
+## Secret Management
 
-When the scan is completed the results will be available on [PIMS SonarQube Dashboard](https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca/projects?sort=-analysis_date)
+If you want to keep private keys and user secrets out of source code use the **user-secrets** management tool.
+Please note this will only work if the _environment=Development_, and it does not appear to be currently working all the time within vscode.
 
 ```bash
-cd backend
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:PIMS" "Server=localhost,<port>;User ID=sa;Database=<database name>"
+```
 
-dotnet sonarscanner begin -k:"bcgov_PIMS_API" \
-  -d:sonar.host.url="https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca" \
-  -d:sonar.login="{token}"
-  
-dotnet build --no-incremental
+## Running Locally
 
-dotnet sonarscanner end -d:sonar.login="{token}"
+to run the API locally with vscode, comment out the following lines, and add the `ConnectionStrings__PIMS` value in your `.env` file;
+
+```conf
+# ASPNETCORE_ENVIRONMENT=Development
+# ASPNETCORE_URLS=http://*:8080
+ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User Id=sa;
+```
+
+This is so that the `/.vscode/launch.json` configured environment variables are used instead. Specifically it will run with the following;
+
+```json
+{
+    "configurations": [{
+        ...
+        "env": {
+            "ASPNETCORE_ENVIRONMENT": "Local",
+            "ASPNETCORE_URLS": "http://*:5000"
+        }
+        ...
+    }]
+}
 ```
