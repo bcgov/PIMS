@@ -543,7 +543,14 @@ namespace Pims.Dal.Services
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
 
-            await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+            try
+            {
+                await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, "Failed to send notifications");
+            }
 
             return Get(originalProject.Id);
         }

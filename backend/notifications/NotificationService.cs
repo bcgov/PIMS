@@ -211,6 +211,8 @@ namespace Pims.Notifications
         public async Task<Model.EmailResponse> SendAsync(Model.IEmail email)
         {
             if (email == null) throw new ArgumentNullException(nameof(email));
+            if (email.To == null || !email.To.Any()) throw new ArgumentNullException(nameof(email.To));
+
             var response = await this.Ches.SendEmailAsync(new Ches.Models.EmailModel()
             {
                 From = email.From,
@@ -315,7 +317,7 @@ namespace Pims.Notifications
         }
 
         /// <summary>
-        /// Run the template 
+        /// Run the template
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <param name="templateKey"></param>
