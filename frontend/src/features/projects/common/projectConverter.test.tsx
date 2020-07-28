@@ -10,8 +10,8 @@ import moment, { Moment } from 'moment';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { mockApiProject, mockProject, mockFlatProject } from '../dispose/testUtils';
-import { NoteTypes, IProject } from './interfaces';
+import { mockApiProject, mockFlatProject } from '../dispose/testUtils';
+import { NoteTypes } from './interfaces';
 
 const createAppraisal = (date: Moment): IEvaluation => {
   return {
