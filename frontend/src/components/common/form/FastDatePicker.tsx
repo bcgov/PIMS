@@ -79,6 +79,9 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
     <FormGroup className={outerClassName ?? ''}>
       <span className={isInvalid}></span>
       <DatePicker
+        showYearDropdown
+        scrollableYearDropdown
+        yearDropdownItemNumber={10}
         autoComplete="off"
         name={field}
         placeholderText="--/--/----"
@@ -86,16 +89,22 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         dateFormat="MM/dd/yyyy"
         selected={(value && new Date(value)) || null}
         disabled={disabled}
-        minDate={moment(minDate, 'YYYY-MM-DD').toDate()}
+        minDate={minDate ? moment(minDate, 'YYYY-MM-DD').toDate() : undefined}
         {...rest}
-        onBlur={() => setFieldTouched(field)}
-        onCalendarClose={() => setFieldTouched(field)}
-        onChange={(val: any, e) => {
-          if (oldDateWarning && initialValue && moment(value).isAfter(moment(val))) {
-            setOldDate(val);
-          } else {
-            setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
+        onBlur={() => {
+          if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
+            setOldDate(value);
           }
+          setFieldTouched(field);
+        }}
+        onCalendarClose={() => {
+          if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
+            setOldDate(value);
+          }
+          setFieldTouched(field);
+        }}
+        onChange={(val: any, e) => {
+          setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
         }}
       />
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
@@ -103,8 +112,9 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         <GenericModal
           display={!!oldDate}
           cancelButtonText={`Use ${moment(oldDate).format('MM/DD/YYYY')}`}
-          okButtonText={`Use ${moment(value).format('MM/DD/YYYY')}`}
+          okButtonText={`Use ${moment(initialValue).format('MM/DD/YYYY')}`}
           handleOk={(e: any) => {
+            setFieldValue(field, moment(initialValue).format('YYYY-MM-DD'));
             setOldDate(undefined);
           }}
           handleCancel={() => {
