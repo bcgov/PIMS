@@ -94,6 +94,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   return (
     <Container fluid className="ReviewApproveStep">
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         innerRef={formikRef}
         onSubmit={(values: IProject) => {
