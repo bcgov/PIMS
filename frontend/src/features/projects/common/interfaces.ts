@@ -267,7 +267,7 @@ export interface IStepProps {
 
 export interface IProjectProperty {
   id?: number;
-  projectNumber: string;
+  projectNumber?: string;
   propertyType: string;
   parcelId?: number;
   parcel?: IApiProperty;

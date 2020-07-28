@@ -259,6 +259,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     name="purchaser"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    value="purchaser"
                   />
                 </div>
               </div>
@@ -378,7 +379,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         placeholder="--/--/----"
                         readOnly={false}
                         type="text"
-                        value=""
+                        value="01/01/2020"
                       />
                     </div>
                   </div>
@@ -1591,7 +1592,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     placeholder="--/--/----"
                     readOnly={false}
                     type="text"
-                    value=""
+                    value="01/01/2020"
                   />
                 </div>
               </div>
@@ -1679,13 +1680,13 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 >
                   <input
                     className="form-check-input"
-                    defaultChecked={false}
+                    defaultChecked={true}
                     disabled={false}
                     id="input-isContractConditional"
                     name="isContractConditional"
                     onChange={[Function]}
                     type="radio"
-                    value={false}
+                    value={true}
                   />
                   <label
                     className="form-check-label"
@@ -1700,13 +1701,13 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 >
                   <input
                     className="form-check-input"
-                    defaultChecked={true}
+                    defaultChecked={false}
                     disabled={false}
                     id="input-isContractConditional-2"
                     name="isContractConditional"
                     onChange={[Function]}
                     type="radio"
-                    value={true}
+                    value={false}
                   />
                   <label
                     className="form-check-label"
@@ -1757,7 +1758,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     placeholder="--/--/----"
                     readOnly={false}
                     type="text"
-                    value=""
+                    value="01/01/2020"
                   />
                 </div>
               </div>
@@ -1786,6 +1787,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 name="purchaser"
                 onBlur={[Function]}
                 onChange={[Function]}
+                value="purchaser"
               />
             </div>
           </div>
@@ -1815,7 +1817,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder="$0"
-                  value=""
+                  value={123}
                 />
               </div>
             </div>
@@ -1986,7 +1988,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     placeholder="--/--/----"
                     readOnly={false}
                     type="text"
-                    value=""
+                    value="01/01/2020"
                   />
                 </div>
               </div>

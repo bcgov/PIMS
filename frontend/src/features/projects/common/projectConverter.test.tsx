@@ -1,13 +1,31 @@
-import { getMostRecentAppraisal } from './projectConverter';
+import {
+  getMostRecentAppraisal,
+  getCurrentFiscal,
+  getMostRecentEvaluation,
+  getFlatProjectNotes,
+  toFlatProject,
+  toApiProject,
+} from './projectConverter';
 import moment, { Moment } from 'moment';
-import { IEvaluation } from 'actions/parcelsActions';
+import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import { mockApiProject, mockProject, mockFlatProject } from '../dispose/testUtils';
+import { NoteTypes, IProject } from './interfaces';
 
 const createAppraisal = (date: Moment): IEvaluation => {
   return {
     key: EvaluationKeys.Appraised,
     value: 123,
     date: date.format('YYYY-MM-DD'),
+  };
+};
+
+const createFiscal = (year: number): IFiscal => {
+  return {
+    key: FiscalKeys.Estimated,
+    value: 123,
+    fiscalYear: year,
   };
 };
 
@@ -45,6 +63,50 @@ describe('projectConverter function tests', () => {
       const disposalDate = moment('2018-01-01');
       const appraisal = createAppraisal(disposalDate.add(366, 'days'));
       expect(getMostRecentAppraisal([appraisal], '2018-01-01')).toBeUndefined();
+    });
+  });
+  describe('getCurrentFiscal', () => {
+    it('returns undefined if passed an empty array', () => {
+      expect(getCurrentFiscal([], FiscalKeys.Estimated)).toBeUndefined();
+    });
+    it('returns the most recent fiscal', () => {
+      const fiscals = [];
+      fiscals.push(createFiscal(2020));
+      fiscals.push(createFiscal(2021));
+      fiscals.push(createFiscal(2018));
+      expect(getCurrentFiscal(fiscals, FiscalKeys.Estimated)).toBe(fiscals[1]);
+    });
+  });
+  describe('getMostRecentEvaluation', () => {
+    it('returns undefined if passed an empty array', () => {
+      expect(getMostRecentEvaluation([], EvaluationKeys.Assessed)).toBeUndefined();
+    });
+    it('returns the most recent evaluation', () => {
+      const evaluations = [];
+      evaluations.push(createAppraisal(moment('2018-01-01')));
+      evaluations.push(createAppraisal(moment('2021-01-01')));
+      evaluations.push(createAppraisal(moment('2020-01-01')));
+      expect(getMostRecentEvaluation(evaluations, EvaluationKeys.Appraised)).toBe(evaluations[1]);
+    });
+  });
+  describe('getFlatProjectNotes', () => {
+    it('returns an array with all note types', () => {
+      expect(getFlatProjectNotes({ notes: [] } as any)).toHaveLength(
+        Object.keys(NoteTypes).filter((val: any) => isNaN(val)).length,
+      );
+    });
+  });
+  describe('toFlatProject', () => {
+    it('returns undefined if given an invalid project', () => {
+      expect(toFlatProject(undefined)).toBeUndefined();
+    });
+    it('converts an api project to flat project', () => {
+      expect(toFlatProject(mockApiProject as any)).toMatchObject(mockFlatProject);
+    });
+  });
+  describe('toApiProject', () => {
+    it('converts a flat project to an api project', () => {
+      expect(toApiProject(mockFlatProject as any)).toBeTruthy();
     });
   });
 });

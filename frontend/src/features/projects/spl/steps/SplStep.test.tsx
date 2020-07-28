@@ -48,6 +48,7 @@ describe('SPL Approval Step', () => {
   });
   afterEach(() => {
     cleanup();
+    mockAxios.reset();
   });
   beforeAll(() => {
     mockAxios.onAny().reply(200, {});
@@ -210,6 +211,7 @@ describe('SPL Approval Step', () => {
     it('performs validation on dispose', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = new Date();
+      project.marketedOn = undefined;
       project.statusCode = ReviewWorkflowStatus.ContractInPlace;
 
       const component = render(getSplStep(getStore(project)));
@@ -251,6 +253,35 @@ describe('SPL Approval Step', () => {
 
       await act(async () => {
         saveButton.click();
+      });
+    });
+
+    it('spl disposes project', async (done: any) => {
+      const project = _.cloneDeep(mockProject);
+      project.disposedOn = new Date();
+      project.statusCode = ReviewWorkflowStatus.ContractInPlace;
+
+      const component = render(getSplStep(getStore(project)));
+      const disposeButton = component.getByText(/Change Status to Disposed Externally/);
+      mockAxios
+        .onPut()
+        .reply((config: any) => {
+          if (config.url.includes(ReviewWorkflowStatus.Disposed)) {
+            done();
+          } else {
+            done.fail('status code was not disposed');
+          }
+          return [200, Promise.resolve({})];
+        })
+        .onAny()
+        .reply((config: any) => {
+          return [200, Promise.resolve({})];
+        });
+
+      await act(async () => {
+        disposeButton.click();
+        const disposePopupButton = await component.findAllByText(/Dispose Project/);
+        disposePopupButton[1].click();
       });
     });
   });
