@@ -112,7 +112,12 @@ export const validateFinancials = (
       financial.fiscalYear === getCurrentFiscalYear() &&
       !financial.value &&
       financial.key !== EvaluationKeys.Appraised &&
-      financial.key !== FiscalKeys.Estimated
+      financial.key !== FiscalKeys.Estimated &&
+      !(
+        financial.key === EvaluationKeys.Assessed &&
+        financial?.year &&
+        financial.year > moment().year()
+      )
     ) {
       errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
     }
