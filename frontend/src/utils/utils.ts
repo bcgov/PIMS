@@ -102,6 +102,16 @@ export const handleAxiosResponse = (
     });
 };
 
+export const validateFormikWithCallback = (formikProps: FormikProps<any>, callback: Function) => {
+  formikProps.validateForm().then((errors: any) => {
+    if (errors !== undefined && Object.keys(errors).length === 0) {
+      callback();
+    } else {
+      //force formik to display the validation errors.
+      formikProps.submitForm();
+    }
+  });
+};
 export const generateSortCriteria = (column: string, direction: SortDirection) => {
   if (!column || !direction) {
     return '';

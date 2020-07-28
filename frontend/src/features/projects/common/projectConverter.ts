@@ -12,6 +12,7 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import { getCurrentFiscalYear, formatDate } from 'utils';
 import _ from 'lodash';
 import { EvaluationKeys } from 'constants/evaluationKeys';
+import moment from 'moment';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();
@@ -24,6 +25,30 @@ export const getMostRecentEvaluation = (
 ): IEvaluation | undefined => {
   const mostRecentEvaluation = _.find(_.orderBy(evaluations, 'date', 'desc'), { key: key });
   return mostRecentEvaluation;
+};
+
+/**
+ * Get the most recent appraisal, restricted to within one year of either the current year or the year the project was disposed on.
+ * @param evaluations all evaluations for the property.
+ * @param disposedOn the date the project was disposed on, may be undefined.
+ */
+export const getMostRecentAppraisal = (
+  evaluations: IEvaluation[],
+  disposedOn?: Date | string,
+): IEvaluation | undefined => {
+  let targetDate = moment();
+  if (disposedOn) {
+    targetDate = moment(disposedOn, 'YYYY-MM-DD');
+  }
+  const evaluationsForYear = _.filter(evaluations, evaluation => {
+    return (
+      moment
+        .duration(moment(evaluation.date, 'YYYY-MM-DD').diff(targetDate))
+        .abs()
+        .asYears() < 1
+    );
+  });
+  return getMostRecentEvaluation(evaluationsForYear, EvaluationKeys.Appraised);
 };
 
 export const getFlatProjectNotes = (project: IApiProject) => {
@@ -50,7 +75,7 @@ export const toFlatProject = (project?: IApiProject) => {
   const flatProperties = project.properties.map(pp => {
     const apiProperty: IApiProperty = (pp.parcel ?? pp.building) as IApiProperty;
     const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
-    const appraised = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Appraised);
+    const appraised = getMostRecentAppraisal(apiProperty.evaluations, project.disposedOn);
     const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
     const estimated = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Estimated);
     const property: IProperty = {
@@ -108,6 +133,31 @@ export const toFlatProject = (project?: IApiProject) => {
   return flatProject;
 };
 
+/** create api evaluation objects based on flat app evaluation structure */
+const getApiEvaluations = (property: IProperty): IEvaluation[] => {
+  const evaluations: IEvaluation[] = [];
+  evaluations.push({
+    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
+    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+    value: property.appraised,
+    date: property.appraisedDate ?? formatDate(new Date()),
+    rowVersion: property.appraisedRowVersion,
+    key: EvaluationKeys.Appraised,
+    firm: property.appraisedFirm ?? '',
+  });
+  evaluations.push({
+    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
+    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+    value: property.assessed,
+    date: property.assessedDate ?? formatDate(new Date()),
+    rowVersion: property.assessedRowVersion,
+    key: EvaluationKeys.Assessed,
+    firm: property.assessedFirm ?? '',
+  });
+
+  return evaluations;
+};
+
 const toApiProperty = (property: IProperty): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
@@ -137,26 +187,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
     landArea: property.landArea,
     landLegalDescription: property.landLegalDescription,
     buildings: [], //parcel buildings should not be relevant to this api.
-    evaluations: [
-      {
-        parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-        buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-        value: property.assessed,
-        date: property.assessedDate ?? formatDate(new Date()),
-        rowVersion: property.assessedRowVersion,
-        key: EvaluationKeys.Assessed,
-        firm: property.assessedFirm ?? '',
-      },
-      {
-        parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-        buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-        value: property.appraised,
-        date: property.appraisedDate ?? formatDate(new Date()),
-        rowVersion: property.appraisedRowVersion,
-        key: EvaluationKeys.Appraised,
-        firm: property.appraisedFirm ?? '',
-      },
-    ],
+    evaluations: getApiEvaluations(property),
     fiscals: [
       {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,

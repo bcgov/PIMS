@@ -247,7 +247,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           const { pids } = await api.getSitePids(data.siteId);
           parcelPid = pids && pids.length > 0 ? pids[0] : '';
         } catch (error) {
-          console.log('Failed to get pids');
+          console.error('Failed to get pids');
         }
       }
       newValues.pid = parcelPid;

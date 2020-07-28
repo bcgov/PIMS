@@ -13,6 +13,7 @@ import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes'
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
 import GenericModal from 'components/common/GenericModal';
+import { validateFormikWithCallback } from 'utils';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -150,16 +151,7 @@ const SurplusPropertyListForm = ({
               _.filter(contractTasks, { isCompleted: false, isOptional: false }).length !== 0 ||
               formikProps.values.statusCode !== ReviewWorkflowStatus.ContractInPlace
             }
-            onClick={() => {
-              formikProps.validateForm().then((errors: any) => {
-                if (errors !== undefined && Object.keys(errors).length === 0) {
-                  setDispose(true);
-                } else {
-                  //force formik to display the validation errors.
-                  formikProps.submitForm();
-                }
-              });
-            }}
+            onClick={() => validateFormikWithCallback(formikProps, () => setDispose(true))}
           >
             Change Status to Disposed Externally
           </Button>

@@ -66,7 +66,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               name="address.cityId"
               onChange={[Function]}
               required={true}
-              value=""
+              value="test city"
             />
           </div>
         </div>
@@ -472,7 +472,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             >
               <input
                 autoComplete="off"
-                className="form-control date-picker"
+                className="form-control date-picker is-valid "
                 disabled={false}
                 name="leaseExpiry"
                 onBlur={[Function]}

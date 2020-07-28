@@ -262,7 +262,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - A static netbook value used on the close out form.
         /// </summary>
-        public decimal CloseOutNetbook { get; set; }
+        public decimal? CloseOutNetbook { get; set; }
 
         /// <summary>
         /// get/set - The estimated value which is the sum of the properties.
@@ -277,42 +277,42 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The sales cost.
         /// </summary>
-        public decimal SalesCost { get; set; }
+        public decimal? SalesCost { get; set; }
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
-        public decimal NetProceeds { get; set; }
+        public decimal? NetProceeds { get; set; }
 
         /// <summary>
         /// get/set - The sales proceeds
         /// </summary>
-        public decimal SalesProceeds { get; set; }
+        public decimal? SalesProceeds { get; set; }
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
-        public decimal ProgramCost { get; set; }
+        public decimal? ProgramCost { get; set; }
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
-        public decimal GainLoss { get; set; }
+        public decimal? GainLoss { get; set; }
 
         /// <summary>
         /// get/set - The SPP Capitalization value.
         /// </summary>
-        public decimal SppCapitalization { get; set; }
+        public decimal? SppCapitalization { get; set; }
 
         /// <summary>
         /// get/set - The gain before SPP.
         /// </summary>
-        public decimal GainBeforeSpp { get; set; }
+        public decimal? GainBeforeSpp { get; set; }
 
         /// <summary>
         /// get/set - The gain after SPP.
         /// </summary>
-        public decimal GainAfterSpp { get; set; }
+        public decimal? GainAfterSpp { get; set; }
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -322,12 +322,12 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
-        public decimal InterestComponent { get; set; }
+        public decimal? InterestComponent { get; set; }
 
         /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
-        public decimal OfferAmount { get; set; }
+        public decimal? OfferAmount { get; set; }
 
         /// <summary>
         /// get/set - Whether the sale includes a lease in place (SLIP).
@@ -342,7 +342,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - Whether an adjustment to prior year sale is required.
         /// </summary>
-        public decimal PriorYearAdjustmentAmount { get; set; }
+        public decimal? PriorYearAdjustmentAmount { get; set; }
 
         /// <summary>
         /// get/set - Remediation.
@@ -367,7 +367,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - the real estate agent's commission for this project
         /// </summary>
-        public decimal RealtorCommission { get; set; }
+        public decimal? RealtorCommission { get; set; }
 
         /// <summary>
         /// get/set - who signed the preliminary form.

@@ -20,6 +20,11 @@ export const onTransferredWithinTheGreTooltip =
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
+export const notInSplWarning = `Are you sure you would like to change the status of the project to Tier 1: Not Included in SPL?`;
 export const disposeWarning = `Are you sure you want to dispose this project? This will set all properties within the project to inactive.`;
 export const offersReceived = `Review Required for offer(s) in Tier 3 & 4.`;
 export const projectComments = `Please provide any variances between appraised, assessed, and sale price.`;
+export const appraisalDateWarning =
+  'You have entered an appraisal date that is older then the current appraisal date stored in PIMS. Are you sure that you would like to update PIMS to use this older date?';
+export const tabErrorWarning =
+  'Please correct all of the highlighted errors within the red coloured tab(s) before changing the status to Disposed Externally.';

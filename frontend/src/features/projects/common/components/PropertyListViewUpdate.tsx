@@ -6,7 +6,7 @@ import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { getColumns, getColumnsWithRemove } from './columns';
+import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import { useStepper } from 'features/projects/dispose';
 
 type RequiredAttributes = {
@@ -62,7 +62,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   const columns = useMemo(
     () =>
       disabled
-        ? getColumns({
+        ? getPropertyColumns({
             project,
             editableClassification: !disabled && editableClassification,
             editableFinancials: !disabled && editableFinancials,
