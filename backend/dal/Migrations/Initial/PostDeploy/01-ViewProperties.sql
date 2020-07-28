@@ -188,8 +188,8 @@ OUTER APPLY (
     SELECT TOP 1
         [Value]
         , [Date]
-    FROM dbo.[ParcelEvaluations]
-    WHERE [ParcelId] = p.[Id]
+    FROM dbo.[BuildingEvaluations]
+    WHERE [BuildingId] = b.[Id]
         AND [Key] = 0 -- [Assessed]
     ORDER BY [Date] DESC
 ) AS eas
@@ -197,8 +197,8 @@ OUTER APPLY (
     SELECT TOP 1
         [Value]
         , [Date]
-    FROM dbo.[ParcelEvaluations]
-    WHERE [ParcelId] = p.[Id]
+    FROM dbo.[BuildingEvaluations]
+    WHERE [BuildingId] = b.[Id]
         AND [Key] = 1 -- Appraised
     ORDER BY [Date] DESC
 ) AS eap
@@ -206,8 +206,8 @@ OUTER APPLY (
     SELECT TOP 1
         [Value]
         , [FiscalYear]
-    FROM dbo.[ParcelFiscals]
-    WHERE [ParcelId] = p.[Id]
+    FROM dbo.[BuildingFiscals]
+    WHERE [BuildingId] = b.[Id]
         AND [Key] = 1 -- Estimated
     ORDER BY [FiscalYear] DESC
 ) AS fe
@@ -215,8 +215,8 @@ OUTER APPLY (
     SELECT TOP 1
         [Value]
         , [FiscalYear]
-    FROM dbo.[ParcelFiscals]
-    WHERE [ParcelId] = p.[Id]
+    FROM dbo.[BuildingFiscals]
+    WHERE [BuildingId] = b.[Id]
         AND [Key] = 0 -- NetBook
     ORDER BY [FiscalYear] DESC
 ) AS fn
