@@ -388,6 +388,56 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <label
               className="form-label col-form-label col-md-2"
             >
+              Agency
+            </label>
+            <div
+              className="AutoCompleteText"
+            >
+              <div
+                className="form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-buildings.0.agencyId"
+                  name="buildings.0.agencyId"
+                  onChange={[Function]}
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-2"
+            >
+              Sub-Agency
+            </label>
+            <div
+              className="AutoCompleteText"
+            >
+              <div
+                className="form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-buildings.0.agencyId"
+                  name="buildings.0.agencyId"
+                  onChange={[Function]}
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-2"
+            >
               RAEG or SPP
             </label>
             <div

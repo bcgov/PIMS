@@ -242,34 +242,30 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
           </Form.Row>
         </Col>
         <Col md={6}>
-          {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && (
-            <>
-              <Form.Row>
-                <Form.Label column md={2}>
-                  Agency
-                </Form.Label>
-                <AutoCompleteText
-                  field={withNameSpace('agencyId')}
-                  options={agencies}
-                  disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-                  getValueDisplay={(val: SelectOption) => val.code!}
-                  agencyType="parent"
-                />
-              </Form.Row>
-              <Form.Row>
-                <Form.Label column md={2}>
-                  Sub-Agency
-                </Form.Label>
-                <AutoCompleteText
-                  field={withNameSpace('agencyId')}
-                  options={agencies}
-                  disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-                  getValueDisplay={(val: SelectOption) => val.code!}
-                  agencyType="child"
-                />
-              </Form.Row>
-            </>
-          )}
+          <Form.Row>
+            <Form.Label column md={2}>
+              Agency
+            </Form.Label>
+            <AutoCompleteText
+              field={withNameSpace('agencyId')}
+              options={agencies}
+              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
+              getValueDisplay={(val: SelectOption) => val.code!}
+              agencyType="parent"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Sub-Agency
+            </Form.Label>
+            <AutoCompleteText
+              field={withNameSpace('agencyId')}
+              options={agencies}
+              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
+              getValueDisplay={(val: SelectOption) => val.code!}
+              agencyType="child"
+            />
+          </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               RAEG or SPP
