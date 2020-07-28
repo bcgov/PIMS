@@ -76,6 +76,8 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
                 .Include(p => p.Responses)
+                .Include(p => p.Notes)
+                .Include(p => p.Tasks)
                 .FirstOrDefault(u => u.ProjectNumber == projectNumber);
         }
 
@@ -99,77 +101,27 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="project"></param>
         /// <returns></returns>
-        public override Project Add(Project project)
+        public override void Add(Project project)
         {
             project.ThrowIfNull(nameof(project));
 
-            if (project.Workflow != null)
-            {
-                var workflow = this.Context.Workflows.Local.FirstOrDefault(w => w.Id == project.WorkflowId);
-                if (workflow != null)
-                    project.Workflow = workflow;
-                else
-                    this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
-            }
-            if (project.Status != null)
-            {
-                var status = this.Context.ProjectStatus.Local.FirstOrDefault(w => w.Id == project.StatusId);
-                if (status != null)
-                    project.Status = status;
-                else
-                    this.Context.Entry(project.Status).State = EntityState.Unchanged;
-            }
-            if (project.Agency != null)
-            {
-                var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == project.AgencyId);
-                if (agency != null)
-                    project.Agency = agency;
-                else
-                    this.Context.Entry(project.Agency).State = EntityState.Unchanged;
-            }
-            if (project.TierLevel != null)
-            {
-                var tier = this.Context.TierLevels.Local.FirstOrDefault(w => w.Id == project.TierLevelId);
-                if (tier != null)
-                    project.TierLevel = tier;
-                else
-                    this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
-
-            }
-            if (project.Risk != null)
-            {
-                var risk = this.Context.ProjectRisks.Local.FirstOrDefault(w => w.Id == project.RiskId);
-                if (risk != null)
-                    project.Risk = risk;
-                else
-                    this.Context.Entry(project.Risk).State = EntityState.Unchanged;
-            }
+            project.Workflow = null;
+            project.Status = null;
+            project.Agency = null;
+            project.TierLevel = null;
+            project.Risk = null;
 
             project.Responses.ForEach(r =>
             {
-                if (r.Agency != null)
-                {
-                    var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == r.AgencyId);
-                    if (agency != null)
-                        r.Agency = agency;
-                    else
-                        this.Context.Entry(r.Agency).State = EntityState.Unchanged;
-                }
+                r.Agency = null;
             });
 
             project.Tasks.ForEach(t =>
             {
-                if (t.Task != null)
-                {
-                    var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
-                    if (task != null)
-                        t.Task = task;
-                    else
-                        this.Context.Entry(t.Task).State = EntityState.Unchanged;
-                }
+                t.Task = null;
             });
 
-            return base.Add(project);
+            base.Add(project);
         }
 
         /// <summary>
@@ -177,7 +129,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="projects"></param>
         /// <returns></returns>
-        public IEnumerable<Project> Add(IEnumerable<Project> projects)
+        public void Add(IEnumerable<Project> projects)
         {
             projects.ThrowIfNull(nameof(projects));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -186,83 +138,26 @@ namespace Pims.Dal.Services.Admin
             {
                 if (project == null) throw new ArgumentNullException();
 
-                if (project.Workflow != null)
-                {
-                    var workflow = this.Context.Workflows.Local.FirstOrDefault(w => w.Id == project.WorkflowId);
-                    if (workflow != null)
-                        project.Workflow = workflow;
-                    else
-                        this.Context.Entry(project.Workflow).State = EntityState.Unchanged;
-                }
-                if (project.Status != null)
-                {
-                    var status = this.Context.ProjectStatus.Local.FirstOrDefault(w => w.Id == project.StatusId);
-                    if (status != null)
-                        project.Status = status;
-                    else
-                        this.Context.Entry(project.Status).State = EntityState.Unchanged;
-                }
-                if (project.Agency != null)
-                {
-                    var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == project.AgencyId);
-                    if (agency != null)
-                        project.Agency = agency;
-                    else
-                        this.Context.Entry(project.Agency).State = EntityState.Unchanged;
-                }
-                if (project.TierLevel != null)
-                {
-                    var tier = this.Context.TierLevels.Local.FirstOrDefault(w => w.Id == project.TierLevelId);
-                    if (tier != null)
-                        project.TierLevel = tier;
-                    else
-                        this.Context.Entry(project.TierLevel).State = EntityState.Unchanged;
-                }
-                if (project.Risk != null)
-                {
-                    var risk = this.Context.ProjectRisks.Local.FirstOrDefault(w => w.Id == project.RiskId);
-                    if (risk != null)
-                        project.Risk = risk;
-                    else
-                        this.Context.Entry(project.Risk).State = EntityState.Unchanged;
-                }
+                project.Workflow = null;
+                project.Status = null;
+                project.Agency = null;
+                project.TierLevel = null;
+                project.Risk = null;
 
                 project.Responses.ForEach(r =>
                 {
-                    if (r.Agency != null)
-                    {
-                        var agency = this.Context.Agencies.Local.FirstOrDefault(w => w.Id == r.AgencyId);
-                        if (agency != null)
-                            r.Agency = agency;
-                        else
-                            this.Context.Entry(r.Agency).State = EntityState.Unchanged;
-                    }
+                    r.Agency = null;
                 });
 
                 project.Tasks.ForEach(t =>
                 {
-                    if (t.Task != null)
-                    {
-                        var task = this.Context.Tasks.Local.FirstOrDefault(ta => ta.Id == t.TaskId);
-                        if (task != null)
-                            t.Task = task;
-                        else
-                            this.Context.Entry(t.Task).State = EntityState.Unchanged;
-                    }
+                    t.Task = null;
                 });
 
-                if (project.Id == 0)
-                {
-                    this.Context.Projects.Add(project);
-                }
-                else
-                {
-                    this.Context.Projects.Update(project);
-                }
+                this.Context.Projects.Add(project);
             });
 
             this.Context.CommitTransaction();
-            return projects;
         }
 
         /// <summary>
@@ -271,7 +166,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="project"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override Project Update(Project project)
+        public override void Update(Project project)
         {
             project.ThrowIfNull(nameof(project));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
@@ -281,7 +176,43 @@ namespace Pims.Dal.Services.Admin
             this.Context.Entry(originalProject).CurrentValues.SetValues(project);
 
             // TODO: Update child properties appropriately.
-            return base.Update(originalProject);
+            base.Update(originalProject);
+        }
+
+        /// <summary>
+        /// Update the collection of projects in the datasource.
+        /// </summary>
+        /// <param name="projects"></param>
+        /// <returns></returns>
+        public void Update(IEnumerable<Project> projects)
+        {
+            projects.ThrowIfNull(nameof(projects));
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            projects.ForEach((project) =>
+            {
+                if (project == null) throw new ArgumentNullException();
+
+                project.Workflow = project.Workflow != null ? this.Context.Workflows.Find(project.WorkflowId) : null;
+                project.Status = project.Status != null ? this.Context.ProjectStatus.Find(project.StatusId) : null;
+                project.Agency = project.Agency != null ? this.Context.Agencies.Find(project.AgencyId) : null;
+                project.TierLevel = project.TierLevel != null ? this.Context.TierLevels.Find(project.TierLevelId) : null;
+                project.Risk = project.Risk != null ? this.Context.ProjectRisks.Find(project.RiskId) : null;
+
+                project.Responses.ForEach(r =>
+                {
+                    r.Agency = r.Agency != null ? this.Context.Agencies.Find(r.AgencyId) : null;
+                });
+
+                project.Tasks.ForEach(t =>
+                {
+                    t.Task = t.Task != null ? this.Context.Tasks.Find(t.TaskId) : null;
+                });
+
+                this.Context.Projects.Update(project);
+            });
+
+            this.Context.CommitTransaction();
         }
 
         /// <summary>

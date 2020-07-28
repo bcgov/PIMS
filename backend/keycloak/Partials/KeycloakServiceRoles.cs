@@ -219,7 +219,7 @@ namespace Pims.Keycloak
         /// <param name="parentName"></param>
         /// <param name="roles"></param>
         /// <returns></returns>
-        public async Task<Models.RoleModel[]> DeleteCompositeRoleAsync(string parentName, Models.RoleModel[] roles)
+        public async Task<Models.RoleModel[]> DeleteCompositeRolesAsync(string parentName, Models.RoleModel[] roles)
         {
             var json = roles.Serialize();
             var content = new StringContent(json, Encoding.UTF8, "application/json");

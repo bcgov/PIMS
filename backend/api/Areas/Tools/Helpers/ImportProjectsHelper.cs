@@ -58,9 +58,18 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         public IEnumerable<Entity.Project> AddUpdateProjects(IEnumerable<Model.ImportProjectModel> models, bool stopOnError = true, string[] defaults = null)
         {
-            var projects = models.Select(p => Merge(_adminService.Project.Get(p.ProjectNumber), p, stopOnError, defaults)).NotNull();
+            var projects = models.Select(p => Merge(_adminService.Project.Get(p.ProjectNumber), p, stopOnError, defaults)).ToArray().NotNull();
 
-            return _adminService.Project.Add(projects).ToArray();
+            var addProjects = projects.Where(p => p.Id == 0);
+            var updateProjects = projects.Where(p => p.Id != 0);
+
+            if (addProjects.Any())
+                _adminService.Project.Add(addProjects);
+
+            if (updateProjects.Any())
+                _adminService.Project.Update(updateProjects);
+
+            return projects;
         }
         #endregion
 
@@ -176,6 +185,10 @@ namespace Pims.Api.Areas.Tools.Helpers
                     tasks = tasks.Concat(_service.Task.GetForWorkflow("ERP"));
                     tasks = tasks.Concat(_service.Task.GetForWorkflow("SPL"));
                     project.AddTask(tasks.DistinctBy(t => t.Id).ToArray());
+                    project.Tasks.ForEach(t =>
+                    {
+                        t.IsCompleted = !t.Task.IsOptional;
+                    });
                 }
 
                 _logger.LogDebug($"Parsed project '{project.ProjectNumber}' - '{project.Status.Code}'", project);

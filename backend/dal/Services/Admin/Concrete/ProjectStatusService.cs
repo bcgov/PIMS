@@ -57,14 +57,14 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override ProjectStatus Update(ProjectStatus entity)
+        public override void Update(ProjectStatus entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
             var project = this.Context.ProjectStatus.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(project).CurrentValues.SetValues(entity);
-            return base.Update(project);
+            base.Update(project);
         }
 
         /// <summary>

@@ -57,14 +57,14 @@ namespace Pims.Dal.Services.Admin
         /// <param name="entity"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public override TierLevel Update(TierLevel entity)
+        public override void Update(TierLevel entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
             var tierLevel = this.Context.TierLevels.Find(entity.Id) ?? throw new KeyNotFoundException();
 
             this.Context.Entry(tierLevel).CurrentValues.SetValues(entity);
-            return base.Update(tierLevel);
+            base.Update(tierLevel);
         }
 
         /// <summary>

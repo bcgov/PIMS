@@ -31,7 +31,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override Address Update(Address entity)
+        public override void Update(Address entity)
         {
             // TODO: Check for system-administrator role.
             entity.ThrowIfNull(nameof(entity));
@@ -40,7 +40,7 @@ namespace Pims.Dal.Services.Admin
             if (address == null) throw new KeyNotFoundException();
 
             this.Context.Entry(address).CurrentValues.SetValues(entity);
-            return base.Update(address);
+            base.Update(address);
         }
 
         /// <summary>

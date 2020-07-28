@@ -55,7 +55,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override Province Update(Province entity)
+        public override void Update(Province entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -63,7 +63,7 @@ namespace Pims.Dal.Services.Admin
             if (province == null) throw new KeyNotFoundException();
 
             this.Context.Entry(province).CurrentValues.SetValues(entity);
-            return base.Update(province);
+            base.Update(province);
         }
 
         /// <summary>

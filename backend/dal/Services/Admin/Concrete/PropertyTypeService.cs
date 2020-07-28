@@ -46,7 +46,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override PropertyType Update(PropertyType entity)
+        public override void Update(PropertyType entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -54,7 +54,7 @@ namespace Pims.Dal.Services.Admin
             if (propertyType == null) throw new KeyNotFoundException();
 
             this.Context.Entry(propertyType).CurrentValues.SetValues(entity);
-            return base.Update(propertyType);
+            base.Update(propertyType);
         }
 
         /// <summary>

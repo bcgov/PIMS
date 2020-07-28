@@ -124,9 +124,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddUser([FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
-            var addedEntity = _pimsAdminService.User.Add(entity);
+            _pimsAdminService.User.Add(entity);
 
-            var user = _mapper.Map<Model.UserModel>(addedEntity);
+            var user = _mapper.Map<Model.UserModel>(entity);
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -146,9 +146,9 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult UpdateUser(Guid id, [FromBody] Model.UserModel model)
         {
             var entity = _mapper.Map<Entity.User>(model);
-            var updatedEntity = _pimsAdminService.User.Update(entity);
+            _pimsAdminService.User.Update(entity);
 
-            var user = _mapper.Map<Model.UserModel>(updatedEntity);
+            var user = _mapper.Map<Model.UserModel>(entity);
             return new JsonResult(user);
         }
 

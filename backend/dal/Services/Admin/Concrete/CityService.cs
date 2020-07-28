@@ -60,7 +60,7 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override City Update(City entity)
+        public override void Update(City entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -68,7 +68,7 @@ namespace Pims.Dal.Services.Admin
             if (city == null) throw new KeyNotFoundException();
 
             this.Context.Entry(city).CurrentValues.SetValues(entity);
-            return base.Update(city);
+            base.Update(city);
         }
 
         /// <summary>

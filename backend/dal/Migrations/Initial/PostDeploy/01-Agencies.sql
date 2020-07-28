@@ -17,96 +17,128 @@ INSERT INTO dbo.[Agencies] (
     , 'Ministry of Advanced Education, Skills & Training'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'kevin.brewster@gov.bc.ca'
+    , 'ADM and EFO Finance, Technology and Management Services'
 ), (
     2
     , 'CITZ'
     , 'Ministry of Citizens Services'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'dean.skinner@gov.bc.ca'
+    , 'ADM and EFO CSD'
 ), (
     4
     , 'EDUC'
     , 'Ministry of Education'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'reg.bawa@gov.bc.ca'
+    , 'ADM Resource Management Division'
 ), (
     5
     , 'FIN'
     , 'Ministry of Finance'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'teri.spaven@gov.bc.ca'
+    , 'ADM & EFO Corporate Services Division'
 ), (
     6
     , 'FLNR'
     , 'Ministry of Forests, Lands, Natural Resources'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'trish.dohan@gov.bc.ca'
+    , 'ADM CSNR and EFO for FLNR'
 ), (
     7
     , 'HLTH'
     , 'Ministry of Health'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'philip.twyford@gov.bc.ca'
+    , 'ADM & EFO Finance and Corporate Services'
 ), (
     8
     , 'MAH'
     , 'Ministry of Municipal Affairs & Housing'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'david.curtis@gov.bc.ca'
+    , 'ADM & EFO Management Services Division'
 ), (
     9
     , 'TRAN'
     , 'Ministry of Transportation and Infrastructure'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'nancy.bain@gov.bc.ca'
+    , 'ADM & EFO Finance & Management Services Department'
 ), (
     10
     , 'EMPR'
     , 'Energy, Mines & Petroleum Resources'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'wes.boyd@gov.bc.ca'
+    , 'ADM  CSNR and EFO to MIRR, AGRI EMPR ENV'
 ), (
     11
     , 'MAG'
     , 'Ministry of Attorney General'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'tracy.campbell@gov.bc.ca'
+    , 'ADM & EFO CMSB AG and PSSG'
 ), (
     12
     , 'JEDC'
     , 'Jobs, Economic Development & Competitiveness'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'joanna.white@gov.bc.ca'
+    , 'A/ADM & EFO Management Services Division'
 ), (
     13
     , 'MTAC'
     , 'Ministry of Tourism, Arts and Culture'
     , 0
     , 1
-    , 'jeremy.foster@fosol.ca'
-    , 'Agency'
+    , 'salman.azam@gov.bc.ca'
+    , 'ADM & EFO Management Services Division'
+), (
+    14
+    , 'SDPR'
+    , 'Ministry of of Social Development and Poverty Reduction'
+    , 0
+    , 1
+    , 'jonathan.dube@gov.bc.ca'
+    , 'ADM & EFO CSD'
+), (
+    15
+    , 'MMHA'
+    , 'Ministry of Mental Health and Addictions'
+    , 0
+    , 1
+    , 'dara.landry@gov.bc.ca'
+    , 'Executive Lead Corporate Services'
+), (
+    16
+    , 'MCFD'
+    , 'Ministry of Children and Family Development'
+    , 0
+    , 1
+    , 'rob.byers@gov.bc.ca'
+    , 'AMD & EFO'
+), (
+    17
+    , 'BCPSA'
+    , 'Public Service Agency'
+    , 0
+    , 1
+    , 'bruce.richmond@gov.bc.ca'
+    , 'ADM Corporate Services'
 )
 
 -- Child Agencies for HLTH.
