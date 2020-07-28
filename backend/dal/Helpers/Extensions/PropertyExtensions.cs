@@ -175,7 +175,7 @@ namespace Pims.Dal.Helpers.Extensions
                 //If the date passed in is the most recent, we don't need to do any removal logic.
                 if (mostRecentDate == null || date == null || mostRecentDate == date)
                 {
-                    return;
+                    continue;
                 }
                 var maxDate = (disposedOn ?? date)?.AddYears(1);
                 if (property is Entity.Parcel)
