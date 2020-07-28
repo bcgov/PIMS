@@ -1,8 +1,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/bcgov/pims/issues)
-![API (DEV)](<https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=master>)
-![APP (React)](<https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=master>)
-[![codecov](https://codecov.io/gh/bcgov/PIMS/branch/master/graph/badge.svg)](https://codecov.io/gh/bcgov/PIMS)
+![API (.Net Core)](<https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=dev>)
+![APP (React)](<https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=dev>)
+[![codecov](https://codecov.io/gh/bcgov/PIMS/branch/dev/graph/badge.svg)](https://codecov.io/gh/bcgov/PIMS)
 
 ![Uptime Robot status](https://img.shields.io/uptimerobot/status/m784832378-1d844c019bc2900c17c826cb)
 
@@ -57,15 +57,9 @@ Objectives include:
 
 ## Development
 
-![API (.Net Core)](<https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=dev>)
-![APP (React)](<https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=dev>)
-[![codecov](https://codecov.io/gh/bcgov/PIMS/branch/dev/graph/badge.svg)](https://codecov.io/gh/bcgov/PIMS)
-
-![Uptime Robot status](https://img.shields.io/uptimerobot/status/m784832378-1d844c019bc2900c17c826cb)
-
 > We are actively adding new features and enhancements.
 
-Read the documentation [here](./docs/README.md)
+Read the documentation [here](https://github.com/bcgov/PIMS/wiki)
 
 ## License
 

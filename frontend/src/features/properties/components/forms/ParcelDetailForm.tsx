@@ -76,6 +76,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
 
   let allowEdit =
     keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+    !props.parcelDetail ||
     keycloak.hasAgency(props.parcelDetail?.agencyId as number);
 
   const agencies = useMemo(
