@@ -423,8 +423,6 @@ namespace Pims.Dal.Helpers.Extensions
             var agency = originalProject.Agency;
             var metadata = originalProject.Metadata;
 
-            if (originalProject.AgencyId != updatedProject.AgencyId) throw new InvalidOperationException("Projects cannot be transferred to another agency.");
-
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
             originalProject.Agency = agency; // TODO: this should not be necessary.
             originalProject.Metadata = metadata;
