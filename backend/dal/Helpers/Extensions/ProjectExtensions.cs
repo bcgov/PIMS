@@ -408,6 +408,10 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static bool IsProjectClosed(this Entity.Project project)
         {
+            if(project?.Status == null)
+            {
+                return false;
+            }
             return project.Status.IsTerminal;
         }
 
