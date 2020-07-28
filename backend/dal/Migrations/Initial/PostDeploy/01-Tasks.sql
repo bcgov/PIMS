@@ -78,7 +78,7 @@ INSERT INTO dbo.[Tasks] (
     9
     , 'Preparation and due diligence'
     , 0
-    , 'First Nations consulatation preparation and due diligence.'
+    , 'First Nations consultation preparation and due diligence.'
     , 12
     , 1
     , 1
@@ -86,7 +86,7 @@ INSERT INTO dbo.[Tasks] (
     10
     , 'Consultation underway'
     , 0
-    , 'First Nations consulation is underway.'
+    , 'First Nations consultation is underway.'
     , 12
     , 1
     , 2
