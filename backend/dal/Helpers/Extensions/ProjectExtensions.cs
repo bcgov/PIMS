@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Presentation;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pims.Core.Extensions;
@@ -421,6 +422,9 @@ namespace Pims.Dal.Helpers.Extensions
             // Update a project
             var agency = originalProject.Agency;
             var metadata = originalProject.Metadata;
+
+            if (originalProject.AgencyId != updatedProject.AgencyId) throw new InvalidOperationException("Projects cannot be transferred to another agency.");
+
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
             originalProject.Agency = agency; // TODO: this should not be necessary.
             originalProject.Metadata = metadata;
