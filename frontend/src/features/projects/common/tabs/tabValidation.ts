@@ -8,6 +8,11 @@ export interface ValidationGroup {
   statusCode: string;
 }
 
+/** return tab error classname if tab is in error */
+export const isTabInError = (errors: any, tabName: string) => {
+  return (errors.tabs as string[])?.includes(tabName) ? 'tabError' : '';
+};
+
 /**
  * Validate all tab based forms, reporting all tabs that have errors.
  * @param values Formik field values.
@@ -18,14 +23,8 @@ export const handleValidate = async (values: IProject, validationGroups: Validat
   for (const validationGroup of validationGroups) {
     errors = await validateTab(values, errors, validationGroup);
   }
-  if (Object.keys(errors).length > 0 && !!errors.tabs?.length) {
-    errors = setIn(
-      errors,
-      'status',
-      `The following tabs have errors: ${_.uniq(errors.tabs).join(', ')}`,
-    );
-  } else {
-    errors = {};
+  if (errors.tabs?.length === 0) {
+    delete errors.tabs;
   }
   return Promise.resolve(errors);
 };

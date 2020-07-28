@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { Tab, Tabs } from 'react-bootstrap';
-import { SPPApprovalTabs, ReviewWorkflowStatus } from '../../common';
+import { Tab } from 'react-bootstrap';
+import { SPPApprovalTabs, ReviewWorkflowStatus, isTabInError, IProject } from '../../common';
 import { DocumentationTab } from '../../common';
 import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
+import { useFormikContext } from 'formik';
+import ErrorTabs from 'features/projects/common/tabs/ErrorTabs';
+import { EnhancedReferralTab } from 'features/projects/erp';
+import { noop } from 'lodash';
 
 interface ISplTabsProps {
   /** The currently displayed tab */
@@ -18,7 +22,7 @@ interface ISplTabsProps {
 }
 
 /**
- * Tab based formik form for ERP/SPL workflows.
+ * Tab based formik form for the SPL workflow.
  * @param param0 ISplTabsProps
  */
 const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
@@ -27,25 +31,57 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
   isReadOnly,
   setSubmitStatusCode,
 }) => {
+  const { errors, values } = useFormikContext<IProject>();
   return (
     <React.Fragment>
-      <Tabs activeKey={currentTab} id="approvalTabs" onSelect={(key: string) => setCurrentTab(key)}>
-        <Tab eventKey={SPPApprovalTabs.projectInformation} title="Project Information">
+      <ErrorTabs setCurrentTab={setCurrentTab} currentTab={currentTab}>
+        <Tab
+          eventKey={SPPApprovalTabs.projectInformation}
+          title="Project Information"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.projectInformation)}
+        >
           <SurplusPropertyInformationTab isReadOnly={isReadOnly} />
         </Tab>
-        <Tab eventKey={SPPApprovalTabs.documentation} title="Documentation">
+        <Tab
+          eventKey={SPPApprovalTabs.documentation}
+          title="Documentation"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.documentation)}
+        >
           <DocumentationTab
             isReadOnly={isReadOnly}
             appraisalTaskStatusCode={ReviewWorkflowStatus.Disposed}
           />
         </Tab>
-        <Tab eventKey={SPPApprovalTabs.spl} title="Surplus Properties List">
+        <Tab
+          eventKey={SPPApprovalTabs.erp}
+          title={`${
+            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption
+              ? 'Exemption from the Enhanced Referral Process'
+              : 'Enhanced Referral Process'
+          }`}
+          tabClassName={isTabInError(errors, SPPApprovalTabs.erp)}
+        >
+          <EnhancedReferralTab
+            isReadOnly={true}
+            setSubmitStatusCode={noop}
+            goToGreTransferred={noop}
+          />
+        </Tab>
+        <Tab
+          eventKey={SPPApprovalTabs.spl}
+          title="Surplus Properties List"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.spl)}
+        >
           <SplTab isReadOnly={isReadOnly} setSubmitStatusCode={setSubmitStatusCode} />
         </Tab>
-        <Tab eventKey={SPPApprovalTabs.closeOutForm} title="Close Out Form">
+        <Tab
+          eventKey={SPPApprovalTabs.closeOutForm}
+          title="Close Out Form"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.closeOutForm)}
+        >
           <CloseOutFormTab isReadOnly={isReadOnly} />
         </Tab>
-      </Tabs>
+      </ErrorTabs>
     </React.Fragment>
   );
 };

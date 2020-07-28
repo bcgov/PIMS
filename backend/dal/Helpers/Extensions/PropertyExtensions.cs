@@ -149,5 +149,36 @@ namespace Pims.Dal.Helpers.Extensions
             if (!parcel.AgencyId.HasValue || !projectAgencyIds.Contains(parcel.AgencyId.Value))
                 throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
         }
+
+        /// <summary>
+        /// The user may create an evaluation older then the most recent evaluation stored in PIMS. To support this, remove any evaluations that are within one year of the passed date.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="date"></param>
+        public static void RemoveEvaluationsWithinOneYear(this Entity.Property property, DateTime date)
+        {
+            DateTime? mostRecentDate = null;
+            if (property is Entity.Parcel)
+            {
+                mostRecentDate = ((Entity.Parcel)property).Evaluations.OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+            }
+            else if (property is Entity.Building)
+            {
+                mostRecentDate = ((Entity.Building)property).Evaluations.OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+            }
+            //If the date passed in is the most recent, we don't need to do any removal logic.
+            if(mostRecentDate == null || mostRecentDate == date)
+            {
+                return;
+            }
+            var maxDate = date.AddYears(1);
+            if (property is Entity.Parcel)
+            {
+                ((Entity.Parcel)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate);
+            } else if (property is Entity.Building)
+            {
+                ((Entity.Building)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate);
+            }
+        }
     }
 }

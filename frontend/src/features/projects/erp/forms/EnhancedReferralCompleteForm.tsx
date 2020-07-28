@@ -12,9 +12,11 @@ import {
   onTransferredWithinTheGreTooltip,
   onHoldNotificationTooltip,
   proceedToSplWarning,
+  notInSplWarning,
 } from '../../common';
 import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import GenericModal from 'components/common/GenericModal';
+import { validateFormikWithCallback } from 'utils';
 
 const OrText = styled.div`
   margin: 0.75rem 2rem 0.75rem 2rem;
@@ -41,6 +43,7 @@ const EnhancedReferralCompleteForm = ({
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const [proceedToSpl, setProceedToSpl] = useState(false);
+  const [notInSpl, setNotInSpl] = useState(false);
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
@@ -105,18 +108,34 @@ const EnhancedReferralCompleteForm = ({
         <div className="col-md-6" style={{ display: 'flex' }}>
           <Button
             disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-            onClick={() => setProceedToSpl(true)}
+            onClick={() => validateFormikWithCallback(formikProps, () => setProceedToSpl(true))}
           >
             Proceed to SPL
           </Button>
           <OrText>OR</OrText>
           <Button
             disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-            onClick={onClickNotInSpl}
+            onClick={() => validateFormikWithCallback(formikProps, () => setNotInSpl(true))}
           >
             Not Included in the SPL
           </Button>
         </div>
+        {notInSpl && (
+          <GenericModal
+            display={notInSpl}
+            cancelButtonText="Close"
+            okButtonText="Yes"
+            handleOk={(e: any) => {
+              onClickNotInSpl(e);
+              setNotInSpl(false);
+            }}
+            handleCancel={() => {
+              setNotInSpl(false);
+            }}
+            title="Really Not in SPL?"
+            message={notInSplWarning}
+          />
+        )}
         {proceedToSpl && (
           <GenericModal
             display={proceedToSpl}

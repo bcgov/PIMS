@@ -9,6 +9,8 @@ import {
   CloseOutAdjustmentForm,
 } from '..';
 import { ProjectNotes, NoteTypes, projectComments } from 'features/projects/common';
+import { Container } from 'react-bootstrap';
+import './CloseOutFormTab.scss';
 
 interface ICloseOutFormTabProps {
   isReadOnly?: boolean;
@@ -22,7 +24,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
   isReadOnly,
 }: ICloseOutFormTabProps) => {
   return (
-    <>
+    <Container fluid>
       <CloseOutSummaryForm isReadOnly={isReadOnly} />
       <CloseOutPurchaseInformationForm isReadOnly={isReadOnly} />
       <CloseOutSaleInformationForm isReadOnly={isReadOnly} />
@@ -41,7 +43,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       />
       <CloseOutSignaturesForm isReadOnly={isReadOnly} />
       <CloseOutAdjustmentForm isReadOnly={isReadOnly} />
-    </>
+    </Container>
   );
 };
 

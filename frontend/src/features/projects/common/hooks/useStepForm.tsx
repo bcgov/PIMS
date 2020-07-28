@@ -54,7 +54,7 @@ const useStepForm = () => {
         : (dispatch(updateProject(apiValues)) as any)
       ).catch((error: any) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
-        formikRef.current?.setStatus({ msg });
+        formikRef?.current?.setStatus({ msg });
       });
     }
   };
