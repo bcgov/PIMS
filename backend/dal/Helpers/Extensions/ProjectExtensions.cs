@@ -498,11 +498,7 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
-                            var eval = property.Parcel.Evaluations.FirstOrDefault();
-                            if (eval != null)
-                            {
-                                existingProperty.Parcel.RemoveEvaluationsWithinOneYear(updatedProject.DisposedOn ?? eval.Date);
-                            }
+                            existingProperty.Parcel.RemoveEvaluationsWithinOneYear(property.Parcel, originalProject.DisposedOn);
 
                             context.Entry(existingProperty.Parcel).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Parcel.Fiscals)
@@ -543,11 +539,7 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
-                            var eval = property.Building.Evaluations.FirstOrDefault();
-                            if (eval != null)
-                            {
-                                existingProperty.Building.RemoveEvaluationsWithinOneYear(updatedProject.DisposedOn ?? eval.Date);
-                            }
+                            existingProperty.Building.RemoveEvaluationsWithinOneYear(property.Building, originalProject.DisposedOn);
 
                             context.Entry(existingProperty.Building).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Building.Fiscals)

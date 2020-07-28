@@ -29,6 +29,7 @@ namespace Pims.Dal.Test.Helpers.Extensions
 
             var context = helper.InitializeDatabase(user);
             var parcel = context.CreateParcel(1);
+            var updatedParcel = context.CreateParcel(2);
             var olderThenOneYear = new Entities.ParcelEvaluation()
             {
                 Date = DateTime.Now.AddYears(1).AddDays(1),
@@ -51,8 +52,16 @@ namespace Pims.Dal.Test.Helpers.Extensions
             parcel.Evaluations.Add(toRemove);
             parcel.Evaluations.Add(toNotRemove);
 
+            var eval = new Entities.ParcelEvaluation()
+            {
+                Date = DateTime.Now,
+                Value = 1,
+                Key = EvaluationKeys.Appraised,
+            };
+            updatedParcel.Evaluations.Add(eval);
+
             // Act
-            parcel.RemoveEvaluationsWithinOneYear(DateTime.Now);
+            parcel.RemoveEvaluationsWithinOneYear(updatedParcel);
 
             // Assert
             parcel.Evaluations.Should().Contain(toNotRemove);
@@ -70,6 +79,8 @@ namespace Pims.Dal.Test.Helpers.Extensions
             var context = helper.InitializeDatabase(user);
             var parcel = context.CreateParcel(1);
             var building = context.CreateBuilding(parcel, 2);
+            var updatedParcel = context.CreateParcel(3);
+            var updatedBuilding = context.CreateBuilding(updatedParcel, 4);
             var olderThenOneYear = new Entities.BuildingEvaluation()
             {
                 Date = DateTime.Now.AddYears(1).AddDays(1),
@@ -92,8 +103,16 @@ namespace Pims.Dal.Test.Helpers.Extensions
             building.Evaluations.Add(toRemove);
             building.Evaluations.Add(toNotRemove);
 
+            var eval = new Entities.BuildingEvaluation()
+            {
+                Date = DateTime.Now,
+                Value = 1,
+                Key = EvaluationKeys.Appraised,
+            };
+            updatedBuilding.Evaluations.Add(eval);
+
             // Act
-            building.RemoveEvaluationsWithinOneYear(DateTime.Now);
+            building.RemoveEvaluationsWithinOneYear(updatedBuilding);
 
             // Assert
             building.Evaluations.Should().Contain(toNotRemove);
