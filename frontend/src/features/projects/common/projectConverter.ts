@@ -73,7 +73,7 @@ export const toFlatProject = (project?: IApiProject) => {
     return undefined;
   }
   const flatProperties = project.properties.map(pp => {
-    const apiProperty: IApiProperty = (pp.parcel ?? pp.building) as IApiProperty;
+    const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
     const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
     const appraised = getMostRecentAppraisal(apiProperty.evaluations, project.disposedOn);
     const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
