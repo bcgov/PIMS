@@ -103,7 +103,7 @@ describe('FilterBar', () => {
       minLotSize: '1',
       maxLotSize: '3',
       parcelId: '',
-      propertyType: '0',
+      propertyType: '',
     });
   });
 });

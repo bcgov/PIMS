@@ -96,6 +96,8 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   detailsPanel?: DetailsOptions<T>;
   footer?: boolean;
   hideToolbar?: boolean;
+  // Limit where you would like an expansion button to appear based off this props criteria
+  canRowExpand?: (val: any) => boolean;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -282,11 +284,21 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       return (
         <div key={index} className="tr-wrapper">
           <div {...row.getRowProps()} className="tr">
-            {renderExpandRowStateButton(
-              props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
-              'td',
-              () => handleExpandClick(row.original),
-            )}
+            {/* If canRowExpand prop is passed only allow expansions on those rows */}
+            {props.canRowExpand &&
+              props.canRowExpand(row) &&
+              renderExpandRowStateButton(
+                props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
+                'td',
+                () => handleExpandClick(row.original),
+              )}
+            {/* Expansion button shown on every row by default */}
+            {!props.canRowExpand &&
+              renderExpandRowStateButton(
+                props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
+                'td',
+                () => handleExpandClick(row.original),
+              )}
             {row.cells.map((cell: CellWithProps<T>) => {
               return (
                 <div
