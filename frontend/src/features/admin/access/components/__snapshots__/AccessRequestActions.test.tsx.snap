@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccessRequestActions renders correctly 1`] = `
+<div
+  className="dropdown"
+  onKeyDown={[Function]}
+>
+  <button
+    aria-expanded={false}
+    aria-haspopup={true}
+    className="dropdown-toggle btn btn-primary"
+    disabled={false}
+    id="dropdown-basic"
+    onClick={[Function]}
+    type="button"
+  >
+    Actions
+  </button>
+</div>
+`;

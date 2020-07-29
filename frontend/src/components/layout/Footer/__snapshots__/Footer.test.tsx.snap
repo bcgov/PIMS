@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer renders correctly 1`] = `
+<nav
+  className="footer navbar navbar-expand navbar-light"
+>
+  <a
+    className="nav-link"
+    href="http://www.gov.bc.ca/gov/content/home/disclaimer"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Disclaimer
+  </a>
+  <a
+    className="nav-link"
+    href="http://www.gov.bc.ca/gov/content/home/privacy"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Privacy
+  </a>
+  <a
+    className="nav-link"
+    href="http://www.gov.bc.ca/gov/content/home/accessible-government"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Accessibility
+  </a>
+  <a
+    className="nav-link"
+    href="http://www.gov.bc.ca/gov/content/home/copyright"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Copyright
+  </a>
+</nav>
+`;
