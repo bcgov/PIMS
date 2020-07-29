@@ -23,9 +23,10 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { mockDetails } from 'mocks/filterDataMock';
 import { EvaluationKeys } from 'constants/evaluationKeys';
-import { fillInput } from 'utils/testUtils';
+import { fillInput, getInput } from 'utils/testUtils';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { LatLng } from 'leaflet';
+import { useApi, PimsAPI } from 'hooks/useApi';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
@@ -40,6 +41,34 @@ jest.mock('@react-keycloak/web');
       agencies: ['1'],
       roles: ['admin-properties'],
     },
+  },
+});
+
+// mock useApi hook - for geocoder integration tests
+jest.mock('hooks/useApi');
+((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
+  isPidAvailable: async () => {
+    return { available: true };
+  },
+  getSitePids: async () => {
+    return {
+      siteId: '00000000-0000-0000-0000-000000000000',
+      pids: ['123456789'],
+    };
+  },
+  searchAddress: async () => {
+    return [
+      {
+        siteId: '00000000-0000-0000-0000-000000000000',
+        fullAddress: '525 Superior St, Victoria, BC',
+        address1: '525 Superior St',
+        city: 'Victoria',
+        latitude: 90,
+        longitude: -90,
+        provinceCode: 'BC',
+        score: 83,
+      },
+    ];
   },
 });
 
@@ -102,6 +131,7 @@ const parcelDetailForm = (
     </Router>
   </Provider>
 );
+
 describe('ParcelDetailForm', () => {
   afterEach(() => {
     cleanup();
@@ -171,7 +201,7 @@ describe('ParcelDetailForm', () => {
       });
     });
 
-    it('properly renders EvalutationForm', () => {
+    it('properly renders EvaluationForm', () => {
       const { getByText, getAllByText } = render(parcelDetailForm());
       expect(getByText('Land')).toBeInTheDocument();
       expect(getByText('Improvements')).toBeInTheDocument();
@@ -377,5 +407,20 @@ describe('autosave functionality', () => {
     const { container: updatedContainer } = render(updateForm);
     const address = updatedContainer.querySelector('input[name="address.line1"]');
     expect(address).not.toHaveValue('mockaddress');
+  });
+
+  it('integrates with geocoder endpoints', async () => {
+    const { container, findByText } = render(parcelDetailForm());
+    // type a civic address, then click on first suggestion
+    await fillInput(container, 'address.line1', '525 Superior');
+    const suggestion = await findByText(/525 Superior St/);
+    expect(suggestion).not.toBeNull();
+    act(() => {
+      fireEvent.click(suggestion);
+    });
+    await wait(() => {
+      // assert --> PID value was set
+      expect(getInput(container, 'pid')).toHaveValue('123-456-789');
+    });
   });
 });
