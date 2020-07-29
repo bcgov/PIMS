@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>5697DD19-62CC-4377-ABA8-1E192376F4F6</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
