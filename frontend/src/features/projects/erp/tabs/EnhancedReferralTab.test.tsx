@@ -1,5 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import 'jest-styled-components';
 import { noop } from 'lodash';
 import EnhancedReferralTab from './EnhancedReferralTab';
 import { ReviewWorkflowStatus } from 'features/projects/common';
