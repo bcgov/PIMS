@@ -313,7 +313,7 @@ namespace Pims.Dal.Services
                     }
 
                     // update only an active project with any financial value changes.
-                    if (updateProject && !String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed() ?? false))
+                    if (updateProject && !String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed() ?? false))
                     {
                         this.Context.UpdateProjectFinancials(existingBuilding.ProjectNumber);
                     }
@@ -387,7 +387,8 @@ namespace Pims.Dal.Services
                 }
 
                 // update only an active project with any financial value changes.
-                if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) && (!this.Context.Projects.FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed() ?? false))
+                if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) 
+                    && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed() ?? false))
                 {
                     this.Context.UpdateProjectFinancials(parcel.ProjectNumber);
                 }
