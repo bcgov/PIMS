@@ -239,7 +239,7 @@ namespace Pims.Dal.Services
 
             // Users who don't own the parcel, but only own a building cannot update the parcel.
 
-            if (!allowEdit)
+            if (allowEdit)
             {
                 this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
