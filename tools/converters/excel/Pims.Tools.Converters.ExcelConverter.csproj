@@ -6,6 +6,7 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>61EB1AB8-3717-4A1E-B64F-EF0E36D8081D</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

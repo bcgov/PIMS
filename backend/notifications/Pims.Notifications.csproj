@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <ProjectGuid>3942CAF2-93CE-45BC-A734-3247D266ECE6</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

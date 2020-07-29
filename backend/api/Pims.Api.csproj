@@ -8,6 +8,7 @@
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <ProjectGuid>16BC0468-78F6-4C91-87DA-7403C919E646</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".env" />
