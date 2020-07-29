@@ -28,6 +28,16 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
           <Col>
             <ListGroup>
               <ListGroup.Item>
+                <Label>Name: </Label>
+                {buildingDetail?.name}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Label>Description: </Label>
+                {buildingDetail?.description}
+              </ListGroup.Item>
+            </ListGroup>
+            <ListGroup>
+              <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {buildingDetail?.evaluations
                   ?.find(e => e.key === EvaluationKeys.Assessed)

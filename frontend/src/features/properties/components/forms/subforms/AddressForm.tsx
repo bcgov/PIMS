@@ -9,7 +9,6 @@ import _ from 'lodash';
 import * as API from 'constants/API';
 import { Form, FastInput, Select, AutoCompleteText, SelectOption } from 'components/common/form';
 import { mapLookupCode } from 'utils';
-import { Col } from 'react-bootstrap';
 import { IAddress } from 'actions/parcelsActions';
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { IGeocoderResponse } from 'hooks/useApi';
@@ -68,7 +67,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
 
   return (
     <Fragment>
-      <Col className="addressForm" md={6}>
+      <div className="addressForm">
         <Form.Row>
           <Form.Label column md={2}>
             Street Address
@@ -122,7 +121,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             field={withNameSpace('postal')}
           />
         </Form.Row>
-      </Col>
+      </div>
     </Fragment>
   );
 };

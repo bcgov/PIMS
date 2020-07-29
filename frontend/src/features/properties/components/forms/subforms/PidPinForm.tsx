@@ -15,6 +15,8 @@ export const defaultPidPinFormValues = {
   pid: '',
   pin: '',
   projectNumber: '',
+  name: '',
+  description: '',
 };
 
 /**
@@ -77,6 +79,16 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             disabled={projectNumberDisabled}
             outerClassName="col-md-10"
             field={withNameSpace('projectNumber')}
+          />
+        </Form.Row>
+        <Form.Row>
+          <Form.Label column md={2}>
+            Name
+          </Form.Label>
+          <Input
+            disabled={props.disabled}
+            outerClassName="col-md-10"
+            field={withNameSpace('name')}
           />
         </Form.Row>
       </Col>

@@ -30,6 +30,7 @@ const mockParcel = (agencyId: number, projectNumber?: string) => {
     municipality: 'Test Municipality',
     projectNumber: projectNumber,
     classification: 'Test Classification',
+    name: 'test name',
     description: 'Test Description',
     landArea: 100,
     classificationId: 1,
