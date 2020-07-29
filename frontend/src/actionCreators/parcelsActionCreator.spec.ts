@@ -1,3 +1,10 @@
+import {
+  fetchBuildingDetail,
+  createParcel,
+  updateParcel,
+  deleteParcel,
+} from './parcelsActionCreator';
+import { IBuildingDetailParams } from './../constants/API';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { fetchParcelDetail, fetchParcels } from 'actionCreators/parcelsActionCreator';
@@ -46,6 +53,7 @@ describe('fetchParcels action creator', () => {
       minLandArea: null,
       maxLandArea: null,
       projectNumber: null,
+      inSurplusPropertyProgram: false,
     };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     const mockResponse = { data: { success: true } };
@@ -70,6 +78,7 @@ describe('fetchParcels action creator', () => {
       minLandArea: null,
       maxLandArea: null,
       projectNumber: null,
+      inSurplusPropertyProgram: false,
     };
     const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
@@ -98,6 +107,130 @@ describe('fetchParcelDetail action creator', () => {
     const url = ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
     return fetchParcelDetail(params)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(4);
+    });
+  });
+});
+
+describe('fetchBuildingDetail action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const params: IBuildingDetailParams = { id: 1 };
+    const url = ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params);
+    const mockResponse = { data: { success: true } };
+    mockAxios.onGet(url).reply(200, mockResponse);
+    return fetchBuildingDetail(params)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
+    });
+  });
+
+  it('Request failure, dispatches `error` with correct response', () => {
+    const params: IParcelDetailParams = { id: 1 };
+    const url = ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params);
+    mockAxios.onGet(url).reply(400, MOCK.ERROR);
+    return fetchBuildingDetail(params)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(4);
+    });
+  });
+});
+
+describe('fetchPropertyDetail action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const params: any = { id: 1, propertyTypeId: 0, position: [0, 0] };
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params);
+    const mockResponse = { data: { success: true } };
+    mockAxios.onGet(url).reply(200, mockResponse);
+    return fetchParcelDetail(params)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
+    });
+  });
+
+  it('Request successful, dispatches `success` with correct response', () => {
+    const params: any = { id: 1, propertyTypeId: 0, position: [0, 0] };
+    const url = ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params);
+    const mockResponse = { data: { success: true } };
+    mockAxios.onGet(url).reply(200, mockResponse);
+    return fetchBuildingDetail(params)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
+    });
+  });
+});
+
+describe('createParcel action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT;
+    const mockResponse = { data: { success: true } };
+    mockAxios.onPost(url).reply(200, mockResponse);
+    return createParcel({} as any)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
+    });
+  });
+
+  it('Request successful, dispatches `error` with correct response', () => {
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT;
+    mockAxios.onPost(url).reply(400, MOCK.ERROR);
+    return createParcel({} as any)(dispatch).catch(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(4);
+    });
+  });
+});
+
+describe('updateParcel action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const parcel = { id: 1 } as any;
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`;
+    const mockResponse = { data: { success: true } };
+    mockAxios.onPut(url).reply(200, mockResponse);
+    return updateParcel(parcel)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(6);
+    });
+  });
+
+  it('Request successful, dispatches `error` with correct response', () => {
+    const parcel = { id: 1 } as any;
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`;
+    mockAxios.onPut(url).reply(400, MOCK.ERROR);
+    return updateParcel(parcel)(dispatch).catch(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(4);
+    });
+  });
+});
+
+describe('deleteParcel action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const parcel = { id: 1 } as any;
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`;
+    const mockResponse = { data: { success: true } };
+    mockAxios.onDelete(url).reply(200, mockResponse);
+    return deleteParcel(parcel)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(5);
+    });
+  });
+
+  it('Request successful, dispatches `error` with correct response', () => {
+    const parcel = { id: 1 } as any;
+    const url = ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`;
+    mockAxios.onDelete(url).reply(400, MOCK.ERROR);
+    return deleteParcel(parcel)(dispatch).catch(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);
