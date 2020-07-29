@@ -10,7 +10,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import { IPaginate } from 'utils/CommonFunctions';
-import { formikFieldMemo, getCurrentFiscalYear } from 'utils';
+import { formikFieldMemo, getCurrentFiscalYear, isPositiveNumberOrZero } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import SumFinancialsForm from './SumFinancialsForm';
 
@@ -106,11 +106,11 @@ export const validateFinancials = (
   // Yup has major performance issues with the validation of large arrays.
   // As a result, handle the validation manually here.
   let errors = {};
-  financials.forEach((financial, index) => {
+  filterFutureAssessedValues(financials).forEach((financial, index) => {
     //All financials are required for the current year except appraised.
     if (
       financial.fiscalYear === getCurrentFiscalYear() &&
-      !financial.value &&
+      !isPositiveNumberOrZero(financial.value) &&
       financial.key !== EvaluationKeys.Appraised &&
       financial.key !== FiscalKeys.Estimated &&
       !(
@@ -127,12 +127,12 @@ export const validateFinancials = (
       showAppraisal &&
       financial.date &&
       financial.key === EvaluationKeys.Appraised &&
-      !financial.value
+      !isPositiveNumberOrZero(financial.value)
     ) {
       errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
     } else if (
       showAppraisal &&
-      financial.value &&
+      !isPositiveNumberOrZero(financial.value) &&
       financial.key === EvaluationKeys.Appraised &&
       !financial.date
     ) {
@@ -147,6 +147,13 @@ export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
     return !!evaluation.value || (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date);
   });
 
+export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
+  _.filter(evaluations, evaluation => {
+    return (
+      evaluation.key !== EvaluationKeys.Assessed ||
+      (evaluation.key === EvaluationKeys.Assessed && evaluation.year! <= moment().year())
+    );
+  });
 /**
  * Get the paginated page numbers that contain errors.
  */
@@ -184,6 +191,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   const isFiscal = (type: string) => {
     return Object.keys(FiscalKeys).includes(type);
   };
+  console.log(props);
   return (
     <Fragment>
       <PaginatedFormErrors

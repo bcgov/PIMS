@@ -2,7 +2,7 @@ import React, { memo, useEffect } from 'react';
 import MaskedInput from 'react-text-mask';
 import { FormikProps, getIn, ErrorMessage } from 'formik';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import { formikFieldMemo } from 'utils';
+import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
 import classNames from 'classnames';
 import Form from 'react-bootstrap/Form';
 import TooltipIcon from '../TooltipIcon';
@@ -69,7 +69,7 @@ const CurrencyInput = ({
   value = value ? value : getIn(values, field);
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
-  if (!value) {
+  if (!isPositiveNumberOrZero(value)) {
     value = '';
   }
   useEffect(() => {
