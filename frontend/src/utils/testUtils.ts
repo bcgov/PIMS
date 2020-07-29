@@ -26,4 +26,10 @@ export const fillInput = async (
       fireEvent.blur(input!);
     });
   });
+  return { input };
+};
+
+export const getInput = (container: HTMLElement, name: string, type: string = 'input') => {
+  const input = container.querySelector(`${type}[name="${name}"]`);
+  return input;
 };
