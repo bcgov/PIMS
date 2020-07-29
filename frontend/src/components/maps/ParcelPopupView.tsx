@@ -27,6 +27,16 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
           <Col>
             <ListGroup>
               <ListGroup.Item>
+                <Label>Name: </Label>
+                {parcelDetail?.name}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Label>Description: </Label>
+                {parcelDetail?.description}
+              </ListGroup.Item>
+            </ListGroup>
+            <ListGroup>
+              <ListGroup.Item>
                 <Label>Assessed Value: </Label>$
                 {parcelDetail?.evaluations
                   ?.find(e => e.key === EvaluationKeys.Assessed)

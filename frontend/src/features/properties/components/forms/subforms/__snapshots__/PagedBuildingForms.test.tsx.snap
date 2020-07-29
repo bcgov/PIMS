@@ -79,7 +79,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
         }
       >
         <div
-          className="addressForm col-md-6"
+          className="col-md-6"
         >
           <div
             className="form-row"
@@ -87,95 +87,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <label
               className="form-label col-form-label col-md-2"
             >
-              Street Address
-            </label>
-            <div
-              className="GeocoderAutoComplete"
-            >
-              <div>
-                <div
-                  className="form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-buildings.0.address.line1"
-                    name="buildings.0.address.line1"
-                    onChange={[Function]}
-                    value="line1"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              City
-            </label>
-            <div
-              className="AutoCompleteText"
-            >
-              <div
-                className="form-group"
-              >
-                <input
-                  autoComplete="new-password"
-                  className="form-control"
-                  disabled={true}
-                  id="input-buildings.0.address.cityId"
-                  name="buildings.0.address.cityId"
-                  onChange={[Function]}
-                  required={true}
-                  value="test city"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Province
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-select form-control"
-                disabled={true}
-                id="input-buildings.0.address.provinceId"
-                name="buildings.0.address.provinceId"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="2"
-              >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  className="option"
-                  value="2222"
-                >
-                  test province
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Postal
+              Name
             </label>
             <div
               className="col-md-10 form-group"
@@ -183,18 +95,155 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               <input
                 className="form-control"
                 disabled={true}
-                id="input-buildings.0.address.postal"
-                name="buildings.0.address.postal"
+                id="input-buildings.0.name"
+                name="buildings.0.name"
                 onBlur={[Function]}
                 onChange={[Function]}
-                value="postal"
               />
+            </div>
+          </div>
+          <div
+            className="addressForm"
+          >
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-2"
+              >
+                Street Address
+              </label>
+              <div
+                className="GeocoderAutoComplete"
+              >
+                <div>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-buildings.0.address.line1"
+                      name="buildings.0.address.line1"
+                      onChange={[Function]}
+                      value="line1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-2"
+              >
+                City
+              </label>
+              <div
+                className="AutoCompleteText"
+              >
+                <div
+                  className="form-group"
+                >
+                  <input
+                    autoComplete="new-password"
+                    className="form-control"
+                    disabled={true}
+                    id="input-buildings.0.address.cityId"
+                    name="buildings.0.address.cityId"
+                    onChange={[Function]}
+                    required={true}
+                    value="test city"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-2"
+              >
+                Province
+              </label>
+              <div
+                className="col-md-10 form-group"
+              >
+                <select
+                  className="form-select form-control"
+                  disabled={true}
+                  id="input-buildings.0.address.provinceId"
+                  name="buildings.0.address.provinceId"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  value="2"
+                >
+                  <option
+                    value=""
+                  >
+                    Must Select One
+                  </option>
+                  <option
+                    className="option"
+                    value="2222"
+                  >
+                    test province
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div
+              className="form-row"
+            >
+              <label
+                className="form-label col-form-label col-md-2"
+              >
+                Postal
+              </label>
+              <div
+                className="col-md-10 form-group"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-buildings.0.address.postal"
+                  name="buildings.0.address.postal"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  value="postal"
+                />
+              </div>
             </div>
           </div>
         </div>
         <div
           className="col-md-6"
         >
+          <div
+            className="form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-2"
+            >
+              Description
+            </label>
+            <div
+              className="col-md-10 form-group"
+            >
+              <span>
+                <textarea
+                  className="form-control"
+                  disabled={true}
+                  id="input-buildings.0.description"
+                  name="buildings.0.description"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  value="description"
+                />
+              </span>
+            </div>
+          </div>
           <div
             className="form-row"
           >
@@ -378,6 +427,39 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               />
             </div>
           </div>
+          <div
+            className="form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-2"
+            >
+              Classification
+            </label>
+            <div
+              className="col-md-10 form-group"
+            >
+              <select
+                className="form-control"
+                disabled={true}
+                id="input-buildings.0.classificationId"
+                name="buildings.0.classificationId"
+                onChange={[Function]}
+                type="number"
+                value={16}
+              >
+                <option
+                  value=""
+                >
+                  Must Select One
+                </option>
+                <option
+                  value="1"
+                >
+                  classification test
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
         <div
           className="col-md-6"
@@ -454,39 +536,6 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   value="projectNumber"
                 />
               </span>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Classification
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.classificationId"
-                name="buildings.0.classificationId"
-                onChange={[Function]}
-                type="number"
-                value={16}
-              >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  value="1"
-                >
-                  classification test
-                </option>
-              </select>
             </div>
           </div>
         </div>
