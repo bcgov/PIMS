@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -676,6 +677,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
+                .Include(p => p.Responses)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
@@ -741,10 +743,10 @@ namespace Pims.Dal.Services
                     var now = DateTime.UtcNow;
                     originalProject.ApprovedOn = now;
                     // Default notification dates.
-                    originalProject.InitialNotificationSentOn = now;
-                    originalProject.ThirtyDayNotificationSentOn = now.AddDays(30);
-                    originalProject.SixtyDayNotificationSentOn = now.AddDays(60);
-                    originalProject.NinetyDayNotificationSentOn = now.AddDays(90);
+                    project.InitialNotificationSentOn = now;
+                    project.ThirtyDayNotificationSentOn = now.AddDays(30);
+                    project.SixtyDayNotificationSentOn = now.AddDays(60);
+                    project.NinetyDayNotificationSentOn = now.AddDays(90);
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
@@ -779,7 +781,7 @@ namespace Pims.Dal.Services
                 case ("DIS"): // DISPOSED
                     if (project.DisposedOn == null) throw new InvalidOperationException("Disposed status requires Disposed Notification Sent date.");
                     this.Context.DisposeProjectProperties(originalProject);
-                    originalProject.DisposedOn = DateTime.UtcNow;
+                    project.DisposedOn = DateTime.UtcNow;
                     originalProject.CompletedOn = DateTime.UtcNow;
                     break;
                 case ("ERP-OH"): // OnHold
@@ -804,7 +806,8 @@ namespace Pims.Dal.Services
             // Update a project
             originalProject.StatusId = toStatus.Id;
             originalProject.Status = toStatus;
-            originalProject.Metadata = project.Metadata;
+
+            originalProject.Metadata = JsonConvert.SerializeObject(project);
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 
