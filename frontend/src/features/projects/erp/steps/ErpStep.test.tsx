@@ -57,6 +57,26 @@ describe('ERP Approval Step', () => {
     const tree = renderer.create(getApprovalStep()).toJSON();
     expect(tree).toMatchSnapshot();
   });
+  describe('ERP tab Display', () => {
+    beforeAll(() => {
+      mockKeycloak([Claims.ADMIN_PROJECTS]);
+    });
+    it('Displays Project Information Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.projectInformation);
+      const { getByText } = render(getApprovalStep(store));
+      expect(getByText(/Project No\./)).toBeVisible();
+    });
+    it('Displays Documentation Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.documentation);
+      const { getByText } = render(getApprovalStep(store));
+      expect(getByText(/First Nations Consultation/)).toBeVisible();
+    });
+    it('Displays ERP Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.erp);
+      const { getByText } = render(getApprovalStep(store));
+      expect(getByText(/Enhanced Referral Process Complete/)).toBeVisible();
+    });
+  });
   describe('Display when user has required claims', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);

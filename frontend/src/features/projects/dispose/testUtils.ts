@@ -292,6 +292,7 @@ export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
     [reducerTypes.NETWORK]: {
       [ProjectActions.GET_PROJECT]: {},
     },
+    [reducerTypes.ProjectReducers.ERP_TAB]: tab,
     [reducerTypes.ProjectReducers.SPL_TAB]: tab,
   });
 
