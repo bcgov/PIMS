@@ -9,6 +9,7 @@ import {
   getSubmitAdminAccessRequestAction,
   getAccessRequestsAction,
   getAccessRequestsDeleteAction,
+  getSubmitAccessRequestAction,
 } from './accessRequestActionCreator';
 
 const dispatch = jest.fn();
@@ -41,6 +42,32 @@ describe('getCurrentAccessRequestAction action creator', () => {
     const url = ENVIRONMENT.apiUrl + API.REQUEST_ACCESS();
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
     return getCurrentAccessRequestAction()(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(4);
+    });
+  });
+});
+
+describe('getSubmitAccessRequestAction action creator', () => {
+  it('Request successful, dispatches `success` with correct response', () => {
+    const accessRequest = { id: 0 } as any;
+    const url = ENVIRONMENT.apiUrl + API.REQUEST_ACCESS();
+    const mockResponse = { data: { success: true } };
+
+    mockAxios.onPost(url).reply(200, mockResponse);
+    return getSubmitAccessRequestAction(accessRequest)(dispatch).then(() => {
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledTimes(5);
+    });
+  });
+
+  it('Request failure, dispatches `error` with correct response', () => {
+    const accessRequest = { id: 0 } as any;
+    const url = ENVIRONMENT.apiUrl + API.REQUEST_ACCESS();
+    mockAxios.onPost(url).reply(400, MOCK.ERROR);
+    return getSubmitAccessRequestAction(accessRequest)(dispatch).then(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);
