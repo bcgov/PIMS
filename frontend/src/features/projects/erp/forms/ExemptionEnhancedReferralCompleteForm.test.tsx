@@ -37,14 +37,15 @@ const testProject: IProject = {
   netBook: 1,
   estimated: 1,
   properties: [],
-  clearanceNotificationSentOn: new Date(),
-  transferredWithinGreOn: new Date(),
+  clearanceNotificationSentOn: new Date(Date.UTC(2020, 5, 9, 8)),
+  transferredWithinGreOn: new Date(Date.UTC(2020, 5, 9, 8)),
   note: 'string',
   publicNote: '',
   privateNote: 'string',
   tasks: [],
   fiscalYear: 2021,
   projectAgencyResponses: [],
+  notes: [],
 };
 
 const FormComponent: React.FC<{
@@ -66,7 +67,7 @@ const FormComponent: React.FC<{
 );
 
 describe('ExemptionEnhancedReferralCompleteForm', () => {
-  xit('Should render successfully', () => {
+  it('Should render successfully', () => {
     const tree = renderer
       .create(
         <FormComponent
