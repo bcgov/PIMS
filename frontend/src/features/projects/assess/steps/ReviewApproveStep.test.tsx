@@ -21,6 +21,7 @@ import Enzyme from 'enzyme';
 import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { IProperty } from 'features/properties/list/interfaces';
+import { act } from 'react-dom/test-utils';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -39,6 +40,7 @@ const mockKeycloak = (claims: string[]) => {
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+const mockAxios = new MockAdapter(axios);
 
 const mockTasks: IProjectTask[] = [
   {
@@ -132,7 +134,8 @@ const mockProject = (tasks: any) => {
     id: 1,
     fiscalYear: 2020,
     projectAgencyResponses: [],
-  } as IProject;
+    notes: [],
+  } as any;
 };
 
 export const tasks: ITask[] = [
@@ -176,7 +179,6 @@ describe('Review Approve Step', () => {
     jest.clearAllMocks();
   });
   beforeEach(() => {
-    const mockAxios = new MockAdapter(axios);
     mockAxios.onAny().reply(200, {});
     mockKeycloak([]);
   });
@@ -194,6 +196,39 @@ describe('Review Approve Step', () => {
     const { queryByText } = render(getReviewApproveStep());
     const editButton = queryByText(/Edit/);
     expect(editButton).toBeFalsy();
+  });
+
+  it('Review step submits correctly', async done => {
+    mockAxios.reset();
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: [1],
+          roles: Claims.ADMIN_PROJECTS,
+        },
+        subject: 'test',
+      },
+    });
+    let component: any;
+    act(() => {
+      component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
+    });
+    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+      return node.type() === Button && node.text() === 'Save';
+    });
+
+    mockAxios
+      .onPut()
+      .reply((config: any) => {
+        done();
+        return [200, Promise.resolve({})];
+      })
+      .onAny()
+      .reply((config: any) => {
+        return [200, Promise.resolve({})];
+      });
+
+    button.simulate('click');
   });
 });
 

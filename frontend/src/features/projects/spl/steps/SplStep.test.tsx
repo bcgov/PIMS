@@ -58,6 +58,36 @@ describe('SPL Approval Step', () => {
     const tree = renderer.create(getSplStep()).toJSON();
     expect(tree).toMatchSnapshot();
   });
+  describe('SPL tab Display', () => {
+    beforeAll(() => {
+      mockKeycloak([Claims.ADMIN_PROJECTS]);
+    });
+    it('Displays Project Information Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.projectInformation);
+      const { getByText } = render(getSplStep(store));
+      expect(getByText(/Project No\./)).toBeVisible();
+    });
+    it('Displays Documentation Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.documentation);
+      const { getByText } = render(getSplStep(store));
+      expect(getByText(/First Nations Consultation/)).toBeVisible();
+    });
+    it('Displays ERP Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.erp);
+      const { getByText } = render(getSplStep(store));
+      expect(getByText(/Enhanced Referral Process Complete/)).toBeVisible();
+    });
+    it('Displays SPL Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.spl);
+      const { getByText } = render(getSplStep(store));
+      expect(getByText(/Date Entered Market/)).toBeVisible();
+    });
+    it('Displays close out Tab', () => {
+      const store = getStore(mockProject, SPPApprovalTabs.closeOutForm);
+      const { getByText } = render(getSplStep(store));
+      expect(getByText(/Signed by Chief Financial Officer/)).toBeVisible();
+    });
+  });
   describe('Display when user has required claims', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
