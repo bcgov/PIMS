@@ -753,7 +753,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                         onBlur={[Function]}
                         onChange={[Function]}
                         placeholder="$0"
-                        value=""
+                        value={0}
                       />
                     </div>
                   </div>
