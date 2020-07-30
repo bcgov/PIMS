@@ -25,6 +25,7 @@ const mockBuilding = (agencyId: number) => {
     id: 1,
     parcelId: 1,
     localId: 'string',
+    name: 'test name',
     description: 'Test description',
     address: ([
       {

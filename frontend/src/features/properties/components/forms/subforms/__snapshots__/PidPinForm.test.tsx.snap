@@ -137,6 +137,28 @@ exports[`PidPin sub-form renders correctly 1`] = `
         </span>
       </div>
     </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="form-label col-form-label col-md-2"
+      >
+        Name
+      </label>
+      <div
+        className="col-md-10 form-group"
+      >
+        <span>
+          <input
+            className="form-control"
+            id="input-name"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+          />
+        </span>
+      </div>
+    </div>
   </div>
 </form>
 `;

@@ -158,60 +158,144 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   </span>
                 </div>
               </div>
-            </div>
-            <div
-              className="addressForm col-md-6"
-            >
               <div
                 className="form-row"
               >
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Street Address
+                  Name
                 </label>
                 <div
-                  className="GeocoderAutoComplete"
+                  className="col-md-10 form-group"
                 >
-                  <div>
+                  <span>
+                    <input
+                      className="form-control"
+                      disabled={true}
+                      id="input-name"
+                      name="name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value="test name"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              className="col-md-6"
+            >
+              <div
+                className="addressForm"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Street Address
+                  </label>
+                  <div
+                    className="GeocoderAutoComplete"
+                  >
+                    <div>
+                      <div
+                        className="form-group"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={true}
+                          id="input-address.line1"
+                          name="address.line1"
+                          onChange={[Function]}
+                          value="1234 mock Street"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    City
+                  </label>
+                  <div
+                    className="AutoCompleteText"
+                  >
                     <div
                       className="form-group"
                     >
                       <input
+                        autoComplete="new-password"
                         className="form-control"
                         disabled={true}
-                        id="input-address.line1"
-                        name="address.line1"
+                        id="input-address.cityId"
+                        name="address.cityId"
                         onChange={[Function]}
-                        value="1234 mock Street"
+                        required={true}
+                        value=""
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-2"
-                >
-                  City
-                </label>
                 <div
-                  className="AutoCompleteText"
+                  className="form-row"
                 >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Province
+                  </label>
                   <div
-                    className="form-group"
+                    className="col-md-10 form-group"
+                  >
+                    <select
+                      className="form-select form-control"
+                      disabled={true}
+                      id="input-address.provinceId"
+                      name="address.provinceId"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value="1"
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                      <option
+                        className="option"
+                        value="2222"
+                      >
+                        test province
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label col-form-label col-md-2"
+                  >
+                    Postal
+                  </label>
+                  <div
+                    className="col-md-10 form-group"
                   >
                     <input
-                      autoComplete="new-password"
                       className="form-control"
                       disabled={true}
-                      id="input-address.cityId"
-                      name="address.cityId"
+                      id="input-address.postal"
+                      name="address.postal"
+                      onBlur={[Function]}
                       onChange={[Function]}
-                      required={true}
-                      value=""
+                      value="V1V1V1"
                     />
                   </div>
                 </div>
@@ -222,54 +306,22 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <label
                   className="form-label col-form-label col-md-2"
                 >
-                  Province
+                  Description
                 </label>
                 <div
                   className="col-md-10 form-group"
                 >
-                  <select
-                    className="form-select form-control"
-                    disabled={true}
-                    id="input-address.provinceId"
-                    name="address.provinceId"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="1"
-                  >
-                    <option
-                      value=""
-                    >
-                      Must Select One
-                    </option>
-                    <option
-                      className="option"
-                      value="2222"
-                    >
-                      test province
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-2"
-                >
-                  Postal
-                </label>
-                <div
-                  className="col-md-10 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-address.postal"
-                    name="address.postal"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="V1V1V1"
-                  />
+                  <span>
+                    <textarea
+                      className="form-control"
+                      disabled={true}
+                      id="input-description"
+                      name="description"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value="test"
+                    />
+                  </span>
                 </div>
               </div>
             </div>

@@ -34,6 +34,7 @@ export const defaultLandValues: IParcel = {
   agency: undefined,
   agencyId: '',
   address: undefined,
+  name: '',
   description: '',
   landLegalDescription: '',
   pin: '',

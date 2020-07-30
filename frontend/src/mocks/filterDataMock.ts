@@ -126,6 +126,7 @@ export const mockDetails = [
     longitude: 123,
     propertyStatus: 'active',
     classification: 'Core Operational',
+    name: 'test name',
     description: 'test',
     evaluations: [
       {
@@ -168,6 +169,7 @@ export const mockDetails = [
     latitude: 50,
     longitude: 133,
     classification: 'Core Operational',
+    name: 'test name',
     description: 'test',
     address: {
       line1: '1234 mock Street',
@@ -213,6 +215,7 @@ export const ACTIVE = {
   latitude: 48,
   longitude: 123,
   classification: 'Core Operational',
+  name: 'test name',
   description: 'test',
   evaluations: [
     {

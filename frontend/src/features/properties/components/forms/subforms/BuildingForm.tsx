@@ -18,6 +18,7 @@ import {
   Input,
   AutoCompleteText,
   SelectOption,
+  TextArea,
 } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
@@ -33,6 +34,7 @@ export interface IFormBuilding extends IBuilding {
 
 export const defaultBuildingValues: any = {
   id: 0,
+  name: '',
   localId: '',
   projectNumber: '',
   description: '',
@@ -151,13 +153,36 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
   return (
     <Fragment>
       <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
-        <AddressForm
-          {...props}
-          nameSpace={withNameSpace('address')}
-          disabled={props.disabled || readonly}
-          onGeocoderChange={handleGeocoderChanges}
-        />
         <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Name
+            </Form.Label>
+            <FastInput
+              formikProps={props}
+              disabled={props.disabled || readonly}
+              outerClassName="col-md-10"
+              field={withNameSpace('name')}
+            />
+          </Form.Row>
+          <AddressForm
+            {...props}
+            nameSpace={withNameSpace('address')}
+            disabled={props.disabled || readonly}
+            onGeocoderChange={handleGeocoderChanges}
+          />
+        </Col>
+        <Col md={6}>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Description
+            </Form.Label>
+            <TextArea
+              disabled={props.disabled || readonly}
+              outerClassName="col-md-10"
+              field={withNameSpace('description')}
+            />
+          </Form.Row>
           <Form.Row>
             <Form.Label column md={2}>
               Type of Construction
@@ -240,6 +265,20 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               field={withNameSpace('longitude')}
             />
           </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Classification
+            </Form.Label>
+            <FastSelect
+              formikProps={props}
+              disabled={props.disabled || readonly}
+              outerClassName="col-md-10"
+              placeholder="Must Select One"
+              field={withNameSpace('classificationId')}
+              type="number"
+              options={classifications}
+            />
+          </Form.Row>
         </Col>
         <Col md={6}>
           <Form.Row>
@@ -274,20 +313,6 @@ const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
               disabled={projectNumberDisabled || props.disabled}
               outerClassName="col-md-10"
               field={withNameSpace('projectNumber')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Classification
-            </Form.Label>
-            <FastSelect
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              placeholder="Must Select One"
-              field={withNameSpace('classificationId')}
-              type="number"
-              options={classifications}
             />
           </Form.Row>
         </Col>
