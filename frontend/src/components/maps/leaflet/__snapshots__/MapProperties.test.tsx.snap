@@ -23,6 +23,36 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           <p
             className="label"
           >
+            Name: 
+          </p>
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Description: 
+          </p>
+          test
+        </div>
+      </div>
+      <div
+        className="list-group"
+        onKeyDown={[Function]}
+      >
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
             Assessed Value: 
           </p>
           $

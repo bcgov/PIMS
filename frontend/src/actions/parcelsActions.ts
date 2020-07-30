@@ -47,6 +47,7 @@ export interface IBuilding {
   parcelId: number;
   localId: string;
   projectNumber?: string;
+  name: string;
   description: string;
   address: IAddress;
   latitude: number | '';
@@ -98,6 +99,7 @@ export interface IParcel {
   longitude: number | '';
   classification?: string;
   classificationId: number | '';
+  name: string;
   description: string;
   address?: IAddress;
   landArea: number | '';

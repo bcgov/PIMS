@@ -67,6 +67,9 @@ export const Financial = Yup.object().shape({
 
 export const Building = Yup.object().shape({
   localId: Yup.string().max(50, 'LocalId must be less then 50 characters'),
+  name: Yup.string()
+    .max(150, 'Name must be less then 150 characters')
+    .nullable(),
   description: Yup.string()
     .max(2000, 'Description must be less than 2000 characters')
     .nullable(),
@@ -116,6 +119,9 @@ export const LandSchema = Yup.object().shape({
     .matches(/\d*/, 'Invalid Classification')
     .nullable(),
   address: Address.required(),
+  name: Yup.string()
+    .max(150, 'Name must be less then 150 characters')
+    .nullable(),
   description: Yup.string()
     .max(2000, 'Description must be less than 2000 characters')
     .nullable(),

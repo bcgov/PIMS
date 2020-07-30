@@ -16,7 +16,7 @@ import EvaluationForm, {
 import './ParcelDetailForm.scss';
 import { useHistory } from 'react-router-dom';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
-import { Form } from 'components/common/form';
+import { Form, TextArea } from 'components/common/form';
 
 import { IParcel } from 'actions/parcelsActions';
 import { clear } from 'actions/genericActions';
@@ -308,12 +308,24 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   <h3>Parcel Information</h3>
                   <Form.Row className="pidPinForm">
                     <PidPinForm disabled={props.disabled || !allowEdit} />
-                    <AddressForm
-                      onGeocoderChange={handleGeocoderChanges}
-                      {...formikProps}
-                      disabled={props.disabled || !allowEdit}
-                      nameSpace="address"
-                    />
+                    <Col md={6}>
+                      <AddressForm
+                        onGeocoderChange={handleGeocoderChanges}
+                        {...formikProps}
+                        disabled={props.disabled || !allowEdit}
+                        nameSpace="address"
+                      />
+                      <Form.Row>
+                        <Form.Label column md={2}>
+                          Description
+                        </Form.Label>
+                        <TextArea
+                          disabled={props.disabled || !allowEdit}
+                          outerClassName="col-md-10"
+                          field="description"
+                        />
+                      </Form.Row>
+                    </Col>
                   </Form.Row>
                 </Col>
               </Row>
