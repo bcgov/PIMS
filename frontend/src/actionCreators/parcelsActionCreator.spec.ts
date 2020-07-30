@@ -10,7 +10,7 @@ import axios from 'axios';
 import { fetchParcelDetail, fetchParcels } from 'actionCreators/parcelsActionCreator';
 import * as genericActions from 'actions/genericActions';
 import * as API from 'constants/API';
-import { IParcelListParams, IParcelDetailParams } from 'constants/API';
+import { IPropertySearchParams, IParcelDetailParams } from 'constants/API';
 import * as MOCK from 'mocks/dataMocks';
 import { ENVIRONMENT } from 'constants/environment';
 
@@ -30,7 +30,7 @@ beforeEach(() => {
 
 describe('fetchParcels action creator', () => {
   it('Null Params - Request successful, dispatches `success` with correct response', () => {
-    const url = ENVIRONMENT.apiUrl + API.PARCELS(null);
+    const url = ENVIRONMENT.apiUrl + API.PROPERTIES(null);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
     return fetchParcels(null)(dispatch).then(() => {
@@ -41,7 +41,7 @@ describe('fetchParcels action creator', () => {
   });
 
   it('Request successful, dispatches `success` with correct response', () => {
-    const params: IParcelListParams = {
+    const params: IPropertySearchParams = {
       neLatitude: 1,
       neLongitude: 2,
       swLatitude: 3,
@@ -55,7 +55,7 @@ describe('fetchParcels action creator', () => {
       projectNumber: null,
       inSurplusPropertyProgram: false,
     };
-    const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
+    const url = ENVIRONMENT.apiUrl + API.PROPERTIES(params);
     const mockResponse = { data: { success: true } };
     mockAxios.onGet(url).reply(200, mockResponse);
     return fetchParcels(params)(dispatch)!.then(() => {
@@ -66,7 +66,7 @@ describe('fetchParcels action creator', () => {
   });
 
   it('Request failure, dispatches `error` with correct response', () => {
-    const params: IParcelListParams = {
+    const params: IPropertySearchParams = {
       neLatitude: 1,
       neLongitude: 2,
       swLatitude: 3,
@@ -80,7 +80,7 @@ describe('fetchParcels action creator', () => {
       projectNumber: null,
       inSurplusPropertyProgram: false,
     };
-    const url = ENVIRONMENT.apiUrl + API.PARCELS(params);
+    const url = ENVIRONMENT.apiUrl + API.PROPERTIES(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
     return fetchParcels(params)(dispatch).then(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);

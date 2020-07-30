@@ -79,6 +79,7 @@ export interface IProperty {
 export interface IPropertyFilter {
   page: number;
   quantity: number;
+  pid?: string;
   address?: string;
   municipality?: string;
   projectNumber?: string;

@@ -27,6 +27,25 @@ exports[`renders correctly 1`] = `
             className="bar-item col"
           >
             <div
+              className="form-group"
+            >
+              <span>
+                <input
+                  className="form-control"
+                  id="input-pid"
+                  name="pid"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="Enter PID or PIN"
+                  value=""
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="bar-item col"
+          >
+            <div
               className="input-group"
             >
               <div

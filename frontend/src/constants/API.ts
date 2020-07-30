@@ -25,7 +25,8 @@ export interface IPaginateAccessRequests extends IPaginateParams {
 }
 
 // Parcels
-export interface IParcelListParams {
+export interface IPropertySearchParams {
+  pid?: string | null;
   neLatitude: number;
   neLongitude: number;
   swLatitude: number;
@@ -41,8 +42,9 @@ export interface IParcelListParams {
   inSurplusPropertyProgram: boolean | null;
   inEnhancedReferralProcess?: boolean;
 }
-export const PARCELS = (params: IParcelListParams | null) =>
+export const PROPERTIES = (params: IPropertySearchParams | null) =>
   `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+
 export interface IParcelDetailParams {
   id: number;
 }
