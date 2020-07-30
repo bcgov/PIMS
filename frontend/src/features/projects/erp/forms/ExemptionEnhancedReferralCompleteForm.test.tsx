@@ -91,7 +91,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it.only('requires Clearance Notification Date to be set before enabling action buttons', async () => {
+  it('disables form buttons when Clearance Notification Date is empty', async () => {
     // need a ref here to change field values programmatically
     const formikRef = React.createRef<FormikProps<any>>();
     const { findByRole } = render(
@@ -117,6 +117,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     act(() => {
       setClearanceDate('');
     });
+
     expect(await findButton('Add to Enhanced Referral Process')).toBeDisabled();
     expect(await findButton('Update Property Information')).toBeDisabled();
     expect(await findButton('Not Included in the SPL')).toBeDisabled();
@@ -126,14 +127,18 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     act(() => {
       setClearanceDate(new Date(Date.UTC(2020, 5, 9, 8)));
     });
+
     expect(await findButton('Add to Enhanced Referral Process')).toBeEnabled();
     expect(await findButton('Not Included in the SPL')).toBeEnabled();
     expect(await findButton('Proceed to SPL')).toBeEnabled();
 
     // ASSERT - GRE button should be enabled ONLY when GRE date set
+    expect(await findButton('Update Property Information')).toBeDisabled();
+
     act(() => {
       setTransferredGreDate(new Date(Date.UTC(2020, 5, 9, 8)));
     });
+
     expect(await findButton('Update Property Information')).toBeEnabled();
   });
 
