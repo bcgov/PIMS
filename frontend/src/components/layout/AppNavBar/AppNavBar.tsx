@@ -102,8 +102,9 @@ function AdminDropdown() {
  */
 function ViewProjects() {
   const keycloak = useKeycloakWrapper();
+  const history = useHistory();
   return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
-    <Nav.Link href="/projects/list">View Projects</Nav.Link>
+    <Nav.Link onClick={() => history.push('/projects/list')}>View Projects</Nav.Link>
   ) : null;
 }
 
@@ -112,8 +113,11 @@ function ViewProjects() {
  */
 function ViewProjectApprovalRequests() {
   const keycloak = useKeycloakWrapper();
+  const history = useHistory();
   return keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
-    <Nav.Link href="/projects/approval/requests">Approval Requests</Nav.Link>
+    <Nav.Link onClick={() => history.push('/projects/approval/requests')}>
+      Approval Requests
+    </Nav.Link>
   ) : null;
 }
 
