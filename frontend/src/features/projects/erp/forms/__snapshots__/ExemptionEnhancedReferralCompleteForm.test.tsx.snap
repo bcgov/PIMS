@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExemptionEnhancedReferralCompleteForm Should render successfully 1`] = `
+exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
 <form
   action="#"
   onReset={[Function]}
