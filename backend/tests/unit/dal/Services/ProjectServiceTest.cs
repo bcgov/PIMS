@@ -828,6 +828,45 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             result.Notes.Should().Contain(projectNote);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
+        }
+
+        [Fact]
+        public async void Update_SharedNote()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var project = init.CreateProject(1);
+            var template = init.CreateNotificationTemplate(1, "Project Shared Note Changed");
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(new NotificationQueue(template, "test@test.com", template.Subject, template.Body));
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.PublicNote = "changed value";
+            var result = await service.UpdateAsync(projectToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PublicNote.Should().Be(project.PublicNote);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
@@ -1902,6 +1941,44 @@ namespace Pims.Dal.Test.Services
             // Act
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, workflowCode));
+        }
+
+        [Fact]
+        public async void SetStatus_SharedNote()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectView, Permissions.ProjectEdit).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+
+            var project = init.CreateProject(1);
+            var template = init.CreateNotificationTemplate(1, "Project Shared Note Changed");
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), It.IsAny<string>())).Returns(new NotificationQueue(template, "test@test.com", template.Subject, template.Body));
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
+            var workflow = init.Workflows.FirstOrDefault(w => w.Code == "ASSESS-DISPOSAL");
+
+            // Act
+            var projectToUpdate = service.Get(project.ProjectNumber);
+            projectToUpdate.PublicNote = "changed value";
+            var result = await service.SetStatusAsync(projectToUpdate, workflow);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PublicNote.Should().Be(project.PublicNote);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Once());
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
 
         [Fact]
