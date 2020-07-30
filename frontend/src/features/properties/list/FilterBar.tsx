@@ -113,7 +113,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         minLotSize: '',
         maxLotSize: '',
         parcelId: '',
-        propertyType: '0',
+        propertyType: '',
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
