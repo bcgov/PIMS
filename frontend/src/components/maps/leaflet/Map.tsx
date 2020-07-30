@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
 import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer } from 'react-leaflet';
-import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
@@ -153,7 +153,13 @@ const Map: React.FC<MapProps> = ({
     onViewportChanged?.(e);
   };
 
-  const onZoomEnd = (event: LeafletEvent) => dispatch(setMapViewZoom(event.target._zoom));
+  const onZoomEnd = (event: LeafletEvent) => {
+    dispatch(setMapViewZoom(event.target._zoom));
+  };
+
+  const closeMarkerPopup = (event: LeafletEvent) => {
+    dispatch(storeParcelDetail(null));
+  };
 
   const handleMapFilterChange = (e: MapFilterChangeEvent) => {
     setMapFilter(e);
@@ -258,6 +264,7 @@ const Map: React.FC<MapProps> = ({
             onclick={onMapClick}
             closePopupOnClick={interactive}
             onzoomend={onZoomEnd}
+            onzoomstart={closeMarkerPopup}
             onmoveend={updateMap}
           >
             {activeBasemap && (
