@@ -1,0 +1,22 @@
+.legend-control {
+  &.card {
+    min-width: 200px;
+    .card-header {
+      margin-bottom: 0;
+      border-bottom: none;
+      background-color: #fff;
+      font-weight: 900;
+    }
+    .card-body {
+      padding-top: 0px;
+      padding-bottom: 5px;
+      .row {
+        margin-top: 5px;
+        .col {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

@@ -144,7 +144,10 @@ export const validateFinancials = (
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   _.filter(evaluations, evaluation => {
-    return !!evaluation.value || (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date);
+    return (
+      isPositiveNumberOrZero(evaluation.value) ||
+      (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date)
+    );
   });
 
 export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
