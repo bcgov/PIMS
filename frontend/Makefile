@@ -38,36 +38,49 @@ help:
 local: | local-build local-run ## Runs the steps for local (non-docker) development
 
 test: | lint ## Runs frontend unit tests via Jest
-	@echo "$(P) Running the unit tests..."
+	@echo -e "\n$(P) Running the unit tests..."
 	@npm run test -- -u
 
 format: ## Runs prettier on local filesystem
-	@echo "$(P) Formatting the codebase..."
+	@echo -e "\n$(P) Formatting the codebase..."
 	@npm run format
 
 lint: | format ## Runs the linter on local filesystem
-	@echo "$(P) Running the linter..."
+	@echo -e "\n$(P) Running the linter..."
 	@npm run lint
 
 local-clean: ## Purges node_modules on local filesystem
-	@echo "$(P) Cleaning..."
+	@echo -e "\n$(P) Cleaning node_modules..."
 	@rm -rf node_modules
 	@rm -rf $(BUILD_DIR)
 
 local-install: ## Installs NPM dependencies on local filesystem
-	@echo "$(P) Installing dependencies..."
+	@echo -e "\n$(P) Installing dependencies..."
 	@npm ci
 
 local-build: ## Builds the frontend app on local filesystem
-	@echo "$(P) Building in release mode..."
+	@echo -e "\n$(P) Building in release mode..."
 	@npm run build
 
 local-run: ## Serves the frontend via webpack-dev-server
-	@echo "$(P) Removing frontend docker container and building local dev version..."
+	@echo -e "\n$(P) Removing frontend docker container and building local dev version..."
 	@docker-compose rm -f -v -s frontend
 	@npm run start
 
-.PHONY: local test format lint local-clean local-install local-build local-run rebuild-all-local-friendly-message
+needs-rebase:
+	$(eval GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD))
+	@echo -e "\n$(P) Checking if current branch '$(GIT_BRANCH)' is up-to-date with 'upstream/dev'..."
+	@git fetch --all
+	$(eval HASH1 := $(shell git rev-parse --verify upstream/dev))
+	@echo "git-hash 1: $(HASH1)"
+	$(eval HASH2 := $(shell git merge-base upstream/dev "$(GIT_BRANCH)"))
+	@echo "git-hash 2: $(HASH2)"
+	@[ "$(HASH1)" = "$(HASH2)" ] && echo -e "OK" || (echo -e "\nFAIL: Rebase is required. Aborting.\n"; exit 1)
+
+pr: | needs-rebase test local-build ## Runs various checks before a pull request is submitted
+	@echo -e "\n$(P) All checks PASSED. Pull request can be submitted..."
+
+.PHONY: local test format lint local-clean local-install local-build local-run rebuild-all-local-friendly-message pr
 
 ##############################################################################
 # Docker Development
@@ -78,29 +91,29 @@ docker: | build run rebuild-all-local-friendly-message ## Builds and runs the do
 restart: | stop build run rebuild-all-local-friendly-message ## Rebuilds the docker containers
 
 build-all: ## Rebuilds all docker containers for this project
-	@echo "$(P) Building images..."
+	@echo -e "\n$(P) Building images..."
 	@docker-compose build --force-rm --no-cache
 
 build: ## Builds the frontend container
-	@echo "$(P) Building images..."
+	@echo -e "\n$(P) Building images..."
 	@docker-compose build --force-rm --no-cache frontend
 
 run: ## Runs the frontend docker container
-	@echo "$(P) Running client and server..."
+	@echo -e "\n$(P) Running client and server..."
 	@docker-compose up -d
 
 stop: ## Tears down the docker development containers
-	@echo "$(P) Stopping client and server..."
+	@echo -e "\n$(P) Stopping client and server..."
 	@docker-compose down
 
 clean: ## Removes local docker containers, images, volumes, etc
-	@echo "$(P) Removing containers, images, volumes etc..."
+	@echo -e "\n$(P) Removing containers, images, volumes etc..."
 	@echo "$(P) Note: does not clear image cache."
 	@docker-compose rm -f -v -s frontend
 	@docker volume rm -f pims-frontend-node-cache
 
 rebuild-all-local-friendly-message:
-	@echo "$(P) pims_frontend will be available at http://localhost:3000"
+	@echo -e "\n$(P) pims_frontend will be available at http://localhost:3000"
 	@echo "$(P) pims_backend will be available at http://localhost:5000"
 	@echo "$(P) pims_database will be available at http://localhost:5433"
 	@echo "$(P) pims_keycloak will be available at http://keycloak:8080"
