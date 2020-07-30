@@ -24,6 +24,7 @@ const getServerQuery = (state: {
     pageSize,
     agencyIds,
     filter: {
+      pid,
       address,
       municipality,
       projectNumber,
@@ -42,6 +43,7 @@ const getServerQuery = (state: {
 
   const query: IPropertyFilter = {
     ...initialQuery,
+    pid,
     address,
     municipality,
     projectNumber,

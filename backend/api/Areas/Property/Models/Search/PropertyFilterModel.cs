@@ -124,6 +124,11 @@ namespace Pims.Api.Areas.Property.Models.Search
 
         #region Parcel Filters
         /// <summary>
+        /// get/set - The parcel PID.
+        /// </summary>
+        public string PID { get; set; }
+
+        /// <summary>
         /// get/set - The property municipality.
         /// </summary>
         /// <value></value>
@@ -204,6 +209,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 return this.StatusId.HasValue
                     || this.ClassificationId.HasValue
                     || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || !String.IsNullOrWhiteSpace(this.PID)
                     || !String.IsNullOrWhiteSpace(this.Municipality)
                     || this.MinLotArea.HasValue
                     || this.MaxLotArea.HasValue
@@ -288,6 +294,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
 
             // Parcel filters.
+            this.PID = filter.GetStringValue(nameof(this.PID));
             this.Municipality = filter.GetStringValue(nameof(this.Municipality));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
@@ -323,6 +330,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 
+                PID = model.PID,
                 Municipality = model.Municipality,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
@@ -407,6 +415,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
 
+                PID = model.PID,
                 Municipality = model.Municipality,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
@@ -457,6 +466,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.FloorCount.HasValue
                 || this.MinRentableArea.HasValue
                 || this.MaxRentableArea.HasValue
+                || !String.IsNullOrWhiteSpace(this.PID)
                 || !String.IsNullOrWhiteSpace(this.Municipality)
                 || !String.IsNullOrWhiteSpace(this.Tenancy);
         }

@@ -8,7 +8,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 
-export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
+export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => (
   dispatch: Function,
 ) => {
   if (
@@ -19,7 +19,7 @@ export const fetchParcels = (parcelBounds: API.IParcelListParams | null) => (
     dispatch(request(actionTypes.GET_PARCELS));
     dispatch(showLoading());
     return CustomAxios()
-      .get(ENVIRONMENT.apiUrl + API.PARCELS(parcelBounds))
+      .get(ENVIRONMENT.apiUrl + API.PROPERTIES(parcelBounds))
       .then((response: AxiosResponse) => {
         dispatch(success(actionTypes.GET_PARCELS));
         dispatch(parcelsActions.storeParcelsAction(response.data));

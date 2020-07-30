@@ -21,6 +21,7 @@ import PointClusterer from './PointClusterer';
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
   filter?: {
+    pid: string;
     address: string;
     municipality: string;
     projectNumber: string;
@@ -73,6 +74,7 @@ const Map: React.FC<MapProps> = ({
   const dispatch = useDispatch();
   const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
+    pid: '',
     searchBy: 'address',
     address: '',
     municipality: '',
@@ -126,6 +128,7 @@ const Map: React.FC<MapProps> = ({
   const handleViewportChange = (filter: MapFilterChangeEvent) => {
     const bounds = getBounds();
     const {
+      pid,
       address,
       municipality,
       projectNumber,
@@ -139,6 +142,7 @@ const Map: React.FC<MapProps> = ({
     const e: MapViewportChangeEvent = {
       bounds,
       filter: {
+        pid,
         address,
         municipality,
         projectNumber,

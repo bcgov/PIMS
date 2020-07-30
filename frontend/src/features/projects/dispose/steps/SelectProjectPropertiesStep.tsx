@@ -28,6 +28,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
+    pid: '',
     address: '',
     municipality: '',
     projectNumber: '',

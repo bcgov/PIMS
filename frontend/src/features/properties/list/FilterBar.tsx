@@ -31,11 +31,13 @@ const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
       { label: 'Address', value: 'address' },
+      { label: 'PID/PIN', value: 'pid' },
       { label: 'Municipality', value: 'municipality' },
       { label: 'RAEG or SPP No.', value: 'projectNumber' },
     ],
     placeholders: {
       address: 'Enter an address or city',
+      pid: 'Enter a PID or PIN',
       municipality: 'Enter a municipality',
       projectNumber: 'Enter an SPP/RAEG number',
     },
@@ -67,6 +69,7 @@ const SearchBar: React.FC = () => {
 
 export interface IFilterBarState {
   searchBy: string;
+  pid: string;
   address: string;
   municipality: string;
   projectNumber: string;
@@ -105,6 +108,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
     <Formik<IFilterBarState>
       initialValues={{
         searchBy: 'address',
+        pid: '',
         address: '',
         municipality: '',
         projectNumber: '',

@@ -293,7 +293,7 @@ const EditButton = ({
   setFormDisabled,
 }: IEditButtonParams) => {
   return keycloak.hasAgency(cachedParcelDetail?.agencyId as number) ||
-    keycloak.agencyIds.some(a => cachedParcelDetail?.buildings.some(b => b.agencyId === a)) ||
+    keycloak.agencyIds?.some(a => cachedParcelDetail?.buildings?.some(b => b.agencyId === a)) ||
     keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
     <Button
       disabled={!formDisabled || !parcelId || readonly}
