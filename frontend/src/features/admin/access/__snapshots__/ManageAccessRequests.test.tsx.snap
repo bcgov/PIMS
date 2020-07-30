@@ -178,6 +178,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             <button
               className="Button Button--icon-only bg-warning btn btn-primary btn-sm"
               disabled={false}
+              onClick={[Function]}
               type="button"
             >
               <div
@@ -186,7 +187,6 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height={20}
-                  onClick={[Function]}
                   size={20}
                   stroke="currentColor"
                   strokeWidth="0"
