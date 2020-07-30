@@ -1,5 +1,5 @@
 import { ILookupCode } from 'actions/lookupActions';
-import { startCase } from 'lodash';
+import { startCase, isNull, isUndefined, isEmpty } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
 import { SortDirection } from 'components/Table/TableSort';
@@ -30,6 +30,18 @@ export const decimalOrEmpty = (input: string): number | string => {
 
 export const floatOrNull = (input: string): number | null => {
   return input !== '' ? parseFloat(input) : null;
+};
+
+export const isPositiveNumberOrZero = (input: string | number | undefined | null) => {
+  if (isNull(input) || isUndefined(input)) {
+    return false;
+  }
+
+  if (typeof input === 'string' && isEmpty(input.trim())) {
+    return false;
+  }
+
+  return !isNaN(Number(input)) && Number(input) > -1;
 };
 
 export const mapLookupCode = (
