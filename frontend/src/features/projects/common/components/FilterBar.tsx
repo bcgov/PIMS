@@ -11,6 +11,7 @@ import {
   Button,
   ButtonProps,
   InputGroup,
+  Input,
 } from 'components/common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
 
@@ -51,6 +52,7 @@ const SearchBar: React.FC = () => {
 
 export interface IFilterBarState {
   searchBy: string;
+  pid: string;
   address: string;
   municipality: string;
   projectNumber: string;
@@ -86,6 +88,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
     <Formik<IFilterBarState>
       initialValues={{
         searchBy: 'address',
+        pid: '',
         address: '',
         municipality: '',
         projectNumber: '',
@@ -108,6 +111,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
       {({ isSubmitting, handleReset }) => (
         <Form>
           <Form.Row className="filter-bar">
+            <Col className="bar-item">
+              <Input field="pid" placeholder="Enter PID or PIN" />
+            </Col>
             <Col className="bar-item">
               <SearchBar />
             </Col>

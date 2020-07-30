@@ -14,6 +14,11 @@ namespace Pims.Dal.Entities.Models
 
         #region Parcel Properties
         /// <summary>
+        /// get/set - The parcel PID.
+        /// </summary>
+        public string PID { get; set; }
+
+        /// <summary>
         /// get/set - The parcel municipality.
         /// </summary>
         public string Municipality { get; set; }
@@ -102,79 +107,6 @@ namespace Pims.Dal.Entities.Models
         }
 
         /// <summary>
-        /// Creates a new instance of a AllPropertyFilter class, initializes it with the specified arguments.
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="agencyId"></param>
-        /// <param name="classificationId"></param>
-        /// <param name="minEstimatedValue"></param>
-        /// <param name="maxEstimatedValue"></param>
-        /// <param name="minAssessedValue"></param>
-        /// <param name="maxAssessedValue"></param>
-        /// <param name="sort"></param>
-        /// <returns></returns>
-        public AllPropertyFilter(string address, int? agencyId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-            : base(address, agencyId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of a ParcelFilter class, initializes it with the specified arguments.
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="agencyId"></param>
-        /// <param name="classificationId"></param>
-        /// <param name="minLandArea"></param>
-        /// <param name="maxLandArea"></param>
-        /// <param name="minEstimatedValue"></param>
-        /// <param name="maxEstimatedValue"></param>
-        /// <param name="minAssessedValue"></param>
-        /// <param name="maxAssessedValue"></param>
-        /// <param name="sort"></param>
-        /// <returns></returns>
-        public AllPropertyFilter(string address, int? agencyId, int? classificationId, float? minLandArea, float? maxLandArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-            : base(address, agencyId, classificationId, minEstimatedValue, maxEstimatedValue, minAssessedValue, maxAssessedValue, sort)
-        {
-            this.MinLandArea = minLandArea;
-            this.MaxLandArea = maxLandArea;
-        }
-
-        /// <summary>
-        /// Creates a new instance of a BuildingFilter class, initializes it with the specified arguments.
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="agencyId"></param>
-        /// <param name="constructionTypeId"></param>
-        /// <param name="predominantUseId"></param>
-        /// <param name="floorCount"></param>
-        /// <param name="tenancy"></param>
-        /// <param name="minRentableArea"></param>
-        /// <param name="maxRentableArea"></param>
-        /// <param name="minEstimatedValue"></param>
-        /// <param name="maxEstimatedValue"></param>
-        /// <param name="minAssessedValue"></param>
-        /// <param name="maxAssessedValue"></param>
-        /// <param name="sort"></param>
-        /// <returns></returns>
-        public AllPropertyFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
-        {
-            this.Address = address;
-            this.ConstructionTypeId = constructionTypeId;
-            this.PredominateUseId = predominantUseId;
-            this.FloorCount = floorCount;
-            this.Tenancy = tenancy;
-            this.MinRentableArea = minRentableArea;
-            this.MaxRentableArea = maxRentableArea;
-            this.MinEstimatedValue = minEstimatedValue;
-            this.MaxEstimatedValue = maxEstimatedValue;
-            this.MinAssessedValue = minAssessedValue;
-            this.MaxAssessedValue = maxAssessedValue;
-            if (agencyId.HasValue)
-                this.Agencies = new[] { agencyId.Value };
-            this.Sort = sort;
-        }
-
-        /// <summary>
         /// Creates a new instance of a PropertyFilter class, initializes it with the specified arguments.
         /// Extracts the properties from the query string to generate the filter.
         /// </summary>
@@ -185,6 +117,7 @@ namespace Pims.Dal.Entities.Models
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
             this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
 
+            this.PID = filter.GetStringValue(nameof(this.PID));
             this.Municipality = filter.GetStringValue(nameof(this.Municipality));
             this.Zoning = filter.GetStringValue(nameof(this.Zoning));
             this.ZoningPotential = filter.GetStringValue(nameof(this.ZoningPotential));
@@ -208,6 +141,7 @@ namespace Pims.Dal.Entities.Models
         public override bool IsValid()
         {
             return base.IsValid()
+                || !String.IsNullOrWhiteSpace(this.PID)
                 || !String.IsNullOrWhiteSpace(this.Municipality)
                 || !String.IsNullOrWhiteSpace(this.Zoning)
                 || !String.IsNullOrWhiteSpace(this.ZoningPotential)
@@ -241,6 +175,7 @@ namespace Pims.Dal.Entities.Models
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
 
+                PID = filter.PID,
                 Municipality = filter.Municipality,
                 MinLandArea = filter.MinLandArea,
                 MaxLandArea = filter.MaxLandArea,

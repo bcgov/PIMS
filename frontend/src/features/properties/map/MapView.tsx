@@ -3,7 +3,7 @@ import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Ma
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
-import { IParcelListParams } from 'constants/API';
+import { IPropertySearchParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
@@ -17,7 +17,8 @@ import {
 import * as API from 'constants/API';
 import _ from 'lodash';
 
-const parcelBounds: IParcelListParams = {
+const parcelBounds: IPropertySearchParams = {
+  pid: null,
   neLatitude: 48.43,
   neLongitude: -123.37,
   swLatitude: 48.43,
@@ -67,11 +68,12 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
 
-  const getApiParams = (e: MapViewportChangeEvent): IParcelListParams | null => {
+  const getApiParams = (e: MapViewportChangeEvent): IPropertySearchParams | null => {
     if (!e || !e.bounds) {
       return null;
     }
     const {
+      pid,
       address,
       municipality,
       projectNumber,
@@ -85,7 +87,8 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
 
     const ne = e.bounds.getNorthEast();
     const sw = e.bounds.getSouthWest();
-    const apiParams: IParcelListParams = {
+    const apiParams: IPropertySearchParams = {
+      pid: pid ?? null,
       neLatitude: ne.lat,
       neLongitude: ne.lng,
       swLatitude: sw.lat,
@@ -103,7 +106,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     return apiParams;
   };
   const saveLatLng = (e: LeafletMouseEvent) => {
-    //TODO: this prevents click events on markers from being recorded, would like a better way.
+    // TODO: this prevents click events on markers from being recorded, would like a better way.
     if (!(e?.originalEvent?.target as any)?.className.indexOf('leaflet-marker')) {
       return;
     }

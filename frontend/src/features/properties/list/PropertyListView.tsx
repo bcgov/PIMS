@@ -38,6 +38,7 @@ const getServerQuery = (state: {
     pageIndex,
     pageSize,
     filter: {
+      pid,
       address,
       municipality,
       projectNumber,
@@ -58,6 +59,7 @@ const getServerQuery = (state: {
   const query: IPropertyFilter = {
     ...initialQuery,
     address,
+    pid,
     municipality,
     projectNumber,
     classificationId: decimalOrUndefined(classificationId),
@@ -99,6 +101,7 @@ const PropertyListView: React.FC = () => {
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
+    pid: '',
     address: '',
     municipality: '',
     projectNumber: '',

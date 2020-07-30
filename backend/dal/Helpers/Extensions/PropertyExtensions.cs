@@ -77,6 +77,12 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
 
+            if (!String.IsNullOrWhiteSpace(filter.PID))
+            {
+                var pidValue = filter.PID.Replace("-", "").Trim();
+                if (Int32.TryParse(pidValue, out int pid))
+                    query = query.Where(p => p.PID == pid || p.PIN == pid);
+            }
             if (!String.IsNullOrWhiteSpace(filter.Municipality))
                 query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
             if (!String.IsNullOrWhiteSpace(filter.Zoning))

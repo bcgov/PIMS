@@ -47,6 +47,12 @@ Array [
                       </option>
                       <option
                         className="option"
+                        value="pid"
+                      >
+                        PID/PIN
+                      </option>
+                      <option
+                        className="option"
                         value="municipality"
                       >
                         Municipality

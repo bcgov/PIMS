@@ -95,6 +95,7 @@ describe('FilterBar', () => {
     // Assert
     expect(onFilterChange).toBeCalledWith<[IFilterBarState]>({
       searchBy: 'address',
+      pid: '',
       address: 'mockaddress',
       municipality: '',
       projectNumber: '',
