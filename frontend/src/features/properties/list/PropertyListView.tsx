@@ -26,7 +26,6 @@ const initialQuery: IPropertyFilter = {
   page: 1,
   quantity: 10,
   agencies: [],
-  propertyType: '0',
 };
 
 const getServerQuery = (state: {
@@ -107,7 +106,6 @@ const PropertyListView: React.FC = () => {
     classificationId: '',
     minLotSize: '',
     maxLotSize: '',
-    propertyType: '0',
   });
 
   const [pageSize, setPageSize] = useState(10);
@@ -200,7 +198,8 @@ const PropertyListView: React.FC = () => {
     if (expandedRows.length > 0) {
       await Promise.all(
         expandedRows.map(async property => {
-          setExpandData((await service.loadBuildings(property.id)).items);
+          property.propertyTypeId === 0 &&
+            setExpandData((await service.loadBuildings(property.id)).items);
         }),
       );
     }
@@ -232,6 +231,13 @@ const PropertyListView: React.FC = () => {
           data={data}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          canRowExpand={(val: any) => {
+            if (val.values.propertyTypeId === 0) {
+              return true;
+            } else {
+              return false;
+            }
+          }}
           detailsPanel={{
             render: () => <Properties hideHeaders={true} data={expandData} />,
             icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
