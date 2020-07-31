@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 import React from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { FormikProps, setIn, getIn } from 'formik';
@@ -183,9 +183,21 @@ const getPageErrors = (errors: any, nameSpace: any) => {
 const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
   const financials: IFinancial[] = getIn(props.values, props.nameSpace);
   // the current paginated page.
-  const [currentPage, setCurrentPage] = useState<number[]>(
-    _.slice(pagedFinancials.items, 0, NUMBER_OF_EVALUATIONS_PER_PAGE),
+  const [currentPage, setCurrentPage] = useState<number[]>([0, NUMBER_OF_EVALUATIONS_PER_PAGE]);
+
+  const getCurrentPage = useCallback(
+    (type: string): number[] => {
+      return _.slice(
+        pagedFinancials.items.filter((year: number) => {
+          return type !== EvaluationKeys.Assessed || year <= moment().year();
+        }),
+        currentPage[0],
+        currentPage[1],
+      );
+    },
+    [currentPage],
   );
+
   const withNameSpace = (name: string, type: string, year?: number): string => {
     return [props.nameSpace, `${indexOfFinancial(financials, type, year)}`, name]
       .filter(x => x)
@@ -194,7 +206,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   const isFiscal = (type: string) => {
     return Object.keys(FiscalKeys).includes(type);
   };
-  console.log(props);
+
   return (
     <Fragment>
       <PaginatedFormErrors
@@ -231,67 +243,61 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
                       </tr>
                     </thead>
                     <tbody>
-                      {currentPage
-                        ?.filter(
-                          year =>
-                            type !== EvaluationKeys.Assessed ||
-                            (type === EvaluationKeys.Assessed && year <= moment().year()),
-                        )
-                        .map(year => {
-                          return (
-                            <tr key={type + year}>
-                              <td>
-                                {type === EvaluationKeys.Assessed && (
-                                  <Form.Control
-                                    disabled={true}
-                                    readOnly={true}
-                                    type="string"
-                                    value={year.toString()}
-                                  />
-                                )}
-                                {isFiscal(type) && (
-                                  <Form.Control
-                                    disabled={true}
-                                    readOnly={true}
-                                    type="string"
-                                    value={`${year - 1}/${year}`}
-                                  />
-                                )}
-                                {type === EvaluationKeys.Appraised && (
-                                  <FastDatePicker
-                                    formikProps={props}
-                                    disabled={props.disabled}
-                                    minDate={moment(year, 'YYYY')
-                                      .startOf('year')
-                                      .toDate()}
-                                    maxDate={moment(year, 'YYYY')
-                                      .endOf('year')
-                                      .toDate()}
-                                    field={withNameSpace('date', type, year)}
-                                  />
-                                )}
-                              </td>
-                              <td>
-                                <FastCurrencyInput
+                      {getCurrentPage(type).map(year => {
+                        return (
+                          <tr key={type + year}>
+                            <td>
+                              {type === EvaluationKeys.Assessed && (
+                                <Form.Control
+                                  disabled={true}
+                                  readOnly={true}
+                                  type="string"
+                                  value={year.toString()}
+                                />
+                              )}
+                              {isFiscal(type) && (
+                                <Form.Control
+                                  disabled={true}
+                                  readOnly={true}
+                                  type="string"
+                                  value={`${year - 1}/${year}`}
+                                />
+                              )}
+                              {type === EvaluationKeys.Appraised && (
+                                <FastDatePicker
                                   formikProps={props}
                                   disabled={props.disabled}
-                                  field={withNameSpace('value', type, year)}
-                                  placeholder={props.disabled ? 'n/a' : ' '}
-                                  tooltip="If value not available enter $1 and add notes"
+                                  minDate={moment(year, 'YYYY')
+                                    .startOf('year')
+                                    .toDate()}
+                                  maxDate={moment(year, 'YYYY')
+                                    .endOf('year')
+                                    .toDate()}
+                                  field={withNameSpace('date', type, year)}
                                 />
-                              </td>
-                              {EvaluationKeys.Assessed === type && props.isParcel && (
-                                <>
-                                  <SumFinancialsForm
-                                    formikProps={props}
-                                    onlyAssesedSums={true}
-                                    year={year}
-                                  />
-                                </>
                               )}
-                            </tr>
-                          );
-                        })}
+                            </td>
+                            <td>
+                              <FastCurrencyInput
+                                formikProps={props}
+                                disabled={props.disabled}
+                                field={withNameSpace('value', type, year)}
+                                placeholder={props.disabled ? 'n/a' : ' '}
+                                tooltip="If value not available enter $1 and add notes"
+                              />
+                            </td>
+                            {EvaluationKeys.Assessed === type && props.isParcel && (
+                              <>
+                                <SumFinancialsForm
+                                  formikProps={props}
+                                  onlyAssesedSums={true}
+                                  year={year}
+                                />
+                              </>
+                            )}
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </Table>
                 </Col>
@@ -301,13 +307,10 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
         </Row>
         <WrappedPaginate
           onPageChange={(page: any) => {
-            setCurrentPage(
-              _.slice(
-                pagedFinancials.items,
-                page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE,
-                page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE + NUMBER_OF_EVALUATIONS_PER_PAGE,
-              ),
-            );
+            setCurrentPage([
+              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE,
+              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE + NUMBER_OF_EVALUATIONS_PER_PAGE,
+            ]);
           }}
           {...pagedFinancials}
         />
