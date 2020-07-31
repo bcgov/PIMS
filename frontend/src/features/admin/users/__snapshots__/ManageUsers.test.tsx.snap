@@ -231,12 +231,7 @@ exports[`component functionality Snapshot matches 1`] = `
     </div>
   </form>
   <div
-    className="container-fluid"
-    style={
-      Object {
-        "marginTop": 10,
-      }
-    }
+    className="sc-fzokOt dFtkRK container-fluid"
   >
     <div
       className="table"
