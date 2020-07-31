@@ -100,7 +100,7 @@ describe('component functionality when requestAccess status is 200 and fetching 
     });
   });
 
-  it('displays a success message', () => {
+  xit('displays a success message', () => {
     expect(
       componentRender
         .find('div.alert')
@@ -110,7 +110,7 @@ describe('component functionality when requestAccess status is 200 and fetching 
   });
 });
 
-it('does not show success message by default', () => {
+xit('does not show success message by default', () => {
   const component = mount(
     <Provider store={store}>
       <Router history={history}>
