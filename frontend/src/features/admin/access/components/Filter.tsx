@@ -89,7 +89,7 @@ export const AccessRequestFilter = (props: IProps) => {
           />
         </Col>
         <Col className="actions">
-          <Button size="sm" className="bg-warning" icon={<FaSearch size={20} onClick={search} />} />
+          <Button size="sm" onClick={search} className="bg-warning" icon={<FaSearch size={20} />} />
           <Button variant="outline-primary" size="sm" onClick={reset} icon={<FaUndo size={20} />}>
             Reset
           </Button>
