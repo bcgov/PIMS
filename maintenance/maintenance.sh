@@ -31,6 +31,9 @@ OC_BUILD=${OC_BUILD:-../openshift/templates/maintenance/caddy.bc.yaml}
 OC_DEPLOY=${OC_DEPLOY:-../openshift/templates/maintenance/caddy.dc.yaml}
 BUILD_PROJECT=${BUILD_PROJECT:-jcxjin-tools}
 
+# support PROD route overrides
+APPLICATION_ROUTE=${APPLICATION_ROUTE:-${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}}
+APPLICATION_SERVICE=${APPLICATION_SERVICE:-${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}}
 
 # Verbose option
 #
@@ -71,16 +74,16 @@ fi
 #
 if [ "${COMMAND}" == "on" ]
 then
-  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" -n ${PROJECT} -p \
+  oc patch route "${APPLICATION_ROUTE}" -n ${PROJECT} -p \
     '{ "spec": { "to": { "name": "'$( echo ${STATIC_PAGE_NAME} )'" },
     "port": { "targetPort": "'$( echo ${STATIC_PAGE_PORT} )'" }}}'
   oc patch route ${STATIC_PAGE_NAME} -n ${PROJECT} -p \
-    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" )'" },
+    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_SERVICE}" )'" },
     "port": { "targetPort": "'$( echo ${APPLICATION_PORT} )'" }}}'
 elif [ "${COMMAND}" == "off" ]
 then
-  oc patch route "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" -n ${PROJECT} -p \
-    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_NAME}-${ENVIRONMENT_NAME}${INSTANCE_ID}" )'" },
+  oc patch route "${APPLICATION_ROUTE}" -n ${PROJECT} -p \
+    '{ "spec": { "to": { "name": "'$( echo "${APPLICATION_SERVICE}" )'" },
     "port": { "targetPort": "'$( echo ${APPLICATION_PORT} )'" }}}'
   oc patch route ${STATIC_PAGE_NAME} -n ${PROJECT} -p \
     '{ "spec": { "to": { "name": "'$( echo ${STATIC_PAGE_NAME} )'" },
