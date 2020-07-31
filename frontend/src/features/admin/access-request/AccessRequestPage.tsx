@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import './AccessRequestPage.scss';
 import { Container, Row, Col, ButtonToolbar, Button, Alert } from 'react-bootstrap';
-import { IGenericNetworkAction } from 'actions/genericActions';
 import { ILookupCode } from 'actions/lookupActions';
 import {
   getCurrentAccessRequestAction,
@@ -16,13 +15,13 @@ import { RootState } from 'reducers/rootReducer';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
-import * as actionTypes from 'constants/actionTypes';
 import { DISCLAIMER_URL, PRIVACY_POLICY_URL } from 'constants/strings';
 import _ from 'lodash';
 import { AccessRequestSchema } from 'utils/YupSchema';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapLookupCode } from 'utils';
 import { AccessRequestStatus } from 'constants/accessStatus';
+import { Snackbar, ISnackbarState } from 'components/common/Snackbar';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -40,6 +39,7 @@ const AccessRequestPage = () => {
   const keycloak = keycloakWrapper.obj;
   const userInfo = keycloak?.userInfo as IUserInfo;
   const dispatch = useDispatch();
+  const [alert, setAlert] = React.useState<ISnackbarState>({});
 
   useEffect(() => {
     dispatch(getCurrentAccessRequestAction());
@@ -51,12 +51,11 @@ const AccessRequestPage = () => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
-  const request = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.ADD_REQUEST_ACCESS] as IGenericNetworkAction,
-  );
+
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
   });
+
   const roles = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.ROLE_CODE_SET_NAME && !!lookupCode.isPublic;
   });
@@ -107,18 +106,15 @@ const AccessRequestPage = () => {
   );
 
   const button = initialValues.id === 0 ? 'Submit' : 'Update';
-  const inProgress =
-    initialValues.id !== 0 ? (
-      <Alert key={initialValues.id} variant="primary">
-        You will receive an email when your request is reviewed.
-      </Alert>
-    ) : null;
-  const success =
-    (!request?.isFetching && request?.status === 201) || request?.status === 200 ? (
-      <Alert key={initialValues.id} variant="success">
-        Your request has been submitted.
-      </Alert>
-    ) : null;
+  const inProgress = React.useMemo(
+    () =>
+      initialValues.id !== 0 ? (
+        <Alert key={initialValues.id} variant="primary">
+          You will receive an email when your request is reviewed.
+        </Alert>
+      ) : null,
+    [initialValues.id],
+  );
 
   return (
     <div className="accessRequestPage">
@@ -132,15 +128,26 @@ const AccessRequestPage = () => {
             enableReinitialize={true}
             initialValues={initialValues}
             validationSchema={AccessRequestSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              dispatch(getSubmitAccessRequestAction(toAccessRequest(values)));
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                await dispatch(getSubmitAccessRequestAction(toAccessRequest(values)));
+                setAlert({
+                  variant: 'success',
+                  message: 'Your request has been submitted.',
+                  show: true,
+                });
+              } catch (error) {
+                setAlert({
+                  variant: 'danger',
+                  message: 'Failed to submit you access request.',
+                  show: true,
+                });
+              }
               setSubmitting(false);
             }}
           >
             {props => (
               <Form className="userInfo">
-                {success}
-
                 {inProgress}
 
                 <Input
@@ -202,7 +209,14 @@ const AccessRequestPage = () => {
                   <a href={DISCLAIMER_URL}>Terms and Conditions</a> and that you have read our{' '}
                   <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>.
                 </p>
-
+                {alert.show && (
+                  <Snackbar
+                    show={alert.show}
+                    message={alert.message}
+                    variant={alert.variant}
+                    onClose={() => setAlert({})}
+                  />
+                )}
                 <Row className="justify-content-md-center">
                   <ButtonToolbar className="cancelSave">
                     <Button className="mr-5" type="submit">
