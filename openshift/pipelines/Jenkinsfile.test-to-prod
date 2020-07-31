@@ -110,6 +110,9 @@ pipeline {
     }
 
     stage("Maintenance mode ON") {
+      environment {
+        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+      }
       steps {
         script {
           commonPipeline.maintenancePageOn("${DESTINATION}")
@@ -150,6 +153,9 @@ pipeline {
     }
 
     stage("Maintenance mode OFF") {
+      environment {
+        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+      }
       steps {
         script {
           commonPipeline.maintenancePageOff("${DESTINATION}")
