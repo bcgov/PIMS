@@ -17,6 +17,7 @@ import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
+import { LegendControl } from './Legend/LegendControl';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -161,7 +162,7 @@ const Map: React.FC<MapProps> = ({
     dispatch(setMapViewZoom(event.target._zoom));
   };
 
-  const closeMarkerPopup = (event: LeafletEvent) => {
+  const closeMarkerPopup = () => {
     dispatch(storeParcelDetail(null));
   };
 
@@ -294,6 +295,7 @@ const Map: React.FC<MapProps> = ({
               onMarkerClick={onSingleMarkerClick}
             />
             {selectedProperty && renderPopup(selectedProperty)}
+            <LegendControl />
           </LeafletMap>
         </Col>
       </Row>
