@@ -351,7 +351,15 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               <Row noGutters key={props.disabled?.toString()}>
                 <PagedBuildingForms disabled={props.disabled} allowEdit={allowEdit} />
               </Row>
-              <div style={{ textAlign: 'right' }}>
+              <div
+                style={{
+                  textAlign: 'right',
+                  position: 'sticky',
+                  bottom: '-18px',
+                  backgroundColor: '#f2f2f2',
+                  zIndex: 4,
+                }}
+              >
                 {formikProps.status && formikProps.status.msg && (
                   <p style={{ color: 'red' }}>{formikProps.status.msg}</p>
                 )}
