@@ -69,6 +69,15 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                     onClick={() =>
                       arrayHelpers.push({
                         ...defaultBuildingValues,
+                        address: {
+                          line1: formikProps.values.address?.line1,
+                          line2: formikProps.values.address?.line2,
+                          city: formikProps.values.address?.city,
+                          cityId: formikProps.values.address?.cityId,
+                          province: formikProps.values.address?.province,
+                          provinceId: 'BC',
+                          postal: formikProps.values.address?.postal,
+                        },
                         latitude: formikProps.values.latitude,
                         longitude: formikProps.values.longitude,
                       })
