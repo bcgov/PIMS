@@ -24,6 +24,12 @@ import {
   setUsersPageSize,
 } from 'actions/adminActions';
 import { generateSortCriteria, formatDateTime } from 'utils';
+import styled from 'styled-components';
+
+const TableContainer = styled(Container)`
+  margin-top: 10px;
+  margin-bottom: 40px;
+`;
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
@@ -111,7 +117,7 @@ export const ManageUsersPage = () => {
         onChange={value => dispatch(getUsersFilterAction(value))}
       />
       {
-        <Container fluid style={{ marginTop: 10 }}>
+        <TableContainer fluid>
           <Table<IUserRecord>
             name="usersTable"
             columns={columns}
@@ -129,7 +135,7 @@ export const ManageUsersPage = () => {
             onPageSizeChange={size => dispatch(setUsersPageSize(size))}
             loading={!(users && !users.isFetching)}
           />
-        </Container>
+        </TableContainer>
       }
     </div>
   );

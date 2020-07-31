@@ -22,12 +22,6 @@ exports[`renders RequestAccessPage correctly 1`] = `
         onSubmit={[Function]}
       >
         <div
-          className="fade alert alert-success show"
-          role="alert"
-        >
-          Your request has been submitted.
-        </div>
-        <div
           className="form-group"
         >
           <label
