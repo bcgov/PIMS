@@ -106,12 +106,15 @@ namespace Pims.Dal.Services
                 filter.PropertyType = Entities.PropertyTypes.Building;
             }
 
+            var skip = (filter.Page - 1) * filter.Quantity;
             var query = this.Context.GenerateQuery(this.User, filter);
-            var total = query.Count();
             var items = query
-                .Skip((filter.Page - 1) * filter.Quantity)
+                .Skip(skip)
                 .Take(filter.Quantity)
                 .ToArray();
+
+            var count = items.Count();
+            var total = count < filter.Quantity ? skip + count : filter.Page * filter.Quantity + 1; // TODO: temporary way to improve performance as the DB is having memory issues scanning the whole table.
 
             return new Paged<Property>(items, filter.Page, filter.Quantity, total);
         }
