@@ -42,7 +42,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 6, 6 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Municipality = "Municipality" }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Municipality = "Municipality" }, new[] { 1, 3 }, 11, 10 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
@@ -67,10 +67,10 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 3 }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 3 }, new[] { 1, 3 }, 11, 10 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 3 }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, new[] { 1, 3 }, 11, 5 },
-                new object[] { new AllPropertyFilter() { Quantity = 2, ClassificationId = 3 }, new[] { 1, 3 }, 11, 2 },
+                new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, new[] { 1, 3 }, 6, 5 },
+                new object[] { new AllPropertyFilter() { Quantity = 2, ClassificationId = 3 }, new[] { 1, 3 }, 3, 2 },
                 new object[] { new AllPropertyFilter(), new[] { 3 }, 7, 7 },
             };
         #endregion
