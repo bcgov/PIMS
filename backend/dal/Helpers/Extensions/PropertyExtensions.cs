@@ -38,12 +38,9 @@ namespace Pims.Dal.Helpers.Extensions
 
             // Only allowed to see user's own agency properties.
             if (!isAdmin)
-            {
-                query = query.Where(p =>
-                    p.IsVisibleToOtherAgencies
-                    || ((!p.IsSensitive || viewSensitive)
-                        && userAgencies.Contains(p.AgencyId))); // Only can view properties in user's agency.
-            }
+                query = query.Where(p => p.IsVisibleToOtherAgencies || userAgencies.Contains(p.AgencyId));
+            if (!viewSensitive)
+                query = query.Where(p => !p.IsSensitive);
 
             if (filter.PropertyType.HasValue)
                 query = query.Where(p => p.PropertyTypeId == filter.PropertyType);
