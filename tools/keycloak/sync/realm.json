@@ -216,7 +216,7 @@
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
         "RedirectUris": ["https://pims.gov.bc.ca/api/*"],
-        "WebOrigins": ["+"],
+        "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "bcgov-v2"
         }
