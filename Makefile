@@ -37,19 +37,23 @@ help:
 # Docker Development
 ##############################################################################
 
-docker: | build run ## Starts existing containers for local development
+restart: | stop build up ## Restart local docker environment
 
-restart: | stop build run ## Recreates local docker environment
+refresh: | down build up ## Recreates local docker environment
 
-run: ## Runs the local development containers
+up: ## Runs the local containers
 	@echo "$(P) Running client and server..."
 	@docker-compose up -d
 
-stop: ## Closes the local development containers
+down: ## Stops the local containers and removes them
 	@echo "$(P) Stopping client and server..."
 	@docker-compose down
 
-build: ## Builds the local development containers
+stop: ## Stops the local containers
+	@echo "$(P) Stopping client and server..."
+	@docker-compose stop
+
+build: ## Builds the local containers
 	@echo "$(P) Building images..."
 	@docker-compose build --no-cache
 
@@ -58,6 +62,9 @@ clean: ## Removes local containers, images, volumes, etc
 	@echo "$(P) Note: does not clear image cache."
 	@docker-compose rm -f -v -s
 	@docker volume rm -f pims-frontend-node-cache
+
+setup: ## Setup local container environment, initialize keycloak and database
+	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
 
 pause-30:
 	@echo "$(P) Pausing 30 seconds..."
@@ -75,26 +82,26 @@ server-run: ## Starts local server containers
 	@echo "$(P) Starting server containers..."
 	@docker-compose up -d keycloak backend
 
-database-run:
-	@echo "$(P) Starting database container..."
-	@docker-compose up -d database
+db-update: ## Update the database with the latest migration
+	@echo "$(P) Updating database with latest migration..."
+	@docker-compose up -d database; cd backend/dal; dotnet ef database update
 
-database-clean: ## Re-creates an empty docker database - ready for seeding
+db-clean: ## Re-creates an empty docker database - ready for seeding
 	@echo "$(P) Refreshing the database..."
 	@cd backend/dal; dotnet ef database drop --force; dotnet ef database update
 
-database-seed: ## Imports a JSON file of properties into PIMS
+db-seed: ## Imports a JSON file of properties into PIMS
 	@echo "$(P) Seeding docker database..."
-	@cd tools/import; make run
+	@cd tools/import; dotnet run;
 
 keycloak-sync: ## Syncs accounts with Keycloak and PIMS
 	@echo "$(P) Syncing keycloak with PIMS..."
-	@cd tools/keycloak/sync; make run
+	@cd tools/keycloak/sync; dotnet run;
 
-database-refresh: | server-run pause-30 database-clean database-seed keycloak-sync ## Refreshes the docker database
+db-refresh: | server-run pause-30 db-clean db-seed keycloak-sync ## Refreshes the docker database
 
 convert: ## Convert Excel files to JSON
 	@echo "$(P) Convert Excel files to JSON..."
-	@cd tools/converters/excel; make run
+	@cd tools/converters/excel; dotnet run;
 
-.PHONY: local restart run stop build clean client-test server-test pause-30 server-run database-run database-clean database-seed keycloak-sync database-refresh
+.PHONY: local setup restart refresh up down stop build clean client-test server-test pause-30 server-run db-update db-clean db-seed keycloak-sync db-refresh

@@ -2,23 +2,9 @@ version: "3.5"
 
 services:
   ####################### Keycloak #######################
-  keycloak-db:
-    restart: on-failure
-    container_name: keycloak-db
-    build:
-      context: ./auth/postgres
-    ports:
-      - "5432:5432"
-    env_file:
-      - auth/postgres/.env
-    volumes:
-      - keycloak-db-data:/var/lib/pgsql/data
-    networks:
-      - pims
-
   keycloak:
     restart: on-failure
-    container_name: keycloak
+    container_name: pims-keycloak
     build:
       context: ./auth/keycloak
     env_file:
@@ -27,8 +13,6 @@ services:
       - ./auth/keycloak/config/realm-export.json:/tmp/realm-export.json
     ports:
       - 8080:8080
-    depends_on:
-      - keycloak-db
     networks:
       - pims
 
@@ -96,4 +80,3 @@ volumes:
   api-db-data:
   frontend-node-cache:
     name: pims-frontend-node-cache
-  keycloak-db-data:

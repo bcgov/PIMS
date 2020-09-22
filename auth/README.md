@@ -8,7 +8,8 @@ You can extend this by modifying the Keycloak Realm and Client configuration.
 
 ## Host Name Configuration
 
-When running the solution with **localhost** it is important to create a _host_ name in your _hosts_ file so that Keycloak will validate the JWT token against the correct issuers.
+When running the solution with **localhost** you can create a _host_ name in your _hosts_ file so that Keycloak will validate the JWT token against the correct issuers.
+This should be optional based on the keycloak configuration.
 
 Add the following host to your _hosts_ file.
 
@@ -21,11 +22,9 @@ Which will allow your docker containers to use a valid JWT token that can be pro
 
 ### Chrome Cookie Issue and Workaround
 
-Chrome is now pushing an update that invalidates cookies without the `SameSite` value. This will result in a rejection of the cookie and make it impossible to remain logged in.
+Chrome is now pushing an update that invalidates cookies without the `SameSite` value. This may result in a rejection of the cookie and make it impossible to remain logged in.
 
 To workaround this issue temporarily you can change the Chrome behaviour by **Disabling** the **SameSite by default cookies** setting here - `chrome://flags/#same-site-by-default-cookies`
-
-> We will need to find a way to update Keycloak to include the property in the cookie in the near future.
 
 ---
 
@@ -37,18 +36,17 @@ This will allow Keycloak to initialize with a new PostgreSQL database.
 
 ### Keycloak Environment Variables
 
-> The default import during initialization no longer works. Start the keycloak container and manually import - [details here](./keycloak/README.md#Import%20Realm).
-
 ```conf
 # Keycloak configuration
 PROXY_ADDRESS_FORWARDING=true
 KEYCLOAK_USER={username}
 KEYCLOAK_PASSWORD={password}
-# KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
+KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN
 
 # Database configuration
+# These are optional if you don't want to run a separate database for keycloak.
 DB_VENDOR=POSTGRES
 DB_ADDR=keycloak-db
 DB_DATABASE=keycloak
