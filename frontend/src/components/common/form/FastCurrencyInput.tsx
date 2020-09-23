@@ -96,7 +96,7 @@ const CurrencyInput = ({
           disabled={disabled}
           placeholder={placeholder || '$0'}
         />
-        {!!tooltip && <TooltipIcon toolTipId="currency" toolTip={tooltip} />}
+        {!!tooltip && <TooltipIcon children toolTipId="currency" toolTip={tooltip} />}
       </div>
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
     </Form.Group>
