@@ -6,7 +6,7 @@ import { FaRegQuestionCircle } from 'react-icons/fa';
 interface TooltipIconProps extends Partial<React.ComponentPropsWithRef<typeof Overlay>> {
   toolTip?: string;
   toolTipId: string;
-  children?: ReactNode;
+  children?: any;
 }
 
 const TooltipIcon = (props: TooltipIconProps) => (
