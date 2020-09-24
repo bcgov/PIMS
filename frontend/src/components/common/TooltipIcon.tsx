@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './TooltipIcon.scss';
 import { OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
 import { FaRegQuestionCircle } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { FaRegQuestionCircle } from 'react-icons/fa';
 interface TooltipIconProps extends Partial<React.ComponentPropsWithRef<typeof Overlay>> {
   toolTip?: string;
   toolTipId: string;
+  children?: ReactNode;
 }
 
 const TooltipIcon = (props: TooltipIconProps) => (
