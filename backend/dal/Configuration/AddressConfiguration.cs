@@ -29,7 +29,11 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.City).WithMany().HasForeignKey(m => m.CityId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.Province).WithMany().HasForeignKey(m => m.ProvinceId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.Postal, m.Address1 });
+            builder.HasIndex(m => new { m.Id, m.CityId }).IncludeProperties(m => new { m.Address1, m.Address2 });
+            builder.HasIndex(m => new { m.Id, m.Postal }).IncludeProperties(m => new { m.Address1, m.Address2 });
+            builder.HasIndex(m => new { m.Id, m.Address1 }).IncludeProperties(m => new { m.Address2 });
+            builder.HasIndex(m => new { m.CityId, m.ProvinceId }).IncludeProperties(m => new { m.Address1, m.Address2 });
+            builder.HasIndex(m => new { m.Id, m.ProvinceId, m.CityId, m.Postal, m.Address1 }).IncludeProperties(m => new { m.Address2 });
 
             base.Configure(builder);
         }
