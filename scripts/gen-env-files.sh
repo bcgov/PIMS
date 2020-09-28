@@ -83,3 +83,32 @@ API_URL=http://backend:8080/
 CHOKIDAR_USEPOLLING=true" >> ./frontend/.env
 fi
 
+if test -f "./tools/import/.env"; then
+    echo "./tools/import/.env exists"
+else
+echo \
+"Import__Quantity=50
+# Import__Skip=8500
+# Import__Delay=3000
+
+# Local
+ASPNETCORE_ENVIRONMENT=Local
+Auth__Keycloak__Secret=
+
+# Property Import
+Import__File=./Data/properties-todds.json
+
+# Project Import
+# Import__File=./Data/projects.json
+# Api__ImportUrl=/tools/import/projects?stopOnError=false&defaults=workflow=SPL" >> ./tools/import/.env
+fi
+
+if test -f "./tools/keycloak/sync/.env"; then
+    echo "./tools/keycloak/sync/.env exists"
+else
+echo \
+"# Local
+ASPNETCORE_ENVIRONMENT=Local
+Auth__Keycloak__Secret=" >> ./tools/keycloak/sync/.env
+fi
+
