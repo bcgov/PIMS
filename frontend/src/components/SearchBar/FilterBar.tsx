@@ -4,8 +4,7 @@ import React, { PropsWithChildren } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form, Button, ButtonProps } from 'components/common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+import { FaSearch } from 'react-icons/fa';
 import ResetButton from 'components/common/form/ResetButton';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {

@@ -14,12 +14,11 @@ import {
   SelectOption,
   AutoCompleteText,
 } from '../common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
 import { FilterBarSchema } from 'utils/YupSchema';
-import TooltipWrapper from 'components/common/TooltipWrapper';
 import ResetButton from 'components/common/form/ResetButton';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
