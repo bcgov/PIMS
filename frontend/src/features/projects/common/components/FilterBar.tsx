@@ -13,18 +13,11 @@ import {
   InputGroup,
   Input,
 } from 'components/common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
+import ResetButton from 'components/common/form/ResetButton';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
-
-const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return (
-    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
-      Reset
-    </Button>
-  );
 };
 
 const SearchBar: React.FC = () => {

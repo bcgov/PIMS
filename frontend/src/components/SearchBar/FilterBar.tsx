@@ -5,17 +5,11 @@ import { Col } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form, Button, ButtonProps } from 'components/common/form';
 import { FaUndo, FaSearch } from 'react-icons/fa';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import ResetButton from 'components/common/form/ResetButton';
 
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
-
-const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return (
-    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
-      Reset
-    </Button>
-  );
 };
 
 interface IProps<T extends object = {}> {
