@@ -270,26 +270,22 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           validate={handleValidate}
           enableReinitialize={true}
           onSubmit={async (values, actions) => {
-            let response: any;
             const apiValues = valuesToApiFormat(_.cloneDeep(values));
-            if (!values.id) {
-              response = dispatch(createParcel(apiValues));
-            } else {
-              response = dispatch(updateParcel(apiValues));
-            }
-            response
-              .then(() => {
-                history.push('/');
-              })
-              .catch((error: any) => {
-                const msg: string = error?.response?.data?.error ?? error.toString();
-                actions.setStatus({ msg });
-              })
-              .finally(() => {
-                actions.setSubmitting(false);
+            try {
+              if (!values.id) {
+                const data = await createParcel(apiValues)(dispatch);
                 dispatch(clear(actionTypes.ADD_PARCEL));
-                dispatch(clear(actionTypes.UPDATE_PARCEL));
-              });
+                history.replace(`/submitProperty/${data.id}`);
+              } else {
+                await updateParcel(apiValues)(dispatch);
+                history.go(0);
+              }
+            } catch (error) {
+              const msg: string = error?.response?.data?.error ?? error.toString();
+              actions.setStatus({ msg });
+            } finally {
+              actions.setSubmitting(false);
+            }
           }}
         >
           {formikProps => (
