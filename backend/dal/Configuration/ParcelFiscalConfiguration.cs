@@ -30,6 +30,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Parcel).WithMany(m => m.Fiscals).HasForeignKey(m => m.ParcelId).OnDelete(DeleteBehavior.ClientCascade);
 
             builder.HasIndex(m => new { m.ParcelId, m.FiscalYear, m.Key, m.Value });
+            builder.HasIndex(m => new { m.ParcelId, m.Key });
 
             base.Configure(builder);
         }

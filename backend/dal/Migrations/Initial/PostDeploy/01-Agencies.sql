@@ -148,11 +148,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     20
     , 7
     , 'FHA'
     , 'Fraser Health Authority'
+    , 0
     , 0
 ), (
     21
@@ -160,11 +162,13 @@ INSERT INTO dbo.[Agencies] (
     , 'IHA'
     , 'Interior Health Authority'
     , 0
+    , 0
 ), (
     22
     , 7
     , 'NHA'
     , 'Northern Health Authority'
+    , 0
     , 0
 ), (
     23
@@ -172,17 +176,20 @@ INSERT INTO dbo.[Agencies] (
     , 'PHSA'
     , 'Provincial Health Services Authority'
     , 0
+    , 0
 ), (
     24
     , 7
     , 'VCHA'
     , 'Vancouver Coastal Health Authority'
     , 0
+    , 0
 ), (
     25
     , 7
     , 'VIHA'
     , 'Vancouver Island Health Authority'
+    , 0
     , 0
 )
 
@@ -193,11 +200,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     30
     , 10
     , 'BCH'
     , 'BC Hydro'
+    , 0
     , 0
 )
 
@@ -208,17 +217,20 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     40
     , 8
     , 'BCH'
     , 'BC Housing'
     , 0
+    , 0
 ), (
     41
     , 8
     , 'BCA'
     , 'BC Assessment'
+    , 0
     , 0
 )
 
@@ -229,11 +241,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     50
     , 11
     , 'ICBC'
     , 'Insurance Coporation of BC'
+    , 0
     , 0
 )
 
@@ -244,11 +258,13 @@ INSERT INTO dbo.[Agencies] (
 --    , [Code]
 --    , [Name]
 --    , [IsDisabled]
+--    , [SendEmail]
 --) VALUES (
 --    50
 --    , 12
 --    , 'BCPC'
 --    , 'BC Pavillion Corporation'
+--    , 0
 --    , 0
 --)
 
@@ -259,11 +275,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     70
     , 4
     , 'CMB'
     , 'Capital Management Branch'
+    , 0
     , 0
 )
 
@@ -274,11 +292,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     80
     , 1
     , 'BCIT'
     , 'British Colubmia Institute of Technology'
+    , 0
     , 0
 ), (
     81
@@ -286,11 +306,13 @@ INSERT INTO dbo.[Agencies] (
     , 'CAMC'
     , 'Camosun College'
     , 0
+    , 0
 ), (
     82
     , 1
     , 'CAPU'
     , 'Capilano University'
+    , 0
     , 0
 ), (
     83
@@ -298,11 +320,13 @@ INSERT INTO dbo.[Agencies] (
     , 'CNC'
     , 'College of New Caledonia'
     , 0
+    , 0
 ), (
     84
     , 1
     , 'CROCK'
     , 'College of the Rockies'
+    , 0
     , 0
 ), (
     85
@@ -310,11 +334,13 @@ INSERT INTO dbo.[Agencies] (
     , 'DC'
     , 'Douglas College'
     , 0
+    , 0
 ), (
     86
     , 1
     , 'ECUAD'
     , 'Emily Carr University of Art and Design'
+    , 0
     , 0
 ), (
     87
@@ -322,11 +348,13 @@ INSERT INTO dbo.[Agencies] (
     , 'JIBC'
     , 'Justice Institute of BC'
     , 0
+    , 0
 ), (
     88
     , 1
     , 'KP'
     , 'Kwantlen Polytechnic'
+    , 0
     , 0
 ), (
     89
@@ -334,11 +362,13 @@ INSERT INTO dbo.[Agencies] (
     , 'LC'
     , 'Langara College'
     , 0
+    , 0
 ), (
     90
     , 1
     , 'NVIT'
     , 'Nichola Valley Institute of Technology'
+    , 0
     , 0
 ), (
     91
@@ -346,11 +376,13 @@ INSERT INTO dbo.[Agencies] (
     , 'NLC'
     , 'Northern Lights College'
     , 0
+    , 0
 ), (
     92
     , 1
     , 'CMC'
     , 'Coast Mountain College'
+    , 0
     , 0
 ), (
     93
@@ -358,11 +390,13 @@ INSERT INTO dbo.[Agencies] (
     , 'OC'
     , 'Okanagan College'
     , 0
+    , 0
 ), (
     94
     , 1
     , 'SC'
     , 'Selkirk College'
+    , 0
     , 0
 ), (
     95
@@ -370,11 +404,13 @@ INSERT INTO dbo.[Agencies] (
     , 'SFU'
     , 'Simon Fraser University'
     , 0
+    , 0
 ), (
     96
     , 1
     , 'TRU'
     , 'Thompson Rivers University'
+    , 0
     , 0
 ), (
     97
@@ -382,11 +418,13 @@ INSERT INTO dbo.[Agencies] (
     , 'UBC'
     , 'University of BC'
     , 0
+    , 0
 ), (
     98
     , 1
     , 'UFV'
     , 'University of the Fraser Valley'
+    , 0
     , 0
 ), (
     99
@@ -394,11 +432,13 @@ INSERT INTO dbo.[Agencies] (
     , 'UNBC'
     , 'University of Northern BC'
     , 0
+    , 0
 ), (
     100
     , 1
     , 'UVIC'
     , 'University of Victoria'
+    , 0
     , 0
 ), (
     101
@@ -406,11 +446,13 @@ INSERT INTO dbo.[Agencies] (
     , 'VCC'
     , 'Vancouver Community College'
     , 0
+    , 0
 ), (
     102
     , 1
     , 'VIU'
     , 'Vancouver Island University'
+    , 0
     , 0
 )
 
@@ -421,11 +463,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     110
     , 2
     , 'RPD'
     , 'Real Property Division'
+    , 0
     , 0
 )
 
@@ -436,11 +480,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     120
     , 6
     , 'CLO'
     , 'Crown Land Opportunities'
+    , 0
     , 0
 )
 
@@ -451,17 +497,20 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     130
     , 9
     , 'PLMB'
     , 'Properties and Land Management Branch'
     , 0
+    , 0
 ),(
     131
     , 9
     , 'BCT'
     , 'BC Transit '
+    , 0
     , 0
 )
 
@@ -472,11 +521,13 @@ INSERT INTO dbo.[Agencies] (
     , [Code]
     , [Name]
     , [IsDisabled]
+    , [SendEmail]
 ) VALUES (
     140
     , 13
     , 'PAVCO'
     , 'BC Pavillion Corporation'
+    , 0
     , 0
 )
 
