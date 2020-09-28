@@ -17,12 +17,17 @@ import {
 import * as API from 'constants/API';
 import _ from 'lodash';
 
+const defaultLatLng = {
+  lat: 52.81604319154934,
+  lng: -124.67285156250001
+}
+
 const parcelBounds: IPropertySearchParams = {
   pid: null,
-  neLatitude: 48.43,
-  neLongitude: -123.37,
-  swLatitude: 48.43,
-  swLongitude: -123.37,
+  neLatitude: defaultLatLng.lat,
+  neLongitude: defaultLatLng.lng,
+  swLatitude: defaultLatLng.lat,
+  swLongitude: defaultLatLng.lng,
   address: null,
   municipality: null,
   projectNumber: null,
@@ -32,6 +37,8 @@ const parcelBounds: IPropertySearchParams = {
   maxLandArea: null,
   inSurplusPropertyProgram: false,
 };
+
+
 
 // This could also come from the API, a local file, etc -OR- replacing the <select> fields with free text inputs.
 // Hard-coding it here until further requirements say otherwise.
@@ -128,8 +135,8 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
 
   return (
     <Map
-      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? 48.43}
-      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? -123.37}
+      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
+      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
       properties={properties}
       selectedProperty={propertyDetail}
       agencies={agencies}
@@ -162,6 +169,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       disableMapFilterBar={props.disableMapFilterBar}
       interactive={!props.disabled}
       showParcelBoundaries={props.showParcelBoundaries ?? true}
+      zoom={6}
     />
   );
 };
