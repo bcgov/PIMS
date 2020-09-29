@@ -8,7 +8,11 @@ exports[`SPP Button renders correctly 1`] = `
     <button
       className="close btn btn-primary"
       disabled={false}
+      onBlur={[Function]}
       onClick={[Function]}
+      onFocus={[Function]}
+      onMouseOut={[Function]}
+      onMouseOver={[Function]}
       type="button"
     >
       <svg

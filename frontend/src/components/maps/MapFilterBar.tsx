@@ -7,30 +7,17 @@ import { ILookupCode } from 'actions/lookupActions';
 import {
   Form,
   Select,
-  Button,
-  ButtonProps,
   InputGroup,
   Input,
   SelectOption,
   AutoCompleteText,
 } from '../common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
 import { FilterBarSchema } from 'utils/YupSchema';
-
-const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
-
-const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return (
-    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
-      Reset
-    </Button>
-  );
-};
+import ResetButton from 'components/common/form/ResetButton';
+import SearchButton from 'components/common/form/SearchButton';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
