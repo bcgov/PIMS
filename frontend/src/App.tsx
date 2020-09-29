@@ -10,6 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import AppRouter from 'router';
 import OnLoadActions from 'OnLoadActions';
+import { ToastContainer, toast } from 'react-toastify';
 
 export const store = configureStore();
 
@@ -36,6 +37,17 @@ const App = () => {
           <>
             <AppRouter />
             <OnLoadActions />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable
+              pauseOnHover
+            />
           </>
         );
       }}
