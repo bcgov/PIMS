@@ -261,6 +261,12 @@ const Map: React.FC<MapProps> = ({
             center={[lat, lng]}
             zoom={lastZoom}
             whenReady={() => {
+              if (mapRef.current) {
+                mapRef.current.leafletElement.fitBounds([
+                  [60.09114547, -119.49609429],
+                  [48.78370426, -139.35937554],
+                ]);
+              }
               handleViewportChange(mapFilter);
             }}
             onViewportChanged={() => {
