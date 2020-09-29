@@ -4,13 +4,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import {
-  Form,
-  Select,
-  SelectOption,
-  InputGroup,
-  Input,
-} from 'components/common/form';
+import { Form, Select, SelectOption, InputGroup, Input } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 

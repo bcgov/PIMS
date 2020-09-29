@@ -4,14 +4,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import {
-  Form,
-  Select,
-  InputGroup,
-  Input,
-  SelectOption,
-  AutoCompleteText,
-} from '../common/form';
+import { Form, Select, InputGroup, Input, SelectOption, AutoCompleteText } from '../common/form';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
