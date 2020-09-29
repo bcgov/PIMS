@@ -20,8 +20,8 @@ import _ from 'lodash';
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
   lat: 52.81604319154934,
-  lng: -124.67285156250001
-}
+  lng: -124.67285156250001,
+};
 
 const parcelBounds: IPropertySearchParams = {
   pid: null,
@@ -38,8 +38,6 @@ const parcelBounds: IPropertySearchParams = {
   maxLandArea: null,
   inSurplusPropertyProgram: false,
 };
-
-
 
 // This could also come from the API, a local file, etc -OR- replacing the <select> fields with free text inputs.
 // Hard-coding it here until further requirements say otherwise.
