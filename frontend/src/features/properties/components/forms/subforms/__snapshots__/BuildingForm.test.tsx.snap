@@ -35,6 +35,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            value="name"
           />
         </div>
       </div>

@@ -139,6 +139,7 @@ describe('ParcelDetailForm', () => {
   describe('field validation', () => {
     const exampleData = {
       projectNumber: '',
+      name: 'name',
       agencyId: 1,
       address: {
         line1: 'addressval',
@@ -225,6 +226,8 @@ describe('ParcelDetailForm', () => {
       const form = render(parcelDetailForm());
       const container = form.container;
       await fillInput(container, 'pin', exampleData.pin);
+      await fillInput(container, 'name', exampleData.name);
+      await fillInput(container, 'description', exampleData.description, 'textArea');
       await fillInput(container, 'municipality', exampleData.municipality);
       await fillInput(container, 'zoning', exampleData.zoning);
       await fillInput(container, 'zoningPotential', exampleData.zoningPotential);
