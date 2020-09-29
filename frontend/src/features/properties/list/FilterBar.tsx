@@ -8,17 +8,11 @@ import {
   Form,
   Select,
   SelectOption,
-  Button,
-  ButtonProps,
   InputGroup,
   Input,
 } from 'components/common/form';
-import { FaSearch } from 'react-icons/fa';
 import ResetButton from 'components/common/form/ResetButton';
-
-const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
+import SearchButton from 'components/common/form/SearchButton';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
