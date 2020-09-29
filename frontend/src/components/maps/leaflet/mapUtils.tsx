@@ -151,7 +151,7 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLngExpression)
 /** Zooms to a cluster */
 export const zoomToCluster = (cluster: ICluster, expansionZoom: number, map: Map) => {
   const latlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
-  map?.setView(latlng, expansionZoom, { animate: true });
+  map?.setView(latlng, cluster.properties.point_count < 5 ? 14 : expansionZoom, { animate: true });
 };
 
 // we need to namespace the keys as IDs are not enough here.

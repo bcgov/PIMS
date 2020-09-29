@@ -56,6 +56,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string Address { get; set; }
 
         /// <summary>
+        /// get/set - The property city.
+        /// </summary>
+        /// <value></value>
+        public string City { get; set; }
+
+        /// <summary>
         /// get/set - The SPP/RAEG project number.
         /// </summary>
         /// <value></value>
@@ -275,6 +281,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.SWLatitude = filter.GetDoubleNullValue(nameof(this.SWLatitude));
             this.SWLongitude = filter.GetDoubleNullValue(nameof(this.SWLongitude));
             this.Address = filter.GetStringValue(nameof(this.Address));
+            this.City = filter.GetStringValue(nameof(this.City));
 
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
@@ -329,6 +336,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 ProjectNumber = model.ProjectNumber,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+                City = model.City,
 
                 PID = model.PID,
                 Municipality = model.Municipality,
@@ -366,6 +374,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 ProjectNumber = model.ProjectNumber,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+                City = model.City,
 
                 Municipality = model.Municipality,
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
@@ -414,6 +423,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 PropertyType = model.PropertyType,
                 ClassificationId = model.ClassificationId,
                 Address = model.Address,
+                City = model.City,
 
                 PID = model.PID,
                 Municipality = model.Municipality,

@@ -123,8 +123,10 @@ describe('MapFilterBar', () => {
 
     // Assert
     expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
+      pid: 'mockPid',
       searchBy: 'address',
       address: 'mockaddress',
+      city: 'mockCity',
       municipality: '',
       projectNumber: '',
       agencies: '2',
