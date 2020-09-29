@@ -13,17 +13,13 @@ interface ITooltipWrapperProps extends Partial<React.ComponentPropsWithRef<typeo
 const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
   return (
     <>
-    <OverlayTrigger
-      placement={props.placement}
-      overlay={
-        <Tooltip id={props.toolTipId}>
-          {props.toolTip}
-        </Tooltip>
-      }
-    >
-      {props.children}
-    </OverlayTrigger>
-</>
+      <OverlayTrigger
+        placement={props.placement}
+        overlay={<Tooltip id={props.toolTipId}>{props.toolTip}</Tooltip>}
+      >
+        {props.children}
+      </OverlayTrigger>
+    </>
   );
 };
 
