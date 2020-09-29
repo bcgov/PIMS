@@ -17,6 +17,7 @@ import {
 import * as API from 'constants/API';
 import _ from 'lodash';
 
+/** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
   lat: 52.81604319154934,
   lng: -124.67285156250001
