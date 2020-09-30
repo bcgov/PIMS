@@ -77,10 +77,12 @@ const userToasts: LifecycleToasts = {
 export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => (
   dispatch: Function,
 ) => {
-  const axiosPromise = CustomAxios().put(
-    ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id),
-    updatedUser,
-  );
+  const axiosPromise = CustomAxios()
+    .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
+    .then((response: AxiosResponse) => {
+      dispatch(adminActions.updateUser(response.data));
+      return Promise.resolve(response);
+    });
 
   return handleAxiosResponseWithToasts(
     dispatch,
