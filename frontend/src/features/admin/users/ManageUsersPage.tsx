@@ -11,8 +11,6 @@ import { IUser, IUsersFilter } from 'interfaces';
 import { IUserRecord } from './interfaces/IUserRecord';
 import { IUsersState } from 'reducers/usersReducer';
 import { UsersFilterBar } from './components/UsersFilterBar';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import { Table } from 'components/Table';
 import { columnDefinitions } from './constants';
@@ -34,9 +32,9 @@ const TableContainer = styled(Container)`
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
-  const { getByType, lookupCodes } = useCodeLookups();
-  const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [lookupCodes]);
+  const { getByType } = useCodeLookups();
+  const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [getByType]);
+  const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
 
   const columns = useMemo(() => columnDefinitions, []);
 

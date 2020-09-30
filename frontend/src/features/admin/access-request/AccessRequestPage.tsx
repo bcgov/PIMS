@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import './AccessRequestPage.scss';
 import { Container, Row, Col, ButtonToolbar, Button, Alert } from 'react-bootstrap';
-import { ILookupCode } from 'actions/lookupActions';
 import {
   getCurrentAccessRequestAction,
   getSubmitAccessRequestAction,
@@ -13,10 +12,8 @@ import { Form, Input, TextArea, Select } from '../../../components/common/form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IAccessRequestState } from 'reducers/accessRequestReducer';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import { DISCLAIMER_URL, PRIVACY_POLICY_URL } from 'constants/strings';
-import _ from 'lodash';
 import { AccessRequestSchema } from 'utils/YupSchema';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapLookupCode } from 'utils';
