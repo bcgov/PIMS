@@ -113,10 +113,7 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
-            var count = query.Count();
-            var total = count < filter.Quantity ? skip + count : filter.Page * filter.Quantity + 1; // TODO: temporary way to improve performance as the DB is having memory issues scanning the whole table.
-
-            return new Paged<Property>(items, filter.Page, filter.Quantity, total);
+            return new Paged<Property>(items, filter.Page, filter.Quantity, query.Count());
         }
         #endregion
     }
