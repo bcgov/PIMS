@@ -105,12 +105,6 @@ describe('Edit user page', () => {
     });
   });
 
-  describe('appropriate fields are autofilled', () => {
-    it('autofills  email, username, first and last name', () => {
-      renderEditUserPage();
-    });
-  });
-
   describe('when the user edit form is submitted', () => {
     it('displays a loading toast', async done => {
       const { getByText, findByText } = renderEditUserPage();
