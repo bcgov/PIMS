@@ -22,6 +22,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapLookupCode } from 'utils';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { Snackbar, ISnackbarState } from 'components/common/Snackbar';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -48,17 +49,10 @@ const AccessRequestPage = () => {
   const data = useSelector<RootState, IAccessRequestState>(
     state => state.accessRequest as IAccessRequestState,
   );
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
 
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-  });
-
-  const roles = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.ROLE_CODE_SET_NAME && !!lookupCode.isPublic;
-  });
+  const { getByType, getPublicByType } = useCodeLookups();
+  const agencies = getByType(API.AGENCY_CODE_SET_NAME);
+  const roles = getPublicByType(API.ROLE_CODE_SET_NAME);
 
   const accessRequest = data?.accessRequest;
   const initialValues: IAccessRequestForm = {

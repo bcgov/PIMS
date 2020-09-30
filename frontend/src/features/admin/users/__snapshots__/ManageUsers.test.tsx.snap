@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component functionality Snapshot matches 1`] = `
+exports[`Manage Users Component Snapshot matches 1`] = `
 <div
   className="users-management-page"
 >

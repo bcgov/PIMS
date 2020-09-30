@@ -17,6 +17,7 @@ import { Label } from 'components/common/Label';
 import { useHistory } from 'react-router-dom';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { formatDateTime } from 'utils';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -30,16 +31,9 @@ const EditUserPage = (props: IEditUserPageProps) => {
     dispatch(fetchUserDetail({ id: userId }));
   }, [dispatch, userId]);
 
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-  });
-  const roles = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.ROLE_CODE_SET_NAME;
-  });
+  const { getByType } = useCodeLookups();
+  const agencies = getByType(API.AGENCY_CODE_SET_NAME);
+  const roles = getByType(API.ROLE_CODE_SET_NAME);
 
   const user = useSelector<RootState, IUserDetails>(state => state.GET_USER_DETAIL as IUserDetails);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({

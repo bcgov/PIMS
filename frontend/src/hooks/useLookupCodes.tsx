@@ -13,7 +13,13 @@ function useCodeLookups() {
     return lookupCodes.filter(code => code.type === type && code.id === id)?.find(x => x)?.code;
   };
 
-  const getByType = (type: string) => lookupCodes.filter(code => code.type === type);
+  const getByType = (type: string) =>
+    lookupCodes.filter(code => code.type === type && code.isDisabled === false);
+
+  const getPublicByType = (type: string) =>
+    lookupCodes.filter(
+      code => code.type === type && code.isDisabled === false && code.isPublic !== false,
+    );
 
   /**
    * filter the passed list of agencies. If the passed agency is a parent agency, include all child agencies. Otherwise just return the filter agency.
@@ -38,7 +44,9 @@ function useCodeLookups() {
     getOptionsByType: getOptionsByType,
     getCodeById: getCodeById,
     getByType,
+    getPublicByType,
     filterByParent,
+    lookupCodes,
   };
 }
 

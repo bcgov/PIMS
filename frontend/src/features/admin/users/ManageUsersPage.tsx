@@ -25,6 +25,7 @@ import {
 } from 'actions/adminActions';
 import { generateSortCriteria, formatDateTime } from 'utils';
 import styled from 'styled-components';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -33,24 +34,9 @@ const TableContainer = styled(Container)`
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
-
-  const roles = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.ROLE_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const { getByType, lookupCodes } = useCodeLookups();
+  const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
+  const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [lookupCodes]);
 
   const columns = useMemo(() => columnDefinitions, []);
 
