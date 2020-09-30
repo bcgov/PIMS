@@ -8,6 +8,7 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment';
 import { IStatus } from 'features/projects/common';
+import { toast } from 'react-toastify';
 
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
@@ -107,6 +108,53 @@ export const handleAxiosResponse = (
     })
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionType, axiosError?.response?.status, axiosError));
+      throw axiosError;
+    })
+    .finally(() => {
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * used by the handleAxiosResponseWithToasts method.
+ * loadingToast is the message to display while the api request is pending. This toast is cancelled when the request is completed.
+ * successToast is displayed when the request is completed successfully.
+ * errorToast is displayed when the request fails for any reason. By default this will return an error from axios.
+ */
+export interface LifecycleToasts {
+  loadingToast: () => React.ReactText;
+  successToast: () => React.ReactText;
+  errorToast?: () => React.ReactText;
+}
+
+/** Provides default redux boilerplate applicable to most axios redux actions. Displays toast messages to provide user feedback to this async action.
+ * Should be used in situations where user actions are directly creating api requests (ie. POST, PUT, DELETE)
+ * @param dispatch Dispatch function
+ * @param actionType All dispatched GenericNetworkActions will use this action type.
+ * @param axiosPromise The result of an axios.get, .put, ..., call.
+ * @param LifecycleToasts loading, error, success messages to display as toast messages during api lifecycle.
+ */
+export const handleAxiosResponseWithToasts = (
+  dispatch: Function,
+  actionType: string,
+  axiosPromise: Promise<any>,
+  toasts: LifecycleToasts,
+): Promise<any> => {
+  dispatch(request(actionType));
+  dispatch(showLoading());
+  const loadingToast = toast.dark(toasts.loadingToast) as any;
+  return axiosPromise
+    .then((response: any) => {
+      dispatch(success(actionType));
+      dispatch(hideLoading());
+      toast.dismiss(loadingToast);
+      toast.dark(toasts.successToast);
+      return response.data ?? response.payload;
+    })
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionType, axiosError?.response?.status, axiosError));
+      toast.dismiss(loadingToast);
+      toast.error(toasts.errorToast ?? axiosError?.response?.statusText);
       throw axiosError;
     })
     .finally(() => {

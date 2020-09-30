@@ -10,7 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import AppRouter from 'router';
 import OnLoadActions from 'OnLoadActions';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 export const store = configureStore();
 
