@@ -142,19 +142,19 @@ export const handleAxiosResponseWithToasts = (
 ): Promise<any> => {
   dispatch(request(actionType));
   dispatch(showLoading());
-  const loadingToast = toast.dark(toasts.loadingToast) as any;
+  const loadingToast = toasts.loadingToast() as any;
   return axiosPromise
     .then((response: any) => {
       dispatch(success(actionType));
       dispatch(hideLoading());
       toast.dismiss(loadingToast);
-      toast.dark(toasts.successToast);
+      toasts.successToast();
       return response.data ?? response.payload;
     })
     .catch((axiosError: AxiosError) => {
       dispatch(error(actionType, axiosError?.response?.status, axiosError));
       toast.dismiss(loadingToast);
-      toast.error(toasts.errorToast ?? axiosError?.response?.statusText);
+      toasts.errorToast ? toasts.errorToast() : toast.dark(axiosError?.response?.statusText);
       throw axiosError;
     })
     .finally(() => {
