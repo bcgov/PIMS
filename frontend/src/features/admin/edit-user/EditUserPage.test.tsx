@@ -107,7 +107,7 @@ describe('Edit user page', () => {
 
   describe('appropriate fields are autofilled', () => {
     it('autofills  email, username, first and last name', () => {
-      const { getByTestId } = renderEditUserPage();
+      renderEditUserPage();
     });
   });
 
