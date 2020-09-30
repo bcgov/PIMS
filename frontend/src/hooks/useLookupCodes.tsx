@@ -14,7 +14,7 @@ function useCodeLookups() {
   };
 
   const getByType = (type: string) =>
-    lookupCodes.filter(code => code.type === type && code.isDisabled === false);
+    lookupCodes.filter(code => code.type === type && code.isDisabled !== true);
 
   const getPublicByType = (type: string) =>
     lookupCodes.filter(
