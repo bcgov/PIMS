@@ -115,53 +115,6 @@ export const handleAxiosResponse = (
     });
 };
 
-/**
- * used by the handleAxiosResponseWithToasts method.
- * loadingToast is the message to display while the api request is pending. This toast is cancelled when the request is completed.
- * successToast is displayed when the request is completed successfully.
- * errorToast is displayed when the request fails for any reason. By default this will return an error from axios.
- */
-export interface LifecycleToasts {
-  loadingToast: () => React.ReactText;
-  successToast: () => React.ReactText;
-  errorToast?: () => React.ReactText;
-}
-
-/** Provides default redux boilerplate applicable to most axios redux actions. Displays toast messages to provide user feedback to this async action.
- * Should be used in situations where user actions are directly creating api requests (ie. POST, PUT, DELETE)
- * @param dispatch Dispatch function
- * @param actionType All dispatched GenericNetworkActions will use this action type.
- * @param axiosPromise The result of an axios.get, .put, ..., call.
- * @param LifecycleToasts loading, error, success messages to display as toast messages during api lifecycle.
- */
-export const handleAxiosResponseWithToasts = (
-  dispatch: Function,
-  actionType: string,
-  axiosPromise: Promise<any>,
-  toasts: LifecycleToasts,
-): Promise<any> => {
-  dispatch(request(actionType));
-  dispatch(showLoading());
-  const loadingToast = toasts.loadingToast() as any;
-  return axiosPromise
-    .then((response: any) => {
-      dispatch(success(actionType));
-      dispatch(hideLoading());
-      toast.dismiss(loadingToast);
-      toasts.successToast();
-      return response.data ?? response.payload;
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionType, axiosError?.response?.status, axiosError));
-      toast.dismiss(loadingToast);
-      toasts.errorToast ? toasts.errorToast() : toast.dark(axiosError?.response?.statusText);
-      throw axiosError;
-    })
-    .finally(() => {
-      dispatch(hideLoading());
-    });
-};
-
 export const validateFormikWithCallback = (formikProps: FormikProps<any>, callback: Function) => {
   formikProps.validateForm().then((errors: any) => {
     if (errors !== undefined && Object.keys(errors).length === 0) {

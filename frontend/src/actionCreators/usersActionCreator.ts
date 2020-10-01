@@ -1,4 +1,4 @@
-import { LifecycleToasts, handleAxiosResponseWithToasts } from './../utils/utils';
+import { handleAxiosResponse } from './../utils/utils';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -6,7 +6,7 @@ import * as API from 'constants/API';
 import * as adminActions from 'actions/adminActions';
 import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios from 'customAxios';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 import * as pimsToasts from 'constants/toasts';
 
@@ -77,19 +77,14 @@ const userToasts: LifecycleToasts = {
 export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => (
   dispatch: Function,
 ) => {
-  const axiosPromise = CustomAxios()
+  const axiosPromise = CustomAxios({ lifecycleToasts: userToasts })
     .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
     .then((response: AxiosResponse) => {
       dispatch(adminActions.updateUser(response.data));
       return Promise.resolve(response);
     });
 
-  return handleAxiosResponseWithToasts(
-    dispatch,
-    reducerTypes.PUT_USER_DETAIL,
-    axiosPromise,
-    userToasts,
-  ).catch(() => {
+  return handleAxiosResponse(dispatch, reducerTypes.PUT_USER_DETAIL, axiosPromise).catch(() => {
     // swallow the exception, the error has already been displayed.
   });
 };
