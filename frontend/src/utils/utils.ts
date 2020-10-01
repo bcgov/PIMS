@@ -8,7 +8,6 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment';
 import { IStatus } from 'features/projects/common';
-import { toast } from 'react-toastify';
 
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
