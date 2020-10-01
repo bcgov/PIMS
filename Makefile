@@ -62,6 +62,7 @@ clean: ## Removes local containers, images, volumes, etc
 	@echo "$(P) Note: does not clear image cache."
 	@docker-compose rm -f -v -s
 	@docker volume rm -f pims-frontend-node-cache
+	@docker volume rm -f pims-api-db-data
 
 setup: ## Setup local container environment, initialize keycloak and database
 	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
