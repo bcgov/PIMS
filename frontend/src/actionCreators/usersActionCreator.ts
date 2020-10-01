@@ -1,3 +1,4 @@
+import { handleAxiosResponse } from './../utils/utils';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -5,8 +6,9 @@ import * as API from 'constants/API';
 import * as adminActions from 'actions/adminActions';
 import * as actionTypes from 'constants/actionTypes';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios from 'customAxios';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
+import * as pimsToasts from 'constants/toasts';
 
 export const getActivateUserAction = () => (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_ACTIVATE_USER));
@@ -66,20 +68,25 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Functio
     .finally(() => dispatch(hideLoading()));
 };
 
+const userToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.user.USER_UPDATING,
+  successToast: pimsToasts.user.USER_UPDATED,
+  errorToast: pimsToasts.user.USER_ERROR,
+};
+
 export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => (
   dispatch: Function,
 ) => {
-  dispatch(request(reducerTypes.PUT_USER_DETAIL));
-  dispatch(showLoading());
-  return CustomAxios()
+  const axiosPromise = CustomAxios({ lifecycleToasts: userToasts })
     .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
     .then((response: AxiosResponse) => {
       dispatch(adminActions.updateUser(response.data));
-      dispatch(success(reducerTypes.PUT_USER_DETAIL));
-      dispatch(hideLoading());
-    })
-    .catch(() => dispatch(error(reducerTypes.PUT_USER_DETAIL)))
-    .finally(() => dispatch(hideLoading()));
+      return Promise.resolve(response);
+    });
+
+  return handleAxiosResponse(dispatch, reducerTypes.PUT_USER_DETAIL, axiosPromise).catch(() => {
+    // swallow the exception, the error has already been displayed.
+  });
 };
 
 export const NEW_PIMS_USER = 201;
