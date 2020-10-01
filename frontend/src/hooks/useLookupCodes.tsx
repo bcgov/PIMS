@@ -47,8 +47,8 @@ function useCodeLookups() {
 
   const getOptionsByType = (type: string) => getByType(type).map(mapLookupCode);
   return {
-    getOptionsByType: getOptionsByType,
-    getCodeById: getCodeById,
+    getOptionsByType,
+    getCodeById,
     getByType,
     getPublicByType,
     filterByParent,
