@@ -6,11 +6,17 @@ import { toast } from 'react-toastify';
  */
 
 /** These toasts are used by the update user api */
-export const USER_UPDATING_TOAST_ID = 'UPDATING_USER';
-export const USER_UPDATING = () =>
-  toast.dark('Updating User...', { toastId: USER_UPDATING_TOAST_ID });
-export const USER_UPDATED_TOAST_ID = 'USER_UPDATED';
-export const USER_UPDATED = () => toast.dark('User updated', { toastId: USER_UPDATED_TOAST_ID });
-export const USER_ERROR_TOAST_ID = 'USER_ERROR';
-export const USER_ERROR = () =>
-  toast.dark('Failed to update User', { toastId: USER_ERROR_TOAST_ID });
+const USER_UPDATING_TOAST_ID = 'UPDATING_USER';
+const USER_UPDATING = () => toast.dark('Updating User...', { toastId: USER_UPDATING_TOAST_ID });
+const USER_UPDATED_TOAST_ID = 'USER_UPDATED';
+const USER_UPDATED = () => toast.dark('User updated', { toastId: USER_UPDATED_TOAST_ID });
+const USER_ERROR_TOAST_ID = 'USER_ERROR';
+const USER_ERROR = () => toast.dark('Failed to update User', { toastId: USER_ERROR_TOAST_ID });
+export const user = {
+  USER_UPDATING_TOAST_ID,
+  USER_UPDATING,
+  USER_UPDATED_TOAST_ID,
+  USER_UPDATED,
+  USER_ERROR_TOAST_ID,
+  USER_ERROR,
+};

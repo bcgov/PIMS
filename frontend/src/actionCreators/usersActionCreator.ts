@@ -69,9 +69,9 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => (dispatch: Functio
 };
 
 const userToasts: LifecycleToasts = {
-  loadingToast: pimsToasts.USER_UPDATING,
-  successToast: pimsToasts.USER_UPDATED,
-  errorToast: pimsToasts.USER_ERROR,
+  loadingToast: pimsToasts.user.USER_UPDATING,
+  successToast: pimsToasts.user.USER_UPDATED,
+  errorToast: pimsToasts.user.USER_ERROR,
 };
 
 export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => (
