@@ -64,9 +64,9 @@ const CustomAxios = ({
         return Promise.resolve(error.message);
       }
 
-      if (lifecycleToasts) {
+      if (lifecycleToasts?.errorToast) {
         loadingToastId && toast.dismiss(loadingToastId);
-        lifecycleToasts.successToast();
+        lifecycleToasts.errorToast();
       }
 
       const status = error.response ? error.response.status : null;
