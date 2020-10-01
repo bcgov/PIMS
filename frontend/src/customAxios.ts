@@ -72,10 +72,6 @@ const CustomAxios = ({
       const status = error.response ? error.response.status : null;
       //const errorMessage =
       //  errorToastMessage || (error.response && error.response.data.message) || String.ERROR;
-
-      if (status === UNAUTHORIZED || status === MAINTENANCE) {
-        window.location.reload(false);
-      }
       return Promise.reject(error);
     },
   );

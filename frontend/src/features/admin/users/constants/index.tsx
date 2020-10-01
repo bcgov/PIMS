@@ -4,6 +4,7 @@ import { CellProps } from 'react-table';
 import { RowActions } from '../components/RowActions';
 import { IUserRecord } from '../interfaces/IUserRecord';
 import { FaCheck, FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
   {
@@ -11,7 +12,7 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     accessor: 'username',
     align: 'left',
     Cell: (props: CellProps<IUserRecord>) => {
-      return <a href={`/admin/user/${props.row.original.id}`}>{props.row.original.username}</a>;
+      return <Link to={`/admin/user/${props.row.original.id}`}>{props.row.original.username}</Link>;
     },
     sortable: true,
   },

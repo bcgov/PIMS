@@ -48,7 +48,6 @@ const GenericModal = (props: ModalProps) => {
     props.handleOk ??
     (() => {
       history.push('/');
-      window.location.reload();
     });
   const ok = () => {
     setShow(false);
