@@ -99,6 +99,9 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.Address))
                 query = query.Where(p => EF.Functions.Like(p.Address, $"%{filter.Address}%") || EF.Functions.Like(p.City, $"%{filter.Address}%"));
 
+            if (!String.IsNullOrWhiteSpace(filter.City))
+                query = query.Where(p => EF.Functions.Like(p.City, $"%{filter.City}%"));
+
             if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);
             if (filter.MaxLandArea.HasValue)
@@ -164,7 +167,7 @@ namespace Pims.Dal.Helpers.Extensions
             foreach (Entity.EvaluationKeys key in Enum.GetValues(typeof(Entity.EvaluationKeys)))
             {
                 DateTime? mostRecentDate = null;
-                DateTime? date = null; 
+                DateTime? date = null;
                 if (property is Entity.Parcel)
                 {
                     mostRecentDate = ((Entity.Parcel)property).Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;

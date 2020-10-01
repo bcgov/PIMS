@@ -30,6 +30,7 @@ const parcelBounds: IPropertySearchParams = {
   swLatitude: defaultLatLng.lat,
   swLongitude: defaultLatLng.lng,
   address: null,
+  city: null,
   municipality: null,
   projectNumber: null,
   agencies: null,
@@ -81,6 +82,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     const {
       pid,
       address,
+      city,
       municipality,
       projectNumber,
       agencies,
@@ -100,6 +102,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       swLatitude: sw.lat,
       swLongitude: sw.lng,
       address: address ?? null,
+      city: city ?? null,
       municipality: municipality ?? null,
       projectNumber: projectNumber ?? null,
       agencies: agencies ?? null,

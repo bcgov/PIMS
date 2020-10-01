@@ -32,6 +32,7 @@ export interface IPropertySearchParams {
   swLatitude: number;
   swLongitude: number;
   address: string | null;
+  city: string | null;
   municipality: string | null;
   projectNumber: string | null;
   /** comma-separated list of agencies to filter by */

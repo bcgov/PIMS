@@ -174,6 +174,7 @@ namespace Pims.Dal.Entities.Models
                 ProjectNumber = filter.ProjectNumber,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
+                City = filter.City,
 
                 PID = filter.PID,
                 Municipality = filter.Municipality,
@@ -213,6 +214,7 @@ namespace Pims.Dal.Entities.Models
                 ProjectNumber = filter.ProjectNumber,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
+                City = filter.City,
 
                 Municipality = filter.Municipality,
                 MinLandArea = filter.MinLandArea,
