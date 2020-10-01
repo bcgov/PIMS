@@ -1,18 +1,11 @@
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class DisableRoles : Migration
+    public partial class DisableRoles : SeedMigration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql("UPDATE dbo.Roles SET IsDisabled = 1 WHERE Name in ('Assistant Deputy Minister', 'Assistant Deputy Minister Assistant', 'Executive Director')");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql("UPDATE dbo.Roles SET IsDisabled = 0 WHERE Name in ('Assistant Deputy Minister', 'Assistant Deputy Minister Assistant', 'Executive Director')");
-        }
     }
 }
 
