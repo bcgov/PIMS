@@ -84,8 +84,6 @@ describe('Manage access requests', () => {
   it('Snapshot matches', () => {
     const component = componentRender(successStore);
     expect(component.toJSON()).toMatchSnapshot();
-    const instance = component.getInstance();
-    expect(instance?.findByType('table'));
   });
 
   it('Table row count is 1', () => {
