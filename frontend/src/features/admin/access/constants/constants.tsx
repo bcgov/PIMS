@@ -4,6 +4,7 @@ import { IAccessRequestModel } from '../interfaces';
 import { CellProps } from 'react-table';
 import { AccessStatusDisplayMapper } from 'constants/accessStatus';
 import { RowActions } from '../components/RowActions';
+import { Link } from 'react-router-dom';
 
 export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
   {
@@ -11,7 +12,9 @@ export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
     accessor: 'username',
     align: 'left',
     Cell: (props: CellProps<IAccessRequestModel>) => {
-      return <a href={`/admin/user/${props.row.original.userId}`}>{props.row.original.username}</a>;
+      return (
+        <Link to={`/admin/user/${props.row.original.userId}`}>{props.row.original.username}</Link>
+      );
     },
   },
   {

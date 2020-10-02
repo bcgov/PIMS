@@ -499,6 +499,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             >
               <a
                 href="/admin/user/1"
+                onClick={[Function]}
               >
                 testername1
               </a>
@@ -816,6 +817,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             >
               <a
                 href="/admin/user/2"
+                onClick={[Function]}
               >
                 testername2
               </a>
