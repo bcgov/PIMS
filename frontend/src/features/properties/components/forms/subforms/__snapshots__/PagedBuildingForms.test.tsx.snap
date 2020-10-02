@@ -99,6 +99,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 name="buildings.0.name"
                 onBlur={[Function]}
                 onChange={[Function]}
+                value="name"
               />
             </div>
           </div>
