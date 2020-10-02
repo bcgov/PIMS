@@ -12,6 +12,7 @@ import * as API from 'constants/API';
 import ManageAccessRequests from './ManageAccessRequests';
 import { create, ReactTestInstance } from 'react-test-renderer';
 import { AccessRequestStatus } from 'constants/accessStatus';
+import { Router } from 'react-router-dom';
 
 const accessRequests = {
   page: 1,
@@ -69,9 +70,11 @@ const successStore = mockStore({
 
 const componentRender = (store: any) => {
   let component = create(
-    <Provider store={store}>
-      <ManageAccessRequests />
-    </Provider>,
+    <Router history={history}>
+      <Provider store={store}>
+        <ManageAccessRequests />
+      </Provider>
+    </Router>,
   );
   return component;
 };
