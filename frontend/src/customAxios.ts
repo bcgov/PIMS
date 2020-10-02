@@ -3,9 +3,6 @@ import { isEmpty } from 'lodash';
 import { store } from 'App';
 import { toast } from 'react-toastify';
 
-const UNAUTHORIZED = 401;
-const MAINTENANCE = 503;
-
 const defaultEnvelope = (x: any) => ({ data: { records: x } });
 
 /**
@@ -69,7 +66,6 @@ const CustomAxios = ({
         lifecycleToasts.errorToast();
       }
 
-      const status = error.response ? error.response.status : null;
       //const errorMessage =
       //  errorToastMessage || (error.response && error.response.data.message) || String.ERROR;
       return Promise.reject(error);
