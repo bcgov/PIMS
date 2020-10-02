@@ -11,8 +11,6 @@ import { IUser, IUsersFilter } from 'interfaces';
 import { IUserRecord } from './interfaces/IUserRecord';
 import { IUsersState } from 'reducers/usersReducer';
 import { UsersFilterBar } from './components/UsersFilterBar';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import { Table } from 'components/Table';
 import { columnDefinitions } from './constants';
@@ -25,6 +23,7 @@ import {
 } from 'actions/adminActions';
 import { generateSortCriteria, formatDateTime } from 'utils';
 import styled from 'styled-components';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -33,24 +32,9 @@ const TableContainer = styled(Container)`
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
-
-  const roles = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.ROLE_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const { getByType } = useCodeLookups();
+  const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [getByType]);
+  const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
 
   const columns = useMemo(() => columnDefinitions, []);
 

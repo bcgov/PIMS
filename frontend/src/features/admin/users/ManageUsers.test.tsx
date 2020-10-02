@@ -12,6 +12,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { create, ReactTestInstance } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -22,7 +23,9 @@ const mockStore = configureMockStore([thunk]);
 const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
@@ -70,9 +73,18 @@ const successStore = mockStore({
   },
 });
 
-describe('component functionality', () => {
+describe('Manage Users Component', () => {
   const componentRender = (store: any) =>
     create(
+      <Provider store={store}>
+        <Router history={history}>
+          <ManageUsersPage />
+        </Router>
+      </Provider>,
+    );
+
+  const testRender = (store: any) =>
+    render(
       <Provider store={store}>
         <Router history={history}>
           <ManageUsersPage />
@@ -90,5 +102,25 @@ describe('component functionality', () => {
     const instance = component.root;
     const table = (instance as ReactTestInstance).findByProps({ name: 'usersTable' });
     expect(table.props.data.length).toBe(2);
+  });
+
+  it('displays enabled agencies', () => {
+    const { queryByText } = testRender(successStore);
+    expect(queryByText('agencyVal')).toBeVisible();
+  });
+
+  it('Does not display disabled agencies', () => {
+    const { queryByText } = testRender(successStore);
+    expect(queryByText('disabledAgency')).toBeNull();
+  });
+
+  it('displays enabled roles', () => {
+    const { queryByText } = testRender(successStore);
+    expect(queryByText('roleVal')).toBeVisible();
+  });
+
+  it('Does not display disabled roles', () => {
+    const { queryByText } = testRender(successStore);
+    expect(queryByText('disabledRole')).toBeNull();
   });
 });

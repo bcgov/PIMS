@@ -24,7 +24,9 @@ const history = createMemoryHistory();
 const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '2', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
@@ -47,6 +49,15 @@ const store = mockStore({
 });
 
 const mockAxios = new MockAdapter(axios);
+
+const testRender = () =>
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <EditUserPage id="TEST-ID" />,
+      </Router>
+    </Provider>,
+  );
 
 const renderEditUserPage = () =>
   render(
@@ -92,6 +103,26 @@ describe('Edit user page', () => {
     expect(getAllByText(/roleVal/i));
     expect(getAllByText(/agencyVal/i));
     expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
+  });
+
+  it('displays enabled agencies', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('agencyVal')).toBeVisible();
+  });
+
+  it('Does not display disabled agencies', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('disabledAgency')).toBeNull();
+  });
+
+  it('displays enabled roles', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('roleVal')).toBeVisible();
+  });
+
+  it('Does not display disabled roles', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('disabledRole')).toBeNull();
   });
 
   describe('appropriate fields are autofilled', () => {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders RequestAccessPage correctly 1`] = `
+exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`] = `
 <div
   className="accessRequestPage"
 >
@@ -144,6 +144,12 @@ exports[`renders RequestAccessPage correctly 1`] = `
             >
               Please Select
             </option>
+            <option
+              className="option"
+              value="1"
+            >
+              agencyVal
+            </option>
           </select>
         </div>
         <div
@@ -194,6 +200,12 @@ exports[`renders RequestAccessPage correctly 1`] = `
               value=""
             >
               Please Select
+            </option>
+            <option
+              className="option"
+              value="1"
+            >
+              roleVal
             </option>
           </select>
         </div>
