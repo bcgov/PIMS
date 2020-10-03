@@ -2,5 +2,15 @@
   .input-tooltip-wrapper {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    input {
+      width: 85%;
+    }
+    svg {
+      width: 15%;
+    }
+    div {
+      width: 100%;
+    }
   }
 }

@@ -1,18 +1,16 @@
-import { Fragment, useState, useCallback } from 'react';
+import { Fragment, useMemo, useRef } from 'react';
 import React from 'react';
-import { Col, Row, Table } from 'react-bootstrap';
 import { FormikProps, setIn, getIn } from 'formik';
-import { Form, FastDatePicker, FastCurrencyInput } from 'components/common/form';
+import { Form } from 'components/common/form';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import _ from 'lodash';
-import WrappedPaginate from 'components/common/WrappedPaginate';
-import { IPaginate } from 'utils/CommonFunctions';
 import { formikFieldMemo, getCurrentFiscalYear, isPositiveNumberOrZero } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
-import SumFinancialsForm from './SumFinancialsForm';
+import { Table } from 'components/Table';
+import { getEvaluationCols } from './EvaluationCols';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -34,6 +32,13 @@ export interface IFinancial extends IFiscal, IEvaluation {
   rowVersion?: string;
   parcelId?: number;
 }
+
+export interface IFinancialYear {
+  assessed: IFinancial;
+  appraised: IFinancial;
+  netbook: IFinancial;
+  estimated: IFinancial;
+}
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
 const NUMBER_OF_GENERATED_EVALUATIONS = 20;
 const currentYear = moment().year();
@@ -44,17 +49,10 @@ const yearsArray = _.range(
   -1,
 );
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
-//configures the react paginate control on this page.
-const pagedFinancials: IPaginate = {
-  page: 0,
-  total: yearsArray.length,
-  quantity: NUMBER_OF_EVALUATIONS_PER_PAGE,
-  items: yearsArray,
-  maxPages: 3,
-};
 
 const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials?.find(financial => {
+  return financials?.find((financialsForYear: any) => {
+    const financial = financialsForYear[type.toLocaleLowerCase()];
     return (
       ((financial.date !== undefined && moment(financial.date).year() === year) ||
         financial.fiscalYear === year) &&
@@ -67,19 +65,22 @@ const indexOfFinancial = (financials: IFinancial[], type: string, year?: number)
 /**
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
-export const defaultFinancials: IFinancial[] = _.flatten(
-  yearsArray.map(year => {
-    return Object.values(keyTypes).map(type => {
-      return {
+export const defaultFinancials: any = yearsArray.map(year => {
+  return _.reduce(
+    Object.values(keyTypes) as string[],
+    (acc, type) => ({
+      ...acc,
+      [type.toLocaleLowerCase()]: {
         date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').format('YYYY-MM-DD') : '',
         year: year,
         fiscalYear: year,
         key: type,
         value: '',
-      };
-    });
-  }),
-);
+      },
+    }),
+    {} as IFinancialYear[],
+  );
+});
 /**
  * Merge the passed list of evaluations with this components defaultEvaluations.
  * @param existingFinancials
@@ -92,52 +93,61 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
       evaluation.key,
       (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
     );
-    evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
-    placeholderFinancials[index] = evaluation;
+    if (index >= 0) {
+      evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
+      placeholderFinancials[index][evaluation.key.toLocaleLowerCase()] = evaluation;
+    }
   });
   return placeholderFinancials;
 };
 
 export const validateFinancials = (
-  financials: IFinancial[],
+  financialYears: IFinancialYear[],
   nameSpace: string,
   showAppraisal?: boolean,
 ) => {
   // Yup has major performance issues with the validation of large arrays.
   // As a result, handle the validation manually here.
   let errors = {};
-  filterFutureAssessedValues(financials).forEach((financial, index) => {
-    //All financials are required for the current year except appraised.
-    if (
-      financial.fiscalYear === getCurrentFiscalYear() &&
-      !isPositiveNumberOrZero(financial.value) &&
-      financial.key !== EvaluationKeys.Appraised &&
-      financial.key !== FiscalKeys.Estimated &&
-      !(
-        financial.key === EvaluationKeys.Assessed &&
-        financial?.year &&
-        financial.year > moment().year()
-      )
-    ) {
-      errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
-    }
+  financialYears.forEach((financialYear, index) => {
+    Object.keys(financialYear).forEach(key => {
+      const financial = (financialYear as any)[key];
+      //All financials are required for the current year except appraised.
+      if (
+        financial.fiscalYear === getCurrentFiscalYear() &&
+        !isPositiveNumberOrZero(financial.value) &&
+        financial.key !== EvaluationKeys.Appraised &&
+        financial.key !== FiscalKeys.Estimated &&
+        !(
+          financial.key === EvaluationKeys.Assessed &&
+          financial?.year &&
+          financial.year > moment().year()
+        )
+      ) {
+        errors = setIn(
+          errors,
+          `${nameSpace}.${index}.${financial.key.toLocaleLowerCase()}.value`,
+          'Required',
+        );
+      }
 
-    //if one of date/value for the Appraised field is filled in the other field is required as well.
-    if (
-      showAppraisal &&
-      financial.date &&
-      financial.key === EvaluationKeys.Appraised &&
-      !isPositiveNumberOrZero(financial.value)
-    ) {
-      errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
-    } else if (
-      showAppraisal &&
-      !isPositiveNumberOrZero(financial.value) &&
-      financial.key === EvaluationKeys.Appraised &&
-      !financial.date
-    ) {
-      errors = setIn(errors, `${nameSpace}.${index}.date`, 'Required');
-    }
+      //if one of date/value for the Appraised field is filled in the other field is required as well.
+      if (
+        showAppraisal &&
+        financial.date &&
+        financial.key === EvaluationKeys.Appraised &&
+        !isPositiveNumberOrZero(financial.value)
+      ) {
+        errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
+      } else if (
+        showAppraisal &&
+        !isPositiveNumberOrZero(financial.value) &&
+        financial.key === EvaluationKeys.Appraised &&
+        !financial.date
+      ) {
+        errors = setIn(errors, `${nameSpace}.${index}.date`, 'Required');
+      }
+    });
   });
   return errors;
 };
@@ -181,140 +191,32 @@ const getPageErrors = (errors: any, nameSpace: any) => {
  * Subform Component intended to be embedded in a higher level formik component.
  */
 const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
-  const financials: IFinancial[] = getIn(props.values, props.nameSpace);
-  // the current paginated page.
-  const [currentPage, setCurrentPage] = useState<number[]>([0, NUMBER_OF_EVALUATIONS_PER_PAGE]);
-
-  const getCurrentPage = useCallback(
-    (type: string): number[] => {
-      return _.slice(
-        pagedFinancials.items.filter((year: number) => {
-          return type !== EvaluationKeys.Assessed || year <= moment().year();
-        }),
-        currentPage[0],
-        currentPage[1],
-      );
-    },
-    [currentPage],
+  const financials: IFinancialYear[] = getIn(props.values, props.nameSpace);
+  const pagingRef: any = useRef();
+  const cols: any = useMemo(
+    () => getEvaluationCols(props.disabled, props.nameSpace, props.nameSpace === 'financials'),
+    [props.disabled, props.nameSpace],
   );
-
-  const withNameSpace = (name: string, type: string, year?: number): string => {
-    return [props.nameSpace, `${indexOfFinancial(financials, type, year)}`, name]
-      .filter(x => x)
-      .join('.');
-  };
-  const isFiscal = (type: string) => {
-    return Object.keys(FiscalKeys).includes(type);
-  };
 
   return (
     <Fragment>
       <PaginatedFormErrors
-        nameSpace="Evaluations"
         errors={getPageErrors(props.errors, props.nameSpace)}
+        pagingRef={pagingRef}
       />
-      <Form.Row className="evaluationForm">
-        <Row noGutters>
-          {Object.values(keyTypes).map(type => {
-            if (!props.showAppraisal && type === EvaluationKeys.Appraised) {
-              return null;
-            } else {
-              return (
-                <Col xs={EvaluationKeys.Assessed === type && props.isParcel ? 5 : 3} key={type}>
-                  <h6>{type}</h6>
-                  <Table bordered>
-                    <thead>
-                      <tr>
-                        <th>
-                          {EvaluationKeys.Appraised === type && 'Date'}
-                          {EvaluationKeys.Assessed === type && 'Year'}
-                          {(FiscalKeys.Estimated === type || FiscalKeys.NetBook === type) &&
-                            'Fiscal Year'}
-                        </th>
-                        <th>
-                          {EvaluationKeys.Assessed === type && props.isParcel ? 'Land' : 'Value'}
-                        </th>
-                        {EvaluationKeys.Assessed === type && props.isParcel && (
-                          <>
-                            <th>Improvements</th>
-                            <th>Total</th>
-                          </>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {getCurrentPage(type).map(year => {
-                        return (
-                          <tr key={type + year}>
-                            <td>
-                              {type === EvaluationKeys.Assessed && (
-                                <Form.Control
-                                  disabled={true}
-                                  readOnly={true}
-                                  type="string"
-                                  value={year.toString()}
-                                />
-                              )}
-                              {isFiscal(type) && (
-                                <Form.Control
-                                  disabled={true}
-                                  readOnly={true}
-                                  type="string"
-                                  value={`${year - 1}/${year}`}
-                                />
-                              )}
-                              {type === EvaluationKeys.Appraised && (
-                                <FastDatePicker
-                                  formikProps={props}
-                                  disabled={props.disabled}
-                                  minDate={moment(year, 'YYYY')
-                                    .startOf('year')
-                                    .toDate()}
-                                  maxDate={moment(year, 'YYYY')
-                                    .endOf('year')
-                                    .toDate()}
-                                  field={withNameSpace('date', type, year)}
-                                />
-                              )}
-                            </td>
-                            <td>
-                              <FastCurrencyInput
-                                formikProps={props}
-                                disabled={props.disabled}
-                                field={withNameSpace('value', type, year)}
-                                placeholder={props.disabled ? 'n/a' : ' '}
-                                tooltip="If value not available enter $1 and add notes"
-                              />
-                            </td>
-                            {EvaluationKeys.Assessed === type && props.isParcel && (
-                              <>
-                                <SumFinancialsForm
-                                  formikProps={props}
-                                  onlyAssesedSums={true}
-                                  year={year}
-                                />
-                              </>
-                            )}
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </Col>
-              );
-            }
-          })}
-        </Row>
-        <WrappedPaginate
-          onPageChange={(page: any) => {
-            setCurrentPage([
-              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE,
-              page.selected * NUMBER_OF_EVALUATIONS_PER_PAGE + NUMBER_OF_EVALUATIONS_PER_PAGE,
-            ]);
-          }}
-          {...pagedFinancials}
-        />
-      </Form.Row>
+      <div ref={pagingRef}>
+        <Form.Row className="evaluationForm">
+          <Table
+            lockPageSize
+            pageSize={NUMBER_OF_EVALUATIONS_PER_PAGE}
+            pageCount={financials.length / NUMBER_OF_EVALUATIONS_PER_PAGE}
+            name="evaluations"
+            columns={cols}
+            data={defaultFinancials}
+            manualPagination={false}
+          />
+        </Form.Row>
+      </div>
     </Fragment>
   );
 };

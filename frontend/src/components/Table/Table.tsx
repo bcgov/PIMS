@@ -96,6 +96,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   detailsPanel?: DetailsOptions<T>;
   footer?: boolean;
   hideToolbar?: boolean;
+  manualPagination?: boolean;
   // Limit where you would like an expansion button to appear based off this props criteria
   canRowExpand?: (val: any) => boolean;
 }
@@ -140,6 +141,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     pageCount,
     setSelectedRows,
     footer,
+    pageSize: pageSizeProp,
+    manualPagination,
   } = props;
 
   // Use the useTable hook to create your table configuration
@@ -148,8 +151,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       columns,
       data,
       defaultColumn,
-      initialState: { pageIndex: 0 },
-      manualPagination: true, // Tell the usePagination hook
+      initialState: { pageIndex: 0, pageSize: pageSizeProp },
+      manualPagination: manualPagination ?? true, // Tell the usePagination hook
       // that we'll handle our own data fetching.
       // This means we'll also have to provide our own
       // pageCount.
