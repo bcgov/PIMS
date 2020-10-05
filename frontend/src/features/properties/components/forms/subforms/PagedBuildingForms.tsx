@@ -37,7 +37,7 @@ const getPageErrors = (errors: any, nameSpace: any) => {
 const deletePagedBuilding = (
   buildings: IFormBuilding[],
   currentPage: number,
-  setCurrentPage: Function,
+  setCurrentPage: (n: number) => any,
   arrayHelpers: any,
 ) => {
   if (currentPage === buildings.length - 1) {
