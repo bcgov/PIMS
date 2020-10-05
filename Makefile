@@ -57,9 +57,8 @@ build: ## Builds the local containers
 	@echo "$(P) Building images..."
 	@docker-compose build --no-cache
 
-clean: ## Removes local containers, images, volumes, etc
-	@echo "$(P) Removing containers, images, volumes etc..."
-	@echo "$(P) Note: does not clear image cache."
+clean: ## Removes all local containers, images, volumes, etc
+	@echo "$(P) Removing all containers, images, volumes for solution."
 	@docker-compose rm -f -v -s
 	@docker volume rm -f pims-frontend-node-cache
 	@docker volume rm -f pims-api-db-data
@@ -82,6 +81,12 @@ server-test: ## Runs the server tests in a container
 server-run: ## Starts local server containers
 	@echo "$(P) Starting server containers..."
 	@docker-compose up -d keycloak backend
+
+npm-clean: ## Removes local containers, images, volumes, for frontend application.
+	@echo "$(P) Removing frontend containers and volumes."
+	@docker-compose stop frontend
+	@docker-compose rm -f -v -s frontend
+	@docker volume rm -f pims-frontend-node-cache
 
 db-update: ## Update the database with the latest migration
 	@echo "$(P) Updating database with latest migration..."

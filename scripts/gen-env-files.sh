@@ -9,10 +9,13 @@ read -p 'Username: ' varKeycloak
 echo 'Enter a username for the API database.'
 read -p 'Username: ' varApiDb
 
-# Generate a random password.
-passvar=$(date +%s | sha256sum | base64 | head -c 32)
+# Generate a random password that satisfies MSSQL password requirements.
+echo 'A password is randomly being generated.'
+passvar=$(date +%s | sha256sum | base64 | head -c 29)A8!
+echo $passvar
 
 # Set environment variables.
+# Keycloak
 if test -f "./auth/keycloak/.env"; then
     echo "./auth/keycloak/.env exists"
 else
@@ -30,6 +33,7 @@ KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN" >> ./auth/keycloak/.env
 fi
 
+# Keycloak Database
 if test -f "./auth/postgres/.env"; then
     echo "./auth/postgres/.env exists"
 else
@@ -40,6 +44,7 @@ POSTGRESQL_PASSWORD=$passvar
 " >> ./auth/postgres/.env
 fi
 
+# API Database
 if test -f "./database/mssql/.env"; then
     echo "./database/mssql/.env exists"
 else
@@ -54,6 +59,7 @@ DB_PASSWORD=$passvar
 TIMEOUT_LENGTH=120" >> ./database/mssql/.env
 fi
 
+# API Database
 if test -f "./database/postgres/.env"; then
     echo "./database/postgres/.env exists"
 else
@@ -63,6 +69,7 @@ POSTGRES_PASSWORD=$passvar
 POSTGRES_DB=pims" >> ./database/postgres/.env
 fi
 
+# API
 if test -f "./backend/api/.env"; then
     echo "./backend/api/.env exists"
 else
@@ -74,6 +81,16 @@ Keycloak__Secret=
 Keycloak__ServiceAccount__Secret=" >> ./backend/api/.env
 fi
 
+# DAL DB migration
+if test -f "./backend/dal/.env"; then
+    echo "./backend/dal/.env exists"
+else
+echo \
+"ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User Id=$varApiDb;
+DB_PASSWORD=$passvar" >> ./backend/dal/.env
+fi
+
+# Application
 if test -f "./frontend/.env"; then
     echo "./frontend/.env exists"
 else
@@ -83,6 +100,7 @@ API_URL=http://backend:8080/
 CHOKIDAR_USEPOLLING=true" >> ./frontend/.env
 fi
 
+# Import tool
 if test -f "./tools/import/.env"; then
     echo "./tools/import/.env exists"
 else
@@ -103,6 +121,7 @@ Import__File=./Data/properties-todds.json
 # Api__ImportUrl=/tools/import/projects?stopOnError=false&defaults=workflow=SPL" >> ./tools/import/.env
 fi
 
+# Keycloak sync tool
 if test -f "./tools/keycloak/sync/.env"; then
     echo "./tools/keycloak/sync/.env exists"
 else
@@ -112,3 +131,4 @@ ASPNETCORE_ENVIRONMENT=Local
 Auth__Keycloak__Secret=" >> ./tools/keycloak/sync/.env
 fi
 
+echo 'Before running all the docker containers, update the .env files with the Keycloak Client Secret (pims-service-account).'
