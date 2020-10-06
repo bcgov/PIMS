@@ -1,0 +1,234 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pims-grafana-deploy
+  annotations:
+    openshift.io/display-name: PIMS Grafana
+    description: Deployment template for Grafana
+    tags: pims-monitoring
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: pims-monitoring-tools-grafana-datasource-config
+      namespace: ${PROJECT_NAME}
+      annotations:
+        description: Grafana datasource configuration
+      labels:
+        name: pims-monitoring-tools-grafana-datasource-config
+        app: pims
+        component: monitoring
+        env: tools
+        role: prometheus
+    type: Opaque
+    data:
+      datasources.yml: |-
+        apiVersion: 1
+        datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: ${PROMETHEUS_DOMAIN}
+
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: pims-monitoring-tools-grafana-ini-config
+      namespace: ${PROJECT_NAME}
+      annotations:
+        description: Grafana ini configuration
+      labels:
+        name: pims-monitoring-tools-grafana-ini-config
+        app: pims
+        component: monitoring
+        env: tools
+        role: prometheus
+    type: Opaque
+    data:
+      grafana.ini: |-
+        [server]
+        root_url = https://${DOMAIN}/
+        domain = ${DOMAIN}
+        enforce_domain = true
+        [auth.github]
+        enabled = true
+        allow_sign_up = true
+        client_id = ${GITHUB_CLIENT_ID}
+        client_secret = ${GITHUB_CLIENT_SECRET}
+        scopes = user:email,read:org
+        allowed_organizations = ${GITHUB_ALLOWED_ORG}
+        auth_url = https://github.com/login/oauth/authorize
+        token_url = https://github.com/login/oauth/access_token
+        api_url = https://api.github.com/user
+
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${GRAFANA_SERVICE_ACCOUNT_NAME}
+      labels:
+        name: ${GRAFANA_SERVICE_ACCOUNT_NAME}
+      namespace: ${PROJECT_NAME}
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      labels:
+        name: grafana
+      name: grafana
+      namespace: ${PROJECT_NAME}
+    spec:
+      host: ${DOMAIN}
+      to:
+        name: grafana
+        kind: Service
+        weight: 100
+      tls:
+        termination: edge
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: grafana
+      namespace: ${PROJECT_NAME}
+      labels:
+        metrics-infra: grafana
+        name: grafana
+    spec:
+      ports:
+        - name: grafana
+          port: 80
+          protocol: TCP
+          targetPort: 3000
+      selector:
+        app: pims-grafana-tools
+
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: pims-grafana-password-secret
+      namespace: ${PROJECT_NAME}
+      annotations:
+        description: "Grafana secrets"
+      labels:
+        name: pims-grafana-password-secret
+        app: pims-grafana-tools
+        component: tools
+        role: grafana
+    type: Opaque
+    stringData:
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: pims-grafana-tools
+      namespace: ${PROJECT_NAME}
+      annotations:
+        description: "Defines how to deploy grafana pims-monitoring"
+      labels:
+        name: pims-grafana-tools
+        app: pims-grafana-tools
+        component: grafana
+        env: tools
+        role: grafana
+    spec:
+      replicas: 1
+      selector:
+        name: pims-grafana-tools
+        app: pims-grafana-tools
+        component: grafana
+        env: tools
+      strategy:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          name: pims-grafana-tools
+          labels:
+            name: pims-grafana-tools
+            app: pims-grafana-tools
+            component: grafana
+            env: tools
+            role: grafana
+        spec:
+          serviceAccountName: ${GRAFANA_SERVICE_ACCOUNT_NAME}
+          volumes:
+            - name: "pims-monitoring-grafana-datasource-config-volume"
+              configMap:
+                name: pims-monitoring-tools-grafana-datasource-config
+            - name: "pims-monitoring-grafana-ini-config-volume"
+              configMap:
+                name: pims-monitoring-tools-grafana-ini-config
+          containers:
+            - name: pims-grafana-tools
+              image: grafana/grafana
+              imagePullPolicy: Always
+              env:
+                - name: GF_SERVER_ROOT_URL
+                  value: https://${DOMAIN}
+                - name: GF_SECURITY_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: pims-grafana-password-secret
+                      key: GF_SECURITY_ADMIN_PASSWORD
+              ports:
+                - containerPort: 3000
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
+              volumeMounts:
+                - mountPath: /etc/grafana/provisioning/datasources
+                  name: pims-monitoring-grafana-datasource-config-volume
+                - mountPath: /etc/grafana
+                  name: pims-monitoring-grafana-ini-config-volume
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+parameters:
+  - name: GF_SECURITY_ADMIN_PASSWORD
+    displayName: Grafana Dashboard Admin Password
+    description: Grafana Dashboard Admin Password
+    required: true
+  - name: GITHUB_ALLOWED_ORG
+    displayName: Github Allowed Organization
+    description: Github Allowed Organization
+    required: true
+  - name: GITHUB_CLIENT_ID
+    displayName: Github Client ID
+    description: Github Client ID
+    required: true
+  - name: GITHUB_CLIENT_SECRET
+    displayName: Github Client Secret
+    description: Github Client Secret
+    required: true
+  - name: GRAFANA_SERVICE_ACCOUNT_NAME
+    displayName: Grafana Service Account Name
+    description: Grafana Service Account Name
+    required: true
+    value: "grafana-service-account"
+  - name: PROJECT_NAME
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "jcxjin-tools"
+  - name: PROMETHEUS_DOMAIN
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "pims-prometheus.pathfinder.gov.bc.ca"
+  - name: DOMAIN
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "pims-grafana.pathfinder.gov.bc.ca"
