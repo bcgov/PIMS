@@ -19,6 +19,7 @@ import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
+import { useApi } from 'hooks/useApi';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -93,6 +94,20 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
+  const { getCityLatLng } = useApi();
+
+  useEffect(() => {
+    const zoomToCity = async () => {
+      if (mapFilter.city) {
+        const center = await getCityLatLng(mapFilter.city);
+        if (center) {
+          mapRef.current?.leafletElement.setZoomAround(center, 11);
+        }
+      }
+    };
+    zoomToCity();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapFilter.city]);
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -272,6 +287,7 @@ const Map: React.FC<MapProps> = ({
               propertyClassifications={propertyClassifications}
               lotSizes={lotSizes}
               onFilterChange={handleMapFilterChange}
+              onFilterReset={fitMapBounds}
             />
           </Container>
         </Container>
@@ -285,8 +301,6 @@ const Map: React.FC<MapProps> = ({
             ref={mapRef}
             center={[lat, lng]}
             zoom={lastZoom}
-            zoomSnap={0.3}
-            zoomDelta={0.3}
             whenReady={() => {
               fitMapBounds();
               handleViewportChange(mapFilter);
