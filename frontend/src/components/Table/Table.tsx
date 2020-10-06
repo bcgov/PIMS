@@ -151,7 +151,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       columns,
       data,
       defaultColumn,
-      initialState: { pageIndex: 0, pageSize: pageSizeProp },
+      initialState: pageSizeProp ? { pageIndex: 0, pageSize: pageSizeProp } : { pageIndex: 0 },
       manualPagination: manualPagination ?? true, // Tell the usePagination hook
       // that we'll handle our own data fetching.
       // This means we'll also have to provide our own

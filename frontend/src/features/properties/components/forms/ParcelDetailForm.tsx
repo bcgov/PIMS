@@ -317,7 +317,8 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 history.go(0);
               }
             } catch (error) {
-              const msg: string = error?.response?.data?.error ?? error.toString();
+              const msg: string =
+                error?.response?.data?.error ?? 'Error saving property data, please try again.';
               actions.setStatus({ msg });
             } finally {
               actions.setSubmitting(false);
