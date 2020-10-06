@@ -201,15 +201,28 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       pidDuplicated = !(await isPidAvailable(values));
     }
 
+    let pinDuplicated = false;
+    if (values.pin) {
+      pinDuplicated = !(await isPinAvailable(values));
+    }
+
     let errors = await yupErrors;
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
+    }
+    if (pinDuplicated) {
+      errors = { ...errors, pin: 'This PIN is already in use.' };
     }
     return Promise.resolve(errors);
   };
 
   const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
     const { available } = await api.isPidAvailable(values.id, values.pid);
+    return available;
+  };
+
+  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const { available } = await api.isPinAvailable(values.id, values.pin);
     return available;
   };
 

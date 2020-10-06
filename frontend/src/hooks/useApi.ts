@@ -28,6 +28,10 @@ export interface PimsAPI extends AxiosInstance {
     parcelId: number | '' | undefined,
     pid: string | undefined,
   ) => Promise<{ available: boolean }>;
+  isPinAvailable: (
+    parcelId: number | '' | undefined,
+    pin: number | '' | undefined,
+  ) => Promise<{ available: boolean }>;
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
   getCityLatLng: (city: string) => Promise<LatLngTuple | null>;
@@ -64,6 +68,18 @@ export const useApi = (): PimsAPI => {
     let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
     const { data } = await axios.get(
       `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
+    );
+    return data;
+  };
+
+  axios.isPinAvailable = async (
+    parcelId: number | '' | undefined,
+    pin: number | '' | undefined,
+  ) => {
+    const pinParam = `pin=${Number(pin)}`;
+    let params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
+    const { data } = await axios.get(
+      `${ENVIRONMENT.apiUrl}/properties/parcels/check/pin-available?${params}`,
     );
     return data;
   };
