@@ -426,4 +426,20 @@ describe('autosave functionality', () => {
       expect(getInput(container, 'pid')).toHaveValue('123-456-789');
     });
   });
+
+  it('does not overwrite the pid if there is an existing one', async () => {
+    const { container, findByText } = render(parcelDetailForm());
+    await fillInput(container, 'pid', '222-222-222');
+    // type a civic address, then click on first suggestion
+    await fillInput(container, 'address.line1', '525 Superior');
+    const suggestion = await findByText(/525 Superior St/);
+    expect(suggestion).not.toBeNull();
+    act(() => {
+      fireEvent.click(suggestion);
+    });
+    await wait(() => {
+      // assert --> PID value was not overwritten
+      expect(getInput(container, 'pid')).toHaveValue('222-222-222');
+    });
+  });
 });

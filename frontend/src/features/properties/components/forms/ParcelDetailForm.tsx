@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Formik, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
@@ -37,6 +37,7 @@ import { RootState } from 'reducers/rootReducer';
 import { useApi, IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import GenericModal from 'components/common/GenericModal';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -69,6 +70,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const history = useHistory();
   const api = useApi();
   const formikRef = React.useRef<FormikProps<any>>();
+  const [pidSelection, setPidSelection] = useState({ showPopup: false, geoPID: '' });
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -251,7 +253,17 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           console.error('Failed to get pids');
         }
       }
-      newValues.pid = parcelPid;
+      if (
+        formikRef.current.values.pid &&
+        parcelPid !== '' &&
+        formikRef.current.values.pid !== parcelPid
+      ) {
+        setPidSelection({ showPopup: true, geoPID: parcelPid });
+      } else if (formikRef.current.values.pid && parcelPid === '') {
+        newValues.pid = formikRef.current.values.pid;
+      } else {
+        newValues.pid = parcelPid;
+      }
 
       // update form with values returned from geocoder
       formikRef.current.setValues(newValues);
@@ -261,6 +273,23 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   return (
     <Row noGutters className="parcelDetailForm">
       <Col>
+        {pidSelection.showPopup && (
+          <GenericModal
+            cancelButtonText={`Use original PID ${formikRef.current?.values.pid}`}
+            okButtonText={`Use PID from GeoCoder ${pidSelection.geoPID}`}
+            handleOk={(e: any) => {
+              formikRef.current?.setFieldValue('pid', pidSelection.geoPID);
+              setPidSelection({ showPopup: false, geoPID: '' });
+            }}
+            handleCancel={() => {
+              setPidSelection({ showPopup: false, geoPID: '' });
+            }}
+            title="Conflicting PIDs found"
+            message={
+              'The PID returned from GeoCoder does not match the one previously entered. Which PID value would you like to use?'
+            }
+          />
+        )}
         <Formik
           innerRef={instance => {
             formikRef.current = instance;
