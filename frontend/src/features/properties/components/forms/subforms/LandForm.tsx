@@ -21,6 +21,8 @@ import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import { senstiveTooltip } from '../strings';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface LandProps {
   nameSpace?: string;
@@ -194,12 +196,24 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
 
           <Form.Row>
             <Form.Label column md={2}>
-              Sensitive Land
+              Harmful if Released{' '}
+              <TooltipWrapper toolTipId="sensitive-harmful" toolTip={senstiveTooltip}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                >
+                  Policy
+                </a>
+              </TooltipWrapper>
             </Form.Label>
             <Check
+              type="radio"
               disabled={props.disabled}
               field={withNameSpace('isSensitive')}
               outerClassName="col-md-10"
+              radioLabelOne="Yes - harmful to persons if location is released"
+              radioLabelTwo="No - not harmful if location released"
             />
           </Form.Row>
         </Col>
