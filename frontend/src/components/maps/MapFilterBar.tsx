@@ -76,6 +76,7 @@ type MapFilterProps = {
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
   onFilterChange: (e: MapFilterChangeEvent) => void;
+  onFilterReset?: () => void;
 };
 
 /**
@@ -85,6 +86,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   agencyLookupCodes,
   propertyClassifications,
   onFilterChange,
+  onFilterReset,
 }) => {
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
@@ -134,6 +136,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       onReset={(values, { setSubmitting }) => {
         delete values.inEnhancedReferralProcess;
         delete values.inSurplusPropertyProgram;
+        !!onFilterReset && onFilterReset();
         onFilterChange?.({ ...values });
         setSubmitting(false);
       }}

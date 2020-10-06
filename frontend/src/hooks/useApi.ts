@@ -4,6 +4,8 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
+import { LatLngTuple } from 'leaflet';
+import { useCallback } from 'react';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -28,6 +30,7 @@ export interface PimsAPI extends AxiosInstance {
   ) => Promise<{ available: boolean }>;
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
+  getCityLatLng: (city: string) => Promise<LatLngTuple | null>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -71,6 +74,21 @@ export const useApi = (): PimsAPI => {
     );
     return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
   };
+
+  axios.getCityLatLng = useCallback(
+    async (address: string): Promise<LatLngTuple | null> => {
+      const { data } = await axios.get<IGeocoderResponse[]>(
+        `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
+      );
+
+      if (data.length < 0) {
+        return null;
+      }
+      const highestMatch = _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc'])[0];
+      return [highestMatch.latitude, highestMatch.longitude];
+    },
+    [axios],
+  );
 
   axios.getSitePids = async (siteId: string): Promise<IGeocoderPidsResponse> => {
     const { data } = await axios.get<IGeocoderPidsResponse>(
