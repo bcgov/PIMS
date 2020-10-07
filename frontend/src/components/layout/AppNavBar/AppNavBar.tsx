@@ -14,7 +14,11 @@ import { FaHome } from 'react-icons/fa';
 function AppNavBar() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  const displayName = keycloak.displayName || keycloak.firstName || 'default';
+  const displayName =
+    keycloak.displayName ??
+    (!!keycloak.firstName && !!keycloak.lastName
+      ? `${keycloak.firstName} ${keycloak.lastName}`
+      : 'default');
   const configuration = useConfiguration();
 
   return (
