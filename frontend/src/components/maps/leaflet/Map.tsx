@@ -96,29 +96,6 @@ const Map: React.FC<MapProps> = ({
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const { getCityLatLng } = useApi();
 
-  useEffect(() => {
-    const zoomToCity = async () => {
-      if (mapFilter.city) {
-        const center = await getCityLatLng(mapFilter.city);
-        if (center) {
-          mapRef.current?.leafletElement.setZoomAround(center, 11);
-        }
-      }
-    };
-    zoomToCity();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapFilter.city]);
-
-  useEffect(() => {
-    if (!mapRef.current) {
-      return;
-    }
-
-    if (!properties || properties.length === 0) {
-      fitMapBounds();
-    }
-  }, [mapRef, properties]);
-
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
@@ -197,7 +174,19 @@ const Map: React.FC<MapProps> = ({
     dispatch(storeParcelDetail(null));
   };
 
-  const handleMapFilterChange = (e: MapFilterChangeEvent) => {
+  const zoomToCity = async (city: string) => {
+    const center = await getCityLatLng(city);
+    if (center) {
+      mapRef.current?.leafletElement.setZoomAround(center, 11);
+    }
+  };
+
+  const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
+    if (e.city) {
+      await zoomToCity(e.city);
+    } else {
+      fitMapBounds();
+    }
     setMapFilter(e);
     handleViewportChange(e);
   };
