@@ -2,7 +2,7 @@ import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { Formik, Form } from 'formik';
 import SumFinancialsForm from './SumFinancialsForm';
-import { IFinancial } from './EvaluationForm';
+import { IFinancialYear } from './EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 
@@ -22,10 +22,13 @@ describe('sub-form SumFinancialsForm functionality', () => {
     );
   };
   it('sums financial data', () => {
-    const financials: IFinancial[] = [
-      { key: EvaluationKeys.Assessed, value: 100 },
-      { key: FiscalKeys.Estimated, value: 10000 },
-      { key: FiscalKeys.NetBook, value: 100000 },
+    const financials: IFinancialYear[] = [
+      {
+        assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
+        appraised: { key: EvaluationKeys.Appraised, value: 100, year: 2020 },
+        estimated: { key: FiscalKeys.Estimated, value: 10000, year: 2020 },
+        netbook: { key: FiscalKeys.NetBook, value: 100000, year: 2020 },
+      },
     ];
     const sumFinancialsForm = getSumFinancialsForm({ financials: financials });
     const { getByDisplayValue } = render(sumFinancialsForm);
@@ -35,9 +38,19 @@ describe('sub-form SumFinancialsForm functionality', () => {
   });
 
   it('only sums financial data from the current year', () => {
-    const financials: IFinancial[] = [
-      { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-      { key: EvaluationKeys.Assessed, value: 100, year: 2019 },
+    const financials: IFinancialYear[] = [
+      {
+        assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
+        appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
+        estimated: { key: FiscalKeys.Estimated, value: 102, year: 2020 },
+        netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+      },
+      {
+        assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2019 },
+        appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2019 },
+        estimated: { key: FiscalKeys.Estimated, value: 102, year: 2019 },
+        netbook: { key: FiscalKeys.NetBook, value: 103, year: 2019 },
+      },
     ];
     const sumFinancialsForm = getSumFinancialsForm({ financials: financials });
     const { getByDisplayValue } = render(sumFinancialsForm);
@@ -46,8 +59,26 @@ describe('sub-form SumFinancialsForm functionality', () => {
 
   it('sums financials from properties and buildings', () => {
     const financials: any = {
-      financials: [{ key: EvaluationKeys.Assessed, value: 100, year: 2020 }],
-      buildings: [{ financials: { key: EvaluationKeys.Assessed, value: 100, year: 2020 } }],
+      financials: [
+        {
+          assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
+          appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
+          estimated: { key: FiscalKeys.Estimated, value: 102, year: 2020 },
+          netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+        },
+      ],
+      buildings: [
+        {
+          financials: [
+            {
+              assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
+              appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
+              estimated: { key: FiscalKeys.Estimated, value: 102, year: 2020 },
+              netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+            },
+          ],
+        },
+      ],
     };
     const sumFinancialsForm = getSumFinancialsForm(financials);
     const { getByDisplayValue } = render(sumFinancialsForm);
@@ -56,8 +87,26 @@ describe('sub-form SumFinancialsForm functionality', () => {
 
   it('sums financials from properties and buildings only in the most recent year', () => {
     const financials: any = {
-      financials: [{ key: EvaluationKeys.Assessed, value: 100, year: 2020 }],
-      buildings: [{ financials: { key: EvaluationKeys.Assessed, value: 100, year: 2019 } }],
+      financials: [
+        {
+          assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
+          appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
+          estimated: { key: FiscalKeys.Estimated, value: 102, year: 2020 },
+          netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+        },
+      ],
+      buildings: [
+        {
+          financials: [
+            {
+              assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2019 },
+              appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2019 },
+              estimated: { key: FiscalKeys.Estimated, value: 102, year: 2019 },
+              netbook: { key: FiscalKeys.NetBook, value: 103, year: 2019 },
+            },
+          ],
+        },
+      ],
     };
     const sumFinancialsForm = getSumFinancialsForm(financials);
     const { getByDisplayValue } = render(sumFinancialsForm);

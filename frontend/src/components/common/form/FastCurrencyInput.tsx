@@ -82,7 +82,7 @@ const CurrencyInput = ({
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
     <Form.Group className={classNames(outerClassName, 'fast-currency-input')}>
-      <div className={'input-tooltip-wrapper'}>
+      <div className="input-tooltip-wrapper">
         <MaskedInput
           value={value}
           mask={currencyMask}
@@ -97,8 +97,9 @@ const CurrencyInput = ({
           placeholder={placeholder || '$0'}
         />
         {!!tooltip && <TooltipIcon toolTipId="currency" toolTip={tooltip} />}
+
+        <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
       </div>
-      <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
     </Form.Group>
   );
 };

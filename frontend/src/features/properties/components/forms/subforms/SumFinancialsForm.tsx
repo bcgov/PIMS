@@ -6,14 +6,27 @@ import _ from 'lodash';
 import { Form, FastCurrencyInput, DisplayCurrency } from 'components/common/form';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { EvaluationKeys } from 'constants/evaluationKeys';
-import { IFinancial } from './EvaluationForm';
+import { IFinancial, IFinancialYear } from './EvaluationForm';
+
+/**
+ * Sum the list of passed financial years.
+ * create an object where all sums are keyed by evaluation/fiscal type.
+ * @param financials an unordered list of financial years to sum.
+ */
+export const sumFinancialYears = (financials: IFinancialYear[], year?: number) => {
+  const seperatedFinancials = _.flatten(
+    financials.map((financial: IFinancialYear) => _.values(financial)),
+  ) as IFinancial[];
+
+  return sumFinancials(seperatedFinancials, year);
+};
 
 /**
  * Sum the list of passed financials.
  * create an object where all sums are keyed by evaluation/fiscal type.
  * @param financials an unordered list of financials to sum.
  */
-const sumFinancials = (financials: IFinancial[], year?: number) => {
+export const sumFinancials = (financials: IFinancial[], year?: number) => {
   const summedFinancials: any = {};
   Object.keys({ ...EvaluationKeys, ...FiscalKeys }).forEach(type => {
     const typedFinancials = year
@@ -28,6 +41,7 @@ const sumFinancials = (financials: IFinancial[], year?: number) => {
   });
   return summedFinancials;
 };
+
 /**
  * From the passed list of financials,
  * get all financial values of the most recent year with one or more values.
@@ -90,9 +104,9 @@ const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
     }
   };
   const summedFinancials: any = props.onlyAssesedSums
-    ? sumFinancials(allFinancials, props.year)
-    : sumFinancials(allFinancials) ?? {};
-  const summedBuildingFinacnials: any = sumFinancials(buildings, props.year);
+    ? sumFinancialYears(allFinancials, props.year)
+    : sumFinancialYears(allFinancials) ?? {};
+  const summedBuildingFinacnials: any = sumFinancialYears(buildings, props.year);
   if (props.onlyAssesedSums) {
     return (
       <>
@@ -125,7 +139,7 @@ const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
         <Col md={6}>
           <Form.Row>
             <Form.Label column md={2}>
-              NetBook Sum
+              Net Book Sum
             </Form.Label>
             <FastCurrencyInput
               formikProps={props.formikProps}
