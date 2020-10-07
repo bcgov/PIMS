@@ -43,14 +43,17 @@ objects:
           scrape_interval: 10s 
         scrape_configs:
         - job_name: 'pims-prometheus-dev'   
+          scheme: https
           static_configs:
           - targets: 
             - ${PIMS_DEV_API_URL}
-        - job_name: 'pims-prometheus-test'   
+        - job_name: 'pims-prometheus-test'
+          scheme: https   
           static_configs:
           - targets: 
             - ${PIMS_TEST_API_URL}
-        - job_name: 'pims-prometheus-prod'   
+        - job_name: 'pims-prometheus-prod'
+          scheme: https   
           static_configs:
           - targets: 
             - ${PIMS_PROD_API_URL}
