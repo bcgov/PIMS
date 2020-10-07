@@ -127,7 +127,7 @@ describe('sub-form BuildingForm functionality', () => {
 
   it('renders EvaluationForm as expected', () => {
     const { getAllByText } = render(getBuildingForm(defaultBuildingValues, () => {}));
-    expect(getAllByText('Value')).toHaveLength(3);
+    expect(getAllByText('Value')).toHaveLength(2);
   });
 
   it('validates all required fields', async () => {

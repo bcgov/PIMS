@@ -19,6 +19,7 @@ import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
+import { useApi } from 'hooks/useApi';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -93,16 +94,7 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
-
-  useEffect(() => {
-    if (!mapRef.current) {
-      return;
-    }
-
-    if (!properties || properties.length === 0) {
-      fitMapBounds();
-    }
-  }, [mapRef, properties]);
+  const { getCityLatLng } = useApi();
 
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -182,7 +174,19 @@ const Map: React.FC<MapProps> = ({
     dispatch(storeParcelDetail(null));
   };
 
-  const handleMapFilterChange = (e: MapFilterChangeEvent) => {
+  const zoomToCity = async (city: string) => {
+    const center = await getCityLatLng(city);
+    if (center) {
+      mapRef.current?.leafletElement.setZoomAround(center, 11);
+    }
+  };
+
+  const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
+    if (e.city) {
+      await zoomToCity(e.city);
+    } else {
+      fitMapBounds();
+    }
     setMapFilter(e);
     handleViewportChange(e);
   };
@@ -272,6 +276,7 @@ const Map: React.FC<MapProps> = ({
               propertyClassifications={propertyClassifications}
               lotSizes={lotSizes}
               onFilterChange={handleMapFilterChange}
+              onFilterReset={fitMapBounds}
             />
           </Container>
         </Container>
@@ -285,8 +290,6 @@ const Map: React.FC<MapProps> = ({
             ref={mapRef}
             center={[lat, lng]}
             zoom={lastZoom}
-            zoomSnap={0.3}
-            zoomDelta={0.3}
             whenReady={() => {
               fitMapBounds();
               handleViewportChange(mapFilter);

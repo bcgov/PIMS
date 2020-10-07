@@ -43,6 +43,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Prometheus;
 
 namespace Pims.Api
 {
@@ -289,6 +290,9 @@ namespace Pims.Api
         /// <param name="provider"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             if (!env.IsProduction())
             {
                 app.UseDatabaseErrorPage();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Col, Button } from 'react-bootstrap';
 import { FieldArray, useFormikContext, FormikProps, getIn } from 'formik';
 import BuildingForm, { defaultBuildingValues, IFormBuilding } from './BuildingForm';
@@ -64,6 +64,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
   // the current paginated page.
   const [currentPage, setCurrentPage] = useState<number>(0);
   // to determine whether to show the delete confirmation popup
+  const paginationRef = useRef();
   const [showDelete, setShowDelete] = useState(false);
 
   return (
@@ -133,14 +134,15 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
               )}
 
               <WrappedPaginate
+                pagingRef={paginationRef}
                 onPageChange={(page: any) => setCurrentPage(page.selected)}
                 {...pagedBuildings}
               />
             </span>
             {!!formikProps.values.buildings.length && <h4>Building Information</h4>}
             <PaginatedFormErrors
+              pagingRef={paginationRef}
               errors={getPageErrors(formikProps.errors, 'buildings')}
-              nameSpace="Buildings"
             />
             <div>
               {!!buildings.length && (

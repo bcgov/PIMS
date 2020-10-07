@@ -64,6 +64,12 @@ export const Financial = Yup.object().shape({
     .nullable()
     .matches(/\d+(\.\d{1,2})?/, 'Only two decimal places are allowed'),
 });
+export const FinancialYear = Yup.object().shape({
+  assessed: Financial.required(),
+  appraised: Financial.required(),
+  netbook: Financial.required(),
+  estimated: Financial.required(),
+});
 
 export const Building = Yup.object().shape({
   localId: Yup.string().max(50, 'LocalId must be less then 50 characters'),
@@ -111,7 +117,7 @@ export const Building = Yup.object().shape({
   leaseExpiry: Yup.string().nullable(),
   financials: Yup.array()
     .compact((financial: any) => financial.year !== currentYear)
-    .of(Financial),
+    .of(FinancialYear),
 });
 export const LandSchema = Yup.object().shape({
   classificationId: Yup.string()
@@ -171,7 +177,7 @@ export const ParcelSchema = Yup.object()
       buildings: Yup.array().of(Building),
       financials: Yup.array()
         .compact((financial: any) => financial.year !== currentYear)
-        .of(Financial),
+        .of(FinancialYear),
     },
     [['pin', 'pid']],
   )

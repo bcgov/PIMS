@@ -55,12 +55,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     options: { radius: 60, extent: 256, minZoom, maxZoom },
   });
 
-  useEffect(() => {
-    if (clusters.length === 1) {
-      zoomToCluster(clusters[0], 11, map);
-    }
-  }, [clusters, map]);
-
   // reload the geojson layer when clusters change (usually due to zoom changes)
   const reload = () => {
     const geojsonLayer = ref.current?.leafletElement;

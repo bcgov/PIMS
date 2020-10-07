@@ -11,7 +11,7 @@ const USER_UPDATING = () => toast.dark('Updating User...', { toastId: USER_UPDAT
 const USER_UPDATED_TOAST_ID = 'USER_UPDATED';
 const USER_UPDATED = () => toast.dark('User updated', { toastId: USER_UPDATED_TOAST_ID });
 const USER_ERROR_TOAST_ID = 'USER_ERROR';
-const USER_ERROR = () => toast.dark('Failed to update User', { toastId: USER_ERROR_TOAST_ID });
+const USER_ERROR = () => toast.error('Failed to update User', { toastId: USER_ERROR_TOAST_ID });
 export const user = {
   USER_UPDATING_TOAST_ID,
   USER_UPDATING,
