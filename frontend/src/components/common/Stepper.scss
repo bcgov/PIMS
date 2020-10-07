@@ -58,32 +58,6 @@ h6 {
   background-color: rgba(0, 0, 0, 0.06);
 }
 
-@media (max-width: 1400px) {
-  .bs-stepper .bs-stepper-header {
-    flex-wrap: wrap;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 1275px) {
-  .bs-stepper .bs-stepper-header {
-    width: 500px;
-  }
-}
-
-@media (max-width: 850px) {
-  .bs-stepper .bs-stepper-header {
-    width: 350px;
-  }
-}
-
-@media (max-width: 750px) {
-  .bs-stepper .bs-stepper-header {
-    flex-direction: column;
-    -ms-flex-direction: column;
-  }
-}
-
 .bs-stepper-label {
   display: inline-block;
   margin: 0.25rem;
