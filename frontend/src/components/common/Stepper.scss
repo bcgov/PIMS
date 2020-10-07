@@ -60,9 +60,27 @@ h6 {
 
 @media (max-width: 1400px) {
   .bs-stepper .bs-stepper-header {
-    -ms-flex-direction: column;
-    flex-direction: column;
+    flex-wrap: wrap;
     padding: 10px;
+  }
+}
+
+@media (max-width: 1275px) {
+  .bs-stepper .bs-stepper-header {
+    width: 500px;
+  }
+}
+
+@media (max-width: 850px) {
+  .bs-stepper .bs-stepper-header {
+    width: 350px;
+  }
+}
+
+@media (max-width: 750px) {
+  .bs-stepper .bs-stepper-header {
+    flex-direction: column;
+    -ms-flex-direction: column;
   }
 }
 
