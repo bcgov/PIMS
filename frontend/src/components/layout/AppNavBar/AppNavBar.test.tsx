@@ -51,7 +51,7 @@ describe('AppNavBar', () => {
       keycloak: {
         subject: 'test',
         userInfo: {
-          roles: ['project-view'],
+          roles: ['admin-properties', 'admin-projects'],
         },
       },
     });
@@ -225,33 +225,12 @@ describe('AppNavBar', () => {
       });
     });
 
-    it('AppNavBar include View Projects Link', () => {
-      (useKeycloak as jest.Mock).mockReturnValue({
-        keycloak: {
-          subject: 'test',
-          userInfo: {
-            roles: ['project-view'],
-          },
-        },
-      });
-      const { getByText } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <AppNavBar />
-          </Router>
-        </Provider>,
-      );
-      const element = getByText('View Projects');
-
-      expect(element).toBeTruthy();
-    });
-
     it('AppNavBar include Disposal Project Link', () => {
       (useKeycloak as jest.Mock).mockReturnValue({
         keycloak: {
           subject: 'test',
           userInfo: {
-            roles: ['project-add'],
+            roles: ['admin-properties', 'admin-projects'],
           },
         },
       });
