@@ -314,4 +314,72 @@ describe('AppNavBar', () => {
       expect(name).toBeVisible();
     });
   });
+  describe('AppNavbar user name display', () => {
+    it('Displays keycloak display name if available', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            name: 'display name',
+            firstName: 'name',
+            roles: ['project-add'],
+          },
+        },
+      });
+
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const name = getByText('display name');
+      expect(name).toBeVisible();
+    });
+
+    it('Displays first last name if no display name', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: ['project-add'],
+            firstName: 'firstName',
+            lastName: 'lastName',
+          },
+        },
+      });
+
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const name = getByText('firstName lastName');
+      expect(name).toBeVisible();
+    });
+
+    it('Displays default if no user name information found', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: ['project-add'],
+          },
+        },
+      });
+
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const name = getByText('default');
+      expect(name).toBeVisible();
+    });
+  });
 });
