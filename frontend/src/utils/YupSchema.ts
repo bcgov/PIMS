@@ -172,7 +172,7 @@ export const ParcelSchema = Yup.object()
         otherwise: Yup.string()
           .min(1)
           .required('PID or PIN Required')
-          .max(15, 'Please enter a valid PIN'),
+          .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
       }),
       buildings: Yup.array().of(Building),
       financials: Yup.array()

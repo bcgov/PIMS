@@ -166,6 +166,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     });
     return values;
   };
+
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
    * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
@@ -202,7 +203,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     }
 
     let pinDuplicated = false;
-    if (values.pin) {
+    if (values.pin && initialValues.pin !== values.pin && values.pin.toString().length < 10) {
       pinDuplicated = !(await isPinAvailable(values));
     }
 

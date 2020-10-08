@@ -7,7 +7,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
 import { FaHome } from 'react-icons/fa';
-import Roles from 'constants/roles';
 
 /**
  * Nav bar with with role-based functionality.
@@ -101,22 +100,14 @@ function AdminDropdown() {
     </NavDropdown>
   ) : null;
 }
-/**
- * Determine if user is part of SRES
- */
-const isSRESUser = () => {
-  const keycloak = useKeycloakWrapper();
-  const sres =
-    keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && keycloak.hasClaim(Claims.ADMIN_PROJECTS);
-  return sres;
-};
 
 /**
  * View Projects navigation menu link.
  */
 function ViewProjects() {
   const history = useHistory();
-  return isSRESUser() ? (
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim('admin-properties') && keycloak.hasClaim('admin-projects') ? (
     <Nav.Link onClick={() => history.push('/projects/list')}>View Projects</Nav.Link>
   ) : null;
 }
@@ -139,7 +130,8 @@ function ViewProjectApprovalRequests() {
  */
 function DisposeRequest() {
   const history = useHistory();
-  return isSRESUser() ? (
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim('admin-properties') && keycloak.hasClaim('admin-projects') ? (
     <Nav.Link onClick={() => history.push('/dispose')}>Dispose Properties</Nav.Link>
   ) : null;
 }
