@@ -62,9 +62,12 @@ export const ManageUsersPage = () => {
     state => (state.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
 
-  const onRequestData = useCallback(({ pageIndex }) => {
-    dispatch(getUsersPageIndexAction(pageIndex));
-  }, []);
+  const onRequestData = useCallback(
+    ({ pageIndex }) => {
+      dispatch(getUsersPageIndexAction(pageIndex));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     dispatch(

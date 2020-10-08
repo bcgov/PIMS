@@ -214,7 +214,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
     pageIndexProp !== undefined && pageIndexProp >= 0 && instance.gotoPage(pageIndexProp);
-  }, [pageIndexProp]);
+  }, [pageIndexProp, instance]);
 
   useEffect(() => {
     onRequestData?.({ pageIndex: pageIndex, pageSize });
