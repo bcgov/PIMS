@@ -146,6 +146,7 @@ describe('ParcelDetailForm', () => {
   });
   describe('field validation', () => {
     const exampleData = {
+      id: 1,
       projectNumber: '',
       name: 'name',
       agencyId: 1,
@@ -225,9 +226,9 @@ describe('ParcelDetailForm', () => {
         fireEvent.click(submit!);
       });
       const errors = getAllByText('Required');
-      const idErrors = getAllByText('PID or PIN Required');
-      expect(errors).toHaveLength(6);
-      expect(idErrors).toHaveLength(2);
+      const idErrors = getAllByText('PID must be in the format ###-###-###');
+      expect(errors).toHaveLength(3);
+      expect(idErrors).toHaveLength(1);
     });
 
     it('detail submits all basic fields correctly', async done => {
@@ -264,7 +265,7 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'isSensitive', true, 'radio');
       // await fillInput(container, 'financials.1.date', exampleData.evaluations[1].date);
       // TODO: add a function capable of filling this type of field
-      await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
+      await fillInput(container, 'financials.0.netbook.value', exampleData.fiscals[1].value);
       (updateParcel as any).mockImplementation((parcel: IParcel) => {
         expect(parcel.isSensitive).toBeTruthy();
         expect(parcel.pin).toEqual(exampleData.pin);
@@ -301,22 +302,17 @@ describe('ParcelDetailForm', () => {
     });
 
     it('displays a top level error message if submit fails', async done => {
-      jest.unmock('formik');
-      const formik = require('formik');
-      formik.validateYupSchema = jest.fn(() => Promise.resolve({}));
-      const { getByText, findByText, container } = render(parcelDetailForm());
+      const { getByText, findByText } = render(parcelDetailForm(undefined, undefined, exampleData));
       const mockAxios = new MockAdapter(axios);
       const submit = getByText('Submit');
       mockAxios.onPost().reply(() => {
         throw Error('test message');
       });
 
-      await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
-      await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
       await wait(() => {
         fireEvent.click(submit!);
       });
-      await findByText('Error');
+      await findByText('Error saving property data, please try again.');
       done();
     });
   });
