@@ -217,6 +217,10 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   }, [pageIndexProp, instance]);
 
   useEffect(() => {
+    pageSizeProp && instance.setPageSize(pageSizeProp);
+  }, [pageSizeProp, instance]);
+
+  useEffect(() => {
     onRequestData?.({ pageIndex: pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
 
