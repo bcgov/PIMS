@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { Container } from 'react-bootstrap';
 import { getUsersAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
@@ -62,6 +62,13 @@ export const ManageUsersPage = () => {
     state => (state.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
 
+  const onRequestData = useCallback(
+    ({ pageIndex }) => {
+      dispatch(getUsersPageIndexAction(pageIndex));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     dispatch(
       getUsersAction(
@@ -98,20 +105,22 @@ export const ManageUsersPage = () => {
         value={filter}
         agencyLookups={agencies}
         rolesLookups={roles}
-        onChange={value => dispatch(getUsersFilterAction(value))}
+        onChange={value => {
+          dispatch(getUsersFilterAction(value));
+          dispatch(getUsersPageIndexAction(0));
+        }}
       />
       {
         <TableContainer fluid>
           <Table<IUserRecord>
             name="usersTable"
             columns={columns}
+            pageIndex={pageIndex}
             data={userList}
             defaultCanSort={true}
             pageCount={Math.ceil(pagedUsers.total / pageSize)}
             pageSize={pageSize}
-            onRequestData={({ pageIndex }) => {
-              dispatch(getUsersPageIndexAction(pageIndex));
-            }}
+            onRequestData={onRequestData}
             onSortChange={(column, direction) =>
               dispatch(getUsersSortAction({ column, direction }))
             }

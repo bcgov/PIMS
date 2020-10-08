@@ -54,6 +54,7 @@ const TablePagination = <T extends object>(props: TablePaginationProps<T>): Reac
       marginPagesDisplayed={2}
       pageRangeDisplayed={5}
       onPageChange={handleChangePage}
+      forcePage={pageIndex}
       // css
       activeClassName="active"
       breakClassName="page-item"
