@@ -195,8 +195,8 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           </Form.Row>
 
           <Form.Row>
-            <Form.Label column md={2}>
-              Harmful if Released{' '}
+            <Form.Label column md={12}>
+              Harmful if Released?{' '}
               <TooltipWrapper toolTipId="sensitive-harmful" toolTip={senstiveTooltip}>
                 <a
                   target="_blank"
@@ -212,8 +212,8 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
               disabled={props.disabled}
               field={withNameSpace('isSensitive')}
               outerClassName="col-md-10"
-              radioLabelOne="Yes - harmful to persons if location is released"
-              radioLabelTwo="No - not harmful if location released"
+              radioLabelOne="Yes"
+              radioLabelTwo="No"
             />
           </Form.Row>
         </Col>
