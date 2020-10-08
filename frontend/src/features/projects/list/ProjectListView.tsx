@@ -305,6 +305,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           data={data}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          pageIndex={pageIndex}
           onRowClick={onRowClick}
           detailsPanel={{
             render: project => <Properties data={project.properties} />,

@@ -1,6 +1,6 @@
 import './TablePagination.scss';
 
-import React, { useCallback, ReactElement, PropsWithChildren } from 'react';
+import React, { useCallback, ReactElement, PropsWithChildren, useEffect } from 'react';
 import { TableInstance } from 'react-table';
 import ReactPaginate from 'react-paginate';
 
@@ -54,6 +54,7 @@ const TablePagination = <T extends object>(props: TablePaginationProps<T>): Reac
       marginPagesDisplayed={2}
       pageRangeDisplayed={5}
       onPageChange={handleChangePage}
+      forcePage={pageIndex}
       // css
       activeClassName="active"
       breakClassName="page-item"
