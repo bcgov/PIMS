@@ -166,6 +166,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     });
     return values;
   };
+
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
    * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
@@ -201,15 +202,28 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       pidDuplicated = !(await isPidAvailable(values));
     }
 
+    let pinDuplicated = false;
+    if (values.pin && initialValues.pin !== values.pin && values.pin.toString().length < 10) {
+      pinDuplicated = !(await isPinAvailable(values));
+    }
+
     let errors = await yupErrors;
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
+    }
+    if (pinDuplicated) {
+      errors = { ...errors, pin: 'This PIN is already in use.' };
     }
     return Promise.resolve(errors);
   };
 
   const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
     const { available } = await api.isPidAvailable(values.id, values.pid);
+    return available;
+  };
+
+  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const { available } = await api.isPinAvailable(values.id, values.pin);
     return available;
   };
 

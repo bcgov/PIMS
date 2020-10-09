@@ -51,6 +51,9 @@ jest.mock('hooks/useApi');
   isPidAvailable: async () => {
     return { available: true };
   },
+  isPinAvailable: async () => {
+    return { available: true };
+  },
   getSitePids: async () => {
     return {
       siteId: '00000000-0000-0000-0000-000000000000',

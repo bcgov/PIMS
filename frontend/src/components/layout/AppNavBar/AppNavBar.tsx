@@ -105,9 +105,9 @@ function AdminDropdown() {
  * View Projects navigation menu link.
  */
 function ViewProjects() {
-  const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  return keycloak.hasClaim(Claims.PROJECT_VIEW) ? (
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim('admin-properties') && keycloak.hasClaim('admin-projects') ? (
     <Nav.Link onClick={() => history.push('/projects/list')}>View Projects</Nav.Link>
   ) : null;
 }
@@ -129,9 +129,9 @@ function ViewProjectApprovalRequests() {
  * Disposal Project navigation dropdown menu.
  */
 function DisposeRequest() {
-  const keycloak = useKeycloakWrapper();
   const history = useHistory();
-  return keycloak.hasClaim(Claims.PROJECT_ADD) || keycloak.hasClaim(Claims.ADMIN_PROJECTS) ? (
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim('admin-properties') && keycloak.hasClaim('admin-projects') ? (
     <Nav.Link onClick={() => history.push('/dispose')}>Dispose Properties</Nav.Link>
   ) : null;
 }

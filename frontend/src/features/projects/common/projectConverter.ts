@@ -164,7 +164,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
     pid: property.pid,
-    pin: property.pin,
+    pin: Number(property.pin),
     projectNumber: property.projectNumber ?? '',
     latitude: property.latitude,
     longitude: property.longitude,
