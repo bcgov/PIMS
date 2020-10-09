@@ -2,6 +2,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
+using Serilog;
 
 namespace Pims.Api
 {
@@ -16,6 +17,7 @@ namespace Pims.Api
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
+            // ConfigureLogging();
             var builder = CreateWebHostBuilder(args);
             builder.Build().Run();
         }
@@ -48,6 +50,7 @@ namespace Pims.Api
                     config.AddEnvironmentVariables();
                     config.AddCommandLine(args);
                 })
+                .UseSerilog()
                 .UseUrls(config.GetValue<string>("ASPNETCORE_URLS"))
                 .UseStartup<Startup>();
         }
