@@ -1,1 +1,0 @@
-UPDATE dbo.Roles SET IsDisabled = 0 WHERE Name in ('Assistant Deputy Minister', 'Assistant Deputy Minister Assistant', 'Executive Director')
