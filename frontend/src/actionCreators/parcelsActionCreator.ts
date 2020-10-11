@@ -81,38 +81,39 @@ export const fetchPropertyDetail = (
     : dispatch(fetchBuildingDetail({ id }, position));
 };
 
-export const createParcel = (parcel: IParcel) => (dispatch: Function) => {
+export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_PARCEL));
   dispatch(showLoading());
-  return CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.PARCEL_ROOT, parcel)
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.ADD_PARCEL, response.status));
-      dispatch(fetchParcelDetail(response.data));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.ADD_PARCEL, axiosError?.response?.status, axiosError));
-      throw Error(axiosError.response?.data.details);
-    })
-    .finally(() => dispatch(hideLoading()));
+  try {
+    const { data, status } = await CustomAxios().post(ENVIRONMENT.apiUrl + API.PARCEL_ROOT, parcel);
+    dispatch(success(actionTypes.ADD_PARCEL, status));
+    dispatch(fetchParcelDetail(data));
+    dispatch(hideLoading());
+    return data;
+  } catch (axiosError) {
+    dispatch(error(actionTypes.ADD_PARCEL, axiosError?.response?.status, axiosError));
+    dispatch(hideLoading());
+    throw Error(axiosError.response?.data.details);
+  }
 };
 
-export const updateParcel = (parcel: IParcel) => (dispatch: Function) => {
+export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
-  return CustomAxios()
-    .put(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, parcel)
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.UPDATE_PARCEL, response.status));
-      dispatch(fetchParcelDetail(response.data));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError));
-      throw Error(axiosError.response?.data.details);
-    })
-    .finally(() => dispatch(hideLoading()));
+  try {
+    const { data, status } = await CustomAxios().put(
+      ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`,
+      parcel,
+    );
+    dispatch(success(actionTypes.UPDATE_PARCEL, status));
+    dispatch(fetchParcelDetail(data));
+    dispatch(hideLoading());
+    return data;
+  } catch (axiosError) {
+    dispatch(error(actionTypes.UPDATE_PARCEL, axiosError?.response?.status, axiosError));
+    dispatch(hideLoading());
+    throw Error(axiosError.response?.data.details);
+  }
 };
 
 export const deleteParcel = (parcel: IParcel) => (dispatch: Function) => {

@@ -1,0 +1,12 @@
+.help-submit-box {
+  .form-group {
+    display: flex;
+    label {
+      padding-right: 1rem;
+      width: 20%;
+    }
+    span {
+      width: 80%;
+    }
+  }
+}

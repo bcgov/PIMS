@@ -18,7 +18,7 @@
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
         "RedirectUris": ["http://localhost:5000/api/*"],
-        "WebOrigins": ["+"],
+        "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "keycloak"
         }
@@ -40,7 +40,7 @@
         "RootUrl": "http://localhost:3000",
         "RedirectUris": ["http://localhost:3000/*"],
         "BaseUrl": "/",
-        "WebOrigins": ["http://localhost:3000"],
+        "WebOrigins": ["*"],
         "ProtocolMappers": [
           {
             "Name": "agencies",

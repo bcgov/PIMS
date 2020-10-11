@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { Container } from 'react-bootstrap';
 import { getUsersAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +11,6 @@ import { IUser, IUsersFilter } from 'interfaces';
 import { IUserRecord } from './interfaces/IUserRecord';
 import { IUsersState } from 'reducers/usersReducer';
 import { UsersFilterBar } from './components/UsersFilterBar';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import { Table } from 'components/Table';
 import { columnDefinitions } from './constants';
@@ -25,6 +23,7 @@ import {
 } from 'actions/adminActions';
 import { generateSortCriteria, formatDateTime } from 'utils';
 import styled from 'styled-components';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -33,24 +32,9 @@ const TableContainer = styled(Container)`
 
 export const ManageUsersPage = () => {
   const dispatch = useDispatch();
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
-
-  const roles = useMemo(
-    () =>
-      lookupCodes.filter((lookupCode: ILookupCode) => {
-        return lookupCode.type === API.ROLE_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const { getByType } = useCodeLookups();
+  const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [getByType]);
+  const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
 
   const columns = useMemo(() => columnDefinitions, []);
 
@@ -76,6 +60,13 @@ export const ManageUsersPage = () => {
 
   const users = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
+  );
+
+  const onRequestData = useCallback(
+    ({ pageIndex }) => {
+      dispatch(getUsersPageIndexAction(pageIndex));
+    },
+    [dispatch],
   );
 
   useEffect(() => {
@@ -114,20 +105,22 @@ export const ManageUsersPage = () => {
         value={filter}
         agencyLookups={agencies}
         rolesLookups={roles}
-        onChange={value => dispatch(getUsersFilterAction(value))}
+        onChange={value => {
+          dispatch(getUsersFilterAction(value));
+          dispatch(getUsersPageIndexAction(0));
+        }}
       />
       {
         <TableContainer fluid>
           <Table<IUserRecord>
             name="usersTable"
             columns={columns}
+            pageIndex={pageIndex}
             data={userList}
             defaultCanSort={true}
             pageCount={Math.ceil(pagedUsers.total / pageSize)}
             pageSize={pageSize}
-            onRequestData={({ pageIndex }) => {
-              dispatch(getUsersPageIndexAction(pageIndex));
-            }}
+            onRequestData={onRequestData}
             onSortChange={(column, direction) =>
               dispatch(getUsersSortAction({ column, direction }))
             }

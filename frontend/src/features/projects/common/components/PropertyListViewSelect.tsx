@@ -142,6 +142,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             pageSize={pageSize}
             onRequestData={handleRequestData}
             pageCount={pageCount}
+            pageIndex={pageIndex}
             setSelectedRows={setSelectedProperties}
             clickableTooltip={clickableTooltip}
             onRowClick={(row: IProperty) => {

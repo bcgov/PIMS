@@ -67,7 +67,7 @@ interface BuildingProps {
   disabled?: boolean;
   allowEdit?: boolean;
 }
-const BuildingForm = <T extends any>(props: BuildingProps & FormikProps<T>) => {
+const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   const keycloak = useKeycloakWrapper();
 
   const lookupCodes = useSelector<RootState, ILookupCode[]>(

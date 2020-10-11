@@ -28,6 +28,7 @@ namespace Pims.Dal.Configuration
 
             builder.HasOne(m => m.Building).WithMany(m => m.Evaluations).HasForeignKey(m => m.BuildingId).OnDelete(DeleteBehavior.ClientCascade);
 
+            builder.HasIndex(m => new { m.BuildingId, m.Key });
             builder.HasIndex(m => new { m.BuildingId, m.Date, m.Key, m.Value });
 
             base.Configure(builder);

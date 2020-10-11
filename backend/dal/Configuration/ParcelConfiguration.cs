@@ -27,7 +27,9 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.Agency).WithMany(m => m.Parcels).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasIndex(m => new { m.PID, m.PIN }).IsUnique(); // This will allow for Crown Land to set ParcelId=0 and PIN=#######.
-            builder.HasIndex(m => new { m.Latitude, m.Longitude, m.IsSensitive, m.AgencyId, m.ClassificationId, m.ProjectNumber, m.LandArea, m.Municipality, m.Zoning, m.ZoningPotential, m.Description });
+            builder.HasIndex(m => new { m.Id, m.AgencyId, m.IsSensitive, m.AddressId });
+            builder.HasIndex(m => new { m.Id, m.Latitude, m.Longitude, m.IsSensitive, m.AgencyId, m.ClassificationId, m.PID, m.PIN, m.AddressId, m.ProjectNumber, m.LandArea, m.Municipality, m.Zoning, m.ZoningPotential });
+            builder.HasIndex(m => new { m.Id, m.IsSensitive, m.AgencyId, m.ClassificationId, m.PID, m.PIN, m.AddressId, m.ProjectNumber, m.LandArea, m.Municipality, m.Zoning, m.ZoningPotential });
 
             base.Configure(builder);
         }

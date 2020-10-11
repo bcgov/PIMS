@@ -2,7 +2,7 @@ import { createSlice, createAction } from '@reduxjs/toolkit';
 
 export const setMapViewZoom = createAction<number>('setMapViewZoom');
 export const resetMapViewZoom = createAction('resetMapViewZoom');
-export const DEFAULT_MAP_ZOOM = 14;
+export const DEFAULT_MAP_ZOOM = 6;
 
 const mapViewZoomSlice = createSlice({
   name: 'mapViewZoom',

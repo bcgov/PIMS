@@ -17,13 +17,20 @@ import {
 import * as API from 'constants/API';
 import _ from 'lodash';
 
+/** rough center of bc Itcha Ilgachuz Provincial Park */
+const defaultLatLng = {
+  lat: 52.81604319154934,
+  lng: -124.67285156250001,
+};
+
 const parcelBounds: IPropertySearchParams = {
   pid: null,
-  neLatitude: 48.43,
-  neLongitude: -123.37,
-  swLatitude: 48.43,
-  swLongitude: -123.37,
+  neLatitude: defaultLatLng.lat,
+  neLongitude: defaultLatLng.lng,
+  swLatitude: defaultLatLng.lat,
+  swLongitude: defaultLatLng.lng,
   address: null,
+  city: null,
   municipality: null,
   projectNumber: null,
   agencies: null,
@@ -75,6 +82,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     const {
       pid,
       address,
+      city,
       municipality,
       projectNumber,
       agencies,
@@ -94,6 +102,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       swLatitude: sw.lat,
       swLongitude: sw.lng,
       address: address ?? null,
+      city: city ?? null,
       municipality: municipality ?? null,
       projectNumber: projectNumber ?? null,
       agencies: agencies ?? null,
@@ -128,8 +137,8 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
 
   return (
     <Map
-      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? 48.43}
-      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? -123.37}
+      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
+      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
       properties={properties}
       selectedProperty={propertyDetail}
       agencies={agencies}
@@ -162,6 +171,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       disableMapFilterBar={props.disableMapFilterBar}
       interactive={!props.disabled}
       showParcelBoundaries={props.showParcelBoundaries ?? true}
+      zoom={6}
     />
   );
 };

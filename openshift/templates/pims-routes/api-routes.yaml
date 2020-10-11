@@ -3,6 +3,7 @@
 #   - Route 1: API
 #   - Route 2: API Swagger docs
 #   - Route 3: APP
+#   - Route 4: API Prometheus metrics
 kind: Template
 apiVersion: v1
 metadata:
@@ -58,6 +59,29 @@ objects:
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-metrics
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}-metrics
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    spec:
+      host: ${APP_DOMAIN}
+      path: ${API_METRICS_PATH}
+      to:
+        kind: Service
+        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${ID}
+        weight: 100
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
 parameters:
   - name: APP_NAME
     displayName: App Name
@@ -102,3 +126,7 @@ parameters:
     displayName: API Swagger URL path
     description: The URL path to the api swagger docs
     value: "/api-docs"
+  - name: API_METRICS_PATH
+    displayName: API Prometheus metrics URL path
+    description: The URL path to the api Prometheus metrics
+    value: "/metrics"

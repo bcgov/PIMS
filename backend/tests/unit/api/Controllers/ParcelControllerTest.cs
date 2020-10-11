@@ -234,6 +234,31 @@ namespace Pims.Api.Test.Controllers
         }
         #endregion
 
+        #region Check if PIN is available
+        [Fact]
+        public void IsPinAvailable_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ParcelController>(Permissions.PropertyView);
+
+            var service = helper.GetService<Mock<IPimsService>>();
+            var expectedResults = new Model.CheckPidAvailabilityResponseModel { Available = true };
+            service.Setup(m => m.Parcel.IsPinAvailable(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(true);
+
+            // Act
+            var result = controller.IsPinAvailable(1, 1);
+
+            // Assert
+            var actionResult = Assert.IsType<JsonResult>(result);
+            Assert.Null(actionResult.StatusCode);
+            var actualResult = Assert.IsType<Model.CheckPidAvailabilityResponseModel>(actionResult.Value);
+            Assert.Equal(expectedResults, actualResult, new DeepPropertyCompare());
+            service.Verify(m => m.Parcel.IsPinAvailable(1, 1), Times.Once());
+        }
+        #endregion
+
         #endregion
     }
 }

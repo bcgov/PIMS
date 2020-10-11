@@ -133,6 +133,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     [setFilter, setPageIndex],
   );
 
+  const onPageSizeChanged = useCallback(size => {
+    setPageSize(size);
+  }, []);
+
   const fetchData = useCallback(
     async ({
       pageIndex,
@@ -305,6 +309,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           data={data}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
           onRowClick={onRowClick}
           detailsPanel={{
             render: project => <Properties data={project.properties} />,
@@ -313,9 +319,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             onExpand: lazyLoadProperties,
             getRowId: row => row.projectNumber,
           }}
-          onPageSizeChange={size => {
-            setPageSize(size);
-          }}
+          onPageSizeChange={onPageSizeChanged}
         />
       </div>
     </Container>

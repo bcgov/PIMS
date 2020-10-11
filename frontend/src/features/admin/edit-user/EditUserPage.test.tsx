@@ -1,6 +1,6 @@
 import EditUserPage from './EditUserPage';
 import React from 'react';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import configureMockStore from 'redux-mock-store';
@@ -14,6 +14,7 @@ import { Router } from 'react-router-dom';
 import { render, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { ToastContainer } from 'react-toastify';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -23,7 +24,9 @@ const history = createMemoryHistory();
 const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '2', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
@@ -45,13 +48,40 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
+const mockAxios = new MockAdapter(axios);
+
+const testRender = () =>
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <EditUserPage id="TEST-ID" />,
+      </Router>
+    </Provider>,
+  );
+
+const renderEditUserPage = () =>
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+        />
+        <EditUserPage id="TEST-ID" />,
+      </Router>
+    </Provider>,
+  );
+
 describe('Edit user page', () => {
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
   });
   beforeEach(() => {
-    const mockAxios = new MockAdapter(axios);
     mockAxios.onAny().reply(200, {});
   });
   it('EditUserPage renders', () => {
@@ -68,33 +98,75 @@ describe('Edit user page', () => {
   });
 
   it('contains role options from lookup code + please select disabled option', () => {
-    const { getAllByText, getByTestId } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <EditUserPage id="TEST-ID" />,
-        </Router>
-      </Provider>,
-    );
+    const { getAllByText, getByTestId } = renderEditUserPage();
     expect(getAllByText(/Roles/i));
     expect(getAllByText(/roleVal/i));
     expect(getAllByText(/agencyVal/i));
     expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
   });
 
+  it('displays enabled agencies', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('agencyVal')).toBeVisible();
+  });
+
+  it('Does not display disabled agencies', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('disabledAgency')).toBeNull();
+  });
+
+  it('displays enabled roles', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('roleVal')).toBeVisible();
+  });
+
+  it('Does not display disabled roles', () => {
+    const { queryByText } = testRender();
+    expect(queryByText('disabledRole')).toBeNull();
+  });
+
   describe('appropriate fields are autofilled', () => {
     it('autofills  email, username, first and last name', () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <EditUserPage id="TEST-ID" />,
-          </Router>
-        </Provider>,
-      );
+      const { getByTestId } = renderEditUserPage();
       expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
       expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
       expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
       expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
       expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+    });
+  });
+
+  describe('when the user edit form is submitted', () => {
+    it('displays a loading toast', async done => {
+      const { getByText, findByText } = renderEditUserPage();
+      const saveButton = getByText('Save');
+      act(() => {
+        saveButton.click();
+      });
+      await findByText('Updating User...');
+      done();
+    });
+
+    it('displays a success toast if the request passes', async done => {
+      const { getByText, findByText } = renderEditUserPage();
+      const saveButton = getByText('Save');
+      act(() => {
+        saveButton.click();
+      });
+      await findByText('User updated');
+      done();
+    });
+
+    it('displays a error toast if the request fails', async done => {
+      const { getByText, findByText } = renderEditUserPage();
+      const saveButton = getByText('Save');
+      mockAxios.reset();
+      mockAxios.onAny().reply(500, {});
+      act(() => {
+        saveButton.click();
+      });
+      await findByText('Failed to update User');
+      done();
     });
   });
 });

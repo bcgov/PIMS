@@ -58,14 +58,6 @@ h6 {
   background-color: rgba(0, 0, 0, 0.06);
 }
 
-@media (max-width: 1400px) {
-  .bs-stepper .bs-stepper-header {
-    -ms-flex-direction: column;
-    flex-direction: column;
-    padding: 10px;
-  }
-}
-
 .bs-stepper-label {
   display: inline-block;
   margin: 0.25rem;

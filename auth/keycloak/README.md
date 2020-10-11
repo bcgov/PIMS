@@ -12,12 +12,6 @@ You'll even get advanced features such as User Federation, Identity Brokering an
 
 ## Export Realm Configuration
 
----
-
-> NOTE - Keycloak exporting no longer works (or is fully supported). You will need to use the Keycloak Sync Tool - [here](../../backend/tools/keycloak/sync/README.md)
-
----
-
 After configuring Keycloak you can export the configuration to a JSON file so that it can be used to initialize a new Keycloak instance.
 If you use the UI to export it will not contain all the necessary information and settings, thus the need for this CLI option.
 
@@ -45,7 +39,7 @@ $ /opt/jboss/keycloak/bin/standalone.sh \
   -Dkeycloak.migration.action=export \
   -Dkeycloak.migration.provider=singleFile \
   -Dkeycloak.migration.realmName=pims \
-  -Dkeycloak.migration.file=/tmp/realm-export-new.json \
+  -Dkeycloak.migration.file=/tmp/realm-export.json \
   -Dkeycloak.migration.usersExportStrategy=REALM_FILE \
   -Dkeycloak.migration.strategy=OVERWRITE_EXISTING \
   -Djboss.http.port=8888 \
@@ -56,7 +50,7 @@ $ /opt/jboss/keycloak/bin/standalone.sh \
 Or (this doesn't appear to work on Windows)
 
 ```bash
-$ docker exec -it keycloak bash /opt/jboss/keycloak/bin/standalone.sh -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.strategy=OVERWRITE_EXISTING -Dkeycloak.migration.realmName=pims -Dkeycloak.migration.usersExportStrategy=REALM_FILE -Dkeycloak.migration.file=/tmp/realm-export-new.json
+$ docker exec -it keycloak bash /opt/jboss/keycloak/bin/standalone.sh -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.strategy=OVERWRITE_EXISTING -Dkeycloak.migration.realmName=pims -Dkeycloak.migration.usersExportStrategy=REALM_FILE -Dkeycloak.migration.file=/tmp/realm-export.json
 ```
 
 ## Import Realm

@@ -85,6 +85,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   pageCount?: number;
   pageSize?: number;
   pageSizeOptions?: number[];
+  pageIndex?: number;
   onRowClick?: (data: T) => void;
   clickableTooltip?: string;
   onSortChange?: (field: IdType<T>, directions: SortDirection) => void;
@@ -96,6 +97,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   detailsPanel?: DetailsOptions<T>;
   footer?: boolean;
   hideToolbar?: boolean;
+  manualPagination?: boolean;
   // Limit where you would like an expansion button to appear based off this props criteria
   canRowExpand?: (val: any) => boolean;
 }
@@ -140,6 +142,9 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     pageCount,
     setSelectedRows,
     footer,
+    pageSize: pageSizeProp,
+    pageIndex: pageIndexProp,
+    manualPagination,
   } = props;
 
   // Use the useTable hook to create your table configuration
@@ -148,8 +153,10 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       columns,
       data,
       defaultColumn,
-      initialState: { pageIndex: 0 },
-      manualPagination: true, // Tell the usePagination hook
+      initialState: pageSizeProp
+        ? { pageIndex: pageIndexProp ?? 0, pageSize: pageSizeProp }
+        : { pageIndex: pageIndexProp ?? 0 },
+      manualPagination: manualPagination ?? true, // Tell the usePagination hook
       // that we'll handle our own data fetching.
       // This means we'll also have to provide our own
       // pageCount.
@@ -206,7 +213,15 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    onRequestData?.({ pageIndex, pageSize });
+    pageIndexProp !== undefined && pageIndexProp >= 0 && instance.gotoPage(pageIndexProp);
+  }, [pageIndexProp, instance]);
+
+  useEffect(() => {
+    pageSizeProp && instance.setPageSize(pageSizeProp);
+  }, [pageSizeProp, instance]);
+
+  useEffect(() => {
+    onRequestData?.({ pageIndex: pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
 
   useEffect(() => {

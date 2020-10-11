@@ -487,6 +487,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             >
               <a
                 href="/admin/user/userid"
+                onClick={[Function]}
               />
             </div>
             <div

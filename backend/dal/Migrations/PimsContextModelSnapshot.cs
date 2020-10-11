@@ -191,15 +191,26 @@ namespace Pims.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId");
-
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ProvinceId");
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Postal", "Address1");
+                    b.HasIndex("CityId", "ProvinceId")
+                        .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
+
+                    b.HasIndex("Id", "Address1")
+                        .HasAnnotation("SqlServer:Include", new[] { "Address2" });
+
+                    b.HasIndex("Id", "CityId")
+                        .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
+
+                    b.HasIndex("Id", "Postal")
+                        .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
+
+                    b.HasIndex("Id", "ProvinceId", "CityId", "Postal", "Address1")
+                        .HasAnnotation("SqlServer:Include", new[] { "Address2" });
 
                     b.ToTable("Addresses");
                 });
@@ -255,9 +266,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("rowversion");
 
                     b.Property<bool>("SendEmail")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<int>("SortOrder")
                         .ValueGeneratedOnAdd()
@@ -408,7 +417,9 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Latitude", "Longitude", "LocalId", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ParcelId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingPredominateUseId", "BuildingConstructionTypeId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+
+                    b.HasIndex("Id", "Latitude", "Longitude", "IsSensitive", "AgencyId", "ParcelId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -509,6 +520,8 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
+                    b.HasIndex("BuildingId", "Key");
+
                     b.HasIndex("BuildingId", "Date", "Key", "Value");
 
                     b.ToTable("BuildingEvaluations");
@@ -556,6 +569,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("BuildingId", "Key");
 
                     b.HasIndex("BuildingId", "FiscalYear", "Key", "Value");
 
@@ -723,7 +738,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("IsDisabled", "Name", "SortOrder");
+                    b.HasIndex("Id", "IsDisabled", "Name", "SortOrder");
 
                     b.ToTable("Cities");
                 });
@@ -1096,7 +1111,11 @@ namespace Pims.Dal.Migrations
                         .IsUnique()
                         .HasFilter("[PIN] IS NOT NULL");
 
-                    b.HasIndex("Latitude", "Longitude", "IsSensitive", "AgencyId", "ClassificationId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential", "Description");
+                    b.HasIndex("Id", "AgencyId", "IsSensitive", "AddressId");
+
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential");
+
+                    b.HasIndex("Id", "Latitude", "Longitude", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential");
 
                     b.ToTable("Parcels");
                 });
@@ -1148,6 +1167,8 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
+                    b.HasIndex("ParcelId", "Key");
+
                     b.HasIndex("ParcelId", "Date", "Key", "Value");
 
                     b.ToTable("ParcelEvaluations");
@@ -1195,6 +1216,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("ParcelId", "Key");
 
                     b.HasIndex("ParcelId", "FiscalYear", "Key", "Value");
 
@@ -1629,22 +1652,22 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("Estimated")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("GainLoss")
+                    b.Property<decimal?>("GainLoss")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("InterestComponent")
+                    b.Property<decimal?>("InterestComponent")
                         .HasColumnType("MONEY");
 
                     b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("NetProceeds")
+                    b.Property<decimal?>("NetProceeds")
                         .HasColumnType("MONEY");
 
                     b.Property<decimal?>("OcgFinancialStatement")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("ProgramCost")
+                    b.Property<decimal?>("ProgramCost")
                         .HasColumnType("MONEY");
 
                     b.Property<int>("ProjectId")
@@ -1658,7 +1681,7 @@ namespace Pims.Dal.Migrations
                     b.Property<bool>("SaleWithLeaseInPlace")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("SalesCost")
+                    b.Property<decimal?>("SalesCost")
                         .HasColumnType("MONEY");
 
                     b.Property<Guid?>("UpdatedById")

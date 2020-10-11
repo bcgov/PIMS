@@ -8,10 +8,12 @@ import { Menu } from 'components/menu/Menu';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { CellProps } from 'react-table';
 import { IUsersState } from 'reducers/usersReducer';
+import { useHistory } from 'react-router-dom';
 
 export const RowActions = (props: CellProps<IUserRecord>) => {
   const store = useStore();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const getUser = (): IUser | undefined =>
     ((store.getState() as RootState).users as IUsersState).pagedUsers.items.find(
@@ -34,7 +36,7 @@ export const RowActions = (props: CellProps<IUserRecord>) => {
   };
 
   const openUserDetails = () => {
-    window.location.assign(`/admin/user/${props.row.original.id}`);
+    history.push(`/admin/user/${props.row.original.id}`);
   };
 
   const isLastRow = props.row.original.id === props.data[props.data.length - 1].id;

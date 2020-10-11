@@ -1,8 +1,4 @@
-# Property Inventory Management System
-
-## MSSQL Backups
-
-### Usage
+# MS SQL Database Backups
 
 Provides cron based MSSQL backups using plugin developed for https://github.com/BCDevOps/backup-container
 
@@ -20,20 +16,20 @@ For the sake of simplicity all examples will use jcxjin-dev.
 
 ## Backup Build
 
-1. View the parameters `oc process --parameters -f openshift/templates/backup/backup-build.yaml`
-2. Optionally (the defaults will generally be correct) Create a **`backup-build.params`** file that contains the values for the parameters within the template.
-3. Create the pipeline objects (add --param-file=[backup-build.params] to oc process if using overrides) `oc process -f openshift/templates/backup/backup-build.yaml | oc create -f -`
+1. View the parameters `oc process --parameters -f openshift/templates/backup/build.yaml`
+2. Optionally (the defaults will generally be correct) Create a **`build.env`** file that contains the values for the parameters within the template.
+3. Create the pipeline objects (add --param-file=[build.env] to oc process if using overrides) `oc process -f openshift/templates/backup/build.yaml | oc create -f -`
 
 ## Backup Config Map
 
 1. Add any desired cron configuration and mssql database connections to backup.conf (that file contains examples).
 2. Either run `backup-deploy.overrides.sh` from https://github.com/BCDevOps/backup-container/tree/master/openshift which will generate a new deployment config, or manually edit backup-conf-configmap_DeploymentConfig.json
-3. Run `oc create -f backup-conf-configmap_DeploymentConfig.json` to create the deployment config within Openshift.
+3. Run `oc create -f backup-config-deploy.yaml` or `oc create -f backup-config-deploy.json` to create the deployment config within Openshift.
 
 ## Backup Deployment Config
 
-1. View the parameters `oc process --parameters -f openshift/templates/backup/backup-deploy.yaml`
-2. Most of the defaults should be correct, so either create a **`backup-deploy.params`** file that contains the values for the parameters within the template, or provide any desired paremeter changes with -p (see below for example).
+1. View the parameters `oc process --parameters -f openshift/templates/backup/deploy.yaml`
+2. Most of the defaults should be correct, so either create a **`deploy.env`** file that contains the values for the parameters within the template, or provide any desired paremeter changes with -p (see below for example).
 3. Create the pipeline objects. Note that DATABASE_DEPLOYMENT_NAME should be set to whatever secret holds the pims database credentials. note that the BACKUP_VOLUME_SIZE MUST match the size of your provisioned volume.
 
 ```

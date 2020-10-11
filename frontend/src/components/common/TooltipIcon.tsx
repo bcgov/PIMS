@@ -3,7 +3,7 @@ import './TooltipIcon.scss';
 import { OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 
-interface TooltipIconProps extends React.ComponentPropsWithRef<typeof Overlay> {
+interface TooltipIconProps extends Partial<React.ComponentPropsWithRef<typeof Overlay>> {
   toolTip?: string;
   toolTipId: string;
 }

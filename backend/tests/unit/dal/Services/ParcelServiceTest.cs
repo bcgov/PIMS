@@ -1039,6 +1039,51 @@ namespace Pims.Dal.Test.Services
             Assert.False(result);
         }
         #endregion
+        
+        #region Check PIN available
+
+        /// <summary>
+        /// Pin is Available for use.
+        /// </summary>
+        [Fact]
+        public void IsPinAvailable_UsedByCurrentParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.PIN = 1;
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.IsPinAvailable(parcel.Id, 1);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        /// <summary>
+        /// Pin is not Available for use.
+        /// </summary>
+        [Fact]
+        public void IsPinAvailable_UsedAnotherParcel()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.PIN = 1;
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            var result = service.IsPinAvailable(10, 1);
+
+            // Assert
+            Assert.False(result);
+        }
+        #endregion
         #endregion
     }
 }

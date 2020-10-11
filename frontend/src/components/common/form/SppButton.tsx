@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { ReactComponent as SppIcon } from 'assets/images/SPP.svg';
 import { Col, Overlay, Tooltip, Button, Row, Image } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
+import TooltipWrapper from '../TooltipWrapper';
 
 interface ISppButtonProps {
   handleErpClick: () => void;
@@ -22,9 +23,11 @@ const SppButton: React.FC<ISppButtonProps> = ({ handleErpClick, handleSppClick }
   return (
     <ClickAwayListener onClickAway={() => setVisible(false)}>
       <div className="sppButton">
-        <Button ref={target} className="close" onClick={() => setVisible(true)}>
-          <SppIcon title="spp" />
-        </Button>
+        <TooltipWrapper toolTipId="map-filter-spp-tooltip" toolTip="Filter SPP/ERP Properties">
+          <Button ref={target} className="close" onClick={() => setVisible(true)}>
+            <SppIcon title="spp" />
+          </Button>
+        </TooltipWrapper>
         <Overlay target={target.current!} show={visible} placement="bottom">
           {(props: any) => {
             return (

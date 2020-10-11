@@ -18,7 +18,7 @@
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
         "RedirectUris": ["https://pims-dev.pathfinder.gov.bc.ca/api/*"],
-        "WebOrigins": ["+"],
+        "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "bcgov-v2"
         }
