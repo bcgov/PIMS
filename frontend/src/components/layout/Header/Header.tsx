@@ -9,6 +9,7 @@ import { RootState } from 'reducers/rootReducer';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaBomb } from 'react-icons/fa';
 import _ from 'lodash';
+import { HelpContainer } from 'features/help/containers/HelpContainer';
 
 const Header = () => {
   const history = useHistory();
@@ -101,6 +102,7 @@ const Header = () => {
           <FaBomb size={30} className="errors" onClick={handleShow} />
         ) : null}
       </Nav>
+      <HelpContainer />
       {errorModal(errors)}
     </Navbar>
   );
