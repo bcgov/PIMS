@@ -39,6 +39,16 @@
         height: 2rem;
       }
     }
+    .page-item.error.active a {
+      background-color: #dc3545;
+      color: black;
+      z-index: 3;
+    }
+    .page-item.error a {
+      border: 1px solid #dc3545;
+      color: #dc3545;
+      z-index: 3;
+    }
     .pagination {
       flex-wrap: wrap;
     }

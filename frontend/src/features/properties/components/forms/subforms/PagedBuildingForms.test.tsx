@@ -15,10 +15,13 @@ import { ILookupCode } from 'actions/lookupActions';
 import _ from 'lodash';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
+const history = createMemoryHistory();
 const mockBuilding: IFormBuilding = {
   address: {
     cityId: 1,
@@ -28,6 +31,8 @@ const mockBuilding: IFormBuilding = {
     city: 'city',
     province: 'province',
   },
+  name: 'name',
+  classification: 'class',
   agencyId: 3,
   buildingConstructionTypeId: 4,
   buildingFloorCount: 5,
@@ -97,9 +102,11 @@ describe('PagedBuildingForms functionality', () => {
   const getPagedBuildingForms = (initialValues: IFormParcel, onSubmit: any) => {
     return (
       <Provider store={store}>
-        <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          <PagedBuildingForms allowEdit={true}></PagedBuildingForms>
-        </Formik>
+        <Router history={history}>
+          <Formik initialValues={initialValues} onSubmit={onSubmit}>
+            <PagedBuildingForms allowEdit={true}></PagedBuildingForms>
+          </Formik>
+        </Router>
       </Provider>
     );
   };
@@ -138,16 +145,20 @@ describe('PagedBuildingForms functionality', () => {
     expect(getByText('Building Information')).toBeVisible(); //the building header is hidden until one building is present.
   });
 
-  it('removes a pre-existing building when remove button clicked', () => {
+  it('removes a pre-existing building after user confirms modal', () => {
     const initialValues: IFormParcel = {
       ...mockDetails[0],
       financials: [],
       buildings: [mockBuilding],
     };
     const pagedBuildingForms = getPagedBuildingForms(initialValues, () => {});
-    const { getByTitle, queryByText } = render(pagedBuildingForms);
+    const { getByTitle, queryByText, getByText } = render(pagedBuildingForms);
     act(() => {
       fireEvent.click(getByTitle('Remove Building'));
+    });
+    expect(queryByText('Confirmation of removal')).toBeInTheDocument();
+    act(() => {
+      fireEvent.click(getByText('Delete'));
     });
     expect(queryByText('Type of Construction')).not.toBeInTheDocument(); //validate that no building fields are being displayed
     expect(queryByText('Building Information')).not.toBeInTheDocument(); //the building header is hidden as no buildings are present.

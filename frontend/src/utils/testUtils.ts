@@ -7,7 +7,12 @@ export const fillInput = async (
   value: any,
   type: string = 'input',
 ) => {
-  const input = container.querySelector(`${type}[name="${name}"]`);
+  let input: any = undefined;
+  if (type === 'radio') {
+    input = container.querySelector(`#input-${name}`);
+  } else {
+    input = container.querySelector(`${type}[name="${name}"]`);
+  }
   await wait(() => {
     act(() => {
       if (type === 'input') {
@@ -16,6 +21,8 @@ export const fillInput = async (
             value: value,
           },
         });
+      } else if (type === 'radio') {
+        fireEvent.click(input);
       } else {
         fireEvent.change(input!, {
           target: {

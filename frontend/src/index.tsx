@@ -5,6 +5,7 @@ import './index.scss'; // should be loaded last to allow for overrides without h
 
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App, { store } from './App';

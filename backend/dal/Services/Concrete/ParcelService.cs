@@ -447,6 +447,11 @@ namespace Pims.Dal.Services
             return !Context.Parcels.Any(parcel => parcel.PID == PID && parcel.Id != parcelId);
         }
 
+        public bool IsPinAvailable(int parcelId, int PIN)
+        {
+            return !Context.Parcels.Any(parcel => parcel.PIN == PIN && parcel.Id != parcelId);
+        }
+
         #endregion
     }
 }

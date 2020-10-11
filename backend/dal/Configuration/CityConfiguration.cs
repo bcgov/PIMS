@@ -23,7 +23,7 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.Code).HasMaxLength(4);
 
-            builder.HasIndex(m => new { m.IsDisabled, m.Name, m.SortOrder });
+            builder.HasIndex(m => new { m.Id, m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
         }

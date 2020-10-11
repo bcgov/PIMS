@@ -28,6 +28,7 @@ const mockBuilding: IFormBuilding = {
     city: 'city',
     province: 'province',
   },
+  name: 'name',
   classification: 'class',
   agencyId: 3,
   buildingConstructionTypeId: 4,
@@ -104,7 +105,7 @@ describe('sub-form BuildingForm functionality', () => {
     return (
       <Provider store={store}>
         <Formik
-          initialValues={initialValues}
+          initialValues={initialValues as any}
           onSubmit={onSubmit}
           validationSchema={YupSchema.Building}
         >
@@ -126,7 +127,7 @@ describe('sub-form BuildingForm functionality', () => {
 
   it('renders EvaluationForm as expected', () => {
     const { getAllByText } = render(getBuildingForm(defaultBuildingValues, () => {}));
-    expect(getAllByText('Value')).toHaveLength(3);
+    expect(getAllByText('Value')).toHaveLength(2);
   });
 
   it('validates all required fields', async () => {
@@ -169,6 +170,8 @@ describe('sub-form BuildingForm functionality', () => {
       'select',
     );
 
+    await fillInput(container, 'name', mockBuilding.name);
+    await fillInput(container, 'description', mockBuilding.description, 'textArea');
     await fillInput(container, 'latitude', mockBuilding.latitude);
     await fillInput(container, 'longitude', mockBuilding.longitude);
     await fillInput(container, 'occupantName', mockBuilding.occupantName);

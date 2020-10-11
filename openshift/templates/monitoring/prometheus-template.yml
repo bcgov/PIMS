@@ -1,0 +1,233 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pims-prometheus-deploy
+  annotations:
+    openshift.io/display-name: PIMS Prometheus
+    description: Deployment template for Prometheus
+    tags: pims-monitoring
+objects:
+  - kind: "PersistentVolumeClaim"
+    apiVersion: v1
+    metadata:
+      name: "prometheus-service-volume-claim"
+      labels:
+        name: prometheus-service-volume-claim
+      namespace: jcxjin-tools
+    spec:
+      storageClassName: netapp-block-standard
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+    volumeName: "prometheus-service-volume-claim"
+
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: pims-prometheus-tools-config
+      namespace: jcxjin-tools
+      annotations:
+        description: Prometheus scraping configuration
+      labels:
+        name: pims-prometheus-tools-config
+        app: pims
+        component: pims-prometheus-config
+        env: tools
+        role: prometheus
+    type: Opaque
+    data:
+      prometheus.yml: |-
+        global:
+          scrape_interval: 10s 
+        scrape_configs:
+        - job_name: 'pims-prometheus-dev'   
+          scheme: https
+          static_configs:
+          - targets: 
+            - ${PIMS_DEV_API_URL}
+        - job_name: 'pims-prometheus-test'
+          scheme: https   
+          static_configs:
+          - targets: 
+            - ${PIMS_TEST_API_URL}
+        - job_name: 'pims-prometheus-prod'
+          scheme: https   
+          static_configs:
+          - targets: 
+            - ${PIMS_PROD_API_URL}
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${PROMETHEUS_SERVICE_ACCOUNT_NAME}
+      labels:
+        name: ${PROMETHEUS_SERVICE_ACCOUNT_NAME}
+      namespace: jcxjin-tools
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      labels:
+        name: prometheus
+      name: prometheus
+      namespace: jcxjin-tools
+    spec:
+      host: ${DOMAIN}
+      to:
+        name: prometheus
+        kind: Service
+        weight: 100
+      tls:
+        termination: edge
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: prometheus
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/scheme: http
+      namespace: jcxjin-tools
+      labels:
+        metrics-infra: prometheus
+        name: prometheus
+    spec:
+      ports:
+        - name: prometheus
+          port: 80
+          protocol: TCP
+          targetPort: 9090
+      selector:
+        app: pims-monitoring-tools
+
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: pims-monitoring-tools
+      namespace: jcxjin-tools
+      annotations:
+        description: "Defines how to deploy pims prometheus"
+      labels:
+        name: pims-monitoring-tools
+        app: pims-monitoring-tools
+        component: monitoring
+        env: tools
+        role: prometheus
+    spec:
+      replicas: 1
+      selector:
+        name: pims-monitoring-tools
+        app: pims-monitoring-tools
+        component: monitoring
+        env: tools
+      strategy:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          name: pims-monitoring-tools
+          labels:
+            name: pims-monitoring-tools
+            app: pims-monitoring-tools
+            component: monitoring
+            env: tools
+            role: tools
+        spec:
+          serviceAccountName: ${PROMETHEUS_SERVICE_ACCOUNT_NAME}
+          volumes:
+            - name: "pims-monitoring-prometheus-config-volume"
+              configMap:
+                name: pims-prometheus-tools-config
+                items:
+                  - key: prometheus.yml
+                    path: prometheus.yml
+            - name: prometheus-data
+              persistentVolumeClaim:
+                claimName: prometheus-service-volume-claim
+          containers:
+            - name: pims-prometheus-tools
+              image: docker.io/prom/prometheus:v2.9.2
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 9090
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
+              volumeMounts:
+                - name: "pims-monitoring-prometheus-config-volume"
+                  mountPath: /etc/prometheus/prometheus.yml
+                  subPath: prometheus.yml
+                - mountPath: /data
+                  name: prometheus-data
+              args:
+                - "--config.file=/etc/prometheus/prometheus.yml"
+                - "--storage.tsdb.path=/data"
+                - "--web.console.libraries=/etc/prometheus/console_libraries"
+                - "--web.console.templates=/etc/prometheus/consoles"
+                - "--web.enable-lifecycle"
+              livenessProbe:
+                httpGet:
+                  path: "/-/healthy"
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                timeoutSeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
+              readinessProbe:
+                httpGet:
+                  path: "/-/ready"
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 20
+                timeoutSeconds: 60
+                periodSeconds: 20
+                successThreshold: 1
+                failureThreshold: 5
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+parameters:
+  - name: PIMS_DEV_API_URL
+    displayName: PIMS Dev API URL
+    description: PIMS Dev API URL
+    required: true
+    value: pims-dev.pathfinder.gov.bc.ca
+  - name: PIMS_TEST_API_URL
+    displayName: PIMS Test API URL
+    description: PIMS Test API URL
+    required: true
+    value: pims-test.pathfinder.gov.bc.ca
+  - name: PIMS_PROD_API_URL
+    displayName: PIMS Prod API URL
+    description: PIMS Prod API URL
+    required: true
+    value: pims-prod.pathfinder.gov.bc.ca
+  - name: PROMETHEUS_SERVICE_ACCOUNT_NAME
+    displayName: PIMS Prometheus Service Account Name
+    description: PIMS Prometheus Service Account Name
+    required: true
+    value: pims-monitoring-prometheus-account
+  - name: PROJECT_NAME
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "jcxjin-tools"
+  - name: DOMAIN
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "pims-prometheus.pathfinder.gov.bc.ca"

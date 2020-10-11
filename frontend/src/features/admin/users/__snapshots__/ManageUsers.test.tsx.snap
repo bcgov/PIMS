@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component functionality Snapshot matches 1`] = `
+exports[`Manage Users Component Snapshot matches 1`] = `
 <div
   className="users-management-page"
 >
@@ -162,6 +162,10 @@ exports[`component functionality Snapshot matches 1`] = `
         <button
           className="Button Button--icon-only bg-warning btn btn-primary"
           disabled={false}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           type="submit"
         >
           <div
@@ -193,9 +197,13 @@ exports[`component functionality Snapshot matches 1`] = `
         className="bar-item flex-grow-0 col"
       >
         <button
-          className="Button btn btn-outline-primary"
+          className="Button Button--icon-only btn btn-outline-primary"
           disabled={false}
+          onBlur={[Function]}
           onClick={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           type="reset"
         >
           <div
@@ -221,17 +229,12 @@ exports[`component functionality Snapshot matches 1`] = `
               />
             </svg>
           </div>
-          <div
-            className="Button__value"
-          >
-            Reset
-          </div>
         </button>
       </div>
     </div>
   </form>
   <div
-    className="sc-fzokOt dFtkRK container-fluid"
+    className="sc-fznxsB gzixru container-fluid"
   >
     <div
       className="table"
@@ -496,6 +499,7 @@ exports[`component functionality Snapshot matches 1`] = `
             >
               <a
                 href="/admin/user/1"
+                onClick={[Function]}
               >
                 testername1
               </a>
@@ -813,6 +817,7 @@ exports[`component functionality Snapshot matches 1`] = `
             >
               <a
                 href="/admin/user/2"
+                onClick={[Function]}
               >
                 testername2
               </a>

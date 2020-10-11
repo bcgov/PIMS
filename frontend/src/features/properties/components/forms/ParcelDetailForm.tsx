@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { Formik, validateYupSchema, yupToFormErrors, FormikProps } from 'formik';
+import { Formik, yupToFormErrors, FormikProps } from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
 import { IFormBuilding } from './subforms/BuildingForm';
@@ -12,6 +12,8 @@ import EvaluationForm, {
   filterEmptyFinancials,
   getMergedFinancials,
   validateFinancials,
+  IFinancial,
+  IFinancialYear,
 } from './subforms/EvaluationForm';
 import './ParcelDetailForm.scss';
 import { useHistory } from 'react-router-dom';
@@ -37,6 +39,8 @@ import { RootState } from 'reducers/rootReducer';
 import { useApi, IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import GenericModal from 'components/common/GenericModal';
+import DebouncedValidation from './subforms/DebouncedValidation';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -57,7 +61,7 @@ export const getInitialValues = (): any => {
   };
 };
 export interface IFormParcel extends IParcel {
-  financials: any;
+  financials: IFinancialYear[];
   buildings: IFormBuilding[];
 }
 
@@ -69,6 +73,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const history = useHistory();
   const api = useApi();
   const formikRef = React.useRef<FormikProps<any>>();
+  const [pidSelection, setPidSelection] = useState({ showPopup: false, geoPID: '' });
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -129,7 +134,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
     values.pin = values?.pin ? values.pin : undefined;
     values.pid = values?.pid ? values.pid : undefined;
-    const allFinancials = filterEmptyFinancials(values.financials);
+    const seperatedFinancials = _.flatten(
+      values.financials.map((financial: IFinancialYear) => _.values(financial)),
+    ) as IFinancial[];
+    const allFinancials = filterEmptyFinancials(seperatedFinancials);
 
     values.evaluations = _.filter(allFinancials, financial =>
       Object.keys(EvaluationKeys).includes(financial.key),
@@ -144,7 +152,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       if (!building.leaseExpiry || !building.leaseExpiry.length) {
         building.leaseExpiry = undefined;
       }
-      const allFinancials = filterEmptyFinancials(building.financials);
+      const seperatedBuildingFinancials = _.flatten(
+        building.financials.map((financial: IFinancialYear) => _.values(financial)),
+      ) as IFinancial[];
+      const allFinancials = filterEmptyFinancials(seperatedBuildingFinancials);
       building.evaluations = _.filter(allFinancials, financial =>
         Object.keys(EvaluationKeys).includes(financial.key),
       );
@@ -155,6 +166,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     });
     return values;
   };
+
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
    * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
@@ -167,18 +179,16 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     if (values.pid) {
       financialErrors = validateFinancials(values.financials, 'financials', showAppraisal);
       values.buildings.forEach((building, index) => {
-        financialErrors = {
-          ...financialErrors,
-          ...validateFinancials(
-            building.financials,
-            `buildings.${index}.financials`,
-            showAppraisal,
-          ),
-        };
+        const result = validateFinancials(
+          building.financials,
+          `buildings.${index}.financials`,
+          showAppraisal,
+        );
+        _.merge(financialErrors, result);
       });
     }
 
-    const yupErrors: any = validateYupSchema(values, ParcelSchema).then(
+    const yupErrors: any = ParcelSchema.validate(values, { abortEarly: false }).then(
       () => {
         return financialErrors;
       },
@@ -188,19 +198,32 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     );
 
     let pidDuplicated = false;
-    if (values.pid) {
+    if (values.pid && initialValues.pid !== values.pid) {
       pidDuplicated = !(await isPidAvailable(values));
+    }
+
+    let pinDuplicated = false;
+    if (values.pin && initialValues.pin !== values.pin && values.pin.toString().length < 10) {
+      pinDuplicated = !(await isPinAvailable(values));
     }
 
     let errors = await yupErrors;
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
     }
+    if (pinDuplicated) {
+      errors = { ...errors, pin: 'This PIN is already in use.' };
+    }
     return Promise.resolve(errors);
   };
 
   const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
     const { available } = await api.isPidAvailable(values.id, values.pid);
+    return available;
+  };
+
+  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const { available } = await api.isPinAvailable(values.id, values.pin);
     return available;
   };
 
@@ -251,7 +274,17 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           console.error('Failed to get pids');
         }
       }
-      newValues.pid = parcelPid;
+      if (
+        formikRef.current.values.pid &&
+        parcelPid !== '' &&
+        formikRef.current.values.pid !== parcelPid
+      ) {
+        setPidSelection({ showPopup: true, geoPID: parcelPid });
+      } else if (formikRef.current.values.pid && parcelPid === '') {
+        newValues.pid = formikRef.current.values.pid;
+      } else {
+        newValues.pid = parcelPid;
+      }
 
       // update form with values returned from geocoder
       formikRef.current.setValues(newValues);
@@ -261,6 +294,23 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   return (
     <Row noGutters className="parcelDetailForm">
       <Col>
+        {pidSelection.showPopup && (
+          <GenericModal
+            cancelButtonText={`Use original PID ${formikRef.current?.values.pid}`}
+            okButtonText={`Use PID from GeoCoder ${pidSelection.geoPID}`}
+            handleOk={(e: any) => {
+              formikRef.current?.setFieldValue('pid', pidSelection.geoPID);
+              setPidSelection({ showPopup: false, geoPID: '' });
+            }}
+            handleCancel={() => {
+              setPidSelection({ showPopup: false, geoPID: '' });
+            }}
+            title="Conflicting PIDs found"
+            message={
+              'The PID returned from GeoCoder does not match the one previously entered. Which PID value would you like to use?'
+            }
+          />
+        )}
         <Formik
           innerRef={instance => {
             formikRef.current = instance;
@@ -270,30 +320,28 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           validate={handleValidate}
           enableReinitialize={true}
           onSubmit={async (values, actions) => {
-            let response: any;
             const apiValues = valuesToApiFormat(_.cloneDeep(values));
-            if (!values.id) {
-              response = dispatch(createParcel(apiValues));
-            } else {
-              response = dispatch(updateParcel(apiValues));
-            }
-            response
-              .then(() => {
-                history.push('/');
-              })
-              .catch((error: any) => {
-                const msg: string = error?.response?.data?.error ?? error.toString();
-                actions.setStatus({ msg });
-              })
-              .finally(() => {
-                actions.setSubmitting(false);
+            try {
+              if (!values.id) {
+                const data = await createParcel(apiValues)(dispatch);
                 dispatch(clear(actionTypes.ADD_PARCEL));
-                dispatch(clear(actionTypes.UPDATE_PARCEL));
-              });
+                history.replace(`/submitProperty/${data.id}`);
+              } else {
+                await updateParcel(apiValues)(dispatch);
+                history.go(0);
+              }
+            } catch (error) {
+              const msg: string =
+                error?.response?.data?.error ?? 'Error saving property data, please try again.';
+              actions.setStatus({ msg });
+            } finally {
+              actions.setSubmitting(false);
+            }
           }}
         >
           {formikProps => (
             <Form>
+              <DebouncedValidation formikProps={formikProps} />
               {setLatLng(formikProps)}
               {!props.disabled && (
                 <Persist
@@ -367,7 +415,13 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                   <Button disabled={props.disabled} type="submit">
                     Submit&nbsp;
                     {formikProps.isSubmitting && (
-                      <Spinner animation="border" size="sm" role="status" as="span" />
+                      <Spinner
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        as="span"
+                        style={{ marginLeft: '.5rem' }}
+                      />
                     )}
                   </Button>
                 )}

@@ -232,6 +232,7 @@ const PropertyListView: React.FC = () => {
           lockPageSize={true}
           columns={columns}
           data={data}
+          pageIndex={pageIndex}
           onRequestData={handleRequestData}
           pageCount={pageCount}
           canRowExpand={(val: any) => {

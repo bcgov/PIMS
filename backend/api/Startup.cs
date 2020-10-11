@@ -43,6 +43,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Pims.Api.Helpers.Logging;
+using Prometheus;
 
 namespace Pims.Api
 {
@@ -85,6 +87,7 @@ namespace Pims.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSerilogging();
             services.AddMapster(options =>
             {
                 options.Default.IgnoreNonMapped(true);
@@ -289,6 +292,9 @@ namespace Pims.Api
         /// <param name="provider"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             if (!env.IsProduction())
             {
                 app.UseDatabaseErrorPage();

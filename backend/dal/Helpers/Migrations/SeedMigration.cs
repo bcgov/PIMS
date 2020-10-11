@@ -78,6 +78,30 @@ namespace Pims.Dal.Helpers.Migrations
         }
 
         /// <summary>
+        /// Execute any scripts in the migration \Up\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'Up Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "Up"));
+        }
+
+        /// <summary>
+        /// Execute any scripts in the migration \Down\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'Down Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "Down"));
+        }
+
+        /// <summary>
         /// Execute the specified script or scripts in the specified folder.
         /// </summary>
         /// <param name="migrationBuilder"></param>

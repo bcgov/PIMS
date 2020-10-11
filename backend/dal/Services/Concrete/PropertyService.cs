@@ -67,8 +67,8 @@ namespace Pims.Dal.Services
 
             var projectNumbers = properties.Select(p => p.ProjectNumber).Distinct().ToArray();
             var statuses = from p in this.Context.ProjectProperties
-                where projectNumbers.Contains(p.Project.ProjectNumber)
-                select new { p.Project.ProjectNumber, p.Project.Status };
+                           where projectNumbers.Contains(p.Project.ProjectNumber)
+                           select new { p.Project.ProjectNumber, p.Project.Status };
 
             foreach (var status in statuses)
             {
@@ -113,10 +113,7 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
-            var count = items.Count();
-            var total = count < filter.Quantity ? skip + count : filter.Page * filter.Quantity + 1; // TODO: temporary way to improve performance as the DB is having memory issues scanning the whole table.
-
-            return new Paged<Property>(items, filter.Page, filter.Quantity, total);
+            return new Paged<Property>(items, filter.Page, filter.Quantity, query.Count());
         }
         #endregion
     }

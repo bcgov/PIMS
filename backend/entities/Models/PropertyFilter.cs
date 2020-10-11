@@ -82,6 +82,12 @@ namespace Pims.Dal.Entities.Models
         public string Address { get; set; }
 
         /// <summary>
+        /// get/set - The property city.
+        /// </summary>
+        /// <value></value>
+        public string City { get; set; }
+
+        /// <summary>
         /// get/set - Building minimum estimated value.
         /// </summary>
         /// <value></value>
@@ -176,6 +182,8 @@ namespace Pims.Dal.Entities.Models
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
             this.Address = filter.GetStringValue(nameof(this.Address));
+            this.City = filter.GetStringValue(nameof(this.City));
+
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
             this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));

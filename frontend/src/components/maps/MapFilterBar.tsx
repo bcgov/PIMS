@@ -4,44 +4,26 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import {
-  Form,
-  Select,
-  Button,
-  ButtonProps,
-  InputGroup,
-  Input,
-  SelectOption,
-  AutoCompleteText,
-} from '../common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
+import { Form, Select, InputGroup, Input, SelectOption, AutoCompleteText } from '../common/form';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
 import { FilterBarSchema } from 'utils/YupSchema';
-
-const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
-
-const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return (
-    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
-      Reset
-    </Button>
-  );
-};
+import ResetButton from 'components/common/form/ResetButton';
+import SearchButton from 'components/common/form/SearchButton';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
       { label: 'Address', value: 'address' },
+      { label: 'City', value: 'city' },
       { label: 'PID/PIN', value: 'pid' },
       { label: 'Municipality', value: 'municipality' },
       { label: 'RAEG or SPP No.', value: 'projectNumber' },
     ],
     placeholders: {
       address: 'Enter an address or city',
+      city: 'Enter a city name',
       pid: 'Enter a PID or PIN',
       municipality: 'Enter a municipality',
       projectNumber: 'Enter an SPP/RAEG number',
@@ -59,6 +41,7 @@ const SearchBar: React.FC = () => {
     setFieldValue('address', '');
     setFieldValue('municipality', '');
     setFieldValue('projectNumber', '');
+    setFieldValue('city', '');
   };
 
   return (
@@ -76,6 +59,7 @@ export type MapFilterChangeEvent = {
   searchBy: string;
   pid: string;
   address: string;
+  city: string;
   municipality: string;
   projectNumber: string;
   /** comma-separated list of agencies to filter by */
@@ -92,6 +76,7 @@ type MapFilterProps = {
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
   onFilterChange: (e: MapFilterChangeEvent) => void;
+  onFilterReset?: () => void;
 };
 
 /**
@@ -101,6 +86,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   agencyLookupCodes,
   propertyClassifications,
   onFilterChange,
+  onFilterReset,
 }) => {
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
@@ -128,6 +114,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         searchBy: 'address',
         pid: '',
         address: '',
+        city: '',
         municipality: '',
         projectNumber: '',
         agencies: '',
@@ -149,6 +136,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       onReset={(values, { setSubmitting }) => {
         delete values.inEnhancedReferralProcess;
         delete values.inSurplusPropertyProgram;
+        !!onFilterReset && onFilterReset();
         onFilterChange?.({ ...values });
         setSubmitting(false);
       }}

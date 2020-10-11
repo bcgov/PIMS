@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Col, Button } from 'react-bootstrap';
 import { FieldArray, useFormikContext, FormikProps, getIn } from 'formik';
 import BuildingForm, { defaultBuildingValues, IFormBuilding } from './BuildingForm';
@@ -8,6 +8,7 @@ import WrappedPaginate from 'components/common/WrappedPaginate';
 import _ from 'lodash';
 import { IPaginate } from 'utils/CommonFunctions';
 import PaginatedFormErrors from './PaginatedFormErrors';
+import GenericModal from 'components/common/GenericModal';
 
 interface PagedBuildingFormsProps {
   /** controls whether this form can be interacted with */
@@ -33,6 +34,18 @@ const getPageErrors = (errors: any, nameSpace: any) => {
   );
 };
 
+const deletePagedBuilding = (
+  buildings: IFormBuilding[],
+  currentPage: number,
+  setCurrentPage: (n: number) => any,
+  arrayHelpers: any,
+) => {
+  if (currentPage === buildings.length - 1) {
+    setCurrentPage(currentPage - 1);
+  }
+  arrayHelpers.remove(currentPage);
+};
+
 /**
  * PagedBuildingForms paginates all buildings within props.values.buildings.
  * @param props
@@ -50,6 +63,9 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
   };
   // the current paginated page.
   const [currentPage, setCurrentPage] = useState<number>(0);
+  // to determine whether to show the delete confirmation popup
+  const paginationRef = useRef();
+  const [showDelete, setShowDelete] = useState(false);
 
   return (
     <Col>
@@ -58,6 +74,22 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
         name="buildings"
         render={arrayHelpers => (
           <div>
+            {showDelete && (
+              <GenericModal
+                display={showDelete}
+                cancelButtonText="Close"
+                okButtonText="Delete"
+                handleOk={() => {
+                  deletePagedBuilding(buildings, currentPage, setCurrentPage, arrayHelpers);
+                  setShowDelete(false);
+                }}
+                handleCancel={() => setShowDelete(false)}
+                title="Confirmation of removal"
+                message={
+                  'Are you sure you would like to delete this building? You must click Submit to save your changes to the property.'
+                }
+              />
+            )}
             <span className="buildingPaginate">
               {!props.disabled && !!props.allowEdit && (
                 <>
@@ -91,10 +123,9 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                     variant="link"
                     title="Remove Building"
                     onClick={() => {
-                      if (currentPage === buildings.length - 1) {
-                        setCurrentPage(currentPage - 1);
-                      }
-                      arrayHelpers.remove(currentPage);
+                      formikProps.values.buildings[currentPage].id
+                        ? setShowDelete(true)
+                        : deletePagedBuilding(buildings, currentPage, setCurrentPage, arrayHelpers);
                     }}
                   >
                     <FaTrash size={14} />
@@ -103,14 +134,15 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
               )}
 
               <WrappedPaginate
+                pagingRef={paginationRef}
                 onPageChange={(page: any) => setCurrentPage(page.selected)}
                 {...pagedBuildings}
               />
             </span>
             {!!formikProps.values.buildings.length && <h4>Building Information</h4>}
             <PaginatedFormErrors
+              pagingRef={paginationRef}
               errors={getPageErrors(formikProps.errors, 'buildings')}
-              nameSpace="Buildings"
             />
             <div>
               {!!buildings.length && (

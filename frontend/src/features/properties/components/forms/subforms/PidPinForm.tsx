@@ -13,7 +13,7 @@ interface PidPinProps {
 }
 export const defaultPidPinFormValues = {
   pid: '',
-  pin: '',
+  pin: null,
   projectNumber: '',
   name: '',
   description: '',

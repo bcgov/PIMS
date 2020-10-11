@@ -4,6 +4,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { mapLookupCode } from 'utils';
 import _ from 'lodash';
+import { useCallback } from 'react';
 
 function useCodeLookups() {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
@@ -13,7 +14,18 @@ function useCodeLookups() {
     return lookupCodes.filter(code => code.type === type && code.id === id)?.find(x => x)?.code;
   };
 
-  const getByType = (type: string) => lookupCodes.filter(code => code.type === type);
+  const getByType = useCallback(
+    (type: string) => lookupCodes.filter(code => code.type === type && code.isDisabled !== true),
+    [lookupCodes],
+  );
+
+  const getPublicByType = useCallback(
+    (type: string) =>
+      lookupCodes.filter(
+        code => code.type === type && code.isDisabled === false && code.isPublic !== false,
+      ),
+    [lookupCodes],
+  );
 
   /**
    * filter the passed list of agencies. If the passed agency is a parent agency, include all child agencies. Otherwise just return the filter agency.
@@ -35,10 +47,12 @@ function useCodeLookups() {
 
   const getOptionsByType = (type: string) => getByType(type).map(mapLookupCode);
   return {
-    getOptionsByType: getOptionsByType,
-    getCodeById: getCodeById,
+    getOptionsByType,
+    getCodeById,
     getByType,
+    getPublicByType,
     filterByParent,
+    lookupCodes,
   };
 }
 

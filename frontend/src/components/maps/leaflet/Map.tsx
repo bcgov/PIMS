@@ -12,18 +12,21 @@ import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { decimalOrNull, floatOrNull } from 'utils';
 import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMapViewZoom, resetMapViewZoom } from 'reducers/mapViewZoomSlice';
+import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
 import { BBox } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
+import { useMediaQuery } from 'react-responsive';
+import { useApi } from 'hooks/useApi';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
   filter?: {
     pid: string;
     address: string;
+    city: string;
     municipality: string;
     projectNumber: string;
     /** comma-separated list of agencies to filter by */
@@ -78,6 +81,7 @@ const Map: React.FC<MapProps> = ({
     pid: '',
     searchBy: 'address',
     address: '',
+    city: '',
     municipality: '',
     projectNumber: '',
     agencies: '',
@@ -89,6 +93,8 @@ const Map: React.FC<MapProps> = ({
   });
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
+  const smallScreen = useMediaQuery({ maxWidth: 1800 });
+  const { getCityLatLng } = useApi();
 
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -97,8 +103,8 @@ const Map: React.FC<MapProps> = ({
   }
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
-    dispatch(resetMapViewZoom());
-  }, [dispatch]);
+    dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
+  }, [dispatch, smallScreen]);
 
   // TODO: refactor various zoom settings
   const [bounds, setBounds] = useState<BBox>();
@@ -131,6 +137,7 @@ const Map: React.FC<MapProps> = ({
     const {
       pid,
       address,
+      city,
       municipality,
       projectNumber,
       agencies,
@@ -145,6 +152,7 @@ const Map: React.FC<MapProps> = ({
       filter: {
         pid,
         address,
+        city,
         municipality,
         projectNumber,
         agencies: agencies,
@@ -166,7 +174,19 @@ const Map: React.FC<MapProps> = ({
     dispatch(storeParcelDetail(null));
   };
 
-  const handleMapFilterChange = (e: MapFilterChangeEvent) => {
+  const zoomToCity = async (city: string) => {
+    const center = await getCityLatLng(city);
+    if (center) {
+      mapRef.current?.leafletElement.setZoomAround(center, 11);
+    }
+  };
+
+  const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
+    if (e.city) {
+      await zoomToCity(e.city);
+    } else {
+      fitMapBounds();
+    }
     setMapFilter(e);
     handleViewportChange(e);
   };
@@ -236,6 +256,15 @@ const Map: React.FC<MapProps> = ({
     );
   };
 
+  const fitMapBounds = () => {
+    if (mapRef.current) {
+      mapRef.current.leafletElement.fitBounds([
+        [60.09114547, -119.49609429],
+        [48.78370426, -139.35937554],
+      ]);
+    }
+  };
+
   // return map
   return (
     <Container fluid className="px-0">
@@ -247,6 +276,7 @@ const Map: React.FC<MapProps> = ({
               propertyClassifications={propertyClassifications}
               lotSizes={lotSizes}
               onFilterChange={handleMapFilterChange}
+              onFilterReset={fitMapBounds}
             />
           </Container>
         </Container>
@@ -261,6 +291,7 @@ const Map: React.FC<MapProps> = ({
             center={[lat, lng]}
             zoom={lastZoom}
             whenReady={() => {
+              fitMapBounds();
               handleViewportChange(mapFilter);
             }}
             onViewportChanged={() => {

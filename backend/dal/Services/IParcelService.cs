@@ -17,5 +17,6 @@ namespace Pims.Dal.Services
         Parcel Update(Parcel parcel);
         void Remove(Parcel parcel);
         bool IsPidAvailable(int parcelId, int PID);
+        bool IsPinAvailable(int parcelId, int PIN);
     }
 }

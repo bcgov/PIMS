@@ -39,21 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
-    <None Remove="Migrations\Initial\PostDeploy\01-NotificationTemplates.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\01-ProjectRisks.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\01-ProjectStatusTasks.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\01-Workflow.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\01-WorkflowProjectStatus.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\02-ProjectStatusNotifications.sql" />
-    <None Remove="Migrations\Initial\PostDeploy\02-ProjectStatusTransitions.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />
     <ProjectReference Include="..\core\Pims.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Migrations\20200618164721_Initial.cs" />
-    <Compile Remove="Migrations\20200618164721_Initial.Designer.cs" />
-    <Compile Remove="Migrations\PimsContextModelSnapshot.cs" />
   </ItemGroup>
 </Project>

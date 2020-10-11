@@ -51,7 +51,7 @@ describe('AppNavBar', () => {
       keycloak: {
         subject: 'test',
         userInfo: {
-          roles: ['project-view'],
+          roles: ['admin-properties', 'admin-projects'],
         },
       },
     });
@@ -225,15 +225,16 @@ describe('AppNavBar', () => {
       });
     });
 
-    it('AppNavBar include View Projects Link', () => {
+    it('AppNavBar include Disposal Project Link', () => {
       (useKeycloak as jest.Mock).mockReturnValue({
         keycloak: {
           subject: 'test',
           userInfo: {
-            roles: ['project-view'],
+            roles: ['admin-properties', 'admin-projects'],
           },
         },
       });
+
       const { getByText } = render(
         <Provider store={store}>
           <Router history={history}>
@@ -241,12 +242,58 @@ describe('AppNavBar', () => {
           </Router>
         </Provider>,
       );
-      const element = getByText('View Projects');
+      const link = getByText('Dispose Properties');
+      expect(link).toBeTruthy();
+    });
+  });
+  describe('AppNavbar user name display', () => {
+    it('Displays keycloak display name if available', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            name: 'display name',
+            firstName: 'name',
+            roles: ['project-add'],
+          },
+        },
+      });
 
-      expect(element).toBeTruthy();
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const name = getByText('display name');
+      expect(name).toBeVisible();
     });
 
-    it('AppNavBar include Disposal Project Link', () => {
+    it('Displays first last name if no display name', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: ['project-add'],
+            firstName: 'firstName',
+            lastName: 'lastName',
+          },
+        },
+      });
+
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const name = getByText('firstName lastName');
+      expect(name).toBeVisible();
+    });
+
+    it('Displays default if no user name information found', () => {
       (useKeycloak as jest.Mock).mockReturnValue({
         keycloak: {
           subject: 'test',
@@ -263,8 +310,8 @@ describe('AppNavBar', () => {
           </Router>
         </Provider>,
       );
-      const link = getByText('Dispose Properties');
-      expect(link).toBeTruthy();
+      const name = getByText('default');
+      expect(name).toBeVisible();
     });
   });
 });

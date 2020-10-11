@@ -4,28 +4,9 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import {
-  Form,
-  Select,
-  SelectOption,
-  Button,
-  ButtonProps,
-  InputGroup,
-  Input,
-} from 'components/common/form';
-import { FaUndo, FaSearch } from 'react-icons/fa';
-
-const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />;
-};
-
-const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
-  return (
-    <Button type="reset" variant="outline-primary" {...props} icon={<FaUndo size={20} />}>
-      Reset
-    </Button>
-  );
-};
+import { Form, Select, SelectOption, InputGroup, Input } from 'components/common/form';
+import ResetButton from 'components/common/form/ResetButton';
+import SearchButton from 'components/common/form/SearchButton';
 
 const SearchBar: React.FC = () => {
   const state: { placeholders: Record<string, string> } = {

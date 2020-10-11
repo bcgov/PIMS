@@ -27,9 +27,13 @@ import { fillInput, getInput } from 'utils/testUtils';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { LatLng } from 'leaflet';
 import { useApi, PimsAPI } from 'hooks/useApi';
+import { IParcel } from 'actions/parcelsActions';
+import { updateParcel } from 'actionCreators/parcelsActionCreator';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+
+jest.mock('actionCreators/parcelsActionCreator');
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -48,6 +52,9 @@ jest.mock('@react-keycloak/web');
 jest.mock('hooks/useApi');
 ((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   isPidAvailable: async () => {
+    return { available: true };
+  },
+  isPinAvailable: async () => {
     return { available: true };
   },
   getSitePids: async () => {
@@ -118,13 +125,14 @@ const store = mockStore({
 const parcelDetailForm = (
   clickLatLng: LatLng | undefined = undefined,
   loadDraft: boolean = true,
+  data?: any,
 ) => (
   <Provider store={store}>
     <Router history={history}>
       <ParcelDetailForm
         agencyId={1}
         clickLatLng={clickLatLng}
-        parcelDetail={null}
+        parcelDetail={data ?? null}
         secret="test"
         loadDraft={loadDraft}
       />
@@ -138,13 +146,15 @@ describe('ParcelDetailForm', () => {
   });
   describe('field validation', () => {
     const exampleData = {
+      id: 1,
       projectNumber: '',
+      name: 'name',
       agencyId: 1,
       address: {
         line1: 'addressval',
         cityId: 1,
         provinceId: '2222',
-        postal: 'V8X3L5',
+        postal: 'V8X 3L5',
       },
       description: '',
       landLegalDescription: '',
@@ -216,15 +226,25 @@ describe('ParcelDetailForm', () => {
         fireEvent.click(submit!);
       });
       const errors = getAllByText('Required');
-      const idErrors = getAllByText('PID or PIN Required');
-      expect(errors).toHaveLength(6);
-      expect(idErrors).toHaveLength(2);
+      const idErrors = getAllByText('PID must be in the format ###-###-###');
+      expect(errors).toHaveLength(3);
+      expect(idErrors).toHaveLength(1);
     });
 
-    it('submits all basic fields correctly', async done => {
-      const form = render(parcelDetailForm());
+    it('detail submits all basic fields correctly', async done => {
+      const form = render(
+        parcelDetailForm(undefined, undefined, {
+          id: 1,
+          address: { cityId: 1 },
+          buildings: [],
+          evaluations: [],
+          fiscals: [],
+        }),
+      );
       const container = form.container;
       await fillInput(container, 'pin', exampleData.pin);
+      await fillInput(container, 'name', exampleData.name);
+      await fillInput(container, 'description', exampleData.description, 'textArea');
       await fillInput(container, 'municipality', exampleData.municipality);
       await fillInput(container, 'zoning', exampleData.zoning);
       await fillInput(container, 'zoningPotential', exampleData.zoningPotential);
@@ -242,19 +262,27 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'latitude', exampleData.latitude);
       await fillInput(container, 'longitude', exampleData.longitude);
       await fillInput(container, 'landArea', exampleData.landArea);
+      await fillInput(container, 'isSensitive', true, 'radio');
       // await fillInput(container, 'financials.1.date', exampleData.evaluations[1].date);
       // TODO: add a function capable of filling this type of field
-      await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
-      const mockAxios = new MockAdapter(axios);
-      const submit = form.getByText('Submit');
-      mockAxios.onPost().reply(config => {
-        expect(JSON.parse(config.data)).toEqual(exampleData);
-        return [200, Promise.resolve(config.data)];
+      await fillInput(container, 'financials.0.netbook.value', exampleData.fiscals[1].value);
+      (updateParcel as any).mockImplementation((parcel: IParcel) => {
+        expect(parcel.isSensitive).toBeTruthy();
+        expect(parcel.pin).toEqual(exampleData.pin);
+        expect(parcel.latitude).toEqual(exampleData.latitude);
+        expect(parcel.longitude).toEqual(exampleData.longitude);
+        expect(parcel.landArea).toEqual(exampleData.landArea);
+        expect(parcel.address).toEqual(exampleData.address);
+        expect(parcel.name).toEqual(exampleData.name);
+        expect(parcel.municipality).toEqual(exampleData.municipality);
+        expect(parcel.zoning).toEqual(exampleData.zoning);
+        expect(parcel.zoningPotential).toEqual(exampleData.zoningPotential);
+        done();
       });
+      const submit = form.getByText('Submit');
       await wait(() => {
         fireEvent.click(submit!);
       });
-      done();
     });
 
     it('allows admin to change agency', async done => {
@@ -274,22 +302,17 @@ describe('ParcelDetailForm', () => {
     });
 
     it('displays a top level error message if submit fails', async done => {
-      jest.unmock('formik');
-      const formik = require('formik');
-      formik.validateYupSchema = jest.fn(() => Promise.resolve({}));
-      const { getByText, findByText, container } = render(parcelDetailForm());
+      const { getByText, findByText } = render(parcelDetailForm(undefined, undefined, exampleData));
       const mockAxios = new MockAdapter(axios);
       const submit = getByText('Submit');
       mockAxios.onPost().reply(() => {
         throw Error('test message');
       });
 
-      await fillInput(container, 'financials.2.value', exampleData.fiscals[0].value);
-      await fillInput(container, 'financials.3.value', exampleData.fiscals[1].value);
       await wait(() => {
         fireEvent.click(submit!);
       });
-      await findByText('Error');
+      await findByText('Error saving property data, please try again.');
       done();
     });
   });

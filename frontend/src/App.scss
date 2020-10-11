@@ -29,3 +29,13 @@ div.bootstrap-table {
     font-weight: 700;
   }
 }
+
+.Toastify__toast.Toastify__toast--dark {
+  color: $accent-color;
+  background-color: $dark-variant-color;
+}
+
+.Toastify__toast.Toastify__toast--error {
+  color: #fff;
+  background-color: $danger-color;
+}

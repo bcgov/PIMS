@@ -79,6 +79,22 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// Check if PIN is available
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("check/pin-available")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.CheckPidAvailabilityResponseModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult IsPinAvailable(int parcelId, int pin)
+        {
+            var result = new Model.CheckPidAvailabilityResponseModel
+            { Available = _pimsService.Parcel.IsPinAvailable(parcelId, pin) };
+            return new JsonResult(result);
+        }
+
+        /// <summary>
         /// Add a new parcel to the datasource for the current user.
         /// </summary>
         /// <param name="model"></param>
