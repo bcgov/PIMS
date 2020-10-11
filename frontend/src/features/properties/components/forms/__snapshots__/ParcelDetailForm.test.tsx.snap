@@ -583,9 +583,21 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 className="form-row"
               >
                 <label
-                  className="form-label col-form-label col-md-2"
+                  className="form-label col-form-label col-md-12"
                 >
-                  Sensitive Land
+                  Harmful if Released?
+                   
+                  <a
+                    href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Policy
+                  </a>
                 </label>
                 <div
                   className="col-md-10 form-group"
@@ -597,15 +609,43 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       className="form-check"
                     >
                       <input
-                        className="form-check-input position-static"
+                        className="form-check-input"
                         defaultChecked={false}
                         disabled={true}
                         id="input-isSensitive"
                         name="isSensitive"
                         onChange={[Function]}
-                        type="checkbox"
+                        type="radio"
                         value={false}
                       />
+                      <label
+                        className="form-check-label"
+                        htmlFor="input-isSensitive"
+                        title=""
+                      >
+                        Yes
+                      </label>
+                    </div>
+                    <div
+                      className="form-check"
+                    >
+                      <input
+                        className="form-check-input"
+                        defaultChecked={true}
+                        disabled={true}
+                        id="input-isSensitive-2"
+                        name="isSensitive"
+                        onChange={[Function]}
+                        type="radio"
+                        value={true}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="input-isSensitive-2"
+                        title=""
+                      >
+                        No
+                      </label>
                     </div>
                   </div>
                 </div>

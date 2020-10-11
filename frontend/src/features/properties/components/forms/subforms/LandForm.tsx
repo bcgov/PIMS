@@ -21,6 +21,9 @@ import { Check } from 'components/common/form/Check';
 import { IParcel } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
+import { senstiveTooltip as sensitiveTooltip } from '../strings';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 
 interface LandProps {
   nameSpace?: string;
@@ -193,13 +196,21 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           </Form.Row>
 
           <Form.Row>
-            <Form.Label column md={2}>
-              Sensitive Land
+            <Form.Label column md={12}>
+              Harmful if Released?{' '}
+              <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
+                <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
+                  Policy
+                </a>
+              </TooltipWrapper>
             </Form.Label>
             <Check
+              type="radio"
               disabled={props.disabled}
               field={withNameSpace('isSensitive')}
               outerClassName="col-md-10"
+              radioLabelOne="Yes"
+              radioLabelTwo="No"
             />
           </Form.Row>
         </Col>
