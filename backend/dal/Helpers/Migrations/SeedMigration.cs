@@ -54,30 +54,6 @@ namespace Pims.Dal.Helpers.Migrations
 
         #region Methods
         /// <summary>
-        /// Execute any scripts in the migration \PreDeploy\ folder.
-        /// </summary>
-        /// <param name="migrationBuilder"></param>
-        protected void PreDeploy(MigrationBuilder migrationBuilder)
-        {
-            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
-            migrationBuilder.Sql($"PRINT 'PreDeploy Scripts'");
-
-            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PreDeploy"));
-        }
-
-        /// <summary>
-        /// Execute any scripts in the migration \PostDeploy\ folder.
-        /// </summary>
-        /// <param name="migrationBuilder"></param>
-        protected void PostDeploy(MigrationBuilder migrationBuilder)
-        {
-            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
-            migrationBuilder.Sql($"PRINT 'PostDeploy Scripts'");
-
-            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "PostDeploy"));
-        }
-
-        /// <summary>
         /// Execute any scripts in the migration \Up\ folder.
         /// </summary>
         /// <param name="migrationBuilder"></param>
@@ -87,6 +63,30 @@ namespace Pims.Dal.Helpers.Migrations
             migrationBuilder.Sql($"PRINT 'Up Scripts'");
 
             ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "Up"));
+        }
+
+        /// <summary>
+        /// Execute any scripts in the migration \Up\PreUp\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected void PreUp(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'PreUp Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, Path.Combine("Up", "PreUp")));
+        }
+
+        /// <summary>
+        /// Execute any scripts in the migration \Up\PostUp\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected void PostUp(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'PostUp Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, Path.Combine("Up", "PostUp")));
         }
 
         /// <summary>
@@ -100,6 +100,32 @@ namespace Pims.Dal.Helpers.Migrations
 
             ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, "Down"));
         }
+
+        /// <summary>
+        /// Execute any scripts in the migration \Down\PreDown\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected void PreDown(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'PreDown Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, Path.Combine("Down", "PreDown")));
+        }
+
+        /// <summary>
+        /// Execute any scripts in the migration \Down\PostDown\ folder.
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
+        protected void PostDown(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            migrationBuilder.Sql($"PRINT 'PostDown Scripts'");
+
+            ScriptDeploy(migrationBuilder, Path.Combine(this.DefaultMigrationsPath, this.Version, Path.Combine("Down", "PostDown")));
+        }
+
+
 
         /// <summary>
         /// Execute the specified script or scripts in the specified folder.
