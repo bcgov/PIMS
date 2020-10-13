@@ -7,7 +7,7 @@ namespace Pims.Dal.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            PreDeploy(migrationBuilder);
+            PreUp(migrationBuilder);
 
             migrationBuilder.DropIndex(
                 name: "IX_Parcels_Latitude_Longitude_IsSensitive_AgencyId_ClassificationId_ProjectNumber_LandArea_Municipality_Zoning_ZoningPotential_~",
@@ -157,11 +157,13 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Id", "ProvinceId", "CityId", "Postal", "Address1" })
                 .Annotation("SqlServer:Include", new[] { "Address2" });
 
-            PostDeploy(migrationBuilder);
+            PostUp(migrationBuilder);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            PreDown(migrationBuilder);
+
             migrationBuilder.DropIndex(
                 name: "IX_Parcels_Id_AgencyId_IsSensitive_AddressId",
                 table: "Parcels");
@@ -299,6 +301,8 @@ namespace Pims.Dal.Migrations
                 name: "IX_Addresses_Postal_Address1",
                 table: "Addresses",
                 columns: new[] { "Postal", "Address1" });
+
+            PostDown(migrationBuilder);
         }
     }
 }
