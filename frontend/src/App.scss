@@ -39,3 +39,7 @@ div.bootstrap-table {
   color: #fff;
   background-color: $danger-color;
 }
+
+.tooltip {
+  pointer-events: none;
+}
