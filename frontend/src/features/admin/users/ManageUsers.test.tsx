@@ -13,6 +13,7 @@ import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { create, ReactTestInstance } from 'react-test-renderer';
 import { render } from '@testing-library/react';
+import moment from 'moment-timezone';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -50,6 +51,7 @@ const successStore = mockStore({
           position: 'tester position',
           agencies: [{ id: '1', name: 'HLTH' }],
           roles: [{ id: '1', name: 'admin' }],
+          lastLogin: '2020-10-14T17:45:39.7381599',
         },
         {
           id: '2',
@@ -60,6 +62,7 @@ const successStore = mockStore({
           position: 'tester',
           agencies: [{ id: '1', name: 'HLTH' }],
           roles: [{ id: '1', name: 'admin' }],
+          lastLogin: '2020-10-14T17:46:39.7381599',
         },
       ],
     },
@@ -122,5 +125,14 @@ describe('Manage Users Component', () => {
   it('Does not display disabled roles', () => {
     const { queryByText } = testRender(successStore);
     expect(queryByText('disabledRole')).toBeNull();
+  });
+
+  it('Displays the correct last login time', () => {
+    const dateTime = moment
+      .utc('2020-10-14T17:45:39.7381599')
+      .tz('America/Los_Angeles')
+      .format('YYYY-MM-DD hh:mm a');
+    const { getByText } = testRender(successStore);
+    expect(getByText(dateTime)).toBeVisible();
   });
 });

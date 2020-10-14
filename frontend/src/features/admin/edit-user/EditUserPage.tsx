@@ -13,7 +13,7 @@ import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
 import { useHistory } from 'react-router-dom';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { formatDateTime } from 'utils';
+import { formatApiDateTime } from 'utils';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { ILookupCode } from 'actions/lookupActions';
 
@@ -89,7 +89,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
     position: user.position,
-    lastLogin: formatDateTime(user.lastLogin),
+    lastLogin: formatApiDateTime(user.lastLogin),
   };
 
   return (

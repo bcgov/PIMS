@@ -6,7 +6,7 @@ import { SortDirection } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
 
 export const truncate = (input: string, maxLength: number): string => {
@@ -156,6 +156,15 @@ export const formatDate = (date?: string | Date) => {
 
 export const formatDateTime = (date: string | undefined) => {
   return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
+};
+
+export const formatApiDateTime = (date: string | undefined) => {
+  return !!date
+    ? moment
+        .utc(date)
+        .local()
+        .format('YYYY-MM-DD hh:mm a')
+    : '';
 };
 
 export const formatDateFiscal = (date: string | undefined) => {
