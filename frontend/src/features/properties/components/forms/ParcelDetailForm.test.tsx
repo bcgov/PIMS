@@ -227,7 +227,7 @@ describe('ParcelDetailForm', () => {
       });
       const errors = getAllByText('Required');
       const idErrors = getAllByText('PID must be in the format ###-###-###');
-      expect(errors).toHaveLength(3);
+      expect(errors).toHaveLength(6);
       expect(idErrors).toHaveLength(1);
     });
 
