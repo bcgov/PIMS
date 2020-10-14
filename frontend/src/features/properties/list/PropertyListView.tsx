@@ -95,8 +95,8 @@ const PropertyListView: React.FC = () => {
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);
-  // For getting the buildings on parcel click
-  const [expandData, setExpandData] = useState<IProperty[]>([]);
+  // For getting the buildings on parcel folder click
+  const [expandData, setExpandData] = useState<any>({});
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
@@ -201,8 +201,14 @@ const PropertyListView: React.FC = () => {
     if (expandedRows.length > 0) {
       await Promise.all(
         expandedRows.map(async property => {
-          property.propertyTypeId === 0 &&
-            setExpandData((await service.loadBuildings(property.id)).items);
+          if (property.propertyTypeId === 0) {
+            if (expandData[property.id] === undefined) {
+              setExpandData({
+                ...expandData,
+                [property.id]: (await service.loadBuildings(property.id)).items,
+              });
+            }
+          }
         }),
       );
     }
@@ -243,11 +249,15 @@ const PropertyListView: React.FC = () => {
             }
           }}
           detailsPanel={{
-            render: () => <Properties hideHeaders={true} data={expandData} />,
+            render: val => {
+              if (expandData[val.id]) {
+                return <Properties hideHeaders={true} data={expandData[val.id]} />;
+              }
+            },
             icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
             checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
             onExpand: loadBuildings,
-            getRowId: row => row.projectNumber,
+            getRowId: row => row.id,
           }}
         />
       </div>
