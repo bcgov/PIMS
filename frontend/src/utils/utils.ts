@@ -170,7 +170,6 @@ export const formatApiDateTime = (date: string | undefined) => {
         .format('YYYY-MM-DD hh:mm a')
     : '';
 };
-
 export const formatApiDateTime = (date: string | undefined) => {
   return !!date
     ? moment
