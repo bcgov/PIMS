@@ -179,7 +179,7 @@ describe('Edit user page', () => {
     it('Displays the correct last login time', () => {
       const dateTime = moment
         .utc('2020-10-14T17:45:39.7381599')
-        .tz('America/Los_Angeles')
+        .local()
         .format('YYYY-MM-DD hh:mm a');
       const { getByTestId } = renderEditUserPage();
       expect(getByTestId('lastLogin')).toHaveValue(dateTime);
