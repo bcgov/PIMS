@@ -8,7 +8,7 @@ namespace Pims.Dal.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            PreDeploy(migrationBuilder);
+            PreUp(migrationBuilder);
 
             migrationBuilder.CreateTable(
                 name: "Users",
@@ -2674,7 +2674,7 @@ namespace Pims.Dal.Migrations
                 table: "Workflows",
                 columns: new[] { "IsDisabled", "Name", "SortOrder" });
 
-            PostDeploy(migrationBuilder);
+            PostUp(migrationBuilder);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
