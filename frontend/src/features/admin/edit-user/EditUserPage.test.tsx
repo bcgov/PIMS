@@ -50,6 +50,11 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
+const noDateStore = mockStore({
+  [reducerTypes.GET_USER_DETAIL]: { ...selectedUser, lastLogin: null },
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+});
+
 const mockAxios = new MockAdapter(axios);
 
 const testRender = () =>
@@ -89,7 +94,7 @@ describe('Edit user page', () => {
   it('EditUserPage renders', () => {
     const tree = renderer
       .create(
-        <Provider store={store}>
+        <Provider store={noDateStore}>
           <Router history={history}>
             <EditUserPage id="TEST-ID" />,
           </Router>
