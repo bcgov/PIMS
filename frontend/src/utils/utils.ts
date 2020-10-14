@@ -157,7 +157,11 @@ export const formatDate = (date?: string | Date) => {
 export const formatDateTime = (date: string | undefined) => {
   return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
 };
-
+/**
+ * Format the passed string date assuming the date was recorded in UTC (as is the case with the pims API server).
+ * Returns a date formatted for display in the current time zone of the user.
+ * @param date utc date/time string.
+ */
 export const formatApiDateTime = (date: string | undefined) => {
   return !!date
     ? moment
