@@ -64,7 +64,7 @@ Array [
                 onChange={[Function]}
                 readOnly={true}
                 type="text"
-                value="2020-10-14 10:45 am"
+                value=""
               />
             </span>
           </div>

@@ -679,7 +679,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               }
               title=""
             >
-              2020-10-14 10:45 am
+              
             </div>
             <div
               className="td"
@@ -997,7 +997,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               }
               title=""
             >
-              2020-10-14 10:46 am
+              
             </div>
             <div
               className="td"
