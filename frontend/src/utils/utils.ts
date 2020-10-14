@@ -171,6 +171,15 @@ export const formatApiDateTime = (date: string | undefined) => {
     : '';
 };
 
+export const formatApiDateTime = (date: string | undefined) => {
+  return !!date
+    ? moment
+        .utc(date)
+        .local()
+        .format('YYYY-MM-DD hh:mm a')
+    : '';
+};
+
 export const formatDateFiscal = (date: string | undefined) => {
   return !!date
     ? `${moment(date)
