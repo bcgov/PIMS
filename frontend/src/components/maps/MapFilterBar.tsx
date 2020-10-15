@@ -67,7 +67,7 @@ export type MapFilterChangeEvent = {
   classificationId: string;
   minLotSize: string;
   maxLotSize: string;
-  inSurplusPropertyProgram: boolean;
+  inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
 };
 
@@ -103,9 +103,10 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
     onFilterChange(values);
   };
 
-  const handleRowClick = (submitHandler: Function, setValue: Function, field: string) => {
-    setValue(field, true);
-    submitHandler();
+  const applySurplusPropertyFilter = () => {
+    const values: MapFilterChangeEvent = formikRef!.values;
+    values.inSurplusPropertyProgram = true;
+    onFilterChange(values);
   };
 
   return (
@@ -171,9 +172,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
               <Col className="bar-item flex-grow-0">
                 <SppButton
                   handleErpClick={applyEnhancedReferralFilter}
-                  handleSppClick={() =>
-                    handleRowClick(handleSubmit, setFieldValue, 'inSurplusPropertyProgram')
-                  }
+                  handleSppClick={applySurplusPropertyFilter}
                 />
               </Col>
             )}
