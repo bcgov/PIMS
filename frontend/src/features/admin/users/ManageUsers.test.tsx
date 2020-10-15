@@ -13,6 +13,7 @@ import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { create, ReactTestInstance } from 'react-test-renderer';
 import { render } from '@testing-library/react';
+import moment from 'moment-timezone';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -33,45 +34,47 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
   useRouteMatch: () => ({ url: '/admin', path: '/admin' }),
 }));
-
-const successStore = mockStore({
-  [reducerTypes.USERS]: {
-    pagedUsers: {
-      pageIndex: 0,
-      total: 2,
-      quantity: 2,
-      items: [
-        {
-          id: '1',
-          username: 'testername1',
-          firstName: 'testUserFirst1',
-          lastName: 'testUserLast1',
-          isDisabled: false,
-          position: 'tester position',
-          agencies: [{ id: '1', name: 'HLTH' }],
-          roles: [{ id: '1', name: 'admin' }],
-        },
-        {
-          id: '2',
-          username: 'testername2',
-          firstName: 'testUser',
-          lastName: 'testUser',
-          isDisabled: true,
-          position: 'tester',
-          agencies: [{ id: '1', name: 'HLTH' }],
-          roles: [{ id: '1', name: 'admin' }],
-        },
-      ],
+const getStore = (includeDate?: boolean) =>
+  mockStore({
+    [reducerTypes.USERS]: {
+      pagedUsers: {
+        pageIndex: 0,
+        total: 2,
+        quantity: 2,
+        items: [
+          {
+            id: '1',
+            username: 'testername1',
+            firstName: 'testUserFirst1',
+            lastName: 'testUserLast1',
+            isDisabled: false,
+            position: 'tester position',
+            agencies: [{ id: '1', name: 'HLTH' }],
+            roles: [{ id: '1', name: 'admin' }],
+            lastLogin: includeDate ? '2020-10-14T17:45:39.7381599' : null,
+          },
+          {
+            id: '2',
+            username: 'testername2',
+            firstName: 'testUser',
+            lastName: 'testUser',
+            isDisabled: true,
+            position: 'tester',
+            agencies: [{ id: '1', name: 'HLTH' }],
+            roles: [{ id: '1', name: 'admin' }],
+            lastLogin: includeDate ? '2020-10-14T17:46:39.7381599' : null,
+          },
+        ],
+      },
+      rowsPerPage: 10,
     },
-    rowsPerPage: 10,
-  },
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: {
-    [actionTypes.GET_USERS]: {
-      isFetching: false,
+    [reducerTypes.LOOKUP_CODE]: lCodes,
+    [reducerTypes.NETWORK]: {
+      [actionTypes.GET_USERS]: {
+        isFetching: false,
+      },
     },
-  },
-});
+  });
 
 describe('Manage Users Component', () => {
   const componentRender = (store: any) =>
@@ -93,34 +96,43 @@ describe('Manage Users Component', () => {
     );
 
   it('Snapshot matches', () => {
-    const component = componentRender(successStore);
+    const component = componentRender(getStore());
     expect(component.toJSON()).toMatchSnapshot();
   });
 
   it('Table row count is 2', () => {
-    const component = componentRender(successStore);
+    const component = componentRender(getStore());
     const instance = component.root;
     const table = (instance as ReactTestInstance).findByProps({ name: 'usersTable' });
     expect(table.props.data.length).toBe(2);
   });
 
   it('displays enabled agencies', () => {
-    const { queryByText } = testRender(successStore);
+    const { queryByText } = testRender(getStore());
     expect(queryByText('agencyVal')).toBeVisible();
   });
 
   it('Does not display disabled agencies', () => {
-    const { queryByText } = testRender(successStore);
+    const { queryByText } = testRender(getStore());
     expect(queryByText('disabledAgency')).toBeNull();
   });
 
   it('displays enabled roles', () => {
-    const { queryByText } = testRender(successStore);
+    const { queryByText } = testRender(getStore());
     expect(queryByText('roleVal')).toBeVisible();
   });
 
   it('Does not display disabled roles', () => {
-    const { queryByText } = testRender(successStore);
+    const { queryByText } = testRender(getStore());
     expect(queryByText('disabledRole')).toBeNull();
+  });
+
+  it('Displays the correct last login time', () => {
+    const dateTime = moment
+      .utc('2020-10-14T17:45:39.7381599')
+      .local()
+      .format('YYYY-MM-DD hh:mm a');
+    const { getByText } = testRender(getStore(true));
+    expect(getByText(dateTime)).toBeVisible();
   });
 });

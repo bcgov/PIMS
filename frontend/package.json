@@ -18,6 +18,7 @@
     "leaflet": "1.6.0",
     "lodash": "4.17.20",
     "moment": "2.25.3",
+    "moment-timezone": "0.5.31",
     "node-sass": "4.13.1",
     "query-string": "6.12.1",
     "react": "16.12.0",
