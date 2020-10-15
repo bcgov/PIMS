@@ -34,7 +34,7 @@ export type MapViewportChangeEvent = {
     classificationId: number | null;
     minLotSize: number | null;
     maxLotSize: number | null;
-    inSurplusPropertyProgram: boolean | null;
+    inSurplusPropertyProgram?: boolean;
     inEnhancedReferralProcess?: boolean;
   };
 };
