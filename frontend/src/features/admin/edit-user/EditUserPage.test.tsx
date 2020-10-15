@@ -15,6 +15,7 @@ import { render, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
+import moment from 'moment-timezone';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -41,10 +42,16 @@ const selectedUser = {
   roles: [{ id: '2' }],
   rowVersion: 'AAAAAAAAB9E=',
   note: 'test note',
+  lastLogin: '2020-10-14T17:45:39.7381599',
 };
 
 const store = mockStore({
   [reducerTypes.GET_USER_DETAIL]: selectedUser,
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+});
+
+const noDateStore = mockStore({
+  [reducerTypes.GET_USER_DETAIL]: { ...selectedUser, lastLogin: null },
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
@@ -87,7 +94,7 @@ describe('Edit user page', () => {
   it('EditUserPage renders', () => {
     const tree = renderer
       .create(
-        <Provider store={store}>
+        <Provider store={noDateStore}>
           <Router history={history}>
             <EditUserPage id="TEST-ID" />,
           </Router>
@@ -167,6 +174,15 @@ describe('Edit user page', () => {
       });
       await findByText('Failed to update User');
       done();
+    });
+
+    it('Displays the correct last login time', () => {
+      const dateTime = moment
+        .utc('2020-10-14T17:45:39.7381599')
+        .local()
+        .format('YYYY-MM-DD hh:mm a');
+      const { getByTestId } = renderEditUserPage();
+      expect(getByTestId('lastLogin')).toHaveValue(dateTime);
     });
   });
 });
