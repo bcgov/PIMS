@@ -94,7 +94,7 @@ export const ManageUsersPage = () => {
       isDisabled: u.isDisabled,
       roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
-      position: u.position,
+      position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),
     }),
   );
