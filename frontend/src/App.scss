@@ -43,3 +43,8 @@ div.bootstrap-table {
 .tooltip {
   pointer-events: none;
 }
+
+//React table global styling
+.table .tr .td {
+  word-break: break-word;
+}

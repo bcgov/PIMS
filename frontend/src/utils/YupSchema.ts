@@ -1,6 +1,13 @@
 import * as Yup from 'yup';
 import moment from 'moment';
 
+function emptyStringToNull(value: any, originalValue: any) {
+  if (typeof originalValue === 'string' && originalValue === '') {
+    return undefined;
+  }
+  return value;
+}
+
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
     .min(1, 'Invalid Agency')
@@ -83,10 +90,12 @@ export const Building = Yup.object().shape({
   latitude: Yup.number()
     .min(-90, 'Invalid Latitude')
     .max(90, 'Invalid Latitude')
+    .transform(emptyStringToNull)
     .required('Required'),
   longitude: Yup.number()
     .min(-180, 'Invalid Longitude')
     .max(180, 'Invalid Longitude')
+    .transform(emptyStringToNull)
     .required('Required'),
   buildingConstructionTypeId: Yup.string()
     .matches(/\d*/, 'Invalid Building Construction Type')
@@ -106,12 +115,16 @@ export const Building = Yup.object().shape({
     .nullable(),
   buildingFloorCount: Yup.number()
     .min(1, 'Floor Count must be a positive number')
+    .transform(emptyStringToNull)
     .required('Required'),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   rentableArea: Yup.number()
     .min(0, 'Rentable Area must be a positive number')
+    .transform(emptyStringToNull)
     .required('Required'),
-  agencyId: Yup.number().required('Required'),
+  agencyId: Yup.number()
+    .transform(emptyStringToNull)
+    .required('Required'),
   isSensitive: Yup.boolean(),
   transferLeaseOnSale: Yup.boolean(),
   leaseExpiry: Yup.string().nullable(),
@@ -146,13 +159,16 @@ export const LandSchema = Yup.object().shape({
   latitude: Yup.number()
     .min(-90, 'Invalid Latitude')
     .max(90, 'Invalid Latitude')
+    .transform(emptyStringToNull)
     .required('Required'),
   longitude: Yup.number()
     .min(-180, 'Invalid Longitude')
     .max(180, 'Invalid Longitude')
+    .transform(emptyStringToNull)
     .required('Required'),
   landArea: Yup.number()
     .min(0, 'Land Area must be a positive number')
+    .transform(emptyStringToNull)
     .required('Required')
     .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
 });
@@ -171,6 +187,7 @@ export const ParcelSchema = Yup.object()
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .min(1)
+          .nullable()
           .required('PID or PIN Required')
           .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
       }),

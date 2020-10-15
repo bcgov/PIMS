@@ -107,6 +107,7 @@
     }
     .form-label {
       padding: 0 1rem 0 0;
+      min-width: 4.5rem;
     }
     .input-group {
       flex-wrap: nowrap;
@@ -120,7 +121,6 @@
     }
     .input-group-content {
       padding: 0;
-      height: 2.5rem;
       width: 100%;
     }
     .input-group-text {
