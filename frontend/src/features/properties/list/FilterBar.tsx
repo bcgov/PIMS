@@ -102,7 +102,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
     .filter(i => !!i.isVisible)
     .map(c => mapLookupCode(c));
 
-  console.log(filter);
   return (
     <Formik<IFilterBarState>
       initialValues={{ ...defaultFilterValues, ...filter }}
