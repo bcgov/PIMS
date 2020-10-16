@@ -112,12 +112,13 @@ export const validateFinancials = (
   financialYears.forEach((financialYear, index) => {
     Object.keys(financialYear).forEach(key => {
       const financial = (financialYear as any)[key];
-      //All financials are required for the current year except appraised.
+      //Below is used to determine whether a financial value is required or not.
       if (
         financial.fiscalYear === getCurrentFiscalYear() &&
         !isPositiveNumberOrZero(financial.value) &&
         financial.key !== EvaluationKeys.Appraised &&
         financial.key !== FiscalKeys.Estimated &&
+        financial.key !== FiscalKeys.NetBook &&
         !(
           financial.key === EvaluationKeys.Assessed &&
           financial?.year &&
