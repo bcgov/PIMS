@@ -3,7 +3,7 @@ import './Map.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer, LayersControl } from 'react-leaflet';
 import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -311,15 +311,6 @@ const Map: React.FC<MapProps> = ({
                 zIndex={0}
               />
             )}
-            {showParcelBoundaries && (
-              <WMSTileLayer
-                url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
-                layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-                transparent={true}
-                format="image/png"
-                zIndex={10}
-              />
-            )}
             <PointClusterer
               points={points}
               zoom={zoom}
@@ -328,6 +319,29 @@ const Map: React.FC<MapProps> = ({
             />
             {selectedProperty && renderPopup(selectedProperty)}
             <LegendControl />
+            <LayersControl position="topright">
+              <LayersControl.Overlay checked={showParcelBoundaries} name="Parcel Boundaries">
+                <WMSTileLayer
+                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+                  layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+                  transparent={true}
+                  format="image/png"
+                  zIndex={10}
+                  id="parcelLayer"
+                />
+              </LayersControl.Overlay>
+              <LayersControl.Overlay checked name="Municipalities">
+                <WMSTileLayer
+                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?"
+                  layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP"
+                  transparent={true}
+                  format="image/png"
+                  opacity={0.5}
+                  zIndex={8}
+                  id="municipalityLayer"
+                />
+              </LayersControl.Overlay>
+            </LayersControl>
           </LeafletMap>
         </Col>
       </Row>
