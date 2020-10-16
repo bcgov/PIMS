@@ -1,10 +1,8 @@
 import React from 'react';
-import renderer, { act } from 'react-test-renderer';
-import { noop } from 'lodash';
+import { act } from 'react-test-renderer';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import LastUpdatedBy from './LastUpdatedBy';
 import { formatApiDateTime } from 'utils';
-import { MdDone } from 'react-icons/md';
 
 const getLastUpdatedBy = (
   createdOn?: string,
