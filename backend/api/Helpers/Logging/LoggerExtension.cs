@@ -37,8 +37,11 @@ namespace Pims.Api.Helpers.Logging
 
         private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
         {
-            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            return new ElasticsearchSinkOptions(new Uri(configuration["Elastic:Uri"]))
             {
+                ModifyConnectionSettings = x => x.BasicAuthentication(
+                    configuration["Elastic:Username"],
+                    configuration["Elastic:Password"]),
                 AutoRegisterTemplate = true,
                 IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
             };

@@ -1,0 +1,140 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pims-elastic-deploy
+  annotations:
+    openshift.io/display-name: PIMS Elasticsearch
+    description: Deployment template for Elastic search
+    tags: pims-logging
+objects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      namespace: ${PROJECT_NAME}
+      name: ${APP_NAME}
+      labels:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+    data:
+      elasticsearch.yml: |-
+        xpack.security.enabled: true
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      namespace: ${PROJECT_NAME}
+      name: ${APP_NAME}
+      labels:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+    spec:
+      ports:
+        - port: 9200
+          name: client
+        - port: 9300
+          name: transport
+      selector:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      labels:
+        name: ${APP_NAME}
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAME}
+    spec:
+      host: ${ELASTICSEARCH_DOMAIN}
+      to:
+        name: ${APP_NAME}
+        kind: Service
+        weight: 100
+      tls:
+        termination: edge
+  - kind: "PersistentVolumeClaim"
+    apiVersion: v1
+    metadata:
+      name: "${APP_NAME}-data-persistent-storage-claim"
+      labels:
+        name: ${APP_NAME}-data-persistent-storage-claim
+      namespace: ${PROJECT_NAME}
+    spec:
+      storageClassName: netapp-block-standard
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi
+    volumeName: "${APP_NAME}-data-persistent-storage-claim"
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      namespace: ${PROJECT_NAME}
+      name: ${APP_NAME}
+      labels:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+    spec:
+      replicas: 1
+      selector:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}
+            role: ${ROLE_NAME}
+        spec:
+          containers:
+            - name: ${APP_NAME}
+              image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+              env:
+                - name: discovery.type
+                  value: single-node
+                - name: network.host
+                  value: "0.0.0.0"
+                - name: "ES_JAVA_OPTS"
+                  value: "-Xms256m -Xmx256m"
+              resources:
+                limits:
+                  memory: "1000Mi"
+              ports:
+                - containerPort: 9300
+                  name: transport
+                - containerPort: 9200
+                  name: client
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+                  readOnly: true
+                  subPath: elasticsearch.yml
+                - name: ${APP_NAME}-data-persistent-storage-volume
+                  mountPath: /data
+          volumes:
+            - name: config-volume
+              configMap:
+                name: ${APP_NAME}
+            - name: ${APP_NAME}-data-persistent-storage-volume
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-data-persistent-storage-claim
+parameters:
+  - name: PROJECT_NAME
+    displayName: Project Name
+    description: Project Name
+    required: true
+    value: "jcxjin-tools"
+  - name: APP_NAME
+    displayName: Application Name
+    description: Application Name
+    required: true
+    value: "elasticsearch"
+  - name: ROLE_NAME
+    displayName: Role Name
+    description: Role Name
+    required: true
+    value: "master"
+  - name: ELASTICSEARCH_DOMAIN
+    displayName: Elastic search domain
+    description: Elastic search domain
+    required: true
+    value: pims-elastic.pathfinder.gov.bc.ca
