@@ -764,7 +764,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     }
                   }
                 >
-                  Estimated
+                  Estimated Market Value
                 </div>
               </div>
               <div

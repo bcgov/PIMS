@@ -114,7 +114,7 @@ export const getEvaluationCols = (
       ],
     },
     {
-      Header: 'Estimated',
+      Header: 'Estimated Market Value',
       columns: [
         {
           Header: 'Fiscal Year',
