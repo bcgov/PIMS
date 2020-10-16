@@ -41,7 +41,7 @@ const setFilter = (f: any) => {
 };
 
 describe('useRouterFilter hook tests', () => {
-  beforeEach(() => {
+  afterEach(() => {
     filter = {};
     history.push({ search: '' });
   });

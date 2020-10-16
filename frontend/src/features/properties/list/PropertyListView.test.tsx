@@ -59,7 +59,9 @@ describe('Property list view', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <PropertyListView />,
+          <Router history={history}>
+            <PropertyListView />,
+          </Router>
         </Provider>,
       )
       .toJSON();

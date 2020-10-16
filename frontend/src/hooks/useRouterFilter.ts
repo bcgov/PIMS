@@ -50,7 +50,7 @@ export const useRouterFilter = (filter: any, setFilter: (val: any) => void, key:
       _.intersection(Object.keys(filterFromParams), Object.keys(defaultFilter)).length
     ) {
       setFilter(filterFromParams);
-    } else if (!!originalSearchRedux[key]?.searchBy) {
+    } else if (originalSearchRedux?.hasOwnProperty(key) && !!originalSearchRedux[key]?.searchBy) {
       setFilter(originalSearchRedux[key]);
     }
   }, [key, originalSearch, originalSearchRedux, setFilter]);

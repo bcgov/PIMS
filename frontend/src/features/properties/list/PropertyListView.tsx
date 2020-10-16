@@ -161,7 +161,7 @@ const PropertyListView: React.FC = () => {
         const data = await service.getPropertyList(query);
         // The server could send back total page count.
         // For now we'll just calculate it.
-        if (fetchId === fetchIdRef.current) {
+        if (fetchId === fetchIdRef.current && data?.items) {
           setData(data.items);
           setPageCount(Math.ceil(data.total / pageSize));
         }

@@ -101,8 +101,8 @@ describe('FilterBar', () => {
       projectNumber: '',
       agencies: '1',
       classificationId: '0',
-      minLotSize: '10',
-      maxLotSize: '20',
+      minLotSize: '1',
+      maxLotSize: '3',
       parcelId: '',
       propertyType: '',
     });
