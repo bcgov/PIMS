@@ -43,6 +43,7 @@ describe('Property list view', () => {
     mockedService.getPropertyReport.mockClear();
   });
   afterEach(() => {
+    history.push({ search: '' });
     cleanup();
   });
 
@@ -132,6 +133,8 @@ describe('Property list view', () => {
           floorCount: 0,
           transferLeaseOnSale: false,
           rentableArea: 0,
+          propertyType: 'property',
+          cityId: 0,
         },
         {
           id: 5,
@@ -173,6 +176,8 @@ describe('Property list view', () => {
           tenancy: '100% Rental',
           transferLeaseOnSale: false,
           rentableArea: 0,
+          propertyType: 'property',
+          cityId: 0,
         },
       ],
     });
