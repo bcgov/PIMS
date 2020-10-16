@@ -16,7 +16,7 @@ const UpdateText = styled.p`
   justify-content: flex-end;
 `;
 
-const LinkButton = styled.div`
+const LinkButton = styled.span`
   background: none;
   border: none;
   padding: 0;

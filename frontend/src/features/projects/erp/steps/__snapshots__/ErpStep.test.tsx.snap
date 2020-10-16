@@ -10,10 +10,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzpans ecgrOJ default-status"
+      className="sc-fznKkj lnNMyB default-status"
     >
       <h5
-        className="sc-fzplWN jRhPxB"
+        className="sc-fznZeY bEkyNU"
       >
         Approved for Surplus Property Program
       </h5>
@@ -37,13 +37,13 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzplWN jRhPxB"
+        className="sc-fznZeY bEkyNU"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzqNJr fDCwIE"
+      className="sc-fzoXzr cIZMlc"
     >
       Approved for ERP
     </div>
@@ -1362,10 +1362,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fznZeY dPVzne"
+      className="sc-fzqNJr FcpLd"
     />
     <div
-      className="sc-fznZeY dPVzne"
+      className="sc-fzqNJr FcpLd"
     >
       <span>
         <button
@@ -1415,10 +1415,10 @@ exports[`ERP Approval Step renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzpans ecgrOJ default-status"
+      className="sc-fznKkj lnNMyB default-status"
     >
       <h5
-        className="sc-fzplWN jRhPxB"
+        className="sc-fznZeY bEkyNU"
       >
         Approved for Surplus Property Program
       </h5>
@@ -1442,13 +1442,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzplWN jRhPxB"
+        className="sc-fznZeY bEkyNU"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzqNJr fDCwIE"
+      className="sc-fzoXzr cIZMlc"
     >
       Approved for ERP
     </div>
@@ -2135,7 +2135,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-fzpjYC lcqWot"
+            className="sc-fznWqX fApSkZ"
           >
             OR
           </div>
@@ -2194,7 +2194,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-fzpjYC lcqWot"
+                className="sc-fznWqX fApSkZ"
               >
                 OR
               </div>
