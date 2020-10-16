@@ -1,13 +1,13 @@
 import { Fragment, useMemo, useRef } from 'react';
 import React from 'react';
-import { FormikProps, setIn, getIn } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { Form } from 'components/common/form';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import _ from 'lodash';
-import { formikFieldMemo, getCurrentFiscalYear, isPositiveNumberOrZero } from 'utils';
+import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import { Table } from 'components/Table';
 import { getEvaluationCols } from './EvaluationCols';
@@ -99,57 +99,6 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
     }
   });
   return placeholderFinancials;
-};
-
-export const validateFinancials = (
-  financialYears: IFinancialYear[],
-  nameSpace: string,
-  showAppraisal?: boolean,
-) => {
-  // Yup has major performance issues with the validation of large arrays.
-  // As a result, handle the validation manually here.
-  let errors = {};
-  financialYears.forEach((financialYear, index) => {
-    Object.keys(financialYear).forEach(key => {
-      const financial = (financialYear as any)[key];
-      //All financials are required for the current year except appraised.
-      if (
-        financial.fiscalYear === getCurrentFiscalYear() &&
-        !isPositiveNumberOrZero(financial.value) &&
-        financial.key !== EvaluationKeys.Appraised &&
-        financial.key !== FiscalKeys.Estimated &&
-        !(
-          financial.key === EvaluationKeys.Assessed &&
-          financial?.year &&
-          financial.year > moment().year()
-        )
-      ) {
-        errors = setIn(
-          errors,
-          `${nameSpace}.${index}.${financial.key.toLocaleLowerCase()}.value`,
-          'Required',
-        );
-      }
-
-      //if one of date/value for the Appraised field is filled in the other field is required as well.
-      if (
-        showAppraisal &&
-        financial.date &&
-        financial.key === EvaluationKeys.Appraised &&
-        !isPositiveNumberOrZero(financial.value)
-      ) {
-        errors = setIn(errors, `${nameSpace}.${index}.value`, 'Required');
-      } else if (
-        showAppraisal &&
-        !isPositiveNumberOrZero(financial.value) &&
-        financial.key === EvaluationKeys.Appraised &&
-        !financial.date
-      ) {
-        errors = setIn(errors, `${nameSpace}.${index}.date`, 'Required');
-      }
-    });
-  });
-  return errors;
 };
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
