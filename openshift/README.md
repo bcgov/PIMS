@@ -41,6 +41,7 @@ Follow the instructions below to setup all the components required to run PIMS i
 1. [SonarQube](./SONARQUBE.md)
 1. [ZAP](./ZAP.md)
 1. [Monitoring](./templates/monitoring/README.md)
+1. [Logging](./templates/logging/README.md)
 1. [SSL Certificates](./SSL_CERTIFICATES.md) - for top level domains (e.g. https://pims.gov.bc.ca)
 
 ### Multiple Instances

@@ -139,6 +139,22 @@ objects:
     type: Opaque
     stringData:
       GEOCODER_KEY: ${GEOCODER_KEY}
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ENV_NAME}${ID}-elasticsearch-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Elastic search password secrets"
+      labels:
+        name: ${APP_NAME}-${ENV_NAME}${ID}-elasticsearch-secret
+        app: ${APP_NAME}
+        component: ${COMP_NAME}
+        env: ${ENV_NAME}
+        role: backend
+    type: Opaque
+    stringData:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -297,6 +313,11 @@ objects:
                     secretKeyRef:
                       name: ${APP_NAME}-${ENV_NAME}${ID}-geocoder-secret
                       key: GEOCODER_KEY
+                - name: ElasticConfiguration__Password
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${ENV_NAME}${ID}-elasticsearch-secret
+                      key: ELASTIC_PASSWORD
               resources:
                 limits:
                   cpu: "${CPU_LIMIT}"
@@ -420,6 +441,10 @@ parameters:
   - name: GEOCODER_KEY
     displayName: Geocoder Secret Key.
     description: The Geocoder secret key that must be .
+    required: true
+  - name: ELASTIC_PASSWORD
+    displayName: Elasticsearch Secret Key.
+    description: Elasticsearch secret key.
     required: true
 
   - name: HEALTH_SCHEME
