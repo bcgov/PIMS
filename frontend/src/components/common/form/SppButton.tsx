@@ -5,7 +5,6 @@ import { ReactComponent as SppIcon } from 'assets/images/SPP.svg';
 import { Col, Overlay, Tooltip, Button, Row, Image } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 import TooltipWrapper from '../TooltipWrapper';
-import { useFormikContext } from 'formik';
 
 interface ISppButtonProps {
   handleErpClick: () => void;
