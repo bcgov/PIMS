@@ -19,6 +19,7 @@ import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWo
 import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
 import splTabSlice from 'features/projects/spl/slices/splTabSlice';
 import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
+import filterSlice from './filterSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -30,6 +31,7 @@ export const reducerObject = {
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
+  [reducerTypes.FILTER]: filterSlice.reducer,
   [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,
   [ProjectReducers.WORKFLOW_TASKS]: ProjectWorkflowTasksSlice.reducer,
   [ProjectReducers.TASKS]: projectTasksSlice.reducer,
