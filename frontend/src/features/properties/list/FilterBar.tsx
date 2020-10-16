@@ -7,6 +7,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { Form, Select, SelectOption, InputGroup, Input } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
+import { BasePropertyFilter } from 'components/common/interfaces';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
@@ -48,7 +49,7 @@ const SearchBar: React.FC = () => {
   );
 };
 
-export interface IFilterBarState {
+export interface IFilterBarState extends BasePropertyFilter {
   searchBy: string;
   pid: string;
   address: string;
@@ -65,7 +66,22 @@ export interface IFilterBarState {
 type FilterBarProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
+  filter?: IFilterBarState;
   onChange: (value: IFilterBarState) => void;
+};
+
+const defaultFilterValues: IFilterBarState = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  municipality: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+  parcelId: '',
+  propertyType: '',
 };
 
 /**
@@ -74,6 +90,7 @@ type FilterBarProps = {
 const FilterBar: React.FC<FilterBarProps> = ({
   agencyLookupCodes,
   propertyClassifications,
+  filter,
   onChange,
 }) => {
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
@@ -87,25 +104,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
   return (
     <Formik<IFilterBarState>
-      initialValues={{
-        searchBy: 'address',
-        pid: '',
-        address: '',
-        municipality: '',
-        projectNumber: '',
-        agencies: '',
-        classificationId: '',
-        minLotSize: '',
-        maxLotSize: '',
-        parcelId: '',
-        propertyType: '',
-      }}
+      initialValues={{ ...defaultFilterValues, ...filter }}
+      enableReinitialize
       onSubmit={(values, { setSubmitting }) => {
-        setSubmitting(true);
-        onChange?.({ ...values });
-        setSubmitting(false);
-      }}
-      onReset={(values, { setSubmitting }) => {
         setSubmitting(true);
         onChange?.({ ...values });
         setSubmitting(false);
@@ -136,7 +137,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
               <SearchButton disabled={isSubmitting} />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting} onClick={handleReset} />
+              <ResetButton
+                disabled={isSubmitting}
+                onClick={() => onChange?.({ ...defaultFilterValues })}
+              />
             </Col>
           </Form.Row>
         </Form>

@@ -11,6 +11,7 @@ import SppButton from 'components/common/form/SppButton';
 import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
+import { BasePropertyFilter } from 'components/common/interfaces';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
@@ -55,7 +56,7 @@ const SearchBar: React.FC = () => {
   );
 };
 
-export type MapFilterChangeEvent = {
+export interface MapFilterChangeEvent extends BasePropertyFilter {
   searchBy: string;
   pid: string;
   address: string;
@@ -69,14 +70,29 @@ export type MapFilterChangeEvent = {
   maxLotSize: string;
   inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
-};
+}
 
 type MapFilterProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
+  mapFilter?: MapFilterChangeEvent;
   onFilterChange: (e: MapFilterChangeEvent) => void;
   onFilterReset?: () => void;
+};
+
+const defaultFilterValues: MapFilterChangeEvent = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  city: '',
+  municipality: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+  inSurplusPropertyProgram: false,
 };
 
 /**
@@ -85,6 +101,7 @@ type MapFilterProps = {
 const MapFilterBar: React.FC<MapFilterProps> = ({
   agencyLookupCodes,
   propertyClassifications,
+  mapFilter,
   onFilterChange,
   onFilterReset,
 }) => {
@@ -98,32 +115,23 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   let formikRef = React.useRef<any>() as any;
 
   const applyEnhancedReferralFilter = () => {
-    const values: MapFilterChangeEvent = formikRef!.values;
+    const values: MapFilterChangeEvent = { ...formikRef!.values };
     values.inEnhancedReferralProcess = true;
+    values.inSurplusPropertyProgram = false;
     onFilterChange(values);
   };
 
   const applySurplusPropertyFilter = () => {
-    const values: MapFilterChangeEvent = formikRef!.values;
+    const values: MapFilterChangeEvent = { ...formikRef!.values };
     values.inSurplusPropertyProgram = true;
+    values.inEnhancedReferralProcess = false;
     onFilterChange(values);
   };
 
   return (
     <Formik<MapFilterChangeEvent>
-      initialValues={{
-        searchBy: 'address',
-        pid: '',
-        address: '',
-        city: '',
-        municipality: '',
-        projectNumber: '',
-        agencies: '',
-        classificationId: '',
-        minLotSize: '',
-        maxLotSize: '',
-        inSurplusPropertyProgram: false,
-      }}
+      initialValues={{ ...defaultFilterValues, ...mapFilter }}
+      enableReinitialize
       validationSchema={FilterBarSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
@@ -134,15 +142,8 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         setSubmitting(false);
       }}
       innerRef={ref => (formikRef = ref)}
-      onReset={(values, { setSubmitting }) => {
-        delete values.inEnhancedReferralProcess;
-        delete values.inSurplusPropertyProgram;
-        !!onFilterReset && onFilterReset();
-        onFilterChange?.({ ...values });
-        setSubmitting(false);
-      }}
     >
-      {({ isSubmitting, handleReset, handleSubmit, setFieldValue }) => (
+      {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
         <Form>
           <Form.Row className="map-filter-bar align-items-start">
             <Col className="bar-item">
@@ -173,6 +174,8 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                 <SppButton
                   handleErpClick={applyEnhancedReferralFilter}
                   handleSppClick={applySurplusPropertyFilter}
+                  inEnhancedReferralProcess={values.inEnhancedReferralProcess}
+                  inSurplusPropertyProgram={values.inSurplusPropertyProgram}
                 />
               </Col>
             )}
@@ -180,7 +183,10 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
               <SearchButton disabled={isSubmitting} />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting} onClick={handleReset} />
+              <ResetButton
+                disabled={isSubmitting}
+                onClick={() => onFilterChange?.({ ...defaultFilterValues })}
+              />
             </Col>
           </Form.Row>
         </Form>

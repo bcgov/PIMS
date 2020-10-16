@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
@@ -124,10 +124,14 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     }
   };
 
+  const throttledFetch = useRef(
+    _.throttle<any>((parcelBounds: any) => dispatch(fetchParcels(parcelBounds)), 1000),
+  ).current;
+
   useEffect(() => {
-    dispatch(fetchParcels(parcelBounds));
+    throttledFetch(parcelBounds);
     dispatch(getFetchLookupCodeAction());
-  }, [dispatch]);
+  }, [dispatch, throttledFetch]);
 
   useEffect(() => {
     return () => {
@@ -152,17 +156,11 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
         if (!props.submittingProperty) {
           const apiParams = getApiParams(mapFilterModel);
-          const action = fetchParcels(apiParams);
-          _.throttle(() => {
-            dispatch(action);
-          }, 250)();
+          throttledFetch(apiParams);
         } else {
           if (!loadedProperties) {
             const apiParams = getApiParams(mapFilterModel);
-            const action = fetchParcels(apiParams);
-            _.throttle(() => {
-              dispatch(action);
-            }, 250)();
+            throttledFetch(apiParams);
             setLoadedProperties(true);
           }
         }

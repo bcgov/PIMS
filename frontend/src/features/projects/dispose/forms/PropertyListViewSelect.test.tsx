@@ -34,6 +34,7 @@ jest.mock('@react-keycloak/web');
 const mockAxios = new MockAdapter(axios);
 
 const filter: IFilterBarState = {
+  pid: '',
   address: '',
   agencies: '',
   classificationId: '',

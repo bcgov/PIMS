@@ -4,10 +4,10 @@
   .btn {
     height: 37px;
     width: 37px;
-    background-color: #3b99fc !important;
   }
 }
 .sppTooltip {
+  pointer-events: all;
   .tooltip-inner {
     background-color: white;
     color: black;

@@ -107,4 +107,31 @@ describe('FilterBar', () => {
       propertyType: '',
     });
   });
+  it('loads list filter values if provided', () => {
+    const providedFilter = {
+      pid: 'mockPid',
+      searchBy: 'address',
+      address: 'mockaddress',
+      city: 'mockCity',
+      municipality: '',
+      projectNumber: '',
+      agencies: '2',
+      classificationId: '0',
+      minLotSize: '10',
+      maxLotSize: '20',
+      inSurplusPropertyProgram: true,
+    };
+    const { getByText, getByPlaceholderText } = render(
+      <FilterBar
+        agencyLookupCodes={MOCK.AGENCIES}
+        propertyClassifications={MOCK.CLASSIFICATIONS}
+        onChange={onFilterChange}
+        filter={providedFilter}
+      />,
+    );
+    expect(getByText('Address')).toBeVisible();
+    expect(getByText('Core Operational')).toBeVisible();
+    expect(getByPlaceholderText('Min Lot Size')).toHaveValue('10');
+    expect(getByPlaceholderText('Max Lot Size')).toHaveValue('20');
+  });
 });
