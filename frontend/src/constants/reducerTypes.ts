@@ -25,6 +25,7 @@ export const GET_REQUEST_ACCESS = 'getRequestAccess';
 export const ADD_REQUEST_ACCESS = 'addRequestAccess';
 
 export const JWT = 'jwt';
+export const FILTER = 'filter';
 export const KEYCLOAK_READY = 'keycloakReady';
 export const MAP_VIEW_ZOOM = 'mapViewZoom';
 export const LEAFLET_CLICK_EVENT = 'leafletClickEvent';

@@ -20,6 +20,7 @@ import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
+import { useRouterFilter } from 'hooks/useRouterFilter';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -88,13 +89,12 @@ const Map: React.FC<MapProps> = ({
     classificationId: '',
     minLotSize: '',
     maxLotSize: '',
-    inSurplusPropertyProgram: false,
-    inEnhancedReferralProcess: false,
   });
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const { getCityLatLng } = useApi();
+  useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
 
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -275,6 +275,7 @@ const Map: React.FC<MapProps> = ({
               agencyLookupCodes={agencies}
               propertyClassifications={propertyClassifications}
               lotSizes={lotSizes}
+              mapFilter={mapFilter}
               onFilterChange={handleMapFilterChange}
               onFilterReset={fitMapBounds}
             />

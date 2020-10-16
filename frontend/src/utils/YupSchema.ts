@@ -203,12 +203,12 @@ export const ParcelSchema = Yup.object()
 export const FilterBarSchema = Yup.object().shape({
   minLotSize: Yup.number()
     .typeError('Invalid')
-    .positive('Invalid')
+    .positive('Must be greater than 0')
     .max(200000, 'Invalid'),
   maxLotSize: Yup.number()
     .typeError('Invalid')
-    .positive('Invalid')
+    .positive('Must be greater than 0')
     .max(200000, 'Invalid')
     /* Reference minLotSize field in validating maxLotSize value */
-    .moreThan(Yup.ref('minLotSize'), 'Invalid'),
+    .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
 });
