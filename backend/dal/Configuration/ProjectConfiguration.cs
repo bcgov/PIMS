@@ -45,6 +45,9 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");
             builder.Property(m => m.Assessed).HasColumnType("MONEY");
+            builder.Property(m => m.Appraised).HasColumnType("MONEY");
+
+            builder.Property(m => m.AppraisedNote).HasColumnType("NVARCHAR(MAX)");
 
             builder.HasOne(m => m.Status).WithMany().HasForeignKey(m => m.StatusId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(m => m.Agency).WithMany().HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientCascade);
