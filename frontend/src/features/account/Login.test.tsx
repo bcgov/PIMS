@@ -99,8 +99,13 @@ describe('login', () => {
 
   it('unAuthenticated users are shown the login screen', () => {
     (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
-    const { getByRole } = renderLogin();
-    expect(getByRole('heading')).toHaveTextContent('Search and manage government properties');
+    const { getAllByRole } = renderLogin();
+    expect(getAllByRole('heading')[0]).toHaveTextContent(
+      'Search and visualize government property information',
+    );
+    expect(getAllByRole('heading')[1]).toHaveTextContent(
+      'PIMS enables you to search properties owned by the Government of British Columbia',
+    );
   });
 
   it('a spinner is displayed if keycloak has not yet been initialized', () => {
@@ -116,7 +121,7 @@ describe('login', () => {
     });
 
     const { getByText } = renderLogin();
-    fireEvent.click(getByText(/sign in/i));
+    fireEvent.click(getByText(/Sign In/));
 
     expect(login.mock.calls.length).toBe(1);
   });
