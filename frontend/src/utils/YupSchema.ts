@@ -16,6 +16,9 @@ export const AccessRequestSchema = Yup.object().shape({
     .min(1, 'Invalid Role')
     .required('Required'),
   note: Yup.string().max(1000, 'Note must be less than 1000 characters'),
+  user: Yup.object().shape({
+    position: Yup.string().max(100, 'Note must be less than 100 characters'),
+  }),
 });
 
 export const UserUpdateSchema = Yup.object().shape({
