@@ -10,17 +10,11 @@ namespace Pims.Api.Helpers.Logging
     public static class LoggerExtensions
     {
         public static IServiceCollection AddSerilogging(
-            this IServiceCollection services
+            this IServiceCollection services, IConfiguration configuration
         )
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             if (environment != null && !environment.EndsWith("Local")) {
-                var configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile(
-                        $"appsettings.{environment}.json",
-                        optional: true)
-                    .Build();
 
                 Log.Logger = new LoggerConfiguration()
                     .Enrich.FromLogContext()
@@ -35,7 +29,7 @@ namespace Pims.Api.Helpers.Logging
             return services;
         }
 
-        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
+        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment)
         {
             return new ElasticsearchSinkOptions(new Uri(configuration["Elastic:Uri"]))
             {
