@@ -87,7 +87,7 @@ namespace Pims.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSerilogging();
+            services.AddSerilogging(this.Configuration);
             services.AddMapster(options =>
             {
                 options.Default.IgnoreNonMapped(true);

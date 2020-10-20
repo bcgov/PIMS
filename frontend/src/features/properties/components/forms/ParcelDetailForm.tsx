@@ -11,7 +11,6 @@ import EvaluationForm, {
   defaultFinancials,
   filterEmptyFinancials,
   getMergedFinancials,
-  validateFinancials,
   IFinancial,
   IFinancialYear,
 } from './subforms/EvaluationForm';
@@ -183,18 +182,6 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
    */
   const handleValidate = async (values: IFormParcel) => {
     let financialErrors = {};
-
-    if (values.pid) {
-      financialErrors = validateFinancials(values.financials, 'financials', showAppraisal);
-      values.buildings.forEach((building, index) => {
-        const result = validateFinancials(
-          building.financials,
-          `buildings.${index}.financials`,
-          showAppraisal,
-        );
-        _.merge(financialErrors, result);
-      });
-    }
 
     const yupErrors: any = ParcelSchema.validate(values, { abortEarly: false }).then(
       () => {

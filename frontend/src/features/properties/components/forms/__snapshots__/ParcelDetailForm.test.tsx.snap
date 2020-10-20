@@ -834,7 +834,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           }
                         }
                       >
-                        Estimated
+                        Estimated Market Value
                       </div>
                     </div>
                     <div

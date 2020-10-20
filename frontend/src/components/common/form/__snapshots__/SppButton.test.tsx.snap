@@ -13,6 +13,11 @@ exports[`SPP Button renders correctly 1`] = `
       onFocus={[Function]}
       onMouseOut={[Function]}
       onMouseOver={[Function]}
+      style={
+        Object {
+          "backgroundColor": "#3b99fc",
+        }
+      }
       type="button"
     >
       <svg

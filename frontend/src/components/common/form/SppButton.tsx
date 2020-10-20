@@ -9,9 +9,16 @@ import TooltipWrapper from '../TooltipWrapper';
 interface ISppButtonProps {
   handleErpClick: () => void;
   handleSppClick: () => void;
+  inEnhancedReferralProcess?: boolean;
+  inSurplusPropertyProgram?: boolean;
 }
 
-const SppButton: React.FC<ISppButtonProps> = ({ handleErpClick, handleSppClick }) => {
+const SppButton: React.FC<ISppButtonProps> = ({
+  handleErpClick,
+  handleSppClick,
+  inEnhancedReferralProcess,
+  inSurplusPropertyProgram,
+}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const target = useRef(null);
 
@@ -20,11 +27,22 @@ const SppButton: React.FC<ISppButtonProps> = ({ handleErpClick, handleSppClick }
     callback();
   };
 
+  const iconColor = inEnhancedReferralProcess
+    ? '#cf3e4f'
+    : inSurplusPropertyProgram
+    ? '#a758cb'
+    : '#3b99fc';
+
   return (
     <ClickAwayListener onClickAway={() => setVisible(false)}>
       <div className="sppButton">
         <TooltipWrapper toolTipId="map-filter-spp-tooltip" toolTip="Filter SPP/ERP Properties">
-          <Button ref={target} className="close" onClick={() => setVisible(true)}>
+          <Button
+            ref={target}
+            className="close"
+            onClick={() => setVisible(true)}
+            style={{ backgroundColor: iconColor }}
+          >
             <SppIcon title="spp" />
           </Button>
         </TooltipWrapper>
