@@ -133,6 +133,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
                 .Include(p => p.Buildings)
+                .Include(p => p.CreatedBy)
+                .Include(p => p.UpdatedBy)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
                 .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
