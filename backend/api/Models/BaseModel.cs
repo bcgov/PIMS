@@ -9,6 +9,10 @@ namespace Pims.Api.Models
 
         public DateTime? UpdatedOn { get; set; }
 
+        public string UpdatedByName { get; set; }
+
+        public string UpdatedByEmail { get; set; }
+
         public string RowVersion { get; set; }
         #endregion
     }
