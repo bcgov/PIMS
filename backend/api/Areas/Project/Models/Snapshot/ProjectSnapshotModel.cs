@@ -19,26 +19,6 @@ namespace Pims.Api.Areas.Project.Models.Snapshot
         public int ProjectId { get; set; }
 
         /// <summary>
-        /// get/set - The snapshot to compare to this snapshot.
-        /// </summary>
-        public int? FromSnapshotId { get; set; }
-
-        /// <summary>
-        /// get/set - The snapshot to compare to this snapshot.
-        /// </summary>
-        public ProjectSnapshotModel FromSnapshot { get; set; }
-
-        /// <summary>
-        /// get/set - The name to identify the project snapshot.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// get/set - Whether or not this snapshot is final and should not be deleted/edited.
-        /// </summary>
-        public bool IsFinal { get; set; }
-
-        /// <summary>
         /// get/set - The date when this snapshot's data was taken from the project.
         /// </summary>
         public DateTime? SnapshotOn { get; set; }
@@ -57,6 +37,11 @@ namespace Pims.Api.Areas.Project.Models.Snapshot
         /// get/set - The assessed value which is the sum of the properties.
         /// </summary>
         public decimal Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - The appraised value which is the sum of the properties.
+        /// </summary>
+        public decimal Appraised { get; set; }
 
         /// <summary>
         /// get/set - The sales cost.

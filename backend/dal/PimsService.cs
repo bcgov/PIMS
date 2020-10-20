@@ -38,7 +38,7 @@ namespace Pims.Dal
         /// <summary>
         /// get - The project services.
         /// </summary>
-        public IProjectSnapshotService ProjectSnapshot { get { return _serviceProvider.GetService<IProjectSnapshotService>(); } }
+        public IProjectReportService ProjectReport { get { return _serviceProvider.GetService<IProjectReportService>(); } }
 
         /// <summary>
         /// get - The lookup services.

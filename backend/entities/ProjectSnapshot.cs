@@ -28,26 +28,6 @@ namespace Pims.Dal.Entities
         /// </summary>
         public DateTime SnapshotOn { get; set; }
 
-        /// <summary>
-        /// get/set - Optional, a project snapshot id to compare to this snapshot for variance reporting.
-        /// </summary>
-        public int? FromSnapshotId { get; set; }
-
-        /// <summary>
-        /// get/set - Optional, a project snapshot to compare to this snapshot for variance reporting.
-        /// </summary>
-        public ProjectSnapshot FromSnapshot { get; set; }
-
-        /// <summary>
-        /// get/set - Whether this report is final and should not be deleted.
-        /// </summary>
-        public bool IsFinal { get; set; }
-
-        /// <summary>
-        /// get/set - An optional, descriptive name given to the report.
-        /// </summary>
-        public string Name { get; set; }
-
         #region Financials
         /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
@@ -63,6 +43,11 @@ namespace Pims.Dal.Entities
         /// get/set - The assessed value which is the sum of the properties.
         /// </summary>
         public decimal Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - The appraised value which is the sum of the properties.
+        /// </summary>
+        public decimal Appraised { get; set; }
 
         /// <summary>
         /// get/set - The sales cost.
