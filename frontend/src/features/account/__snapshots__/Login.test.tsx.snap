@@ -31,7 +31,7 @@ exports[`login login renders correctly 1`] = `
         Sign In
       </button>
       <p>
-        Sign into PIMS with your government issued IDIR or with your BCeID.
+        Sign into PIMS with your government issued IDIR or with your Business BCeID.
       </p>
       <div
         className="bceid row"
@@ -45,6 +45,9 @@ exports[`login login renders correctly 1`] = `
           Don't have a BCeID?
         </button>
       </div>
+      <div
+        className="row"
+      />
     </div>
     <div
       className="col-md-3 col-1"
