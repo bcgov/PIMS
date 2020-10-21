@@ -47,7 +47,7 @@ const Login = () => {
           <p>Sign into PIMS with your government issued IDIR or with your Business BCeID.</p>
           <Row className="bceid">
             <Button variant="link" onClick={() => setShowInstruction(!showInstruction)}>
-              Don't have a BCeID?
+              Don't have a Business BCeID?
             </Button>
           </Row>
           <Row>
