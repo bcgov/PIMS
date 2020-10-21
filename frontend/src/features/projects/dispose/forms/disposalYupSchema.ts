@@ -59,8 +59,11 @@ export const SelectProjectPropertiesStepYupSchema = Yup.object().shape({
 });
 
 export const ProjectDraftStepYupSchema = Yup.object().shape({
-  name: Yup.string().required('Required'),
-  description: Yup.string(),
+  name: Yup.string()
+    .max(100, 'Name allows a maximum of 100 characters.')
+    .required('Required'),
+  description: Yup.string().max(1000, 'Description allows a maximum of 1000 characters.'),
+  note: Yup.string().max(2000, 'Note allows a maximum of 2000 characters.'),
 });
 
 export const EnhancedReferralExemptionSchema = Yup.object().shape({
