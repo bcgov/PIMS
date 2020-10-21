@@ -44,34 +44,36 @@ const Login = () => {
           <Button variant="primary" onClick={() => keycloak.login()}>
             Sign In
           </Button>
-          <p>Sign into PIMS with your government issued IDIR or with your BCeID.</p>
+          <p>Sign into PIMS with your government issued IDIR or with your Business BCeID.</p>
           <Row className="bceid">
             <Button variant="link" onClick={() => setShowInstruction(!showInstruction)}>
               Don't have a BCeID?
             </Button>
           </Row>
-          {showInstruction && (
-            <Jumbotron>
-              <p>
-                1. Search to see if your entity is{' '}
-                <a
-                  href="https://www.bceid.ca/directories/whitepages"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  already registered
-                </a>{' '}
-                <FaExternalLinkAlt />
-              </p>
-              <p>
-                If you're not yet registered, <br></br>2.{' '}
-                <a href="https://www.bceid.ca/os/?7169" target="_blank" rel="noopener noreferrer">
-                  Register for your Business BCeID
-                </a>{' '}
-                <FaExternalLinkAlt />
-              </p>
-            </Jumbotron>
-          )}
+          <Row>
+            {showInstruction && (
+              <Jumbotron>
+                <p>
+                  1. Search to see if your entity is{' '}
+                  <a
+                    href="https://www.bceid.ca/directories/whitepages"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    already registered
+                  </a>{' '}
+                  <FaExternalLinkAlt />
+                </p>
+                <p>
+                  If you're not yet registered, <br></br>2.{' '}
+                  <a href="https://www.bceid.ca/os/?7169" target="_blank" rel="noopener noreferrer">
+                    Register for your Business BCeID
+                  </a>{' '}
+                  <FaExternalLinkAlt />
+                </p>
+              </Jumbotron>
+            )}
+          </Row>
         </Col>
         <Col xs={1} md={3} />
       </Row>

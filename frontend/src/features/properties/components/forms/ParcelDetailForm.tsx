@@ -42,6 +42,7 @@ import GenericModal from 'components/common/GenericModal';
 import DebouncedValidation from './subforms/DebouncedValidation';
 import styled from 'styled-components';
 import LastUpdatedBy from '../LastUpdatedBy';
+import ManualLink from 'features/projects/common/components/ManualLink';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
@@ -406,6 +407,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                 {formikProps.status && formikProps.status.msg && (
                   <p style={{ color: 'red' }}>{formikProps.status.msg}</p>
                 )}
+                <ManualLink
+                  url="https://www2.gov.bc.ca/gov/content/governments/services-for-government/real-estate-space/asset-management-services/inventory-policy "
+                  label="Inventory Policy"
+                />
                 <FormControls>
                   {formikProps.values.id && <LastUpdatedBy {...(formikProps.values as any)} />}
                   {!props.disabled && (
