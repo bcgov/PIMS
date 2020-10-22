@@ -42,7 +42,7 @@ exports[`login login renders correctly 1`] = `
           onClick={[Function]}
           type="button"
         >
-          Don't have a BCeID?
+          Don't have a Business BCeID?
         </button>
       </div>
       <div
