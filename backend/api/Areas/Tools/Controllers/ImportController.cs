@@ -73,6 +73,29 @@ namespace Pims.Api.Areas.Tools.Controllers
             return new JsonResult(parcels);
         }
 
+        /// <summary>
+        /// POST - Update property financial values in the datasource.
+        /// If the property does not exist it will not be imported.
+        /// The financial values provided will overwrite existing data in the datasource.
+        /// </summary>
+        /// <param name="models">An array of property models.</param>
+        /// <returns>The properties added.</returns>
+        [HttpPost("properties/financials")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "tools-import" })]
+        [HasPermission(Permissions.SystemAdmin)]
+        public IActionResult ImportPropertyFinancials([FromBody] Model.ImportPropertyModel[] models)
+        {
+            if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
+
+            var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
+            var entities = helper.UpdatePropertyFinancials(models);
+            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
+
+            return new JsonResult(parcels);
+        }
 
         /// <summary>
         /// POST - Add an array of new properties to the datasource.

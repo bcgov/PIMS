@@ -5,10 +5,8 @@ using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -204,13 +202,74 @@ namespace Pims.Dal.Services.Admin
         {
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
-            var existingBuilding = this.Context.Buildings
+            var originalBuilding = this.Context.Buildings
                 .Include(b => b.Classification)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
+            this.ThrowIfNotAllowedToUpdate(originalBuilding, _options.Project);
 
-            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-            base.Update(existingBuilding);
+            var entry = this.Context.Entry(originalBuilding);
+            entry.CurrentValues.SetValues(building);
+            entry.Collection(p => p.Evaluations).Load();
+            entry.Collection(p => p.Fiscals).Load();
+
+            // TODO: Update child properties appropriately.
+            building.Evaluations.ForEach(e =>
+            {
+                // This will only add an evaluation if it isn't already being tracked.
+                if (!originalBuilding.Evaluations.Any(pe => pe.Key == e.Key && pe.Date == e.Date))
+                {
+                    e.Building = originalBuilding;
+                    this.Context.BuildingEvaluations.Add(e);
+                }
+            });
+            building.Fiscals.ForEach(f =>
+            {
+                // This will only add an fiscal if it isn't already being tracked.
+                if (!originalBuilding.Fiscals.Any(pf => pf.Key == f.Key && pf.FiscalYear == f.FiscalYear))
+                {
+                    f.Building = originalBuilding;
+                    this.Context.BuildingFiscals.Add(f);
+                }
+            });
+
+            base.Update(originalBuilding);
+        }
+
+        /// <summary>
+        /// Update the specified building financials in the datasource.
+        /// </summary>
+        /// <param name="building"></param>
+        public void UpdateFinancials(Building building)
+        {
+            building.ThrowIfNull(nameof(building));
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
+
+            var originalBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+
+            var entry = this.Context.Entry(originalBuilding);
+            entry.Collection(p => p.Evaluations).Load();
+            entry.Collection(p => p.Fiscals).Load();
+
+            building.Evaluations.ForEach(e =>
+            {
+                // This will only add an evaluation if it isn't already being tracked.
+                if (!originalBuilding.Evaluations.Any(pe => pe.Key == e.Key && pe.Date == e.Date))
+                {
+                    e.Building = originalBuilding;
+                    this.Context.BuildingEvaluations.Add(e);
+                }
+            });
+            building.Fiscals.ForEach(f =>
+            {
+                // This will only add an fiscal if it isn't already being tracked.
+                if (!originalBuilding.Fiscals.Any(pf => pf.Key == f.Key && pf.FiscalYear == f.FiscalYear))
+                {
+                    f.Building = originalBuilding;
+                    this.Context.BuildingFiscals.Add(f);
+                }
+            });
+
+            base.Update(originalBuilding);
         }
 
         /// <summary>
@@ -221,10 +280,10 @@ namespace Pims.Dal.Services.Admin
         {
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
-            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var originalBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
 
-            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-            base.Remove(existingBuilding);
+            this.Context.Entry(originalBuilding).CurrentValues.SetValues(building);
+            base.Remove(originalBuilding);
         }
         #endregion
     }
