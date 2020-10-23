@@ -32,6 +32,7 @@ namespace Pims.Dal
             services.AddScoped<Services.IBuildingService, Services.BuildingService>();
             services.AddScoped<Services.IParcelService, Services.ParcelService>();
             services.AddScoped<Services.IProjectService, Services.ProjectService>();
+            services.AddScoped<Services.IProjectReportService, Services.ProjectReportService>();
             services.AddScoped<Services.IUserService, Services.UserService>();
             services.AddScoped<Services.ITaskService, Services.TaskService>();
             services.AddScoped<Services.IWorkflowService, Services.WorkflowService>();

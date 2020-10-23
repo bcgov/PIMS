@@ -74,6 +74,12 @@ namespace Pims.Dal.Services
                 .Take(filter.Quantity)
                 .ToArray();
 
+            if (filter.ReportId != null)
+            {
+                var report = this.Context.ProjectReports.FirstOrDefault(r => r.Id == filter.ReportId);
+                items.ForEach(p => p.Snapshots.RemoveAll(s => s.SnapshotOn != report?.To));
+            }
+
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
