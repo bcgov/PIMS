@@ -41,30 +41,27 @@ restart: | stop build up ## Restart local docker environment
 
 refresh: | down build up ## Recreates local docker environment
 
-up: ## Runs the local containers
+up: ## Runs the local containers (n=service name)
 	@echo "$(P) Running client and server..."
-	@docker-compose up -d
+	@docker-compose up -d $(n)
 
 down: ## Stops the local containers and removes them
 	@echo "$(P) Stopping client and server..."
 	@docker-compose down
 
-stop: ## Stops the local containers
+stop: ## Stops the local containers (n=service name)
 	@echo "$(P) Stopping client and server..."
-	@docker-compose stop
+	@docker-compose stop $(n)
 
-build: ## Builds the local containers
+build: ## Builds the local containers (n=service name)
 	@echo "$(P) Building images..."
-	@docker-compose build --no-cache
+	@docker-compose build --no-cache $(n)
 
 clean: ## Removes all local containers, images, volumes, etc
 	@echo "$(P) Removing all containers, images, volumes for solution."
 	@docker-compose rm -f -v -s
 	@docker volume rm -f pims-frontend-node-cache
 	@docker volume rm -f pims-api-db-data
-
-setup: ## Setup local container environment, initialize keycloak and database
-	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
 
 setup: ## Setup local container environment, initialize keycloak and database
 	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
@@ -91,13 +88,39 @@ npm-clean: ## Removes local containers, images, volumes, for frontend applicatio
 	@docker-compose rm -f -v -s frontend
 	@docker volume rm -f pims-frontend-node-cache
 
-db-update: ## Update the database with the latest migration
+npm-refresh: ## Cleans and rebuilds the frontend.  This is useful when npm packages are changed.
+	@make npm-clean; make build n=frontend; make up;
+
+db-migrations: ## Display a list of migrations.
+	@echo "$(P) Display a list of migrations."
+	@cd backend/dal; dotnet ef migrations list
+
+db-add: ## Add a new database migration for the specified name (n=name of migration).
+	@echo "$(P) Create a new database migration for the specified name."
+	@cd backend/dal; dotnet ef migrations add $(n); code -r ./Migrations/*_$(n).cs
+	@./scripts/db-migration.sh $(n);
+
+db-update: ## Update the database with the latest migration.
 	@echo "$(P) Updating database with latest migration..."
 	@docker-compose up -d database; cd backend/dal; dotnet ef database update
 
-db-clean: ## Re-creates an empty docker database - ready for seeding
+db-rollback: ## Rollback to the specified database migration (n=name of migration).
+	@echo "$(P) Rollback to the specified database migration."
+	@cd backend/dal; dotnet ef database update n=$(n);
+
+db-remove: ## Remove the last database migration.
+	@echo "$(P) Remove the last migration."
+	@cd backend/dal; dotnet ef migrations remove --force;
+
+db-clean: ## Re-creates an empty docker database - ready for seeding.
 	@echo "$(P) Refreshing the database..."
 	@cd backend/dal; dotnet ef database drop --force; dotnet ef database update
+
+db-refresh: | server-run pause-30 db-clean db-seed keycloak-sync ## Refresh the database and seed it with data.
+
+db-drop: ## Drop the database.
+	@echo "$(P) Drop the database."
+	@cd backend/dal; dotnet ef database drop;
 
 db-seed: ## Imports a JSON file of properties into PIMS
 	@echo "$(P) Seeding docker database..."
@@ -107,10 +130,8 @@ keycloak-sync: ## Syncs accounts with Keycloak and PIMS
 	@echo "$(P) Syncing keycloak with PIMS..."
 	@cd tools/keycloak/sync; dotnet run;
 
-db-refresh: | server-run pause-30 db-clean db-seed keycloak-sync ## Refreshes the docker database
-
 convert: ## Convert Excel files to JSON
 	@echo "$(P) Convert Excel files to JSON..."
 	@cd tools/converters/excel; dotnet run;
 
-.PHONY: local setup restart refresh up down stop build clean client-test server-test pause-30 server-run db-update db-clean db-seed keycloak-sync db-refresh
+.PHONY: local setup restart refresh up down stop build clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-seed db-refresh npm-clean npm-refresh keycloak-sync convert

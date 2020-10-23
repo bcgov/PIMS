@@ -10,8 +10,8 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20201016195846_correctAgencies")]
-    partial class correctAgencies
+    [Migration("20201023193301_v01.01.01")]
+    partial class v010101
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1242,6 +1242,12 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("AgencyId1")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Appraised")
+                        .HasColumnType("MONEY");
+
+                    b.Property<string>("AppraisedNote")
+                        .HasColumnType("NVARCHAR(MAX)");
+
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
 
@@ -1569,6 +1575,60 @@ namespace Pims.Dal.Migrations
                     b.ToTable("ProjectProperties");
                 });
 
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("From")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<bool>("IsFinal")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
+
+                    b.Property<int>("ReportTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTime?>("To")
+                        .IsRequired()
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("Id", "To", "From", "IsFinal");
+
+                    b.ToTable("ProjectReports");
+                });
+
             modelBuilder.Entity("Pims.Dal.Entities.ProjectRisk", b =>
                 {
                     b.Property<int>("Id")
@@ -1640,7 +1700,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Appraised")
+                        .HasColumnType("MONEY");
+
                     b.Property<decimal>("Assessed")
+                        .HasColumnType("MONEY");
+
+                    b.Property<decimal?>("BaselineIntegrity")
                         .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
@@ -1686,6 +1752,9 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal?>("SalesCost")
                         .HasColumnType("MONEY");
 
+                    b.Property<DateTime>("SnapshotOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1698,7 +1767,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("ProjectId", "CreatedOn");
+                    b.HasIndex("ProjectId", "SnapshotOn");
 
                     b.ToTable("ProjectSnapshots");
                 });
@@ -3049,6 +3118,17 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ProjectReport", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
