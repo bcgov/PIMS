@@ -15,7 +15,6 @@ import { useDispatch } from 'react-redux';
 import GenericModal from 'components/common/GenericModal';
 import { toast } from 'react-toastify';
 import { useRouterReport } from '../hooks/useRouterReport';
-import { Prompt } from 'react-router-dom';
 
 interface ISplReportContainerProps {}
 

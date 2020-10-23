@@ -2,7 +2,7 @@ import ProjectListView from './ProjectListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, getByTitle } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { create } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
