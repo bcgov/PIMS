@@ -16,6 +16,8 @@ export enum Claims {
   PROJECT_EDIT = 'project-edit',
   PROJECT_ADD = 'project-add',
   PROJECT_DELETE = 'project-delete',
+  REPORTS_VIEW = 'reports-view',
+  REPORTS_SPL = 'reports-spl',
 }
 
 export default Claims;

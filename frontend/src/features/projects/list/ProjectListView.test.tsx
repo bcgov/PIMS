@@ -131,7 +131,7 @@ describe('Project list view', () => {
     expect(noResults).toBeInTheDocument();
   });
 
-  it('Displays appropriate buttons by default', async () => {
+  it('Does not display export buttons by default', async () => {
     mockedService.getProjectList.mockResolvedValueOnce({
       quantity: 0,
       total: 0,
@@ -140,36 +140,15 @@ describe('Project list view', () => {
       items: [],
     });
 
-    const { getByText, queryByText } = render(
+    const { queryByText, queryByTitle } = render(
       <Provider store={store}>
         <Router history={history}>
           <ProjectListView />
         </Router>
       </Provider>,
     );
-    expect(getByText('Export Generic Report')).toBeInTheDocument();
-    expect(getByText('Export CSV')).toBeInTheDocument();
-    expect(queryByText('Export SPL Report')).toBeNull();
-  });
-
-  it('Displays appropriate buttons by default', async () => {
-    mockedService.getProjectList.mockResolvedValueOnce({
-      quantity: 0,
-      total: 0,
-      page: 1,
-      pageIndex: 0,
-      items: [],
-    });
-
-    const { getByText, queryByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
-    expect(getByText('Export Generic Report')).toBeInTheDocument();
-    expect(getByText('Export CSV')).toBeInTheDocument();
-    expect(queryByText('Export SPL Report')).toBeNull();
+    expect(queryByTitle('Export Generic Report')).not.toBeInTheDOM();
+    expect(queryByTitle('Export CSV')).not.toBeInTheDOM();
+    expect(queryByText('SPL Report')).not.toBeInTheDOM();
   });
 });

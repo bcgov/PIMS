@@ -20,9 +20,6 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
       <div
         className="col-md-2 form-group"
       >
-        <span
-          className=""
-        />
         <div
           className="react-datepicker-wrapper"
         >
@@ -86,9 +83,6 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
       <div
         className="col-md-2 form-group"
       >
-        <span
-          className=""
-        />
         <div
           className="react-datepicker-wrapper"
         >
@@ -144,7 +138,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           Proceed to SPL
         </button>
         <div
-          className="sc-fzoiQi gnA-DBP"
+          className="sc-fznxKY cHliGV"
         >
           OR
         </div>

@@ -35,6 +35,11 @@ div.bootstrap-table {
   background-color: $dark-variant-color;
 }
 
+.Toastify__toast.Toastify__toast--warning {
+  color: black;
+  background-color: $accent-color;
+}
+
 .Toastify__toast.Toastify__toast--error {
   color: #fff;
   background-color: $danger-color;

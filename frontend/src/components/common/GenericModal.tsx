@@ -10,8 +10,44 @@ interface ModalProps {
   handleOk?: Function;
   /** Optional text to display on the cancel button. Default is Cancel. */
   cancelButtonText?: string;
+  /** Optional variant that will override the default variant of warning. */
+  cancelButtonVariant?:
+    | 'link'
+    | 'warning'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'info'
+    | 'dark'
+    | 'light'
+    | 'outline-primary'
+    | 'outline-secondary'
+    | 'outline-success'
+    | 'outline-danger'
+    | 'outline-info'
+    | 'outline-dark'
+    | 'outline-light';
   /** Optional test to display on the ok button. Default is Ok. */
   okButtonText?: string;
+  /** Optional variant that will override the default variant of primary. */
+  okButtonVariant?:
+    | 'link'
+    | 'warning'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'info'
+    | 'dark'
+    | 'light'
+    | 'outline-primary'
+    | 'outline-secondary'
+    | 'outline-success'
+    | 'outline-danger'
+    | 'outline-info'
+    | 'outline-dark'
+    | 'outline-light';
   /** Optional title to display - no default. */
   title?: string;
   /** Optional message to display - no default. */
@@ -64,11 +100,15 @@ const GenericModal = (props: ModalProps) => {
         <Modal.Body style={{ maxHeight: '500px' }}>{props.message}</Modal.Body>
 
         <Modal.Footer>
-          <Button variant="primary" onClick={ok}>
+          <Button variant={props.okButtonVariant ?? 'primary'} onClick={ok}>
             {props.okButtonText ?? 'Ok'}
           </Button>
           {props.cancelButtonText && (
-            <Button variant="warning" onClick={close} style={{ width: 'unset' }}>
+            <Button
+              variant={props.cancelButtonVariant ?? 'warning'}
+              onClick={close}
+              style={{ width: 'unset' }}
+            >
               {props.cancelButtonText}
             </Button>
           )}

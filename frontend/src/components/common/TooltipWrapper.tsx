@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Overlay, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger, OverlayTriggerProps } from 'react-bootstrap';
 
-interface ITooltipWrapperProps extends Partial<React.ComponentPropsWithRef<typeof Overlay>> {
+interface ITooltipWrapperProps extends Partial<OverlayTriggerProps> {
   toolTip?: string;
   toolTipId: string;
 }
@@ -13,10 +13,7 @@ interface ITooltipWrapperProps extends Partial<React.ComponentPropsWithRef<typeo
 const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
   return (
     <>
-      <OverlayTrigger
-        placement={props.placement}
-        overlay={<Tooltip id={props.toolTipId}>{props.toolTip}</Tooltip>}
-      >
+      <OverlayTrigger {...props} overlay={<Tooltip id={props.toolTipId}>{props.toolTip}</Tooltip>}>
         {props.children}
       </OverlayTrigger>
     </>

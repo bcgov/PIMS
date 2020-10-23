@@ -12,8 +12,8 @@ const defaultEnvelope = (x: any) => ({ data: { records: x } });
  * errorToast is displayed when the request fails for any reason. By default this will return an error from axios.
  */
 export interface LifecycleToasts {
-  loadingToast: () => React.ReactText;
-  successToast: () => React.ReactText;
+  loadingToast?: () => React.ReactText;
+  successToast?: () => React.ReactText;
   errorToast?: () => React.ReactText;
 }
 
@@ -42,7 +42,7 @@ const CustomAxios = ({
         throw new axios.Cancel(JSON.stringify(envelope(storedValue)));
       }
     }
-    if (lifecycleToasts) {
+    if (lifecycleToasts?.loadingToast) {
       loadingToastId = lifecycleToasts.loadingToast();
     }
     return config;
@@ -50,7 +50,7 @@ const CustomAxios = ({
 
   instance.interceptors.response.use(
     response => {
-      if (lifecycleToasts) {
+      if (lifecycleToasts?.successToast) {
         loadingToastId && toast.dismiss(loadingToastId);
         lifecycleToasts.successToast();
       }
@@ -60,7 +60,6 @@ const CustomAxios = ({
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }
-
       if (lifecycleToasts?.errorToast) {
         loadingToastId && toast.dismiss(loadingToastId);
         lifecycleToasts.errorToast();

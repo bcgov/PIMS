@@ -2,7 +2,7 @@ import React, { FunctionComponent, memo, useEffect, useState } from 'react';
 import { ErrorMessage, getIn, FormikProps } from 'formik';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import moment from 'moment';
-import { FormGroup, FormControlProps } from 'react-bootstrap';
+import { FormGroup, FormControlProps, Form } from 'react-bootstrap';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import GenericModal from '../GenericModal';
@@ -24,6 +24,8 @@ type OptionalAttributes = {
   minDate?: Date;
   /** warn the user if they select a date that is older then the current date */
   oldDateWarning?: boolean;
+  /** form label */
+  label?: string;
 };
 
 export type FastDatePickerProps = FormControlProps &
@@ -41,6 +43,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   outerClassName,
   minDate,
   oldDateWarning,
+  label,
   formikProps: {
     values,
     initialValues,
@@ -77,7 +80,8 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
     <FormGroup className={outerClassName ?? ''}>
-      <span className={isInvalid}></span>
+      {!!label && <Form.Label>{label}</Form.Label>}
+
       <DatePicker
         showYearDropdown
         scrollableYearDropdown

@@ -129,6 +129,8 @@ export interface IProject {
   agencyResponseNote?: string;
   offersNote?: string;
   agencyId: number;
+  agency?: string;
+  subAgency?: string;
   statusId: number;
   status?: IStatus;
   exemptionRationale?: string;
