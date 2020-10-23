@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Dal.Entities
 {
@@ -31,22 +30,22 @@ namespace Pims.Dal.Entities
 
         #region Financials
         /// <summary>
-        /// get/set - The netbook value which is the sum of the properties.
+        /// get/set - The netbook value.
         /// </summary>
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value which is the sum of the properties.
+        /// get/set - The estimated value.
         /// </summary>
         public decimal Estimated { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value which is the sum of the properties.
+        /// get/set - The assessed value.
         /// </summary>
         public decimal Assessed { get; set; }
 
         /// <summary>
-        /// get/set - The appraised value which is the sum of the properties.
+        /// get/set - The appraised value.
         /// </summary>
         public decimal Appraised { get; set; }
 
