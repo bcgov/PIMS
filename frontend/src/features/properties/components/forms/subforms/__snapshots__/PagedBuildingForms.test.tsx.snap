@@ -625,9 +625,6 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <div
               className="col-md-10 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >

@@ -43,7 +43,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fznJRM DFkLw"
+      className="sc-fzoXWK bJauRU"
     >
       Approved for ERP
     </div>
@@ -357,9 +357,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -396,9 +393,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1191,9 +1185,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1230,9 +1221,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1313,9 +1301,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1376,10 +1361,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fzqNJr FcpLd"
+      className="sc-fzoyAV cGutgP"
     />
     <div
-      className="sc-fzqNJr FcpLd"
+      className="sc-fzoyAV cGutgP"
     >
       <span>
         <button
@@ -1462,7 +1447,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fznJRM DFkLw"
+      className="sc-fzoXWK bJauRU"
     >
       Approved for ERP
     </div>
@@ -1570,9 +1555,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -1736,9 +1718,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -1966,9 +1945,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >

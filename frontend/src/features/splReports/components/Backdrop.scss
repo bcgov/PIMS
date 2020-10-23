@@ -1,0 +1,10 @@
+@import '../../../variables';
+
+.backdrop {
+  width: 100%;
+  height: calc(100% - #{$footer-height} - #{$header-height} - #{$navbar-height});
+  position: fixed;
+  z-index: 1;
+  top: $header-height + $navbar-height;
+  background-color: rgba(0, 0, 0, 0.5);
+}
