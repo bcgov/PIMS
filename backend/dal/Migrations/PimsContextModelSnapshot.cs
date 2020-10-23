@@ -1241,7 +1241,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Appraised")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("MONEY");
+
+                    b.Property<string>("AppraisedNote")
+                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
