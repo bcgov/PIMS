@@ -666,7 +666,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       }
     />
     <div
-      className="sc-fzokOt cycZXj"
+      className="sc-fzqBZW cSdQOS"
     >
       <button
         className="btn btn-warning"
@@ -1360,7 +1360,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       }
     />
     <div
-      className="sc-fzokOt cycZXj"
+      className="sc-fzqBZW cSdQOS"
     >
       <button
         className="btn btn-warning"
@@ -2054,7 +2054,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       }
     />
     <div
-      className="sc-fzokOt cycZXj"
+      className="sc-fzqBZW cSdQOS"
     >
       <button
         className="btn btn-warning"

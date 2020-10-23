@@ -47,7 +47,9 @@ const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
     <div className="spl-reports">
       <div className={classNames('side-bar', showSidebar ? 'side-bar-show open' : 'close')}>
         <span>
-          <ReportList {...{ onOpen, onFinal, onDelete, reports, onAdd }}></ReportList>
+          <ReportList
+            {...{ onOpen, onFinal, onDelete, reports, onAdd, currentReport }}
+          ></ReportList>
         </span>
         <button onClick={() => setShowSidebar(!showSidebar)}>
           {showSidebar ? <FaChevronLeft></FaChevronLeft> : <FaChevronRight></FaChevronRight>}

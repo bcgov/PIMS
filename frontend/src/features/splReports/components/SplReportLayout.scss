@@ -8,6 +8,9 @@
       display: block;
     }
   }
+  div.active.row {
+    background-color: $accent-color;
+  }
 
   .report-content {
     height: calc(100vh - #{$footer-height} - #{$header-height} - #{$navbar-height});

@@ -8,6 +8,8 @@ import { formatApiDateTime } from 'utils';
 interface IReportListitemProps {
   /** The underlying report that this control is mapped to. */
   report: IReport;
+  /** The class of this report item. */
+  className?: string;
   /** function to invoke when this list item's name is clicked. */
   onOpen: (report: IReport) => void;
   /** function to invoke when the checkbox is clicked */
@@ -59,10 +61,11 @@ const ReportListitem: React.FunctionComponent<IReportListitemProps> = ({
   onOpen,
   onDelete,
   onFinal,
+  className,
 }) => {
   return (
     <>
-      <ListItemRow>
+      <ListItemRow className={className}>
         <Report onClick={() => onOpen(report)} md={9} title={getName(report)}>
           {getName(report)}
         </Report>

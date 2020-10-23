@@ -43,7 +43,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXzr cIZMlc"
+      className="sc-fzqNqU dZqUFU"
     >
       Approved for ERP
     </div>
@@ -343,9 +343,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -382,9 +379,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1177,9 +1171,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1216,9 +1207,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1299,9 +1287,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <div
                   className="col-md-8 form-group"
                 >
-                  <span
-                    className=""
-                  />
                   <div
                     className="react-datepicker-wrapper"
                   >
@@ -1362,10 +1347,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fzqNJr FcpLd"
+      className="sc-fzoyAV cGutgP"
     />
     <div
-      className="sc-fzqNJr FcpLd"
+      className="sc-fzoyAV cGutgP"
     >
       <span>
         <button
@@ -1448,7 +1433,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXzr cIZMlc"
+      className="sc-fzqNqU dZqUFU"
     >
       Approved for ERP
     </div>
@@ -1523,9 +1508,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-8 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -1562,9 +1544,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-8 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -1601,9 +1580,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-8 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -1640,9 +1616,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-8 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -2019,9 +1992,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -2094,9 +2064,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -2135,7 +2102,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-fznWqX fApSkZ"
+            className="sc-fzpmMD itvViV"
           >
             OR
           </div>
@@ -2150,9 +2117,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
             <div
               className="col-md-2 form-group"
             >
-              <span
-                className=""
-              />
               <div
                 className="react-datepicker-wrapper"
               >
@@ -2194,7 +2158,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-fznWqX fApSkZ"
+                className="sc-fzpmMD itvViV"
               >
                 OR
               </div>

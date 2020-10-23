@@ -8,6 +8,7 @@ import { IReport } from '../interfaces';
 import _ from 'lodash';
 import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
 import styled from 'styled-components';
+import { Prompt } from 'react-router-dom';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -89,54 +90,60 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
       enableReinitialize
     >
       {({ dirty, values }) => (
-        <Form className="report-form">
-          <Row noGutters className="d-flex align-items-center">
-            {reportOptions.length > 1 ? (
-              <BSForm.Group>
-                <BSForm.Control
-                  label="From: "
-                  options={reportOptions}
-                  as="select"
-                  value={fromId}
-                  disabled={values.isFinal}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    onFromChange(+e.target.value)
-                  }
-                >
-                  {reportOptions.map((option: SelectOption) => (
-                    <option key={option.value} value={option.value} className="option">
-                      {option.label}
-                    </option>
-                  ))}
-                </BSForm.Control>
+        <>
+          <Form className="report-form">
+            <Row noGutters className="d-flex align-items-center">
+              {reportOptions.length > 1 ? (
+                <BSForm.Group>
+                  <BSForm.Control
+                    label="From: "
+                    options={reportOptions}
+                    as="select"
+                    value={fromId}
+                    disabled={values.isFinal}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      onFromChange(+e.target.value)
+                    }
+                  >
+                    {reportOptions.map((option: SelectOption) => (
+                      <option key={option.value} value={option.value} className="option">
+                        {option.label}
+                      </option>
+                    ))}
+                  </BSForm.Control>
+                </BSForm.Group>
+              ) : (
+                <BSForm.Group>
+                  <BSForm.Label>From: N/A</BSForm.Label>
+                </BSForm.Group>
+              )}
+              <BSForm.Group className="h-75">
+                <BSForm.Label>To:</BSForm.Label>
+                <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
               </BSForm.Group>
-            ) : (
-              <BSForm.Group>
-                <BSForm.Label>From: N/A</BSForm.Label>
-              </BSForm.Group>
-            )}
-            <BSForm.Group className="h-75">
-              <BSForm.Label>To:</BSForm.Label>
-              <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
-            </BSForm.Group>
-            <ResetButton
-              disabled={values.isFinal}
-              onClick={() => onRefresh(currentReport)}
-              className="mr-3"
-            />
-            <Input label="Name:" field="name" disabled={values.isFinal} />
-            <Check label="Is Final:" field="isFinal" />
-            <Button className="h-75 mr-auto" type="submit" disabled={!dirty}>
-              Save
-            </Button>
-            <FileIcon>
-              <FaFileExcel size={36} onClick={() => onExport(currentReport, 'excel')} />
-            </FileIcon>
-            <FileIcon>
-              <FaFileAlt size={36} onClick={() => onExport(currentReport, 'csv')} />
-            </FileIcon>
-          </Row>
-        </Form>
+              <ResetButton
+                disabled={values.isFinal}
+                onClick={() => onRefresh(currentReport)}
+                className="mr-3"
+              />
+              <Input label="Name:" field="name" disabled={values.isFinal} />
+              <Check label="Is Final:" field="isFinal" />
+              <Button className="h-75 mr-auto" type="submit" disabled={!dirty}>
+                Save
+              </Button>
+              <FileIcon>
+                <FaFileExcel size={36} onClick={() => onExport(currentReport, 'excel')} />
+              </FileIcon>
+              <FileIcon>
+                <FaFileAlt size={36} onClick={() => onExport(currentReport, 'csv')} />
+              </FileIcon>
+            </Row>
+          </Form>
+          <Prompt
+            when={dirty}
+            message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
+          />
+        </>
       )}
     </Formik>
   ) : (

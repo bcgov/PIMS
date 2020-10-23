@@ -10,6 +10,8 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 interface IReportListProps {
   /** a list of all spl reports in the system */
   reports: IReport[];
+  /** The currently selected report in this listview. */
+  currentReport?: IReport;
   /** The action to take if a report is selected */
   onOpen: (report: IReport) => void;
   /** The action to take if a report is set to final */
@@ -33,6 +35,7 @@ const ReportList: React.FunctionComponent<IReportListProps> = ({
   onFinal,
   onOpen,
   onAdd,
+  currentReport,
   reports,
 }) => {
   return (
@@ -49,6 +52,7 @@ const ReportList: React.FunctionComponent<IReportListProps> = ({
         reports.map((report, index) => (
           <ReportListitem
             key={`${report.name}${index}`}
+            className={currentReport?.id === report?.id ? 'active' : ''}
             {...{ report, onOpen, onDelete, onFinal }}
           ></ReportListitem>
         ))

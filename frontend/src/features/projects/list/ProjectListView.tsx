@@ -307,10 +307,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <FileIcon className="mr-1 p-0" onClick={() => fetch('excel', 'generic')}>
-                <FaFileExcel size={36} />
+                <FaFileExcel size={36} title="Export Generic Report" />
               </FileIcon>
               <FileIcon className="mr-1 p-0" onClick={() => fetch('csv', 'generic')}>
-                <FaFileAlt size={36} />
+                <FaFileAlt title="Export CSV" size={36} />
               </FileIcon>
             </>
           )}
