@@ -805,7 +805,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                         }
                       }
                     >
-                      Net Book
+                      Net Book Value
                     </div>
                     <div
                       className="th"

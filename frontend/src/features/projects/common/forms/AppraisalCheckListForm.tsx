@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import classNames from 'classnames';
 import TasksForm from './TasksForm';
 import { ReviewWorkflowStatus, reviewAppraisalTooltip, useProject } from '../../common';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
+import ProjectNotes from '../components/ProjectNotes';
 
 interface IAppraisalCheckListFormProps {
   className?: string;
@@ -22,12 +23,23 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
   });
   return (
     <Container fluid className={classNames(props.className)}>
-      <h3>
-        Appraisal
-        <TooltipIcon toolTipId="review-appraisal" toolTip={reviewAppraisalTooltip}></TooltipIcon>
-      </h3>
-
-      <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
+      <Row>
+        <Col>
+          <h3>
+            Appraisal
+            <TooltipIcon
+              toolTipId="review-appraisal"
+              toolTip={reviewAppraisalTooltip}
+            ></TooltipIcon>
+          </h3>
+          <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
+          <ProjectNotes
+            outerClassName="col-md-12 reviewRequired"
+            field="appraisedNote"
+            label="Appraised Notes"
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

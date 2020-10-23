@@ -635,33 +635,6 @@ namespace Pims.Dal.Test.Services
         #endregion
 
         #region Update Building
-        [Fact]
-        public void Update_Building_UpdateProjectFinancials()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.AdminProjects).AddAgency(1);
-            var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1);
-            project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1);
-            var building = init.CreateBuilding(parcel, 2);
-            var fiscal = init.CreateFiscal(building, 2020, Entity.FiscalKeys.NetBook, 10);
-            project.AddProperty(parcel);
-            project.AddProperty(building);
-            init.SaveChanges();
-
-            var options = ControllerHelper.CreateDefaultPimsOptions();
-            var service = helper.CreateService<BuildingService>(user, options);
-
-            // Act
-            fiscal.Value = 15;
-            var result = service.Update(building);
-
-            // Assert
-            Assert.NotNull(result);
-            project.NetBook.Should().Be(15);
-        }
 
         [Fact]
         public void Update_Building_LinkedToProject_NotAuthorized()

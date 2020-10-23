@@ -1131,9 +1131,7 @@ exports[`Property List View Select renders correctly 1`] = `
               }
             }
           >
-            <span>
-              Sum
-            </span>
+             
           </div>
           <div
             className="th"
@@ -1152,9 +1150,7 @@ exports[`Property List View Select renders correctly 1`] = `
               }
             }
           >
-            <span>
-              $1
-            </span>
+             
           </div>
           <div
             className="th"
@@ -1173,9 +1169,7 @@ exports[`Property List View Select renders correctly 1`] = `
               }
             }
           >
-            <span>
-              $0
-            </span>
+             
           </div>
           <div
             className="th"
@@ -1194,9 +1188,7 @@ exports[`Property List View Select renders correctly 1`] = `
               }
             }
           >
-            <span>
-              $1
-            </span>
+             
           </div>
           <div
             className="th"
