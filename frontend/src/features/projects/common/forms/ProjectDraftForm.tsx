@@ -1,7 +1,7 @@
 import './ProjectDraftForm.scss';
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Form, Input } from 'components/common/form';
+import { Form, Input, TextArea } from 'components/common/form';
 import { IStepProps, projectNoDescription, EditButton } from '..';
 import styled from 'styled-components';
 
@@ -55,7 +55,7 @@ const ProjectDraftForm = ({
         />
       </Form.Row>
       <Form.Row>
-        <Input
+        <TextArea
           disabled={isReadOnly}
           field="description"
           label="Description"

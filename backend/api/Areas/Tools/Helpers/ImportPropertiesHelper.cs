@@ -25,6 +25,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.PropertyClassification> _propertyClassifications;
         private readonly IList<Entity.City> _cities;
         private readonly IList<Entity.Agency> _agencies;
+        private readonly Dictionary<string, string> _agencyCodeCorrections = new Dictionary<string, string>() { { "BT", "BCT" }, { "ICOB", "ICBC" } };
         #endregion
 
         #region Constructors
@@ -104,6 +105,13 @@ namespace Pims.Api.Areas.Tools.Helpers
             if (!String.IsNullOrWhiteSpace(property.SubAgency))
             {
                 var createCode = new string(property.SubAgency.GetFirstLetterOfEachWord(true).Take(6).ToArray()).Trim();
+
+                //check if this agency mapping needs to be corrected.
+                string mappedCode = null;
+                if (_agencyCodeCorrections.TryGetValue(createCode, out mappedCode))
+                {
+                    createCode = mappedCode;
+                }
                 var subAgency = _agencies.FirstOrDefault(a =>
                     (a.ParentId == agency.Id && a.Name == property.SubAgency)
                     || (a.ParentId == agency.Id && a.Code == createCode)

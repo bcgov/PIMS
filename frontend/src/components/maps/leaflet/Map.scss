@@ -13,3 +13,18 @@
     margin: 0px;
   }
 }
+
+.leaflet-control-layers {
+  &.leaflet-control-layers-expanded {
+    border-radius: 0px;
+  }
+  .leaflet-control-layers-overlays {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 150px;
+    label {
+      display: flex;
+    }
+  }
+}

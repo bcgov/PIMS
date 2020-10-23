@@ -1,20 +1,18 @@
 @import '../../styles.scss';
 @import '../../colors.scss';
-
 .unauth {
   font-size: 24px;
   margin: 91px auto;
-
-  .row {
+  .sign-in {
     justify-content: center;
   }
-
   .block {
     background-color: #f2f2f2;
     padding: 43px 0;
-    max-width: 776px;
+    max-width: 650px;
+    max-height: 475px;
+    text-align: center;
   }
-
   h1 {
     padding-bottom: 18px;
     font-family: 'BCSans', Fallback, sans-serif;
@@ -22,23 +20,54 @@
     font-size: 24px;
     color: $text-color;
   }
-
+  h6 {
+    margin-bottom: 20px;
+  }
   p {
-    font-size: 16px;
+    font-size: 12px;
     color: $text-color;
     font-family: 'BCSans', Fallback, sans-serif;
     line-height: 130%;
-    width: 75%;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 2px;
   }
-
+  .btn {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .btn-link {
+    margin-left: 30px;
+    font-size: 12px;
+  }
+  .btn-link:focus,
+  .btn-link:active {
+    background: none !important;
+  }
+  .bceid {
+    margin-bottom: -30px;
+  }
+  .jumbotron {
+    background-color: white;
+    padding: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+    width: 90%;
+    justify-content: left;
+    border: 1px;
+    border-style: solid;
+    border-color: #707070;
+    text-align: left;
+    p {
+      margin: 10px;
+    }
+  }
   .blockText {
     margin: 0 auto 38px auto;
   }
-
   .or {
     margin: 20px auto;
   }
-
   .border-dark {
     border-color: $primary-color !important;
     color: $text-color !important;

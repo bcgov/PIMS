@@ -5,10 +5,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzpans ecgrOJ [object Object]-status"
+    className="sc-fznKkj lnNMyB [object Object]-status"
   >
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       Approved for Surplus Property Program
     </h5>
@@ -32,7 +32,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       Approval Date: Unknown Date
     </h5>
@@ -128,7 +128,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
           <span
             className="col-md-5"
           >
-            <input
+            <textarea
               className="form-control"
               disabled={true}
               id="input-description"
@@ -666,7 +666,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       }
     />
     <div
-      className="sc-fznyAO iGcMNF"
+      className="sc-fzokOt cycZXj"
     >
       <button
         className="btn btn-warning"
@@ -699,10 +699,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzpans ecgrOJ [object Object]-status"
+    className="sc-fznKkj lnNMyB [object Object]-status"
   >
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       Submitted
     </h5>
@@ -726,7 +726,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       test
     </h5>
@@ -822,7 +822,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
           <span
             className="col-md-5"
           >
-            <input
+            <textarea
               className="form-control"
               disabled={true}
               id="input-description"
@@ -1360,7 +1360,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       }
     />
     <div
-      className="sc-fznyAO iGcMNF"
+      className="sc-fzokOt cycZXj"
     >
       <button
         className="btn btn-warning"
@@ -1393,10 +1393,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzpans ecgrOJ [object Object]-status"
+    className="sc-fznKkj lnNMyB [object Object]-status"
   >
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       Submitted
     </h5>
@@ -1420,7 +1420,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzplWN jRhPxB"
+      className="sc-fznZeY bEkyNU"
     >
       In Review
     </h5>
@@ -1516,7 +1516,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           <span
             className="col-md-5"
           >
-            <input
+            <textarea
               className="form-control"
               disabled={true}
               id="input-description"
@@ -2054,7 +2054,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       }
     />
     <div
-      className="sc-fznyAO iGcMNF"
+      className="sc-fzokOt cycZXj"
     >
       <button
         className="btn btn-warning"

@@ -96,7 +96,7 @@ exports[`Project Draft Step renders correctly 1`] = `
           <span
             className="col-md-5"
           >
-            <input
+            <textarea
               className="form-control"
               disabled={true}
               id="input-description"
