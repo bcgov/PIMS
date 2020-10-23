@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 
 namespace Pims.Dal.Configuration
@@ -20,11 +21,15 @@ namespace Pims.Dal.Configuration
 
             builder.Property(m => m.ProjectId).IsRequired();
 
+            builder.Property(m => m.SnapshotOn).HasColumnType("DATETIME2");
+
             builder.Property(m => m.NetBook).HasColumnType("MONEY");
             builder.Property(m => m.Estimated).HasColumnType("MONEY");
             builder.Property(m => m.Assessed).HasColumnType("MONEY");
+            builder.Property(m => m.Appraised).HasColumnType("MONEY");
             builder.Property(m => m.SalesCost).HasColumnType("MONEY");
             builder.Property(m => m.NetProceeds).HasColumnType("MONEY");
+            builder.Property(m => m.BaselineIntegrity).HasColumnType("MONEY");
             builder.Property(m => m.ProgramCost).HasColumnType("MONEY");
             builder.Property(m => m.GainLoss).HasColumnType("MONEY");
             builder.Property(m => m.OcgFinancialStatement).HasColumnType("MONEY");
@@ -32,7 +37,7 @@ namespace Pims.Dal.Configuration
 
             builder.HasOne(m => m.Project).WithMany(p => p.Snapshots).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(m => new { m.ProjectId, m.CreatedOn });
+            builder.HasIndex(m => new { m.ProjectId, m.SnapshotOn });
 
             base.Configure(builder);
         }

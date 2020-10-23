@@ -55,7 +55,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="all"></param>
         /// <returns></returns>
         [HttpGet]
-        [HasPermission(Permissions.ProjectView)]
+        [HasPermission(Permissions.ReportsView)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]
@@ -75,7 +75,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="all"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [HasPermission(Permissions.ProjectView)]
+        [HasPermission(Permissions.ReportsView)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]
@@ -108,7 +108,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("surplus/properties/list")]
-        [HasPermission(Permissions.ProjectView)]
+        [HasPermission(Permissions.ReportsView)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]
@@ -127,7 +127,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("surplus/properties/list/filter")]
-        [HasPermission(Permissions.ProjectView)]
+        [HasPermission(Permissions.ReportsSpl)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]

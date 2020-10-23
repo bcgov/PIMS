@@ -27,6 +27,7 @@ namespace Pims.Dal
 
         #region Projects
         IProjectService Project { get; }
+        IProjectReportService ProjectReport { get; }
         IProjectNotificationService ProjectNotification { get; }
         IProjectStatusService ProjectStatus { get; }
         ITaskService Task { get; }

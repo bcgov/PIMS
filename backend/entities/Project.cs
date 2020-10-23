@@ -312,6 +312,11 @@ namespace Pims.Dal.Entities
         public decimal Assessed { get; set; }
 
         /// <summary>
+        /// get/set - The appraised value which is the sum of the properties.
+        /// </summary>
+        public decimal Appraised { get; set; }
+
+        /// <summary>
         /// get/set - The sales cost.
         /// </summary>
         [NotMapped]
@@ -324,6 +329,13 @@ namespace Pims.Dal.Entities
         [NotMapped]
         [DataMemberAttribute]
         public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The baseline integrity is the net proceed variance since the last project report.
+        /// This is not stored in the DB but may be returned as a calculated value.
+        /// </summary>
+        [NotMapped]
+        public decimal? BaselineIntegrity { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The sales proceeds

@@ -87,6 +87,10 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.Status.Workflows.Any(w => filter.Workflows.Contains(w.Workflow.Code)));
             }
 
+            if (filter.ReportId.HasValue)
+            {
+                query = query.Include(p => p.Snapshots);
+            }
             // Only admins can view all agency projects.
             if (!isAdmin)
             {

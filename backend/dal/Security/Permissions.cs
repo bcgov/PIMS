@@ -64,6 +64,12 @@ namespace Pims.Dal.Security
         ProjectEdit = 32,
 
         [Display(GroupName = "project", Name = "project-delete", Description = "Can delete projects.")]
-        ProjectDelete = 33
+        ProjectDelete = 33,
+
+        [Display(GroupName = "project", Name = "reports-view", Description = "Can view project reports.")]
+        ReportsView = 34,
+
+        [Display(GroupName = "project", Name = "reports-spl", Description = "Can view/modify/generated project spl reports.")]
+        ReportsSpl = 35
     }
 }
