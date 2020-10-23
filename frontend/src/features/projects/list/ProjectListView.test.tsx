@@ -140,15 +140,15 @@ describe('Project list view', () => {
       items: [],
     });
 
-    const { queryByText, getByTitle } = render(
+    const { queryByText, queryByTitle } = render(
       <Provider store={store}>
         <Router history={history}>
           <ProjectListView />
         </Router>
       </Provider>,
     );
-    expect(getByTitle('Export Generic Report')).not.toBeInTheDOM();
-    expect(getByTitle('Export CSV')).not.toBeInTheDOM();
+    expect(queryByTitle('Export Generic Report')).not.toBeInTheDOM();
+    expect(queryByTitle('Export CSV')).not.toBeInTheDOM();
     expect(queryByText('SPL Report')).not.toBeInTheDOM();
   });
 });
