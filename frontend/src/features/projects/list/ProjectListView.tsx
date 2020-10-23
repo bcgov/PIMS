@@ -12,7 +12,7 @@ import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../apiService';
-import { FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col } from 'react-bootstrap';
@@ -26,6 +26,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import queryString from 'query-string';
 import download from 'utils/download';
 import { mapLookupCode, mapStatuses } from 'utils';
+import styled from 'styled-components';
 
 interface IProjectFilterState {
   name?: string;
@@ -43,17 +44,22 @@ const initialValues = {
 const getProjectReportUrl = (filter: IProjectFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
 
-const getProjectFinancialReportUrl = (filter: IProjectFilter) =>
+export const getProjectFinancialReportUrl = (filter?: IProjectFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/projects/surplus/properties/list?${
     filter ? queryString.stringify(filter) : ''
   }`;
+
+const FileIcon = styled(Button)`
+  background-color: white !important;
+  color: #003366 !important;
+`;
 
 const initialQuery: IProjectFilter = {
   page: 1,
   quantity: 10,
 };
 
-const getServerQuery = (state: {
+export const getServerQuery = (state: {
   pageIndex: number;
   pageSize: number;
   filter: IProjectFilterState;
@@ -292,15 +298,21 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           />
         )}
         <Container fluid className="TableToolbar">
-          <h3 className="mr-auto">{title}</h3>
-          <Button className="mr-2" onClick={() => fetch('excel', 'generic')}>
-            Export Generic Report
-          </Button>
-          <Button className="mr-2" onClick={() => fetch('csv', 'generic')}>
-            Export CSV
-          </Button>
-          {keycloak.hasClaim(Claims.ADMIN_PROJECTS) && (
-            <Button onClick={() => fetch('excel', 'spl')}>Export SPL Report</Button>
+          <h3 className="mr-4">{title}</h3>
+          {keycloak.hasClaim(Claims.REPORTS_SPL) && (
+            <Button className="mr-auto" onClick={() => history.push('/splReports')}>
+              SPL Report
+            </Button>
+          )}
+          {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
+            <>
+              <FileIcon className="mr-1 p-0" onClick={() => fetch('excel', 'generic')}>
+                <FaFileExcel size={36} />
+              </FileIcon>
+              <FileIcon className="mr-1 p-0" onClick={() => fetch('csv', 'generic')}>
+                <FaFileAlt size={36} />
+              </FileIcon>
+            </>
           )}
         </Container>
         <Table<IProject>

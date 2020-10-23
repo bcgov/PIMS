@@ -178,3 +178,11 @@ export const formatDateFiscal = (date: string | undefined) => {
         .format('YYYY')}/${moment(date).format('YYYY')}`
     : '';
 };
+
+/**
+ * Get the current date time in the UTC timezone. This allows the frontend to create timestamps that are compatible with timestamps created by the API.
+ */
+export const generateUtcNowDateTime = () =>
+  moment(new Date())
+    .utc()
+    .format('YYYY-MM-DDTHH:mm:ss.SSSSSSS');

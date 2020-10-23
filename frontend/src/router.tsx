@@ -20,6 +20,7 @@ import { ProjectListView, ProjectApprovalRequestListView } from 'features/projec
 import { LogoutPage } from 'features/account/Logout';
 import { ProjectRouter } from 'features/projects/common';
 import { ProjectDisposeView } from 'features/projects/dispose';
+import SplReportContainer from 'features/splReports/containers/SplReportContainer';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -147,6 +148,14 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
         title={getTitle('Edit User')}
+      />
+      <AppRoute
+        protected
+        path="/splReports"
+        component={SplReportContainer}
+        layout={AuthLayout}
+        claim={Claims.REPORTS_SPL}
+        title={getTitle('Dispose Property')}
       />
       <AppRoute title="*" path="*" component={() => <Redirect to="/page-not-found" />} />
     </Switch>
