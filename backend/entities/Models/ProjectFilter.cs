@@ -60,6 +60,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - An array of workflow [SUBMIT-DISPOSAL, ASSESS-DISPOSAL, ASSESS-EXEMPTION, ERP, SPL].
         /// </summary>
         public string[] Workflows { get; set; }
+
+        /// <summary>
+        /// get/set - The spl project report that should be used to populate report data.
+        /// </summary>
+        public int? ReportId { get; set; }
         #endregion
 
         #region Constructors
@@ -87,6 +92,7 @@ namespace Pims.Dal.Entities.Models
             this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
             this.Workflows = filter.GetStringArrayValue(nameof(this.Workflows));
+            this.ReportId = filter.GetIntNullValue(nameof(this.ReportId));
         }
         #endregion
 

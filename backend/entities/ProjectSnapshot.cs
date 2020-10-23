@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pims.Dal.Entities
 {
@@ -23,6 +24,11 @@ namespace Pims.Dal.Entities
         /// </summary>
         public Project Project { get; set; }
 
+        /// <summary>
+        /// get/set - The date that this snapshot was taken.
+        /// </summary>
+        public DateTime SnapshotOn { get; set; }
+
         #region Financials
         /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
@@ -40,6 +46,11 @@ namespace Pims.Dal.Entities
         public decimal Assessed { get; set; }
 
         /// <summary>
+        /// get/set - The appraised value which is the sum of the properties.
+        /// </summary>
+        public decimal Appraised { get; set; }
+
+        /// <summary>
         /// get/set - The sales cost.
         /// </summary>
         public decimal? SalesCost { get; set; } // TODO: Move to metadata property.
@@ -48,6 +59,11 @@ namespace Pims.Dal.Entities
         /// get/set - The net proceeds
         /// </summary>
         public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
+
+        /// <summary>
+        /// get/set - The net proceed baseline integrity
+        /// </summary>
+        public decimal? BaselineIntegrity { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.

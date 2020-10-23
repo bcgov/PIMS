@@ -43,6 +43,8 @@ namespace Pims.Dal
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectNumber> ProjectNumbers { get; set; }
         public DbSet<ProjectSnapshot> ProjectSnapshots { get; set; }
+
+        public DbSet<ProjectReport> ProjectReports { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
         public DbSet<ProjectRisk> ProjectRisks { get; set; }
         public DbSet<ProjectProperty> ProjectProperties { get; set; }
