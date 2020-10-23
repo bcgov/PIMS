@@ -231,7 +231,6 @@ export const getPropertyColumns = ({
       align: 'left',
       clickable: !editableZoning,
       Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
-      Footer: () => <span>Sum</span>,
     },
     {
       Header: 'Netbook Value',
@@ -239,13 +238,6 @@ export const getPropertyColumns = ({
       Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
       minWidth: 145,
       align: 'left',
-      Footer: ({ properties }: { properties: IProperty[] }) => (
-        <span>
-          {useProjectFinancialValues(project, editableFinancials)
-            ? formatMoney(project.netBook)
-            : sumFinancialRows(properties, 'netBook')}
-        </span>
-      ),
     },
     {
       Header: 'Estimated Value',
@@ -253,13 +245,6 @@ export const getPropertyColumns = ({
       Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
       minWidth: 145,
       align: 'left',
-      Footer: ({ properties }: { properties: IProperty[] }) => (
-        <span>
-          {useProjectFinancialValues(project, editableFinancials)
-            ? formatMoney(project.estimated)
-            : sumFinancialRows(properties, 'estimated')}
-        </span>
-      ),
     },
     {
       Header: 'Assessed Value',
@@ -267,13 +252,6 @@ export const getPropertyColumns = ({
       Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
       minWidth: 145,
       align: 'left',
-      Footer: ({ properties }: { properties: IProperty[] }) => (
-        <span>
-          {useProjectFinancialValues(project, editableFinancials)
-            ? formatMoney(project.assessed)
-            : sumFinancialRows(properties, 'assessed')}
-        </span>
-      ),
     },
     {
       Header: 'Type',

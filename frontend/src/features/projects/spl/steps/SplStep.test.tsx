@@ -214,6 +214,9 @@ describe('SPL Approval Step', () => {
       project.offerAmount = 12345;
       project.isContractConditional = true;
       project.marketedOn = new Date();
+      project.assessed = 123;
+      project.estimated = 123;
+      project.netBook = 123;
 
       const component = render(getSplStep(getStore(project)));
       const disposedButton = component.getByText(/Change Status to Disposed Externally/);
@@ -290,6 +293,9 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlace;
+      project.assessed = 123;
+      project.estimated = 123;
+      project.netBook = 123;
 
       const component = render(getSplStep(getStore(project)));
       const disposeButton = component.getByText(/Change Status to Disposed Externally/);

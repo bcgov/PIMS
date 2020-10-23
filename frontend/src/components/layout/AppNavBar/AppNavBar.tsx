@@ -79,7 +79,8 @@ function PropertyDropdown() {
     <NavDropdown
       className={
         history.location.pathname.includes('submitProperty') ||
-        history.location.pathname.includes('properties')
+        (history.location.pathname.includes('properties') &&
+          !history.location.pathname.includes('projects'))
           ? 'active'
           : 'idle'
       }
@@ -138,7 +139,12 @@ function ViewProjectApprovalRequests() {
   const history = useHistory();
   return keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
     <Nav.Link
-      className={history.location.pathname.includes('projects/approval') ? 'active' : 'idle'}
+      className={
+        history.location.pathname.includes('projects/approval') ||
+        history.location.pathname.includes('assess')
+          ? 'active'
+          : 'idle'
+      }
       onClick={() => history.push('/projects/approval/requests')}
     >
       Approval Requests
