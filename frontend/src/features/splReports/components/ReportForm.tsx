@@ -13,15 +13,16 @@ interface IReportFormProps {
  */
 const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, snapshots }) => {
   const data: ISnapshot[] = snapshots ?? [];
-  return currentReport ? (
+  return (
     <Table
       name="spl report table"
+      noRowsMessage="No Reports Available"
       columns={columns}
       data={data}
       loading={snapshots === undefined}
       hideToolbar
     ></Table>
-  ) : null;
+  );
 };
 
 export default ReportForm;

@@ -70,11 +70,7 @@ const ReportListitem: React.FunctionComponent<IReportListitemProps> = ({
           {getName(report)}
         </Report>
         <FlexCol md={3}>
-          <CheckBox
-            type="checkbox"
-            checked={report.isFinal}
-            onChange={() => onFinal(report)}
-          ></CheckBox>
+          <CheckBox type="checkbox" checked={report.isFinal} disabled={true}></CheckBox>
           <ElipsisControls {...{ onOpen, onFinal, onDelete, report }} />
         </FlexCol>
       </ListItemRow>

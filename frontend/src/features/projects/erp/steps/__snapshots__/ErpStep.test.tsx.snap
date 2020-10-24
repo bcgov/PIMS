@@ -43,7 +43,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzqNqU dZqUFU"
+      className="sc-fzqARJ gPmckb"
     >
       Approved for ERP
     </div>
@@ -1433,7 +1433,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzqNqU dZqUFU"
+      className="sc-fzqARJ gPmckb"
     >
       Approved for ERP
     </div>
@@ -2102,7 +2102,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-fzpmMD itvViV"
+            className="sc-fzoXWK faKhDS"
           >
             OR
           </div>
@@ -2158,7 +2158,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-fzpmMD itvViV"
+                className="sc-fzoXWK faKhDS"
               >
                 OR
               </div>

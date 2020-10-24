@@ -4,9 +4,6 @@
   .side-bar.side-bar-show {
     transform: translateX(0);
     width: 300px;
-    > span {
-      display: block;
-    }
   }
   div.active.row {
     background-color: $accent-color;
@@ -28,7 +25,7 @@
     top: $header-height + $navbar-height;
     left: 0;
     overflow-x: hidden;
-    background-color: $form-background-color;
+    background-color: $table-header-color;
     display: grid;
 
     > button {
@@ -42,9 +39,13 @@
     :focus {
       outline: 1px dotted;
     }
-    .backdrop {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
+  }
+
+  .add-spl {
+    background-color: $table-header-color;
+    height: 50px;
+    width: 275px;
+    padding: 0.5rem;
   }
 
   .tbody > .tr-wrapper:nth-child(even) {
@@ -60,6 +61,7 @@
   }
 
   .form-group {
+    height: 2.5rem;
     display: flex;
     align-items: flex-end;
     margin-bottom: 0;
