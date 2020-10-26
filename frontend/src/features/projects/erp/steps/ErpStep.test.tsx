@@ -231,6 +231,9 @@ describe('ERP Approval Step', () => {
     it('displays modal when proceed to SPL button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.clearanceNotificationSentOn = new Date();
+      project.assessed = 1;
+      project.netBook = 2;
+      project.estimated = 3;
 
       const component = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = component.getByText(/Proceed to SPL/);
@@ -243,6 +246,9 @@ describe('ERP Approval Step', () => {
     });
     it('displays modal when not in SPL button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
+      project.assessed = 1;
+      project.netBook = 2;
+      project.estimated = 3;
       project.clearanceNotificationSentOn = new Date();
 
       const component = render(getApprovalStep(getStore(project)));

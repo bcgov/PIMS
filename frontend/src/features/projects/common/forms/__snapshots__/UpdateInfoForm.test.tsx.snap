@@ -165,7 +165,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           <label
             className="form-label col-form-label col-md-4"
           >
-            Assesed Value 
+            Assessed Value 
             <span
               className="required"
             >
