@@ -25,7 +25,7 @@ const ProjectFinancialTable = () => {
         <Col md={4}>
           <Row>
             <Form.Label column md={4}>
-              Assesed Value <span className="required">*</span>
+              Assessed Value <span className="required">*</span>
             </Form.Label>
             <FastCurrencyInput field="assessed" formikProps={context} />
           </Row>

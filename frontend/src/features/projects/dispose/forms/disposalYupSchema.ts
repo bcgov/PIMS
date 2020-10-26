@@ -17,6 +17,9 @@ export const DocumentationStepSchema = Yup.object().shape({
 });
 
 export const UpdateInfoStepYupSchema = Yup.object().shape({
+  netBook: Yup.number().required('Required'),
+  estimated: Yup.number().required('Required'),
+  assessed: Yup.number().required('Required'),
   properties: Yup.array().of(
     Yup.object().shape({
       classificationId: Yup.number().test(
@@ -25,16 +28,6 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
         (val: any) =>
           val === CLASSIFICATIONS.SurplusActive || val === CLASSIFICATIONS.SurplusEncumbered,
       ),
-      netBook: Yup.number()
-        .required()
-        .min(0.01, 'Minimum value is $1')
-        .max(1000000000, 'Maximum value is $1,000,000,000')
-        .required('Required'),
-      estimated: Yup.number()
-        .required()
-        .min(0.01, 'Minimum value is $1')
-        .max(1000000000, 'Maximum value is $1,000,000,000')
-        .required('Required'),
     }),
   ),
 });

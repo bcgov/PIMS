@@ -291,7 +291,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assesed Value 
+              Assessed Value 
               <span
                 className="required"
               >
@@ -1126,7 +1126,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assesed Value 
+              Assessed Value 
               <span
                 className="required"
               >
@@ -1961,7 +1961,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assesed Value 
+              Assessed Value 
               <span
                 className="required"
               >
