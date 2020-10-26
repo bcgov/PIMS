@@ -13,7 +13,6 @@ import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
-import { fillInput } from 'utils/testUtils';
 import { CLASSIFICATIONS } from 'constants/classifications';
 import { UpdateInfoStepYupSchema } from '../../dispose';
 
@@ -133,17 +132,5 @@ describe('Update Info Form', () => {
       });
     });
     expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
-  });
-
-  it('displays financial validation errors correctly', async () => {
-    const { getAllByText, container } = render(getUpdateInfoForm());
-    const form = container.querySelector('form');
-    await fillInput(container, 'properties.0.netBook', 0);
-    await fillInput(container, 'properties.0.estimated', 0);
-    await wait(() => {
-      fireEvent.submit(form!);
-    });
-    const financialErrors = getAllByText('Minimum value is $1');
-    expect(financialErrors).toHaveLength(2);
   });
 });
