@@ -741,7 +741,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     }
                   }
                 >
-                  Net Book
+                  Net Book Value
                 </div>
                 <div
                   className="th"

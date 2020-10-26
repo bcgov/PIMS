@@ -130,6 +130,12 @@ const SurplusPropertyListForm = ({
       </Form.Row>
       <TasksForm tasks={contractTasks} />
       <ProjectNotes outerClassName="col-md-12" disabled={true} />
+      <ProjectNotes
+        outerClassName="col-md-12"
+        field="appraisedNote"
+        label="Appraised Notes"
+        disabled={isReadOnly}
+      />
       <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />
       <PrivateNotes outerClassName="col-md-12" disabled={isReadOnly} />
       <Form.Row>

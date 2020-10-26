@@ -25,6 +25,7 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
         title=""
       />
       <ProjectNotes disabled={true} />
+      <ProjectNotes field="appraisedNote" label="Appraised Notes" disabled={isReadOnly} />
       <PublicNotes disabled={isReadOnly} />
       <PrivateNotes disabled={isReadOnly} />
     </Container>

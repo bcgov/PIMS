@@ -373,14 +373,6 @@ namespace Pims.Dal.Helpers.Extensions
             var year = date.Year;
             var fiscalYear = date.GetFiscalYear(); // TODO: Unclear if this should be 'Reported' or 'Actual', or current year.  Using the most recent fiscal year based on financial data in project.
 
-            // Sum up parcel values for the project year.
-            // Sum up building values for the project year.
-            project.NetBook = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
-            project.NetBook += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.NetBook).Sum(e => e.Value);
-            project.Estimated = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
-            project.Estimated += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Fiscals).Where(e => e.FiscalYear == fiscalYear && e.Key == Entity.FiscalKeys.Estimated).Sum(e => e.Value);
-            project.Assessed = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).SelectMany(p => p.Parcel.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
-            project.Assessed += project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).SelectMany(p => p.Building.Evaluations).Where(e => e.Date.Year == year && e.Key == Entity.EvaluationKeys.Assessed).Sum(e => e.Value);
         }
 
         /// <summary>
