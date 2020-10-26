@@ -119,6 +119,11 @@ namespace Pims.Api.Areas.Project.Models.Search
         public decimal Assessed { get; set; }
 
         /// <summary>
+        /// get/set - The appraised value which is the sum of the properties.
+        /// </summary>
+        public decimal Appraised { get; set; }
+
+        /// <summary>
         /// get/set - Project properties
         /// </summary>
         public IEnumerable<ProjectPropertyModel> Properties { get; set; } = new List<ProjectPropertyModel>();

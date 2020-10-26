@@ -58,6 +58,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       setCurrentReport(data[0]);
     } else if (data.length === 0) {
       setShowSidebar(true);
+      setSnapshots([]);
     }
   }, [getProjectReports, id]);
 
@@ -88,6 +89,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     }
   };
   const refreshSnapshots = async (report: IReport) => {
+    setSnapshots(undefined);
     const data = await refreshProjectReportSnapshots(report);
     const now = generateUtcNowDateTime();
     setCurrentReport({

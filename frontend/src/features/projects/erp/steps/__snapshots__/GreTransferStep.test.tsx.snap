@@ -41,7 +41,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoyTs dcehPm"
+      className="sc-fzqNqU dZqUFU"
     >
       Transferred within the Greater Revenue Entity
     </div>
@@ -821,9 +821,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                <span>
-                  Sum
-                </span>
+                 
               </div>
               <div
                 className="th"
@@ -842,9 +840,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                <span>
-                  $1
-                </span>
+                 
               </div>
               <div
                 className="th"
@@ -863,9 +859,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                <span>
-                  $0
-                </span>
+                 
               </div>
               <div
                 className="th"
@@ -884,9 +878,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                <span>
-                  $1
-                </span>
+                 
               </div>
               <div
                 className="th"

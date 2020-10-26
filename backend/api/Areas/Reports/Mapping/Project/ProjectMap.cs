@@ -32,6 +32,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.PublicNote, src => src.PublicNote)
                 .Map(dest => dest.PrivateNote, src => src.PrivateNote)
+                .Map(dest => dest.AppraisedNote, src => src.AppraisedNote)
             #endregion
 
             #region Exemption
@@ -43,6 +44,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.Estimated, src => src.Estimated)
                 .Map(dest => dest.Assessed, src => src.Assessed)
+                .Map(dest => dest.Appraised, src => src.Appraised)
                 .Map(dest => dest.SalesCost, src => src.SalesCost)
                 .Map(dest => dest.NetProceeds, src => src.NetProceeds)
                 .Map(dest => dest.ProgramCost, src => src.ProgramCost)

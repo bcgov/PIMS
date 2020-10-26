@@ -448,16 +448,6 @@ namespace Pims.Dal.Test.Services
 
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1, project.Agency);
-            var buildings = init.CreateBuildings(parcel, 2, 5);
-            init.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
-            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.Estimated, 5);
-            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.NetBook, 5);
-            init.CreateEvaluations(buildings.Next(0), new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
-            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.Estimated, 5);
-            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.NetBook, 5);
-            project.AddProperty(parcel);
-            buildings.ForEach(b => project.AddProperty(b));
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
@@ -465,6 +455,9 @@ namespace Pims.Dal.Test.Services
             var queueService = helper.GetService<Mock<IPimsService>>();
             queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+            project.NetBook = 5;
+            project.Assessed = 5;
+            project.Estimated = 5;
 
             // Act
             var result = await service.AddAsync(project);
@@ -472,9 +465,9 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<Entity.Project>(result);
-            project.Estimated.Should().Be(10);
-            project.NetBook.Should().Be(10);
-            project.Assessed.Should().Be(10);
+            project.Estimated.Should().Be(5);
+            project.NetBook.Should().Be(5);
+            project.Assessed.Should().Be(5);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
@@ -882,17 +875,6 @@ namespace Pims.Dal.Test.Services
 
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1, project.Agency);
-            var buildings = init.CreateBuildings(parcel, 2, 5);
-            init.SaveChanges();
-            init.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
-            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.Estimated, 5);
-            init.CreateFiscals(parcel, 2015, 6, Entity.FiscalKeys.NetBook, 5);
-            init.CreateEvaluations(buildings.Next(0), new DateTime(2015, 1, 1), 6, Entity.EvaluationKeys.Assessed, 5);
-            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.Estimated, 5);
-            init.CreateFiscals(buildings.Next(0), 2015, 6, Entity.FiscalKeys.NetBook, 5);
-            project.AddProperty(parcel);
-            buildings.ForEach(b => project.AddProperty(b));
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -901,12 +883,11 @@ namespace Pims.Dal.Test.Services
             var queueService = helper.GetService<Mock<IPimsService>>();
             queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
-
+            project.Estimated = 15;
+            project.Assessed = 15;
+            project.NetBook = 15;
             // Act
             var projectToUpdate = service.Get(project.Id);
-            parcel.Evaluations.Where(e => e.Date.Year == project.ReportedFiscalYear).Single().Value = 10;
-            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.Estimated && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
-            parcel.Fiscals.Where(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear == project.ReportedFiscalYear).Single().Value = 10;
             await service.UpdateAsync(projectToUpdate);
             var result = service.Get(projectToUpdate.Id);
 

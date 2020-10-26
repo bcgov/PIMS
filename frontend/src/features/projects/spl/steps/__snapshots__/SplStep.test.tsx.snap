@@ -43,7 +43,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>
@@ -1447,7 +1447,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>
@@ -1832,6 +1832,28 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 value="my notes"
+              />
+            </div>
+          </div>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-appraisedNote"
+              >
+                Appraised Notes
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                disabled={true}
+                id="input-appraisedNote"
+                name="appraisedNote"
+                onBlur={[Function]}
+                onChange={[Function]}
               />
             </div>
           </div>

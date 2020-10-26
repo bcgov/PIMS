@@ -1,6 +1,6 @@
 import { ISnapshot } from './interfaces';
 import { CellProps } from 'react-table';
-import { formatMoney } from 'utils';
+import { formatMoney, formatFiscalYear } from 'utils';
 
 const howManyColumns = 13;
 const totalWidthPercent = 100; // how wide the table should be; e.g. 100%
@@ -33,6 +33,9 @@ export const columns: any[] = [
     responsive: false,
     width: 50,
     minWidth: 50,
+    Cell: (props: CellProps<ISnapshot>) => {
+      return formatFiscalYear(props?.row?.original?.project?.actualFiscalYear);
+    },
   },
   {
     Header: 'Agency',
@@ -53,7 +56,7 @@ export const columns: any[] = [
   {
     Header: 'CMV',
     accessor: 'estimated',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -64,7 +67,7 @@ export const columns: any[] = [
   {
     Header: 'NBV',
     accessor: 'netBook',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -75,7 +78,7 @@ export const columns: any[] = [
   {
     Header: 'Sales Cost',
     accessor: 'salesCost',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -86,7 +89,7 @@ export const columns: any[] = [
   {
     Header: 'Program Cost',
     accessor: 'programCost',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -97,7 +100,7 @@ export const columns: any[] = [
   {
     Header: 'Gain Loss',
     accessor: 'gainLoss',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -108,7 +111,7 @@ export const columns: any[] = [
   {
     Header: 'OCG Fin. Stmts.',
     accessor: 'ocgFinancialStatements',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -119,7 +122,7 @@ export const columns: any[] = [
   {
     Header: 'Interest Comp.',
     accessor: 'interestComponent',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -130,7 +133,7 @@ export const columns: any[] = [
   {
     Header: 'Net Proceeds',
     accessor: 'netProceeds',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
@@ -141,7 +144,7 @@ export const columns: any[] = [
   {
     Header: 'Baseline Integrity',
     accessor: 'baselineIntegrity',
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,

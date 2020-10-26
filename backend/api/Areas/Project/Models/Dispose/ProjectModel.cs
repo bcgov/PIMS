@@ -105,6 +105,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string PrivateNote { get; set; }
 
         /// <summary>
+        /// get/set - Notes for appraisal value.
+        /// </summary>
+        public string AppraisedNote { get; set; }
+
+        /// <summary>
         /// get/set - Note summerizing offers received.
         /// </summary>
         public string OffersNote { get; set; }
@@ -265,12 +270,17 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal? CloseOutNetbook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value which is the sum of the properties.
+        /// get/set - The estimated value.
         /// </summary>
         public decimal Estimated { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value which is the sum of the properties.
+        /// get/set - The appraised value.
+        /// </summary>
+        public decimal Appraised { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value.
         /// </summary>
         public decimal Assessed { get; set; }
 
