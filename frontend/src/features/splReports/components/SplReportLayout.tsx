@@ -2,11 +2,11 @@ import * as React from 'react';
 import './SplReportLayout.scss';
 import ReportList from './ReportList';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import Backdrop from './Backdrop';
 import classNames from 'classnames';
 import { IReport, ISnapshot } from '../interfaces';
 import ReportControls from './ReportControls';
 import ReportForm from './ReportForm';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface ISplReportLayoutProps {
   showSidebar: boolean;
@@ -45,21 +45,23 @@ const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
 }) => {
   return (
     <div className="spl-reports">
-      <div className={classNames('side-bar', showSidebar ? 'side-bar-show open' : 'close')}>
-        <span>
-          <ReportList
-            {...{ onOpen, onFinal, onDelete, reports, onAdd, currentReport }}
-          ></ReportList>
-        </span>
-        <button onClick={() => setShowSidebar(!showSidebar)}>
-          {showSidebar ? <FaChevronLeft></FaChevronLeft> : <FaChevronRight></FaChevronRight>}
-        </button>
-      </div>
+      <ClickAwayListener onClickAway={() => setShowSidebar(false)}>
+        <div className={classNames('side-bar', showSidebar ? 'side-bar-show open' : 'close')}>
+          <span>
+            <ReportList
+              {...{ onOpen, onFinal, onDelete, reports, onAdd, currentReport, setShowSidebar }}
+            ></ReportList>
+          </span>
+          <button onClick={() => setShowSidebar(!showSidebar)}>
+            {showSidebar ? <FaChevronLeft></FaChevronLeft> : <FaChevronRight></FaChevronRight>}
+          </button>
+        </div>
+      </ClickAwayListener>
       <div className="ml-4 report-content">
-        <Backdrop show={showSidebar} onClick={() => setShowSidebar(false)} />
         <ReportControls
           reports={reports}
           currentReport={currentReport}
+          onAdd={onAdd}
           onSave={onSave}
           onRefresh={onRefresh}
           onFromChange={onFromChange}

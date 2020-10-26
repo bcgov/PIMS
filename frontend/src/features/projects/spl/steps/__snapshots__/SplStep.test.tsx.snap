@@ -43,7 +43,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>
@@ -1447,7 +1447,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>

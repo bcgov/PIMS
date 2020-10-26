@@ -42,6 +42,10 @@ $contentheading-height: 60px;
 
   .ScrollContainer {
     padding: 1rem 2rem;
+    max-height: calc(
+      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
+    );
+    overflow-y: scroll;
 
     table {
       background-color: #fff;
