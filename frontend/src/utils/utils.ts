@@ -157,6 +157,13 @@ export const formatDate = (date?: string | Date) => {
 export const formatDateTime = (date: string | undefined) => {
   return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
 };
+
+export const formatFiscalYear = (year: string | number | undefined): string => {
+  if (year === undefined) return '';
+  const fiscalYear = +year;
+  const previousFiscalYear = fiscalYear - 1;
+  return `${previousFiscalYear.toString().slice(-2)}/${fiscalYear.toString().slice(-2)}`;
+};
 /**
  * Format the passed string date assuming the date was recorded in UTC (as is the case with the pims API server).
  * Returns a date formatted for display in the current time zone of the user.

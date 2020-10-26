@@ -35,7 +35,7 @@ const ElipsisControls: React.FunctionComponent<IElipsisControlsProps> = ({
         Open
       </Dropdown.Item>
       <Dropdown.Item eventKey="2" onClick={() => onFinal(report)}>
-        Mark as Final
+        {report.isFinal ? 'Remove Final' : 'Mark as Final'}
       </Dropdown.Item>
       <Dropdown.Item className="danger" eventKey="3" onClick={() => onDelete(report)}>
         Delete

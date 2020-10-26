@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Formik, Form } from 'formik';
 import { Input, Button, Check, SelectOption } from 'components/common/form';
-import ResetButton from 'components/common/form/ResetButton';
-import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
+import { FaFileExcel, FaFileAlt, FaSyncAlt } from 'react-icons/fa';
 import { Row, Form as BSForm } from 'react-bootstrap';
 import { IReport } from '../interfaces';
 import _ from 'lodash';
 import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
 import styled from 'styled-components';
 import { Prompt } from 'react-router-dom';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import AddReportControl from './AddReportControl';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -17,6 +18,8 @@ interface IReportControlsProps {
   reports: IReport[];
   /** the action to take if a report is saved */
   onSave: (report: IReport) => void;
+  /** Add a new SPL report */
+  onAdd: (report: IReport) => void;
   /** the action to take if a report's 'To' date is updated to the current date/time */
   onRefresh: (report: IReport) => void;
   /** the action to take if a report's 'From' date is updated to point to a different, older spl report. */
@@ -74,6 +77,7 @@ const reportsToOptions = (reports: IReport[]) => {
 const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
   reports,
   currentReport,
+  onAdd,
   onSave,
   onRefresh,
   onFromChange,
@@ -83,71 +87,94 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
   const reportOptions = reportsToOptions(otherReports);
   let reportOn = formatApiDateTime(currentReport?.to);
   const fromId = _.find(reports, { to: currentReport?.from })?.id;
-  return currentReport ? (
-    <Formik
-      initialValues={{ ...defaultReport, ...currentReport }}
-      onSubmit={values => onSave(values)}
-      enableReinitialize
-    >
-      {({ dirty, values }) => (
-        <>
-          <Form className="report-form">
-            <Row noGutters className="d-flex align-items-center">
-              {reportOptions.length > 1 ? (
+  return (
+    <>
+      <Formik
+        initialValues={{ ...defaultReport, ...currentReport }}
+        onSubmit={values => onSave(values)}
+        enableReinitialize
+      >
+        {({ dirty, values, submitForm, isSubmitting, setSubmitting }) => (
+          <>
+            <Form className="report-form">
+              <Row noGutters className="d-flex align-items-center">
+                <AddReportControl onAdd={onAdd} />
+                {reportOptions.length > 1 ? (
+                  <BSForm.Group className="ml-2">
+                    <BSForm.Control
+                      label="From: "
+                      options={reportOptions}
+                      as="select"
+                      value={fromId}
+                      disabled={values.isFinal}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        onFromChange(+e.target.value)
+                      }
+                    >
+                      {reportOptions.map((option: SelectOption) => (
+                        <option key={option.value} value={option.value} className="option">
+                          {option.label}
+                        </option>
+                      ))}
+                    </BSForm.Control>
+                  </BSForm.Group>
+                ) : (
+                  <BSForm.Group className="ml-2">
+                    <BSForm.Label>From: N/A</BSForm.Label>
+                  </BSForm.Group>
+                )}
                 <BSForm.Group>
-                  <BSForm.Control
-                    label="From: "
-                    options={reportOptions}
-                    as="select"
-                    value={fromId}
-                    disabled={values.isFinal}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      onFromChange(+e.target.value)
-                    }
-                  >
-                    {reportOptions.map((option: SelectOption) => (
-                      <option key={option.value} value={option.value} className="option">
-                        {option.label}
-                      </option>
-                    ))}
-                  </BSForm.Control>
+                  <BSForm.Label>To:</BSForm.Label>
+                  <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
                 </BSForm.Group>
-              ) : (
-                <BSForm.Group>
-                  <BSForm.Label>From: N/A</BSForm.Label>
-                </BSForm.Group>
-              )}
-              <BSForm.Group className="h-75">
-                <BSForm.Label>To:</BSForm.Label>
-                <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
-              </BSForm.Group>
-              <ResetButton
-                disabled={values.isFinal}
-                onClick={() => onRefresh(currentReport)}
-                className="mr-3"
-              />
-              <Input label="Name:" field="name" disabled={values.isFinal} />
-              <Check label="Is Final:" field="isFinal" />
-              <Button className="h-75 mr-auto" type="submit" disabled={!dirty}>
-                Save
-              </Button>
-              <FileIcon>
-                <FaFileExcel size={36} onClick={() => onExport(currentReport, 'excel')} />
-              </FileIcon>
-              <FileIcon>
-                <FaFileAlt size={36} onClick={() => onExport(currentReport, 'csv')} />
-              </FileIcon>
-            </Row>
-          </Form>
-          <Prompt
-            when={dirty}
-            message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
-          />
-        </>
-      )}
-    </Formik>
-  ) : (
-    <p>Please Create or Select a Report</p>
+                <TooltipWrapper
+                  toolTipId="spl-reports-regenerate-report"
+                  toolTip="Regenerate Report"
+                >
+                  <Button
+                    type="reset"
+                    variant="light"
+                    className="mr-3"
+                    icon={<FaSyncAlt size={20} />}
+                    onClick={() => currentReport && onRefresh(currentReport)}
+                  ></Button>
+                </TooltipWrapper>
+                <Input label="Name:" field="name" disabled={values.isFinal} />
+                <Check label="Is Final:" field="isFinal" />
+                <Button
+                  className="h-75 mr-auto"
+                  type="submit"
+                  disabled={!dirty}
+                  onClick={e => {
+                    e.preventDefault();
+                    setSubmitting(true);
+                    submitForm();
+                  }}
+                >
+                  Save
+                </Button>
+                <FileIcon>
+                  <FaFileExcel
+                    size={36}
+                    onClick={() => currentReport && onExport(currentReport, 'excel')}
+                  />
+                </FileIcon>
+                <FileIcon>
+                  <FaFileAlt
+                    size={36}
+                    onClick={() => currentReport && onExport(currentReport, 'csv')}
+                  />
+                </FileIcon>
+              </Row>
+            </Form>
+            <Prompt
+              when={dirty && !isSubmitting}
+              message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
+            />
+          </>
+        )}
+      </Formik>
+    </>
   );
 };
 
