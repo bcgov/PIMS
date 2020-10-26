@@ -54,13 +54,11 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
   const getReports = React.useCallback(async () => {
     const data = await getProjectReports();
     setReports(data);
-    if (data.length && !id) {
-      setCurrentReport(data[0]);
-    } else if (data.length === 0) {
+    if (data.length === 0) {
       setShowSidebar(true);
       setSnapshots([]);
     }
-  }, [getProjectReports, id]);
+  }, [getProjectReports]);
 
   useDeepCompareEffect(() => {
     getReports();

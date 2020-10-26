@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import _ from 'lodash';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 export const paramsToObject = (searchString: string) => {
   const params = new URLSearchParams(searchString);
@@ -33,16 +34,19 @@ export const useRouterReport = ({
   reports,
 }: RouterFilterProps) => {
   const history = useHistory();
-  const [originalSearch] = useState(history.location.search);
+  const [originalSearch, setOriginalSearch] = useState(history.location.search);
   const dispatch = useDispatch();
 
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
-  React.useEffect(() => {
+  useDeepCompareEffect(() => {
     if (reports?.length) {
       const filterFromParams = paramsToObject(originalSearch);
       if (filterFromParams.reportId) {
-        const report = _.find(reports, { id: filterFromParams.reportId });
-        report && setCurrentReport(report);
+        const report = _.find(reports, { id: +filterFromParams.reportId });
+        setCurrentReport(report ?? reports[0]);
+        setOriginalSearch('');
+      } else {
+        reports?.length && setCurrentReport(reports[0]);
       }
     }
   }, [originalSearch, reports, setCurrentReport]);

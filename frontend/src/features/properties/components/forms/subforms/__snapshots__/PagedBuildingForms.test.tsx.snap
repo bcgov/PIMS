@@ -601,6 +601,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   className="form-check"
                 >
                   <input
+                    checked={true}
                     className="form-check-input position-static"
                     defaultChecked={true}
                     disabled={true}
@@ -716,6 +717,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   className="col-md-10 form-check"
                 >
                   <input
+                    checked={false}
                     className="form-check-input position-static"
                     defaultChecked={false}
                     disabled={true}
