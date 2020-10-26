@@ -31,6 +31,7 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.Estimated, src => src.Estimated)
                 .Map(dest => dest.Assessed, src => src.Assessed)
+                .Map(dest => dest.Appraised, src => src.Appraised)
                 .Map(dest => dest.Properties, src => src.Properties)
                 .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
                 .Map(dest => dest.UpdatedBy,

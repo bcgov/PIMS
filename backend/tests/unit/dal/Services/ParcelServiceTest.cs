@@ -772,32 +772,6 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void Update_Parcel_UpdateProjectFinancials()
-        {
-            // Arrange
-            var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.AdminProjects).AddAgency(1);
-            var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1);
-            project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1);
-            var fiscal = init.CreateFiscal(parcel, 2020, Entity.FiscalKeys.NetBook, 10);
-            project.AddProperty(parcel);
-            init.SaveChanges();
-
-            var options = ControllerHelper.CreateDefaultPimsOptions();
-            var service = helper.CreateService<ParcelService>(user, options);
-
-            // Act
-            fiscal.Value = 15;
-            var result = service.Update(parcel);
-
-            // Assert
-            Assert.NotNull(result);
-            project.NetBook.Should().Be(15);
-        }
-
-        [Fact]
         public void Update_Parcel_LinkedToProject_NotAuthorized()
         {
             // Arrange

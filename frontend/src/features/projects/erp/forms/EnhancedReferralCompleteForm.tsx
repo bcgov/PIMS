@@ -154,6 +154,12 @@ const EnhancedReferralCompleteForm = ({
         )}
       </Form.Row>
       <ProjectNotes outerClassName="col-md-12" disabled={true} />
+      <ProjectNotes
+        outerClassName="col-md-12"
+        field="appraisedNote"
+        label="Appraised Notes"
+        disabled={isReadOnly}
+      />
       <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />
       <PrivateNotes outerClassName="col-md-12" disabled={isReadOnly} />
     </Container>

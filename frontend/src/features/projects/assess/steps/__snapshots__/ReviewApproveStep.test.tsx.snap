@@ -174,6 +174,147 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
       <div
         className="form-row"
+        style={
+          Object {
+            "alignItems": "unset",
+          }
+        }
+      >
+        <h3
+          className="col-md-8"
+        >
+          Project Totals
+        </h3>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="col-md-4"
+        >
+          <div
+            className="row"
+          >
+            <label
+              className="form-label col-form-label col-md-4"
+            >
+              Net Book Value 
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <div
+              className="fast-currency-input form-group"
+            >
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  name="netBook"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <label
+              className="form-label col-form-label col-md-4"
+            >
+              Estimated Market Value 
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <div
+              className="fast-currency-input form-group"
+            >
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  name="estimated"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="col-md-4"
+        >
+          <div
+            className="row"
+          >
+            <label
+              className="form-label col-form-label col-md-4"
+            >
+              Assesed Value 
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <div
+              className="fast-currency-input form-group"
+            >
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  name="assessed"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <label
+              className="form-label col-form-label col-md-4"
+            >
+              Appraised Value
+            </label>
+            <div
+              className="fast-currency-input form-group"
+            >
+              <div
+                className="input-tooltip-wrapper"
+              >
+                <input
+                  className="form-control"
+                  name="appraised"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="$0"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-row"
       >
         <h6
           className="col-md-12"
@@ -828,9 +969,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     }
                   }
                 >
-                  <span>
-                    Sum
-                  </span>
+                   
                 </div>
                 <div
                   className="th"
@@ -849,9 +988,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     }
                   }
                 >
-                  <span>
-                    $223
-                  </span>
+                   
                 </div>
                 <div
                   className="th"
@@ -870,9 +1007,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     }
                   }
                 >
-                  <span>
-                    $123
-                  </span>
+                   
                 </div>
                 <div
                   className="th"
@@ -891,9 +1026,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     }
                   }
                 >
-                  <span>
-                    $123
-                  </span>
+                   
                 </div>
                 <div
                   className="th"
@@ -1002,33 +1135,62 @@ exports[`Review Approve Step renders correctly 1`] = `
     <div
       className="reviewRequired container-fluid"
     >
-      <h3>
-        Appraisal
-        <svg
-          className="tooltip-icon"
-          fill="currentColor"
-          height={14}
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          size={14}
-          stroke="currentColor"
-          strokeWidth="0"
-          style={
-            Object {
-              "color": undefined,
-            }
-          }
-          viewBox="0 0 512 512"
-          width={14}
-          xmlns="http://www.w3.org/2000/svg"
+      <div
+        className="row"
+      >
+        <div
+          className="col"
         >
-          <path
-            d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-          />
-        </svg>
-      </h3>
+          <h3>
+            Appraisal
+            <svg
+              className="tooltip-icon"
+              fill="currentColor"
+              height={14}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+              size={14}
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width={14}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+              />
+            </svg>
+          </h3>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 reviewRequired form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="input-appraisedNote"
+              >
+                Appraised Notes
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                id="input-appraisedNote"
+                name="appraisedNote"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div
       className="reviewRequired container-fluid"

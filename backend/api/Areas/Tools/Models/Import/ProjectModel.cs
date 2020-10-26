@@ -107,8 +107,14 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public string PublicNote { get; set; }
 
         /// <summary>
+        /// get/set - Appraised note
+        /// </summary>
+        public string AppraisedNote { get; set; }
+        
+        /// <summary>
         /// get/set - A private note for SRES only.
         /// </summary>
+        
         public string PrivateNote { get; set; }
 
         /// <summary>
@@ -204,17 +210,22 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         #region Financials
         /// <summary>
-        /// get/set - The netbook value which is the sum of the properties.
+        /// get/set - The netbook value.
         /// </summary>
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value which is the sum of the properties.
+        /// get/set - The estimated value.
         /// </summary>
         public decimal Estimated { get; set; }
 
         /// <summary>
-        /// get/set - The assessed value which is the sum of the properties.
+        /// get/set - The appraised value.
+        /// </summary>
+        public decimal Appraised { get; set; }
+
+        /// <summary>
+        /// get/set - The assessed value.
         /// </summary>
         public decimal Assessed { get; set; }
 

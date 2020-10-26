@@ -2203,6 +2203,28 @@ exports[`ERP Approval Step renders correctly 1`] = `
             >
               <label
                 className="form-label"
+                htmlFor="input-appraisedNote"
+              >
+                Appraised Notes
+              </label>
+              <textarea
+                className="col-md-5 form-control"
+                disabled={true}
+                id="input-appraisedNote"
+                name="appraisedNote"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+          <div
+            className="ProjectNotes form-row"
+          >
+            <div
+              className="col-md-12 form-group"
+            >
+              <label
+                className="form-label"
                 htmlFor="input-publicNote"
               >
                 Shared Notes

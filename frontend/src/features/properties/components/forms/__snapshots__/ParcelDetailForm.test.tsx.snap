@@ -814,7 +814,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                           }
                         }
                       >
-                        Net Book
+                        Net Book Value
                       </div>
                       <div
                         className="th"

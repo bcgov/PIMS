@@ -96,7 +96,7 @@ export const getEvaluationCols = (
   ];
   const otherColumns = [
     {
-      Header: 'Net Book',
+      Header: 'Net Book Value',
       columns: [
         {
           Header: 'Fiscal Year',
