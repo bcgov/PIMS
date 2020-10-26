@@ -61,17 +61,9 @@ namespace Pims.Dal.Test.Helpers.Extensions
             // Arrange
             var project = EntityHelper.CreateProject(1);
             project.ReportedFiscalYear = 2019;
-            var parcel = EntityHelper.CreateParcel(1);
-            EntityHelper.CreateEvaluations(parcel, new DateTime(2015, 1, 1), 5, EvaluationKeys.Assessed, 5);
-            EntityHelper.CreateFiscals(parcel, new[] { 2015, 2016, 2017, 2018, 2019 }, FiscalKeys.Estimated, 5);
-            EntityHelper.CreateFiscals(parcel, new[] { 2015, 2016, 2017, 2018, 2019 }, FiscalKeys.NetBook, 5);
-            var buildings = EntityHelper.CreateBuildings(parcel, 1, 10);
-            EntityHelper.CreateEvaluations(buildings.Next(0), new DateTime(2015, 1, 1), 5, EvaluationKeys.Assessed, 5);
-            EntityHelper.CreateFiscals(buildings.Next(0), new[] { 2015, 2016, 2017, 2018, 2019 }, FiscalKeys.Estimated, 5);
-            EntityHelper.CreateFiscals(buildings.Next(0), new[] { 2015, 2016, 2017, 2018, 2019 }, FiscalKeys.NetBook, 5);
-
-            project.AddProperty(parcel);
-            buildings.ForEach(b => project.AddProperty(b));
+            project.NetBook = 10;
+            project.Assessed = 10;
+            project.Estimated = 10;
 
             // Act
             project.UpdateProjectFinancials();

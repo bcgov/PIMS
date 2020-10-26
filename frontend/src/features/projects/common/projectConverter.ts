@@ -241,6 +241,10 @@ export const toApiProject = (project: IProject) => {
     projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
+    netBook: Number(project.netBook),
+    estimated: Number(project.estimated),
+    assessed: Number(project.assessed),
+    appraised: project.appraised,
     notes: project.notes.filter(note => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined

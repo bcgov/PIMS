@@ -346,6 +346,10 @@ export interface IApiProject {
   properties: IProjectProperty[];
   projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
+  netBook: number | '';
+  estimated: number | '';
+  assessed: number | '';
+  appraised?: number | '';
   publicNote: string;
   privateNote: string;
   exemptionRequested?: boolean;

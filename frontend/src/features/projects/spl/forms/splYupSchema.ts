@@ -23,6 +23,9 @@ export const SurplusPropertyInformationYupSchema = Yup.object().shape({
   approvedOn: Yup.date().required('Required'),
   submittedOn: Yup.date().required('Required'),
   tierLevelId: Yup.number().required('Required'),
+  netBook: Yup.number().required('Required'),
+  estimated: Yup.number().required('Required'),
+  assessed: Yup.number().required('Required'),
   properties: Yup.array().of(
     Yup.object().shape({
       netBook: Yup.number()
