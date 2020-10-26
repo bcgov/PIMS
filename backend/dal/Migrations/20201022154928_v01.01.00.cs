@@ -16,6 +16,19 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.AddColumn<decimal>(
                 name: "Appraised",
+                table: "Projects",
+                type: "MONEY",
+                nullable: false,
+                defaultValue: 0m);
+
+            migrationBuilder.AddColumn<string>(
+                name: "AppraisedNote",
+                table: "Projects",
+                type: "NVARCHAR(MAX)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "Appraised",
                 table: "ProjectSnapshots",
                 type: "MONEY",
                 nullable: false,
@@ -33,12 +46,6 @@ namespace Pims.Dal.Migrations
                 type: "DATETIME2",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "Appraised",
-                table: "Projects",
-                nullable: false,
-                defaultValue: 0m);
 
             migrationBuilder.CreateTable(
                 name: "ProjectReports",
@@ -98,7 +105,7 @@ namespace Pims.Dal.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             PreDown(migrationBuilder);
-            
+
             migrationBuilder.DropTable(
                 name: "ProjectReports");
 
@@ -109,6 +116,10 @@ namespace Pims.Dal.Migrations
             migrationBuilder.DropColumn(
                 name: "Appraised",
                 table: "ProjectSnapshots");
+
+            migrationBuilder.DropColumn(
+                name: "AppraisedNote",
+                table: "Projects");
 
             migrationBuilder.DropColumn(
                 name: "BaselineIntegrity",
