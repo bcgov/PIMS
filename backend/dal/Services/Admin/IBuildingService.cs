@@ -14,5 +14,6 @@ namespace Pims.Dal.Services.Admin
         Building GetByLocalId(string localId);
         Building GetByPidAndLocalId(int pid, string localId);
         IEnumerable<Building> Add(IEnumerable<Building> buildings);
+        void UpdateFinancials(Building building);
     }
 }
