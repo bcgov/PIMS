@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
@@ -318,6 +319,268 @@ namespace Pims.Dal.Test.Services.Admin
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
             Assert.True(parcel.IsSensitive);
+        }
+        #endregion
+
+        #region Update Parcel
+        [Fact]
+        public void UpdateParcel_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            updateParcel.Name = newName;
+
+            // Act
+            service.Update(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(newName);
+        }
+
+        [Fact]
+        public void UpdateParcelWithNewFiscals_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateFiscals(updateParcel, new[] { 2018, 2019 }, Entity.FiscalKeys.NetBook, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.Update(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(newName);
+            parcel.Fiscals.Should().HaveCount(2);
+            parcel.Fiscals.Sum(f => f.Value).Should().Be(10000);
+        }
+
+        [Fact]
+        public void UpdateParcelWithFiscals_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            EntityHelper.CreateFiscals(parcel, new[] { 2017, 2018 }, Entity.FiscalKeys.NetBook, 2000);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateFiscals(updateParcel, new[] { 2018, 2019 }, Entity.FiscalKeys.NetBook, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.Update(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(newName);
+            parcel.Fiscals.Should().HaveCount(3);
+            parcel.Fiscals.Sum(f => f.Value).Should().Be(9000);
+        }
+
+        [Fact]
+        public void UpdateParcelWithNewEvaluations_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateEvaluations(updateParcel, new DateTime(2018, 1, 1), 2, Entity.EvaluationKeys.Assessed, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.Update(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(newName);
+            parcel.Evaluations.Should().HaveCount(2);
+            parcel.Evaluations.Sum(f => f.Value).Should().Be(10000);
+        }
+
+        [Fact]
+        public void UpdateParcelWithEvaluations_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            EntityHelper.CreateEvaluations(parcel, new DateTime(2017, 1, 1), 2, Entity.EvaluationKeys.Assessed, 2000);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateEvaluations(updateParcel, new DateTime(2018, 1, 1), 2, Entity.EvaluationKeys.Assessed, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.Update(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(newName);
+            parcel.Evaluations.Should().HaveCount(3);
+            parcel.Evaluations.Sum(f => f.Value).Should().Be(9000);
+        }
+        #endregion
+
+        #region Update Parcel Financials
+        [Fact]
+        public void UpdateParcelFinancials_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var originalName = "original";
+            parcel.Name = originalName;
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            updateParcel.Name = newName;
+
+            // Act
+            service.UpdateFinancials(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(originalName);
+        }
+
+        [Fact]
+        public void UpdateParcelFinancialsWithNewFiscals_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var originalName = "original";
+            parcel.Name = originalName;
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateFiscals(updateParcel, new[] { 2018, 2019 }, Entity.FiscalKeys.NetBook, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.UpdateFinancials(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(originalName);
+            parcel.Fiscals.Should().HaveCount(2);
+            parcel.Fiscals.Sum(f => f.Value).Should().Be(10000);
+        }
+
+        [Fact]
+        public void UpdateParcelFinancialsWithFiscals_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var originalName = "original";
+            parcel.Name = originalName;
+            EntityHelper.CreateFiscals(parcel, new[] { 2017, 2018 }, Entity.FiscalKeys.NetBook, 2000);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateFiscals(updateParcel, new[] { 2018, 2019 }, Entity.FiscalKeys.NetBook, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.UpdateFinancials(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(originalName);
+            parcel.Fiscals.Should().HaveCount(3);
+            parcel.Fiscals.Sum(f => f.Value).Should().Be(9000);
+        }
+
+        [Fact]
+        public void UpdateParcelFinancialsWithNewEvaluations_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var originalName = "original";
+            parcel.Name = originalName;
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateEvaluations(updateParcel, new DateTime(2018, 1, 1), 2, Entity.EvaluationKeys.Assessed, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.UpdateFinancials(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(originalName);
+            parcel.Evaluations.Should().HaveCount(2);
+            parcel.Evaluations.Sum(f => f.Value).Should().Be(10000);
+        }
+
+        [Fact]
+        public void UpdateParcelFinancialsWithEvaluations_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var originalName = "original";
+            parcel.Name = originalName;
+            EntityHelper.CreateEvaluations(parcel, new DateTime(2017, 1, 1), 2, Entity.EvaluationKeys.Assessed, 2000);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>();
+
+            var updateParcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            var newName = "testing name is updated";
+            EntityHelper.CreateEvaluations(updateParcel, new DateTime(2018, 1, 1), 2, Entity.EvaluationKeys.Assessed, 5000);
+            updateParcel.Name = newName;
+
+            // Act
+            service.UpdateFinancials(updateParcel);
+
+            // Assert
+            parcel.Name.Should().Be(originalName);
+            parcel.Evaluations.Should().HaveCount(3);
+            parcel.Evaluations.Sum(f => f.Value).Should().Be(9000);
         }
         #endregion
         #endregion
