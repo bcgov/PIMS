@@ -275,7 +275,10 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         parcelPid !== '' &&
         formikRef.current.values.pid !== parcelPid
       ) {
-        setPidSelection({ showPopup: true, geoPID: parcelPid });
+        setPidSelection({
+          showPopup: true,
+          geoPID: parcelPid.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'),
+        });
       } else if (formikRef.current.values.pid && parcelPid === '') {
         newValues.pid = formikRef.current.values.pid;
       } else {
@@ -293,7 +296,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         {pidSelection.showPopup && (
           <GenericModal
             cancelButtonText={`Use original PID ${formikRef.current?.values.pid}`}
-            okButtonText={`Use PID from GeoCoder ${pidSelection.geoPID}`}
+            okButtonText={`Use GeoCoder PID ${pidSelection.geoPID}`}
             handleOk={(e: any) => {
               formikRef.current?.setFieldValue('pid', pidSelection.geoPID);
               setPidSelection({ showPopup: false, geoPID: '' });
