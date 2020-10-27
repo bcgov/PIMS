@@ -164,7 +164,7 @@ namespace Pims.Dal.Services.Admin
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            return this.Context.Parcels
+            var parcels = this.Context.Parcels
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
                 .Include(p => p.Address.City)
@@ -180,7 +180,11 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
                 .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
-                .AsNoTracking().SingleOrDefault(u => u.PID == pid) ?? throw new KeyNotFoundException();
+                .AsNoTracking().Where(p => p.PID == pid);
+
+            if (!parcels.Any()) throw new KeyNotFoundException();
+            if (parcels.Count() == 1) return parcels.First();
+            return parcels.SingleOrDefault(p => p.PIN == null) ?? throw new InvalidOperationException($"Parcel '{pid}' does not have a titled property, but has {parcels.Count()} untitled properties."); // If there isn't a primary titled property, throw an exception.
         }
 
         /// <summary>
