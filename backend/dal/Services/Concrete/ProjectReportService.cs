@@ -184,7 +184,7 @@ namespace Pims.Dal.Services
             var originalReport = this.Context.ProjectReports
                 .SingleOrDefault(p => p.Id == report.Id) ?? throw new KeyNotFoundException();
 
-            if (report.To == null) throw new ArgumentNullException();
+            if (report.To == null) throw new ArgumentNullException(nameof(report.To));
             if (originalReport.IsFinal && report.IsFinal) throw new InvalidOperationException($"Unable to update FINAL project reports.");
             if (report.From == report.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
 
