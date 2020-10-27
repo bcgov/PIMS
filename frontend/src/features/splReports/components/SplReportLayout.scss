@@ -11,7 +11,6 @@
 
   .report-content {
     height: calc(100vh - #{$footer-height} - #{$header-height} - #{$navbar-height});
-    overflow-y: scroll;
   }
 
   .side-bar {
@@ -24,7 +23,6 @@
     z-index: 5;
     top: $header-height + $navbar-height;
     left: 0;
-    overflow-x: hidden;
     background-color: $table-header-color;
     display: grid;
 
@@ -41,10 +39,15 @@
     }
   }
 
+  .report-form {
+    grid-template-columns: 275px auto;
+    display: grid;
+  }
+
   .add-spl {
     background-color: $table-header-color;
-    height: 50px;
-    width: 275px;
+    min-width: 275px;
+    max-width: 275px;
     padding: 0.5rem;
   }
 
@@ -54,6 +57,11 @@
 
   .tbody > .tr-wrapper:nth-child(odd) {
     background-color: white;
+  }
+
+  .tbody {
+    max-height: calc(100vh - #{$footer-height} - #{$header-height} - #{$navbar-height} - 110px);
+    background-color: red;
   }
 
   .close {

@@ -91,6 +91,7 @@ export const Check: React.FC<CheckProps> = ({
             {...rest}
             value={!!checked}
             placeholder={placeholder}
+            checked={!!checked}
             onChange={() => setFieldValue(field, !checked)}
           />
           {type === 'radio' && (

@@ -610,6 +610,7 @@ exports[`renders correctly 1`] = `
             className="form-check"
           >
             <input
+              checked={true}
               className="form-check-input position-static"
               defaultChecked={true}
               disabled={true}
@@ -677,6 +678,7 @@ exports[`renders correctly 1`] = `
             className="form-check"
           >
             <input
+              checked={false}
               className="form-check-input position-static"
               defaultChecked={false}
               disabled={true}

@@ -300,7 +300,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
           {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <Button className="mr-auto" onClick={() => history.push('/splReports')}>
+            <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
               SPL Report
             </Button>
           )}

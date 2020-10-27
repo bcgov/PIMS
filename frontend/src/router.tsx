@@ -151,7 +151,7 @@ const AppRouter: React.FC = () => {
       />
       <AppRoute
         protected
-        path="/splReports"
+        path="/reports/spl"
         component={SplReportContainer}
         layout={AuthLayout}
         claim={Claims.REPORTS_SPL}
