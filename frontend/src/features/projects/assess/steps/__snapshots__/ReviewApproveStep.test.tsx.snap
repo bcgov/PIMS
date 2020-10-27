@@ -1107,6 +1107,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             className="form-check"
           >
             <input
+              checked={true}
               className="form-check-input position-static"
               defaultChecked={true}
               disabled={true}
@@ -1239,6 +1240,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             className="form-check"
           >
             <input
+              checked={true}
               className="form-check-input position-static"
               defaultChecked={true}
               disabled={true}

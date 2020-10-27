@@ -1661,6 +1661,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   className="form-check"
                 >
                   <input
+                    checked={true}
                     className="form-check-input"
                     defaultChecked={true}
                     disabled={false}
