@@ -7,21 +7,38 @@ metadata:
     description: Deployment template for Grafana
     tags: pims-monitoring
 objects:
-  - kind: Secret
-    apiVersion: v1
+  - apiVersion: v1
+    kind: ConfigMap
     metadata:
-      name: pims-grafana-password-secret
+      name: grafana-dashboards-config
       namespace: ${PROJECT_NAME}
-      annotations:
-        description: "Grafana secrets"
       labels:
-        name: pims-grafana-password-secret
-        app: pims-grafana-tools
-        component: tools
-        role: grafana
-    type: Opaque
-    stringData:
-      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+        name: grafana
+    data:
+      dashboards-provider.yaml: |-
+        apiVersion: 1
+        providers:
+          #  an unique provider name
+          - name: 'pims-dashboards'
+            #  org id. will default to orgId 1 if not specified
+            orgId: 1
+            #  name of the dashboard folder. Required
+            folder: ''
+            #  folder UID. will be automatically generated if not specified
+            folderUid: ''
+            #  provider type. Required
+            type: file
+            #  disable dashboard deletion
+            disableDeletion: false
+            #  enable dashboard editing
+            editable: true
+            #  how often Grafana will scan for changed dashboards
+            updateIntervalSeconds: 10
+            #  allow updating provisioned dashboards from the UI
+            allowUiUpdates: true
+            options:
+              #  path to dashboard files on disk. Required
+              path: /dashboards
   - apiVersion: v1
     kind: ServiceAccount
     metadata:
@@ -165,11 +182,6 @@ objects:
                   value: "true"
                 - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
                   value: "${GF_USERS_AUTO_ASSIGN_ORG_ROLE}"
-                - name: GF_SECURITY_ADMIN_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: pims-grafana-password-secret
-                      key: GF_SECURITY_ADMIN_PASSWORD
               ports:
                 - containerPort: 3000
                   name: http
@@ -177,6 +189,10 @@ objects:
               volumeMounts:
                 - mountPath: /etc/grafana/provisioning/datasources
                   name: pims-monitoring-grafana-datasource-config-volume
+                - name: grafana-predefined-dashboards-config
+                  mountPath: /dashboards
+                - mountPath: /etc/grafana/provisioning/dashboards
+                  name: grafana-dashboards-config
               resources: {}
               securityContext: {}
               terminationMessagePath: /dev/termination-log
@@ -188,6 +204,14 @@ objects:
             - name: grafana-tls
               secret:
                 secretName: grafana-tls
+            - configMap:
+                defaultMode: 420
+                name: grafana-dashboards-config
+              name: grafana-dashboards-config
+            - configMap:
+                defaultMode: 420
+                name: grafana-predefined-dashboards-config
+              name: grafana-predefined-dashboards-config
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -195,10 +219,6 @@ objects:
           terminationGracePeriodSeconds: 60
       test: false
 parameters:
-  - name: GF_SECURITY_ADMIN_PASSWORD
-    displayName: Grafana Dashboard Admin Password
-    description: Grafana Dashboard Admin Password
-    required: true
   - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
     displayName: Grafana Default User Role
     description: Grafana Default User Role
@@ -215,12 +235,12 @@ parameters:
     required: true
     value: "jcxjin-tools"
   - name: PROMETHEUS_DATASOURCE_URL
-    displayName: Project Name
-    description: Project Name
+    displayName: Prometheus datasources
+    description: Prometheus datasources
     required: true
     value: "https://pims-prometheus.pathfinder.gov.bc.ca"
   - name: DOMAIN
-    displayName: Project Name
-    description: Project Name
+    displayName: Application route domain
+    description: Application route domain
     required: true
     value: "pims-grafana.pathfinder.gov.bc.ca"
