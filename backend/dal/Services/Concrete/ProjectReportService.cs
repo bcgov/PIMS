@@ -261,7 +261,6 @@ namespace Pims.Dal.Services
                     .Include(s => s.Project).ThenInclude(p => p.Status)
                     .Where(s => s.SnapshotOn == from)
                     .ToDictionary(s => (int?)s.ProjectId, s => s);
-                if (fromSnapshots.Count() == 0) throw new KeyNotFoundException("If specified report FROM value must return valid snapshots");
             }
 
             IEnumerable<ProjectSnapshot> projectSnapshots = new HashSet<ProjectSnapshot>();

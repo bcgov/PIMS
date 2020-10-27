@@ -609,6 +609,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       className="form-check"
                     >
                       <input
+                        checked={false}
                         className="form-check-input"
                         defaultChecked={false}
                         disabled={true}

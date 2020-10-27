@@ -34,6 +34,7 @@ function AppNavBar() {
           <ViewProjects />
           <DisposeRequest />
           <ViewProjectApprovalRequests />
+          <ReportsDropdown />
         </Nav>
       </Navbar.Collapse>
       <Nav className="profile align-items-center">
@@ -165,6 +166,27 @@ function DisposeRequest() {
     >
       Dispose Properties
     </Nav.Link>
+  ) : null;
+}
+
+/**
+ * Reports navigation dropdown menu.
+ */
+function ReportsDropdown() {
+  const history = useHistory();
+  const keycloak = useKeycloakWrapper();
+  return keycloak.hasClaim(Claims.REPORTS_VIEW) ? (
+    <NavDropdown
+      className={history.location.pathname.includes('reports') ? 'active' : 'idle'}
+      title="Reports"
+      id="reports"
+    >
+      {keycloak.hasClaim(Claims.REPORTS_SPL) ? (
+        <NavDropdown.Item onClick={() => history.push('/reports/spl')}>
+          SPL With Variance
+        </NavDropdown.Item>
+      ) : null}
+    </NavDropdown>
   ) : null;
 }
 

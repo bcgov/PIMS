@@ -8,14 +8,18 @@ import { IReport } from '../interfaces';
 interface IAddReportControlProps {
   /** the function to call when the add button is clicked. */
   onAdd: (report: IReport) => void;
+  className?: string;
 }
 
 /**
  * A simple control containing a header and an add button.
  */
-const AddReportControl: React.FunctionComponent<IAddReportControlProps> = ({ onAdd }) => {
+const AddReportControl: React.FunctionComponent<IAddReportControlProps> = ({
+  onAdd,
+  className,
+}) => {
   return (
-    <span className="d-flex justify-content-between align-items-center add-spl">
+    <span className={`d-flex justify-content-between align-items-center add-spl ${className}`}>
       <h2>SPL Reports</h2>
       <Button className="h-auto">
         <TooltipWrapper toolTipId="no-spl-reports" toolTip="Create New Report">
