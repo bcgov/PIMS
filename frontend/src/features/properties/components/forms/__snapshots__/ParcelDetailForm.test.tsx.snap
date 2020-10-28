@@ -214,7 +214,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   <label
                     className="form-label col-form-label col-md-2"
                   >
-                    City
+                    Location
                   </label>
                   <div
                     className="AutoCompleteText"
@@ -226,8 +226,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                         autoComplete="new-password"
                         className="form-control"
                         disabled={true}
-                        id="input-address.cityId"
-                        name="address.cityId"
+                        id="input-address.administrativeArea"
+                        name="address.administrativeArea"
                         onChange={[Function]}
                         required={true}
                         value=""
@@ -474,28 +474,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
             <div
               className="col-md-6"
             >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-2"
-                >
-                  Municipality
-                </label>
-                <div
-                  className="col-md-10 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-municipality"
-                    name="municipality"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value=""
-                  />
-                </div>
-              </div>
               <div
                 className="form-row"
               >

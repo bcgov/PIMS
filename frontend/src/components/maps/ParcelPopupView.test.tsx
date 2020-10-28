@@ -27,7 +27,6 @@ const mockParcel = (agencyId: number, projectNumber?: string) => {
     pin: 1,
     latitude: 1,
     longitude: 1,
-    municipality: 'Test Municipality',
     projectNumber: projectNumber,
     classification: 'Test Classification',
     name: 'test name',
@@ -41,7 +40,7 @@ const mockParcel = (agencyId: number, projectNumber?: string) => {
     address: ([
       {
         line1: '1234 Mock Street',
-        cityId: 1,
+        administrativeArea: 'Test Administrative Area',
         provinceId: 'BC',
         postal: 'V0S1N0',
       },

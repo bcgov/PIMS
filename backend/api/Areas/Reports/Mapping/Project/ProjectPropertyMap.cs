@@ -24,9 +24,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     src => src.Building != null
                         ? src.Building.Address.FormatAddress()
                         : src.Parcel.Address.FormatAddress())
-                .Map(dest => dest.City,
-                    src => src.Building != null ? src.Building.Address.City.Name : src.Parcel.Address.City.Name)
-                .Map(dest => dest.Municipality, src => src.Building != null ? src.Building.Parcel.Municipality : src.Parcel.Municipality)
+                .Map(dest => dest.AdministrativeArea,
+                    src => src.Building != null ? src.Building.Address.AdministrativeArea : src.Parcel.Address.AdministrativeArea)
                 .Map(dest => dest.Assessed,
                     src => src.Building != null
                         ? GetBuildingAssessedValue(src.Building.Evaluations)
@@ -39,16 +38,16 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     src => src.Building != null
                         ? GetBuildingEstimatedValue(src.Building.Fiscals)
                         : GetParcelEstimatedValue(src.Parcel.Fiscals))
-                .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning() : src.Parcel.Zoning)
-                .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential() : src.Parcel.ZoningPotential)
+                .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
+                .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
 
                 .Map(dest => dest.AgencyCode,
                     src => src.Building != null ? GetAgencyCode(src.Building.Agency) : GetAgencyCode(src.Parcel.Agency))
                 .Map(dest => dest.SubAgency,
                     src => src.Building != null ? GetAgencyName(src.Building.Agency) : GetAgencyName(src.Parcel.Agency))
 
-                .Map(dest => dest.LandArea, src => src.Building != null ? GetLandArea(src.Building.Parcel) : GetLandArea(src.Parcel))
-                .Map(dest => dest.ParcelId, src => src.Building != null ? src.Building.Parcel.GetId() : src.Parcel.GetId())
+                .Map(dest => dest.LandArea, src => src.Building != null ? GetLandArea(src.Building.Parcels.FirstOrDefault().Parcel) : GetLandArea(src.Parcel))
+                .Map(dest => dest.ParcelId, src => src.Building != null ? src.Building.Parcels.FirstOrDefault().ParcelId : src.Parcel.GetId())
                 .Inherits<BaseEntity, BaseModel>();
 
         }

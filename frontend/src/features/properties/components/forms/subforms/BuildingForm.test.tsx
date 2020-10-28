@@ -58,7 +58,12 @@ const mockBuilding: IFormBuilding = {
 
 const lCodes = {
   lookupCodes: [
-    { name: 'test city', id: '1', isDisabled: false, type: API.CITY_CODE_SET_NAME },
+    {
+      name: 'test aDministrative area',
+      id: '1',
+      isDisabled: false,
+      type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
+    },
     {
       name: 'test province',
       id: mockBuilding.address.provinceId,

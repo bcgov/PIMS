@@ -76,7 +76,11 @@ namespace Pims.Dal
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<PimsContext>();
-            optionsBuilder.UseSqlServer(sqlBuilder.ConnectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
+            optionsBuilder.UseSqlServer(sqlBuilder.ConnectionString, options =>
+            {
+                options.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds);
+                options.UseNetTopologySuite();
+            });
             return new PimsContext(optionsBuilder.Options);
         }
         #endregion

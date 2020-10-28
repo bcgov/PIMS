@@ -17,7 +17,7 @@ namespace Pims.Dal.Services.Admin
         IBuildingService Building { get; }
         IAddressService Address { get; }
         IProvinceService Province { get; }
-        ICityService City { get; }
+        IAdministrativeAreaService AdministrativeArea { get; }
         IBuildingConstructionTypeService BuildingConstructionType { get; }
         IBuildingPredominateUseService BuildingPredominateUse { get; }
         IPropertyClassificationService PropertyClassification { get; }

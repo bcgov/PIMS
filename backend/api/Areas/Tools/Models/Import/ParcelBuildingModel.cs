@@ -12,8 +12,6 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public int AgencyId { get; set; }
 
-        public string LocalId { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

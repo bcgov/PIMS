@@ -51,7 +51,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                   {buildingDetail?.address?.line1}
                 </div>
                 <div>
-                  {buildingDetail?.address?.city}, {buildingDetail?.address?.province}{' '}
+                  {buildingDetail?.address?.administrativeArea}, {buildingDetail?.address?.province}{' '}
                   {buildingDetail?.address?.postal}
                 </div>
               </ListGroup.Item>

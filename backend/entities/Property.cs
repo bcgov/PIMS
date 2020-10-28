@@ -1,3 +1,5 @@
+using NetTopologySuite.Geometries;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -57,14 +59,14 @@ namespace Pims.Dal.Entities
         public Address Address { get; set; }
 
         /// <summary>
-        /// get/set - The Latitude co-ordinate.
+        /// get/set - The longitude (x), latitude (y) location of the property.
         /// </summary>
-        public double Latitude { get; set; }
+        public Point Location { get; set; }
 
         /// <summary>
-        /// get/set - The longitude co-ordinate.
+        /// get/set - The property boundary polygon.
         /// </summary>
-        public double Longitude { get; set; }
+        public Geometry Boundary { get; set; }
 
         /// <summary>
         /// get/set - Whether this property is considered sensitive and should only be visible to users who are part of the owning agency.
@@ -90,8 +92,7 @@ namespace Pims.Dal.Entities
         /// <param name="lng"></param>
         public Property(double lat, double lng)
         {
-            this.Latitude = lat;
-            this.Longitude = lng;
+            this.Location = new Point(lng, lat) { SRID = 4326 };
         }
         #endregion
     }

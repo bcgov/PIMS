@@ -8,8 +8,6 @@ namespace Pims.Api.Models.Parcel
         #region Properties
         public int ParcelId { get; set; }
 
-        public string LocalId { get; set; }
-
         public int BuildingConstructionTypeId { get; set; }
 
         public string BuildingConstructionType { get; set; }

@@ -1,4 +1,5 @@
---DROP VIEW dbo.View_Properties
+PRINT 'Creating View_Properties'
+GO
 -- This script provides a way to union both parcels and buildings into a single result of properties.
 CREATE VIEW dbo.[View_Properties] AS
 SELECT

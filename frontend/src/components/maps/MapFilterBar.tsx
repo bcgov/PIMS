@@ -17,16 +17,14 @@ const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
       { label: 'Address', value: 'address' },
-      { label: 'City', value: 'city' },
+      { label: 'Location', value: 'administrativeArea' },
       { label: 'PID/PIN', value: 'pid' },
-      { label: 'Municipality', value: 'municipality' },
       { label: 'RAEG or SPP No.', value: 'projectNumber' },
     ],
     placeholders: {
       address: 'Enter an address or city',
-      city: 'Enter a city name',
+      administrativeArea: 'Enter a location name',
       pid: 'Enter a PID or PIN',
-      municipality: 'Enter a municipality',
       projectNumber: 'Enter an SPP/RAEG number',
     },
   };
@@ -40,7 +38,7 @@ const SearchBar: React.FC = () => {
 
   const reset = () => {
     setFieldValue('address', '');
-    setFieldValue('municipality', '');
+    setFieldValue('administrativeArea', '');
     setFieldValue('projectNumber', '');
     setFieldValue('city', '');
   };
@@ -60,8 +58,7 @@ export interface MapFilterChangeEvent extends BasePropertyFilter {
   searchBy: string;
   pid: string;
   address: string;
-  city: string;
-  municipality: string;
+  administrativeArea: string;
   projectNumber: string;
   /** comma-separated list of agencies to filter by */
   agencies: string;
@@ -85,8 +82,7 @@ const defaultFilterValues: MapFilterChangeEvent = {
   searchBy: 'address',
   pid: '',
   address: '',
-  city: '',
-  municipality: '',
+  administrativeArea: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',

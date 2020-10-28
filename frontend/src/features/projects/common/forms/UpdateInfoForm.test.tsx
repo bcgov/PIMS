@@ -43,7 +43,7 @@ const mockProject = {
         landLegalDescription: '',
         latitude: 48.42538763146778,
         longitude: -123.39006198220181,
-        municipality: '',
+        administrativeArea: '',
         netBook: 1,
         netBookFiscalYear: 2020,
         occupantTypeId: 0,

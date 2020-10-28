@@ -20,10 +20,10 @@ interface AddressProps {
 }
 
 export const defaultAddressValues: IAddress = {
+  id: 0,
   line1: '',
   line2: undefined,
-  city: undefined,
-  cityId: '',
+  administrativeArea: '',
   province: undefined,
   provinceId: 'BC',
   postal: '',
@@ -35,8 +35,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const cities = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.CITY_CODE_SET_NAME;
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   }).map(mapLookupCode);
 
   const withNameSpace: Function = useCallback(
@@ -84,13 +84,13 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         </Form.Row>
         <Form.Row>
           <Form.Label column md={2}>
-            City
+            Location
           </Form.Label>
           <AutoCompleteText
             autoSetting="new-password"
             getValueDisplay={(val: SelectOption) => val.label}
-            field={withNameSpace('cityId')}
-            options={cities}
+            field={withNameSpace('administrativeArea')}
+            options={administrativeAreas}
             disabled={props.disabled}
             required={true}
           />

@@ -50,7 +50,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                   {parcelDetail?.address?.line1}
                 </div>
                 <div>
-                  {parcelDetail?.address?.city}, {parcelDetail?.address?.province}{' '}
+                  {parcelDetail?.address?.administrativeArea}, {parcelDetail?.address?.province}{' '}
                   {parcelDetail?.address?.postal}
                 </div>
               </ListGroup.Item>

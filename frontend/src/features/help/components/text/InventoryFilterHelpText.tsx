@@ -11,9 +11,8 @@ const InventoryFilterHelpText = () => {
       <br />
       <strong>Address:</strong> The address contains the value.
       <br />
-      <strong>City:</strong> The city containing the value.
-      <br />
-      <strong>Municipality:</strong> The municipality containing the value.
+      <strong>Location:</strong> The administrative area (city, municipality, district, etc.)
+      containing the value.
       <br />
       <strong>PID/PIN:</strong> The property has the specified PID or PIN.
       <br />

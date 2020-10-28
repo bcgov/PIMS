@@ -26,8 +26,7 @@ export interface IProperty {
 
   addressId: number;
   address: string;
-  cityId: number;
-  city: string;
+  administrativeArea: string;
   province: string;
   postal: string;
 
@@ -51,7 +50,6 @@ export interface IProperty {
   // Parcel Properties
   landArea: number;
   landLegalDescription: string;
-  municipality?: string;
   zoning?: string;
   zoningPotential?: string;
 
@@ -81,7 +79,7 @@ export interface IPropertyFilter {
   quantity: number;
   pid?: string;
   address?: string;
-  municipality?: string;
+  administrativeArea?: string;
   projectNumber?: string;
   ignorePropertiesInProjects?: boolean;
   inSurplusPropertyProgram?: boolean;
@@ -401,7 +399,6 @@ export interface IApiProperty {
   landLegalDescription: string;
   zoning: string;
   zoningPotential: string;
-  municipality: string;
   agency?: string;
   subAgency?: string;
   agencyId: number;

@@ -75,7 +75,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <label
             className="form-label col-form-label col-md-2"
           >
-            City
+            Location
           </label>
           <div
             className="AutoCompleteText"
@@ -87,11 +87,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                 autoComplete="new-password"
                 className="form-control"
                 disabled={false}
-                id="input-address.cityId"
-                name="address.cityId"
+                id="input-address.administrativeArea"
+                name="address.administrativeArea"
                 onChange={[Function]}
                 required={true}
-                value="test city"
+                value=""
               />
             </div>
           </div>

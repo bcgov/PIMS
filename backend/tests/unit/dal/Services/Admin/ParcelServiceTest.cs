@@ -32,7 +32,7 @@ namespace Pims.Dal.Test.Services.Admin
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, 1 },
                 new object[] { new ParcelFilter() { ClassificationId = 2 }, 1 },
                 new object[] { new ParcelFilter() { Description = "DescriptionTest" }, 1 },
-                new object[] { new ParcelFilter() { Municipality = "Municipality" }, 1 },
+                new object[] { new ParcelFilter() { AdministrativeArea = "AdministrativeArea" }, 1 },
                 new object[] { new ParcelFilter() { ProjectNumber = "ProjectNumber" }, 1 },
                 new object[] { new ParcelFilter() { Zoning = "Zoning" }, 1 },
                 new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, 1 }
@@ -91,13 +91,13 @@ namespace Pims.Dal.Test.Services.Admin
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location.Y = 50;
+            parcels.Next(0).Location.X = 25;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).ProjectNumber = "ProjectNumber";
             parcels.Next(6).Zoning = "-Zoning-";
             parcels.Next(7).ZoningPotential = "-ZoningPotential-";

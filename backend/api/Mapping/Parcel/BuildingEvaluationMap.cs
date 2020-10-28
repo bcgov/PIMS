@@ -9,7 +9,6 @@ namespace Pims.Api.Mapping.Parcel
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.BuildingEvaluation, Model.BuildingEvaluationModel>()
-                .IgnoreNonMapped(true)
                 .EnumMappingStrategy(EnumMappingStrategy.ByName)
                 .Map(dest => dest.BuildingId, src => src.BuildingId)
                 .Map(dest => dest.Date, src => src.Date)
@@ -20,7 +19,6 @@ namespace Pims.Api.Mapping.Parcel
 
 
             config.NewConfig<Model.BuildingEvaluationModel, Entity.BuildingEvaluation>()
-                .IgnoreNonMapped(true)
                 .EnumMappingStrategy(EnumMappingStrategy.ByName)
                 .Map(dest => dest.BuildingId, src => src.BuildingId)
                 .Map(dest => dest.Date, src => src.Date)

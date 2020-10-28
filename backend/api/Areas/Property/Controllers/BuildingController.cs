@@ -5,9 +5,9 @@ using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
-using Model = Pims.Api.Models.Building;
+using Model = Pims.Api.Areas.Property.Models.Building;
 
-namespace Pims.Api.Controllers
+namespace Pims.Api.Areas.Property.Controllers
 {
     /// <summary>
     /// BuildingController class, provides endpoints for managing my buildings.

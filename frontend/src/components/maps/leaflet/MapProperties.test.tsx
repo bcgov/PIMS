@@ -33,7 +33,6 @@ const mockDetails: IParcelDetail = {
     pin: '',
     projectNumber: '',
     classificationId: 0,
-    municipality: '',
     zoning: '',
     zoningPotential: '',
     agencyId: 0,
@@ -53,7 +52,7 @@ const mockDetails: IParcelDetail = {
     address: {
       line1: '1234 mock Street',
       line2: 'N/A',
-      cityId: 0,
+      administrativeArea: '',
       provinceId: 'BC',
       postal: 'V1V1V1',
     },

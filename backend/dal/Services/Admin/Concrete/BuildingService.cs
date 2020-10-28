@@ -68,20 +68,19 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingOccupantType)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
-        /// Get the building for the specified 'localId'.
+        /// Get the building for the specified 'pid' and 'name'.
+        /// This searched for a name that begins the same.
         /// </summary>
-        /// <param name="localId"></param>
+        /// <param name="pid"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public Building GetByLocalId(string localId)
+        public IEnumerable<Building> GetByPid(int pid, string name = null)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -89,21 +88,18 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingOccupantType)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
-                .AsNoTracking().SingleOrDefault(u => u.LocalId == localId) ?? throw new KeyNotFoundException();
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking()
+                .Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like($"{name}%", b.Name)));
         }
 
         /// <summary>
-        /// Get the building for the specified 'pid' and 'localId'.
+        /// Get the building for the specified 'name'.
         /// </summary>
-        /// <param name="pid"></param>
-        /// <param name="localId"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public Building GetByPidAndLocalId(int pid, string localId)
+        public Building GetByName(string name)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -111,46 +107,47 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingOccupantType)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
-                .AsNoTracking()
-                .SingleOrDefault(u => u.Parcel.PID == pid && u.LocalId == localId) ?? throw new KeyNotFoundException();
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().SingleOrDefault(b => b.Name == name) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>
         /// Add the building to the datasource.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="building"></param>
         /// <returns></returns>
-        public override void Add(Building entity)
+        public override void Add(Building building)
         {
-            entity.ThrowIfNull(nameof(entity));
+            building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            if (entity.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == entity.AgencyId))
-                this.Context.Entry(entity.Agency).State = EntityState.Unchanged;
-            if (entity.Classification != null && !this.Context.PropertyClassifications.Local.Any(c => c.Id == entity.ClassificationId))
-                this.Context.Entry(entity.Classification).State = EntityState.Unchanged;
-            if (entity.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == entity.BuildingConstructionTypeId))
-                this.Context.Entry(entity.BuildingConstructionType).State = EntityState.Unchanged;
-            if (entity.BuildingPredominateUse != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == entity.BuildingPredominateUseId))
-                this.Context.Entry(entity.BuildingPredominateUse).State = EntityState.Unchanged;
-            if (entity.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == entity.BuildingOccupantTypeId))
-                this.Context.Entry(entity.BuildingOccupantType).State = EntityState.Unchanged;
+            if (building.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == building.AgencyId))
+                this.Context.Entry(building.Agency).State = EntityState.Unchanged;
+            if (building.Classification != null && !this.Context.PropertyClassifications.Local.Any(c => c.Id == building.ClassificationId))
+                this.Context.Entry(building.Classification).State = EntityState.Unchanged;
+            if (building.BuildingConstructionType != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == building.BuildingConstructionTypeId))
+                this.Context.Entry(building.BuildingConstructionType).State = EntityState.Unchanged;
+            if (building.BuildingPredominateUse != null && !this.Context.BuildingConstructionTypes.Local.Any(a => a.Id == building.BuildingPredominateUseId))
+                this.Context.Entry(building.BuildingPredominateUse).State = EntityState.Unchanged;
+            if (building.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == building.BuildingOccupantTypeId))
+                this.Context.Entry(building.BuildingOccupantType).State = EntityState.Unchanged;
 
-            entity.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == entity.AgencyId);
-            entity.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == entity.ClassificationId);
-            entity.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == entity.BuildingConstructionTypeId);
-            entity.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == entity.BuildingPredominateUseId);
-            entity.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == entity.BuildingOccupantTypeId);
+            building.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == building.AgencyId);
+            building.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == building.ClassificationId);
+            building.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == building.BuildingConstructionTypeId);
+            building.BuildingPredominateUse = this.Context.BuildingPredominateUses.Local.FirstOrDefault(a => a.Id == building.BuildingPredominateUseId);
+            building.BuildingOccupantType = this.Context.BuildingOccupantTypes.Local.FirstOrDefault(a => a.Id == building.BuildingOccupantTypeId);
 
-            this.Context.Addresses.Add(entity.Address);
-            this.Context.BuildingEvaluations.AddRange(entity.Evaluations);
+            if (building.Address != null)
+            {
+                this.Context.Addresses.Add(building.Address);
+            }
 
-            base.Add(entity);
+            this.Context.BuildingEvaluations.AddRange(building.Evaluations);
+            this.Context.BuildingFiscals.AddRange(building.Fiscals);
+
+            base.Add(building);
         }
 
         /// <summary>

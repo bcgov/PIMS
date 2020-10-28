@@ -55,8 +55,8 @@ export const Address = Yup.object().shape({
     .max(150, 'Address must be less then 150 characters')
     .required('Required'),
   line2: Yup.string().max(150, 'Address must be less then 150 characters'),
-  cityId: Yup.string()
-    .matches(/\d*/, 'Invalid City')
+  administrativeArea: Yup.string()
+    .matches(/\d*/, 'Invalid Location')
     .required('Required')
     .nullable(),
   provinceId: Yup.string().required('Required'),
@@ -83,7 +83,6 @@ export const FinancialYear = Yup.object().shape({
 });
 
 export const Building = Yup.object().shape({
-  localId: Yup.string().max(50, 'LocalId must be less then 50 characters'),
   name: Yup.string()
     .max(150, 'Name must be less then 150 characters')
     .nullable(),
@@ -148,8 +147,8 @@ export const LandSchema = Yup.object().shape({
   description: Yup.string()
     .max(2000, 'Description must be less than 2000 characters')
     .nullable(),
-  municipality: Yup.string()
-    .max(250, 'Municipality must be less than 250 characters')
+  administrativeArea: Yup.string()
+    .max(250, 'Location must be less than 250 characters')
     .nullable(),
   zoning: Yup.string()
     .max(250, 'Zoning must be less than 250 characters')

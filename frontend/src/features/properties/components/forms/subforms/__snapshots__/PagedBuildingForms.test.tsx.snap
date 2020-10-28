@@ -139,7 +139,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               <label
                 className="form-label col-form-label col-md-2"
               >
-                City
+                Location
               </label>
               <div
                 className="AutoCompleteText"
@@ -151,11 +151,11 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                     autoComplete="new-password"
                     className="form-control"
                     disabled={true}
-                    id="input-buildings.0.address.cityId"
-                    name="buildings.0.address.cityId"
+                    id="input-buildings.0.address.administrativeArea"
+                    name="buildings.0.address.administrativeArea"
                     onChange={[Function]}
                     required={true}
-                    value="test city"
+                    value=""
                   />
                 </div>
               </div>

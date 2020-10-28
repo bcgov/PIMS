@@ -11,8 +11,6 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public int ParcelId { get; set; }
 
-        public string LocalId { get; set; }
-
         public int AgencyId { get; set; }
 
         public string SubAgency { get; set; }

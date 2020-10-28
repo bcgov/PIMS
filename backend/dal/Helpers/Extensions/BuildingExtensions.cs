@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using System;
@@ -14,18 +15,18 @@ namespace Pims.Dal.Helpers.Extensions
     public static class BuildingExtensions
     {
         /// <summary>
-        /// Make a query to determine if the building PID and PIN are unique.
-        /// - No two buildings should have the same PID (exception below)
-        /// - No two buildings should have the same PIN
-        /// - A Crown Land building without a Title will have a PID=0 and a unique PIN.
+        /// Make a query to determine if the building names are unique.
+        /// - No two buildings should have the same name on a parcel.
         /// </summary>
-        /// <param name="buildings"></param>
+        /// <param name="context"></param>
+        /// <param name="parcel"></param>
         /// <param name="building"></param>
-        /// <exception type="DbUpdateException">The PID and PIN must be unique.</exception>
-        public static void ThrowIfNotUnique(this DbSet<Entity.Building> buildings, Entity.Building building)
+        /// <exception type="DbUpdateException">The name within a parcel should be unique.</exception>
+        public static void ThrowIfNotUnique(this PimsContext context, Entity.Parcel parcel, Entity.Building building)
         {
-            var alreadyExists = buildings.Any(p => p.Id != building.Id && p.ParcelId == building.ParcelId && p.LocalId == building.LocalId);
-            if (alreadyExists) throw new DbUpdateException("Local ID must be unique within a parcel.");
+            var parcelBuildings = context.Parcels.Where(p => p.Id == parcel.Id).SelectMany(p => p.Buildings.Select(b => b.Building.Name)).Distinct().ToArray();
+            var alreadyExists = parcelBuildings.Contains(building.Name);
+            if (alreadyExists) throw new DbUpdateException("A building name must be unique on the parcel.");
         }
 
         /// <summary>
@@ -57,13 +58,20 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
-                query = query.Where(b =>
-                    b.Latitude != 0 &&
-                    b.Longitude != 0 &&
-                    b.Latitude <= filter.NELatitude &&
-                    b.Latitude >= filter.SWLatitude &&
-                    b.Longitude <= filter.NELongitude &&
-                    b.Longitude >= filter.SWLongitude);
+            {
+                var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
+                var ring = new NetTopologySuite.Geometries.LinearRing(
+                    new[] {
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.NELatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.SWLatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.SWLatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value)
+                    });
+                var poly = pfactory.CreatePolygon(ring);
+                poly.SRID = 4326;
+                query = query.Where(p => poly.Contains(p.Location));
+            }
 
             if (filter.Agencies?.Any() == true)
             {
@@ -87,15 +95,15 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.Tenancy))
                 query = query.Where(b => EF.Functions.Like(b.BuildingTenancy, $"%{filter.Tenancy}%"));
 
-            if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Parcel.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.AdministrativeArea))
+                query = query.Where(b => b.Parcels.Any(p => EF.Functions.Like(p.Parcel.Address.AdministrativeArea, $"%{filter.AdministrativeArea}%")));
             if (!String.IsNullOrWhiteSpace(filter.Zoning))
-                query = query.Where(p => EF.Functions.Like(p.Parcel.Zoning, $"%{filter.Zoning}%"));
+                query = query.Where(b => b.Parcels.Any(p => EF.Functions.Like(p.Parcel.Zoning, $"%{filter.Zoning}%")));
             if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
-                query = query.Where(p => EF.Functions.Like(p.Parcel.ZoningPotential, $"%{filter.ZoningPotential}%"));
+                query = query.Where(b => b.Parcels.Any(p => EF.Functions.Like(p.Parcel.ZoningPotential, $"%{filter.ZoningPotential}%")));
 
             if (!String.IsNullOrWhiteSpace(filter.Address)) // TODO: Parse the address information by City, Postal, etc.
-                query = query.Where(b => EF.Functions.Like(b.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(b.Address.City.Name, $"%{filter.Address}%"));
+                query = query.Where(b => EF.Functions.Like(b.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(b.Address.AdministrativeArea, $"%{filter.Address}%"));
 
             if (filter.MinRentableArea.HasValue)
                 query = query.Where(b => b.RentableArea >= filter.MinRentableArea);
@@ -147,9 +155,9 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="building"></param>
         /// <returns></returns>
-        public static string GetZoning(this Entity.Building building)
+        public static string[] GetZoning(this Entity.Building building)
         {
-            return building.Parcel != null ? building.Parcel.Zoning : "";
+            return building.Parcels.Select(p => p.Parcel.Zoning).Where(s => !String.IsNullOrWhiteSpace(s)).ToArray();
         }
 
         /// <summary>
@@ -157,9 +165,49 @@ namespace Pims.Dal.Helpers.Extensions
         /// </summary>
         /// <param name="building"></param>
         /// <returns></returns>
-        public static string GetZoningPotential(this Entity.Building building)
+        public static string[] GetZoningPotential(this Entity.Building building)
         {
-            return building.Parcel != null ? building.Parcel.ZoningPotential : "";
+            return building.Parcels.Select(p => p.Parcel.ZoningPotential).Where(s => !String.IsNullOrWhiteSpace(s)).ToArray();
+        }
+
+        /// <summary>
+        /// Get the building construction type name.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static string GetConstructionType(this Entity.Building building)
+        {
+            return building.BuildingConstructionType?.Name;
+        }
+
+        /// <summary>
+        /// Get the building occupant type name.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static string GetOccupantType(this Entity.Building building)
+        {
+            return building.BuildingOccupantType?.Name;
+        }
+
+        /// <summary>
+        /// Get the building preduminate use name.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static string GetPredominateUse(this Entity.Building building)
+        {
+            return building.BuildingPredominateUse?.Name;
+        }
+
+        /// <summary>
+        /// Get the first parcel this building is located on.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static int? GetParcelId(this Entity.Building building)
+        {
+            return building.Parcels.FirstOrDefault()?.ParcelId;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { Description = "DescriptionTest" }, new[] { 1, 3 }, 1 },
-                new object[] { new ParcelFilter() { Municipality = "Municipality" }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { Zoning = "Zoning" }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1 }
             };
@@ -90,13 +90,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -121,13 +120,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -155,13 +153,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -187,13 +184,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -257,13 +253,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -288,13 +283,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -322,13 +316,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -353,13 +346,12 @@ namespace Pims.Dal.Test.Services
 
             using var init = helper.InitializeDatabase(user);
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             init.SaveChanges();
@@ -482,7 +474,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.NotNull(parcel.Address);
-            Assert.NotNull(parcel.Address.City);
+            Assert.NotNull(parcel.Address.AdministrativeArea);
             Assert.NotNull(parcel.Address.Province);
             Assert.NotNull(parcel.Classification);
             Assert.NotNull(parcel.Agency);
@@ -516,7 +508,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.NotNull(parcel.Address);
-            Assert.NotNull(parcel.Address.City);
+            Assert.NotNull(parcel.Address.AdministrativeArea);
             Assert.NotNull(parcel.Address.Province);
             Assert.NotNull(parcel.Classification);
             Assert.NotNull(parcel.Agency);
@@ -557,7 +549,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.Single(result.Buildings);
             Assert.False(result.IsSensitive);
-            Assert.False(result.Buildings.First().IsSensitive);
+            Assert.False(result.Buildings.First().Building.IsSensitive);
         }
 
         /// <summary>
@@ -619,7 +611,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.Equal(2, result.Buildings.Count());
             Assert.True(result.IsSensitive);
-            Assert.Equal(1, result.Buildings.Count(b => b.IsSensitive));
+            Assert.Equal(1, result.Buildings.Count(b => b.Building.IsSensitive));
         }
 
         /// <summary>

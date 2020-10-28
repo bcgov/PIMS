@@ -9,7 +9,6 @@ namespace Pims.Api.Mapping.Parcel
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.BuildingFiscal, Model.BuildingFiscalModel>()
-                .IgnoreNonMapped(true)
                 .EnumMappingStrategy(EnumMappingStrategy.ByName)
                 .Map(dest => dest.BuildingId, src => src.BuildingId)
                 .Map(dest => dest.FiscalYear, src => src.FiscalYear)
@@ -20,7 +19,6 @@ namespace Pims.Api.Mapping.Parcel
 
 
             config.NewConfig<Model.BuildingFiscalModel, Entity.BuildingFiscal>()
-                .IgnoreNonMapped(true)
                 .EnumMappingStrategy(EnumMappingStrategy.ByName)
                 .Map(dest => dest.BuildingId, src => src.BuildingId)
                 .Map(dest => dest.FiscalYear, src => src.FiscalYear)

@@ -2,11 +2,14 @@ namespace Pims.Dal.Entities.Models
 {
     public class ProjectProperty :  Pims.Dal.Entities.Views.Property
     {
+        #region Properties
         /// <summary>
         /// get/set - The RAEG/SPP project status
         /// </summary>
         public string ProjectStatus { get; set; }
+        #endregion
 
+        #region Constructors
         public ProjectProperty(Pims.Dal.Entities.Views.Property property)
         {
             Id = property.Id;
@@ -23,11 +26,10 @@ namespace Pims.Dal.Entities.Models
             SubAgency = property.SubAgency;
             AddressId = property.AddressId;
             Address = property.Address;
-            City = property.City;
+            AdministrativeArea = property.AdministrativeArea;
             Postal = property.Postal;
             Province = Province;
-            Latitude = property.Latitude;
-            Longitude = property.Longitude;
+            Location = property.Location;
             IsSensitive = property.IsSensitive;
             IsVisibleToOtherAgencies = property.IsVisibleToOtherAgencies;
             Estimated = property.Estimated;
@@ -41,10 +43,9 @@ namespace Pims.Dal.Entities.Models
             PIN = property.PIN;
             LandArea = property.LandArea;
             LandLegalDescription = property.LandLegalDescription;
-            Municipality = property.Municipality;
+            AdministrativeArea = property.AdministrativeArea;
             Zoning = property.Zoning;
             ZoningPotential = property.ZoningPotential;
-            LocalId = property.LocalId;
             ParcelId = property.ParcelId;
             BuildingConstructionTypeId = property.BuildingConstructionTypeId;
             BuildingConstructionType = property.BuildingConstructionType;
@@ -59,5 +60,6 @@ namespace Pims.Dal.Entities.Models
             OccupantName = property.OccupantName;
             TransferLeaseOnSale = property.TransferLeaseOnSale;
         }
+        #endregion
     }
 }

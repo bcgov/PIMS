@@ -9,7 +9,7 @@ namespace Pims.Dal.Services
     public interface ILookupService : IService
     {
         IEnumerable<Agency> GetAgencies();
-        IEnumerable<City> GetCities();
+        IEnumerable<AdministrativeArea> GetAdministrativeAreas();
         IEnumerable<Province> GetProvinces();
         IEnumerable<PropertyClassification> GetPropertyClassifications();
         IEnumerable<PropertyType> GetPropertyTypes();

@@ -57,11 +57,11 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get all cities sorted by SortOrder and Name
+        /// Get all administrative areas (city, municipality, district, etc) sorted by SortOrder and Name
         /// </summary>
-        public IEnumerable<City> GetCities()
+        public IEnumerable<AdministrativeArea> GetAdministrativeAreas()
         {
-            return this.Context.Cities.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
+            return this.Context.AdministrativeAreas.AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToArray();
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Municipality = "Municipality" }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land }, new[] { 3 }, 1, 1 },
@@ -42,7 +42,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 6, 6 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Municipality = "Municipality" }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 10, 10 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
@@ -59,7 +59,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 7, 7 },
                 new object[] { new AllPropertyFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 2, 2 },
                 new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "DescriptionTest" }, new[] { 1, 3 }, 2, 2 },
-                new object[] { new AllPropertyFilter() { Municipality = "Municipality" }, new[] { 1, 3 }, 11, 10 },
+                new object[] { new AllPropertyFilter() { AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 11, 10 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
@@ -128,19 +128,17 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -181,19 +179,17 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -234,13 +230,12 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
 
             var parcels = init.CreateParcels(1, 20);
-            parcels.Next(0).Latitude = 50;
-            parcels.Next(0).Longitude = 25;
+            parcels.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
             parcels.Next(3).Description = "-DescriptionTest-";
-            parcels.Next(4).Municipality = "-Municipality-";
+            parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
             parcels.Next(5).Zoning = "-Zoning-";
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
             parcels.Next(7).LandArea = 5500.55f;
@@ -250,8 +245,7 @@ namespace Pims.Dal.Test.Services
             parcels.Next(8).ClassificationId = classification.Id;
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location = new NetTopologySuite.Geometries.Point(25, 50) { SRID = 4326 };
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;

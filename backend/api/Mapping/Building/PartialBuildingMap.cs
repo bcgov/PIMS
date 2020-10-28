@@ -10,12 +10,11 @@ namespace Pims.Api.Mapping.Building
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Building, Model.PartialBuildingModel>()
-                .IgnoreNonMapped(true)
                 .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.LocalId, src => src.LocalId)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
         }
     }

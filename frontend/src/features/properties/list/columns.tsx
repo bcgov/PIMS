@@ -72,16 +72,8 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 160,
   },
   {
-    Header: 'City',
-    accessor: 'city',
-    align: 'left',
-    responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
-  },
-  {
-    Header: 'Municipality',
-    accessor: 'municipality',
+    Header: 'Location',
+    accessor: 'administrativeArea',
     align: 'left',
     responsive: true,
     width: spacing.medium,
