@@ -184,18 +184,18 @@ namespace Pims.Dal.Services
             var originalReport = this.Context.ProjectReports
                 .SingleOrDefault(p => p.Id == report.Id) ?? throw new KeyNotFoundException();
 
-            if (originalReport.To == null) throw new ArgumentNullException();
+            if (report.To == null) throw new ArgumentNullException(nameof(report.To));
             if (originalReport.IsFinal && report.IsFinal) throw new InvalidOperationException($"Unable to update FINAL project reports.");
-            if (originalReport.From == originalReport.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
-
-            this.Context.Entry(originalReport).CurrentValues.SetValues(report);
-            this.Context.SetOriginalRowVersion(originalReport);
+            if (report.From == report.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
 
             //If the report 'To' date has changed regenerate all the snapshots based on that date.
-            if(!originalReport.To.Equals(report.To))
+            if (!originalReport.To.Equals(report.To))
             {
                 this.Context.ProjectSnapshots.AddRange(GenerateSnapshots((DateTime)report.To, report.From));
             }
+
+            this.Context.Entry(originalReport).CurrentValues.SetValues(report);
+            this.Context.SetOriginalRowVersion(originalReport);
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
@@ -270,7 +270,7 @@ namespace Pims.Dal.Services
                 JsonConvert.PopulateObject(project.Metadata ?? "{}", project);
                 ProjectSnapshot snapshot = new ProjectSnapshot(project);
                 snapshot.SnapshotOn = to;
-                snapshot.BaselineIntegrity = project.NetProceeds - (fromSnapshots.GetValueOrDefault(project.Id)?.NetProceeds ?? 0);
+                snapshot.BaselineIntegrity = project.NetProceeds ?? 0 - (fromSnapshots.GetValueOrDefault(project.Id)?.NetProceeds ?? 0);
 
                 projectSnapshots = projectSnapshots.Append(snapshot);
             }
