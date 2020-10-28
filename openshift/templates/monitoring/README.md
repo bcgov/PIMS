@@ -2,6 +2,8 @@
 
 PIMS monitoring uses Prometheus to collect metrics from the PIMS API, and Grafana dashboards to visualize the metrics.
 
+![alt text](pims-monitoring.png "Logging")
+
 ## Prometheus Configuration
 
 1. To enable Prometheus in the PIMS DotNet API
@@ -21,15 +23,12 @@ Add the following code in the StartUp.cs => Configure Method to enable the /metr
         }
 ```
 
-2. Prometheus is deployed to the PIMS tools project in OpenShift (using the prometheus-template.yml) to target the development, test and production deployment of the API
+2. Prometheus is deployed to the PIMS tools project in OpenShift (using the prometheus-template.yml - PIMS Prometheus) to target the development, test and production deployment of the API
 
-## Grafana Configuration
+## Grafana Configuration (PIMS Grafana template)
 
 Grafana uses Prometheus as a datasource to display and visualize the metrics collected from the API deployments. Grafana is also configured to use Github to authenticate users to view the dashboard
 
-Apply the grafana-template.yml to Openshift and deploy an instance of Grafana from the Console. Make sure to supply the following parameters
+Apply the grafana-template.yml to Openshift and deploy an instance of Grafana from the Console. Make sure that all required fields are filled out.
 
-- GF_SECURITY_ADMIN_PASSWORD => Grafana Dashboard Admin Password
-- GITHUB_ALLOWED_ORG => Github Allowed Organization
-- GITHUB_CLIENT_ID => Github Client ID
-- name: GITHUB_CLIENT_SECRET => Github Client Secret
+Our Grafana dashboard uses Openshift OAuth to authenticate users and only users with access to the PIMS project are allowed. By default the Grafana deployment will assign all users an Admin role on signup, and it is recommended to change the default role assignment to `Viewer` after the first Admin user is logged in. Only Admin users can change other users permissions.
