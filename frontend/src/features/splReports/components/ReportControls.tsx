@@ -87,6 +87,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
   const reportOptions = reportsToOptions(otherReports);
   let reportOn = formatApiDateTime(currentReport?.to);
   const fromId = _.find(reports, { to: currentReport?.from })?.id;
+  const originalReport = _.find(reports, { id: currentReport?.id });
   return (
     <>
       <Formik
@@ -146,7 +147,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 <Button
                   className="h-75 mr-auto"
                   type="submit"
-                  disabled={!dirty || !values.id}
+                  disabled={(!dirty && originalReport?.to === currentReport?.to) || !values.id}
                   onClick={e => {
                     e.preventDefault();
                     setSubmitting(true);
