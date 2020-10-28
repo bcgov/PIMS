@@ -3,7 +3,7 @@ import './Map.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, WMSTileLayer, LayersControl } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -21,6 +21,13 @@ import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
 import { useRouterFilter } from 'hooks/useRouterFilter';
+import { Layer } from './Layers/Layer';
+import {
+  municipalityLayerPopupConfig,
+  MUNICIPALITY_LAYER_URL,
+  parcelLayerPopupConfig,
+  PARCELS_LAYER_URL,
+} from './Layers/constants';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -73,7 +80,6 @@ const Map: React.FC<MapProps> = ({
   onMapClick,
   disableMapFilterBar,
   interactive = true,
-  showParcelBoundaries = true,
 }) => {
   // state and refs
   const dispatch = useDispatch();
@@ -319,27 +325,31 @@ const Map: React.FC<MapProps> = ({
             />
             {selectedProperty && renderPopup(selectedProperty)}
             <LegendControl />
+
             <LayersControl position="topright">
-              <LayersControl.Overlay checked={showParcelBoundaries} name="Parcel Boundaries">
-                <WMSTileLayer
-                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
-                  layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-                  transparent={true}
-                  format="image/png"
-                  zIndex={10}
-                  id="parcelLayer"
-                />
+              <LayersControl.Overlay checked={true} name="Parcel Boundaries">
+                <LayerGroup>
+                  <Layer
+                    bbox={bounds}
+                    minZoom={14}
+                    opacity={0.6}
+                    weight={0.8}
+                    color="#d39e00"
+                    popupConfig={parcelLayerPopupConfig}
+                    src={PARCELS_LAYER_URL}
+                  />
+                </LayerGroup>
               </LayersControl.Overlay>
               <LayersControl.Overlay checked name="Municipalities">
-                <WMSTileLayer
-                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?"
-                  layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP"
-                  transparent={true}
-                  format="image/png"
-                  opacity={0.5}
-                  zIndex={8}
-                  id="municipalityLayer"
-                />
+                <LayerGroup>
+                  <Layer
+                    opacity={0.5}
+                    bbox={bounds}
+                    weight={0.7}
+                    src={MUNICIPALITY_LAYER_URL}
+                    popupConfig={municipalityLayerPopupConfig}
+                  />
+                </LayerGroup>
               </LayersControl.Overlay>
             </LayersControl>
           </LeafletMap>
