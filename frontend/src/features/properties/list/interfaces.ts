@@ -22,8 +22,7 @@ export interface IProperty {
 
   addressId: number;
   address: string;
-  city: string;
-  cityId: number;
+  administrativeArea: string;
   province: string;
   postal: string;
 
@@ -41,7 +40,6 @@ export interface IProperty {
   // Parcel Properties
   landArea: number;
   landLegalDescription: string;
-  municipality?: string;
   zoning?: string;
   zoningPotential?: string;
 
@@ -70,7 +68,7 @@ export interface IPropertyFilter {
   quantity: number;
   pid?: string;
   address?: string;
-  municipality?: string;
+  administrativeArea?: string;
   projectNumber?: string;
   classificationId?: number;
   agencies?: number | number[];

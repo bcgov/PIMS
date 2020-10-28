@@ -43,9 +43,9 @@ exports[`FilterBar renders correctly 1`] = `
               </option>
               <option
                 className="option"
-                value="municipality"
+                value="administrativeArea"
               >
-                Municipality
+                Location
               </option>
               <option
                 className="option"
@@ -68,7 +68,7 @@ exports[`FilterBar renders correctly 1`] = `
               name="address"
               onBlur={[Function]}
               onChange={[Function]}
-              placeholder="Enter an address or city"
+              placeholder="Enter an address or location"
               value=""
             />
           </div>

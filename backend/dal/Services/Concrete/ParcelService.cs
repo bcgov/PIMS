@@ -62,13 +62,21 @@ namespace Pims.Dal.Services
                 (isAdmin
                     || p.IsVisibleToOtherAgencies
                     || ((!p.IsSensitive || viewSensitive)
-                        && userAgencies.Contains(p.AgencyId)))
-                && p.Latitude != 0
-                && p.Longitude != 0
-                && p.Latitude <= neLat
-                && p.Latitude >= swLat
-                && p.Longitude <= neLong
-                && p.Longitude >= swLong);
+                        && userAgencies.Contains(p.AgencyId))));
+
+            var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
+            var ring = new NetTopologySuite.Geometries.LinearRing(
+                new[] {
+                        new NetTopologySuite.Geometries.Coordinate(neLong, neLat),
+                        new NetTopologySuite.Geometries.Coordinate(swLong, neLat),
+                        new NetTopologySuite.Geometries.Coordinate(swLong, swLat),
+                        new NetTopologySuite.Geometries.Coordinate(neLong, swLat),
+                        new NetTopologySuite.Geometries.Coordinate(neLong, neLat)
+                });
+            var poly = pfactory.CreatePolygon(ring);
+            poly.SRID = 4326;
+            query = query.Where(p => poly.Contains(p.Location));
+
             return query.ToArray();
         }
 
@@ -118,15 +126,14 @@ namespace Pims.Dal.Services
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var ownsABuilding = this.Context.Buildings
-                .Any(b => b.ParcelId == id
-                    && userAgencies.Contains(b.AgencyId));
+            var ownsABuilding = this.Context.ParcelBuildings
+                .Any(pb => pb.ParcelId == id
+                    && userAgencies.Contains(pb.Building.AgencyId));
 
             var parcel = this.Context.Parcels
                 .AsNoTracking()
                 .Include(p => p.Classification)
                 .Include(p => p.Address)
-                .Include(p => p.Address.City)
                 .Include(p => p.Address.Province)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency.Parent)
@@ -135,27 +142,26 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings)
                 .Include(p => p.CreatedBy)
                 .Include(p => p.UpdatedBy)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.City)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address.Province)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingConstructionType)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingPredominateUse)
-                .Include(p => p.Buildings).ThenInclude(b => b.BuildingOccupantType)
-                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address.Province)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingConstructionType)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingPredominateUse)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
             // Remove any sensitive buildings from the results if the user is not allowed to view them.
             if (!viewSensitive)
             {
-                parcel?.Buildings.RemoveAll(b => b.IsSensitive);
+                parcel?.Buildings.RemoveAll(pb => pb.Building.IsSensitive);
             }
 
             // Remove any properties not owned by user's agency.
             if (!isAdmin)
             {
-                parcel?.Buildings.RemoveAll(b => !userAgencies.Contains(b.AgencyId));
+                parcel?.Buildings.RemoveAll(pb => !userAgencies.Contains(pb.Building.AgencyId));
             }
 
             return parcel;
@@ -178,20 +184,19 @@ namespace Pims.Dal.Services
 
             parcel.AgencyId = agency.Id;
             parcel.Agency = agency;
-            parcel.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;
 
-            parcel.Buildings.ForEach(b =>
+            parcel.Buildings.ForEach(pb =>
             {
-                b.Parcel = parcel;
-                b.Address.City = this.Context.Cities.Find(parcel.Address.CityId);
-                b.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
-                b.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
-                b.BuildingConstructionType = this.Context.BuildingConstructionTypes.Find(b.BuildingConstructionTypeId);
-                b.BuildingOccupantType = this.Context.BuildingOccupantTypes.Find(b.BuildingOccupantTypeId);
-                b.BuildingPredominateUse = this.Context.BuildingPredominateUses.Find(b.BuildingPredominateUseId);
+                pb.Parcel = parcel;
+                pb.Building.Address.AdministrativeArea = parcel.Address.AdministrativeArea;
+                pb.Building.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
+                pb.Building.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
+                pb.Building.BuildingConstructionType = this.Context.BuildingConstructionTypes.Find(pb.Building.BuildingConstructionTypeId);
+                pb.Building.BuildingOccupantType = this.Context.BuildingOccupantTypes.Find(pb.Building.BuildingOccupantTypeId);
+                pb.Building.BuildingPredominateUse = this.Context.BuildingPredominateUses.Find(pb.Building.BuildingPredominateUseId);
 
             });
 
@@ -216,15 +221,15 @@ namespace Pims.Dal.Services
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
-                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
             var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
-            var ownsABuilding = originalParcel.Buildings.Any(b => userAgencies.Contains(b.AgencyId.Value));
+            var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
             if (!allowEdit && !ownsABuilding) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             // Do not allow switching agencies through this method.
@@ -248,13 +253,13 @@ namespace Pims.Dal.Services
                 this.Context.SetOriginalRowVersion(originalParcel);
             }
 
-            foreach (var building in parcel.Buildings)
+            foreach (var building in parcel.Buildings.Select(pb => pb.Building))
             {
+                // Check if the buildig already exists.
                 var existingBuilding = originalParcel.Buildings
-                    .FirstOrDefault(b => b.Id == building.Id);
+                    .FirstOrDefault(pb => pb.BuildingId == building.Id)?.Building;
 
                 // Reset all relationships that are not changed through this update.
-                building.Address.City = this.Context.Cities.FirstOrDefault(c => c.Id == building.Address.CityId);
                 building.Address.Province = this.Context.Provinces.FirstOrDefault(p => p.Id == building.Address.ProvinceId);
                 building.BuildingConstructionType = this.Context.BuildingConstructionTypes.FirstOrDefault(b => b.Id == building.BuildingConstructionTypeId);
                 building.BuildingOccupantType = this.Context.BuildingOccupantTypes.FirstOrDefault(b => b.Id == building.BuildingOccupantTypeId);
@@ -265,7 +270,7 @@ namespace Pims.Dal.Services
                 {
                     if (!allowEdit) throw new NotAuthorizedException("User may not add properties to a parcel they don't own.");
 
-                    originalParcel.Buildings.Add(building);
+                    originalParcel.Buildings.Add(new ParcelBuilding(parcel, building));
                 }
                 else
                 {
@@ -354,27 +359,42 @@ namespace Pims.Dal.Services
                 }
 
                 // Delete any missing records in child collections.
-                foreach (var building in originalParcel.Buildings)
+                foreach (var parcelBuilding in originalParcel.Buildings)
                 {
-                    var matchingBuilding = parcel.Buildings.FirstOrDefault(b => b.Id == building.Id);
-                    if (matchingBuilding == null)
+                    var matchingParcelBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
+                    if (matchingParcelBuilding == null)
                     {
-                        this.ThrowIfNotAllowedToUpdate(building, _options.Project);
-                        this.Context.Buildings.Remove(building);
+                        // TODO: This will delete the building from the datasource.  This isn't entirely ideal as it may be related to multiple parcels.
+                        this.ThrowIfNotAllowedToUpdate(matchingParcelBuilding.Building, _options.Project);
+
+                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
+                        parcel.Buildings.Remove(matchingParcelBuilding);
+                        parcelBuildings.ForEach(pb => this.Context.ParcelBuildings.Remove(pb)); // Remove all relationships from other parcels to this building.
+                        this.Context.Buildings.Remove(matchingParcelBuilding.Building);
 
                         continue;
                     }
-                    foreach (var buildingEvaluation in building.Evaluations)
+                    foreach (var buildingEvaluation in parcelBuilding.Building.Evaluations)
                     {
-                        if (!matchingBuilding.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                        // Delete the evaluations from the building that have been removed.
+                        if (!matchingParcelBuilding.Building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
                         {
                             this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                        }
+                    }
+                    foreach (var buildingFiscal in parcelBuilding.Building.Fiscals)
+                    {
+                        // Delete the fiscals from the building that have been removed.
+                        if (!matchingParcelBuilding.Building.Fiscals.Any(e => (e.BuildingId == buildingFiscal.BuildingId && e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key)))
+                        {
+                            this.Context.BuildingFiscals.Remove(buildingFiscal);
                         }
                     }
                 }
 
                 foreach (var parcelEvaluation in originalParcel.Evaluations)
                 {
+                    // Delete the evaluations from the parcel that have been removed.
                     if (!parcel.Evaluations.Any(e => (e.ParcelId == parcelEvaluation.ParcelId && e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key)))
                     {
                         this.Context.ParcelEvaluations.Remove(parcelEvaluation);
@@ -382,6 +402,7 @@ namespace Pims.Dal.Services
                 }
                 foreach (var parcelFiscals in originalParcel.Fiscals)
                 {
+                    // Delete the fiscals from the parcel that have been removed.
                     if (!parcel.Fiscals.Any(e => (e.ParcelId == parcelFiscals.ParcelId && e.FiscalYear == parcelFiscals.FiscalYear && e.Key == parcelFiscals.Key)))
                     {
                         this.Context.ParcelFiscals.Remove(parcelFiscals);
@@ -389,7 +410,7 @@ namespace Pims.Dal.Services
                 }
 
                 // update only an active project with any financial value changes.
-                if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber) 
+                if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber)
                     && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed() ?? false))
                 {
                     this.Context.UpdateProjectFinancials(parcel.ProjectNumber);
@@ -419,9 +440,9 @@ namespace Pims.Dal.Services
                 .Include(p => p.Address)
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
-                .Include(p => p.Buildings).ThenInclude(b => b.Evaluations)
-                .Include(p => p.Buildings).ThenInclude(b => b.Fiscals)
-                .Include(p => p.Buildings).ThenInclude(b => b.Address)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             if (!isAdmin && (!userAgencies.Contains(originalParcel.AgencyId) || originalParcel.IsSensitive && !viewSensitive))
@@ -431,16 +452,17 @@ namespace Pims.Dal.Services
             this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
             this.Context.SetOriginalRowVersion(originalParcel);
 
-            originalParcel.Buildings.ForEach((building) =>
+            originalParcel.Buildings.ForEach(b =>
             {
-                this.ThrowIfNotAllowedToUpdate(building, _options.Project);
-                this.Context.BuildingEvaluations.RemoveRange(building.Evaluations);
-                this.Context.BuildingFiscals.RemoveRange(building.Fiscals);
-                this.Context.Buildings.Remove(building);
+                this.ThrowIfNotAllowedToUpdate(b.Building, _options.Project);
+                this.Context.ParcelBuildings.Remove(b);
+                this.Context.BuildingEvaluations.RemoveRange(b.Building.Evaluations);
+                this.Context.BuildingFiscals.RemoveRange(b.Building.Fiscals);
+                this.Context.Buildings.Remove(b.Building);
             });
             this.Context.ParcelEvaluations.RemoveRange(originalParcel.Evaluations);
             this.Context.ParcelFiscals.RemoveRange(originalParcel.Fiscals);
-            this.Context.Parcels.Remove(originalParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely.
+            this.Context.Parcels.Remove(originalParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely under certain conditions.
             this.Context.CommitTransaction();
         }
 

@@ -155,8 +155,8 @@ namespace Pims.Api.Test.Controllers
             var province = EntityHelper.CreateProvince("BC", "British Columbia");
             service.Setup(m => m.Lookup.GetProvinces()).Returns(new[] { province });
 
-            var city = EntityHelper.CreateCity("VIC", "Victoria");
-            service.Setup(m => m.Lookup.GetCities()).Returns(new[] { city });
+            var administrativeArea = EntityHelper.CreateAdministrativeArea("VIC", "Victoria");
+            service.Setup(m => m.Lookup.GetAdministrativeAreas()).Returns(new[] { administrativeArea });
 
             var buildingConstructionType = EntityHelper.CreateBuildingConstructionType("type");
             service.Setup(m => m.Lookup.GetBuildingConstructionTypes()).Returns(new[] { buildingConstructionType });
@@ -180,7 +180,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(mapper.Map<Models.CodeModel<int>>(agency), actualResult.Next(1), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.LookupModel<int>>(propertyClassification), actualResult.Next(2), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.LookupModel<string>>(province), actualResult.Next(3), new ShallowPropertyCompare());
-            Assert.Equal(mapper.Map<Models.CodeModel<int>>(city), actualResult.Next(4), new ShallowPropertyCompare());
+            Assert.Equal(mapper.Map<Models.CodeModel<int>>(administrativeArea), actualResult.Next(4), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingConstructionType), actualResult.Next(5), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingPredominateUse), actualResult.Next(6), new ShallowPropertyCompare());
             Assert.Equal(mapper.Map<Models.LookupModel<int>>(buildingOccupantType), actualResult.Next(7), new ShallowPropertyCompare());

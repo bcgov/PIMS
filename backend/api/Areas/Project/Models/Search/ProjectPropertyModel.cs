@@ -51,9 +51,9 @@ namespace Pims.Api.Areas.Project.Models.Search
         public string Address { get; set; }
 
         /// <summary>
-        /// get/set - The name of the city.
+        /// get/set - The name of the administrative area (city, municipality, district, etc.).
         /// </summary>
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         /// <summary>
         /// get/set - The property netbook value.
@@ -80,11 +80,6 @@ namespace Pims.Api.Areas.Project.Models.Search
         /// get/set - The id of the parcel.
         /// </summary>
         public float ParcelId { get; set; }
-
-        /// <summary>
-        /// get/set - The property municipality name.
-        /// </summary>
-        public string Municipality { get; set; }
 
         /// <summary>
         /// get/set - The property zoning

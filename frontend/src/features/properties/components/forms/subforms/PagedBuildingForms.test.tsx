@@ -24,11 +24,10 @@ mockAxios.onAny().reply(200, {});
 const history = createMemoryHistory();
 const mockBuilding: IFormBuilding = {
   address: {
-    cityId: 1,
     line1: 'line1',
     postal: 'postal',
     provinceId: '2',
-    city: 'city',
+    administrativeArea: 'administrativeArea',
     province: 'province',
   },
   name: 'name',
@@ -61,7 +60,12 @@ const mockBuilding: IFormBuilding = {
 
 const lCodes = {
   lookupCodes: [
-    { name: 'test city', id: '1', isDisabled: false, type: API.CITY_CODE_SET_NAME },
+    {
+      name: 'test administrative area',
+      id: '1',
+      isDisabled: false,
+      type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
+    },
     { name: 'test province', id: '2222', isDisabled: false, type: API.PROVINCE_CODE_SET_NAME },
     {
       name: 'construction test type',

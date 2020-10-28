@@ -36,7 +36,8 @@ namespace Pims.Dal
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Province> Provinces { get; set; }
-        public DbSet<City> Cities { get; set; }
+        public DbSet<AdministrativeArea> AdministrativeAreas { get; set; }
+        public DbSet<ParcelBuilding> ParcelBuildings { get; set; }
         #endregion
 
         #region Projects

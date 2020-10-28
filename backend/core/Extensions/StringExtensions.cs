@@ -78,5 +78,19 @@ namespace Pims.Core.Extensions
                 _ => HttpMethod.Post,
             };
         }
+
+        /// <summary>
+        /// Convert the specified 'value' from default to UTF8 encoding.
+        /// Replace linebreaks with spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="replaceLineBreaks"></param>
+        /// <returns></returns>
+        public static string ConvertToUTF8(this string value, bool replaceLineBreaks = true)
+        {
+            if (value == null) return value;
+            var bytes = Encoding.Default.GetBytes(replaceLineBreaks ? value.Replace("\r\n", " ") : value);
+            return Encoding.UTF8.GetString(bytes);
+        }
     }
 }

@@ -125,34 +125,28 @@ namespace Pims.Dal.Services
                 if (pp.PropertyType == PropertyTypes.Land)
                 {
                     this.Context.Entry(pp)
-                    .Reference(p => p.Parcel).Query()
-                    .Include(p => p.Evaluations)
-                    .Include(p => p.Fiscals)
-                    .Include(p => p.Classification)
-                    .Include(p => p.Address)
-                    .Include(p => p.Address).ThenInclude(a => a.City)
-                    .Include(p => p.Address).ThenInclude(a => a.Province)
-                    .Include(p => p.Agency)
-                    .Include(p => p.Agency).ThenInclude(a => a.Parent)
-                    .Load();
+                        .Reference(p => p.Parcel).Query()
+                        .Include(p => p.Evaluations)
+                        .Include(p => p.Fiscals)
+                        .Include(p => p.Classification)
+                        .Include(p => p.Address).ThenInclude(a => a.Province)
+                        .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                        .Load();
                 }
                 else
                 {
                     this.Context.Entry(pp)
-                    .Reference(p => p.Building).Query()
-                    .Include(b => b.Parcel)
-                    .Include(b => b.Evaluations)
-                    .Include(p => p.Fiscals)
-                    .Include(b => b.Classification)
-                    .Include(b => b.Address)
-                    .Include(b => b.Address).ThenInclude(a => a.City)
-                    .Include(b => b.Address).ThenInclude(a => a.Province)
-                    .Include(b => b.Agency)
-                    .Include(b => b.Agency).ThenInclude(a => a.Parent)
-                    .Include(b => b.BuildingConstructionType)
-                    .Include(b => b.BuildingOccupantType)
-                    .Include(b => b.BuildingPredominateUse)
-                    .Load();
+                        .Reference(p => p.Building).Query()
+                        .Include(b => b.Parcels).ThenInclude(p => p.Parcel)
+                        .Include(b => b.Evaluations)
+                        .Include(p => p.Fiscals)
+                        .Include(b => b.Classification)
+                        .Include(b => b.Address).ThenInclude(a => a.Province)
+                        .Include(b => b.Agency).ThenInclude(a => a.Parent)
+                        .Include(b => b.BuildingConstructionType)
+                        .Include(b => b.BuildingOccupantType)
+                        .Include(b => b.BuildingPredominateUse)
+                        .Load();
                 }
             }
 
@@ -220,12 +214,9 @@ namespace Pims.Dal.Services
                 .Include(p => p.Status)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Risk)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
-                .Include(p => p.Tasks)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
-                .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
                 .Include(p => p.Workflow)
@@ -245,10 +236,7 @@ namespace Pims.Dal.Services
                     .Include(p => p.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(p => p.Classification)
-                    .Include(p => p.Address)
-                    .Include(p => p.Address).ThenInclude(a => a.City)
                     .Include(p => p.Address).ThenInclude(a => a.Province)
-                    .Include(p => p.Agency)
                     .Include(p => p.Agency).ThenInclude(a => a.Parent)
                     .Load();
                 }
@@ -256,14 +244,11 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
-                    .Include(b => b.Parcel)
+                    .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel)
                     .Include(b => b.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(b => b.Classification)
-                    .Include(b => b.Address)
-                    .Include(b => b.Address).ThenInclude(a => a.City)
                     .Include(b => b.Address).ThenInclude(a => a.Province)
-                    .Include(b => b.Agency)
                     .Include(b => b.Agency).ThenInclude(a => a.Parent)
                     .Include(b => b.BuildingConstructionType)
                     .Include(b => b.BuildingOccupantType)
@@ -458,7 +443,6 @@ namespace Pims.Dal.Services
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Agency)
-                .Include(p => p.Tasks)
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Responses)
                 .Include(p => p.Workflow)
@@ -484,7 +468,7 @@ namespace Pims.Dal.Services
                     this.Context.Entry(pp)
                     .Reference(p => p.Building).Query()
                     .Include(p => p.Classification)
-                    .Include(b => b.Parcel)
+                    .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel)
                     .Include(b => b.Evaluations)
                     .Include(p => p.Fiscals)
                     .Load();

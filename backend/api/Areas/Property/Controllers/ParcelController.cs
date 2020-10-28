@@ -7,9 +7,9 @@ using Pims.Dal;
 using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models.Parcel;
+using Model = Pims.Api.Areas.Property.Models.Parcel;
 
-namespace Pims.Api.Controllers
+namespace Pims.Api.Areas.Property.Controllers
 {
     /// <summary>
     /// ParcelController class, provides endpoints for managing my parcels.

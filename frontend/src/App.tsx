@@ -1,5 +1,5 @@
 import './App.scss';
-
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Spinner } from 'react-bootstrap';

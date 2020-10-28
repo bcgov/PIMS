@@ -1,7 +1,7 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Pims.Api.Controllers;
+using Pims.Api.Areas.Property.Controllers;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
 using Pims.Dal;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models.Building;
+using Model = Pims.Api.Areas.Property.Models.Building;
 
 namespace Pims.Api.Test.Controllers
 {
