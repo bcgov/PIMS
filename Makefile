@@ -66,9 +66,6 @@ clean: ## Removes all local containers, images, volumes, etc
 setup: ## Setup local container environment, initialize keycloak and database
 	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
 
-setup: ## Setup local container environment, initialize keycloak and database
-	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
-
 pause-30:
 	@echo "$(P) Pausing 30 seconds..."
 	@-sleep 30
