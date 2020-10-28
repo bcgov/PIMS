@@ -7,8 +7,6 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
         #region Properties
         public int Id { get; set; }
 
-        public string LocalId { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

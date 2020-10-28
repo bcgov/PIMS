@@ -1,6 +1,9 @@
+using FluentAssertions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Xunit;
 
 namespace Pims.Dal.Test.Helpers.Extensions
@@ -22,16 +25,17 @@ namespace Pims.Dal.Test.Helpers.Extensions
             {
                 Zoning = zone
             };
-            var building = new Building
-            {
-                Parcel = parcel
-            };
+            var building = new Building();
+            building.Parcels.Add(new ParcelBuilding(parcel, building));
 
             // Act
             var zoning = building.GetZoning();
 
             // Assert
-            Assert.Equal(zoning, zone);
+            Assert.NotNull(zoning);
+            Assert.IsAssignableFrom<IEnumerable<string>>(zoning);
+            zoning.Should().HaveCount(1);
+            zoning.First().Should().Be(zone);
         }
 
         [Fact]
@@ -51,21 +55,22 @@ namespace Pims.Dal.Test.Helpers.Extensions
         public void Get_BuildingZoningPotential()
         {
             // Arrange
-            var zoningPotential = "ZoningPotential";
+            var zonePotential = "ZoningPotential";
             var parcel = new Parcel
             {
-                ZoningPotential = zoningPotential
+                ZoningPotential = zonePotential
             };
-            var building = new Building
-            {
-                Parcel = parcel
-            };
+            var building = new Building();
+            building.Parcels.Add(new ParcelBuilding(parcel, building));
 
             // Act
-            var ActualZoningPotential = building.GetZoningPotential();
+            var zoningPotential = building.GetZoningPotential();
 
             // Assert
-            Assert.Equal(ActualZoningPotential, zoningPotential);
+            Assert.NotNull(zoningPotential);
+            Assert.IsAssignableFrom<IEnumerable<string>>(zoningPotential);
+            zoningPotential.Should().HaveCount(1);
+            zoningPotential.First().Should().Be(zonePotential);
         }
 
         [Fact]

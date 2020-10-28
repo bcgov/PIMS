@@ -21,12 +21,11 @@ namespace Pims.Core.Test
         /// <param name="lng"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        public static Entity.Building CreateBuilding(Entity.Parcel parcel, int id, string projectNumber = null, string localId = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
+        public static Entity.Building CreateBuilding(Entity.Parcel parcel, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
-            localId ??= $"l{id}";
             projectNumber ??= $"p{id}";
             agency ??= parcel.Agency;
-            var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
+            var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = EntityHelper.CreateBuildingPredominateUse("use");
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
@@ -35,10 +34,10 @@ namespace Pims.Core.Test
             return new Entity.Building(parcel, lat, lng)
             {
                 Id = id,
-                LocalId = localId,
                 ProjectNumber = projectNumber,
                 AgencyId = agency.Id,
                 Agency = agency,
+                Name = name,
                 AddressId = address.Id,
                 Address = address,
                 Classification = classification,
@@ -71,9 +70,9 @@ namespace Pims.Core.Test
             for (var i = startId; i < (startId + count); i++)
             {
                 var building = CreateBuilding(parcel, i);
-                parcel.Buildings.Add(building);
+                parcel.Buildings.Add(new Entity.ParcelBuilding(parcel, building));
             }
-            return parcel.Buildings.ToList();
+            return parcel.Buildings.Select(pb => pb.Building).ToList();
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace Pims.Core.Test
         {
             localId ??= $"l{id}";
             agency ??= parcel.Agency;
-            var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.City, parcel.Address.Province, parcel.Address.Postal);
+            var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingOccupantType("occupant");
@@ -101,7 +100,6 @@ namespace Pims.Core.Test
             {
                 Id = id,
                 ProjectNumber = projectNumber,
-                LocalId = localId,
                 AgencyId = agency.Id,
                 Agency = agency,
                 AddressId = address.Id,
@@ -121,7 +119,7 @@ namespace Pims.Core.Test
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
-            parcel.Buildings.Add(building);
+            var parcelBuilding = new Entity.ParcelBuilding(parcel, building);
             context.Buildings.Add(building);
             return building;
         }
@@ -141,7 +139,7 @@ namespace Pims.Core.Test
             {
                 context.CreateBuilding(parcel, i);
             }
-            return parcel.Buildings.ToList();
+            return parcel.Buildings.Select(pb => pb.Building).ToList();
         }
     }
 }

@@ -11,7 +11,7 @@ export interface IGeocoderResponse {
   siteId: string;
   fullAddress: string;
   address1: string;
-  city: string;
+  administrativeArea: string;
   provinceCode: string;
   latitude: number;
   longitude: number;
@@ -34,7 +34,7 @@ export interface PimsAPI extends AxiosInstance {
   ) => Promise<{ available: boolean }>;
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
-  getCityLatLng: (city: string) => Promise<LatLngTuple | null>;
+  getAdministrativeAreaLatLng: (city: string) => Promise<LatLngTuple | null>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -91,7 +91,7 @@ export const useApi = (): PimsAPI => {
     return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
   };
 
-  axios.getCityLatLng = useCallback(
+  axios.getAdministrativeAreaLatLng = useCallback(
     async (address: string): Promise<LatLngTuple | null> => {
       const { data } = await axios.get<IGeocoderResponse[]>(
         `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,

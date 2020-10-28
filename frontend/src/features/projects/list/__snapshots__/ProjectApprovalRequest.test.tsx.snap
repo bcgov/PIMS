@@ -733,7 +733,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     }
                     width="7%"
                   >
-                    City
+                    Location
                   </div>
                   <div
                     className="th"
@@ -1047,7 +1047,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="7%"
                     >
-                      Merritt
+                      
                     </div>
                     <div
                       className="td"

@@ -10,12 +10,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -184,26 +182,16 @@ namespace Pims.Api
                 options.AddPolicy("Administrator", policy => policy.Requirements.Add(new RealmAccessRoleRequirement("administrator")));
             });
 
-            var cs = Configuration.GetConnectionString("PIMS");
-            var builder = new SqlConnectionStringBuilder(cs);
-            var pwd = Configuration["DB_PASSWORD"];
+            // Generate the database connection string.
+            var csBuilder = new SqlConnectionStringBuilder(this.Configuration.GetConnectionString("PIMS"));
+            var pwd = this.Configuration["DB_PASSWORD"];
             if (!String.IsNullOrEmpty(pwd))
             {
-                builder.Password = pwd;
+                csBuilder.Password = pwd;
             }
-            services.AddDbContext<PimsContext>(options =>
-            {
-                var sql = options.UseSqlServer(builder.ConnectionString);
-                if (!this.Environment.IsProduction())
-                {
-                    var debugLoggerFactory = LoggerFactory.Create(builder => { builder.AddDebug(); }); // NOSONAR
-                    sql.UseLoggerFactory(debugLoggerFactory);
-                    options.EnableSensitiveDataLogging();
-                }
-            });
 
             services.AddHttpClient();
-
+            services.AddPimsContext(this.Environment, csBuilder.ConnectionString);
             services.AddPimsServices();
             services.AddPimsKeycloakService();
             services.AddGeocoderService(this.Configuration.GetSection("Geocoder")); // TODO: Determine if a default value could be used instead.
@@ -218,7 +206,7 @@ namespace Pims.Api
 
             services.AddHealthChecks()
                 .AddCheck("liveliness", () => HealthCheckResult.Healthy())
-                .AddSqlServer(builder.ConnectionString, tags: new[] { "services" });
+                .AddSqlServer(csBuilder.ConnectionString, tags: new[] { "services" });
 
             services.AddApiVersioning(options =>
             {
@@ -242,7 +230,7 @@ namespace Pims.Api
 
             services.AddSwaggerGen(options =>
             {
-                options.EnableAnnotations(true);
+                options.EnableAnnotations(false, true);
                 options.CustomSchemaIds(o => o.FullName);
                 options.OperationFilter<Helpers.Swagger.SwaggerDefaultValues>();
                 options.DocumentFilter<Helpers.Swagger.SwaggerDocumentFilter>();

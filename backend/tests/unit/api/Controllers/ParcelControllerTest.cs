@@ -1,7 +1,7 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Pims.Api.Controllers;
+using Pims.Api.Areas.Property.Controllers;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
 using Pims.Dal;
@@ -13,7 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Entity = Pims.Dal.Entities;
-using Model = Pims.Api.Models.Parcel;
+using Model = Pims.Api.Areas.Property.Models.Parcel;
 
 namespace Pims.Api.Test.Controllers
 {
@@ -32,7 +32,7 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new ParcelFilter() { Agencies = new int[] { 3 } } },
                 new object[] { new ParcelFilter() { ClassificationId = 2 } },
                 new object[] { new ParcelFilter() { Description = "test" } },
-                new object[] { new ParcelFilter() { Municipality = "test" } },
+                new object[] { new ParcelFilter() { AdministrativeArea = "test" } },
                 new object[] { new ParcelFilter() { Zoning = "test" } },
                 new object[] { new ParcelFilter() { ZoningPotential = "test" } },
                 new object[] { new ParcelFilter() { ProjectNumber = "test" } }
@@ -45,7 +45,7 @@ namespace Pims.Api.Test.Controllers
                 new object[] { new Uri("http://host/api/parcels?Address=test") },
                 new object[] { new Uri("http://host/api/parcels?ProjectNumber=test") },
                 new object[] { new Uri("http://host/api/parcels?Description=test") },
-                new object[] { new Uri("http://host/api/parcels?Municipality=test") },
+                new object[] { new Uri("http://host/api/parcels?AdministrativeArea=test") },
                 new object[] { new Uri("http://host/api/parcels?Zoning=test") },
                 new object[] { new Uri("http://host/api/parcels?ZoningPotential=test") },
                 new object[] { new Uri("http://host/api/parcels?ClassificationId=1") },
@@ -96,10 +96,9 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
             parcel.PIN = 3;
-            parcel.Description = "Municipality";
+            parcel.Description = "Description";
             parcel.LandArea = 3434.34f;
             parcel.LandLegalDescription = "LandLegalDescription";
-            parcel.Municipality = "Municipality";
             parcel.Zoning = "Zoning";
             parcel.ZoningPotential = "ZoningPotential";
             parcel.IsSensitive = false;
@@ -120,11 +119,10 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(parcel.AgencyId, actualResult.AgencyId);
             Assert.Equal(parcel.Description, actualResult.Description);
             Assert.Equal(parcel.AddressId, actualResult.Address.Id);
-            Assert.Equal(parcel.Latitude, actualResult.Latitude);
-            Assert.Equal(parcel.Longitude, actualResult.Longitude);
+            Assert.Equal(parcel.Location.Y, actualResult.Latitude);
+            Assert.Equal(parcel.Location.X, actualResult.Longitude);
             Assert.Equal(parcel.LandArea, actualResult.LandArea);
             Assert.Equal(parcel.LandLegalDescription, actualResult.LandLegalDescription);
-            Assert.Equal(parcel.Municipality, actualResult.Municipality);
             Assert.Equal(parcel.Zoning, actualResult.Zoning);
             Assert.Equal(parcel.ZoningPotential, actualResult.ZoningPotential);
             Assert.Equal(parcel.IsSensitive, actualResult.IsSensitive);

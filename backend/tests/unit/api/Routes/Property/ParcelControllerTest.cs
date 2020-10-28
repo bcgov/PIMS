@@ -1,10 +1,10 @@
-using Pims.Api.Controllers;
+using Pims.Api.Areas.Property.Controllers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
 using Pims.Dal.Security;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using Model = Pims.Api.Models.Parcel;
+using Model = Pims.Api.Areas.Property.Models.Parcel;
 
 namespace Pims.Api.Test.Routes
 {

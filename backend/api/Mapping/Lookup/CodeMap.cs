@@ -12,8 +12,8 @@ namespace Pims.Api.Mapping.Lookup
                 .Map(dest => dest.ParentId, src => src.ParentId)
                 .Inherits<Entity.LookupEntity<int>, Models.LookupModel<int>>();
 
-            config.NewConfig<Entity.City, Models.CodeModel<int>>()
-                .Map(dest => dest.Code, src => src.Code)
+            config.NewConfig<Entity.AdministrativeArea, Models.CodeModel<int>>()
+                .Map(dest => dest.Code, src => src.Abbreviation)
                 .Inherits<Entity.LookupEntity<int>, Models.LookupModel<int>>();
         }
     }

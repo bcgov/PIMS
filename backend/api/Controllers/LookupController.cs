@@ -108,7 +108,7 @@ namespace Pims.Api.Controllers
             var propertyClassificationCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetPropertyClassifications());
             var roleCodes = _mapper.Map<Model.RoleModel[]>(_pimsService.Lookup.GetRoles());
             var provinceCodes = _mapper.Map<Models.LookupModel<string>[]>(_pimsService.Lookup.GetProvinces());
-            var cityCodes = _mapper.Map<Models.CodeModel<int>[]>(_pimsService.Lookup.GetCities());
+            var administrativeAreaCodes = _mapper.Map<Models.CodeModel<int>[]>(_pimsService.Lookup.GetAdministrativeAreas());
             var constructionTypeCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingConstructionTypes());
             var predominateUseCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingPredominateUses());
             var occupantTypeCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
@@ -119,7 +119,7 @@ namespace Pims.Api.Controllers
             codes.AddRange(agencyCodes);
             codes.AddRange(propertyClassificationCodes);
             codes.AddRange(provinceCodes);
-            codes.AddRange(cityCodes);
+            codes.AddRange(administrativeAreaCodes);
             codes.AddRange(constructionTypeCodes);
             codes.AddRange(predominateUseCodes);
             codes.AddRange(occupantTypeCodes);

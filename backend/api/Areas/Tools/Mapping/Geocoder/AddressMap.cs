@@ -17,7 +17,7 @@ namespace Pims.Api.Areas.Tools.Mapping.Geocoder
                 .Map(dest => dest.SiteId, src => src.Properties.SiteID)
                 .Map(dest => dest.FullAddress, src => src.Properties.FullAddress)
                 .Map(dest => dest.Address1, src => GetAddress1(src.Properties))
-                .Map(dest => dest.City, src => GetCity(src.Properties))
+                .Map(dest => dest.AdministrativeArea, src => GetAdministrativeArea(src.Properties))
                 .Map(dest => dest.ProvinceCode, src => src.Properties.ProvinceCode)
                 .Map(dest => dest.Longitude, src => GetLongtitude(src.Geometry))
                 .Map(dest => dest.Latitude, src => GetLatitude(src.Geometry))
@@ -56,13 +56,13 @@ namespace Pims.Api.Areas.Tools.Mapping.Geocoder
         }
 
         /// <summary>
-        /// Get the city name based on the model property values.
+        /// Get the administrative area name (city, municipality, district, etc.) based on the model property values.
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        private string GetCity(GModel.PropertyModel properties)
+        private string GetAdministrativeArea(GModel.PropertyModel properties)
         {
-            return properties.LocalityType == "City" ? properties.LocalityName : null;
+            return properties.LocalityName;
         }
 
         /// <summary>

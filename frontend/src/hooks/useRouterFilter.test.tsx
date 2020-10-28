@@ -25,7 +25,7 @@ const defaultFilter = {
   searchBy: 'address',
   pid: '1',
   address: '2',
-  municipality: '3',
+  administrativeArea: '3',
   projectNumber: '4',
   agencies: '5',
   classificationId: '6',

@@ -125,15 +125,18 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
       newValues.buildings[props.index!].latitude = data.latitude;
       newValues.buildings[props.index!].longitude = data.longitude;
 
-      const city = data.city
+      const administrativeArea = data.administrativeArea
         ? lookupCodes.find(code => {
-            return code.type === API.CITY_CODE_SET_NAME && code.name === data.city;
+            return (
+              code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+              code.name === data.administrativeArea
+            );
           })
         : undefined;
 
-      if (city) {
-        newValues.buildings[props.index!].address.cityId = city.id;
-        newValues.buildings[props.index!].address.city = city.name;
+      if (administrativeArea) {
+        newValues.buildings[props.index!].address.cityId = administrativeArea.id;
+        newValues.buildings[props.index!].address.city = administrativeArea.name;
       }
 
       const province = data.provinceCode

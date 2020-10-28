@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Pims.Dal.Entities
 {
@@ -27,16 +28,10 @@ namespace Pims.Dal.Entities
         public string Address2 { get; set; }
 
         /// <summary>
-        /// get/set - The foreign key to the city.
+        /// get/set - The name of the location (city, municipality, area, etc.)
         /// </summary>
         /// <value></value>
-        public int CityId { get; set; }
-
-        /// <summary>
-        /// get/set - The city of the address.
-        /// </summary>
-        /// <value></value>
-        public City City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the province.
@@ -68,14 +63,14 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="address1"></param>
         /// <param name="address2"></param>
-        /// <param name="cityId"></param>
+        /// <param name="administrativeArea"></param>
         /// <param name="provinceId"></param>
         /// <param name="postal"></param>
-        public Address(string address1, string address2, int cityId, string provinceId, string postal)
+        public Address(string address1, string address2, string administrativeArea, string provinceId, string postal)
         {
             this.Address1 = address1;
             this.Address2 = address2;
-            this.CityId = cityId;
+            this.AdministrativeArea = administrativeArea ?? throw new ArgumentNullException(nameof(administrativeArea));
             this.ProvinceId = provinceId;
             this.Postal = postal;
             this.CreatedOn = DateTime.UtcNow;
@@ -86,16 +81,14 @@ namespace Pims.Dal.Entities
         /// </summary>
         /// <param name="address1"></param>
         /// <param name="address2"></param>
-        /// <param name="city"></param>
+        /// <param name="administrativeArea"></param>
         /// <param name="province"></param>
         /// <param name="postal"></param>
-        public Address(string address1, string address2, City city, Province province, string postal)
+        public Address(string address1, string address2, string administrativeArea, Province province, string postal)
         {
             this.Address1 = address1;
             this.Address2 = address2;
-            this.City = city;
-            this.CityId = city?.Id ??
-                throw new ArgumentNullException(nameof(city));
+            this.AdministrativeArea = administrativeArea ?? throw new ArgumentNullException(nameof(administrativeArea));
             this.Province = province;
             this.ProvinceId = province?.Id ??
                 throw new ArgumentNullException(nameof(province));
@@ -110,7 +103,7 @@ namespace Pims.Dal.Entities
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{this.Address1}{(String.IsNullOrWhiteSpace(this.Address2) ? null : $" {this.Address2}")}, {this.City?.Name} {this.ProvinceId}, {this.Postal}";
+            return String.Join(", ", new[] { this.Address1, this.Address2, this.AdministrativeArea, this.ProvinceId, this.Postal }.Where(s => String.IsNullOrWhiteSpace(s)));
         }
         #endregion
     }

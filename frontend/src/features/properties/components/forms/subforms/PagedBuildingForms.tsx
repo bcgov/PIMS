@@ -104,8 +104,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                         address: {
                           line1: formikProps.values.address?.line1,
                           line2: formikProps.values.address?.line2,
-                          city: formikProps.values.address?.city,
-                          cityId: formikProps.values.address?.cityId,
+                          administrativeArea: formikProps.values.address?.administrativeArea,
                           province: formikProps.values.address?.province,
                           provinceId: 'BC',
                           postal: formikProps.values.address?.postal,

@@ -26,13 +26,13 @@ namespace Pims.Dal.Test.Services
         public static IEnumerable<object[]> BuildingFilters =>
             new List<object[]>
             {
-                new object[] { new BuildingFilter(50, 25, 50, 20), 1 },
-                new object[] { new BuildingFilter(50, 24, 50, 26), 0 },
+                new object[] { new BuildingFilter(48.571155, -123.657596, 48.492947, -123.731803), 1 },
+                new object[] { new BuildingFilter(48.821333, -123.795017, 48.763431, -123.959783), 0 },
                 new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1 },
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
                 new object[] { new BuildingFilter() { Description = "DescriptionTest" }, 1 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
-                new object[] { new BuildingFilter() { Municipality = "Municipality" }, 5 },
+                new object[] { new BuildingFilter() { AdministrativeArea = "AdministrativeArea" }, 5 },
                 new object[] { new BuildingFilter() { ConstructionTypeId = 2 }, 1 },
                 new object[] { new BuildingFilter() { PredominateUseId = 2 }, 1 },
                 new object[] { new BuildingFilter() { MinRentableArea = 100 }, 1 },
@@ -93,8 +93,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -106,7 +106,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(22);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
@@ -131,8 +131,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -144,7 +144,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(22);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
@@ -170,8 +170,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -183,7 +183,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(22);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
@@ -208,8 +208,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 2, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -221,7 +221,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(22);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 23, 5);
             init.SaveChanges();
 
@@ -285,8 +285,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -298,7 +298,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(2);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 31, 5);
 
             init.SaveChanges();
@@ -324,8 +324,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -337,7 +337,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(2);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 31, 5);
 
             init.SaveChanges();
@@ -364,8 +364,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -377,7 +377,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(2);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 31, 5);
 
             init.SaveChanges();
@@ -403,8 +403,8 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var parcel1 = init.CreateParcel(1);
             var buildings = init.CreateBuildings(parcel1, 10, 20);
-            buildings.Next(0).Latitude = 50;
-            buildings.Next(0).Longitude = 25;
+            buildings.Next(0).Location.X = -123.720810;
+            buildings.Next(0).Location.Y = 48.529338;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
@@ -416,7 +416,7 @@ namespace Pims.Dal.Test.Services
             buildings.Next(8).RentableArea = 50;
 
             var parcel2 = init.CreateParcel(2);
-            parcel2.Municipality = "-Municipality-";
+            parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
             init.CreateBuildings(parcel2, 31, 5);
 
             init.SaveChanges();
@@ -553,7 +553,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(building, result, new ShallowPropertyCompare());
             Assert.NotNull(building.Address);
-            Assert.NotNull(building.Address.City);
+            Assert.NotNull(building.Address.AdministrativeArea);
             Assert.NotNull(building.Address.Province);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);
@@ -588,7 +588,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(building, result, new ShallowPropertyCompare());
             Assert.NotNull(building.Address);
-            Assert.NotNull(building.Address.City);
+            Assert.NotNull(building.Address.AdministrativeArea);
             Assert.NotNull(building.Address.Province);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);
@@ -623,7 +623,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(building, result, new ShallowPropertyCompare());
             Assert.NotNull(building.Address);
-            Assert.NotNull(building.Address.City);
+            Assert.NotNull(building.Address.AdministrativeArea);
             Assert.NotNull(building.Address.Province);
             Assert.NotNull(building.Classification);
             Assert.NotNull(building.Agency);

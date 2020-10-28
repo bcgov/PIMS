@@ -11,9 +11,7 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public string Line2 { get; set; }
 
-        public int CityId { get; set; }
-
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         public string ProvinceId { get; set; }
 

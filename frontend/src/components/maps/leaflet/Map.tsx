@@ -36,8 +36,7 @@ export type MapViewportChangeEvent = {
   filter?: {
     pid: string;
     address: string;
-    city: string;
-    municipality: string;
+    administrativeArea: string;
     projectNumber: string;
     /** comma-separated list of agencies to filter by */
     agencies: string | null;
@@ -94,8 +93,7 @@ const Map: React.FC<MapProps> = ({
     pid: '',
     searchBy: 'address',
     address: '',
-    city: '',
-    municipality: '',
+    administrativeArea: '',
     projectNumber: '',
     agencies: '',
     classificationId: '',
@@ -105,7 +103,7 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
-  const { getCityLatLng } = useApi();
+  const { getAdministrativeAreaLatLng } = useApi();
   useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
@@ -153,8 +151,7 @@ const Map: React.FC<MapProps> = ({
     const {
       pid,
       address,
-      city,
-      municipality,
+      administrativeArea,
       projectNumber,
       agencies,
       classificationId,
@@ -168,8 +165,7 @@ const Map: React.FC<MapProps> = ({
       filter: {
         pid,
         address,
-        city,
-        municipality,
+        administrativeArea,
         projectNumber,
         agencies: agencies,
         classificationId: decimalOrNull(classificationId),
@@ -191,16 +187,16 @@ const Map: React.FC<MapProps> = ({
     dispatch(storeParcelDetail(null));
   };
 
-  const zoomToCity = async (city: string) => {
-    const center = await getCityLatLng(city);
+  const zoomToAdministrativeArea = async (city: string) => {
+    const center = await getAdministrativeAreaLatLng(city);
     if (center) {
       mapRef.current?.leafletElement.setZoomAround(center, 11);
     }
   };
 
   const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
-    if (e.city) {
-      await zoomToCity(e.city);
+    if (e.administrativeArea) {
+      await zoomToAdministrativeArea(e.administrativeArea);
     } else {
       fitMapBounds();
     }

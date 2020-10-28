@@ -37,21 +37,15 @@ exports[`MapFilterBar renders correctly 1`] = `
               </option>
               <option
                 className="option"
-                value="city"
+                value="administrativeArea"
               >
-                City
+                Location
               </option>
               <option
                 className="option"
                 value="pid"
               >
                 PID/PIN
-              </option>
-              <option
-                className="option"
-                value="municipality"
-              >
-                Municipality
               </option>
               <option
                 className="option"

@@ -14,13 +14,13 @@ const SearchBar: React.FC = () => {
     options: [
       { label: 'Address', value: 'address' },
       { label: 'PID/PIN', value: 'pid' },
-      { label: 'Municipality', value: 'municipality' },
+      { label: 'Location', value: 'administrativeArea' },
       { label: 'RAEG or SPP No.', value: 'projectNumber' },
     ],
     placeholders: {
-      address: 'Enter an address or city',
+      address: 'Enter an address or location',
       pid: 'Enter a PID or PIN',
-      municipality: 'Enter a municipality',
+      administrativeArea: 'Enter a location',
       projectNumber: 'Enter an SPP/RAEG number',
     },
   };
@@ -34,7 +34,7 @@ const SearchBar: React.FC = () => {
 
   const reset = () => {
     setFieldValue('address', '');
-    setFieldValue('municipality', '');
+    setFieldValue('administrativeArea', '');
     setFieldValue('projectNumber', '');
   };
 
@@ -53,7 +53,7 @@ export interface IFilterBarState extends BasePropertyFilter {
   searchBy: string;
   pid: string;
   address: string;
-  municipality: string;
+  administrativeArea: string;
   projectNumber: string;
   agencies: string;
   classificationId: string;
@@ -74,7 +74,7 @@ const defaultFilterValues: IFilterBarState = {
   searchBy: 'address',
   pid: '',
   address: '',
-  municipality: '',
+  administrativeArea: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',

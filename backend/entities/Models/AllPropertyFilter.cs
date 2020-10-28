@@ -19,11 +19,6 @@ namespace Pims.Dal.Entities.Models
         public string PID { get; set; }
 
         /// <summary>
-        /// get/set - The parcel municipality.
-        /// </summary>
-        public string Municipality { get; set; }
-
-        /// <summary>
         /// get/set - The parcel zoning.
         /// </summary>
         public string Zoning { get; set; }
@@ -118,7 +113,6 @@ namespace Pims.Dal.Entities.Models
             this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
 
             this.PID = filter.GetStringValue(nameof(this.PID));
-            this.Municipality = filter.GetStringValue(nameof(this.Municipality));
             this.Zoning = filter.GetStringValue(nameof(this.Zoning));
             this.ZoningPotential = filter.GetStringValue(nameof(this.ZoningPotential));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea));
@@ -142,7 +136,6 @@ namespace Pims.Dal.Entities.Models
         {
             return base.IsValid()
                 || !String.IsNullOrWhiteSpace(this.PID)
-                || !String.IsNullOrWhiteSpace(this.Municipality)
                 || !String.IsNullOrWhiteSpace(this.Zoning)
                 || !String.IsNullOrWhiteSpace(this.ZoningPotential)
                 || this.MinLandArea.HasValue
@@ -174,10 +167,9 @@ namespace Pims.Dal.Entities.Models
                 ProjectNumber = filter.ProjectNumber,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
-                City = filter.City,
 
                 PID = filter.PID,
-                Municipality = filter.Municipality,
+                AdministrativeArea = filter.AdministrativeArea,
                 MinLandArea = filter.MinLandArea,
                 MaxLandArea = filter.MaxLandArea,
                 Zoning = filter.Zoning,
@@ -214,9 +206,8 @@ namespace Pims.Dal.Entities.Models
                 ProjectNumber = filter.ProjectNumber,
                 ClassificationId = filter.ClassificationId,
                 Address = filter.Address,
-                City = filter.City,
 
-                Municipality = filter.Municipality,
+                AdministrativeArea = filter.AdministrativeArea,
                 MinLandArea = filter.MinLandArea,
                 MaxLandArea = filter.MaxLandArea,
                 Zoning = filter.Zoning,

@@ -33,10 +33,10 @@ export const storeParcelAction = (parcel: IProperty): IStoreParcelAction => ({
 
 //Parcel Detail API action
 export interface IAddress {
+  id?: number | undefined;
   line1: string;
   line2?: string;
-  city?: string;
-  cityId: number | '';
+  administrativeArea: string;
   province?: string;
   provinceId: string;
   postal: string;
@@ -106,21 +106,12 @@ export interface IParcel {
   landLegalDescription: string;
   zoning: string;
   zoningPotential: string;
-  municipality: string;
   agency?: string;
   agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
-}
-
-export interface IAddress {
-  id?: number;
-  line1: string;
-  cityId: number | '';
-  provinceId: string;
-  postal: string;
 }
 
 export interface IParcelDetail {
