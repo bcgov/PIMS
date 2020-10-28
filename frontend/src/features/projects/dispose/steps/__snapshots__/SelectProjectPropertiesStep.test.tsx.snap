@@ -29,17 +29,15 @@ exports[`renders correctly 1`] = `
             <div
               className="form-group"
             >
-              <span>
-                <input
-                  className="form-control"
-                  id="input-pid"
-                  name="pid"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="Enter PID or PIN"
-                  value=""
-                />
-              </span>
+              <input
+                className="form-control"
+                id="input-pid"
+                name="pid"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Enter PID or PIN"
+                value=""
+              />
             </div>
           </div>
           <div
@@ -54,17 +52,15 @@ exports[`renders correctly 1`] = `
                 <div
                   className="form-group"
                 >
-                  <span>
-                    <input
-                      className="form-control"
-                      id="input-address"
-                      name="address"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder="Enter an address or city"
-                      value=""
-                    />
-                  </span>
+                  <input
+                    className="form-control"
+                    id="input-address"
+                    name="address"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="Enter an address or city"
+                    value=""
+                  />
                 </div>
               </div>
             </div>

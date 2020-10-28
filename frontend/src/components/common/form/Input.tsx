@@ -94,30 +94,29 @@ export const Input: React.FC<InputProps> = ({
           {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
         </Form.Label>
       )}
-      <span className={className}>
-        <Form.Control
-          as={asElement}
-          name={field}
-          required={required}
-          disabled={disabled}
-          custom={custom}
-          isInvalid={!!touch && !!error}
-          {...rest}
-          isValid={false}
-          value={pattern ? restricted : rest.value ?? value}
-          placeholder={placeholder}
-          onBlur={(e: any) => {
-            if (onBlurFormatter) {
-              pattern && setRestricted(onBlurFormatter(value));
-              setFieldValue(field, onBlurFormatter(value));
-            }
-            handleBlur(e);
-          }}
-          onChange={pattern ? handleRestrictedChange : handleChange}
-        />
-        {!label && !!required && <span className="required">*</span>}
-        <DisplayError field={field} />
-      </span>
+      <Form.Control
+        as={asElement}
+        name={field}
+        required={required}
+        disabled={disabled}
+        custom={custom}
+        isInvalid={!!touch && !!error}
+        {...rest}
+        isValid={false}
+        value={pattern ? restricted : rest.value ?? value}
+        placeholder={placeholder}
+        onBlur={(e: any) => {
+          if (onBlurFormatter) {
+            pattern && setRestricted(onBlurFormatter(value));
+            setFieldValue(field, onBlurFormatter(value));
+          }
+          handleBlur(e);
+        }}
+        className={className}
+        onChange={pattern ? handleRestrictedChange : handleChange}
+      />
+      {!label && !!required && <span className="required">*</span>}
+      <DisplayError field={field} />
     </Form.Group>
   );
 };

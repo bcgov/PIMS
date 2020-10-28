@@ -246,6 +246,28 @@ describe('AppNavBar', () => {
       expect(link).toBeTruthy();
     });
   });
+
+  it('AppNavBar include Reports Link', () => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['reports-view', 'spl-reports'],
+        },
+      },
+    });
+
+    const { getByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <AppNavBar />
+        </Router>
+      </Provider>,
+    );
+    const link = getByText('Reports');
+    expect(link).toBeTruthy();
+  });
+
   describe('AppNavbar user name display', () => {
     it('Displays keycloak display name if available', () => {
       (useKeycloak as jest.Mock).mockReturnValue({

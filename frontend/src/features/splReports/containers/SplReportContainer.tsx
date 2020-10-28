@@ -6,12 +6,6 @@ import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import _ from 'lodash';
 import { generateUtcNowDateTime } from 'utils';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import {
-  getServerQuery,
-  getProjectFinancialReportUrl,
-} from 'features/projects/list/ProjectListView';
-import download from 'utils/download';
-import { useDispatch } from 'react-redux';
 import GenericModal from 'components/common/GenericModal';
 import { toast } from 'react-toastify';
 import { useRouterReport } from '../hooks/useRouterReport';
@@ -28,7 +22,6 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
   const [snapshots, setSnapshots] = useState<ISnapshot[] | undefined>();
   const [reportIdToDelete, setReportIdToDelete] = useState<number | undefined>();
   const [reportToSave, setReportToSave] = useState<IReport | undefined>();
-  const dispatch = useDispatch();
   useRouterReport({ currentReport, setCurrentReport, reports });
   const {
     getProjectReports,
@@ -38,6 +31,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     deleteProjectReport,
     addProjectReport,
     updateProjectReport,
+    exportReport,
   } = useProjectSnapshotApi();
 
   const id = currentReport?.id;
@@ -100,19 +94,6 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     const data = await getProjectReportSnapshots(report);
     setCurrentReport(report);
     setSnapshots(data);
-  };
-  const exportReport = (report: IReport, accept: 'csv' | 'excel') => {
-    const query = getServerQuery({ pageIndex: 0, pageSize: 1, filter: {}, agencyIds: [] });
-    return dispatch(
-      download({
-        url: getProjectFinancialReportUrl({ ...query, all: true, reportId: report?.id }),
-        fileName: `spl_report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'projects-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
   };
 
   /**

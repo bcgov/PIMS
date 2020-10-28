@@ -18,16 +18,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           className="form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              id="input-username"
-              name="username"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="IDIR/BCeID"
-            />
-          </span>
+          <input
+            className="form-control"
+            id="input-username"
+            name="username"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="IDIR/BCeID"
+          />
         </div>
       </div>
       <div
@@ -36,16 +34,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           className="form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              id="input-firstName"
-              name="firstName"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="First name"
-            />
-          </span>
+          <input
+            className="form-control"
+            id="input-firstName"
+            name="firstName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="First name"
+          />
         </div>
       </div>
       <div
@@ -54,16 +50,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           className="form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              id="input-lastName"
-              name="lastName"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="Last name"
-            />
-          </span>
+          <input
+            className="form-control"
+            id="input-lastName"
+            name="lastName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Last name"
+          />
         </div>
       </div>
       <div
@@ -72,16 +66,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           className="form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              id="input-email"
-              name="email"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="Email"
-            />
-          </span>
+          <input
+            className="form-control"
+            id="input-email"
+            name="email"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Email"
+          />
         </div>
       </div>
       <div
@@ -90,16 +82,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           className="form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              id="input-position"
-              name="position"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="Position"
-            />
-          </span>
+          <input
+            className="form-control"
+            id="input-position"
+            name="position"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="Position"
+          />
         </div>
       </div>
       <div

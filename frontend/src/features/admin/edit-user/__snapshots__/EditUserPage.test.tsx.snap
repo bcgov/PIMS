@@ -32,19 +32,17 @@ Array [
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                data-testid="username"
-                id="input-username"
-                name="username"
-                onBlur={[Function]}
-                onChange={[Function]}
-                readOnly={true}
-                type="text"
-                value="test.user"
-              />
-            </span>
+            <input
+              className="form-control"
+              data-testid="username"
+              id="input-username"
+              name="username"
+              onBlur={[Function]}
+              onChange={[Function]}
+              readOnly={true}
+              type="text"
+              value="test.user"
+            />
           </div>
           <p
             className="label"
@@ -54,19 +52,17 @@ Array [
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                data-testid="lastLogin"
-                id="input-lastLogin"
-                name="lastLogin"
-                onBlur={[Function]}
-                onChange={[Function]}
-                readOnly={true}
-                type="text"
-                value=""
-              />
-            </span>
+            <input
+              className="form-control"
+              data-testid="lastLogin"
+              id="input-lastLogin"
+              name="lastLogin"
+              onBlur={[Function]}
+              onChange={[Function]}
+              readOnly={true}
+              type="text"
+              value=""
+            />
           </div>
           <div
             className="row"
@@ -82,19 +78,17 @@ Array [
               <div
                 className="form-group"
               >
-                <span>
-                  <input
-                    className="form-control"
-                    data-testid="firstName"
-                    id="input-firstName"
-                    name="firstName"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    placeholder="Test"
-                    type="text"
-                    value="Test"
-                  />
-                </span>
+                <input
+                  className="form-control"
+                  data-testid="firstName"
+                  id="input-firstName"
+                  name="firstName"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="Test"
+                  type="text"
+                  value="Test"
+                />
               </div>
             </div>
             <div
@@ -108,19 +102,17 @@ Array [
               <div
                 className="form-group"
               >
-                <span>
-                  <input
-                    className="form-control"
-                    data-testid="lastName"
-                    id="input-lastName"
-                    name="lastName"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    placeholder="User"
-                    type="text"
-                    value="User"
-                  />
-                </span>
+                <input
+                  className="form-control"
+                  data-testid="lastName"
+                  id="input-lastName"
+                  name="lastName"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="User"
+                  type="text"
+                  value="User"
+                />
               </div>
             </div>
           </div>
@@ -132,19 +124,17 @@ Array [
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                data-testid="email"
-                id="input-email"
-                name="email"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="test@user.com"
-                type="email"
-                value="test@user.com"
-              />
-            </span>
+            <input
+              className="form-control"
+              data-testid="email"
+              id="input-email"
+              name="email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="test@user.com"
+              type="email"
+              value="test@user.com"
+            />
           </div>
           <div
             className="required form-group"
@@ -191,18 +181,16 @@ Array [
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                data-testid="position"
-                id="input-position"
-                name="position"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-                type="text"
-              />
-            </span>
+            <input
+              className="form-control"
+              data-testid="position"
+              id="input-position"
+              name="position"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+              type="text"
+            />
           </div>
           <div
             className="required form-group"
@@ -249,19 +237,17 @@ Array [
           <div
             className="form-group"
           >
-            <span>
-              <textarea
-                className="form-control"
-                data-testid="note"
-                id="input-note"
-                name="note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="A note about this user"
-                type="text"
-                value="test note"
-              />
-            </span>
+            <textarea
+              className="form-control"
+              data-testid="note"
+              id="input-note"
+              name="note"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="A note about this user"
+              type="text"
+              value="test note"
+            />
           </div>
           <div
             className="is-disabled form-group"

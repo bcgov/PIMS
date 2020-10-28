@@ -27,7 +27,6 @@ exports[`Documentation Step renders correctly 1`] = `
             <input
               checked={false}
               className="form-check-input position-static"
-              defaultChecked={false}
               disabled={true}
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
@@ -66,7 +65,6 @@ exports[`Documentation Step renders correctly 1`] = `
             <input
               checked={false}
               className="form-check-input position-static"
-              defaultChecked={false}
               disabled={true}
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"

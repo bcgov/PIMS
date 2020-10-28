@@ -13,9 +13,24 @@ import * as reducerTypes from 'constants/reducerTypes';
 import service from '../apiService';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { useKeycloak } from '@react-keycloak/web';
+import Claims from 'constants/claims';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
+
+jest.mock('@react-keycloak/web');
+const mockKeycloak = (claims: string[]) => {
+  (useKeycloak as jest.Mock).mockReturnValue({
+    keycloak: {
+      userInfo: {
+        agencies: [1],
+        roles: claims,
+      },
+      subject: 'test',
+    },
+  });
+};
 
 const testData = {
   items: [
@@ -86,14 +101,16 @@ const store = mockStore({
 
 const history = createMemoryHistory();
 
-describe('Project list view', () => {
+describe('Project list view tests', () => {
   // clear mocks before each test
   beforeEach(() => {
     mockedService.getProjectList.mockClear();
     mockedService.deleteProject.mockClear();
+    mockKeycloak([]);
   });
   afterEach(() => {
     cleanup();
+    jest.clearAllMocks();
   });
 
   it('Matches snapshot', () => {
@@ -150,5 +167,46 @@ describe('Project list view', () => {
     expect(queryByTitle('Export Generic Report')).not.toBeInTheDOM();
     expect(queryByTitle('Export CSV')).not.toBeInTheDOM();
     expect(queryByText('SPL Report')).not.toBeInTheDOM();
+  });
+
+  it('Displays export buttons with view reports permission', async () => {
+    mockKeycloak([Claims.REPORTS_VIEW]);
+    mockedService.getProjectList.mockResolvedValueOnce({
+      quantity: 0,
+      total: 0,
+      page: 1,
+      pageIndex: 0,
+      items: [],
+    });
+
+    const { queryByTitle } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ProjectListView />
+        </Router>
+      </Provider>,
+    );
+    expect(queryByTitle('Export Generic Report')).toBeInTheDOM();
+    expect(queryByTitle('Export CSV')).toBeInTheDOM();
+  });
+
+  it('Displays export buttons with spl reports permission', async () => {
+    mockKeycloak([Claims.REPORTS_SPL]);
+    mockedService.getProjectList.mockResolvedValueOnce({
+      quantity: 0,
+      total: 0,
+      page: 1,
+      pageIndex: 0,
+      items: [],
+    });
+
+    const { queryByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ProjectListView />
+        </Router>
+      </Provider>,
+    );
+    expect(queryByText('SPL Report')).toBeVisible();
   });
 });

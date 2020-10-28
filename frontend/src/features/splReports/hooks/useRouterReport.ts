@@ -34,17 +34,16 @@ export const useRouterReport = ({
   reports,
 }: RouterFilterProps) => {
   const history = useHistory();
-  const [originalSearch, setOriginalSearch] = useState(history.location.search);
+  const [originalSearch] = useState(history.location.search);
   const dispatch = useDispatch();
 
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
   useDeepCompareEffect(() => {
-    if (reports?.length) {
+    if (reports?.length && currentReport?.id === undefined) {
       const filterFromParams = paramsToObject(originalSearch);
       if (filterFromParams.reportId) {
         const report = _.find(reports, { id: +filterFromParams.reportId });
         setCurrentReport(report ?? reports[0]);
-        setOriginalSearch('');
       } else {
         reports?.length && setCurrentReport(reports[0]);
       }
