@@ -9,8 +9,17 @@
   width: 100%;
   margin: auto;
 
+  .leaflet-popup-content-wrapper {
+    border-radius: 0;
+  }
   .leaflet-popup-content {
     margin: 0px;
+    .list-group {
+      .list-group-item {
+        border: none;
+        padding: 0.5rem 1.25rem;
+      }
+    }
   }
 }
 
