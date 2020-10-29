@@ -97,8 +97,8 @@ describe('Spl Report Container', () => {
       await act(async () => {
         // API "returns" no results
         mockApi().getProjectReports.mockResolvedValue([
-          defaultReport,
-          { ...defaultReport, name: 'report 2' },
+          { ...defaultReport, to: undefined },
+          { ...defaultReport, to: undefined, name: 'report 2' },
         ]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByText, container } = renderContainer();
