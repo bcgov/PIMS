@@ -76,12 +76,18 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
           {buildingDetail?.parcelId && !props?.disabled && (
             <Row className="menu">
               <Col>
-                <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
+                <Link to={{
+                    pathname: `/mapview/${buildingDetail?.parcelId}?disabled=true`,
+                    search: location.search,
+                  }}>View</Link>
                 {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
                     style={{ paddingLeft: '5px' }}
-                    to={`/submitProperty/${buildingDetail?.parcelId}`}
+                    to={{
+                      pathname: `/mapview/${buildingDetail?.parcelId}`,
+                      search: location.search,
+                    }}
                   >
                     Update
                   </Link>

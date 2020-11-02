@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tabs } from 'react-bootstrap';
-import { tabErrorWarning } from '../../common';
+import { tabErrorWarning } from '../../features/projects/common';
 import { useFormikContext } from 'formik';
 import GenericModal from 'components/common/GenericModal';
 import { useState } from 'react';
@@ -13,7 +13,7 @@ interface IErrorTabsProps {
 }
 
 /**
- * Tab based formik form for ERP/SPL workflows. Displays error modal if formik submit fails due to validation error.
+ * Tab based wrapper for formik forms. Displays error modal if formik submit fails due to validation error.
  * @param param0 IErrorTabsProps
  */
 const ErrorTabs: React.FunctionComponent<IErrorTabsProps> = ({

@@ -20,3 +20,21 @@ export const user = {
   USER_ERROR_TOAST_ID,
   USER_ERROR,
 };
+
+/** These toasts are used by the parcel detail api */
+const PARCEL_CREATING_TOAST_ID = 'CREATING_PARCEL';
+const PARCEL_CREATING = () =>
+  toast.dark('Creating Parcel...', { toastId: PARCEL_CREATING_TOAST_ID });
+const PARCEL_CREATED_TOAST_ID = 'CREATED_PARCEL';
+const PARCEL_CREATED = () => toast.dark('Parcel created.', { toastId: PARCEL_CREATED_TOAST_ID });
+const PARCEL_ERROR_TOAST_ID = 'PARCEL_ERROR';
+const PARCEL_ERROR = () =>
+  toast.error('Failed to create Parcel.', { toastId: PARCEL_ERROR_TOAST_ID });
+export const parcel = {
+  PARCEL_CREATING_TOAST_ID,
+  PARCEL_CREATING,
+  PARCEL_CREATED_TOAST_ID,
+  PARCEL_CREATED,
+  PARCEL_ERROR_TOAST_ID,
+  PARCEL_ERROR,
+};

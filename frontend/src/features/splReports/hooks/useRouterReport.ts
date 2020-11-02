@@ -1,22 +1,10 @@
+import queryString from 'query-string';
 import { IReport } from './../interfaces';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import _ from 'lodash';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-
-export const paramsToObject = (searchString: string) => {
-  const params = new URLSearchParams(searchString);
-  const obj: any = {};
-  for (const key of params.keys()) {
-    if (params.getAll(key).length > 1) {
-      obj[key] = params.getAll(key);
-    } else {
-      obj[key] = params.get(key);
-    }
-  }
-  return obj;
-};
 
 interface RouterFilterProps {
   currentReport?: IReport;
@@ -40,7 +28,7 @@ export const useRouterReport = ({
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
   useDeepCompareEffect(() => {
     if (reports?.length && currentReport?.id === undefined) {
-      const filterFromParams = paramsToObject(originalSearch);
+      const filterFromParams = queryString.parse(originalSearch);
       if (filterFromParams.reportId) {
         const report = _.find(reports, { id: +filterFromParams.reportId });
         setCurrentReport(report ?? reports[0]);

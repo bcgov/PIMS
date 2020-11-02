@@ -5,7 +5,6 @@ import AccessRequestPage from './features/admin/access-request/AccessRequestPage
 import EditUserPage from './features/admin/edit-user/EditUserPage';
 import Login from './features/account/Login';
 import AccessDenied from './pages/401/AccessDenied';
-import SubmitProperty from 'features/properties/submit/SubmitProperty';
 import { ManageUsersPage } from 'features/admin/users/ManageUsersPage';
 import ManageAccessRequests from 'features/admin/access/ManageAccessRequests';
 import { Claims } from 'constants/claims';
@@ -79,7 +78,7 @@ const AppRouter: React.FC = () => {
       ></AppRoute>
       <AppRoute
         protected
-        path="/mapView"
+        path="/mapView/:id?"
         component={MapView}
         layout={AuthLayout}
         claim={Claims.PROPERTY_VIEW}
@@ -132,14 +131,6 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.PROJECT_VIEW}
         title={getTitle('Dispose Property Complete')}
-      />
-      <AppRoute
-        protected
-        path="/submitProperty/:id?"
-        component={SubmitProperty}
-        layout={AuthLayout}
-        claim={Claims.PROPERTY_ADD}
-        title={getTitle('Submit Property')}
       />
       <AppRoute
         protected

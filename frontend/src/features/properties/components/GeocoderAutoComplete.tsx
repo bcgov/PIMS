@@ -5,6 +5,8 @@ import { Form, FormControlProps } from 'react-bootstrap';
 import { DisplayError } from 'components/common/form';
 import ClickAwayListener from 'react-click-away-listener';
 import { debounce } from 'lodash';
+import TooltipIcon from 'components/common/TooltipIcon';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IGeocoderAutoCompleteProps {
   field: string;
@@ -18,6 +20,8 @@ interface IGeocoderAutoCompleteProps {
   error?: any;
   touch?: any;
   onTextChange?: (value?: string) => void;
+  tooltip?: string;
+  displayErrorTooltips?: boolean;
 }
 
 export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
@@ -32,9 +36,13 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   touch,
   error,
   onTextChange,
+  tooltip,
+  displayErrorTooltips,
+  ...rest
 }) => {
   const [options, setOptions] = React.useState<IGeocoderResponse[]>([]);
   const api = useApi();
+  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
   const search = debounce(async (val: string) => {
     const data = await api.searchAddress(val);
@@ -80,16 +88,20 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
     <div className="GeocoderAutoComplete">
       <ClickAwayListener onClickAway={() => setOptions([])}>
         <Form.Group controlId={`input-${field}`}>
-          <InputControl
-            autoComplete={autoSetting}
-            field={field}
-            value={value}
-            isInvalid={!!touch && !!error}
-            onTextChange={onTextChanged}
-            placeholder={placeholder}
-            disabled={disabled}
-            required={required}
-          />
+          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+          <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
+            <InputControl
+              autoComplete={autoSetting}
+              field={field}
+              value={value}
+              isInvalid={!!touch && !!error}
+              onTextChange={onTextChanged}
+              placeholder={placeholder}
+              disabled={disabled}
+              required={required}
+              {...rest}
+            />
+          </TooltipWrapper>
           {renderSuggestions()}
           <DisplayError field={field} />
         </Form.Group>
@@ -107,9 +119,9 @@ interface IDebounceInputProps extends FormControlProps {
   onTextChange: (value?: string) => void;
 }
 
-const InputControl: React.FC<IDebounceInputProps> = props => {
+const InputControl: React.FC<IDebounceInputProps> = ({ onTextChange, ...props }) => {
   const onChange = (value: string) => {
-    props.onTextChange(value);
+    onTextChange(value);
   };
 
   return (
@@ -124,6 +136,7 @@ const InputControl: React.FC<IDebounceInputProps> = props => {
       placeholder={props.placeholder}
       disabled={props.disabled}
       required={props.required}
+      {...props}
     />
   );
 };

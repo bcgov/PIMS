@@ -94,7 +94,7 @@ const CurrencyInput = ({
           onBlur={handleBlur}
           className={classNames('form-control', className, isInvalid, isValid)}
           disabled={disabled}
-          placeholder={placeholder || '$0'}
+          placeholder={placeholder || ''}
         />
         {!!tooltip && <TooltipIcon toolTipId="currency" toolTip={tooltip} />}
 

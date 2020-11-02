@@ -6,7 +6,6 @@
   );
   // margin-top: 10px;
   // padding-top: 20px;
-  width: 100%;
   margin: auto;
 
   .leaflet-popup-content-wrapper {
@@ -20,6 +19,10 @@
         padding: 0.5rem 1.25rem;
       }
     }
+  }
+
+  .leaflet-control-container .leaflet-top {
+    z-index: 500;
   }
 }
 

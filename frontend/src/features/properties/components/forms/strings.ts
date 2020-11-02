@@ -17,3 +17,13 @@ export const PinTooltip =
 
 export const senstiveTooltip =
   'Is the building you’re about to submit/update considered harmful if released according to FOIPPA policy?  Examples would be a women’s transition house.\n\n Click this link for more details.';
+
+export const streetAddressTooltip =
+  'Enter the address and select the option that matches to auto-populate the location and PID.';
+
+export const latitudeTooltip =
+  'Click on the map to automatically populate the latitude and longitude.';
+
+export const currentZoningTooltip = 'The current zoning';
+
+export const potentialZoningTooltip = 'The potential zoning';

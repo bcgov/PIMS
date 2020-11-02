@@ -1,5 +1,5 @@
-import React from 'react';
-import renderer, { act } from 'react-test-renderer';
+import React, { createRef } from 'react';
+import { act } from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { mount } from 'enzyme';
@@ -18,6 +18,7 @@ import AddressForm from './subforms/AddressForm';
 import BuildingForm from './subforms/BuildingForm';
 import PidPinForm from './subforms/PidPinForm';
 import { render, fireEvent, wait, cleanup } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { act as domAct } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -29,6 +30,10 @@ import { LatLng } from 'leaflet';
 import { useApi, PimsAPI } from 'hooks/useApi';
 import { IParcel } from 'actions/parcelsActions';
 import { updateParcel } from 'actionCreators/parcelsActionCreator';
+import { ParcelDetailTabs } from 'features/mapSideBar/containers/ParcelDetailContainer';
+import { noop } from 'lodash';
+import { ToastContainer } from 'react-toastify';
+import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
@@ -69,7 +74,7 @@ jest.mock('hooks/useApi');
         siteId: '00000000-0000-0000-0000-000000000000',
         fullAddress: '525 Superior St, Victoria, BC',
         address1: '525 Superior St',
-        administrativeArea: 'Victoria',
+        city: 'Victoria',
         latitude: 90,
         longitude: -90,
         provinceCode: 'BC',
@@ -83,12 +88,7 @@ const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME, code: 'TEST' },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-    {
-      name: 'test administrative area',
-      id: '1',
-      isDisabled: false,
-      type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
-    },
+    { name: 'test city', id: '1', isDisabled: false, type: API.CITY_CODE_SET_NAME },
     { name: 'test province', id: '2222', isDisabled: false, type: API.PROVINCE_CODE_SET_NAME },
     {
       name: 'construction test type',
@@ -127,19 +127,37 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
 
-const parcelDetailForm = (
-  clickLatLng: LatLng | undefined = undefined,
-  loadDraft: boolean = true,
-  data?: any,
-) => (
+const parcelDetailForm = ({
+  clickLatLng,
+  loadDraft,
+  data,
+  tab,
+}: {
+  clickLatLng?: LatLng;
+  loadDraft?: boolean;
+  data?: any;
+  tab?: ParcelDetailTabs;
+}) => (
   <Provider store={store}>
     <Router history={history}>
+      <ToastContainer
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+      />
       <ParcelDetailForm
         agencyId={1}
         clickLatLng={clickLatLng}
         parcelDetail={data ?? null}
         secret="test"
-        loadDraft={loadDraft}
+        loadDraft={loadDraft ?? true}
+        currentTab={tab ?? ParcelDetailTabs.parcel}
+        setCurrentTab={noop}
+        setSidebarOpen={noop}
+        formikRef={createRef()}
       />
     </Router>
   </Provider>
@@ -157,7 +175,7 @@ describe('ParcelDetailForm', () => {
       agencyId: 1,
       address: {
         line1: 'addressval',
-        administrativeArea: 'administrativeArea',
+        cityId: 1,
         provinceId: '2222',
         postal: 'V8X 3L5',
       },
@@ -166,6 +184,7 @@ describe('ParcelDetailForm', () => {
       pin: 5,
       zoning: 'zoningVal',
       zoningPotential: 'zoningPotentialVal',
+      municipality: 'municipalityVal',
       landArea: 1234,
       classificationId: 1,
       isSensitive: false,
@@ -202,21 +221,27 @@ describe('ParcelDetailForm', () => {
 
     it('ParcelDetailForm renders correctly', () => {
       act(() => {
-        const tree = renderer
-          .create(
-            <Provider store={store}>
-              <Router history={history}>
-                <ParcelDetailForm secret="test" agencyId={1} parcelDetail={mockDetails[0]} />
-              </Router>
-            </Provider>,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { container } = render(
+          <Provider store={store}>
+            <Router history={history}>
+              <ParcelDetailForm
+                secret="test"
+                agencyId={1}
+                parcelDetail={mockDetails[0]}
+                currentTab={ParcelDetailTabs.parcel}
+                setCurrentTab={noop}
+                setSidebarOpen={noop}
+                formikRef={undefined}
+              />
+            </Router>
+          </Provider>,
+        );
+        expect(pretty(container.innerHTML)).toMatchSnapshot();
       });
     });
 
     it('properly renders EvaluationForm', () => {
-      const { getByText, getAllByText } = render(parcelDetailForm());
+      const { getByText, getAllByText } = render(parcelDetailForm({}));
       expect(getByText('Land')).toBeInTheDocument();
       expect(getByText('Improvements')).toBeInTheDocument();
       expect(getByText('Total')).toBeInTheDocument();
@@ -224,7 +249,7 @@ describe('ParcelDetailForm', () => {
     });
 
     it('validates all required fields correctly', async () => {
-      const { getByText, getAllByText } = render(parcelDetailForm());
+      const { getByText, getAllByText } = render(parcelDetailForm({}));
       const submit = getByText('Submit');
       await wait(() => {
         fireEvent.click(submit!);
@@ -235,14 +260,16 @@ describe('ParcelDetailForm', () => {
       expect(idErrors).toHaveLength(1);
     });
 
-    xit('detail submits all basic fields correctly', async done => {
+    it('detail submits all basic fields correctly', async () => {
       const form = render(
-        parcelDetailForm(undefined, undefined, {
-          id: 1,
-          address: { cityId: 1 },
-          buildings: [],
-          evaluations: [],
-          fiscals: [],
+        parcelDetailForm({
+          data: {
+            id: 1,
+            address: { cityId: 1 },
+            buildings: [],
+            evaluations: [],
+            fiscals: [],
+          },
         }),
       );
       const container = form.container;
@@ -251,11 +278,7 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'description', exampleData.description, 'textArea');
       await fillInput(container, 'zoning', exampleData.zoning);
       await fillInput(container, 'zoningPotential', exampleData.zoningPotential);
-      await fillInput(
-        container,
-        'address.administrativeArea',
-        exampleData.address.administrativeArea,
-      );
+      await fillInput(container, 'address.cityId', exampleData.address.cityId.toString());
       await fillInput(container, 'address.provinceId', exampleData.address.provinceId, 'select');
       await fillInput(container, 'address.postal', exampleData.address.postal);
       await fillInput(container, 'address.line1', exampleData.address.line1);
@@ -282,7 +305,6 @@ describe('ParcelDetailForm', () => {
         expect(parcel.name).toEqual(exampleData.name);
         expect(parcel.zoning).toEqual(exampleData.zoning);
         expect(parcel.zoningPotential).toEqual(exampleData.zoningPotential);
-        done();
       });
       const submit = form.getByText('Submit');
       await wait(() => {
@@ -291,7 +313,7 @@ describe('ParcelDetailForm', () => {
     });
 
     it('allows admin to change agency', async done => {
-      const form = render(parcelDetailForm());
+      const form = render(parcelDetailForm({}));
       const container = form.container;
       await fillInput(container, 'agencyId', 2);
       const mockAxios = new MockAdapter(axios);
@@ -306,43 +328,28 @@ describe('ParcelDetailForm', () => {
       done();
     });
 
-    it('displays a top level error message if submit fails', async done => {
-      const { getByText, findByText } = render(parcelDetailForm(undefined, undefined, exampleData));
+    xit('displays a top level error message if submit fails', async done => {
+      const { getByText } = render(parcelDetailForm({ data: exampleData }));
       const mockAxios = new MockAdapter(axios);
       const submit = getByText('Submit');
       mockAxios.onPost().reply(() => {
         throw Error('test message');
       });
 
-      await wait(() => {
-        fireEvent.click(submit!);
-      });
-      await findByText('Error saving property data, please try again.');
+      fireEvent.click(submit!);
+      await screen.findByText('Error saving property data, please try again.');
       done();
     });
   });
 
   it('ParcelDetailForm renders view-only correctly', () => {
-    const history = createMemoryHistory();
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <Router history={history}>
-            <ParcelDetailForm
-              disabled={true}
-              secret="test"
-              agencyId={1}
-              parcelDetail={mockDetails[0]}
-            />
-          </Router>
-        </Provider>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(parcelDetailForm({ data: mockDetails[0] }));
+
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('loads click lat lng', () => {
-    const { container } = render(parcelDetailForm(new LatLng(1, 2)));
+    const { container } = render(parcelDetailForm({ clickLatLng: new LatLng(1, 2) }));
     const latitude = container.querySelector('input[name="latitude"]');
     const longitude = container.querySelector('input[name="longitude"]');
     expect(latitude).toHaveValue(1);
@@ -350,13 +357,13 @@ describe('ParcelDetailForm', () => {
   });
 
   it('loads appropriate provinces in dropdown for address form', () => {
-    const addrForm = mount(parcelDetailForm()).find(AddressForm);
+    const addrForm = mount(parcelDetailForm({})).find(AddressForm);
     expect(addrForm.text()).toContain('test province');
   });
 
   // Currently leaves an ugly warning but passes test
   it('provides appropriate specifications to add a new building', () => {
-    const component = mount(parcelDetailForm());
+    const component = mount(parcelDetailForm({ tab: ParcelDetailTabs.buildings }));
     const addBuilding = component
       .find('[className="pagedBuildingButton page-link btn btn-link"]')
       .first();
@@ -372,13 +379,27 @@ describe('ParcelDetailForm', () => {
   });
 
   it('pidpin form renders', () => {
-    expect(mount(parcelDetailForm()).find(PidPinForm)).toHaveLength(1);
+    expect(mount(parcelDetailForm({})).find(PidPinForm)).toHaveLength(1);
+  });
+  it('integrates with geocoder endpoints', async () => {
+    const { container, findByText } = render(parcelDetailForm({}));
+    // type a civic address, then click on first suggestion
+    await fillInput(container, 'address.line1', '525 Superior');
+    const suggestion = await findByText(/525 Superior St/);
+    expect(suggestion).not.toBeNull();
+    act(() => {
+      fireEvent.click(suggestion);
+    });
+    await wait(() => {
+      // assert --> PID value was set
+      expect(getInput(container, 'pid')).toHaveValue('123-456-789');
+    });
   });
 });
 
 describe('autosave functionality', () => {
   const persistFormData = async () => {
-    const { container } = render(parcelDetailForm());
+    const { container } = render(parcelDetailForm({}));
     const address = container.querySelector('input[name="address.line1"]');
 
     await wait(() => {
@@ -391,14 +412,14 @@ describe('autosave functionality', () => {
   };
   it('form details are autosaved', async () => {
     await persistFormData();
-    const { container: updatedContainer } = render(parcelDetailForm());
+    const { container: updatedContainer } = render(parcelDetailForm({}));
     const address = updatedContainer.querySelector('input[name="address.line1"]');
     expect(address).toHaveValue('mockaddress');
   });
 
   it('autosaved form details generate a modal window', async () => {
     await persistFormData();
-    const { getByText, container } = render(parcelDetailForm(undefined, false));
+    const { getByText, container } = render(parcelDetailForm({ loadDraft: false }));
     const draftButton = getByText('Resume Editing');
     domAct(() => {
       draftButton.click();
@@ -412,7 +433,16 @@ describe('autosave functionality', () => {
     const differentKey = (
       <Provider store={store}>
         <Router history={history}>
-          <ParcelDetailForm agencyId={1} parcelDetail={null} secret="invalid" loadDraft={true} />
+          <ParcelDetailForm
+            agencyId={1}
+            parcelDetail={null}
+            secret="invalid"
+            loadDraft={true}
+            currentTab={ParcelDetailTabs.parcel}
+            setCurrentTab={noop}
+            setSidebarOpen={noop}
+            formikRef={undefined}
+          />
         </Router>
       </Provider>
     );
@@ -427,7 +457,15 @@ describe('autosave functionality', () => {
     const updateForm = (
       <Provider store={store}>
         <Router history={history}>
-          <ParcelDetailForm agencyId={1} parcelDetail={mockDetails[0]} secret="invalid" />
+          <ParcelDetailForm
+            agencyId={1}
+            parcelDetail={mockDetails[0]}
+            secret="invalid"
+            currentTab={ParcelDetailTabs.parcel}
+            setCurrentTab={noop}
+            setSidebarOpen={noop}
+            formikRef={undefined}
+          />
         </Router>
       </Provider>
     );
@@ -435,20 +473,5 @@ describe('autosave functionality', () => {
     const { container: updatedContainer } = render(updateForm);
     const address = updatedContainer.querySelector('input[name="address.line1"]');
     expect(address).not.toHaveValue('mockaddress');
-  });
-
-  it('integrates with geocoder endpoints', async () => {
-    const { container, findByText } = render(parcelDetailForm());
-    // type a civic address, then click on first suggestion
-    await fillInput(container, 'address.line1', '525 Superior');
-    const suggestion = await findByText(/525 Superior St/);
-    expect(suggestion).not.toBeNull();
-    act(() => {
-      fireEvent.click(suggestion);
-    });
-    await wait(() => {
-      // assert --> PID value was set
-      expect(getInput(container, 'pid')).toHaveValue('123-456-789');
-    });
   });
 });

@@ -4,7 +4,7 @@ import { SPPApprovalTabs, ReviewWorkflowStatus, isTabInError, IProject } from '.
 import { DocumentationTab } from '../../common';
 import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
 import { useFormikContext } from 'formik';
-import ErrorTabs from 'features/projects/common/tabs/ErrorTabs';
+import ErrorTabs from 'components/common/ErrorTabs';
 import { EnhancedReferralTab } from 'features/projects/erp';
 import { noop } from 'lodash';
 

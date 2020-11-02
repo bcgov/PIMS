@@ -138,7 +138,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     }, [field, registerField, unregisterField]);
     return (
       <Form.Group
-        controlId={`input-${field}`}
+        controlId={`input-${field}-fast`}
         className={classNames(!!required ? 'required' : '', outerClassName)}
       >
         {!!label && <Form.Label>{label}</Form.Label>}

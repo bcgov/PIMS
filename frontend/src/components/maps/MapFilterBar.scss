@@ -1,7 +1,9 @@
 @import '../../fonts.scss';
+@import '../../variables';
 
 .container-fluid {
   &.map-filter-container {
+    height: #{$mapfilter-height};
     background-color: #f2f2f2;
 
     .map-filter-bar {

@@ -1,6 +1,6 @@
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import React from 'react';
-import { Col } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import _ from 'lodash';
 import { Form, FastCurrencyInput, DisplayCurrency } from 'components/common/form';
@@ -87,9 +87,7 @@ const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
     if (props.showAppraisal) {
       return (
         <Form.Row>
-          <Form.Label column md={2}>
-            Appraised Sum
-          </Form.Label>
+          <Form.Label>Appraised Sum</Form.Label>
           <FastCurrencyInput
             formikProps={props.formikProps}
             disabled={true}
@@ -120,49 +118,43 @@ const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
     );
   } else {
     return (
-      <Fragment>
+      <Row noGutters>
         <Col md={6}>
           <Form.Row>
-            <Form.Label column md={2}>
-              Assessed Sum
-            </Form.Label>
+            <Form.Label>Assessed Sum</Form.Label>
             <FastCurrencyInput
               formikProps={props.formikProps}
               disabled={true}
-              outerClassName="col-md-10"
               value={summedFinancials[EvaluationKeys.Assessed]}
               field={EvaluationKeys.Assessed}
+              placeholder="$0"
             />
           </Form.Row>
           {withAppraised()}
         </Col>
         <Col md={6}>
           <Form.Row>
-            <Form.Label column md={2}>
-              Net Book Sum
-            </Form.Label>
+            <Form.Label>Net Book Sum</Form.Label>
             <FastCurrencyInput
               formikProps={props.formikProps}
               disabled={true}
-              outerClassName="col-md-10"
               value={summedFinancials[FiscalKeys.NetBook]}
               field={FiscalKeys.NetBook}
+              placeholder="$0"
             />
           </Form.Row>
           <Form.Row>
-            <Form.Label column md={2}>
-              Estimated Sum
-            </Form.Label>
+            <Form.Label>Estimated Sum</Form.Label>
             <FastCurrencyInput
               formikProps={props.formikProps}
               disabled={true}
-              outerClassName="col-md-10"
               value={summedFinancials[FiscalKeys.Estimated]}
               field={FiscalKeys.Estimated}
+              placeholder="$0"
             />
           </Form.Row>
         </Col>
-      </Fragment>
+      </Row>
     );
   }
 };

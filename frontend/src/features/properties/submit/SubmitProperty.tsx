@@ -2,7 +2,6 @@ import './SubmitProperty.scss';
 
 import React, { useState } from 'react';
 import { Row, Col, Spinner, Button, Container, Modal, Form } from 'react-bootstrap';
-import ParcelDetailForm from '../components/forms/ParcelDetailForm';
 import MapView from '../map/MapView';
 import {
   storeParcelDetail,
@@ -48,7 +47,6 @@ const SubmitProperty = (props: any) => {
   const parcelId = props?.match?.params?.id;
   const parsedQuery = queryString.parse(query);
   const [formDisabled, setFormDisabled] = useState(!!parsedQuery.disabled);
-  const loadDraft = parsedQuery.loadDraft;
 
   const mode = formDisabled ? Mode.View : parcelId ? Mode.Update : Mode.Create;
   const [readonly, setReadonly] = useState(true);
@@ -179,16 +177,7 @@ const SubmitProperty = (props: any) => {
           <Spinner animation="border"></Spinner>
         ) : (
           <Row noGutters>
-            <Col>
-              <ParcelDetailForm
-                agencyId={keycloak.agencyId}
-                clickLatLng={leafletMouseEvent?.latlng}
-                parcelDetail={parcelId ? (cachedParcelDetail as IParcel) : null}
-                disabled={formDisabled || readonly}
-                secret={keycloak.obj.subject}
-                loadDraft={!!loadDraft}
-              />
-            </Col>
+            <Col></Col>
           </Row>
         )}
       </Col>

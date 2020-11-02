@@ -125,7 +125,7 @@ exports[`building popup view renders correctly 1`] = `
         View
       </a>
       <a
-        href="/submitProperty/1"
+        href="/mapview/1"
         onClick={[Function]}
         style={
           Object {

@@ -1,3 +1,4 @@
+import { LifecycleToasts } from './../customAxios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
 import * as parcelsActions from 'actions/parcelsActions';
@@ -7,6 +8,7 @@ import { IParcel } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
+import * as pimsToasts from 'constants/toasts';
 
 export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => (
   dispatch: Function,
@@ -81,11 +83,20 @@ export const fetchPropertyDetail = (
     : dispatch(fetchBuildingDetail({ id }, position));
 };
 
+const parcelLoadingToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.parcel.PARCEL_CREATING,
+  successToast: pimsToasts.parcel.PARCEL_CREATED,
+  errorToast: pimsToasts.parcel.PARCEL_ERROR,
+};
+
 export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_PARCEL));
   dispatch(showLoading());
   try {
-    const { data, status } = await CustomAxios().post(ENVIRONMENT.apiUrl + API.PARCEL_ROOT, parcel);
+    const { data, status } = await CustomAxios({ lifecycleToasts: parcelLoadingToasts }).post(
+      ENVIRONMENT.apiUrl + API.PARCEL_ROOT,
+      parcel,
+    );
     dispatch(success(actionTypes.ADD_PARCEL, status));
     dispatch(fetchParcelDetail(data));
     dispatch(hideLoading());

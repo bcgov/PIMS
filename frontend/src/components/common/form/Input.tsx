@@ -4,6 +4,7 @@ import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
 import TooltipIcon from '../TooltipIcon';
+import TooltipWrapper from '../TooltipWrapper';
 
 type RequiredAttributes = {
   /** The field name */
@@ -33,6 +34,8 @@ type OptionalAttributes = {
   onBlurFormatter?: Function;
   /** optional tooltip text to display after the label */
   tooltip?: string;
+  /** Display errors in a tooltip instead of in a div */
+  displayErrorTooltips?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -54,6 +57,7 @@ export const Input: React.FC<InputProps> = ({
   custom,
   onBlurFormatter,
   tooltip,
+  displayErrorTooltips,
   ...rest
 }) => {
   const { handleChange, handleBlur, errors, touched, values, setFieldValue } = useFormikContext<
@@ -62,6 +66,7 @@ export const Input: React.FC<InputProps> = ({
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const value = getIn(values, field);
+  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   const asElement: any = is || 'input';
   const [restricted, setRestricted] = useState(value);
   const handleRestrictedChange = (event: any) => {
@@ -94,27 +99,32 @@ export const Input: React.FC<InputProps> = ({
           {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
         </Form.Label>
       )}
-      <Form.Control
-        as={asElement}
-        name={field}
-        required={required}
-        disabled={disabled}
-        custom={custom}
-        isInvalid={!!touch && !!error}
-        {...rest}
-        isValid={false}
-        value={pattern ? restricted : rest.value ?? value}
-        placeholder={placeholder}
-        onBlur={(e: any) => {
-          if (onBlurFormatter) {
-            pattern && setRestricted(onBlurFormatter(value));
-            setFieldValue(field, onBlurFormatter(value));
-          }
-          handleBlur(e);
-        }}
-        className={className}
-        onChange={pattern ? handleRestrictedChange : handleChange}
-      />
+      {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+
+      <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
+        <Form.Control
+          className={className}
+          as={asElement}
+          name={field}
+          required={required}
+          disabled={disabled}
+          custom={custom}
+          isInvalid={!!touch && !!error}
+          {...rest}
+          isValid={false}
+          value={pattern ? restricted : rest.value ?? value}
+          placeholder={placeholder}
+          onBlur={(e: any) => {
+            if (onBlurFormatter) {
+              pattern && setRestricted(onBlurFormatter(value));
+              setFieldValue(field, onBlurFormatter(value));
+            }
+            handleBlur(e);
+          }}
+          onChange={pattern ? handleRestrictedChange : handleChange}
+        />
+      </TooltipWrapper>
+
       {!label && !!required && <span className="required">*</span>}
       <DisplayError field={field} />
     </Form.Group>

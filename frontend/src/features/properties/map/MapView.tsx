@@ -10,12 +10,15 @@ import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsAc
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
+import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
 import {
   saveClickLatLng as saveLeafletMouseEvent,
   clearClickLatLng,
 } from 'reducers/LeafletMouseSlice';
 import * as API from 'constants/API';
 import _ from 'lodash';
+import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
+import classNames from 'classnames';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -136,38 +139,43 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     };
   }, [dispatch]);
 
+  const { showSideBar } = useParamSideBar();
+
   return (
-    <Map
-      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
-      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
-      properties={properties}
-      selectedProperty={propertyDetail}
-      agencies={agencies}
-      propertyClassifications={propertyClassifications}
-      lotSizes={lotSizes}
-      onMarkerClick={
-        props.onMarkerClick ??
-        ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
-      }
-      onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
-      onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-        if (!props.submittingProperty) {
-          const apiParams = getApiParams(mapFilterModel);
-          throttledFetch(apiParams);
-        } else {
-          if (!loadedProperties) {
+    <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
+      <MapSideBarContainer></MapSideBarContainer>
+      <Map
+        lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
+        lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
+        properties={properties}
+        selectedProperty={propertyDetail}
+        agencies={agencies}
+        propertyClassifications={propertyClassifications}
+        lotSizes={lotSizes}
+        onMarkerClick={
+          props.onMarkerClick ??
+          ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
+        }
+        onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
+        onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
+          if (!props.submittingProperty) {
             const apiParams = getApiParams(mapFilterModel);
             throttledFetch(apiParams);
-            setLoadedProperties(true);
+          } else {
+            if (!loadedProperties) {
+              const apiParams = getApiParams(mapFilterModel);
+              throttledFetch(apiParams);
+              setLoadedProperties(true);
+            }
           }
-        }
-      }}
-      onMapClick={saveLatLng}
-      disableMapFilterBar={props.disableMapFilterBar}
-      interactive={!props.disabled}
-      showParcelBoundaries={props.showParcelBoundaries ?? true}
-      zoom={6}
-    />
+        }}
+        onMapClick={saveLatLng}
+        disableMapFilterBar={props.disableMapFilterBar}
+        interactive={!props.disabled}
+        showParcelBoundaries={props.showParcelBoundaries ?? true}
+        zoom={6}
+      />
+    </div>
   );
 };
 

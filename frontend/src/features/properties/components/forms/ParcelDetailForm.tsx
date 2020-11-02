@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { Row, Col, Button, Spinner } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Row, Col, Button, Tab, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Formik, yupToFormErrors, FormikProps } from 'formik';
 import { ParcelSchema } from 'utils/YupSchema';
 import PidPinForm, { defaultPidPinFormValues } from './subforms/PidPinForm';
+import InformationForm, { defaultInformationFormValues } from './subforms/InformationForm';
 import { IFormBuilding } from './subforms/BuildingForm';
 import AddressForm, { defaultAddressValues } from './subforms/AddressForm';
-import LandForm, { defaultLandValues } from './subforms/LandForm';
 import EvaluationForm, {
   defaultFinancials,
   filterEmptyFinancials,
@@ -15,11 +15,10 @@ import EvaluationForm, {
   IFinancialYear,
 } from './subforms/EvaluationForm';
 import './ParcelDetailForm.scss';
-import { useHistory } from 'react-router-dom';
-import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
-import { Form, TextArea } from 'components/common/form';
+import { createParcel, updateParcel, deleteParcel } from 'actionCreators/parcelsActionCreator';
+import { Form } from 'components/common/form';
 
-import { IParcel } from 'actions/parcelsActions';
+import { IParcel, storeParcelDetail } from 'actions/parcelsActions';
 import { clear } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
 import _ from 'lodash';
@@ -41,31 +40,46 @@ import { Claims } from 'constants/claims';
 import GenericModal from 'components/common/GenericModal';
 import DebouncedValidation from './subforms/DebouncedValidation';
 import styled from 'styled-components';
+import { ErrorTabs, isTabInError } from 'features/projects/common';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { ParcelDetailTabs } from 'features/mapSideBar/containers/ParcelDetailContainer';
+import LandForm, { defaultLandValues } from './subforms/LandForm';
+import LatLongForm from './subforms/LatLongForm';
+import { decimalOrUndefined } from 'utils';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { FaTrash } from 'react-icons/fa';
 import LastUpdatedBy from '../LastUpdatedBy';
-import ManualLink from 'features/projects/common/components/ManualLink';
 
 interface ParcelPropertyProps {
   parcelDetail: IParcel | null;
   secret: string;
+  currentTab: ParcelDetailTabs;
+  setCurrentTab: Function;
+  setSidebarOpen: Function;
+  formikRef: any;
   agencyId?: number;
   disabled?: boolean;
   clickLatLng?: LatLng;
   loadDraft?: boolean;
 }
 
+export interface IFormParcel extends IParcel {
+  financials: IFinancialYear[];
+  buildings: IFormBuilding[];
+}
+
 export const getInitialValues = (): any => {
   return {
-    ...defaultLandValues,
     ...defaultPidPinFormValues,
+    ...defaultLandValues,
+    ...defaultInformationFormValues,
+    latitude: '',
+    longitude: '',
     address: defaultAddressValues,
     buildings: [],
     financials: defaultFinancials,
   };
 };
-export interface IFormParcel extends IParcel {
-  financials: IFinancialYear[];
-  buildings: IFormBuilding[];
-}
 
 const FormControls = styled.div`
   display: flex;
@@ -75,38 +89,32 @@ const FormControls = styled.div`
 
 const showAppraisal = false;
 
-const ParcelDetailForm = (props: ParcelPropertyProps) => {
+const ParcelDetailForm = ({
+  currentTab,
+  setCurrentTab,
+  setSidebarOpen,
+  formikRef,
+  ...props
+}: ParcelPropertyProps) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
-  const history = useHistory();
   const api = useApi();
-  const formikRef = React.useRef<FormikProps<any>>();
   const [pidSelection, setPidSelection] = useState({ showPopup: false, geoPID: '' });
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   let initialValues = getInitialValues();
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
-
+  const isAdmin = keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
   let allowEdit =
-    keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
-    !props.parcelDetail ||
-    keycloak.hasAgency(props.parcelDetail?.agencyId as number);
+    isAdmin || !props.parcelDetail || keycloak.hasAgency(props.parcelDetail?.agencyId as number);
 
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const { getOptionsByType } = useCodeLookups();
 
-  agencies.forEach(x => {
-    if (x.id.toString() === props.agencyId?.toString()) {
-      initialValues.agency = x.code;
-    }
-  });
+  const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  const agencyOptions = getOptionsByType(API.AGENCY_CODE_SET_NAME);
 
-  initialValues.agencyId = props.agencyId;
+  initialValues.agencyId = keycloak.agencyId;
   //Load all data if we are updating a parcel.
   if (props?.parcelDetail?.id) {
     const buildings = props.parcelDetail?.buildings.map(building => {
@@ -163,6 +171,9 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
       const seperatedBuildingFinancials = _.flatten(
         building.financials.map((financial: IFinancialYear) => _.values(financial)),
       ) as IFinancial[];
+      building.buildingFloorCount = decimalOrUndefined(
+        building.buildingFloorCount?.toString() ?? '',
+      );
       const allFinancials = filterEmptyFinancials(seperatedBuildingFinancials);
       building.evaluations = _.filter(allFinancials, financial =>
         Object.keys(EvaluationKeys).includes(financial.key),
@@ -204,6 +215,13 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     }
 
     let errors = await yupErrors;
+    const { buildings: buildingErrors, tabs, ...parcelErrors } = errors;
+    if (buildingErrors?.length) {
+      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.buildings] };
+    }
+    if (parcelErrors && Object.keys(parcelErrors).length) {
+      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.parcel] };
+    }
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
     }
@@ -214,13 +232,13 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
   };
 
   const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const { available } = await api.isPidAvailable(values.id, values.pid);
-    return available;
+    const response = await api.isPidAvailable(values.id, values.pid);
+    return response?.available;
   };
 
   const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const { available } = await api.isPinAvailable(values.id, values.pin);
-    return available;
+    const response = await api.isPinAvailable(values.id, values.pin);
+    return response?.available;
   };
 
   const handleGeocoderChanges = async (data: IGeocoderResponse) => {
@@ -291,6 +309,49 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
     }
   };
 
+  const DeleteModal = ({
+    showDeleteDialog,
+    setShowDeleteDialog,
+    dispatch,
+    cachedParcelDetail,
+  }: any) => (
+    <GenericModal
+      message="Are you sure you want to permanently delete the property?"
+      cancelButtonText="Cancel"
+      okButtonText="Delete"
+      display={showDeleteDialog}
+      handleOk={() => {
+        dispatch(deleteParcel(cachedParcelDetail)).then(() => {
+          dispatch(storeParcelDetail(null));
+        });
+        // todo: better error handling, currently this will log to global error handler.
+      }}
+      handleCancel={() => {
+        setShowDeleteDialog(false);
+      }}
+    />
+  );
+
+  const DeleteButton = ({ cachedParcelDetail, keycloak, setShowDeleteDialog, disabled }: any) => {
+    return (keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
+      keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) &&
+      keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
+      cachedParcelDetail?.id ? (
+      <Button
+        className="delete-btn"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setShowDeleteDialog(true);
+        }}
+        disabled={disabled}
+      >
+        <TooltipWrapper toolTipId="delete-button-tooltip" toolTip="Delete Parcel">
+          <FaTrash size={20} />
+        </TooltipWrapper>
+      </Button>
+    ) : null;
+  };
+
   return (
     <Row noGutters className="parcelDetailForm">
       <Col>
@@ -298,7 +359,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           <GenericModal
             cancelButtonText={`Use original PID ${formikRef.current?.values.pid}`}
             okButtonText={`Use GeoCoder PID ${pidSelection.geoPID}`}
-            handleOk={(e: any) => {
+            handleOk={() => {
               formikRef.current?.setFieldValue('pid', pidSelection.geoPID);
               setPidSelection({ showPopup: false, geoPID: '' });
             }}
@@ -312,9 +373,7 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
           />
         )}
         <Formik
-          innerRef={instance => {
-            formikRef.current = instance;
-          }}
+          innerRef={formikRef}
           initialValues={initialValues}
           validateOnChange={false}
           validate={handleValidate}
@@ -325,10 +384,9 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
               if (!values.id) {
                 const data = await createParcel(apiValues)(dispatch);
                 dispatch(clear(actionTypes.ADD_PARCEL));
-                history.replace(`/submitProperty/${data.id}`);
+                dispatch(storeParcelDetail(data));
               } else {
                 await updateParcel(apiValues)(dispatch);
-                history.go(0);
               }
             } catch (error) {
               const msg: string =
@@ -341,84 +399,23 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         >
           {formikProps => (
             <Form>
-              <DebouncedValidation formikProps={formikProps} />
-              {setLatLng(formikProps)}
-              {!props.disabled && (
-                <Persist
-                  initialValues={initialValues}
-                  secret={props.secret}
-                  loadDraft={props.loadDraft}
-                  name={PARCEL_STORAGE_NAME}
-                />
-              )}
-              <Row noGutters>
-                <Col>
-                  <h3>Parcel Information</h3>
-                  <Form.Row className="pidPinForm">
-                    <PidPinForm disabled={props.disabled || !allowEdit} />
-                    <Col md={6}>
-                      <AddressForm
-                        onGeocoderChange={handleGeocoderChanges}
-                        {...formikProps}
-                        disabled={props.disabled || !allowEdit}
-                        nameSpace="address"
-                      />
-                      <Form.Row>
-                        <Form.Label column md={2}>
-                          Description
-                        </Form.Label>
-                        <TextArea
-                          disabled={props.disabled || !allowEdit}
-                          outerClassName="col-md-10"
-                          field="description"
-                        />
-                      </Form.Row>
-                    </Col>
-                  </Form.Row>
-                </Col>
-              </Row>
-              <Row noGutters>
-                <Col>
-                  <LandForm {...formikProps} disabled={props.disabled || !allowEdit}></LandForm>
-                  <h4>Total values for parcel inclusive of existing building(s)</h4>
-                  <Form.Row className="sumFinancialsForm">
-                    <SumFinancialsForm formikProps={formikProps} showAppraisal={showAppraisal} />
-                  </Form.Row>
-                  <h4>Valuation Information</h4>
-                  <div key={props.disabled?.toString()}>
-                    <EvaluationForm
-                      {...(formikProps as any)}
-                      isParcel={true}
-                      showAppraisal={showAppraisal}
-                      disabled={props.disabled || !allowEdit}
-                      nameSpace="financials"
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row noGutters key={props.disabled?.toString()}>
-                <PagedBuildingForms disabled={props.disabled} allowEdit={allowEdit} />
-              </Row>
-              <div
-                style={{
-                  textAlign: 'right',
-                  position: 'sticky',
-                  bottom: '-18px',
-                  backgroundColor: '#f2f2f2',
-                  zIndex: 4,
-                }}
-              >
-                {formikProps.status && formikProps.status.msg && (
-                  <p style={{ color: 'red' }}>{formikProps.status.msg}</p>
-                )}
-                <ManualLink
-                  url="https://www2.gov.bc.ca/gov/content/governments/services-for-government/real-estate-space/asset-management-services/inventory-policy "
-                  label="Inventory Policy"
-                />
-                <FormControls>
-                  {formikProps.values.id && <LastUpdatedBy {...(formikProps.values as any)} />}
+              <FormControls className="form-controls">
+                {formikProps.values.id && <LastUpdatedBy {...(formikProps.values as any)} />}
+
+                <TooltipWrapper
+                  toolTipId="submit-button-tooltip"
+                  toolTip="Add Property to Inventory"
+                >
                   {!props.disabled && (
-                    <Button disabled={props.disabled} type="submit">
+                    <Button
+                      disabled={props.disabled}
+                      type="submit"
+                      onClick={(e: any) => {
+                        e.preventDefault();
+                        formikProps.setSubmitting(true);
+                        formikProps.submitForm();
+                      }}
+                    >
                       Submit&nbsp;
                       {formikProps.isSubmitting && (
                         <Spinner
@@ -431,8 +428,99 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
                       )}
                     </Button>
                   )}
-                </FormControls>
-              </div>
+                </TooltipWrapper>
+              </FormControls>
+
+              <DeleteButton
+                cachedParcelDetail={formikProps.values}
+                keycloak={keycloak}
+                setShowDeleteDialog={setShowDeleteDialog}
+              />
+              <DeleteModal
+                {...{
+                  showDeleteDialog,
+                  setShowDeleteDialog,
+                  dispatch,
+                  cachedParcelDetail: formikProps.values,
+                }}
+              />
+              <DebouncedValidation formikProps={formikProps} />
+              {setLatLng(formikProps)}
+              {!props.disabled && (
+                <Persist
+                  initialValues={initialValues}
+                  secret={props.secret}
+                  loadDraft={props.loadDraft}
+                  name={PARCEL_STORAGE_NAME}
+                  openSidebar={() => setSidebarOpen(true)}
+                />
+              )}
+              <ErrorTabs currentTab={currentTab} setCurrentTab={setCurrentTab}>
+                <Tab
+                  title="Parcel"
+                  eventKey={ParcelDetailTabs.parcel}
+                  tabClassName={
+                    Object.keys(formikProps.touched).length
+                      ? isTabInError(formikProps.errors, ParcelDetailTabs.parcel)
+                      : ''
+                  }
+                >
+                  <Row noGutters>
+                    <Col md={6}>
+                      <PidPinForm disabled={props.disabled || !allowEdit} />
+                      <InformationForm
+                        isAdmin
+                        agencies={agencyOptions}
+                        classifications={classifications}
+                        disabled={props.disabled || !allowEdit}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <AddressForm
+                        onGeocoderChange={handleGeocoderChanges}
+                        {...formikProps}
+                        disabled={props.disabled || !allowEdit}
+                        nameSpace="address"
+                      />
+                      <LatLongForm {...formikProps} />
+                      <LandForm {...formikProps} />
+                    </Col>
+                  </Row>
+                  <Row noGutters>
+                    <Col>
+                      <h4>Valuation Information</h4>
+                      <p>
+                        Total values for parcel inclusive of existing building(s) for the most
+                        recent year with data
+                      </p>
+                      <SumFinancialsForm formikProps={formikProps} showAppraisal={showAppraisal} />
+                      <div key={props.disabled?.toString()}>
+                        <EvaluationForm
+                          {...(formikProps as any)}
+                          isParcel={true}
+                          showAppraisal={showAppraisal}
+                          disabled={props.disabled || !allowEdit}
+                          nameSpace="financials"
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                </Tab>
+                <Tab
+                  title="Buildings"
+                  eventKey={ParcelDetailTabs.buildings}
+                  tabClassName={
+                    Object.keys(formikProps.touched).length
+                      ? isTabInError(formikProps.errors, ParcelDetailTabs.buildings)
+                      : ''
+                  }
+                >
+                  <PagedBuildingForms disabled={props.disabled} allowEdit={allowEdit} />
+                  {formikProps.status && formikProps.status.msg && (
+                    <p style={{ color: 'red' }}>{formikProps.status.msg}</p>
+                  )}
+                </Tab>
+              </ErrorTabs>
             </Form>
           )}
         </Formik>

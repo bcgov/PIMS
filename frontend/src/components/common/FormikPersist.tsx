@@ -10,6 +10,7 @@ export interface PersistProps {
   name: string;
   secret: string;
   initialValues: any;
+  openSidebar: () => void;
   debounce?: number;
   isSessionStorage?: boolean;
   loadDraft?: boolean;
@@ -115,6 +116,7 @@ class PersistImpl extends React.Component<
             okButtonText="Resume Editing"
             display={this.state.showLoadDraftDialog}
             handleOk={() => {
+              this.props.openSidebar();
               this.setState({ showLoadDraftDialog: false });
               this.loadForm();
             }}

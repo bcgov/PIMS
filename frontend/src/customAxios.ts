@@ -50,9 +50,11 @@ const CustomAxios = ({
 
   instance.interceptors.response.use(
     response => {
-      if (lifecycleToasts?.successToast) {
+      if (lifecycleToasts?.successToast && response.status < 300) {
         loadingToastId && toast.dismiss(loadingToastId);
         lifecycleToasts.successToast();
+      } else if (lifecycleToasts?.errorToast && response.status >= 300) {
+        lifecycleToasts.errorToast();
       }
       return response;
     },
