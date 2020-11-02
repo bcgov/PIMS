@@ -2,8 +2,8 @@ import './Map.scss';
 
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, LayersControl, LayerGroup } from 'react-leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng } from 'leaflet';
+import { Map as LeafletMap, TileLayer, Popup, LayersControl, WMSTileLayer } from 'react-leaflet';
 import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -21,13 +21,15 @@ import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
 import { useRouterFilter } from 'hooks/useRouterFilter';
-import { Layer } from './Layers/Layer';
 import {
   municipalityLayerPopupConfig,
   MUNICIPALITY_LAYER_URL,
   parcelLayerPopupConfig,
   PARCELS_LAYER_URL,
-} from './Layers/constants';
+} from './LayerPopup/constants';
+import { isEmpty } from 'lodash';
+import { LayerPopupContent, PopupContentConfig } from './LayerPopup/LayerPopupContent';
+import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -63,6 +65,10 @@ export type MapProps = {
   disableMapFilterBar?: boolean;
   interactive?: boolean;
   showParcelBoundaries?: boolean;
+};
+
+export type LayerPopupInformation = PopupContentConfig & {
+  latlng: LatLng;
 };
 
 const Map: React.FC<MapProps> = ({
@@ -101,6 +107,10 @@ const Map: React.FC<MapProps> = ({
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const { getCityLatLng } = useApi();
   useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
+  const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+  const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+
+  const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
 
   //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -177,6 +187,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   const closeMarkerPopup = () => {
+    setLayerPopup(undefined);
     dispatch(storeParcelDetail(null));
   };
 
@@ -271,6 +282,31 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  const showLocationDetails = async (event: LeafletMouseEvent) => {
+    !!onMapClick && onMapClick(event);
+    const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
+    const parcel = await parcelsService.findOneWhereContains(event.latlng);
+
+    let properties = {};
+    let displayConfig = {};
+    if (parcel.features.length === 1) {
+      properties = { ...properties, ...parcel.features[0].properties };
+      displayConfig = { ...displayConfig, ...parcelLayerPopupConfig };
+    }
+    if (municipality.features.length === 1) {
+      properties = { ...properties, ...municipality.features[0].properties };
+      displayConfig = { ...displayConfig, ...municipalityLayerPopupConfig };
+    }
+
+    if (!isEmpty(properties)) {
+      setLayerPopup({
+        data: properties as any,
+        config: displayConfig as any,
+        latlng: event.latlng,
+      } as any);
+    }
+  };
+
   // return map
   return (
     <Container fluid className="px-0">
@@ -304,7 +340,7 @@ const Map: React.FC<MapProps> = ({
             onViewportChanged={() => {
               handleViewportChange(mapFilter);
             }}
-            onclick={onMapClick}
+            onclick={showLocationDetails}
             closePopupOnClick={interactive}
             onzoomend={onZoomEnd}
             onzoomstart={closeMarkerPopup}
@@ -324,32 +360,43 @@ const Map: React.FC<MapProps> = ({
               onMarkerClick={onSingleMarkerClick}
             />
             {selectedProperty && renderPopup(selectedProperty)}
+            {!!layerPopup && (
+              <Popup
+                position={layerPopup.latlng}
+                offset={[0, -25]}
+                onClose={() => setLayerPopup(undefined)}
+                closeButton={interactive}
+                autoPan={false}
+              >
+                <LayerPopupContent
+                  data={layerPopup.data as any}
+                  config={layerPopup.config as any}
+                />
+              </Popup>
+            )}
             <LegendControl />
 
             <LayersControl position="topright">
               <LayersControl.Overlay checked={true} name="Parcel Boundaries">
-                <LayerGroup>
-                  <Layer
-                    bbox={bounds}
-                    minZoom={14}
-                    opacity={0.6}
-                    weight={0.8}
-                    color="#d39e00"
-                    popupConfig={parcelLayerPopupConfig}
-                    src={PARCELS_LAYER_URL}
-                  />
-                </LayerGroup>
+                <WMSTileLayer
+                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+                  layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+                  transparent={true}
+                  format="image/png"
+                  zIndex={10}
+                  id="parcelLayer"
+                />
               </LayersControl.Overlay>
               <LayersControl.Overlay checked name="Municipalities">
-                <LayerGroup>
-                  <Layer
-                    opacity={0.5}
-                    bbox={bounds}
-                    weight={0.7}
-                    src={MUNICIPALITY_LAYER_URL}
-                    popupConfig={municipalityLayerPopupConfig}
-                  />
-                </LayerGroup>
+                <WMSTileLayer
+                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?"
+                  layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP"
+                  transparent={true}
+                  format="image/png"
+                  opacity={0.5}
+                  zIndex={8}
+                  id="municipalityLayer"
+                />
               </LayersControl.Overlay>
             </LayersControl>
           </LeafletMap>
