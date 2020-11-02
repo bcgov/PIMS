@@ -101,10 +101,9 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
               <AddReportControl onAdd={onAdd} />
               <Row noGutters className="d-flex align-items-center">
                 {reportOptions.length > 1 ? (
-                  <BSForm.Group className="ml-2">
+                  <BSForm.Group controlId="select-from" className="ml-2">
                     <BSForm.Label>From: </BSForm.Label>
                     <BSForm.Control
-                      label="From: "
                       options={reportOptions}
                       as="select"
                       value={fromId}
@@ -125,7 +124,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                     <BSForm.Label>From: N/A</BSForm.Label>
                   </BSForm.Group>
                 )}
-                <BSForm.Group>
+                <BSForm.Group controlId="input-to">
                   <BSForm.Label>To:</BSForm.Label>
                   <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
                 </BSForm.Group>
@@ -138,7 +137,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                     variant="light"
                     className="mr-3"
                     disabled={values.isFinal}
-                    icon={<FaSyncAlt size={20} />}
+                    icon={<FaSyncAlt size={20} title="refresh-button" />}
                     onClick={() => currentReport && onRefresh(currentReport)}
                   ></Button>
                 </TooltipWrapper>
@@ -147,7 +146,12 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 <Button
                   className="h-75 mr-auto"
                   type="submit"
-                  disabled={(!dirty && originalReport?.to === currentReport?.to) || !values.id}
+                  disabled={
+                    (!dirty &&
+                      originalReport?.to === currentReport?.to &&
+                      originalReport?.from === currentReport?.from) ||
+                    !values.id
+                  }
                   onClick={e => {
                     e.preventDefault();
                     setSubmitting(true);

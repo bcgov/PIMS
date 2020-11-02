@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Project list view Matches snapshot 1`] = `
+exports[`Project list view tests Matches snapshot 1`] = `
 <div
   className="ProjectListView container-fluid"
 >
@@ -64,17 +64,15 @@ exports[`Project list view Matches snapshot 1`] = `
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                id="input-name"
-                name="name"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="Search by project name"
-                value=""
-              />
-            </span>
+            <input
+              className="form-control"
+              id="input-name"
+              name="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Search by project name"
+              value=""
+            />
           </div>
         </div>
         <div

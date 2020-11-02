@@ -68,17 +68,15 @@ exports[`MapFilterBar renders correctly 1`] = `
           <div
             className="form-group"
           >
-            <span>
-              <input
-                className="form-control"
-                id="input-address"
-                name="address"
-                onBlur={[Function]}
-                onChange={[Function]}
-                placeholder="Enter an address or city"
-                value=""
-              />
-            </span>
+            <input
+              className="form-control"
+              id="input-address"
+              name="address"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Enter an address or city"
+              value=""
+            />
           </div>
         </div>
       </div>
@@ -162,17 +160,15 @@ exports[`MapFilterBar renders correctly 1`] = `
       <div
         className="form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-minLotSize"
-            name="minLotSize"
-            onBlur={[Function]}
-            onChange={[Function]}
-            placeholder="Min Lot Size"
-            value=""
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-minLotSize"
+          name="minLotSize"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Min Lot Size"
+          value=""
+        />
       </div>
       <span
         className="mx-2 align-self-center"
@@ -182,17 +178,15 @@ exports[`MapFilterBar renders correctly 1`] = `
       <div
         className="form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-maxLotSize"
-            name="maxLotSize"
-            onBlur={[Function]}
-            onChange={[Function]}
-            placeholder="Max Lot Size"
-            value=""
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-maxLotSize"
+          name="maxLotSize"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Max Lot Size"
+          value=""
+        />
       </div>
     </div>
     <div

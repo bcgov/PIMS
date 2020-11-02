@@ -8,6 +8,11 @@ import * as _ from 'lodash';
 import { IReport } from '../interfaces';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
+import {
+  getServerQuery,
+  getProjectFinancialReportUrl,
+} from 'features/projects/list/ProjectListView';
+import download from 'utils/download';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -144,6 +149,20 @@ export const useProjectSnapshotApi = () => {
     [dispatch],
   );
 
+  const exportReport = (report: IReport, accept: 'csv' | 'excel') => {
+    const query = getServerQuery({ pageIndex: 0, pageSize: 1, filter: {}, agencyIds: [] });
+    return dispatch(
+      download({
+        url: getProjectFinancialReportUrl({ ...query, all: true, reportId: report?.id }),
+        fileName: `spl_report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        actionType: 'projects-report',
+        headers: {
+          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+        },
+      }),
+    );
+  };
+
   return {
     getProjectReports,
     getProjectReportSnapshotsById,
@@ -152,5 +171,6 @@ export const useProjectSnapshotApi = () => {
     deleteProjectReport,
     addProjectReport,
     updateProjectReport,
+    exportReport,
   };
 };

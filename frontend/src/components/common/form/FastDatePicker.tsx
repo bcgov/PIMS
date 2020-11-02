@@ -79,10 +79,11 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
-    <FormGroup className={outerClassName ?? ''}>
+    <FormGroup className={outerClassName ?? ''} controlId={`datepicker-${field}`}>
       {!!label && <Form.Label>{label}</Form.Label>}
 
       <DatePicker
+        id={`datepicker-${field}`}
         showYearDropdown
         scrollableYearDropdown
         yearDropdownItemNumber={10}

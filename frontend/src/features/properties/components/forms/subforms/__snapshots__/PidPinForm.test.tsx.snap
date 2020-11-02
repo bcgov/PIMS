@@ -44,16 +44,14 @@ exports[`PidPin sub-form renders correctly 1`] = `
       <div
         className="col-md-10 form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-pid"
-            name="pid"
-            onBlur={[Function]}
-            onChange={[Function]}
-            value=""
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-pid"
+          name="pid"
+          onBlur={[Function]}
+          onChange={[Function]}
+          value=""
+        />
       </div>
     </div>
     <p
@@ -101,17 +99,15 @@ exports[`PidPin sub-form renders correctly 1`] = `
       <div
         className="col-md-10 form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-pin"
-            name="pin"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="number"
-            value=""
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-pin"
+          name="pin"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="number"
+          value=""
+        />
       </div>
     </div>
     <div
@@ -125,16 +121,14 @@ exports[`PidPin sub-form renders correctly 1`] = `
       <div
         className="col-md-10 form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-projectNumber"
-            name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            value=""
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-projectNumber"
+          name="projectNumber"
+          onBlur={[Function]}
+          onChange={[Function]}
+          value=""
+        />
       </div>
     </div>
     <div
@@ -148,15 +142,13 @@ exports[`PidPin sub-form renders correctly 1`] = `
       <div
         className="col-md-10 form-group"
       >
-        <span>
-          <input
-            className="form-control"
-            id="input-name"
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-          />
-        </span>
+        <input
+          className="form-control"
+          id="input-name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+        />
       </div>
     </div>
   </div>
