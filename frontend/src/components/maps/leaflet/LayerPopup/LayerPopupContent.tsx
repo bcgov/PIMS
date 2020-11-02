@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ReactDOMServer from 'react-dom/server';
 import { ListGroup } from 'react-bootstrap';
 import { keys } from 'lodash';
 
@@ -48,10 +47,3 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config }
     </ListGroup>
   );
 };
-
-/**
- * Compiles the JSX and returns an html string for the popup content
- * @param props
- */
-export const renderPopupContent = (props: IPopupContentProps) =>
-  ReactDOMServer.renderToString(<LayerPopupContent {...props} />);
