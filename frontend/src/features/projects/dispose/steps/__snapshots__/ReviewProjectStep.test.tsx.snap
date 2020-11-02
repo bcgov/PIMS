@@ -33,18 +33,16 @@ exports[`renders correctly 1`] = `
         <div
           className="col-md-2 form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-projectNumber"
-              name="projectNumber"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="SPP-XXXXXX"
-              value=""
-            />
-          </span>
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-projectNumber"
+            name="projectNumber"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="SPP-XXXXXX"
+            value=""
+          />
         </div>
       </div>
       <div
@@ -64,20 +62,16 @@ exports[`renders correctly 1`] = `
               *
             </span>
           </label>
-          <span
-            className="col-md-5"
-          >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-name"
-              name="name"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-              value=""
-            />
-          </span>
+          <input
+            className="col-md-5 form-control"
+            disabled={true}
+            id="input-name"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            required={true}
+            value=""
+          />
         </div>
       </div>
       <div
@@ -92,19 +86,15 @@ exports[`renders correctly 1`] = `
           >
             Description
           </label>
-          <span
-            className="col-md-5"
-          >
-            <textarea
-              className="form-control"
-              disabled={true}
-              id="input-description"
-              name="description"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value=""
-            />
-          </span>
+          <textarea
+            className="col-md-5 form-control"
+            disabled={true}
+            id="input-description"
+            name="description"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
         </div>
       </div>
     </div>
@@ -612,7 +602,6 @@ exports[`renders correctly 1`] = `
             <input
               checked={true}
               className="form-check-input position-static"
-              defaultChecked={true}
               disabled={true}
               id="input-confirmation"
               name="confirmation"
@@ -680,7 +669,6 @@ exports[`renders correctly 1`] = `
             <input
               checked={false}
               className="form-check-input position-static"
-              defaultChecked={false}
               disabled={true}
               id="input-exemptionRequested"
               name="exemptionRequested"

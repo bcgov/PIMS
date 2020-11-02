@@ -232,17 +232,15 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <div
               className="col-md-10 form-group"
             >
-              <span>
-                <textarea
-                  className="form-control"
-                  disabled={true}
-                  id="input-buildings.0.description"
-                  name="buildings.0.description"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="description"
-                />
-              </span>
+              <textarea
+                className="form-control"
+                disabled={true}
+                id="input-buildings.0.description"
+                name="buildings.0.description"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="description"
+              />
             </div>
           </div>
           <div
@@ -526,17 +524,15 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <div
               className="col-md-10 form-group"
             >
-              <span>
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-buildings.0.projectNumber"
-                  name="buildings.0.projectNumber"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="projectNumber"
-                />
-              </span>
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-buildings.0.projectNumber"
+                name="buildings.0.projectNumber"
+                onBlur={[Function]}
+                onChange={[Function]}
+                value="projectNumber"
+              />
             </div>
           </div>
         </div>
@@ -603,7 +599,6 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   <input
                     checked={true}
                     className="form-check-input position-static"
-                    defaultChecked={true}
                     disabled={true}
                     id="input-buildings.0.transferLeaseOnSale"
                     name="buildings.0.transferLeaseOnSale"
@@ -636,6 +631,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                     autoComplete="off"
                     className="form-control date-picker"
                     disabled={true}
+                    id="datepicker-buildings.0.leaseExpiry"
                     name="buildings.0.leaseExpiry"
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -719,7 +715,6 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                   <input
                     checked={false}
                     className="form-check-input position-static"
-                    defaultChecked={false}
                     disabled={true}
                     id="input-buildings.0.sensitiveBuilding"
                     name="buildings.0.sensitiveBuilding"

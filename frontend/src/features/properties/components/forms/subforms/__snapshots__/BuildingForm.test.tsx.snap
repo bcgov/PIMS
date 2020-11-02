@@ -168,17 +168,15 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         <div
           className="col-md-10 form-group"
         >
-          <span>
-            <textarea
-              className="form-control"
-              disabled={false}
-              id="input-description"
-              name="description"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="description"
-            />
-          </span>
+          <textarea
+            className="form-control"
+            disabled={false}
+            id="input-description"
+            name="description"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="description"
+          />
         </div>
       </div>
       <div
@@ -462,17 +460,15 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         <div
           className="col-md-10 form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-projectNumber"
-              name="projectNumber"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="projectNumber"
-            />
-          </span>
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-projectNumber"
+            name="projectNumber"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="projectNumber"
+          />
         </div>
       </div>
     </div>
@@ -539,7 +535,6 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               <input
                 checked={true}
                 className="form-check-input position-static"
-                defaultChecked={true}
                 disabled={false}
                 id="input-transferLeaseOnSale"
                 name="transferLeaseOnSale"
@@ -572,6 +567,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                 autoComplete="off"
                 className="form-control date-picker is-valid "
                 disabled={false}
+                id="datepicker-leaseExpiry"
                 name="leaseExpiry"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -655,7 +651,6 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               <input
                 checked={false}
                 className="form-check-input position-static"
-                defaultChecked={false}
                 disabled={false}
                 id="input-sensitiveBuilding"
                 name="sensitiveBuilding"

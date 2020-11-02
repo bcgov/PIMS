@@ -62,17 +62,15 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <span>
-                    <input
-                      className="form-control"
-                      disabled={true}
-                      id="input-pid"
-                      name="pid"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value="000-000-000"
-                    />
-                  </span>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-pid"
+                    name="pid"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="000-000-000"
+                  />
                 </div>
               </div>
               <p
@@ -120,18 +118,16 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <span>
-                    <input
-                      className="form-control"
-                      disabled={true}
-                      id="input-pin"
-                      name="pin"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      type="number"
-                      value=""
-                    />
-                  </span>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-pin"
+                    name="pin"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    type="number"
+                    value=""
+                  />
                 </div>
               </div>
               <div
@@ -145,17 +141,15 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <span>
-                    <input
-                      className="form-control"
-                      disabled={true}
-                      id="input-projectNumber"
-                      name="projectNumber"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value=""
-                    />
-                  </span>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-projectNumber"
+                    name="projectNumber"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value=""
+                  />
                 </div>
               </div>
               <div
@@ -169,17 +163,15 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <span>
-                    <input
-                      className="form-control"
-                      disabled={true}
-                      id="input-name"
-                      name="name"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value="test name"
-                    />
-                  </span>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    id="input-name"
+                    name="name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="test name"
+                  />
                 </div>
               </div>
             </div>
@@ -311,17 +303,15 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="col-md-10 form-group"
                 >
-                  <span>
-                    <textarea
-                      className="form-control"
-                      disabled={true}
-                      id="input-description"
-                      name="description"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value="test"
-                    />
-                  </span>
+                  <textarea
+                    className="form-control"
+                    disabled={true}
+                    id="input-description"
+                    name="description"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    value="test"
+                  />
                 </div>
               </div>
             </div>
@@ -611,7 +601,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       <input
                         checked={false}
                         className="form-check-input"
-                        defaultChecked={false}
                         disabled={true}
                         id="input-isSensitive"
                         name="isSensitive"
@@ -631,8 +620,8 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                       className="form-check"
                     >
                       <input
+                        checked={true}
                         className="form-check-input"
-                        defaultChecked={true}
                         disabled={true}
                         id="input-isSensitive-2"
                         name="isSensitive"

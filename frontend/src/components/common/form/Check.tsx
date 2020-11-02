@@ -85,7 +85,6 @@ export const Check: React.FC<CheckProps> = ({
             required={required}
             disabled={disabled}
             custom={custom}
-            defaultChecked={!!checked}
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
@@ -103,13 +102,13 @@ export const Check: React.FC<CheckProps> = ({
               required={required}
               disabled={disabled}
               custom={custom}
-              defaultChecked={!checked}
               isInvalid={!!touch && !!error}
               type={type}
               id={`input-${field}-2`}
               {...rest}
               value={!checked}
               placeholder={placeholder}
+              checked={!checked}
               onChange={() => setFieldValue(field, !checked)}
             />
           )}

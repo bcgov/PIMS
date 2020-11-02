@@ -35,18 +35,16 @@ exports[`Project Draft Step renders correctly 1`] = `
         <div
           className="col-md-2 form-group"
         >
-          <span>
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-projectNumber"
-              name="projectNumber"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="SPP-XXXXXX"
-              value="TEST-NUMBER"
-            />
-          </span>
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-projectNumber"
+            name="projectNumber"
+            onBlur={[Function]}
+            onChange={[Function]}
+            placeholder="SPP-XXXXXX"
+            value="TEST-NUMBER"
+          />
         </div>
       </div>
       <div
@@ -66,19 +64,15 @@ exports[`Project Draft Step renders correctly 1`] = `
               *
             </span>
           </label>
-          <span
-            className="col-md-5"
-          >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-name"
-              name="name"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-            />
-          </span>
+          <input
+            className="col-md-5 form-control"
+            disabled={true}
+            id="input-name"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            required={true}
+          />
         </div>
       </div>
       <div
@@ -93,18 +87,14 @@ exports[`Project Draft Step renders correctly 1`] = `
           >
             Description
           </label>
-          <span
-            className="col-md-5"
-          >
-            <textarea
-              className="form-control"
-              disabled={true}
-              id="input-description"
-              name="description"
-              onBlur={[Function]}
-              onChange={[Function]}
-            />
-          </span>
+          <textarea
+            className="col-md-5 form-control"
+            disabled={true}
+            id="input-description"
+            name="description"
+            onBlur={[Function]}
+            onChange={[Function]}
+          />
         </div>
       </div>
     </div>

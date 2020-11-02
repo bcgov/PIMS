@@ -61,7 +61,6 @@
 
   .tbody {
     max-height: calc(100vh - #{$footer-height} - #{$header-height} - #{$navbar-height} - 110px);
-    background-color: red;
     overflow-y: auto;
   }
 

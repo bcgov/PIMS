@@ -43,7 +43,6 @@ Array [
           <input
             checked={false}
             className="form-check-input position-static"
-            defaultChecked={false}
             disabled={false}
             id="input-testFieldOne"
             name="testFieldOne"
