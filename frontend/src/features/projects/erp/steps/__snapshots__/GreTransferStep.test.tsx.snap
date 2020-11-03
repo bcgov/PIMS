@@ -8,10 +8,10 @@ exports[`GRE Transfer Step renders correctly 1`] = `
     className=""
   >
     <div
-      className="sc-fzqBZW loRQSX default-status"
+      className="sc-fzqNJr iZVvRm default-status"
     >
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approved for Surplus Property Program
       </h5>
@@ -35,13 +35,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="sc-fzpmMD gopcyv"
     >
       Transferred within the Greater Revenue Entity
     </div>
@@ -658,6 +658,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   title="Click to view property details"
                 >
                   <svg
+                    className="svg"
                     title="Land"
                   >
                     icon-lot.svg

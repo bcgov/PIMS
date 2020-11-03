@@ -3,7 +3,7 @@ import { columns } from './columns';
 import { Table } from 'components/Table';
 import { IProperty } from '../../common';
 
-interface IProps {
+export interface IProps {
   data: IProperty[];
   hideHeaders?: boolean;
 }

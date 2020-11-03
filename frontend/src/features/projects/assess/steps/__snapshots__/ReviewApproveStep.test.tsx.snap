@@ -806,6 +806,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     title="Click to view property details"
                   >
                     <svg
+                      className="svg"
                       title="Land"
                     >
                       icon-lot.svg

@@ -255,26 +255,106 @@ Array [
       <div
         className="TableToolbar container-fluid"
       >
-        <h3
-          className="mr-auto"
-        >
-          Results
+        <h3>
+          View Inventory
         </h3>
+        <div
+          className="menu"
+        >
+          <div>
+            <div
+              className="svg-btn active"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+            >
+              <svg
+                className="svg"
+              >
+                icon-lot.svg
+              </svg>
+              Parcels view
+            </div>
+          </div>
+          <div>
+            <div
+              className="svg-btn"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+            >
+              <svg
+                className="svg"
+              >
+                icon-business.svg
+              </svg>
+              Buildings view
+            </div>
+          </div>
+        </div>
         <button
-          className="mr-2 btn btn-primary"
+          className="sc-fzolEj iTKQzA btn btn-primary"
           disabled={false}
-          onClick={[Function]}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           type="button"
         >
-          Export as Excel
+          <svg
+            fill="currentColor"
+            height={36}
+            onClick={[Function]}
+            size={36}
+            stroke="currentColor"
+            strokeWidth="0"
+            style={
+              Object {
+                "color": undefined,
+              }
+            }
+            viewBox="0 0 384 512"
+            width={36}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5l60.3-93.5-60.3-93.5c-5.2-8 .6-18.5 10.1-18.5h34.8c4.4 0 8.5 2.4 10.6 6.3 26.1 48.8 20 33.6 36.6 68.5 0 0 6.1-11.7 36.6-68.5 2.1-3.9 6.2-6.3 10.6-6.3H274c9.5-.1 15.2 10.4 10.1 18.4zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+            />
+          </svg>
         </button>
         <button
-          className="btn btn-primary"
+          className="sc-fzolEj iTKQzA btn btn-primary"
           disabled={false}
-          onClick={[Function]}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           type="button"
         >
-          Export as CSV
+          <svg
+            fill="currentColor"
+            height={36}
+            onClick={[Function]}
+            size={36}
+            stroke="currentColor"
+            strokeWidth="0"
+            style={
+              Object {
+                "color": undefined,
+              }
+            }
+            viewBox="0 0 384 512"
+            width={36}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+            />
+          </svg>
         </button>
       </div>
       <div
@@ -301,13 +381,18 @@ Array [
             }
           >
             <div
-              className="th expander"
+              className="th expander svg-btn"
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             >
               <svg
                 color="black"
                 fill="currentColor"
-                height="1em"
+                height={20}
+                size={20}
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
@@ -316,7 +401,7 @@ Array [
                   }
                 }
                 viewBox="0 0 576 512"
-                width="1em"
+                width={20}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -418,6 +503,27 @@ Array [
                   "alignItems": "center",
                   "boxSizing": "border-box",
                   "display": "flex",
+                  "flex": "65 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "65px",
+                  "textAlign": "left",
+                  "width": "3.5%",
+                }
+              }
+              width="3.5%"
+            >
+              Type
+            </div>
+            <div
+              className="th"
+              colSpan={1}
+              onClick={[Function]}
+              role="columnheader"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "boxSizing": "border-box",
+                  "display": "flex",
                   "flex": "160 0 auto",
                   "justifyContent": "flex-start",
                   "minWidth": "160px",
@@ -461,9 +567,9 @@ Array [
                   "boxSizing": "border-box",
                   "display": "flex",
                   "flex": "80 0 auto",
-                  "justifyContent": "flex-start",
+                  "justifyContent": "flex-end",
                   "minWidth": "80px",
-                  "textAlign": "left",
+                  "textAlign": "right",
                   "width": "7%",
                 }
               }
@@ -482,9 +588,9 @@ Array [
                   "boxSizing": "border-box",
                   "display": "flex",
                   "flex": "80 0 auto",
-                  "justifyContent": "flex-start",
+                  "justifyContent": "flex-end",
                   "minWidth": "80px",
-                  "textAlign": "left",
+                  "textAlign": "right",
                   "width": "7%",
                 }
               }
@@ -503,9 +609,9 @@ Array [
                   "boxSizing": "border-box",
                   "display": "flex",
                   "flex": "80 0 auto",
-                  "justifyContent": "flex-start",
+                  "justifyContent": "flex-end",
                   "minWidth": "80px",
-                  "textAlign": "left",
+                  "textAlign": "right",
                   "width": "7%",
                 }
               }
@@ -524,30 +630,9 @@ Array [
                   "boxSizing": "border-box",
                   "display": "flex",
                   "flex": "65 0 auto",
-                  "justifyContent": "flex-start",
+                  "justifyContent": "flex-end",
                   "minWidth": "65px",
-                  "textAlign": "left",
-                  "width": "3.5%",
-                }
-              }
-              width="3.5%"
-            >
-              Type
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "65 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "65px",
-                  "textAlign": "left",
+                  "textAlign": "right",
                   "width": "3.5%",
                 }
               }

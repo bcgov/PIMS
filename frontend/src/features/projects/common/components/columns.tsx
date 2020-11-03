@@ -259,7 +259,12 @@ export const getPropertyColumns = ({
       width: 60,
       clickable: true,
       Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-        const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
+        const icon =
+          value === 0 ? (
+            <LandSvg title="Land" className="svg" />
+          ) : (
+            <BuildingSvg title="Building" className="svg" />
+          );
         return icon;
       },
     },
@@ -287,7 +292,12 @@ export const getAppraisedColumns = (project: IProject): any[] => [
     accessor: 'propertyTypeId',
     width: 60,
     Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      const icon = value === 0 ? <LandSvg title="Land" /> : <BuildingSvg title="Building" />;
+      const icon =
+        value === 0 ? (
+          <LandSvg title="Land" className="svg" />
+        ) : (
+          <BuildingSvg title="Building" className="svg" />
+        );
       return icon;
     },
   },
