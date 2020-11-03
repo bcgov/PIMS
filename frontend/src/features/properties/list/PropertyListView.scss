@@ -5,7 +5,7 @@ $filter-height: 76px;
 $contentheading-height: 60px;
 
 .PropertyListView {
-  background-color: var(--light);
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -40,6 +40,18 @@ $contentheading-height: 60px;
     display: flex;
     flex-direction: row;
     padding-bottom: 1rem;
+  }
+
+  .TableToolbar .menu {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10px;
+    margin-top: auto;
+    margin-right: auto;
+  }
+
+  .TableToolbar .menu div {
+    margin-left: 10px;
   }
 
   .ScrollContainer {

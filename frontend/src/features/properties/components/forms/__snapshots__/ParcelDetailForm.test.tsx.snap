@@ -212,10 +212,10 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   className="form-row"
                 >
                   <div
-                    className="sc-fzoNJl hgprTW form-group"
+                    className="sc-fzoXWK eNEiuy form-group"
                   >
                     <label
-                      className="sc-fzoXWK frIblo form-label"
+                      className="sc-fzpmMD hzPxsT form-label"
                     >
                       Location
                        
@@ -1623,7 +1623,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
           </div>
         </div>
         <div
-          className="sc-fznWOq doWHVH"
+          className="sc-fzolEj kYIodA"
         />
       </div>
     </form>

@@ -6,10 +6,9 @@ import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
-import { IProperty } from '../../common/interfaces';
+import { IProperty } from './IProperty';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
-
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
 
 // NOTE - There numbers below match the total number of columns ATM (13)
@@ -63,6 +62,16 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
+    Header: 'Type',
+    accessor: 'propertyTypeId',
+    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
+      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
+    },
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65,
+  },
+  {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
@@ -72,26 +81,10 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Location',
-    accessor: 'administrativeArea',
+    accessor: 'city',
     align: 'left',
     responsive: true,
     width: spacing.medium,
-    minWidth: 80,
-  },
-  {
-    Header: 'Zoning',
-    accessor: 'zoning',
-    align: 'left',
-    responsive: true,
-    width: spacing.small,
-    minWidth: 80,
-  },
-  {
-    Header: 'Zoning Potential',
-    accessor: 'zoningPotential',
-    align: 'left',
-    responsive: true,
-    width: spacing.small,
     minWidth: 80,
   },
   {
@@ -120,16 +113,6 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
-  },
-  {
-    Header: 'Type',
-    accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
-    },
-    responsive: true,
-    width: spacing.small,
-    minWidth: 65,
   },
   {
     Header: 'Lot Size (in ha)',

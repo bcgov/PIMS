@@ -10,10 +10,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzqBZW loRQSX default-status"
+      className="sc-fzqNJr iZVvRm default-status"
     >
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approved for Surplus Property Program
       </h5>
@@ -37,13 +37,13 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approval Date 2020-07-15
       </h5>
     </div>
     <div
-      className="sc-fznxKY hKlkDb"
+      className="sc-fznMAR DcCKH"
     >
       Approved for ERP
     </div>
@@ -1346,10 +1346,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fzpjYC efPzVu"
+      className="sc-fznxsB erKWrJ"
     />
     <div
-      className="sc-fzpjYC efPzVu"
+      className="sc-fznxsB erKWrJ"
     >
       <span>
         <button
@@ -1399,10 +1399,10 @@ exports[`SPL Approval Step renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzqBZW loRQSX default-status"
+      className="sc-fzqNJr iZVvRm default-status"
     >
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approved for Surplus Property Program
       </h5>
@@ -1426,13 +1426,13 @@ exports[`SPL Approval Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzqNJr iyvzqf"
+        className="sc-fzoyAV iUdhUR"
       >
         Approval Date 2020-07-15
       </h5>
     </div>
     <div
-      className="sc-fznxKY hKlkDb"
+      className="sc-fznMAR DcCKH"
     >
       Approved for ERP
     </div>

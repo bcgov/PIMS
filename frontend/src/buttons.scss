@@ -1,5 +1,38 @@
 @import './colors.scss';
 
+.svg {
+  fill: none;
+  stroke: #494949;
+}
+
+.svg-btn {
+  color: #494949;
+}
+
+.svg-btn:hover {
+  color: #3b99fc;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.svg-btn:hover svg {
+  fill: #3b99fc;
+  stroke: #fff;
+}
+
+.svg-btn.active {
+  color: #3b99fc;
+  border-bottom-style: solid;
+  border-bottom-color: #fcba19;
+  border-bottom-width: 1px;
+  background-color: transparent !important;
+}
+
+.svg-btn.active svg {
+  fill: #3b99fc;
+  stroke: #fff;
+}
+
 .btn {
   height: 44px;
 }
