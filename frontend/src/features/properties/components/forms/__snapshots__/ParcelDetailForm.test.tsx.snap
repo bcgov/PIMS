@@ -1,6 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
+.c0 div {
+  margin-left: 2px;
+  width: 100%;
+}
+
+.c1 {
+  margin-bottom: 0px;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: baseline;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+}
+
 <div
   className="parcelDetailForm row no-gutters"
 >
@@ -212,10 +236,10 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                   className="form-row"
                 >
                   <div
-                    className="sc-fzoXWK eNEiuy form-group"
+                    className="c0 form-group"
                   >
                     <label
-                      className="sc-fzpmMD hzPxsT form-label"
+                      className="c1 form-label"
                     >
                       Location
                        
@@ -1623,7 +1647,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
           </div>
         </div>
         <div
-          className="sc-fzolEj kYIodA"
+          className="c2"
         />
       </div>
     </form>

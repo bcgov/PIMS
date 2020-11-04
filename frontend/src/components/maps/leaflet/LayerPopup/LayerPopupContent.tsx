@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { keys } from 'lodash';
+import styled from 'styled-components';
+
+export const LayerPopupTitle = styled('div')`
+  padding: 16px;
+  font-weight: 800;
+`;
 
 export type PopupContentConfig = {
   [key: string]: {
     label: string;
-    display: (data: { [key: string]: string }) => string;
+    display: (data: { [key: string]: string }) => string | React.ReactNode;
   };
 };
 

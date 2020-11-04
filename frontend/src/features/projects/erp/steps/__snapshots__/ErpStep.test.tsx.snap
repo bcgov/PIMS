@@ -1,6 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+  margin: 0.5rem 0;
+  text-align: right;
+}
+
+.c2 {
+  text-align: center;
+  font-family: 'BCSans-Bold';
+  margin-bottom: 1.5rem;
+}
+
 <div
   className="erpStep container-fluid"
 >
@@ -10,10 +40,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzqNJr iZVvRm default-status"
+      className="c0 default-status"
     >
       <h5
-        className="sc-fzoyAV iUdhUR"
+        className="c1"
       >
         Approved for Surplus Property Program
       </h5>
@@ -37,13 +67,13 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzoyAV iUdhUR"
+        className="c1"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="c2"
     >
       Approved for ERP
     </div>
@@ -1332,10 +1362,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fznxsB erKWrJ"
+      className="c3"
     />
     <div
-      className="sc-fznxsB erKWrJ"
+      className="c3"
     >
       <span>
         <button
@@ -1376,6 +1406,27 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
 `;
 
 exports[`ERP Approval Step renders correctly 1`] = `
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c2 {
+  text-align: center;
+  font-family: 'BCSans-Bold';
+  margin-bottom: 1.5rem;
+}
+
+.c3 {
+  margin: 0.75rem 2rem 0.75rem 2rem;
+}
+
 <div
   className="erpStep container-fluid"
 >
@@ -1385,10 +1436,10 @@ exports[`ERP Approval Step renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fzqNJr iZVvRm default-status"
+      className="c0 default-status"
     >
       <h5
-        className="sc-fzoyAV iUdhUR"
+        className="c1"
       >
         Approved for Surplus Property Program
       </h5>
@@ -1412,13 +1463,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fzoyAV iUdhUR"
+        className="c1"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzoXWK bJauRU"
+      className="c2"
     >
       Approved for ERP
     </div>
@@ -2093,7 +2144,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-fznWOq eRNTMe"
+            className="c3"
           >
             OR
           </div>
@@ -2150,7 +2201,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-fznWOq eRNTMe"
+                className="c3"
               >
                 OR
               </div>

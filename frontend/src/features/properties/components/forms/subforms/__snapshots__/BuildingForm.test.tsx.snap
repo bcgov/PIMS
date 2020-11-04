@@ -1,6 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
+.c0 div {
+  margin-left: 2px;
+  width: 100%;
+}
+
+.c1 {
+  margin-bottom: 0px;
+}
+
 <form
   action="#"
   onReset={[Function]}
@@ -73,10 +82,10 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           className="form-row"
         >
           <div
-            className="sc-fznMAR eqswTV form-group"
+            className="c0 form-group"
           >
             <label
-              className="sc-fznWOq dYJGRA form-label"
+              className="c1 form-label"
             >
               Location
                
