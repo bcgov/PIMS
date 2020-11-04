@@ -345,7 +345,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="realtorCommission"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -740,7 +740,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="salesProceeds"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -766,7 +766,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="salesCost"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -792,7 +792,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="closeOutNetbook"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -818,7 +818,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="gainBeforeSpp"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -869,7 +869,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="programCost"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -917,7 +917,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="gainAfterSpp"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -965,7 +965,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="interestComponent"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -1043,7 +1043,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   name="ocgFinancialStatement"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1085,12 +1085,12 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 <svg
                   className="tooltip-icon"
                   fill="currentColor"
-                  height={14}
+                  height={20}
                   onBlur={[Function]}
                   onFocus={[Function]}
                   onMouseOut={[Function]}
                   onMouseOver={[Function]}
-                  size={14}
+                  size={20}
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
@@ -1099,7 +1099,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     }
                   }
                   viewBox="0 0 512 512"
-                  width={14}
+                  width={20}
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -1277,7 +1277,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       name="priorYearAdjustmentAmount"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="$0"
+                      placeholder=""
                       value=""
                     />
                   </div>
@@ -2007,12 +2007,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
               <svg
                 className="tooltip-icon"
                 fill="currentColor"
-                height={14}
+                height={20}
                 onBlur={[Function]}
                 onFocus={[Function]}
                 onMouseOut={[Function]}
                 onMouseOver={[Function]}
-                size={14}
+                size={20}
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
@@ -2021,7 +2021,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                   }
                 }
                 viewBox="0 0 512 512"
-                width={14}
+                width={20}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -2080,12 +2080,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
               <svg
                 className="tooltip-icon"
                 fill="currentColor"
-                height={14}
+                height={20}
                 onBlur={[Function]}
                 onFocus={[Function]}
                 onMouseOut={[Function]}
                 onMouseOver={[Function]}
-                size={14}
+                size={20}
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
@@ -2094,7 +2094,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                   }
                 }
                 viewBox="0 0 512 512"
-                width={14}
+                width={20}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -2274,12 +2274,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 <svg
                   className="tooltip-icon"
                   fill="currentColor"
-                  height={14}
+                  height={20}
                   onBlur={[Function]}
                   onFocus={[Function]}
                   onMouseOut={[Function]}
                   onMouseOver={[Function]}
-                  size={14}
+                  size={20}
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
@@ -2288,7 +2288,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                     }
                   }
                   viewBox="0 0 512 512"
-                  width={14}
+                  width={20}
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2321,12 +2321,12 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 <svg
                   className="tooltip-icon"
                   fill="currentColor"
-                  height={14}
+                  height={20}
                   onBlur={[Function]}
                   onFocus={[Function]}
                   onMouseOut={[Function]}
                   onMouseOver={[Function]}
-                  size={14}
+                  size={20}
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
@@ -2335,7 +2335,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                     }
                   }
                   viewBox="0 0 512 512"
-                  width={14}
+                  width={20}
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path

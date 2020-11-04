@@ -1,434 +1,377 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`] = `
-.c0 div {
-  margin-left: 2px;
+Array [
+  <div
+    className="buildingPaginate"
+  >
+    <button
+      className="pagedBuildingButton page-link btn btn-link"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseOut={[Function]}
+      onMouseOver={[Function]}
+      title="Add Building"
+      type="button"
+    >
+      <svg
+        fill="currentColor"
+        height={20}
+        size={20}
+        stroke="currentColor"
+        strokeWidth="0"
+        style={
+          Object {
+            "color": undefined,
+          }
+        }
+        viewBox="0 0 448 512"
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+        />
+      </svg>
+    </button>
+    <div
+      className="mr-auto form-group"
+    >
+      <select
+        className="ml-4 input-medium form-control"
+        disabled={false}
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "Choose a building to view",
+              "value": "",
+            },
+            Object {
+              "label": "name",
+              "value": 0,
+            },
+          ]
+        }
+        value={0}
+      >
+        <option
+          className="option"
+          value=""
+        >
+          Choose a building to view
+        </option>
+        <option
+          className="option"
+          value={0}
+        >
+          name
+        </option>
+      </select>
+    </div>
+    <button
+      className="delete-button page-link mr-4 btn btn-link"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseOut={[Function]}
+      onMouseOver={[Function]}
+      title="Remove Building"
+      type="button"
+    >
+      <svg
+        fill="currentColor"
+        height={20}
+        size={20}
+        stroke="currentColor"
+        strokeWidth="0"
+        style={
+          Object {
+            "color": undefined,
+          }
+        }
+        viewBox="0 0 448 512"
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
+        />
+      </svg>
+    </button>
+  </div>,
+  .c0 div {
   width: 100%;
 }
 
-.c1 {
-  margin-bottom: 0px;
-}
-
 <div
-  className="col"
->
-  <h3>
-    Buildings
-  </h3>
-  <div>
-    <span
-      className="buildingPaginate"
+    className="buildingForm row no-gutters"
+    style={
+      Object {
+        "marginBottom": 0,
+      }
+    }
+  >
+    <div
+      className="col-md-6"
     >
-      <button
-        className="pagedBuildingButton page-link btn btn-link"
-        disabled={false}
-        onClick={[Function]}
-        title="Add Building"
-        type="button"
-      >
-        <svg
-          fill="currentColor"
-          height={14}
-          size={14}
-          stroke="currentColor"
-          strokeWidth="0"
-          style={
-            Object {
-              "color": undefined,
-            }
-          }
-          viewBox="0 0 448 512"
-          width={14}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-          />
-        </svg>
-      </button>
-      <button
-        className="pagedBuildingButton page-link btn btn-link"
-        disabled={false}
-        onClick={[Function]}
-        title="Remove Building"
-        type="button"
-      >
-        <svg
-          fill="currentColor"
-          height={14}
-          size={14}
-          stroke="currentColor"
-          strokeWidth="0"
-          style={
-            Object {
-              "color": undefined,
-            }
-          }
-          viewBox="0 0 448 512"
-          width={14}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
-          />
-        </svg>
-      </button>
-    </span>
-    <h4>
-      Building Information
-    </h4>
-    <div>
       <div
-        className="buildingForm form-row"
-        style={
-          Object {
-            "marginBottom": 0,
-          }
-        }
+        className="form-row"
       >
+        <label
+          className="form-label"
+        >
+          Name
+        </label>
         <div
-          className="col-md-6"
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.name"
+            name="buildings.0.name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="name"
+          />
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        >
+          Description
+        </label>
+        <div
+          className="form-group"
+        >
+          <textarea
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.description"
+            name="buildings.0.description"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="description"
+          />
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="required form-label"
+        >
+          Classification
+        </label>
+        <div
+          className="form-group"
+        >
+          <select
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.classificationId-fast"
+            name="buildings.0.classificationId"
+            onChange={[Function]}
+            type="number"
+            value={16}
+          >
+            <option
+              value=""
+            >
+              Must Select One
+            </option>
+            <option
+              value="1"
+            >
+              classification test
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        >
+          Agency
+        </label>
+        <div
+          className="AutoCompleteText"
         >
           <div
-            className="form-row"
+            className="form-group"
           >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Name
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <input
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.name"
-                name="buildings.0.name"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="name"
-              />
-            </div>
+            <input
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.agencyId"
+              name="buildings.0.agencyId"
+              onChange={[Function]}
+              value=""
+            />
           </div>
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        >
+          Sub-Agency
+        </label>
+        <div
+          className="AutoCompleteText"
+        >
           <div
-            className="addressForm"
+            className="form-group"
+          >
+            <input
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.agencyId"
+              name="buildings.0.agencyId"
+              onChange={[Function]}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        />
+        <div
+          className="input-medium"
+        >
+          <p>
+            Harmful if Released? 
+            <a
+              href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Policy
+            </a>
+          </p>
+          <div
+            className="form-group"
           >
             <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-2"
-              >
-                Street Address
-              </label>
-              <div
-                className="GeocoderAutoComplete"
-              >
-                <div>
-                  <div
-                    className="form-group"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={true}
-                      id="input-buildings.0.address.line1"
-                      name="buildings.0.address.line1"
-                      onChange={[Function]}
-                      value="line1"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="form-row"
+              className="check-field"
             >
               <div
-                className="c0 form-group"
-              >
-                <label
-                  className="c1 form-label"
-                >
-                  Location
-                   
-                  <span
-                    className="required"
-                  >
-                    *
-                  </span>
-                </label>
-                <div
-                  className="rbt"
-                  style={
-                    Object {
-                      "outline": "none",
-                      "position": "relative",
-                    }
-                  }
-                  tabIndex={-1}
-                >
-                  <div
-                    style={
-                      Object {
-                        "display": "flex",
-                        "flex": 1,
-                        "height": "100%",
-                        "position": "relative",
-                      }
-                    }
-                  >
-                    <input
-                      aria-autocomplete="both"
-                      aria-expanded={false}
-                      aria-haspopup="listbox"
-                      autoComplete="off"
-                      className="rbt-input-main form-control rbt-input"
-                      disabled={true}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      role="combobox"
-                      type="text"
-                      value="administrativeArea"
-                    />
-                    <input
-                      aria-hidden={true}
-                      className="rbt-input-hint"
-                      readOnly={true}
-                      style={
-                        Object {
-                          "backgroundColor": "transparent",
-                          "borderColor": "transparent",
-                          "boxShadow": "none",
-                          "color": "rgba(0, 0, 0, 0.35)",
-                          "left": 0,
-                          "pointerEvents": "none",
-                          "position": "absolute",
-                          "top": 0,
-                          "width": "100%",
-                        }
-                      }
-                      tabIndex={-1}
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-2"
-              >
-                Province
-              </label>
-              <div
-                className="col-md-10 form-group"
-              >
-                <select
-                  className="form-select form-control"
-                  disabled={true}
-                  id="input-buildings.0.address.provinceId"
-                  name="buildings.0.address.provinceId"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value="2"
-                >
-                  <option
-                    value=""
-                  >
-                    Must Select One
-                  </option>
-                  <option
-                    className="option"
-                    value="2222"
-                  >
-                    test province
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div
-              className="form-row"
-            >
-              <label
-                className="form-label col-form-label col-md-2"
-              >
-                Postal
-              </label>
-              <div
-                className="col-md-10 form-group"
+                className="form-check"
               >
                 <input
-                  className="form-control"
+                  checked={false}
+                  className="form-check-input"
                   disabled={true}
-                  id="input-buildings.0.address.postal"
-                  name="buildings.0.address.postal"
-                  onBlur={[Function]}
+                  id="input-buildings.0.isSensitive"
+                  name="buildings.0.isSensitive"
                   onChange={[Function]}
-                  value="postal"
+                  type="radio"
+                  value={false}
                 />
+                <label
+                  className="form-check-label"
+                  htmlFor="input-buildings.0.isSensitive"
+                  title=""
+                >
+                  Yes
+                </label>
+              </div>
+              <div
+                className="form-check"
+              >
+                <input
+                  checked={true}
+                  className="form-check-input"
+                  disabled={true}
+                  id="input-buildings.0.isSensitive-2"
+                  name="buildings.0.isSensitive"
+                  onChange={[Function]}
+                  type="radio"
+                  value={true}
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="input-buildings.0.isSensitive-2"
+                  title=""
+                >
+                  No
+                </label>
               </div>
             </div>
           </div>
         </div>
-        <div
-          className="col-md-6"
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="form-row"
+      >
+        <label
+          className="required form-label"
         >
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Description
-            </label>
+          Street Address
+        </label>
+        <div
+          className="GeocoderAutoComplete"
+        >
+          <div>
             <div
-              className="col-md-10 form-group"
+              className="form-group"
             >
-              <textarea
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.description"
-                name="buildings.0.description"
+              <svg
+                className="tooltip-icon"
+                fill="currentColor"
+                height={20}
                 onBlur={[Function]}
-                onChange={[Function]}
-                value="description"
-              />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Type of Construction
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.buildingConstructionTypeId"
-                name="buildings.0.buildingConstructionTypeId"
-                onChange={[Function]}
-                type="number"
-                value={4}
+                onFocus={[Function]}
+                onMouseOut={[Function]}
+                onMouseOver={[Function]}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 512 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  value="1"
-                >
-                  construction test type
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Rentable Area
-            </label>
-            <div
-              className="input-group col-md-7 disabled"
-            >
-              <div
-                className="input-group-content"
-              >
-                <div
-                  className="form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-buildings.0.rentableArea"
-                    name="buildings.0.rentableArea"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    type="number"
-                    value={12}
-                  />
-                </div>
-              </div>
-              <div
-                className="input-group-append"
-              >
-                <span
-                  className="input-group-text"
-                >
-                  Sq. Ft
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Number of Floors
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
+                <path
+                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                />
+              </svg>
               <input
                 className="form-control"
                 disabled={true}
-                id="input-buildings.0.buildingFloorCount"
-                name="buildings.0.buildingFloorCount"
-                onBlur={[Function]}
+                field="buildings.0.address.line1"
+                id="input-buildings.0.address.line1"
+                name="buildings.0.address.line1"
                 onChange={[Function]}
-                type="number"
-                value={5}
+                value="line1"
               />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Predominate Use
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.buildingPredominateUseId"
-                name="buildings.0.buildingPredominateUseId"
-                onChange={[Function]}
-                type="number"
-                value={7}
-              >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  value="1"
-                >
-                  predominate use test type
-                </option>
-              </select>
             </div>
           </div>
         </div>
@@ -436,1239 +379,1269 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
       <div
         className="form-row"
       >
+        <label
+          className="required form-label"
+        >
+          Location
+        </label>
         <div
-          className="col-md-6"
+          className="c0 form-group"
         >
           <div
-            className="form-row"
+            className="rbt"
+            style={
+              Object {
+                "outline": "none",
+                "position": "relative",
+              }
+            }
+            tabIndex={-1}
           >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Latitude
-            </label>
             <div
-              className="col-md-10 form-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "flex": 1,
+                  "height": "100%",
+                  "position": "relative",
+                }
+              }
             >
               <input
-                className="form-control"
+                aria-autocomplete="both"
+                aria-expanded={false}
+                aria-haspopup="listbox"
+                autoComplete="off"
+                className="rbt-input-main form-control rbt-input"
                 disabled={true}
-                id="input-buildings.0.latitude"
-                name="buildings.0.latitude"
+                name="buildings.0.address.administrativeArea"
                 onBlur={[Function]}
                 onChange={[Function]}
-                type="number"
-                value={9}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                role="combobox"
+                type="text"
+                value="administrativeArea"
               />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Longitude
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
               <input
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.longitude"
-                name="buildings.0.longitude"
-                onBlur={[Function]}
-                onChange={[Function]}
-                type="number"
-                value={10}
-              />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Classification
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.classificationId"
-                name="buildings.0.classificationId"
-                onChange={[Function]}
-                type="number"
-                value={16}
-              >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  value="1"
-                >
-                  classification test
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div
-          className="col-md-6"
-        >
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Agency
-            </label>
-            <div
-              className="AutoCompleteText"
-            >
-              <div
-                className="form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-buildings.0.agencyId"
-                  name="buildings.0.agencyId"
-                  onChange={[Function]}
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Sub-Agency
-            </label>
-            <div
-              className="AutoCompleteText"
-            >
-              <div
-                className="form-group"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  id="input-buildings.0.agencyId"
-                  name="buildings.0.agencyId"
-                  onChange={[Function]}
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              RAEG or SPP
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <input
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.projectNumber"
-                name="buildings.0.projectNumber"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="projectNumber"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <h4>
-        Tenancy
-      </h4>
-      <div
-        className="buildingTenancy form-row"
-      >
-        <div
-          className="col-md-6"
-        >
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Type of Current Occupant
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <select
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.buildingOccupantTypeId"
-                name="buildings.0.buildingOccupantTypeId"
-                onChange={[Function]}
-                type="number"
-                value={6}
-              >
-                <option
-                  value=""
-                >
-                  Must Select One
-                </option>
-                <option
-                  value="1"
-                >
-                  occupent type test
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Lease to be transferred with land
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <div
-                className="check-field"
-              >
-                <div
-                  className="form-check"
-                >
-                  <input
-                    checked={true}
-                    className="form-check-input position-static"
-                    disabled={true}
-                    id="input-buildings.0.transferLeaseOnSale"
-                    name="buildings.0.transferLeaseOnSale"
-                    onChange={[Function]}
-                    type="checkbox"
-                    value={true}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Date Lease Expires
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <div
-                className="react-datepicker-wrapper"
-              >
-                <div
-                  className="react-datepicker__input-container"
-                >
-                  <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
-                    id="datepicker-buildings.0.leaseExpiry"
-                    name="buildings.0.leaseExpiry"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    placeholder="--/--/----"
-                    readOnly={false}
-                    type="text"
-                    value="01/01/2020"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="col-md-6"
-        >
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Tenancy %
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <input
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.buildingTenancy"
-                name="buildings.0.buildingTenancy"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="buildingTenancy"
-              />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Occupant Name
-            </label>
-            <div
-              className="col-md-10 form-group"
-            >
-              <input
-                className="form-control"
-                disabled={true}
-                id="input-buildings.0.occupantName"
-                name="buildings.0.occupantName"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="occupantName"
-              />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              Sensitive Building
-            </label>
-            <div
-              className="form-group"
-            >
-              <div
-                className="check-field"
-              >
-                <div
-                  className="col-md-10 form-check"
-                >
-                  <input
-                    checked={false}
-                    className="form-check-input position-static"
-                    disabled={true}
-                    id="input-buildings.0.sensitiveBuilding"
-                    name="buildings.0.sensitiveBuilding"
-                    onChange={[Function]}
-                    type="checkbox"
-                    value={false}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="row no-gutters"
-      >
-        <div
-          className="col"
-        >
-          <h4>
-            Building Valuation Information
-          </h4>
-          <div>
-            <div
-              className="evaluationForm form-row"
-            >
-              <div
-                className="table"
-                role="table"
+                aria-hidden={true}
+                className="rbt-input-hint"
+                readOnly={true}
                 style={
                   Object {
-                    "minWidth": undefined,
+                    "backgroundColor": "transparent",
+                    "borderColor": "transparent",
+                    "boxShadow": "none",
+                    "color": "rgba(0, 0, 0, 0.35)",
+                    "left": 0,
+                    "pointerEvents": "none",
+                    "position": "absolute",
+                    "top": 0,
+                    "width": "100%",
                   }
                 }
+                tabIndex={-1}
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        >
+          Province
+        </label>
+        <div
+          className="form-group"
+        >
+          <select
+            className="form-select form-control"
+            disabled={true}
+            id="input-buildings.0.address.provinceId"
+            name="buildings.0.address.provinceId"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="2"
+          >
+            <option
+              value=""
+            >
+              Must Select One
+            </option>
+            <option
+              className="option"
+              value="2222"
+            >
+              test province
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="form-label"
+        >
+          Postal
+        </label>
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.address.postal"
+            name="buildings.0.address.postal"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="postal"
+          />
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="required form-label"
+        >
+          Latitude
+        </label>
+        <div
+          className="form-group"
+        >
+          <svg
+            className="tooltip-icon"
+            fill="currentColor"
+            height={20}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            size={20}
+            stroke="currentColor"
+            strokeWidth="0"
+            style={
+              Object {
+                "color": undefined,
+              }
+            }
+            viewBox="0 0 512 512"
+            width={20}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+            />
+          </svg>
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.latitude"
+            name="buildings.0.latitude"
+            onBlur={[Function]}
+            onChange={[Function]}
+            type="number"
+            value={9}
+          />
+        </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <label
+          className="required form-label"
+        >
+          Longitude
+        </label>
+        <div
+          className="form-group"
+        >
+          <input
+            className="form-control"
+            disabled={true}
+            id="input-buildings.0.longitude"
+            name="buildings.0.longitude"
+            onBlur={[Function]}
+            onChange={[Function]}
+            type="number"
+            value={10}
+          />
+        </div>
+      </div>
+    </div>
+  </div>,
+  .c0 {
+  height: 440px;
+  overflow-y: auto;
+}
+
+<div
+    className="c0"
+  >
+    <h4>
+      Information
+    </h4>
+    <div
+      className="row no-gutters"
+    >
+      <div
+        className="col-md-6"
+      >
+        <div
+          className="form-row"
+        >
+          <label
+            className="required form-label"
+          >
+            Predominate Use
+          </label>
+          <div
+            className="form-group"
+          >
+            <select
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.buildingPredominateUseId-fast"
+              name="buildings.0.buildingPredominateUseId"
+              onChange={[Function]}
+              type="number"
+              value={7}
+            >
+              <option
+                value=""
               >
-                <div
-                  className="thead thead-light"
-                >
-                  <div
-                    className="tr"
-                    role="row"
-                    style={
-                      Object {
-                        "display": "flex",
-                        "flex": "1 0 auto",
-                        "minWidth": "180px",
-                      }
-                    }
-                  >
-                    <div
-                      className="th"
-                      colSpan={2}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "90 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "60px",
-                          "textAlign": "left",
-                          "width": "90px",
-                        }
-                      }
-                    >
-                      Assessed
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={2}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "120 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "60px",
-                          "textAlign": "left",
-                          "width": "120px",
-                        }
-                      }
-                    >
-                      Net Book Value
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={2}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "120 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "60px",
-                          "textAlign": "left",
-                          "width": "120px",
-                        }
-                      }
-                    >
-                      Estimated Market Value
-                    </div>
-                  </div>
-                  <div
-                    className="tr"
-                    role="row"
-                    style={
-                      Object {
-                        "display": "flex",
-                        "flex": "1 0 auto",
-                        "minWidth": "180px",
-                      }
-                    }
-                  >
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "30 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "30px",
-                        }
-                      }
-                    >
-                      Year
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Land
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Fiscal Year
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Value
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Fiscal Year
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      onClick={[Function]}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      Value
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="tbody"
-                  role="rowgroup"
-                >
-                  <div
-                    className="tr-wrapper"
-                  >
-                    <div
-                      className="tr"
-                      role="row"
-                      style={
-                        Object {
-                          "display": "flex",
-                          "flex": "1 0 auto",
-                          "minWidth": "180px",
-                        }
-                      }
-                    >
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "30 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "30px",
-                          }
-                        }
-                        title=""
-                      >
-                        2021
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        N/A
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        2021
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        <div
-                          className="fast-currency-input form-group"
-                        >
-                          <div
-                            className="input-tooltip-wrapper"
-                          >
-                            <input
-                              className="form-control"
-                              disabled={false}
-                              name="buildings.0.financials.0.netbook.value"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              placeholder="$0"
-                              value=""
-                            />
-                            <svg
-                              className="tooltip-icon"
-                              fill="currentColor"
-                              height={14}
-                              onBlur={[Function]}
-                              onFocus={[Function]}
-                              onMouseOut={[Function]}
-                              onMouseOver={[Function]}
-                              size={14}
-                              stroke="currentColor"
-                              strokeWidth="0"
-                              style={
-                                Object {
-                                  "color": undefined,
-                                }
-                              }
-                              viewBox="0 0 512 512"
-                              width={14}
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        2021
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        <div
-                          className="fast-currency-input form-group"
-                        >
-                          <div
-                            className="input-tooltip-wrapper"
-                          >
-                            <input
-                              className="form-control"
-                              disabled={false}
-                              name="buildings.0.financials.0.estimated.value"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              placeholder="$0"
-                              value=""
-                            />
-                            <svg
-                              className="tooltip-icon"
-                              fill="currentColor"
-                              height={14}
-                              onBlur={[Function]}
-                              onFocus={[Function]}
-                              onMouseOut={[Function]}
-                              onMouseOver={[Function]}
-                              size={14}
-                              stroke="currentColor"
-                              strokeWidth="0"
-                              style={
-                                Object {
-                                  "color": undefined,
-                                }
-                              }
-                              viewBox="0 0 512 512"
-                              width={14}
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="tr-wrapper"
-                  >
-                    <div
-                      className="tr"
-                      role="row"
-                      style={
-                        Object {
-                          "display": "flex",
-                          "flex": "1 0 auto",
-                          "minWidth": "180px",
-                        }
-                      }
-                    >
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "30 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "30px",
-                          }
-                        }
-                        title=""
-                      >
-                        2020
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        <div
-                          className="fast-currency-input form-group"
-                        >
-                          <div
-                            className="input-tooltip-wrapper"
-                          >
-                            <input
-                              className="form-control"
-                              disabled={false}
-                              name="buildings.0.financials.1.assessed.value"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              placeholder="$0"
-                              value=""
-                            />
-                            <svg
-                              className="tooltip-icon"
-                              fill="currentColor"
-                              height={14}
-                              onBlur={[Function]}
-                              onFocus={[Function]}
-                              onMouseOut={[Function]}
-                              onMouseOver={[Function]}
-                              size={14}
-                              stroke="currentColor"
-                              strokeWidth="0"
-                              style={
-                                Object {
-                                  "color": undefined,
-                                }
-                              }
-                              viewBox="0 0 512 512"
-                              width={14}
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        2020
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        <div
-                          className="fast-currency-input form-group"
-                        >
-                          <div
-                            className="input-tooltip-wrapper"
-                          >
-                            <input
-                              className="form-control"
-                              disabled={false}
-                              name="buildings.0.financials.1.netbook.value"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              placeholder="$0"
-                              value=""
-                            />
-                            <svg
-                              className="tooltip-icon"
-                              fill="currentColor"
-                              height={14}
-                              onBlur={[Function]}
-                              onFocus={[Function]}
-                              onMouseOut={[Function]}
-                              onMouseOver={[Function]}
-                              size={14}
-                              stroke="currentColor"
-                              strokeWidth="0"
-                              style={
-                                Object {
-                                  "color": undefined,
-                                }
-                              }
-                              viewBox="0 0 512 512"
-                              width={14}
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        2020
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                        title=""
-                      >
-                        <div
-                          className="fast-currency-input form-group"
-                        >
-                          <div
-                            className="input-tooltip-wrapper"
-                          >
-                            <input
-                              className="form-control"
-                              disabled={false}
-                              name="buildings.0.financials.1.estimated.value"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              placeholder="$0"
-                              value=""
-                            />
-                            <svg
-                              className="tooltip-icon"
-                              fill="currentColor"
-                              height={14}
-                              onBlur={[Function]}
-                              onFocus={[Function]}
-                              onMouseOut={[Function]}
-                              onMouseOver={[Function]}
-                              size={14}
-                              stroke="currentColor"
-                              strokeWidth="0"
-                              style={
-                                Object {
-                                  "color": undefined,
-                                }
-                              }
-                              viewBox="0 0 512 512"
-                              width={14}
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                Must Select One
+              </option>
+              <option
+                value="1"
+              >
+                predominate use test type
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="required form-label"
+          >
+            Type of Construction
+          </label>
+          <div
+            className="form-group"
+          >
+            <select
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.buildingConstructionTypeId-fast"
+              name="buildings.0.buildingConstructionTypeId"
+              onChange={[Function]}
+              type="number"
+              value={4}
+            >
+              <option
+                value=""
+              >
+                Must Select One
+              </option>
+              <option
+                value="1"
+              >
+                construction test type
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div
+        className="col-md-6"
+      >
+        <div
+          className="form-row"
+        >
+          <label
+            className="required form-label"
+          >
+            Rentable Area
+          </label>
+          <div
+            className="input-group disabled"
+          >
+            <div
+              className="input-group-content"
+            >
               <div
-                className="table-toolbar"
+                className="form-group"
               >
-                <ul
-                  className="pagination"
-                >
-                  <li
-                    className="page-item disabled"
-                  >
-                    <a
-                      aria-disabled="true"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      &lt;
-                    </a>
-                  </li>
-                  <li
-                    className="page-item active"
-                  >
-                    <a
-                      aria-current="page"
-                      aria-label="Page 1 is your current page"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      1
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 2"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      2
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 3"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      3
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 4"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      4
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 5"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      5
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 6"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      6
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      ...
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 9"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      9
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-current={null}
-                      aria-label="Page 10"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      10
-                    </a>
-                  </li>
-                  <li
-                    className="page-item"
-                  >
-                    <a
-                      aria-disabled="false"
-                      className="page-link"
-                      onClick={[Function]}
-                      onKeyPress={[Function]}
-                      role="button"
-                      tabIndex="0"
-                    >
-                      &gt;
-                    </a>
-                  </li>
-                </ul>
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="input-buildings.0.rentableArea"
+                  name="buildings.0.rentableArea"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  type="number"
+                  value={12}
+                />
               </div>
+            </div>
+            <div
+              className="input-group-append"
+            >
+              <span
+                className="input-group-text"
+              >
+                Sq. Ft
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label"
+          >
+            Number of Floors
+          </label>
+          <div
+            className="form-group"
+          >
+            <input
+              className="input-small form-control"
+              disabled={true}
+              id="input-buildings.0.buildingFloorCount"
+              name="buildings.0.buildingFloorCount"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="number"
+              value={5}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4>
+      Tenancy
+    </h4>
+    <div
+      className="buildingTenancy row no-gutters"
+    >
+      <div
+        className="col-md-6"
+      >
+        <div
+          className="form-row"
+        >
+          <label
+            className="required form-label"
+          >
+            Type of Current Occupant
+          </label>
+          <div
+            className="form-group"
+          >
+            <select
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.buildingOccupantTypeId-fast"
+              name="buildings.0.buildingOccupantTypeId"
+              onChange={[Function]}
+              type="number"
+              value={6}
+            >
+              <option
+                value=""
+              >
+                Must Select One
+              </option>
+              <option
+                value="1"
+              >
+                occupent type test
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label"
+          >
+            Occupant Name
+          </label>
+          <div
+            className="form-group"
+          >
+            <input
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.occupantName"
+              name="buildings.0.occupantName"
+              onBlur={[Function]}
+              onChange={[Function]}
+              value="occupantName"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="col-md-6"
+      >
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label"
+          >
+            Tenancy %
+          </label>
+          <div
+            className="form-group"
+          >
+            <input
+              className="form-control"
+              disabled={true}
+              id="input-buildings.0.buildingTenancy"
+              name="buildings.0.buildingTenancy"
+              onBlur={[Function]}
+              onChange={[Function]}
+              value="buildingTenancy"
+            />
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label"
+          >
+            Date Lease Expires
+          </label>
+          <div
+            className="form-group"
+          >
+            <div
+              className="react-datepicker-wrapper"
+            >
+              <div
+                className="react-datepicker__input-container"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control date-picker"
+                  disabled={true}
+                  id="datepicker-buildings.0.leaseExpiry"
+                  name="buildings.0.leaseExpiry"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="--/--/----"
+                  readOnly={false}
+                  type="text"
+                  value="01/01/2020"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <div
+              className="check-field"
+            >
+              <div
+                className="form-check"
+              >
+                <input
+                  checked={true}
+                  className="form-check-input position-static"
+                  disabled={true}
+                  id="input-buildings.0.transferLeaseOnSale"
+                  name="buildings.0.transferLeaseOnSale"
+                  onChange={[Function]}
+                  type="checkbox"
+                  value={true}
+                />
+              </div>
+              <label
+                className="text-wrap form-label"
+                htmlFor="input-buildings.0.transferLeaseOnSale"
+              >
+                Lease to be transferred with land
+              </label>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+    <div
+      className="row no-gutters"
+    >
+      <div
+        className="col"
+      >
+        <h4>
+          Building Valuation Information
+        </h4>
+        <div>
+          <div
+            className="table"
+            role="table"
+            style={
+              Object {
+                "minWidth": undefined,
+              }
+            }
+          >
+            <div
+              className="thead thead-light"
+            >
+              <div
+                className="tr"
+                role="row"
+                style={
+                  Object {
+                    "display": "flex",
+                    "flex": "1 0 auto",
+                    "minWidth": "180px",
+                  }
+                }
+              >
+                <div
+                  className="th"
+                  colSpan={2}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "150 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "60px",
+                      "textAlign": "left",
+                      "width": "150px",
+                    }
+                  }
+                >
+                  Assessed
+                </div>
+                <div
+                  className="th"
+                  colSpan={2}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "150 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "60px",
+                      "textAlign": "left",
+                      "width": "150px",
+                    }
+                  }
+                >
+                  Net Book Value
+                </div>
+                <div
+                  className="th"
+                  colSpan={2}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "150 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "60px",
+                      "textAlign": "left",
+                      "width": "150px",
+                    }
+                  }
+                >
+                  Estimated Market Value
+                </div>
+              </div>
+              <div
+                className="tr"
+                role="row"
+                style={
+                  Object {
+                    "display": "flex",
+                    "flex": "1 0 auto",
+                    "minWidth": "180px",
+                  }
+                }
+              >
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "50 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "50px",
+                    }
+                  }
+                >
+                  Year
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  Land
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "50 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "50px",
+                    }
+                  }
+                >
+                  Fiscal Year
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  Value
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "50 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "50px",
+                    }
+                  }
+                >
+                  Fiscal Year
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  onClick={[Function]}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  Value
+                </div>
+              </div>
+            </div>
+            <div
+              className="tbody"
+              role="rowgroup"
+            >
+              <div
+                className="tr-wrapper"
+              >
+                <div
+                  className="tr"
+                  role="row"
+                  style={
+                    Object {
+                      "display": "flex",
+                      "flex": "1 0 auto",
+                      "minWidth": "180px",
+                    }
+                  }
+                >
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    2021
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    N/A
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    20/21
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    <div
+                      className="fast-currency-input form-group"
+                    >
+                      <div
+                        className="input-tooltip-wrapper"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          name="buildings.0.financials.0.netbook.value"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    20/21
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    <div
+                      className="fast-currency-input form-group"
+                    >
+                      <div
+                        className="input-tooltip-wrapper"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          name="buildings.0.financials.0.estimated.value"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="tr-wrapper"
+              >
+                <div
+                  className="tr"
+                  role="row"
+                  style={
+                    Object {
+                      "display": "flex",
+                      "flex": "1 0 auto",
+                      "minWidth": "180px",
+                    }
+                  }
+                >
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    2020
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    <div
+                      className="fast-currency-input form-group"
+                    >
+                      <div
+                        className="input-tooltip-wrapper"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          name="buildings.0.financials.1.assessed.value"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    19/20
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    <div
+                      className="fast-currency-input form-group"
+                    >
+                      <div
+                        className="input-tooltip-wrapper"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          name="buildings.0.financials.1.netbook.value"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "50 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "50px",
+                      }
+                    }
+                    title=""
+                  >
+                    19/20
+                  </div>
+                  <div
+                    className="td"
+                    onClick={[Function]}
+                    role="cell"
+                    style={
+                      Object {
+                        "alignItems": "flex-start",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
+                    title=""
+                  >
+                    <div
+                      className="fast-currency-input form-group"
+                    >
+                      <div
+                        className="input-tooltip-wrapper"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          name="buildings.0.financials.1.estimated.value"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="table-toolbar"
+          >
+            <ul
+              className="pagination"
+            >
+              <li
+                className="page-item disabled"
+              >
+                <a
+                  aria-disabled="true"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  &lt;
+                </a>
+              </li>
+              <li
+                className="page-item active"
+              >
+                <a
+                  aria-current="page"
+                  aria-label="Page 1 is your current page"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  1
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 2"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  2
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 3"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  3
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 4"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  4
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 5"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  5
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 6"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  6
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  ...
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 9"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  9
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-current={null}
+                  aria-label="Page 10"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  10
+                </a>
+              </li>
+              <li
+                className="page-item"
+              >
+                <a
+                  aria-disabled="false"
+                  className="page-link"
+                  onClick={[Function]}
+                  onKeyPress={[Function]}
+                  role="button"
+                  tabIndex="0"
+                >
+                  &gt;
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+]
 `;

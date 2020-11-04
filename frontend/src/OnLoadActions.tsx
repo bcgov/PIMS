@@ -19,7 +19,7 @@ const OnLoadActions: React.FC = () => {
         keycloak?.obj?.authenticated
       }
       handleOk={() => {
-        history.push('/mapiew?sidebar=true&loadDraft=true');
+        history.push('/mapview?sidebar=true&loadDraft=true');
       }}
       handleCancel={() => {
         clearStorage(PARCEL_STORAGE_NAME);

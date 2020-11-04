@@ -158,6 +158,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             classifications={classifications}
             agencies={agencies}
             isAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            disabled={props.disabled || readonly}
           />
         </Col>
         <Col md={6}>
@@ -218,6 +219,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             <Form.Row>
               <Form.Label>Number of Floors</Form.Label>
               <FastInput
+                displayErrorTooltips
                 className="input-small"
                 formikProps={props}
                 disabled={props.disabled || readonly}
@@ -244,6 +246,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             <Form.Row>
               <Form.Label>Occupant Name</Form.Label>
               <FastInput
+                displayErrorTooltips
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 field={withNameSpace('occupantName')}
@@ -254,6 +257,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             <Form.Row>
               <Form.Label>Tenancy %</Form.Label>
               <FastInput
+                displayErrorTooltips
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 field={withNameSpace('buildingTenancy')}

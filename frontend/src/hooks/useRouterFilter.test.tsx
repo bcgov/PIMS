@@ -7,6 +7,8 @@ import thunk from 'redux-thunk';
 import * as reducerTypes from 'constants/reducerTypes';
 import { useRouterFilter } from './useRouterFilter';
 import { renderHook } from '@testing-library/react-hooks';
+import { BasePropertyFilter } from 'components/common/interfaces';
+import queryString from 'query-string';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -35,14 +37,14 @@ const defaultFilter = {
   propertyType: '10',
 };
 
-let filter = {};
+let filter: BasePropertyFilter = {} as any;
 const setFilter = (f: any) => {
   filter = f;
 };
 
 describe('useRouterFilter hook tests', () => {
   afterEach(() => {
-    filter = {};
+    filter = {} as any;
     history.push({ search: '' });
   });
   it('will set the filter based on a query string', () => {
@@ -76,6 +78,6 @@ describe('useRouterFilter hook tests', () => {
   it('will set the location based on a passed filter', () => {
     const wrapper = getWrapper(getStore({ test: defaultFilter }));
     renderHook(() => useRouterFilter(defaultFilter, setFilter, 'mismatch'), { wrapper });
-    expect(history.location.search).toEqual('?' + new URLSearchParams(defaultFilter).toString());
+    expect(history.location.search).toEqual('?' + queryString.stringify(defaultFilter));
   });
 });

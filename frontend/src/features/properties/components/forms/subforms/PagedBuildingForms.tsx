@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { FieldArray, useFormikContext, FormikProps, getIn } from 'formik';
 import BuildingForm, { defaultBuildingValues, IFormBuilding } from './BuildingForm';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import { IFormParcel } from '../ParcelDetailForm';
+import { IFormParcel } from '../../../containers/ParcelDetailFormContainer';
 import WrappedPaginate from 'components/common/WrappedPaginate';
 import _ from 'lodash';
 import { IPaginate } from 'utils/CommonFunctions';
@@ -116,6 +116,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
               <TooltipWrapper toolTipId="add-building-tooltip" toolTip="Add a Building">
                 <Button
                   className="pagedBuildingButton page-link"
+                  title="Add Building"
                   variant="link"
                   disabled={props.disabled}
                   onClick={() => {
@@ -168,7 +169,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
             {!props.disabled && !!props.allowEdit && (
               <TooltipWrapper toolTipId="building-delete-button" toolTip="Delete Building">
                 <Button
-                  className="delete-button page-link"
+                  className="delete-button page-link mr-4"
                   disabled={!buildings.length}
                   variant="link"
                   title="Remove Building"

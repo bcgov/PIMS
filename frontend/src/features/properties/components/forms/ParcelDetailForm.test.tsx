@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import { act } from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
@@ -8,7 +8,7 @@ import Enzyme from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import ParcelDetailForm from './ParcelDetailForm';
+import ParcelDetailForm from '../../containers/ParcelDetailFormContainer';
 import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
@@ -30,7 +30,9 @@ import { LatLng } from 'leaflet';
 import { useApi, PimsAPI } from 'hooks/useApi';
 import { IParcel } from 'actions/parcelsActions';
 import { updateParcel } from 'actionCreators/parcelsActionCreator';
-import { ParcelDetailTabs } from 'features/mapSideBar/containers/ParcelDetailContainer';
+import ParcelDetailContainer, {
+  ParcelDetailTabs,
+} from 'features/properties/containers/ParcelDetailContainer';
 import { noop } from 'lodash';
 import { ToastContainer } from 'react-toastify';
 import pretty from 'pretty';
@@ -50,6 +52,7 @@ jest.mock('@react-keycloak/web');
       agencies: ['1'],
       roles: ['admin-properties'],
     },
+    subject: 'test',
   },
 });
 
@@ -74,7 +77,7 @@ jest.mock('hooks/useApi');
         siteId: '00000000-0000-0000-0000-000000000000',
         fullAddress: '525 Superior St, Victoria, BC',
         address1: '525 Superior St',
-        city: 'Victoria',
+        administrativeArea: 'Victoria',
         latitude: 90,
         longitude: -90,
         provinceCode: 'BC',
@@ -88,7 +91,13 @@ const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME, code: 'TEST' },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-    { name: 'test city', id: '1', isDisabled: false, type: API.CITY_CODE_SET_NAME },
+    {
+      name: 'test administrative area',
+      id: '1',
+      isDisabled: false,
+      type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
+    },
+    { name: 'test city', id: '1', isDisabled: false, type: API.AMINISTRATIVE_AREA_CODE_SET_NAME },
     { name: 'test province', id: '2222', isDisabled: false, type: API.PROVINCE_CODE_SET_NAME },
     {
       name: 'construction test type',
@@ -132,11 +141,13 @@ const parcelDetailForm = ({
   loadDraft,
   data,
   tab,
+  disabled,
 }: {
   clickLatLng?: LatLng;
   loadDraft?: boolean;
   data?: any;
   tab?: ParcelDetailTabs;
+  disabled?: boolean;
 }) => (
   <Provider store={store}>
     <Router history={history}>
@@ -148,22 +159,28 @@ const parcelDetailForm = ({
         rtl={false}
         pauseOnFocusLoss={false}
       />
-      <ParcelDetailForm
-        agencyId={1}
-        clickLatLng={clickLatLng}
+      <ParcelDetailContainer
         parcelDetail={data ?? null}
-        secret="test"
+        disabled={disabled}
         loadDraft={loadDraft ?? true}
-        currentTab={tab ?? ParcelDetailTabs.parcel}
-        setCurrentTab={noop}
-        setSidebarOpen={noop}
-        formikRef={createRef()}
+        onDelete={noop}
+        persistCallback={noop}
+        properties={[]}
+        defaultTab={tab}
+        mapClickMouseEvent={
+          clickLatLng
+            ? ({
+                originalEvent: { timeStamp: document?.timeline?.currentTime ?? 0 },
+                latlng: clickLatLng,
+              } as any)
+            : undefined
+        }
       />
     </Router>
   </Provider>
 );
 
-describe('ParcelDetailForm', () => {
+describe('ParcelDetail Functionality', () => {
   afterEach(() => {
     cleanup();
   });
@@ -175,7 +192,7 @@ describe('ParcelDetailForm', () => {
       agencyId: 1,
       address: {
         line1: 'addressval',
-        cityId: 1,
+        administrativeArea: 'administrativeArea',
         provinceId: '2222',
         postal: 'V8X 3L5',
       },
@@ -225,13 +242,10 @@ describe('ParcelDetailForm', () => {
           <Provider store={store}>
             <Router history={history}>
               <ParcelDetailForm
-                secret="test"
                 agencyId={1}
                 parcelDetail={mockDetails[0]}
-                currentTab={ParcelDetailTabs.parcel}
-                setCurrentTab={noop}
-                setSidebarOpen={noop}
                 formikRef={undefined}
+                persistCallback={noop}
               />
             </Router>
           </Provider>,
@@ -278,7 +292,11 @@ describe('ParcelDetailForm', () => {
       await fillInput(container, 'description', exampleData.description, 'textArea');
       await fillInput(container, 'zoning', exampleData.zoning);
       await fillInput(container, 'zoningPotential', exampleData.zoningPotential);
-      await fillInput(container, 'address.cityId', exampleData.address.cityId.toString());
+      await fillInput(
+        container,
+        'address.administrativeArea',
+        exampleData.address.administrativeArea,
+      );
       await fillInput(container, 'address.provinceId', exampleData.address.provinceId, 'select');
       await fillInput(container, 'address.postal', exampleData.address.postal);
       await fillInput(container, 'address.line1', exampleData.address.line1);
@@ -398,6 +416,17 @@ describe('ParcelDetailForm', () => {
 });
 
 describe('autosave functionality', () => {
+  beforeEach(() => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: ['1'],
+          roles: ['admin-properties'],
+        },
+        subject: 'test',
+      },
+    });
+  });
   const persistFormData = async () => {
     const { container } = render(parcelDetailForm({}));
     const address = container.querySelector('input[name="address.line1"]');
@@ -430,22 +459,8 @@ describe('autosave functionality', () => {
 
   it('a mismatched encryption key causes no form details to load.', async () => {
     await persistFormData();
-    const differentKey = (
-      <Provider store={store}>
-        <Router history={history}>
-          <ParcelDetailForm
-            agencyId={1}
-            parcelDetail={null}
-            secret="invalid"
-            loadDraft={true}
-            currentTab={ParcelDetailTabs.parcel}
-            setCurrentTab={noop}
-            setSidebarOpen={noop}
-            formikRef={undefined}
-          />
-        </Router>
-      </Provider>
-    );
+    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { subject: 'test2' } });
+    const differentKey = parcelDetailForm({});
 
     const { container: updatedContainer } = render(differentKey);
     const address = updatedContainer.querySelector('input[name="address.line1"]');
@@ -454,21 +469,7 @@ describe('autosave functionality', () => {
 
   it('no data is loaded if this is an update or view', async () => {
     await persistFormData();
-    const updateForm = (
-      <Provider store={store}>
-        <Router history={history}>
-          <ParcelDetailForm
-            agencyId={1}
-            parcelDetail={mockDetails[0]}
-            secret="invalid"
-            currentTab={ParcelDetailTabs.parcel}
-            setCurrentTab={noop}
-            setSidebarOpen={noop}
-            formikRef={undefined}
-          />
-        </Router>
-      </Provider>
-    );
+    const updateForm = parcelDetailForm({ disabled: true });
 
     const { container: updatedContainer } = render(updateForm);
     const address = updatedContainer.querySelector('input[name="address.line1"]');

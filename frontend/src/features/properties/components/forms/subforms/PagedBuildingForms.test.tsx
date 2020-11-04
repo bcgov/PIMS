@@ -9,7 +9,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
 import { Formik } from 'formik';
 import PagedBuildingForms from './PagedBuildingForms';
-import { IFormParcel, getInitialValues } from '../ParcelDetailForm';
+import { IFormParcel, getInitialValues } from '../../../containers/ParcelDetailFormContainer';
 import { IFormBuilding } from './BuildingForm';
 import { ILookupCode } from 'actions/lookupActions';
 import _ from 'lodash';

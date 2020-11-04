@@ -65,7 +65,7 @@
     padding-top: 15px;
     border: 0px;
     background-color: #f2f2f2;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   div.invalid-feedback {
     display: none;
@@ -136,19 +136,21 @@
       padding: 0;
     }
   }
-  .date-picker.is-invalid {
-    padding-right: 0;
+  .date-picker.is-invalid,
+  .date-picker.is-valid {
+    padding-right: 12px;
   }
   .delete-btn {
     position: absolute;
     background-color: transparent !important;
-    padding: 2px;
     color: white !important;
     border: 0px;
+    height: 40px;
+    padding: 2px;
   }
   .form-controls {
     position: absolute;
-    top: -5px;
+    top: -10px;
     right: 0;
   }
 }

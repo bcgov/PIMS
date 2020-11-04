@@ -126,11 +126,11 @@ export const Building = Yup.object().shape({
     .required('Required')
     .nullable(),
   buildingFloorCount: Yup.number()
-    .min(1, 'Floor Count must be a positive number')
+    .min(0, 'Floor Count must be a valid number')
     .transform(emptyStringToNull),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   rentableArea: Yup.number()
-    .min(0, 'Rentable Area must be a positive number')
+    .min(0, 'Rentable Area must be a valid number')
     .transform(emptyStringToNull)
     .required('Required'),
   agencyId: Yup.number()

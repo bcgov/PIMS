@@ -83,17 +83,17 @@ export const fetchPropertyDetail = (
     : dispatch(fetchBuildingDetail({ id }, position));
 };
 
-const parcelLoadingToasts: LifecycleToasts = {
+const parcelCreatingToasts: LifecycleToasts = {
   loadingToast: pimsToasts.parcel.PARCEL_CREATING,
   successToast: pimsToasts.parcel.PARCEL_CREATED,
-  errorToast: pimsToasts.parcel.PARCEL_ERROR,
+  errorToast: pimsToasts.parcel.PARCEL_CREATING_ERROR,
 };
 
 export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.ADD_PARCEL));
   dispatch(showLoading());
   try {
-    const { data, status } = await CustomAxios({ lifecycleToasts: parcelLoadingToasts }).post(
+    const { data, status } = await CustomAxios({ lifecycleToasts: parcelCreatingToasts }).post(
       ENVIRONMENT.apiUrl + API.PARCEL_ROOT,
       parcel,
     );
@@ -108,11 +108,17 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
   }
 };
 
+const parcelUpdatingToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.parcel.PARCEL_UPDATING,
+  successToast: pimsToasts.parcel.PARCEL_UPDATED,
+  errorToast: pimsToasts.parcel.PARCEL_UPDATING_ERROR,
+};
+
 export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
   try {
-    const { data, status } = await CustomAxios().put(
+    const { data, status } = await CustomAxios({ lifecycleToasts: parcelUpdatingToasts }).put(
       ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`,
       parcel,
     );
@@ -127,10 +133,16 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
   }
 };
 
+const parcelDeletingToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.parcel.PARCEL_DELETING,
+  successToast: pimsToasts.parcel.PARCEL_DELETED,
+  errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
+};
+
 export const deleteParcel = (parcel: IParcel) => (dispatch: Function) => {
   dispatch(request(actionTypes.DELETE_PARCEL));
   dispatch(showLoading());
-  return CustomAxios()
+  return CustomAxios({ lifecycleToasts: parcelDeletingToasts })
     .delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel })
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.DELETE_PARCEL, response.status));

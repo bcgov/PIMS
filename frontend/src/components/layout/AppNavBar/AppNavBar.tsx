@@ -72,6 +72,9 @@ function SubmitPropertyNav() {
           search: queryString.stringify({
             ...queryString.parse(history.location.search),
             sidebar: true,
+            disabled: false,
+            loadDraft: false,
+            new: true,
           }),
         })
       }

@@ -84,13 +84,13 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         />
       </Form.Row>
       <Form.Row>
-          <TypeaheadField
-            label="Location"
-            options={administrativeAreas.map(x => x.label)}
-            name={withNameSpace('administrativeArea')}
-            disabled={props.disabled}
-            paginate={false}
-            required
+        <Form.Label className="required">Location</Form.Label>
+        <TypeaheadField
+          options={administrativeAreas.map(x => x.label)}
+          name={withNameSpace('administrativeArea')}
+          disabled={props.disabled}
+          paginate={false}
+          required
         />
       </Form.Row>
       <Form.Row>

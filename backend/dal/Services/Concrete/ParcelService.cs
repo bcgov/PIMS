@@ -362,7 +362,7 @@ namespace Pims.Dal.Services
                 foreach (var parcelBuilding in originalParcel.Buildings)
                 {
                     var matchingParcelBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
-                    if (matchingParcelBuilding == null)
+                    if (matchingParcelBuilding != null)
                     {
                         // TODO: This will delete the building from the datasource.  This isn't entirely ideal as it may be related to multiple parcels.
                         this.ThrowIfNotAllowedToUpdate(matchingParcelBuilding.Building, _options.Project);

@@ -17,10 +17,10 @@ import {
   IProjectTask,
   IStepProps,
   useProject,
-  handleValidate,
-  ValidationGroup,
   DisposeWorkflowStatus,
+  handleValidate,
 } from '../../common';
+import { ValidationGroup } from 'components/common/tabValidation';
 import {
   saveSplTab,
   SplTabs,

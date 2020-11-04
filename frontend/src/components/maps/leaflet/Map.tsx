@@ -1,9 +1,16 @@
 import './Map.scss';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, LayersControl, WMSTileLayer } from 'react-leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng, Map as LeafletMap } from 'leaflet';
+import {
+  MapProps as LeafletMapProps,
+  TileLayer,
+  Popup,
+  LayersControl,
+  WMSTileLayer,
+  Map as ReactLeafletMap,
+} from 'react-leaflet';
 import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -61,6 +68,7 @@ export type MapProps = {
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
+  mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -91,10 +99,10 @@ const Map: React.FC<MapProps> = ({
   onMapClick,
   disableMapFilterBar,
   interactive = true,
+  mapRef,
 }) => {
   // state and refs
   const dispatch = useDispatch();
-  const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     pid: '',
     searchBy: 'address',
@@ -116,12 +124,11 @@ const Map: React.FC<MapProps> = ({
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
-
-  //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
+
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
     dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
@@ -129,7 +136,7 @@ const Map: React.FC<MapProps> = ({
 
   useEffect(() => {
     mapRef.current?.leafletElement.invalidateSize();
-  }, [mapWidth]);
+  }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
   const [bounds, setBounds] = useState<BBox>();
@@ -237,7 +244,7 @@ const Map: React.FC<MapProps> = ({
   const points = createPoints(properties);
 
   // get map bounds
-  const updateMap = () => {
+  const updateMap = useCallback(() => {
     if (!mapRef?.current) {
       return;
     }
@@ -249,11 +256,7 @@ const Map: React.FC<MapProps> = ({
       b.getNorthEast().lat,
     ]);
     setZoom(mapRef.current.leafletElement.getZoom());
-  };
-
-  useEffect(() => {
-    updateMap();
-  }, []);
+  }, [mapRef]);
 
   const renderPopup = (item: IPropertyDetail) => {
     const { propertyTypeId, parcelDetail, position } = item;
@@ -344,7 +347,7 @@ const Map: React.FC<MapProps> = ({
                 {baseLayers?.length > 0 && (
                   <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
                 )}
-                <LeafletMap
+                <ReactLeafletMap
                   ref={mapRef}
                   center={[lat, lng]}
                   zoom={lastZoom}
@@ -415,7 +418,7 @@ const Map: React.FC<MapProps> = ({
                       />
                     </LayersControl.Overlay>
                   </LayersControl>
-                </LeafletMap>
+                </ReactLeafletMap>
               </Col>
             </Row>
           </Container>
