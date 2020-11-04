@@ -1,14 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Summary View renders approved correctly 1`] = `
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
 <div
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzqNJr iZVvRm [object Object]-status"
+    className="c0 [object Object]-status"
   >
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       Approved for Surplus Property Program
     </h5>
@@ -32,7 +54,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       Approval Date: Unknown Date
     </h5>
@@ -797,7 +819,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       }
     />
     <div
-      className="sc-fzoXzr chUPrj"
+      className="c2"
     >
       <button
         className="btn btn-warning"
@@ -826,14 +848,36 @@ exports[`Review Summary View renders approved correctly 1`] = `
 `;
 
 exports[`Review Summary View renders denied correctly 1`] = `
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
 <div
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzqNJr iZVvRm [object Object]-status"
+    className="c0 [object Object]-status"
   >
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       Submitted
     </h5>
@@ -857,7 +901,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       test
     </h5>
@@ -1622,7 +1666,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       }
     />
     <div
-      className="sc-fzoXzr chUPrj"
+      className="c2"
     >
       <button
         className="btn btn-warning"
@@ -1651,14 +1695,36 @@ exports[`Review Summary View renders denied correctly 1`] = `
 `;
 
 exports[`Review Summary View renders submitted correctly 1`] = `
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
 <div
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fzqNJr iZVvRm [object Object]-status"
+    className="c0 [object Object]-status"
   >
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       Submitted
     </h5>
@@ -1682,7 +1748,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fzoyAV iUdhUR"
+      className="c1"
     >
       In Review
     </h5>
@@ -2447,7 +2513,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       }
     />
     <div
-      className="sc-fzoXzr chUPrj"
+      className="c2"
     >
       <button
         className="btn btn-warning"

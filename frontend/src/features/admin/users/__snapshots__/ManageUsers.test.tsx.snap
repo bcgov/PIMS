@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage Users Component Snapshot matches 1`] = `
+.c0 {
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
 <div
   className="users-management-page"
 >
@@ -224,7 +229,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
     </div>
   </form>
   <div
-    className="sc-fzolEj kuDfzp container-fluid"
+    className="c0 container-fluid"
   >
     <div
       className="table"

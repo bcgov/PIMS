@@ -1,6 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`dispose project draft step display stepper renders correctly based off of workflow 1`] = `
+.c0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
 <div
   className="ProjectDisposeLayout container-fluid"
 >
@@ -204,7 +215,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
     className="step-content container-fluid"
   >
     <div
-      className="sc-fzoXzr chUPrj"
+      className="c0"
     >
       <button
         className="btn btn-primary"
