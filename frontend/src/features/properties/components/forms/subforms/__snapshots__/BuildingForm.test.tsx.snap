@@ -117,14 +117,18 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <div
             className="form-group"
           >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-agencyId"
-              name="agencyId"
-              onChange={[Function]}
-              value=""
-            />
+            <div
+              className="input-area"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-agencyId"
+                name="agencyId"
+                onChange={[Function]}
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -142,14 +146,18 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <div
             className="form-group"
           >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-agencyId"
-              name="agencyId"
-              onChange={[Function]}
-              value=""
-            />
+            <div
+              className="input-area"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-agencyId"
+                name="agencyId"
+                onChange={[Function]}
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>

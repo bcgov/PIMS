@@ -113,7 +113,7 @@ exports[`renders correctly 1`] = `
             className="bar-item flex-grow-0 col"
           >
             <button
-              className="Button Button--icon-only btn btn-warning"
+              className="Button Button--icon-only bg-warning btn btn-primary"
               disabled={false}
               onBlur={[Function]}
               onFocus={[Function]}

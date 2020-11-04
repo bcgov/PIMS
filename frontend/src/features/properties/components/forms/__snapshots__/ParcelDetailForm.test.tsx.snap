@@ -34,12 +34,16 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
                 <div class=\\"AutoCompleteText\\">
-                  <div class=\\"form-group\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"TEST\\"></div>
+                  <div class=\\"form-group\\">
+                    <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"TEST\\"></div>
+                  </div>
                 </div>
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
                 <div class=\\"AutoCompleteText\\">
-                  <div class=\\"form-group\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                  <div class=\\"form-group\\">
+                    <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
                 </div>
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label\\"></label>

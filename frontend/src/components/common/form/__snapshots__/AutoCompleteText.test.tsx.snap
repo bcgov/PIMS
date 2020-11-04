@@ -12,13 +12,17 @@ exports[`Auto Complete Text component renders correctly 1`] = `
     <div
       className="form-group"
     >
-      <input
-        className="form-control"
-        id="input-city"
-        name="city"
-        onChange={[Function]}
-        value=""
-      />
+      <div
+        className="input-area"
+      >
+        <input
+          className="form-control"
+          id="input-city"
+          name="city"
+          onChange={[Function]}
+          value=""
+        />
+      </div>
     </div>
   </div>
 </form>

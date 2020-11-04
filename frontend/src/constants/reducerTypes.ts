@@ -12,6 +12,10 @@ export const ACCESS_REQUEST = 'accessRequest';
 // Users
 export const USERS = 'users';
 
+// Agencies
+export const AGENCIES = 'agencies';
+export const GET_AGENCY_DETAIL = 'GET_AGENCY_DETAIL';
+
 export const NETWORK = 'network';
 
 export const APP_ERRORS = 'appErrors';

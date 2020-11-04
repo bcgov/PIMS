@@ -174,16 +174,20 @@ exports[`GRE Transfer Step renders correctly 1`] = `
         <div
           className="form-group"
         >
-          <input
-            autoComplete="new-password"
-            className="form-control"
-            disabled={true}
-            id="input-agencyId"
-            name="agencyId"
-            onChange={[Function]}
-            required={true}
-            value=""
-          />
+          <div
+            className="input-area"
+          >
+            <input
+              autoComplete="new-password"
+              className="form-control"
+              disabled={true}
+              id="input-agencyId"
+              name="agencyId"
+              onChange={[Function]}
+              required={true}
+              value=""
+            />
+          </div>
         </div>
       </div>
     </div>

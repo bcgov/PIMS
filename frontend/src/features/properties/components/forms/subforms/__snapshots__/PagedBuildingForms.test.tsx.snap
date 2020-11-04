@@ -209,14 +209,18 @@ Array [
           <div
             className="form-group"
           >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-buildings.0.agencyId"
-              name="buildings.0.agencyId"
-              onChange={[Function]}
-              value=""
-            />
+            <div
+              className="input-area"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-buildings.0.agencyId"
+                name="buildings.0.agencyId"
+                onChange={[Function]}
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -234,14 +238,18 @@ Array [
           <div
             className="form-group"
           >
-            <input
-              className="form-control"
-              disabled={true}
-              id="input-buildings.0.agencyId"
-              name="buildings.0.agencyId"
-              onChange={[Function]}
-              value=""
-            />
+            <div
+              className="input-area"
+            >
+              <input
+                className="form-control"
+                disabled={true}
+                id="input-buildings.0.agencyId"
+                name="buildings.0.agencyId"
+                onChange={[Function]}
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
