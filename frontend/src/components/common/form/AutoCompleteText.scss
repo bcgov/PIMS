@@ -1,9 +1,16 @@
 @import '../../../styles.scss';
-
 .AutoCompleteText {
   width: 300px;
   font-size: 14px;
   position: relative;
+  .input-area {
+    display: flex;
+    .form-label {
+      display: inline-block;
+      align-self: flex-end;
+      width: 250px;
+    }
+  }
 }
 
 .AutoCompleteText form.Control {

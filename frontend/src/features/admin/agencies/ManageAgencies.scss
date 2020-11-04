@@ -1,0 +1,36 @@
+$header-height: 72px;
+$footer-height: 46px;
+$navbar-height: 45px;
+$filter-height: 76px;
+$contentheading-height: 60px;
+.ManageAgencies {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  .agency-toolbar {
+    padding: 0;
+    background-color: var(--light);
+    .search-bar {
+      .filterBarHeading {
+        margin-left: 500px;
+        margin-right: 100px;
+      }
+      .plus-button {
+        margin-right: 600px;
+      }
+    }
+  }
+  .table-section {
+    margin-left: 15%;
+    margin-right: 15%;
+    padding: 1rem 2rem;
+    // display: flex;
+    max-height: calc(
+      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
+    );
+    table {
+      background-color: white;
+    }
+  }
+}

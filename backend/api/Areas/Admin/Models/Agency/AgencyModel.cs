@@ -11,6 +11,11 @@ namespace Pims.Api.Areas.Admin.Models.Agency
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
+
+        public string Email { get; set; }
+
+        public string SendEmail { get; set; }
+        
         #endregion
     }
 }

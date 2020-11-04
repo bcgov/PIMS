@@ -20,6 +20,8 @@ import { LogoutPage } from 'features/account/Logout';
 import { ProjectRouter } from 'features/projects/common';
 import { ProjectDisposeView } from 'features/projects/dispose';
 import SplReportContainer from 'features/splReports/containers/SplReportContainer';
+import ManageAgencies from 'features/admin/agencies/ManageAgencies';
+import EditAgencyPage from 'features/admin/agencies/EditAgencyPage';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -139,6 +141,30 @@ const AppRouter: React.FC = () => {
         layout={AuthLayout}
         claim={Claims.ADMIN_USERS}
         title={getTitle('Edit User')}
+      />
+      <AppRoute
+        protected
+        path="/admin/agencies"
+        component={ManageAgencies}
+        layout={AuthLayout}
+        claim={Claims.ADMIN_USERS}
+        title={getTitle('Agency Management')}
+      />
+      <AppRoute
+        protected
+        path="/admin/agency/:id"
+        component={EditAgencyPage}
+        layout={AuthLayout}
+        claim={Claims.ADMIN_USERS}
+        title={getTitle('Edit Agency')}
+      />
+      <AppRoute
+        protected
+        path="/admin/agency/new"
+        component={EditAgencyPage}
+        layout={AuthLayout}
+        claim={Claims.ADMIN_USERS}
+        title={getTitle('Edit Agency')}
       />
       <AppRoute
         protected

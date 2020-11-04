@@ -1,4 +1,5 @@
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using System.Collections.Generic;
 
 namespace Pims.Dal.Services.Admin
@@ -10,5 +11,7 @@ namespace Pims.Dal.Services.Admin
     {
         IEnumerable<Agency> GetAll();
         Agency Get(int id);
+        Paged<Agency> Get(int page, int quantity);
+        Paged<Agency> Get(AgencyFilter filter);
     }
 }

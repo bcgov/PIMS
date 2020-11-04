@@ -17,6 +17,7 @@ export type IAutoCompleteProps = {
   /** to determine whether to show the code or label defaults to label*/
   getValueDisplay?: (value: any) => string;
   agencyType?: 'parent' | 'child';
+  label?: string;
 };
 
 export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
@@ -28,6 +29,7 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
   required,
   getValueDisplay,
   agencyType,
+  label,
 }) => {
   const { values, setFieldValue, errors, touched } = useFormikContext<any>();
   const [suggestions, setSuggestions] = useState<SelectOptions>([]);
@@ -110,16 +112,19 @@ export const AutoCompleteText: React.FC<IAutoCompleteProps> = ({
     // autoComplete will have different value depending on form. eg) 'new-password' is needed to override chrome's address suggestions etc.
     <div className="AutoCompleteText">
       <Form.Group controlId={`input-${field}`}>
-        <Form.Control
-          autoComplete={autoSetting}
-          name={field}
-          value={text}
-          isInvalid={!!touch && !!error}
-          onChange={onTextChanged}
-          placeholder={placeholder}
-          disabled={disabled}
-          required={required}
-        />
+        <div className="input-area">
+          {label && <Form.Label>{label}</Form.Label>}
+          <Form.Control
+            autoComplete={autoSetting}
+            name={field}
+            value={text}
+            isInvalid={!!touch && !!error}
+            onChange={onTextChanged}
+            placeholder={placeholder}
+            disabled={disabled}
+            required={required}
+          />
+        </div>
         {renderSuggestions()}
         <DisplayError field={field} />
       </Form.Group>
