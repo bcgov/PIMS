@@ -7,6 +7,17 @@
   text-align: left;
   padding: 10px;
 
+  .row .col .list-group {
+    margin-top: 6px;
+
+    .list-group-item {
+      padding: 0px 0px 5px 0px;
+      border: none;
+      font-family: 'BCSans', Fallback, sans-serif;
+      font-size: 12px;
+    }
+  }
+
   .row .col :first-child {
     margin-top: 0px;
   }
@@ -19,15 +30,6 @@
     font-weight: bold;
   }
 
-  .list-group {
-    margin-top: 6px;
-  }
-  .list-group-item {
-    padding: 0px 0px 5px 0px !important;
-    border: none;
-    font-family: 'BCSans', Fallback, sans-serif;
-    font-size: 12px;
-  }
   .menu {
     text-align: center;
   }
