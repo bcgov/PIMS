@@ -62,7 +62,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.ParcelBuildingModel, NetTopologySuite.Geometries.Point>()
-                .ConstructUsing(src => GoemetryHelper.CreatePoint(src.Longitude, src.Latitude));
+                .ConstructUsing(src => Dal.Helpers.GeometryHelper.CreatePoint(src.Longitude, src.Latitude));
         }
     }
 }
