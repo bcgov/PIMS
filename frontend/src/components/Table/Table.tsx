@@ -21,6 +21,7 @@ import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
 import _ from 'lodash';
 import { Spinner, Collapse } from 'react-bootstrap';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -277,7 +278,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       return <div className="no-rows-message">{props.noRowsMessage || 'No rows to display'}</div>;
     }
 
-    const handleExpandClick = (data: T) => {
+    const handleExpandClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, data: T) => {
+      e.preventDefault();
       let expanded = expandedRows;
       if (
         props.detailsPanel !== undefined &&
@@ -305,14 +307,19 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td',
-                () => handleExpandClick(row.original),
+                e => handleExpandClick(e, row.original),
               )}
+            {props.canRowExpand && !props.canRowExpand(row) ? (
+              <div className="td">
+                <div style={{ width: '20px' }}>&nbsp;</div>
+              </div>
+            ) : null}
             {/* Expansion button shown on every row by default */}
             {!props.canRowExpand &&
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td',
-                () => handleExpandClick(row.original),
+                e => handleExpandClick(e, row.original),
               )}
             {row.cells.map((cell: CellWithProps<T>) => {
               return (
@@ -350,7 +357,11 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     );
   };
 
-  const renderExpandRowStateButton = (open?: boolean, className?: string, onClick?: () => void) => {
+  const renderExpandRowStateButton = (
+    open?: boolean,
+    className?: string,
+    onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+  ) => {
     const detailsClosedIcon =
       props.detailsPanel && props.detailsPanel.icons?.closed ? (
         props.detailsPanel.icons?.closed
@@ -365,14 +376,17 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       );
     return (
       props.detailsPanel && (
-        <div className={className} onClick={onClick}>
-          {open ? detailsOpenedIcon : detailsClosedIcon}
-        </div>
+        <TooltipWrapper toolTipId="expand-all-rows" toolTip={open ? 'Collapse Row' : 'Expand Row'}>
+          <div className={className + ' svg-btn'} onClick={onClick}>
+            {open ? detailsOpenedIcon : detailsClosedIcon}
+          </div>
+        </TooltipWrapper>
       )
     );
   };
 
-  const handleExpandAll = () => {
+  const handleExpandAll = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
     let expanded = expandedRows.length !== props.data.length ? props.data : [];
     setExpandedRows(expanded);
     if (props.detailsPanel && props.detailsPanel.onExpand && expanded.length > 0) {

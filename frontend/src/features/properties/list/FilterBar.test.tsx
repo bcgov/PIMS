@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
-import FilterBar, { IFilterBarState } from './FilterBar';
+import FilterBar, { IFilterBarState, PropertyTypes } from './FilterBar';
 import * as MOCK from 'mocks/filterDataMock';
 import Axios from 'axios';
 
@@ -104,7 +104,7 @@ describe('FilterBar', () => {
       minLotSize: '1',
       maxLotSize: '3',
       parcelId: '',
-      propertyType: '',
+      propertyType: PropertyTypes.Land,
     });
   });
   it('loads list filter values if provided', () => {

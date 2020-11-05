@@ -60,7 +60,12 @@ export interface IFilterBarState extends BasePropertyFilter {
   minLotSize: string;
   maxLotSize: string;
   parcelId?: string;
-  propertyType?: string;
+  propertyType?: PropertyTypes;
+}
+
+export enum PropertyTypes {
+  Land = 'Land',
+  Building = 'Building',
 }
 
 type FilterBarProps = {
@@ -81,7 +86,7 @@ const defaultFilterValues: IFilterBarState = {
   minLotSize: '',
   maxLotSize: '',
   parcelId: '',
-  propertyType: '',
+  propertyType: PropertyTypes.Land,
 };
 
 /**

@@ -43,8 +43,12 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
           }
         >
           <div
-            className="th expander"
+            className="th expander svg-btn"
+            onBlur={[Function]}
             onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
           >
             <svg
               color="black"
@@ -318,8 +322,12 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             }
           >
             <div
-              className="td"
+              className="td svg-btn"
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             >
               <svg
                 color="black"
@@ -788,9 +796,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                         "boxSizing": "border-box",
                         "display": "flex",
                         "flex": "80 0 auto",
-                        "justifyContent": "flex-start",
+                        "justifyContent": "flex-end",
                         "minWidth": "80px",
-                        "textAlign": "left",
+                        "textAlign": "right",
                         "width": "7%",
                       }
                     }
@@ -809,9 +817,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                         "boxSizing": "border-box",
                         "display": "flex",
                         "flex": "80 0 auto",
-                        "justifyContent": "flex-start",
+                        "justifyContent": "flex-end",
                         "minWidth": "80px",
-                        "textAlign": "left",
+                        "textAlign": "right",
                         "width": "7%",
                       }
                     }
@@ -830,9 +838,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                         "boxSizing": "border-box",
                         "display": "flex",
                         "flex": "80 0 auto",
-                        "justifyContent": "flex-start",
+                        "justifyContent": "flex-end",
                         "minWidth": "80px",
-                        "textAlign": "left",
+                        "textAlign": "right",
                         "width": "7%",
                       }
                     }
@@ -872,9 +880,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                         "boxSizing": "border-box",
                         "display": "flex",
                         "flex": "65 0 auto",
-                        "justifyContent": "flex-start",
+                        "justifyContent": "flex-end",
                         "minWidth": "65px",
-                        "textAlign": "left",
+                        "textAlign": "right",
                         "width": "3.5%",
                       }
                     }
@@ -1101,9 +1109,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                           "boxSizing": "border-box",
                           "display": "flex",
                           "flex": "80 0 auto",
-                          "justifyContent": "flex-start",
+                          "justifyContent": "flex-end",
                           "minWidth": "80px",
-                          "textAlign": "left",
+                          "textAlign": "right",
                           "width": "7%",
                         }
                       }
@@ -1122,9 +1130,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                           "boxSizing": "border-box",
                           "display": "flex",
                           "flex": "80 0 auto",
-                          "justifyContent": "flex-start",
+                          "justifyContent": "flex-end",
                           "minWidth": "80px",
-                          "textAlign": "left",
+                          "textAlign": "right",
                           "width": "7%",
                         }
                       }
@@ -1143,9 +1151,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                           "boxSizing": "border-box",
                           "display": "flex",
                           "flex": "80 0 auto",
-                          "justifyContent": "flex-start",
+                          "justifyContent": "flex-end",
                           "minWidth": "80px",
-                          "textAlign": "left",
+                          "textAlign": "right",
                           "width": "7%",
                         }
                       }
@@ -1173,10 +1181,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="3.5%"
                     >
-                      <img
-                        className=""
-                        src="icon-business.svg"
-                      />
+                      <svg
+                        className="svg"
+                      >
+                        icon-business.svg
+                      </svg>
                     </div>
                     <div
                       className="td"
@@ -1188,9 +1197,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                           "boxSizing": "border-box",
                           "display": "flex",
                           "flex": "65 0 auto",
-                          "justifyContent": "flex-start",
+                          "justifyContent": "flex-end",
                           "minWidth": "65px",
-                          "textAlign": "left",
+                          "textAlign": "right",
                           "width": "3.5%",
                         }
                       }
