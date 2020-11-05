@@ -16,7 +16,7 @@ exports[`Approval Confirmation Matches Snapshot 1`] = `
   className="c0"
 >
   <button
-    className="btn btn-warning"
+    className="btn btn-primary"
     disabled={false}
     onClick={[Function]}
     style={

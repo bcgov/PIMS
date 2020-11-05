@@ -37,10 +37,6 @@
   height: 44px;
 }
 
-.btn.btn-warning {
-  width: 130px;
-}
-
 .btn:hover {
   text-decoration: underline;
 }
@@ -54,17 +50,23 @@
 
 .btn.btn-primary {
   background-color: $primary-color;
-  font-family: 'BCSans', Fallback, sans-serif;
-  text-decoration: none solid rgb(255, 255, 255);
+  border: none;
+  border-radius: 4px;
   color: #ffffff;
+  text-align: center;
+  text-decoration: none;
   font-size: 16px;
-  border-color: transparent;
-  border-radius: 0;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
 
-.btn:hover {
+.btn.btn-primary:hover {
+  text-decoration: underline;
   opacity: 0.8;
 }
+
 .btn:disabled,
 .btn:hover:disabled {
   color: #959da5;
@@ -75,20 +77,25 @@
   cursor: not-allowed;
 }
 
-.btn.btn-secondary {
-  border: 2px solid $secondary-variant-color;
-  background-color: #ffffff;
-  font-family: 'BCSans', Fallback, sans-serif;
-  font-size: 16px;
-  color: $secondary-variant-color;
-  text-decoration: none solid $secondary-variant-color;
+.btn.btn.btn-secondary {
+  background: none;
+  border-radius: 4px;
+  border: 1px solid $primary-color;
   text-align: center;
-  border-radius: 0;
+  text-decoration: none;
+  font-size: 16px;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: $primary-color;
 }
 
 .btn.btn-secondary:hover {
-  background-color: #ffffff;
-  color: $text-color;
+  opacity: 0.8;
+  text-decoration: underline;
+  background-color: $primary-color;
+  color: #ffffff;
 }
 
 .btn.btn-secondary.Button--disabled .Button__value {
@@ -127,12 +134,16 @@
 
 .btn.btn-danger {
   background-color: $danger-color;
-  font-family: 'BCSans', Fallback, sans-serif;
+  border: none;
+  border-radius: 4px;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
   font-size: 16px;
   color: #ffffff;
-  text-decoration: none solid rgb(255, 255, 255);
+  text-decoration: none;
   text-align: center;
-  border-radius: 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .btn.btn-danger:hover {
@@ -140,14 +151,19 @@
   color: #ffffff;
 }
 
-.btn.btn-warning {
+.btn.btn.btn-warning {
   background-color: $accent-color;
-  font-family: 'BCSans', Fallback, sans-serif;
-  text-decoration: none solid rgb(255, 255, 255);
+  border: 1px solid $accent-color;
+  border-radius: 4px;
   color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  display: block;
   font-size: 16px;
-  border-color: transparent;
-  border-radius: 0;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .btn:focus,

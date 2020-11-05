@@ -84,7 +84,7 @@ export const AccessRequestDetails: React.FC<IProps> = ({ request, onClose }) => 
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="warning" onClick={onClose}>
+          <Button variant="primary" onClick={onClose}>
             Close
           </Button>
         </Modal.Footer>

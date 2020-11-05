@@ -301,7 +301,7 @@ Array [
               role="toolbar"
             >
               <button
-                className="mr-5 btn btn-outline-dark"
+                className="mr-5 btn btn-secondary"
                 disabled={false}
                 onClick={[Function]}
                 type="button"
