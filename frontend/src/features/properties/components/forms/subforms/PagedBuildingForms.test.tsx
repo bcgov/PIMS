@@ -45,7 +45,6 @@ const mockBuilding: IFormBuilding = {
   id: 8,
   latitude: 9,
   longitude: 10,
-  localId: 'localId',
   occupantName: 'occupantName',
   parcelId: 11,
   rentableArea: 12,

@@ -55,7 +55,6 @@ export interface IProperty {
 
   // Building Properties
   parcelId?: number;
-  localId?: string;
   constructionTypeId?: number;
   constructionType?: string;
   predominateUseId?: number;
