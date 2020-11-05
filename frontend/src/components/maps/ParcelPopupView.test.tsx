@@ -118,7 +118,7 @@ describe('Parcel popup view', () => {
       </Router>,
     );
     const projectNum = getByText(/Test-Project-Number/);
-    expect(getByText(/Project Number/)).toBeInTheDocument();
+    expect(getByText(/SPP/)).toBeInTheDocument();
     expect(projectNum).toBeInTheDocument();
   });
 
@@ -128,6 +128,6 @@ describe('Parcel popup view', () => {
         <ParcelPopupView parcel={mockParcel(1)} />
       </Router>,
     );
-    expect(queryByText(/Project Number/)).toBeNull();
+    expect(queryByText(/SPP/)).toBeNull();
   });
 });

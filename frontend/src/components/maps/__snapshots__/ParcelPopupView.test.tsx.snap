@@ -15,29 +15,27 @@ exports[`Parcel popup view renders correctly 1`] = `
         onKeyDown={[Function]}
       >
         <div
-          className="list-group-item"
+          className="pid list-group-item"
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Name: 
-          </p>
+          1
+        </div>
+        <div
+          className="name list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
           test name
         </div>
         <div
-          className="list-group-item"
+          className="description list-group-item"
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Description: 
-          </p>
           Test Description
         </div>
       </div>
@@ -54,7 +52,7 @@ exports[`Parcel popup view renders correctly 1`] = `
           <p
             className="label"
           >
-            Assessed Value: 
+            Assessed Value:
           </p>
           $
         </div>
@@ -69,31 +67,11 @@ exports[`Parcel popup view renders correctly 1`] = `
           disabled={false}
           onClick={[Function]}
         >
-          <div>
-            <p
-              className="label"
-            >
-              Address: 
-            </p>
-          </div>
+          <div />
           <div>
             , 
              
           </div>
-        </div>
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            PID: 
-          </p>
-           
-          1
         </div>
       </div>
       <div
@@ -109,7 +87,7 @@ exports[`Parcel popup view renders correctly 1`] = `
           <p
             className="label"
           >
-            Agency: 
+            Agency:
           </p>
         </div>
         <div
@@ -127,6 +105,10 @@ exports[`Parcel popup view renders correctly 1`] = `
         </div>
       </div>
     </div>
+  </div>
+  <div
+    className="menu row"
+  >
     <div
       className="col"
     >
