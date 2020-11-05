@@ -35,7 +35,6 @@ export interface IFormBuilding extends IBuilding {
 export const defaultBuildingValues: any = {
   id: 0,
   name: '',
-  localId: '',
   projectNumber: '',
   description: '',
   address: defaultAddressValues,

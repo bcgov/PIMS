@@ -16,7 +16,8 @@ namespace Pims.Core.Test
         /// </summary>
         /// <param name="parcel"></param>
         /// <param name="id"></param>
-        /// <param name="localId"></param>
+        /// <param name="projectNumber"></param>
+        /// <param name="name"></param>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
         /// <param name="agency"></param>
@@ -81,14 +82,14 @@ namespace Pims.Core.Test
         /// <param name="context"></param>
         /// <param name="parcel"></param>
         /// <param name="id"></param>
-        /// <param name="localId"></param>
+        /// <param name="name"></param>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        public static Entity.Building CreateBuilding(this PimsContext context, Entity.Parcel parcel, int id, string projectNumber = null, string localId = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
+        public static Entity.Building CreateBuilding(this PimsContext context, Entity.Parcel parcel, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
-            localId ??= $"l{id}";
+            name ??= $"l{id}";
             agency ??= parcel.Agency;
             var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal);
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
@@ -99,6 +100,7 @@ namespace Pims.Core.Test
             var building = new Entity.Building(parcel, lat, lng)
             {
                 Id = id,
+                Name = name,
                 ProjectNumber = projectNumber,
                 AgencyId = agency.Id,
                 Agency = agency,

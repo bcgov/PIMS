@@ -24,7 +24,6 @@ const mockBuilding = (agencyId: number) => {
   var building: IBuilding = {
     id: 1,
     parcelId: 1,
-    localId: 'string',
     name: 'test name',
     description: 'Test description',
     address: ([
@@ -48,6 +47,8 @@ const mockBuilding = (agencyId: number) => {
     buildingTenancy: 'string',
     rentableArea: 1,
     agencyId: agencyId,
+    agency: 'agency',
+    agencyCode: 'agency code',
     evaluations: [],
     fiscals: [
       {

@@ -15,16 +15,11 @@ exports[`building popup view renders correctly 1`] = `
         onKeyDown={[Function]}
       >
         <div
-          className="list-group-item"
+          className="name list-group-item"
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Name: 
-          </p>
           test name
         </div>
         <div
@@ -33,11 +28,6 @@ exports[`building popup view renders correctly 1`] = `
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Description: 
-          </p>
           Test description
         </div>
       </div>
@@ -54,7 +44,7 @@ exports[`building popup view renders correctly 1`] = `
           <p
             className="label"
           >
-            Assessed Value: 
+            Assessed Value:
           </p>
           $
         </div>
@@ -69,15 +59,10 @@ exports[`building popup view renders correctly 1`] = `
           disabled={false}
           onClick={[Function]}
         >
+          <div />
           <div>
-            <p
-              className="label"
-            >
-              Address: 
-            </p>
-          </div>
-          <div>
-            , 
+            ,
+             
              
           </div>
         </div>
@@ -95,7 +80,20 @@ exports[`building popup view renders correctly 1`] = `
           <p
             className="label"
           >
-            Floor Count: 
+            Agency:
+          </p>
+          agency
+        </div>
+        <div
+          className="list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        >
+          <p
+            className="label"
+          >
+            Floor Count:
           </p>
           3
         </div>
@@ -108,13 +106,32 @@ exports[`building popup view renders correctly 1`] = `
           <p
             className="label"
           >
-            Predominate Use: 
+            Predominate Use:
           </p>
         </div>
       </div>
+    </div>
+  </div>
+  <div
+    className="menu row"
+  >
+    <div
+      className="col"
+    >
+      <a
+        href="/submitProperty/1?disabled=true"
+        onClick={[Function]}
+      >
+        View
+      </a>
       <a
         href="/submitProperty/1"
         onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": "5px",
+          }
+        }
       >
         Update
       </a>

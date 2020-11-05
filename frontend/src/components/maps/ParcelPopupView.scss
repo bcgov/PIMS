@@ -4,26 +4,36 @@
   max-width: 250px;
   box-shadow: 1px 2px 2px;
   text-align: left;
-  padding: 12px;
+  padding: 10px;
   .row {
     flex-direction: column;
   }
   .row .col :first-child {
     margin-top: 0px;
   }
+  .pid {
+    text-align: center;
+  }
+  .name {
+    font-weight: bold;
+  }
 
   .label {
     font-weight: 700;
+    padding-right: 5px;
   }
 
   .list-group {
     margin-top: 6px;
   }
   .list-group-item {
-    padding: 0;
+    padding: 0px 0px 5px 0px !important;
     border: none;
     font-family: 'BCSans', Fallback, sans-serif;
     font-size: 12px;
+  }
+  .menu {
+    text-align: center;
   }
   p {
     margin: 0;
