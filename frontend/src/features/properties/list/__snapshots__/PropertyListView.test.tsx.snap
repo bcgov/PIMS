@@ -53,9 +53,9 @@ Array [
                       </option>
                       <option
                         className="option"
-                        value="municipality"
+                        value="administrativeArea"
                       >
-                        Municipality
+                        Location
                       </option>
                       <option
                         className="option"
@@ -78,7 +78,7 @@ Array [
                       name="address"
                       onBlur={[Function]}
                       onChange={[Function]}
-                      placeholder="Enter an address or city"
+                      placeholder="Enter an address or location"
                       value=""
                     />
                   </div>
@@ -296,7 +296,7 @@ Array [
               Object {
                 "display": "flex",
                 "flex": "1 0 auto",
-                "minWidth": "1060px",
+                "minWidth": "980px",
               }
             }
           >
@@ -448,28 +448,7 @@ Array [
               }
               width="7%"
             >
-              City
-            </div>
-            <div
-              className="th"
-              colSpan={1}
-              onClick={[Function]}
-              role="columnheader"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "80 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "80px",
-                  "textAlign": "left",
-                  "width": "7%",
-                }
-              }
-              width="7%"
-            >
-              Municipality
+              Location
             </div>
             <div
               className="th"

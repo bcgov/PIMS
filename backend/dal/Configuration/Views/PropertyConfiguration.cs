@@ -51,12 +51,11 @@ namespace Pims.Dal.Configuration.Views
                             Description = b.Description,
                             IsSensitive = b.IsSensitive,
                             IsVisibleToOtherAgencies = b.IsVisibleToOtherAgencies,
-                            Latitude = b.Latitude,
-                            Longitude = b.Longitude,
+                            Location = b.Location,
+                            Boundary = b.Boundary,
 
-                            Municipality = b.Parcel.Municipality,
                             Address = $"{b.Address.Address1} {b.Address.Address2})".Trim(),
-                            City = b.Address.City.Name,
+                            AdministrativeArea = b.Address.AdministrativeArea,
                             Province = b.Address.Province.Name,
                             Postal = b.Address.Postal,
 
@@ -85,12 +84,12 @@ namespace Pims.Dal.Configuration.Views
                             BuildingPredominateUse = b.BuildingPredominateUse.Name,
                             BuildingTenancy = b.BuildingTenancy,
 
-                            PID = b.Parcel.PID,
-                            PIN = b.Parcel.PIN,
-                            Zoning = b.Parcel.Zoning,
-                            ZoningPotential = b.Parcel.ZoningPotential,
-                            LandArea = b.Parcel.LandArea,
-                            LandLegalDescription = b.Parcel.LandLegalDescription
+                            PID = b.Parcels.FirstOrDefault().Parcel.PID,
+                            PIN = b.Parcels.FirstOrDefault().Parcel.PIN,
+                            Zoning = b.Parcels.FirstOrDefault().Parcel.Zoning,
+                            ZoningPotential = b.Parcels.FirstOrDefault().Parcel.ZoningPotential,
+                            LandArea = b.Parcels.FirstOrDefault().Parcel.LandArea,
+                            LandLegalDescription = b.Parcels.FirstOrDefault().Parcel.LandLegalDescription
                         })
                         .Union(
                             from p in this.Context.Parcels
@@ -104,12 +103,11 @@ namespace Pims.Dal.Configuration.Views
                                 Description = p.Description,
                                 IsSensitive = p.IsSensitive,
                                 IsVisibleToOtherAgencies = p.IsVisibleToOtherAgencies,
-                                Latitude = p.Latitude,
-                                Longitude = p.Longitude,
+                                Location = p.Location,
+                                Boundary = p.Boundary,
 
-                                Municipality = p.Municipality,
                                 Address = $"{p.Address.Address1} {p.Address.Address2})".Trim(),
-                                City = p.Address.City.Name,
+                                AdministrativeArea = p.Address.AdministrativeArea,
                                 Province = p.Address.Province.Name,
                                 Postal = p.Address.Postal,
 

@@ -106,7 +106,7 @@ db-update: ## Update the database with the latest migration.
 
 db-rollback: ## Rollback to the specified database migration (n=name of migration).
 	@echo "$(P) Rollback to the specified database migration."
-	@cd backend/dal; dotnet ef database update n=$(n);
+	@cd backend/dal; dotnet ef database update $(n);
 
 db-remove: ## Remove the last database migration.
 	@echo "$(P) Remove the last migration."
@@ -124,14 +124,14 @@ db-drop: ## Drop the database.
 
 db-seed: ## Imports a JSON file of properties into PIMS
 	@echo "$(P) Seeding docker database..."
-	@cd tools/import; dotnet run;
+	@cd tools/import; dotnet build; dotnet run;
 
 keycloak-sync: ## Syncs accounts with Keycloak and PIMS
 	@echo "$(P) Syncing keycloak with PIMS..."
-	@cd tools/keycloak/sync; dotnet run;
+	@cd tools/keycloak/sync; dotnet build; dotnet run;
 
 convert: ## Convert Excel files to JSON
 	@echo "$(P) Convert Excel files to JSON..."
-	@cd tools/converters/excel; dotnet run;
+	@cd tools/converters/excel; dotnet build; dotnet run;
 
 .PHONY: local setup restart refresh up down stop build clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-seed db-refresh npm-clean npm-refresh keycloak-sync convert

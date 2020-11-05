@@ -10,10 +10,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fznKkj lnNMyB default-status"
+      className="sc-fzqBZW loRQSX default-status"
     >
       <h5
-        className="sc-fznZeY bEkyNU"
+        className="sc-fzqNJr iyvzqf"
       >
         Approved for Surplus Property Program
       </h5>
@@ -37,13 +37,13 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fznZeY bEkyNU"
+        className="sc-fzqNJr iyvzqf"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzqARJ gPmckb"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>
@@ -486,7 +486,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         Object {
                           "display": "flex",
                           "flex": "1 0 auto",
-                          "minWidth": "875px",
+                          "minWidth": "845px",
                         }
                       }
                     >
@@ -548,27 +548,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                           }
                         }
                       >
-                        City
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
-                          }
-                        }
-                      >
-                        Municipality
+                        Location
                       </div>
                       <div
                         className="th"
@@ -1352,10 +1332,10 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
       }
     />
     <div
-      className="sc-fzoyAV cGutgP"
+      className="sc-fzpjYC efPzVu"
     />
     <div
-      className="sc-fzoyAV cGutgP"
+      className="sc-fzpjYC efPzVu"
     >
       <span>
         <button
@@ -1405,10 +1385,10 @@ exports[`ERP Approval Step renders correctly 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="sc-fznKkj lnNMyB default-status"
+      className="sc-fzqBZW loRQSX default-status"
     >
       <h5
-        className="sc-fznZeY bEkyNU"
+        className="sc-fzqNJr iyvzqf"
       >
         Approved for Surplus Property Program
       </h5>
@@ -1432,13 +1412,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="sc-fznZeY bEkyNU"
+        className="sc-fzqNJr iyvzqf"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="sc-fzqARJ gPmckb"
+      className="sc-fzoNJl KQqkE"
     >
       Approved for ERP
     </div>
@@ -2113,7 +2093,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="sc-fzoXWK faKhDS"
+            className="sc-fznMAR iJsJEt"
           >
             OR
           </div>
@@ -2170,7 +2150,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 Proceed to SPL
               </button>
               <div
-                className="sc-fzoXWK faKhDS"
+                className="sc-fznMAR iJsJEt"
               >
                 OR
               </div>

@@ -4,7 +4,6 @@ using Moq;
 using Pims.Api.Areas.Tools.Controllers;
 using Pims.Core.Test;
 using Pims.Dal;
-using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
@@ -87,9 +86,9 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new Entity.BuildingConstructionType[0]);
             service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new Entity.BuildingPredominateUse[0]);
             service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
-            service.Setup(m => m.City.GetAll()).Returns(new Entity.City[0]);
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
             service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Returns(parcel);
+            service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
 
             // Act
             var result = controller.ImportProperties(properties);
@@ -101,7 +100,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
             service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
             service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
-            service.Verify(m => m.City.GetAll(), Times.Once());
+            service.Verify(m => m.AdministrativeArea.Get(It.IsAny<string>()), Times.Once());
             service.Verify(m => m.Agency.GetAll(), Times.Once());
             service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
@@ -225,10 +224,10 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().HaveCount(1);
-            first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
+            first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
             project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
@@ -323,10 +322,10 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().HaveCount(1);
-            first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
+            first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -342,7 +341,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
-            project.Responses.Add(new ProjectAgencyResponse(project, agency, NotificationResponses.Ignore, DateTime.UtcNow.AddDays(-1)));
+            project.Responses.Add(new Entity.ProjectAgencyResponse(project, agency, Entity.NotificationResponses.Ignore, DateTime.UtcNow.AddDays(-1)));
 
             var pimsService = helper.GetService<Mock<IPimsService>>();
             pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
@@ -423,10 +422,10 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().HaveCount(1);
-            first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
+            first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -521,7 +520,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
@@ -538,7 +537,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
-            project.Notes.Add(new ProjectNote(project, NoteTypes.Financial, "some note"));
+            project.Notes.Add(new Entity.ProjectNote(project, Entity.NoteTypes.Financial, "some note"));
 
             var pimsService = helper.GetService<Mock<IPimsService>>();
             pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
@@ -618,7 +617,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
@@ -805,10 +804,10 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
-            first.Notes.First().NoteType.Should().Be(NoteTypes.Financial);
+            first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
             first.Responses.Should().HaveCount(1);
-            first.Responses.First().Response.Should().Be(NotificationResponses.Watch);
+            first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
             project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);

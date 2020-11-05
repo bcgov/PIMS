@@ -5,10 +5,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fznKkj lnNMyB [object Object]-status"
+    className="sc-fzqBZW loRQSX [object Object]-status"
   >
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       Approved for Surplus Property Program
     </h5>
@@ -32,7 +32,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       Approval Date: Unknown Date
     </h5>
@@ -797,7 +797,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       }
     />
     <div
-      className="sc-fzqBZW cSdQOS"
+      className="sc-fzoLag iYjTex"
     >
       <button
         className="btn btn-warning"
@@ -830,10 +830,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fznKkj lnNMyB [object Object]-status"
+    className="sc-fzqBZW loRQSX [object Object]-status"
   >
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       Submitted
     </h5>
@@ -857,7 +857,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       test
     </h5>
@@ -1622,7 +1622,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       }
     />
     <div
-      className="sc-fzqBZW cSdQOS"
+      className="sc-fzoLag iYjTex"
     >
       <button
         className="btn btn-warning"
@@ -1655,10 +1655,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   className="ProjectSummaryView container-fluid"
 >
   <div
-    className="sc-fznKkj lnNMyB [object Object]-status"
+    className="sc-fzqBZW loRQSX [object Object]-status"
   >
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       Submitted
     </h5>
@@ -1682,7 +1682,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       />
     </svg>
     <h5
-      className="sc-fznZeY bEkyNU"
+      className="sc-fzqNJr iyvzqf"
     >
       In Review
     </h5>
@@ -2447,7 +2447,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       }
     />
     <div
-      className="sc-fzqBZW cSdQOS"
+      className="sc-fzoLag iYjTex"
     >
       <button
         className="btn btn-warning"

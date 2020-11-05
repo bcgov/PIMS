@@ -12,7 +12,7 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public string Description { get; set; }
         public string Agency { get; set; }
         public string Address { get; set; }
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
         public string Postal { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
@@ -27,13 +27,11 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public int? PIN { get; set; }
         public float LandArea { get; set; }
         public string LandLegalDescription { get; set; }
-        public string Municipality { get; set; }
         public string Zoning { get; set; }
         public string ZoningPotential { get; set; }
         #endregion
 
         #region Building Properties
-        public string LocalId { get; set; }
         public string BuildingConstructionType { get; set; }
         public string BuildingPredominateUse { get; set; }
         public string BuildingOccupantType { get; set; }

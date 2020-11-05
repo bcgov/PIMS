@@ -16,8 +16,8 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
         }
     }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Core.Helpers;
-using Pims.Dal.Entities;
 using Pims.Dal.Services.Admin;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.BuildingConstructionType> _buildingConstructionTypes;
         private readonly IList<Entity.BuildingPredominateUse> _buildingPredominateUses;
         private readonly IList<Entity.PropertyClassification> _propertyClassifications;
-        private readonly IList<Entity.City> _cities;
         private readonly IList<Entity.Agency> _agencies;
         private readonly Dictionary<string, string> _agencyCodeCorrections = new Dictionary<string, string>() { { "BT", "BCT" }, { "ICOB", "ICBC" } };
         #endregion
@@ -43,7 +41,6 @@ namespace Pims.Api.Areas.Tools.Helpers
             _buildingConstructionTypes = _pimsAdminService.BuildingConstructionType.GetAll().ToList();
             _buildingPredominateUses = _pimsAdminService.BuildingPredominateUse.GetAll().ToList();
             _propertyClassifications = _pimsAdminService.PropertyClassification.GetAll().ToList();
-            _cities = _pimsAdminService.City.GetAll().ToList();
             _agencies = _pimsAdminService.Agency.GetAll().ToList();
         }
         #endregion
@@ -123,7 +120,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Building UpdateBuildingFinancials(Model.ImportPropertyModel property, int pid)
         {
             var lid = property.LocalId;
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, lid).FirstOrDefault());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Ignore properties that are not part of inventory.
@@ -197,28 +194,29 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Agency GetOrCreateAgency(Model.ImportPropertyModel property)
         {
             // Find the parent agency.
-            var agency = _agencies.FirstOrDefault(a => a.Code == property.AgencyCode) ?? throw new KeyNotFoundException($"Agency does not exist '{property.AgencyCode}'");
+            var agencyCode = property.AgencyCode.ConvertToUTF8();
+            var subAgencyName = property.SubAgency.ConvertToUTF8();
+            var agency = _agencies.FirstOrDefault(a => a.Code == agencyCode) ?? throw new KeyNotFoundException($"Agency does not exist '{property.AgencyCode}'");
 
             // Find or create a sub-agency.
-            if (!String.IsNullOrWhiteSpace(property.SubAgency))
+            if (!String.IsNullOrWhiteSpace(subAgencyName))
             {
-                var createCode = new string(property.SubAgency.GetFirstLetterOfEachWord(true).Take(6).ToArray()).Trim();
+                var createCode = new string(subAgencyName.GetFirstLetterOfEachWord(true).Take(6).ToArray()).Trim();
 
                 //check if this agency mapping needs to be corrected.
-                string mappedCode = null;
-                if (_agencyCodeCorrections.TryGetValue(createCode, out mappedCode))
+                if (_agencyCodeCorrections.TryGetValue(createCode, out string mappedCode))
                 {
                     createCode = mappedCode;
                 }
                 var subAgency = _agencies.FirstOrDefault(a =>
-                    (a.ParentId == agency.Id && a.Name == property.SubAgency)
+                    (a.ParentId == agency.Id && a.Name == subAgencyName)
                     || (a.ParentId == agency.Id && a.Code == createCode)
-                    || a.Code == property.SubAgency
-                    || a.Name == property.SubAgency);
+                    || a.Code == subAgencyName
+                    || a.Name == subAgencyName);
 
                 if (subAgency == null)
                 {
-                    subAgency = new Entity.Agency(createCode, property.SubAgency)
+                    subAgency = new Entity.Agency(createCode, subAgencyName)
                     {
                         ParentId = agency.Id,
                         Parent = agency
@@ -232,84 +230,6 @@ namespace Pims.Api.Areas.Tools.Helpers
             }
 
             return agency;
-        }
-
-        /// <summary>
-        /// Get or create a new city for the specified code.
-        /// This is a recursive function so that it can generate a new city with a unique code.
-        /// It has a limitation of which the code must be 4 characters and therefore it can only handle 9 variations (i.e. BRe1, BRe2...)
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="name"></param>
-        /// <param name="attempts"></param>
-        /// <returns></returns>
-        private Entity.City GetOrCreateCity(string code, string name, int attempts = 1)
-        {
-            if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException($"Argument '{nameof(code)}' is required.");
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument '{nameof(name)}' is required.");
-
-            var city = _cities.FirstOrDefault(c => String.Compare(c.Code, code, true) == 0);
-
-            // If City doesn't exist, create it.
-            if (city == null)
-            {
-                city = new Entity.City(code, name);
-                _pimsAdminService.City.Add(city);
-                _cities.Add(city);
-
-                _logger.LogDebug($"Adding city '{code}' - '{name}'.");
-            }
-            else
-            {
-                // Generate a new city code.
-                code = $"{new string(code.Take(3).ToArray())}{attempts}";
-
-                // Check if the code is unique.
-                city = GetOrCreateCity(code, name, ++attempts);
-            }
-
-            return city;
-        }
-
-        /// <summary>
-        /// Get or create a new city for the specified name.
-        /// It will generate a unique city code based on the first initials of the city name, plus the first three characters of the last word.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private Entity.City GetOrCreateCity(string name)
-        {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException($"Argument '{nameof(name)}' is required.");
-
-            var city = _cities.FirstOrDefault(c => String.Compare(c.Name, name, true) == 0);
-
-            // If City doesn't exist, create it.
-            if (city == null)
-            {
-                var code = new string(name.GetFirstLetterOfEachWord(true).Take(4).ToArray());
-                var last = new string(name.Split(" ", StringSplitOptions.RemoveEmptyEntries).Last().Take(4).ToArray());
-                if (last.Length >= 4) last = last.Substring(1, 3);
-                else if (last.Length < 4) last = last[1..];
-
-                // Check if the code is unique.
-                city = _cities.FirstOrDefault(c => String.Compare(c.Code, code, true) == 0);
-
-                if (city != null)
-                {
-                    // Generate a new city code.
-                    city = GetOrCreateCity(code, name);
-                }
-                else
-                {
-                    city = new Entity.City(code, name);
-                    _pimsAdminService.City.Add(city);
-                    _cities.Add(city);
-                }
-
-                _logger.LogDebug($"Adding city '{code}' - '{name}'.");
-            }
-
-            return city;
         }
 
         /// <summary>
@@ -337,14 +257,15 @@ namespace Pims.Api.Areas.Tools.Helpers
             {
                 p_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 p_e.Agency = agency;
-                p_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
-                p_e.Description = property.Description;
-                p_e.Latitude = property.Latitude != 0 ? property.Latitude : p_e.Latitude; // This is to stop data from some imports resulting in removing the lat/long.
-                p_e.Longitude = property.Longitude != 0 ? property.Longitude : p_e.Longitude;
+                p_e.Name = GenerateName(property.Name, property.Description);
+                p_e.Description = property.Description.ConvertToUTF8(false);
+                var lng = property.Longitude != 0 ? property.Longitude : p_e.Location?.X ?? 0; // This is to stop data from some imports resulting in removing the lat/long.
+                var lat = property.Latitude != 0 ? property.Latitude : p_e.Location?.Y ?? 0;
+                p_e.Location = new NetTopologySuite.Geometries.Point(lng, lat) { SRID = 4326 };
                 p_e.LandArea = property.LandArea != 0 ? property.LandArea : p_e.LandArea;
-                p_e.LandLegalDescription = property.LandLegalDescription;
+                p_e.LandLegalDescription = property.LandLegalDescription.ConvertToUTF8();
 
-                PropertyClassification propClassification;
+                Entity.PropertyClassification propClassification;
                 if (String.Compare("Active", property.Status, true) == 0)
                 {
                     propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0)
@@ -358,21 +279,22 @@ namespace Pims.Api.Areas.Tools.Helpers
                 p_e.ClassificationId = propClassification.Id;
                 p_e.Classification = propClassification;
 
-                var city = GetOrCreateCity(property.City);
+                // TODO: Handle this issue more gracefully.
+                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8()) ?? throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource.");
 
                 // Add/Update the address.
                 if (p_e.AddressId == 0)
                 {
                     _logger.LogDebug($"Adding address for parcel '{property.PID}'.");
 
-                    var address = new Entity.Address(property.CivicAddress, null, city.Id, "BC", property.Postal);
+                    var address = new Entity.Address(property.CivicAddress.ConvertToUTF8(), null, city.Name, "BC", property.Postal.ConvertToUTF8());
                     p_e.Address = address;
                 }
                 else
                 {
-                    p_e.Address.Address1 = property.CivicAddress;
-                    p_e.Address.CityId = city.Id;
-                    p_e.Address.Postal = property.Postal;
+                    p_e.Address.Address1 = property.CivicAddress.ConvertToUTF8();
+                    p_e.Address.AdministrativeArea = city.Name;
+                    p_e.Address.Postal = property.Postal.ConvertToUTF8();
                 }
             }
 
@@ -413,8 +335,9 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateBuilding(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
-            var lid = property.LocalId;
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidAndLocalId(pid, lid));
+            var lid = property.LocalId.ConvertToUTF8();
+            // Multiple buildings could be returned for the PID and LocalId (name), we will default to the first one hoping that the LocalId will ensure we get the correct one.
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, lid).FirstOrDefault() ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel
@@ -437,18 +360,19 @@ namespace Pims.Api.Areas.Tools.Helpers
                 // Copy properties over to entity.
                 b_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 b_e.Agency = agency;
-                b_e.ParcelId = parcel?.Id ?? throw new KeyNotFoundException($"Parcel '{property.PID}' does not exist.");
-                b_e.LocalId = property.LocalId;
-                b_e.Name = property.Name ?? property.Description?.Substring(0, 150 < property.Description.Length ? 150 : property.Description.Length).Trim();
-                b_e.Description = property.Description;
-                b_e.Latitude = property.Latitude;
-                b_e.Longitude = property.Longitude;
+                if (!b_e.Parcels.Any(pb => pb.ParcelId == parcel.Id))
+                    b_e.Parcels.Add(new Entity.ParcelBuilding(parcel, b_e) { Parcel = null, Building = null });
+                b_e.Name = GenerateName(property.Name, property.Description, property.LocalId);
+                b_e.Description = property.Description.ConvertToUTF8(false);
+                var lng = property.Longitude != 0 ? property.Longitude : b_e.Location?.X ?? 0; // This is to stop data from some imports resulting in removing the lat/long.
+                var lat = property.Latitude != 0 ? property.Latitude : b_e.Location?.Y ?? 0;
+                b_e.Location = new NetTopologySuite.Geometries.Point(lng, lat) { SRID = 4326 };
                 b_e.RentableArea = property.BuildingRentableArea;
                 b_e.BuildingFloorCount = property.BuildingFloorCount;
-                b_e.BuildingTenancy = property.BuildingTenancy;
+                b_e.BuildingTenancy = property.BuildingTenancy.ConvertToUTF8();
                 b_e.TransferLeaseOnSale = false;
 
-                PropertyClassification propClassification;
+                Entity.PropertyClassification propClassification;
                 if (String.Compare("Active", property.Status, true) == 0)
                 {
                     propClassification = _propertyClassifications.FirstOrDefault(pc => String.Compare(pc.Name, property.Classification, true) == 0) ??
@@ -489,21 +413,23 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.BuildingPredominateUseId = build_use.Id;
                 b_e.BuildingPredominateUse = build_use;
 
-                var city = GetOrCreateCity(property.City);
+
+                // TODO: Handle this issue more gracefully.
+                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8()) ?? throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource.");
 
                 // Add/Update the address.
                 if (b_e.AddressId == 0)
                 {
                     _logger.LogDebug($"Adding address for building '{property.PID}'-''{property.LocalId}'.");
 
-                    var address = new Entity.Address(property.CivicAddress, null, city.Id, "BC", property.Postal);
+                    var address = new Entity.Address(property.CivicAddress.ConvertToUTF8(), null, city.Name, "BC", property.Postal.ConvertToUTF8());
                     b_e.Address = address;
                 }
                 else
                 {
-                    b_e.Address.Address1 = property.CivicAddress;
-                    b_e.Address.CityId = city.Id;
-                    b_e.Address.Postal = property.Postal;
+                    b_e.Address.Address1 = property.CivicAddress.ConvertToUTF8();
+                    b_e.Address.AdministrativeArea = city.Name;
+                    b_e.Address.Postal = property.Postal.ConvertToUTF8();
                 }
             }
 
@@ -532,6 +458,18 @@ namespace Pims.Api.Areas.Tools.Helpers
             }
 
             return parcel;
+        }
+
+        /// <summary>
+        /// Generates a name with the specified parameters.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="localId"></param>
+        /// <returns></returns>
+        private string GenerateName(string name, string description = null, string localId = null)
+        {
+            return (localId == null ? null : $"{localId.ConvertToUTF8()} ") + (name != null ? name.ConvertToUTF8() : description?.Substring(0, 150 < description.Length ? 150 : description.Length).Trim().ConvertToUTF8());
         }
         #endregion
     }

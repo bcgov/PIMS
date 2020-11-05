@@ -27,8 +27,8 @@ namespace PimsApi.Test.Controllers
             var mapper = helper.GetMapper();
             var parcel = EntityHelper.CreateParcel(99);
             var building = EntityHelper.CreateBuilding(parcel, 99);
-            building.Latitude = 1;
-            building.Longitude = 1;
+            building.Location.Y = 1;
+            building.Location.X = 1;
 
             // Act
             var result = mapper.Map<Model.BuildingModel>(building);

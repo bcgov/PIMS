@@ -24,10 +24,11 @@ namespace Pims.Core.Comparers
         {
             // Only root objects cannot be null.  Child objects that are null will be equal.
             if (x == null || y == null || GetHashCode(x) != GetHashCode(y) || x.GetType() != y.GetType()) return false;
+            if (x == y) return true;
 
             var type = x.GetType();
             var children = type.GetCachedProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => !p.PropertyType.IsValueType && p.PropertyType != typeof(string) && !p.PropertyType.IsEnumerable());
-            foreach (var p in children)
+            foreach (var p in children.Where(p => !p.GetIndexParameters().Any()))
             {
                 var cx = p.GetValue(x);
                 var cy = p.GetValue(y);
@@ -98,7 +99,7 @@ namespace Pims.Core.Comparers
 
             var props = obj.GetType().GetCachedProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
 
-            foreach (var p in props)
+            foreach (var p in props.Where(p => !p.GetIndexParameters().Any()))
             {
                 if (p.PropertyType.IsValueType || p.PropertyType == typeof(string) || p.PropertyType.IsNullableType())
                     hash.Add(p.GetValue(obj));

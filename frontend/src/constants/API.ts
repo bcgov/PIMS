@@ -32,8 +32,7 @@ export interface IPropertySearchParams {
   swLatitude: number;
   swLongitude: number;
   address: string | null;
-  city: string | null;
-  municipality: string | null;
+  administrativeArea: string | null;
   projectNumber: string | null;
   /** comma-separated list of agencies to filter by */
   agencies: string | null;
@@ -71,7 +70,7 @@ export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`
 export const AGENCY_CODE_SET_NAME = 'Agency';
 export const ROLE_CODE_SET_NAME = 'Role';
 export const PROVINCE_CODE_SET_NAME = 'Province';
-export const CITY_CODE_SET_NAME = 'City';
+export const AMINISTRATIVE_AREA_CODE_SET_NAME = 'AdministrativeArea';
 export const PROPERTY_CLASSIFICATION_CODE_SET_NAME = 'PropertyClassification';
 export const CONSTRUCTION_CODE_SET_NAME = 'BuildingConstructionType';
 export const PREDOMINATE_USE_CODE_SET_NAME = 'BuildingPredominateUse';

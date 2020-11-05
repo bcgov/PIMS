@@ -11,8 +11,8 @@ namespace Pims.Dal.Services.Admin
     {
         Paged<Building> Get(int page, int quantity, string sort);
         Building Get(int id);
-        Building GetByLocalId(string localId);
-        Building GetByPidAndLocalId(int pid, string localId);
+        IEnumerable<Building> GetByPid(int pid, string name = null);
+        Building GetByName(string name);
         IEnumerable<Building> Add(IEnumerable<Building> buildings);
         void UpdateFinancials(Building building);
     }

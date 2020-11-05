@@ -1,5 +1,6 @@
 using Mapster;
 using Pims.Dal.Entities;
+using Pims.Dal.Helpers.Extensions;
 using System;
 using System.Linq;
 using Entity = Pims.Dal.Entities;
@@ -29,13 +30,12 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.SubAgency, src => src.Agency == null ? null : src.Agency.ParentId.HasValue ? null : src.Agency.Name)
                 .Map(dest => dest.SubAgencyCode, src => src.Agency == null ? null : src.Agency.ParentId.HasValue ? null : src.Agency.Code)
 
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
-                .Map(dest => dest.Municipality, src => src.Municipality)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address == null ? null : $"{src.Address.Address1} {src.Address.Address2}".Trim())
                 .Map(dest => dest.Province, src => src.Address == null || src.Address.Province == null ? null : src.Address.Province.Name)
-                .Map(dest => dest.City, src => src.Address == null || src.Address.City == null ? null : src.Address.City.Name)
+                .Map(dest => dest.AdministrativeArea, src => src.Address == null ? null : src.Address.AdministrativeArea)
                 .Map(dest => dest.Postal, src => src.Address == null ? null : src.Address.Postal)
                 .Map(dest => dest.LandArea, src => src.LandArea)
                 .Map(dest => dest.LandLegalDescription, src => src.LandLegalDescription)
@@ -61,8 +61,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
             config.NewConfig<Entity.Building, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => PropertyTypes.Building)
                 .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.PID, src => src.Parcel == null ? null : src.Parcel.ParcelIdentity)
-                .Map(dest => dest.PIN, src => src.Parcel == null ? null : src.Parcel.PIN)
+                .Map(dest => dest.PID, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.ParcelIdentity)
+                .Map(dest => dest.PIN, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.PIN)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification == null ? null : src.Classification.Name)
                 .Map(dest => dest.Name, src => src.Name)
@@ -76,18 +76,17 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.SubAgency, src => src.Agency == null ? null : src.Agency.ParentId.HasValue ? null : src.Agency.Name)
                 .Map(dest => dest.SubAgencyCode, src => src.Agency == null ? null : src.Agency.ParentId.HasValue ? null : src.Agency.Code)
 
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
-                .Map(dest => dest.Municipality, src => src.Parcel == null ? null : src.Parcel.Municipality)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address == null ? null : $"{src.Address.Address1} {src.Address.Address2}".Trim())
                 .Map(dest => dest.Province, src => src.Address == null || src.Address.Province == null ? null : src.Address.Province.Name)
-                .Map(dest => dest.City, src => src.Address == null || src.Address.City == null ? null : src.Address.City.Name)
+                .Map(dest => dest.AdministrativeArea, src => src.Address == null ? null : src.Address.AdministrativeArea)
                 .Map(dest => dest.Postal, src => src.Address == null ? null : src.Address.Postal)
-                .Map(dest => dest.LandArea, src => src.Parcel == null ? 0 : src.Parcel.LandArea)
-                .Map(dest => dest.LandLegalDescription, src => src.Parcel == null ? null : src.Parcel.LandLegalDescription)
-                .Map(dest => dest.Zoning, src => src.Parcel == null ? null : src.Parcel.Zoning)
-                .Map(dest => dest.ZoningPotential, src => src.Parcel == null ? null : src.Parcel.ZoningPotential)
+                .Map(dest => dest.LandArea, src => src.Parcels.FirstOrDefault() == null ? 0 : src.Parcels.FirstOrDefault().Parcel.LandArea)
+                .Map(dest => dest.LandLegalDescription, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.LandLegalDescription)
+                .Map(dest => dest.Zoning, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.Zoning)
+                .Map(dest => dest.ZoningPotential, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.ZoningPotential)
 
                 .Map(dest => dest.Estimated, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).Value)
                 .Map(dest => dest.EstimatedFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).FiscalYear)
@@ -98,14 +97,13 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Appraised, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value)
                 .Map(dest => dest.AppraisedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date)
 
-                .Map(dest => dest.LocalId, src => src.LocalId)
-                .Map(dest => dest.ParcelId, src => src.ParcelId)
+                .Map(dest => dest.ParcelId, src => src.GetParcelId())
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
-                .Map(dest => dest.ConstructionType, src => src.BuildingConstructionType.Name)
+                .Map(dest => dest.ConstructionType, src => src.GetConstructionType())
                 .Map(dest => dest.PredominateUseId, src => src.BuildingPredominateUseId)
-                .Map(dest => dest.PredominateUse, src => src.BuildingPredominateUse.Name)
+                .Map(dest => dest.PredominateUse, src => src.GetPredominateUse())
                 .Map(dest => dest.OccupantTypeId, src => src.BuildingOccupantTypeId)
-                .Map(dest => dest.OccupantType, src => src.BuildingOccupantType.Name)
+                .Map(dest => dest.OccupantType, src => src.GetOccupantType())
                 .Map(dest => dest.OccupantName, src => src.OccupantName)
                 .Map(dest => dest.FloorCount, src => src.BuildingFloorCount)
                 .Map(dest => dest.Tenancy, src => src.BuildingTenancy)
@@ -123,8 +121,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
@@ -134,10 +132,9 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.SubAgency, src => src.SubAgency)
                 .Map(dest => dest.SubAgencyCode, src => src.SubAgencyCode)
 
-                .Map(dest => dest.Municipality, src => src.Municipality)
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address)
-                .Map(dest => dest.City, src => src.City)
+                .Map(dest => dest.AdministrativeArea, src => src.AdministrativeArea)
                 .Map(dest => dest.Province, src => src.Province)
                 .Map(dest => dest.Postal, src => src.Postal)
 
@@ -152,11 +149,9 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 
                 .Map(dest => dest.LandArea, src => src.LandArea)
                 .Map(dest => dest.LandLegalDescription, src => src.LandLegalDescription)
-                .Map(dest => dest.Municipality, src => src.Municipality)
                 .Map(dest => dest.Zoning, src => src.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
-                .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
                 .Map(dest => dest.ConstructionType, src => src.BuildingConstructionType)
@@ -180,8 +175,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Latitude, src => src.Latitude)
-                .Map(dest => dest.Longitude, src => src.Longitude)
+                .Map(dest => dest.Latitude, src => src.Location.Y)
+                .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ProjectStatus, src => src.ProjectStatus)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
@@ -192,10 +187,9 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.SubAgency, src => src.SubAgency)
                 .Map(dest => dest.SubAgencyCode, src => src.SubAgencyCode)
 
-                .Map(dest => dest.Municipality, src => src.Municipality)
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address)
-                .Map(dest => dest.City, src => src.City)
+                .Map(dest => dest.AdministrativeArea, src => src.AdministrativeArea)
                 .Map(dest => dest.Province, src => src.Province)
                 .Map(dest => dest.Postal, src => src.Postal)
 
@@ -210,11 +204,9 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 
                 .Map(dest => dest.LandArea, src => src.LandArea)
                 .Map(dest => dest.LandLegalDescription, src => src.LandLegalDescription)
-                .Map(dest => dest.Municipality, src => src.Municipality)
                 .Map(dest => dest.Zoning, src => src.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
-                .Map(dest => dest.LocalId, src => src.LocalId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
                 .Map(dest => dest.ConstructionType, src => src.BuildingConstructionType)

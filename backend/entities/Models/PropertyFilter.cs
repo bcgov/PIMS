@@ -82,10 +82,9 @@ namespace Pims.Dal.Entities.Models
         public string Address { get; set; }
 
         /// <summary>
-        /// get/set - The property city.
+        /// get/set - The property administrative area (city, muncipality, district, etc.).
         /// </summary>
-        /// <value></value>
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         /// <summary>
         /// get/set - Building minimum estimated value.
@@ -182,7 +181,7 @@ namespace Pims.Dal.Entities.Models
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
             this.Address = filter.GetStringValue(nameof(this.Address));
-            this.City = filter.GetStringValue(nameof(this.City));
+            this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));
 
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
@@ -211,6 +210,7 @@ namespace Pims.Dal.Entities.Models
                 || this.IgnorePropertiesInProjects == true
                 || this.InSurplusPropertyProgram == true
                 || !String.IsNullOrWhiteSpace(this.Address)
+                || !String.IsNullOrWhiteSpace(this.AdministrativeArea)
                 || !String.IsNullOrWhiteSpace(this.Description)
                 || this.MaxAssessedValue.HasValue
                 || this.MinAssessedValue.HasValue

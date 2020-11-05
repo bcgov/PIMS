@@ -35,7 +35,7 @@ export interface IFilterBarState {
   searchBy: string;
   pid: string;
   address: string;
-  municipality: string;
+  administrativeArea: string;
   projectNumber: string;
   agencies: string;
   classificationId: string;
@@ -71,7 +71,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         searchBy: 'address',
         pid: '',
         address: '',
-        municipality: '',
+        administrativeArea: '',
         projectNumber: '',
         agencies: '',
         classificationId: '',

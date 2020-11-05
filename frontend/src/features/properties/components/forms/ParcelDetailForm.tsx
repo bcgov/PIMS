@@ -235,18 +235,19 @@ const ParcelDetailForm = (props: ParcelPropertyProps) => {
         },
       };
 
-      const city = data.city
+      const administrativeArea = data.administrativeArea
         ? lookupCodes.find(code => {
-            return code.type === API.CITY_CODE_SET_NAME && code.name === data.city;
+            return (
+              code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+              code.name === data.administrativeArea
+            );
           })
         : undefined;
 
-      if (city) {
-        newValues.address.cityId = city.id;
-        newValues.address.city = city.name;
+      if (administrativeArea) {
+        newValues.address.administrativeArea = administrativeArea.name;
       } else {
-        newValues.address.cityId = '';
-        newValues.address.city = '';
+        newValues.address.administrativeArea = '';
       }
 
       const province = data.provinceCode

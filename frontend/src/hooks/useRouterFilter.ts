@@ -10,7 +10,7 @@ const defaultFilter: BasePropertyFilter = {
   searchBy: 'address',
   pid: '',
   address: '',
-  municipality: '',
+  administrativeArea: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',
