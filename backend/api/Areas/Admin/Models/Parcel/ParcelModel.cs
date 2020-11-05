@@ -13,8 +13,6 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public string LandLegalDescription { get; set; }
 
-        public string Municipality { get; set; }
-
         public string Zoning { get; set; }
 
         public string ZoningPotential { get; set; }

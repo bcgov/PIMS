@@ -57,9 +57,9 @@ namespace Pims.Dal.Services.Admin
         public IProvinceService Province { get { return _serviceProvider.GetService<IProvinceService>(); } }
 
         /// <summary>
-        /// get - The city service.
+        /// get - The administrative area (city, municipality, district, etc.) service.
         /// </summary>
-        public ICityService City { get { return _serviceProvider.GetService<ICityService>(); } }
+        public IAdministrativeAreaService AdministrativeArea { get { return _serviceProvider.GetService<IAdministrativeAreaService>(); } }
 
         /// <summary>
         /// get - The building construction type service.
@@ -140,7 +140,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public T OriginalValue<T>(object entity, string propertyName)
         {
-            return this.City.OriginalValue<T>(entity, propertyName);
+            return this.Address.OriginalValue<T>(entity, propertyName);
         }
         #endregion
     }

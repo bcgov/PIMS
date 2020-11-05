@@ -57,13 +57,20 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
-                query = query.Where(p =>
-                    p.Latitude != 0 &&
-                    p.Longitude != 0 &&
-                    p.Latitude <= filter.NELatitude &&
-                    p.Latitude >= filter.SWLatitude &&
-                    p.Longitude <= filter.NELongitude &&
-                    p.Longitude >= filter.SWLongitude);
+            {
+                var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
+                var ring = new NetTopologySuite.Geometries.LinearRing(
+                    new[] {
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.NELatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.SWLatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.SWLatitude.Value),
+                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value)
+                    });
+                var poly = pfactory.CreatePolygon(ring);
+                poly.SRID = 4326;
+                query = query.Where(p => poly.Contains(p.Location));
+            }
 
             if (filter.Agencies?.Any() == true)
             {
@@ -78,8 +85,8 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
-            if (!String.IsNullOrWhiteSpace(filter.Municipality))
-                query = query.Where(p => EF.Functions.Like(p.Municipality, $"%{filter.Municipality}%"));
+            if (!String.IsNullOrWhiteSpace(filter.AdministrativeArea))
+                query = query.Where(p => EF.Functions.Like(p.Address.AdministrativeArea, $"%{filter.AdministrativeArea}%"));
             if (!String.IsNullOrWhiteSpace(filter.Zoning))
                 query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
             if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
@@ -87,7 +94,7 @@ namespace Pims.Dal.Helpers.Extensions
 
             // TODO: Parse the address information by City, Postal, etc.
             if (!String.IsNullOrWhiteSpace(filter.Address))
-                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.City.Name, $"%{filter.Address}%"));
+                query = query.Where(p => EF.Functions.Like(p.Address.Address1, $"%{filter.Address}%") || EF.Functions.Like(p.Address.AdministrativeArea, $"%{filter.Address}%"));
 
             if (filter.MinLandArea.HasValue)
                 query = query.Where(p => p.LandArea >= filter.MinLandArea);

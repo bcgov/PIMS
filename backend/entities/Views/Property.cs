@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using NetTopologySuite.Geometries;
 
 namespace Pims.Dal.Entities.Views
 {
@@ -80,9 +82,9 @@ namespace Pims.Dal.Entities.Views
         public string Address { get; set; }
 
         /// <summary>
-        /// get/set - The address for this property.
+        /// get/set - The administrative area (city, municipality, district, etc) for this property.
         /// </summary>
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         /// <summary>
         /// get/set - The address for this property.
@@ -95,14 +97,14 @@ namespace Pims.Dal.Entities.Views
         public string Postal { get; set; }
 
         /// <summary>
-        /// get/set - The Latitude co-ordinate.
+        /// get/set - The location of the property.
         /// </summary>
-        public double Latitude { get; set; }
+        public Point Location { get; set; }
 
         /// <summary>
-        /// get/set - The longitude co-ordinate.
+        /// get/set - The property boundary polygon.
         /// </summary>
-        public double Longitude { get; set; }
+        public Geometry Boundary { get; set; }
 
         /// <summary>
         /// get/set - Whether this property is considered sensitive and should only be visible to users who are part of the owning agency.
@@ -164,7 +166,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The property identification number for Titled land.
         /// </summary>
-        public int PID { get; set; }
+        public int? PID { get; set; }
 
         /// <summary>
         /// get - The friendly formated Parcel Id.
@@ -180,17 +182,12 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The land area.
         /// </summary>
-        public float LandArea { get; set; }
+        public float? LandArea { get; set; }
 
         /// <summary>
         /// get/set - The land legal description.
         /// </summary>
         public string LandLegalDescription { get; set; }
-
-        /// <summary>
-        /// get/set - The municipality the parcel belongs to.
-        /// </summary>
-        public string Municipality { get; set; }
 
         /// <summary>
         /// get/set - Current Parcel zoning information
@@ -204,11 +201,6 @@ namespace Pims.Dal.Entities.Views
         #endregion
 
         #region Building Properties
-        /// <summary>
-        /// get/set - The local identification number.
-        /// </summary>
-        public string LocalId { get; set; }
-
         /// <summary>
         /// get/set - The parent parcel Id.
         /// </summary>
@@ -302,14 +294,15 @@ namespace Pims.Dal.Entities.Views
             this.SubAgency = property.Agency?.ParentId != null ? null : property.Agency?.Name;
             this.SubAgencyCode = property.Agency?.ParentId != null ? null : property.Agency?.Code;
 
+            this.Name = property.Name;
             this.Description = property.Description;
             this.AddressId = property.AddressId;
             this.Address = property.Address != null ? $"{property.Address?.Address1} {property.Address?.Address2}".Trim() : null;
-            this.City = property.Address?.City?.Name;
+            this.AdministrativeArea = property.Address?.AdministrativeArea;
             this.Province = property.Address?.Province?.Name;
             this.Postal = property.Address?.Postal;
-            this.Latitude = property.Latitude;
-            this.Longitude = property.Longitude;
+            this.Location = property.Location;
+            this.Boundary = property.Boundary;
             this.IsSensitive = property.IsSensitive;
         }
 
@@ -324,7 +317,6 @@ namespace Pims.Dal.Entities.Views
             this.PIN = parcel.PIN;
             this.LandArea = parcel.LandArea;
             this.LandLegalDescription = parcel.LandLegalDescription;
-            this.Municipality = parcel.Municipality;
             this.Zoning = parcel.Zoning;
             this.ZoningPotential = parcel.ZoningPotential;
         }
@@ -336,10 +328,9 @@ namespace Pims.Dal.Entities.Views
         public Property(Building building) : this((Entities.Property)building)
         {
             this.PropertyTypeId = PropertyTypes.Building;
-            this.PID = building.Parcel?.PID ?? 0;
-            this.PIN = building.Parcel?.PIN;
-            this.LocalId = building.LocalId;
-            this.ParcelId = building.ParcelId;
+            this.PID = building.Parcels.FirstOrDefault()?.Parcel.PID ?? 0;
+            this.PIN = building.Parcels.FirstOrDefault()?.Parcel.PIN;
+            this.ParcelId = building.Parcels.FirstOrDefault()?.ParcelId;
             this.BuildingConstructionTypeId = building.BuildingConstructionTypeId;
             this.BuildingConstructionType = building.BuildingConstructionType?.Name;
             this.BuildingFloorCount = building.BuildingFloorCount;

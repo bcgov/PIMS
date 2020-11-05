@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using Pims.Dal;
 
 namespace Pims.Dal.Migrations
@@ -15,7 +16,7 @@ namespace Pims.Dal.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -158,8 +159,8 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<string>("AdministrativeArea")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -197,22 +198,86 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("CityId", "ProvinceId")
+                    b.HasIndex("AdministrativeArea", "ProvinceId")
                         .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
 
                     b.HasIndex("Id", "Address1")
                         .HasAnnotation("SqlServer:Include", new[] { "Address2" });
 
-                    b.HasIndex("Id", "CityId")
+                    b.HasIndex("Id", "AdministrativeArea")
                         .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
 
                     b.HasIndex("Id", "Postal")
                         .HasAnnotation("SqlServer:Include", new[] { "Address1", "Address2" });
 
-                    b.HasIndex("Id", "ProvinceId", "CityId", "Postal", "Address1")
+                    b.HasIndex("Id", "ProvinceId", "AdministrativeArea", "Postal", "Address1")
                         .HasAnnotation("SqlServer:Include", new[] { "Address2" });
 
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.AdministrativeArea", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Abbreviation")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("BoundaryType")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("GroupName")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("IsDisabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("Id", "IsDisabled", "Name", "SortOrder");
+
+                    b.ToTable("AdministrativeAreas");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Agency", b =>
@@ -309,6 +374,9 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("AgencyId")
                         .HasColumnType("int");
 
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("GEOGRAPHY");
+
                     b.Property<int>("BuildingConstructionTypeId")
                         .HasColumnType("int");
 
@@ -350,29 +418,20 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
                     b.Property<DateTime?>("LeaseExpiry")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<string>("LocalId")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("GEOGRAPHY");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
 
                     b.Property<string>("OccupantName")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
-
-                    b.Property<int>("ParcelId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ProjectNumber")
                         .HasColumnType("nvarchar(50)")
@@ -413,13 +472,11 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ParcelId");
-
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ParcelId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingPredominateUseId", "BuildingConstructionTypeId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
-                    b.HasIndex("Id", "Latitude", "Longitude", "IsSensitive", "AgencyId", "ParcelId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingPredominateUseId", "BuildingConstructionTypeId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -681,66 +738,6 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("IsDisabled", "Name", "SortOrder");
 
                     b.ToTable("BuildingPredominateUses");
-                });
-
-            modelBuilder.Entity("Pims.Dal.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(4)")
-                        .HasMaxLength(4);
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsDisabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<int>("SortOrder")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("UpdatedById");
-
-                    b.HasIndex("Id", "IsDisabled", "Name", "SortOrder");
-
-                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.Claim", b =>
@@ -1015,6 +1012,9 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("AgencyId")
                         .HasColumnType("int");
 
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("GEOGRAPHY");
+
                     b.Property<int>("ClassificationId")
                         .HasColumnType("int");
 
@@ -1047,19 +1047,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Municipality")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("GEOGRAPHY");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
 
                     b.Property<bool>("NotOwned")
                         .ValueGeneratedOnAdd()
@@ -1113,11 +1107,47 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("Id", "AgencyId", "IsSensitive", "AddressId");
 
-                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential");
-
-                    b.HasIndex("Id", "Latitude", "Longitude", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Municipality", "Zoning", "ZoningPotential");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Zoning", "ZoningPotential");
 
                     b.ToTable("Parcels");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ParcelBuilding", b =>
+                {
+                    b.Property<int>("ParcelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME2");
+
+                    b.HasKey("ParcelId", "BuildingId");
+
+                    b.HasIndex("BuildingId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("ParcelBuildings");
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.ParcelEvaluation", b =>
@@ -2736,11 +2766,6 @@ namespace Pims.Dal.Migrations
 
             modelBuilder.Entity("Pims.Dal.Entities.Address", b =>
                 {
-                    b.HasOne("Pims.Dal.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .IsRequired();
-
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -2749,6 +2774,17 @@ namespace Pims.Dal.Migrations
                         .WithMany()
                         .HasForeignKey("ProvinceId")
                         .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.AdministrativeArea", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
@@ -2804,11 +2840,6 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("Pims.Dal.Entities.Parcel", "Parcel")
-                        .WithMany("Buildings")
-                        .HasForeignKey("ParcelId")
-                        .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
@@ -2872,17 +2903,6 @@ namespace Pims.Dal.Migrations
                 });
 
             modelBuilder.Entity("Pims.Dal.Entities.BuildingPredominateUse", b =>
-                {
-                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById");
-                });
-
-            modelBuilder.Entity("Pims.Dal.Entities.City", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
@@ -2957,6 +2977,29 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Pims.Dal.Entities.ParcelBuilding", b =>
+                {
+                    b.HasOne("Pims.Dal.Entities.Building", "Building")
+                        .WithMany("Parcels")
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.Parcel", "Parcel")
+                        .WithMany("Buildings")
+                        .HasForeignKey("ParcelId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()

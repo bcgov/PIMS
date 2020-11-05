@@ -7,11 +7,12 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastInput, Select, AutoCompleteText, SelectOption } from 'components/common/form';
+import { Form, FastInput, Select } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { IAddress } from 'actions/parcelsActions';
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { IGeocoderResponse } from 'hooks/useApi';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 
 interface AddressProps {
   nameSpace?: string;
@@ -20,10 +21,10 @@ interface AddressProps {
 }
 
 export const defaultAddressValues: IAddress = {
+  id: 0,
   line1: '',
   line2: undefined,
-  city: undefined,
-  cityId: '',
+  administrativeArea: '',
   province: undefined,
   provinceId: 'BC',
   postal: '',
@@ -35,8 +36,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
   }).map(mapLookupCode);
-  const cities = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.CITY_CODE_SET_NAME;
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   }).map(mapLookupCode);
 
   const withNameSpace: Function = useCallback(
@@ -83,16 +84,13 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           />
         </Form.Row>
         <Form.Row>
-          <Form.Label column md={2}>
-            City
-          </Form.Label>
-          <AutoCompleteText
-            autoSetting="new-password"
-            getValueDisplay={(val: SelectOption) => val.label}
-            field={withNameSpace('cityId')}
-            options={cities}
+          <TypeaheadField
+            label="Location"
+            options={administrativeAreas.map(x => x.label)}
+            name={withNameSpace('administrativeArea')}
             disabled={props.disabled}
-            required={true}
+            paginate={false}
+            required
           />
         </Form.Row>
         <Form.Row>

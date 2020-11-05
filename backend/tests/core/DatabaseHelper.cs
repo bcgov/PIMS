@@ -119,7 +119,7 @@ namespace Pims.Core.Test
             var context = helper.CreatePimsContext(dbName, user, true);
             context.AddRange(EntityHelper.CreateDefaultPropertyClassifications());
             context.AddRange(EntityHelper.CreateDefaultProvinces());
-            context.AddRange(EntityHelper.CreateDefaultCities());
+            context.AddRange(EntityHelper.CreateDefaultAdministrativeAreas());
             context.AddRange(EntityHelper.CreateDefaultRoles());
             context.AddRange(EntityHelper.CreateDefaultBuildingPredominateUses());
             context.AddRange(EntityHelper.CreateDefaultBuildingConstructionTypes());

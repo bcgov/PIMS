@@ -119,9 +119,9 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string Address { get; set; }
 
         /// <summary>
-        /// get/set - The name of the city.
+        /// get/set - The name of the administrative area (city, municipality, district, etc.).
         /// </summary>
-        public string City { get; set; }
+        public string AdministrativeArea { get; set; }
 
         /// <summary>
         /// get/set - The name of the province.
@@ -185,11 +185,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string LandLegalDescription { get; set; }
 
         /// <summary>
-        /// get/set - The property municipality name.
-        /// </summary>
-        public string Municipality { get; set; }
-
-        /// <summary>
         /// get/set - The property zoning name.
         /// </summary>
         public string Zoning { get; set; }
@@ -201,11 +196,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         #endregion
 
         #region Building Properties
-        /// <summary>
-        /// get/set - Local building unique identifier.
-        /// </summary>
-        public string LocalId { get; set; }
-
         /// <summary>
         /// get/set - The parent parcel Id.
         /// </summary>

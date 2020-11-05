@@ -278,13 +278,8 @@ export const getAppraisedColumns = (project: IProject): any[] => [
     align: 'left',
   },
   {
-    Header: 'City',
-    accessor: 'city',
-    align: 'left',
-  },
-  {
-    Header: 'Municipality',
-    accessor: 'municipality',
+    Header: 'Location',
+    accessor: 'administrativeArea',
     align: 'left',
   },
   {

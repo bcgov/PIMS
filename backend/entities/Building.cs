@@ -10,21 +10,6 @@ namespace Pims.Dal.Entities
     {
         #region Properties
         /// <summary>
-        /// get/set - The foreign key to the parcel.  This is not the PID value.
-        /// </summary>
-        public int ParcelId { get; set; }
-
-        /// <summary>
-        /// get/set - The parcel this building belongs to.
-        /// </summary>
-        public Parcel Parcel { get; set; }
-
-        /// <summary>
-        /// get/set - The local identification number.
-        /// </summary>
-        public string LocalId { get; set; }
-
-        /// <summary>
         /// get/set - The foreign key to the property building construction type.
         /// </summary>
         public int BuildingConstructionTypeId { get; set; }
@@ -85,16 +70,21 @@ namespace Pims.Dal.Entities
         public bool TransferLeaseOnSale { get; set; } = false;
 
         /// <summary>
+        /// get - A collection of parcels this building is located on.
+        /// </summary>
+        public ICollection<ParcelBuilding> Parcels { get; } = new List<ParcelBuilding>();
+
+        /// <summary>
         /// get - A collection of evaluations for this building.
         /// </summary>
         /// <typeparam name="BuildingEvaluation"></typeparam>
-        public ICollection<BuildingEvaluation> Evaluations { get; private set; } = new List<BuildingEvaluation>();
+        public ICollection<BuildingEvaluation> Evaluations { get; } = new List<BuildingEvaluation>();
 
         /// <summary>
         /// get - A collection of fiscal values for this building.
         /// </summary>
         /// <typeparam name="BuildingFiscals"></typeparam>
-        public ICollection<BuildingFiscal> Fiscals { get; private set; } = new List<BuildingFiscal>();
+        public ICollection<BuildingFiscal> Fiscals { get; } = new List<BuildingFiscal>();
 
         /// <summary>
         /// get - A collection of projects this building is assocated to.
@@ -116,8 +106,8 @@ namespace Pims.Dal.Entities
         /// <param name="longitude"></param>
         public Building(Parcel parcel, double latitude, double longitude) : base(latitude, longitude)
         {
-            this.Parcel = parcel ?? throw new ArgumentNullException(nameof(parcel));
-            this.ParcelId = parcel.Id;
+            var pb = new ParcelBuilding(parcel, this);
+            this.Parcels.Add(pb);
         }
         #endregion
     }

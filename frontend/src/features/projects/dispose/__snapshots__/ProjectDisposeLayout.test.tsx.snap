@@ -204,7 +204,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
     className="step-content container-fluid"
   >
     <div
-      className="sc-fzqBZW cSdQOS"
+      className="sc-fzoLag iYjTex"
     >
       <button
         className="btn btn-primary"

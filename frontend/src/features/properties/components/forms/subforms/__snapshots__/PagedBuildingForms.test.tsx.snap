@@ -136,27 +136,77 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
             <div
               className="form-row"
             >
-              <label
-                className="form-label col-form-label col-md-2"
-              >
-                City
-              </label>
               <div
-                className="AutoCompleteText"
+                className="sc-fznxKY keqzrd form-group"
               >
-                <div
-                  className="form-group"
+                <label
+                  className="sc-fznMAR fzHbWr form-label"
                 >
-                  <input
-                    autoComplete="new-password"
-                    className="form-control"
-                    disabled={true}
-                    id="input-buildings.0.address.cityId"
-                    name="buildings.0.address.cityId"
-                    onChange={[Function]}
-                    required={true}
-                    value="test city"
-                  />
+                  Location
+                   
+                  <span
+                    className="required"
+                  >
+                    *
+                  </span>
+                </label>
+                <div
+                  className="rbt"
+                  style={
+                    Object {
+                      "outline": "none",
+                      "position": "relative",
+                    }
+                  }
+                  tabIndex={-1}
+                >
+                  <div
+                    style={
+                      Object {
+                        "display": "flex",
+                        "flex": 1,
+                        "height": "100%",
+                        "position": "relative",
+                      }
+                    }
+                  >
+                    <input
+                      aria-autocomplete="both"
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      autoComplete="off"
+                      className="rbt-input-main form-control rbt-input"
+                      disabled={true}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      role="combobox"
+                      type="text"
+                      value="administrativeArea"
+                    />
+                    <input
+                      aria-hidden={true}
+                      className="rbt-input-hint"
+                      readOnly={true}
+                      style={
+                        Object {
+                          "backgroundColor": "transparent",
+                          "borderColor": "transparent",
+                          "boxShadow": "none",
+                          "color": "rgba(0, 0, 0, 0.35)",
+                          "left": 0,
+                          "pointerEvents": "none",
+                          "position": "absolute",
+                          "top": 0,
+                          "width": "100%",
+                        }
+                      }
+                      tabIndex={-1}
+                      value=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>

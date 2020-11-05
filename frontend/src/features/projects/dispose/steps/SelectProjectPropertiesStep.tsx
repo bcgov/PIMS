@@ -30,7 +30,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
     searchBy: 'address',
     pid: '',
     address: '',
-    municipality: '',
+    administrativeArea: '',
     projectNumber: '',
     agencies: '',
     classificationId: '',

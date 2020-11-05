@@ -59,16 +59,24 @@ namespace Pims.Dal.Services
             IQueryable<Building> query = null;
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             query = this.Context.Buildings
-                .Include(b => b.Parcel)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel)
                 .AsNoTracking()
                 .Where(b =>
-                (isAdmin || b.IsVisibleToOtherAgencies || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId))) &&
-                b.Latitude != 0 &&
-                b.Longitude != 0 &&
-                b.Latitude <= neLat &&
-                b.Latitude >= swLat &&
-                b.Longitude <= neLong &&
-                b.Longitude >= swLong);
+                (isAdmin || b.IsVisibleToOtherAgencies || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId))));
+
+            var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
+            var ring = new NetTopologySuite.Geometries.LinearRing(
+                new[] {
+                        new NetTopologySuite.Geometries.Coordinate(neLong, neLat),
+                        new NetTopologySuite.Geometries.Coordinate(swLong, neLat),
+                        new NetTopologySuite.Geometries.Coordinate(swLong, swLat),
+                        new NetTopologySuite.Geometries.Coordinate(neLong, swLat),
+                        new NetTopologySuite.Geometries.Coordinate(neLong, neLat)
+                });
+            var poly = pfactory.CreatePolygon(ring);
+            poly.SRID = 4326;
+            query = query.Where(p => poly.Contains(p.Location));
+
             return query.ToArray();
         }
 
@@ -117,15 +125,12 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var building = this.Context.Buildings
-                .Include(p => p.Parcel)
+                .Include(p => p.Parcels).ThenInclude(pb => pb.Parcel)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingOccupantType)
-                .Include(p => p.Address)
-                .Include(p => p.Address.City)
-                .Include(p => p.Address.Province)
-                .Include(p => p.Agency)
-                .Include(p => p.Agency.Parent)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
                 .AsNoTracking()
@@ -151,7 +156,8 @@ namespace Pims.Dal.Services
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
-            this.Context.Buildings.ThrowIfNotUnique(building);
+            // A building should have a unique name within the parcel it is located on.
+            building.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
 
             building.AgencyId = agency.Id;
             building.Agency = agency;
@@ -187,7 +193,8 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
 
-            this.Context.Buildings.ThrowIfNotUnique(building);
+            // A building should have a unique name within the parcel it is located on.
+            existingBuilding.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 

@@ -26,7 +26,7 @@ const getServerQuery = (state: {
     filter: {
       pid,
       address,
-      municipality,
+      administrativeArea,
       projectNumber,
       classificationId,
       agencies,
@@ -45,7 +45,7 @@ const getServerQuery = (state: {
     ...initialQuery,
     pid,
     address,
-    municipality,
+    administrativeArea,
     projectNumber,
     ignorePropertiesInProjects: true,
     classificationId: decimalOrUndefined(classificationId),
@@ -69,7 +69,7 @@ interface UseTableProps {
 
 function transformData(data: IRowProperty[]) {
   data.forEach(property => {
-    property.address = `${property.address}, ${property.city}`;
+    property.address = `${property.address}, ${property.administrativeArea}`;
   });
   return data;
 }

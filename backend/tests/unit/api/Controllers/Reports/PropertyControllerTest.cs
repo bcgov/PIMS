@@ -37,7 +37,7 @@ namespace Pims.Api.Test.Controllers.Reports
             new object [] { new PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 } },
             new object [] { new PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 } },
             new object [] { new PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" } },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Municipality = "Municipality" } }
+            new object [] { new PropertyFilterModel(0, 0, 0, 10) { AdministrativeArea = "AdministrativeArea" } }
         };
 
         public static IEnumerable<object[]> ParcelOnlyFilters = new List<object[]>()

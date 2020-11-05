@@ -139,8 +139,8 @@ namespace Pims.Api.Test.Controllers
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1, 1);
             project.ProjectNumber = "ProjectNumber";
-            project.Name = "Municipality";
-            project.Description = "Municipality";
+            project.Name = "ProjectName";
+            project.Description = "ProjectDescription";
             project.TierLevelId = 1;
             project.StatusId = 1;
             project.AgencyId = 1;

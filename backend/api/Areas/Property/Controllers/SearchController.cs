@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Pims.Api.Areas.Property.Models.Search;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
-using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
@@ -14,6 +13,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BModel = Pims.Api.Models;
 
 namespace Pims.Api.Areas.Property.Controllers
 {
@@ -93,7 +93,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet("page")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(PageModel<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetPropertiesPage()
         {
@@ -110,7 +110,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPost("page/filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(PageModel<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetPropertiesPage([FromBody]PropertyFilterModel filter)
         {
@@ -118,7 +118,7 @@ namespace Pims.Api.Areas.Property.Controllers
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var page = _pimsService.Property.GetPage((AllPropertyFilter)filter);
-            var result = _mapper.Map<PageModel<PropertyModel>>(page);
+            var result = _mapper.Map<BModel.PageModel<PropertyModel>>(page);
             return new JsonResult(result);
         }
         #endregion

@@ -211,27 +211,77 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
                 <div
                   className="form-row"
                 >
-                  <label
-                    className="form-label col-form-label col-md-2"
-                  >
-                    City
-                  </label>
                   <div
-                    className="AutoCompleteText"
+                    className="sc-fzoNJl hgprTW form-group"
                   >
-                    <div
-                      className="form-group"
+                    <label
+                      className="sc-fzoXWK frIblo form-label"
                     >
-                      <input
-                        autoComplete="new-password"
-                        className="form-control"
-                        disabled={true}
-                        id="input-address.cityId"
-                        name="address.cityId"
-                        onChange={[Function]}
-                        required={true}
-                        value=""
-                      />
+                      Location
+                       
+                      <span
+                        className="required"
+                      >
+                        *
+                      </span>
+                    </label>
+                    <div
+                      className="rbt"
+                      style={
+                        Object {
+                          "outline": "none",
+                          "position": "relative",
+                        }
+                      }
+                      tabIndex={-1}
+                    >
+                      <div
+                        style={
+                          Object {
+                            "display": "flex",
+                            "flex": 1,
+                            "height": "100%",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <input
+                          aria-autocomplete="both"
+                          aria-expanded={false}
+                          aria-haspopup="listbox"
+                          autoComplete="off"
+                          className="rbt-input-main form-control rbt-input"
+                          disabled={true}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          role="combobox"
+                          type="text"
+                          value="Victoria"
+                        />
+                        <input
+                          aria-hidden={true}
+                          className="rbt-input-hint"
+                          readOnly={true}
+                          style={
+                            Object {
+                              "backgroundColor": "transparent",
+                              "borderColor": "transparent",
+                              "boxShadow": "none",
+                              "color": "rgba(0, 0, 0, 0.35)",
+                              "left": 0,
+                              "pointerEvents": "none",
+                              "position": "absolute",
+                              "top": 0,
+                              "width": "100%",
+                            }
+                          }
+                          tabIndex={-1}
+                          value=""
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -474,28 +524,6 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
             <div
               className="col-md-6"
             >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-2"
-                >
-                  Municipality
-                </label>
-                <div
-                  className="col-md-10 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-municipality"
-                    name="municipality"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value=""
-                  />
-                </div>
-              </div>
               <div
                 className="form-row"
               >
@@ -1595,7 +1623,7 @@ exports[`ParcelDetailForm ParcelDetailForm renders view-only correctly 1`] = `
           </div>
         </div>
         <div
-          className="sc-fzpmMD jYTwg"
+          className="sc-fznWOq doWHVH"
         />
       </div>
     </form>

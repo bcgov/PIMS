@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Pims.Dal
 {
@@ -55,7 +59,7 @@ namespace Pims.Dal
             services.AddScoped<Services.Admin.IAgencyService, Services.Admin.AgencyService>();
             services.AddScoped<Services.Admin.IAddressService, Services.Admin.AddressService>();
             services.AddScoped<Services.Admin.IBuildingService, Services.Admin.BuildingService>();
-            services.AddScoped<Services.Admin.ICityService, Services.Admin.CityService>();
+            services.AddScoped<Services.Admin.IAdministrativeAreaService, Services.Admin.AdministrativeAreaService>();
             services.AddScoped<Services.Admin.IParcelService, Services.Admin.ParcelService>();
             services.AddScoped<Services.Admin.IProvinceService, Services.Admin.ProvinceService>();
             services.AddScoped<Services.Admin.IRoleService, Services.Admin.RoleService>();
@@ -70,6 +74,35 @@ namespace Pims.Dal
             services.AddScoped<Services.Admin.ITierLevelService, Services.Admin.TierLevelService>();
             services.AddScoped<Services.Admin.IWorkflowService, Services.Admin.WorkflowService>();
             return services; // TODO: Use reflection to find all services.
+        }
+
+        /// <summary>
+        /// Add the PIMS DB Context to the service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="env"></param>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddPimsContext(this IServiceCollection services, IHostEnvironment env, string connectionString)
+        {
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(connectionString));
+
+            services.AddDbContext<PimsContext>(options =>
+            {
+                var sql = options.UseSqlServer(connectionString, options =>
+                {
+                    options.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+                    options.UseNetTopologySuite();
+                });
+                if (!env.IsProduction())
+                {
+                    var debugLoggerFactory = LoggerFactory.Create(builder => { builder.AddDebug(); }); // NOSONAR
+                    sql.UseLoggerFactory(debugLoggerFactory);
+                    options.EnableSensitiveDataLogging();
+                }
+            });
+
+            return services;
         }
     }
 }

@@ -11,26 +11,29 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="1.4.0" />
-    <PackageReference Include="Mapster.EFCore" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+    <PackageReference Include="Mapster.EFCore" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.9" />
+    <PackageReference Include="NetTopologySuite" Version="2.1.0" />
     <PackageReference Include="NpgSql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Migrations\**\*.sql">
@@ -39,6 +42,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
+    <None Remove="Migrations\v01.02.00\Down\PostDown\01-Buildings.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PostDown\01-Cities.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PostDown\01-ViewProperties.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PostDown\02-Addresses.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PostDown\03-SpatialIndex.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PreDown\01-Addresses.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PreDown\01-Buildings.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PreDown\01-Cities.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PreDown\01-ParcelBuildings.sql" />
+    <None Remove="Migrations\v01.02.00\Down\PreDown\01-Parcels.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\01-Addresses.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\01-AdministrativeAreas.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\01-ParcelBuildings.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\01-Parcels.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\02-Buildings.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PostUp\03-SpatialIndex.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PreUp\01-Buildings.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PreUp\01-Cities.sql" />
+    <None Remove="Migrations\v01.02.00\Up\PreUp\01-Municipalities.sql" />
+    <None Remove="Migrations\v01.02.00\Up\Properties\01-Buildings-Location.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\entities\Pims.Dal.Entities.csproj" />
