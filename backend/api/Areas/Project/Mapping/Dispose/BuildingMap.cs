@@ -45,13 +45,13 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
 
             config.NewConfig<Model.BuildingModel, Entity.Building>()
                 .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.Parcels, src => new [] { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
+                .Map(dest => dest.Parcels, src => new[] { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Location, src => new NetTopologySuite.Geometries.Point(src.Longitude, src.Latitude) { SRID = 4326 })
+                .Map(dest => dest.Location, src => src)
                 .Map(dest => dest.AddressId, src => src.Address == null ? 0 : src.Address.Id)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.BuildingConstructionTypeId, src => src.BuildingConstructionTypeId)
@@ -73,6 +73,9 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     parcel.ZoningPotential = src.ZoningPotential;
                 })
                 .Inherits<BaseModel, Entity.BaseEntity>();
+
+            config.NewConfig<Model.BuildingModel, NetTopologySuite.Geometries.Point>()
+                .ConstructUsing(src => GoemetryHelper.CreatePoint(src.Longitude, src.Latitude));
         }
     }
 }

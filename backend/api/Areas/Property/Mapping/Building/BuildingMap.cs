@@ -68,7 +68,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Inherits<BModel.BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.BuildingModel, NetTopologySuite.Geometries.Point>()
-                .ConstructUsing(src => new NetTopologySuite.Geometries.Point(src.Longitude, src.Latitude) { SRID = 4326 });
+                .ConstructUsing(src => GoemetryHelper.CreatePoint(src.Longitude, src.Latitude));
         }
     }
 }

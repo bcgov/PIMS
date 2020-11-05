@@ -45,7 +45,7 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
-                .Map(dest => dest.Location, src => new NetTopologySuite.Geometries.Point(src.Longitude, src.Latitude) { SRID = 4326 })
+                .Map(dest => dest.Location, src => src)
                 .Map(dest => dest.AddressId, src => src.Address == null ? 0 : src.Address.Id)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.LandArea, src => src.LandArea)
@@ -57,6 +57,9 @@ namespace Pims.Api.Areas.Admin.Mapping.Parcel
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
+
+            config.NewConfig<Model.ParcelModel, NetTopologySuite.Geometries.Point>()
+                .ConstructUsing(src => GoemetryHelper.CreatePoint(src.Longitude, src.Latitude));
         }
     }
 }
