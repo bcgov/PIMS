@@ -15,13 +15,13 @@ namespace Pims.Core.Test
         /// <param name="id"></param>
         /// <param name="address1"></param>
         /// <param name="address2"></param>
-        /// <param name="adminsitrativeArea"></param>
+        /// <param name="administrativeArea"></param>
         /// <param name="province"></param>
         /// <param name="postal"></param>
         /// <returns></returns>
-        public static Entity.Address CreateAddress(int id, string address1, string address2, string adminsitrativeArea, Entity.Province province, string postal)
+        public static Entity.Address CreateAddress(int id, string address1, string address2, string administrativeArea, Entity.Province province, string postal)
         {
-            return new Entity.Address(address1, address2, adminsitrativeArea, province, postal)
+            return new Entity.Address(address1, address2, administrativeArea, province, postal)
             {
                 Id = id,
                 RowVersion = new byte[] { 12, 13, 14 }
