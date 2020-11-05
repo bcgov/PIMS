@@ -105,7 +105,7 @@ const GenericModal = (props: ModalProps) => {
           </Button>
           {props.cancelButtonText && (
             <Button
-              variant={props.cancelButtonVariant ?? 'warning'}
+              variant={props.cancelButtonVariant ?? 'secondary'}
               onClick={close}
               style={{ width: 'unset' }}
             >

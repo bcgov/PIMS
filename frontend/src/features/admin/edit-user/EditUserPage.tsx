@@ -220,7 +220,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
                 <Row className="justify-content-md-center">
                   <ButtonToolbar className="cancelSave">
-                    <Button className="mr-5" variant="outline-dark" type="button" onClick={goBack}>
+                    <Button className="mr-5" variant="secondary" type="button" onClick={goBack}>
                       Cancel
                     </Button>
                     <Button className="mr-5" type="submit">

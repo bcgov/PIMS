@@ -146,6 +146,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 <Button
                   className="h-75 mr-auto"
                   type="submit"
+                  variant="primary"
                   disabled={
                     (!dirty &&
                       originalReport?.to === currentReport?.to &&

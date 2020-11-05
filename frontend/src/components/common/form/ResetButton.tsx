@@ -10,12 +10,7 @@ import { Button, ButtonProps } from '.';
 const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
   return (
     <TooltipWrapper toolTipId="map-filter-reset-tooltip" toolTip="Reset Filter">
-      <Button
-        type="reset"
-        variant="outline-primary"
-        {...props}
-        icon={<FaUndo size={20} />}
-      ></Button>
+      <Button type="reset" variant="secondary" {...props} icon={<FaUndo size={20} />}></Button>
     </TooltipWrapper>
   );
 };
