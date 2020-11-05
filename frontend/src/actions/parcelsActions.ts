@@ -45,7 +45,6 @@ export interface IAddress {
 export interface IBuilding {
   id: number;
   parcelId: number;
-  localId: string;
   projectNumber?: string;
   name: string;
   description: string;
@@ -67,6 +66,8 @@ export interface IBuilding {
   buildingTenancy: string;
   rentableArea: number | '';
   agencyId: number | '';
+  agency: string;
+  agencyCode: string;
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
 }

@@ -15,28 +15,25 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
         onKeyDown={[Function]}
       >
         <div
-          className="list-group-item"
+          className="pid list-group-item"
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Name: 
-          </p>
+          000-000-000
         </div>
         <div
-          className="list-group-item"
+          className="name list-group-item"
+          data-rb-event-key={null}
+          disabled={false}
+          onClick={[Function]}
+        />
+        <div
+          className="description list-group-item"
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
         >
-          <p
-            className="label"
-          >
-            Description: 
-          </p>
           test
         </div>
       </div>
@@ -53,7 +50,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           <p
             className="label"
           >
-            Assessed Value: 
+            Assessed Value:
           </p>
           $
         </div>
@@ -69,11 +66,6 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           onClick={[Function]}
         >
           <div>
-            <p
-              className="label"
-            >
-              Address: 
-            </p>
             1234 mock Street
           </div>
           <div>
@@ -82,20 +74,6 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
              
             V1V1V1
           </div>
-        </div>
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            PID: 
-          </p>
-           
-          000-000-000
         </div>
         
       </div>
@@ -112,7 +90,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           <p
             className="label"
           >
-            Agency: 
+            Agency:
           </p>
           FIN
         </div>
@@ -131,6 +109,10 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
         </div>
       </div>
     </div>
+  </div>
+  <div
+    className="menu row"
+  >
     <div
       className="col"
     >

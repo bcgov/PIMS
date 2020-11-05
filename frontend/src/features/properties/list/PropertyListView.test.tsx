@@ -164,7 +164,6 @@ describe('Property list view', () => {
           landArea: 26.9,
           landLegalDescription:
             'LOT A SECTION 22 TOWNSHIP 91 KAMLOOPS DIVISION YALE DISTRICT PLAN EPP50042',
-          localId: 'Residence B',
           parcelId: fakeId,
           constructionTypeId: 2,
           constructionType: 'Mixed',

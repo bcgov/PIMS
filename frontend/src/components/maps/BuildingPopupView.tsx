@@ -24,63 +24,72 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
       {!buildingDetail ? (
         <Alert variant="danger">Failed to load building details.</Alert>
       ) : (
-        <Row>
-          <Col>
-            <ListGroup>
-              <ListGroup.Item>
-                <Label>Name: </Label>
-                {buildingDetail?.name}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Label>Description: </Label>
-                {buildingDetail?.description}
-              </ListGroup.Item>
-            </ListGroup>
-            <ListGroup>
-              <ListGroup.Item>
-                <Label>Assessed Value: </Label>$
-                {buildingDetail?.evaluations
-                  ?.find(e => e.key === EvaluationKeys.Assessed)
-                  ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </ListGroup.Item>
-            </ListGroup>
-            <ListGroup>
-              <ListGroup.Item>
-                <div>
-                  <Label>Address: </Label>
-                  {buildingDetail?.address?.line1}
-                </div>
-                <div>
-                  {buildingDetail?.address?.administrativeArea}, {buildingDetail?.address?.province}{' '}
-                  {buildingDetail?.address?.postal}
-                </div>
-              </ListGroup.Item>
-            </ListGroup>
-            <ListGroup>
-              <ListGroup.Item>
-                <Label>Floor Count: </Label>
-                {buildingDetail?.buildingFloorCount}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Label>Predominate Use: </Label>
-                {buildingDetail?.buildingPredominateUse}
-              </ListGroup.Item>
-              {buildingDetail?.projectNumber && (
+        <>
+          <Row>
+            <Col>
+              <ListGroup>
+                <ListGroup.Item className="name">{buildingDetail?.name}</ListGroup.Item>
+                {buildingDetail?.name !== buildingDetail?.description ? (
+                  <ListGroup.Item>{buildingDetail?.description}</ListGroup.Item>
+                ) : null}
+              </ListGroup>
+              <ListGroup>
                 <ListGroup.Item>
-                  <Label>RAEG or SPP: </Label>
-                  {buildingDetail?.projectNumber}
+                  <Label>Assessed Value:</Label>$
+                  {buildingDetail?.evaluations
+                    ?.find(e => e.key === EvaluationKeys.Assessed)
+                    ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </ListGroup.Item>
-              )}
-            </ListGroup>
-            {!props?.disabled &&
-              (!keycloak.hasAgency(buildingDetail?.agencyId as number) &&
-              !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ? (
+              </ListGroup>
+              <ListGroup>
+                <ListGroup.Item>
+                  <div>{buildingDetail?.address?.line1}</div>
+                  <div>
+                    {buildingDetail?.address?.administrativeArea},{' '}
+                    {buildingDetail?.address?.province} {buildingDetail?.address?.postal}
+                  </div>
+                </ListGroup.Item>
+              </ListGroup>
+              <ListGroup>
+                <ListGroup.Item>
+                  <Label>Agency:</Label>
+                  {buildingDetail?.agency}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Label>Floor Count:</Label>
+                  {buildingDetail?.buildingFloorCount}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Label>Predominate Use:</Label>
+                  {buildingDetail?.buildingPredominateUse}
+                </ListGroup.Item>
+                {buildingDetail?.projectNumber && (
+                  <ListGroup.Item>
+                    <Label>SPP:</Label>
+                    {buildingDetail?.projectNumber}
+                  </ListGroup.Item>
+                )}
+              </ListGroup>
+            </Col>
+          </Row>
+
+          {buildingDetail?.parcelId && !props?.disabled && (
+            <Row className="menu">
+              <Col>
                 <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
-              ) : (
-                <Link to={`/submitProperty/${buildingDetail?.parcelId}`}>Update</Link>
-              ))}
-          </Col>
-        </Row>
+                {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
+                  keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+                  <Link
+                    style={{ paddingLeft: '5px' }}
+                    to={`/submitProperty/${buildingDetail?.parcelId}`}
+                  >
+                    Update
+                  </Link>
+                )}
+              </Col>
+            </Row>
+          )}
+        </>
       )}
     </Container>
   );
