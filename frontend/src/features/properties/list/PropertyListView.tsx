@@ -1,5 +1,4 @@
 import './PropertyListView.scss';
-
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button } from 'react-bootstrap';
@@ -17,11 +16,23 @@ import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
 import { FaFolderOpen, FaFolder } from 'react-icons/fa';
-import { Properties } from 'features/projects/list/properties';
+import { Buildings } from './buildings';
 import { useRouterFilter } from 'hooks/useRouterFilter';
+import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
+import styled from 'styled-components';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
+import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
+import { PropertyTypes } from './FilterBar';
 
 const getPropertyReportUrl = (filter: IPropertyFilter) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
+
+const FileIcon = styled(Button)`
+  background-color: #fff !important;
+  color: #003366 !important;
+  padding: 6px 5px;
+`;
 
 const initialQuery: IPropertyFilter = {
   page: 1,
@@ -110,6 +121,7 @@ const PropertyListView: React.FC = () => {
     classificationId: '',
     minLotSize: '',
     maxLotSize: '',
+    propertyType: PropertyTypes.Land,
   });
 
   const [pageSize, setPageSize] = useState(10);
@@ -218,6 +230,16 @@ const PropertyListView: React.FC = () => {
     }
   };
 
+  const changePropertyType = (type: PropertyTypes) => {
+    setPageIndex(0);
+    setFilter(state => {
+      return {
+        ...state,
+        propertyType: type,
+      };
+    });
+  };
+
   return (
     <Container fluid className="PropertyListView">
       <Container fluid className="filter-container border-bottom">
@@ -232,11 +254,45 @@ const PropertyListView: React.FC = () => {
       </Container>
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h3 className="mr-auto">Results</h3>
-          <Button className="mr-2" onClick={() => fetch('excel')}>
-            Export as Excel
-          </Button>
-          <Button onClick={() => fetch('csv')}>Export as CSV</Button>
+          <h3>View Inventory</h3>
+          <div className="menu">
+            <div>
+              <TooltipWrapper toolTipId="show-parcels" toolTip="Show Parcels">
+                <div
+                  className={
+                    filter.propertyType === PropertyTypes.Land ? 'svg-btn active' : 'svg-btn'
+                  }
+                  onClick={() => changePropertyType(PropertyTypes.Land)}
+                >
+                  <LandSvg className="svg" />
+                  Parcels view
+                </div>
+              </TooltipWrapper>
+            </div>
+            <div>
+              <TooltipWrapper toolTipId="show-buildings" toolTip="Show Buildings">
+                <div
+                  className={
+                    filter.propertyType === PropertyTypes.Building ? 'svg-btn active' : 'svg-btn'
+                  }
+                  onClick={() => changePropertyType(PropertyTypes.Building)}
+                >
+                  <BuildingSvg className="svg" />
+                  Buildings view
+                </div>
+              </TooltipWrapper>
+            </div>
+          </div>
+          <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+            <FileIcon>
+              <FaFileExcel size={36} onClick={() => fetch('excel')} />
+            </FileIcon>
+          </TooltipWrapper>
+          <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
+            <FileIcon>
+              <FaFileAlt size={36} onClick={() => fetch('csv')} />
+            </FileIcon>
+          </TooltipWrapper>
         </Container>
         <Table<IProperty>
           name="propertiesTable"
@@ -256,10 +312,13 @@ const PropertyListView: React.FC = () => {
           detailsPanel={{
             render: val => {
               if (expandData[val.id]) {
-                return <Properties hideHeaders={true} data={expandData[val.id]} />;
+                return <Buildings hideHeaders={true} data={expandData[val.id]} />;
               }
             },
-            icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
+            icons: {
+              open: <FaFolderOpen color="black" size={20} />,
+              closed: <FaFolder color="black" size={20} />,
+            },
             checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
             onExpand: loadBuildings,
             getRowId: row => row.id,

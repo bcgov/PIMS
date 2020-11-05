@@ -1,9 +1,8 @@
-import BuildingSvg from 'assets/images/icon-business.svg';
-import LandSvg from 'assets/images/icon-lot.svg';
+import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
+import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 
 import React from 'react';
 import { CellProps } from 'react-table';
-import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { IProperty } from '.';
@@ -64,6 +63,16 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
+    Header: 'Type',
+    accessor: 'propertyTypeId',
+    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
+      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
+    },
+    responsive: true,
+    width: spacing.small,
+    minWidth: 65,
+  },
+  {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
@@ -83,7 +92,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Header: 'Assessed Value',
     accessor: 'assessed',
     Cell: MoneyCell,
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
@@ -92,7 +101,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Header: 'Netbook Value',
     accessor: 'netBook',
     Cell: MoneyCell,
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
@@ -101,26 +110,16 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Header: 'Estimated Value',
     accessor: 'estimated',
     Cell: MoneyCell,
-    align: 'left',
+    align: 'right',
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
   },
   {
-    Header: 'Type',
-    accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      const icon = value === 0 ? LandSvg : BuildingSvg;
-      return <Image src={icon} />;
-    },
-    responsive: true,
-    width: spacing.small,
-    minWidth: 65,
-  },
-  {
     Header: 'Lot Size (in ha)',
     accessor: 'landArea',
     Cell: NumberCell,
+    align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 65,

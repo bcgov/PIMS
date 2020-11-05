@@ -189,8 +189,12 @@ exports[`Project list view tests Matches snapshot 1`] = `
           }
         >
           <div
-            className="th expander"
+            className="th expander svg-btn"
+            onBlur={[Function]}
             onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
           >
             <svg
               color="black"
