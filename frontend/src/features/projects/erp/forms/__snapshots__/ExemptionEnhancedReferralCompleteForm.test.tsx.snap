@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
+.c0 {
+  margin: 0.75rem 2rem 0.75rem 2rem;
+}
+
 <form
   action="#"
   onReset={[Function]}
@@ -140,7 +144,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           Proceed to SPL
         </button>
         <div
-          className="sc-fzolEj bHRNKN"
+          className="c0"
         >
           OR
         </div>

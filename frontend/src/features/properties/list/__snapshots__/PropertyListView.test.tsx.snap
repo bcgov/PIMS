@@ -2,7 +2,13 @@
 
 exports[`Property list view Matches snapshot 1`] = `
 Array [
-  <div
+  .c0 {
+  background-color: #fff !important;
+  color: #003366 !important;
+  padding: 6px 5px;
+}
+
+<div
     className="PropertyListView container-fluid"
   >
     <div
@@ -297,7 +303,7 @@ Array [
           </div>
         </div>
         <button
-          className="sc-fzolEj iTKQzA btn btn-primary"
+          className="c0 btn btn-primary"
           disabled={false}
           onBlur={[Function]}
           onFocus={[Function]}
@@ -327,7 +333,7 @@ Array [
           </svg>
         </button>
         <button
-          className="sc-fzolEj iTKQzA btn btn-primary"
+          className="c0 btn btn-primary"
           disabled={false}
           onBlur={[Function]}
           onFocus={[Function]}

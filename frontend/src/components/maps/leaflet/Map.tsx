@@ -28,7 +28,11 @@ import {
   PARCELS_LAYER_URL,
 } from './LayerPopup/constants';
 import { isEmpty } from 'lodash';
-import { LayerPopupContent, PopupContentConfig } from './LayerPopup/LayerPopupContent';
+import {
+  LayerPopupContent,
+  LayerPopupTitle,
+  PopupContentConfig,
+} from './LayerPopup/LayerPopupContent';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 
 export type MapViewportChangeEvent = {
@@ -68,6 +72,7 @@ export type MapProps = {
 
 export type LayerPopupInformation = PopupContentConfig & {
   latlng: LatLng;
+  title: string;
 };
 
 const Map: React.FC<MapProps> = ({
@@ -285,17 +290,21 @@ const Map: React.FC<MapProps> = ({
 
     let properties = {};
     let displayConfig = {};
-    if (parcel.features.length === 1) {
-      properties = { ...properties, ...parcel.features[0].properties };
-      displayConfig = { ...displayConfig, ...parcelLayerPopupConfig };
-    }
+    let title = 'Municipality Information';
     if (municipality.features.length === 1) {
-      properties = { ...properties, ...municipality.features[0].properties };
-      displayConfig = { ...displayConfig, ...municipalityLayerPopupConfig };
+      properties = municipality.features[0].properties!;
+      displayConfig = municipalityLayerPopupConfig;
+    }
+
+    if (parcel.features.length === 1) {
+      title = 'Parcel Information';
+      properties = parcel.features[0].properties!;
+      displayConfig = parcelLayerPopupConfig;
     }
 
     if (!isEmpty(properties)) {
       setLayerPopup({
+        title,
         data: properties as any,
         config: displayConfig as any,
         latlng: event.latlng,
@@ -364,6 +373,7 @@ const Map: React.FC<MapProps> = ({
                 closeButton={interactive}
                 autoPan={false}
               >
+                <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
                 <LayerPopupContent
                   data={layerPopup.data as any}
                   config={layerPopup.config as any}
