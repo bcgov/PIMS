@@ -358,34 +358,37 @@ namespace Pims.Dal.Services
                     }
                 }
 
-                // Delete any missing records in child collections.
+                // Go through the existing buildings and see if they have been deleted from the updated parcel.
+                // If they have been removed, delete them from the datasource.
                 foreach (var parcelBuilding in originalParcel.Buildings)
                 {
-                    var matchingParcelBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
-                    if (matchingParcelBuilding != null)
+                    var updateBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
+                    if (updateBuilding == null)
                     {
                         // TODO: This will delete the building from the datasource.  This isn't entirely ideal as it may be related to multiple parcels.
-                        this.ThrowIfNotAllowedToUpdate(matchingParcelBuilding.Building, _options.Project);
+                        this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
                         var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
-                        parcel.Buildings.Remove(matchingParcelBuilding);
                         parcelBuildings.ForEach(pb => this.Context.ParcelBuildings.Remove(pb)); // Remove all relationships from other parcels to this building.
-                        this.Context.Buildings.Remove(matchingParcelBuilding.Building);
+                        this.Context.Buildings.Remove(parcelBuilding.Building);
+                        parcel.Buildings.Remove(parcelBuilding);
 
                         continue;
                     }
+
+                    // The building may have evaluations or fiscals that need to be deleted.
                     foreach (var buildingEvaluation in parcelBuilding.Building.Evaluations)
                     {
-                        // Delete the evaluations from the building that have been removed.
-                        if (!matchingParcelBuilding.Building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                        // Delete the evaluations that have been removed.
+                        if (!updateBuilding.Building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
                         {
                             this.Context.BuildingEvaluations.Remove(buildingEvaluation);
                         }
                     }
                     foreach (var buildingFiscal in parcelBuilding.Building.Fiscals)
                     {
-                        // Delete the fiscals from the building that have been removed.
-                        if (!matchingParcelBuilding.Building.Fiscals.Any(e => (e.BuildingId == buildingFiscal.BuildingId && e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key)))
+                        // Delete the fiscals that have been removed.
+                        if (!updateBuilding.Building.Fiscals.Any(e => (e.BuildingId == buildingFiscal.BuildingId && e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key)))
                         {
                             this.Context.BuildingFiscals.Remove(buildingFiscal);
                         }
