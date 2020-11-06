@@ -386,7 +386,7 @@ const Map: React.FC<MapProps> = ({
                       closeButton={interactive}
                       autoPan={false}
                     >
-                <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
+                      <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
                       <LayerPopupContent
                         data={layerPopup.data as any}
                         config={layerPopup.config as any}
