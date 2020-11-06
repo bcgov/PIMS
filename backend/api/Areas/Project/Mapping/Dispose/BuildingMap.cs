@@ -67,10 +67,13 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .AfterMapping((src, dest) =>
                 {
-                    var parcel = dest.Parcels.FirstOrDefault().Parcel;
-                    parcel.LandArea = src.LandArea;
-                    parcel.Zoning = src.Zoning;
-                    parcel.ZoningPotential = src.ZoningPotential;
+                    var parcel = dest.Parcels.FirstOrDefault()?.Parcel;
+                    if (parcel != null)
+                    {
+                        parcel.LandArea = src.LandArea;
+                        parcel.Zoning = src.Zoning;
+                        parcel.ZoningPotential = src.ZoningPotential;
+                    }
                 })
                 .Inherits<BaseModel, Entity.BaseEntity>();
 
