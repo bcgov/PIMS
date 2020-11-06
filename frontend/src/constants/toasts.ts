@@ -69,3 +69,20 @@ export const parcel = {
   PARCEL_DELETING_ERROR_TOAST_ID,
   PARCEL_DELETING_ERROR,
 };
+
+/** These toasts are used by the update agency api */
+const AGENCY_UPDATING_TOAST_ID = 'UPDATING_AGENCY';
+const AGENCY_UPDATING = () =>
+  toast.dark('Updating Agency...', { toastId: AGENCY_UPDATING_TOAST_ID });
+const AGENCY_UPDATED_TOAST_ID = 'AGENCY_UPDATED';
+const AGENCY_UPDATED = () => toast.dark('Agency updated', { toastId: AGENCY_UPDATED_TOAST_ID });
+const AGENCY_ERROR_TOAST_ID = 'AGENCY_ERROR';
+const AGENCY_ERROR = () => toast.error('Failed to update Agency', { toastId: USER_ERROR_TOAST_ID });
+export const agency = {
+  AGENCY_UPDATING_TOAST_ID,
+  AGENCY_UPDATING,
+  AGENCY_UPDATED_TOAST_ID,
+  AGENCY_UPDATED,
+  AGENCY_ERROR_TOAST_ID,
+  AGENCY_ERROR,
+};

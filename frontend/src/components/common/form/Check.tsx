@@ -4,6 +4,7 @@ import { Form, FormCheckProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
+import TooltipIcon from '../TooltipIcon';
 
 type RequiredAttributes = {
   /** The field name */
@@ -35,6 +36,10 @@ type OptionalAttributes = {
   radioLabelOne?: string;
   /** label of the second radio button */
   radioLabelTwo?: string;
+  /** Optional tool tip message to add to checkbox */
+  toolTip?: string;
+  /** id for tooltip */
+  toolTipId?: string;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -57,6 +62,8 @@ export const Check: React.FC<CheckProps> = ({
   custom,
   radioLabelOne,
   radioLabelTwo,
+  toolTip,
+  toolTipId,
   ...rest
 }) => {
   const { values, setFieldValue, errors, touched } = useFormikContext();
@@ -74,6 +81,7 @@ export const Check: React.FC<CheckProps> = ({
           <Form.Label>
             {label}
             {!!required && <span className="required">*</span>}
+            {!!toolTip && <TooltipIcon toolTipId={toolTipId!} toolTip={toolTip} />}
           </Form.Label>
         )}
         <>

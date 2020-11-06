@@ -6,6 +6,7 @@ using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models.Agency;
+using EModel = Pims.Dal.Entities.Models;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -68,6 +69,23 @@ namespace Pims.Api.Areas.Admin.Controllers
         {
             var agency = _pimsAdminService.Agency.Get(id);
             return new JsonResult(_mapper.Map<Model.AgencyModel>(agency));
+        }
+
+        /// <summary>
+        /// GET - Returns a paged array of agencies from the datasource.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns>Paged object with an array of agencies.</returns>
+        [HttpPost("filter")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AgencyModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-agency" })]
+        public IActionResult GetAgencies(EModel.AgencyFilter filter)
+        {
+            var page = _pimsAdminService.Agency.Get(filter);
+            var result = _mapper.Map<Api.Models.PageModel<Model.AgencyModel>>(page);
+            return new JsonResult(result);
         }
 
         /// <summary>

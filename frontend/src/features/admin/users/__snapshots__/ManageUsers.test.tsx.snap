@@ -17,6 +17,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
     <div
       className="search-bar form-row"
     >
+      <h3
+        className="filterBarHeading"
+      />
       <div
         className="bar-item col"
       >
@@ -155,7 +158,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         className="bar-item flex-grow-0 col"
       >
         <button
-          className="Button Button--icon-only btn btn-warning"
+          className="Button Button--icon-only bg-warning btn btn-primary"
           disabled={false}
           onBlur={[Function]}
           onFocus={[Function]}

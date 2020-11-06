@@ -5,6 +5,9 @@ using Pims.Dal.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Pims.Dal.Entities.Models;
+using Pims.Dal.Helpers.Extensions;
+using Pims.Dal.Security;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -28,6 +31,52 @@ namespace Pims.Dal.Services.Admin
         #endregion
 
         #region Methods
+        
+        /// <summary>
+        /// Get a page of agencies from the datasource.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public Paged<Agency> Get(int page, int quantity)
+        {
+            return Get(new AgencyFilter(page, quantity));
+        }
+
+        /// <summary>
+        /// Get a page of agencies from the datasource.
+        /// The filter will allow queries to search for the following property values; Name, Description, ParentId.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Paged<Agency> Get(AgencyFilter filter = null)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
+
+            var query = this.Context.Agencies.AsNoTracking();
+
+            if (filter != null)
+            {
+                if (filter.Page < 1) filter.Page = 1;
+                if (filter.Quantity < 1) filter.Quantity = 1;
+                if (filter.Quantity > 50) filter.Quantity = 50;
+                if (filter.Sort == null) filter.Sort = new string[] { };
+
+                if (!string.IsNullOrWhiteSpace(filter.Name))
+                    query = query.Where(a => EF.Functions.Like(a.Name, $"%{filter.Name}%"));
+                if (filter.IsDisabled != null)
+                    query = query.Where(a => a.IsDisabled == filter.IsDisabled);
+                if (filter.Id > 0)
+                    query = query.Where(a => a.Id == filter.Id);
+
+                if (filter.Sort.Any())
+                    query = query.OrderByProperty(filter.Sort);
+            }
+            var agencies = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+            return new Paged<Agency>(agencies.ToArray(), filter.Page, filter.Quantity, query.Count());
+        }
+
+
         /// <summary>
         /// Get a page of agencies from the datasource.
         /// </summary>
