@@ -7,6 +7,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { useDispatch } from 'react-redux';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 import { Button } from 'components/common/form/Button';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { IFilterData } from 'actions/accessRequestActions';
 
 interface IProps {
@@ -83,16 +84,24 @@ export const AccessRequestFilter = (props: IProps) => {
         <Col>
           <Form.Control
             type="text"
-            placeholder="search"
+            placeholder="Search"
             value={filterState.searchText}
             onChange={handleSearchTextChange}
           />
         </Col>
         <Col className="actions">
-          <Button size="sm" onClick={search} className="bg-warning" icon={<FaSearch size={20} />} />
-          <Button variant="outline-primary" size="sm" onClick={reset} icon={<FaUndo size={20} />}>
-            Reset
-          </Button>
+          <TooltipWrapper toolTipId="map-filter-search-tooltip" toolTip="Search">
+            <Button
+              variant="warning"
+              size="sm"
+              onClick={search}
+              className="bg-warning"
+              icon={<FaSearch size={20} />}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper toolTipId="map-filter-reset-tooltip" toolTip="Reset Filter">
+            <Button variant="secondary" size="sm" onClick={reset} icon={<FaUndo size={20} />} />
+          </TooltipWrapper>
         </Col>
       </Row>
     </Container>
