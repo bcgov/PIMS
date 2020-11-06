@@ -57,6 +57,10 @@ build: ## Builds the local containers (n=service name)
 	@echo "$(P) Building images..."
 	@docker-compose build --no-cache $(n)
 
+rebuild: ## Build the local contains (n=service name) and then start them after building
+	@make build n=$(n)
+	@make up n=$(n)
+
 clean: ## Removes all local containers, images, volumes, etc
 	@echo "$(P) Removing all containers, images, volumes for solution."
 	@docker-compose rm -f -v -s
@@ -134,4 +138,4 @@ convert: ## Convert Excel files to JSON
 	@echo "$(P) Convert Excel files to JSON..."
 	@cd tools/converters/excel; dotnet build; dotnet run;
 
-.PHONY: local setup restart refresh up down stop build clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-seed db-refresh npm-clean npm-refresh keycloak-sync convert
+.PHONY: local setup restart refresh up down stop build rebuild clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-seed db-refresh npm-clean npm-refresh keycloak-sync convert
