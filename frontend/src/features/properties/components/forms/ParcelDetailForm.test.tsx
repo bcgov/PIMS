@@ -8,7 +8,7 @@ import Enzyme from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import ParcelDetailForm from '../../containers/ParcelDetailFormContainer';
+import ParcelDetailFormContainer from '../../containers/ParcelDetailFormContainer';
 import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
@@ -167,6 +167,7 @@ const parcelDetailForm = ({
         persistCallback={noop}
         properties={[]}
         defaultTab={tab}
+        movingPinNameSpace={''}
         mapClickMouseEvent={
           clickLatLng
             ? ({
@@ -241,7 +242,7 @@ describe('ParcelDetail Functionality', () => {
         const { container } = render(
           <Provider store={store}>
             <Router history={history}>
-              <ParcelDetailForm
+              <ParcelDetailFormContainer
                 agencyId={1}
                 parcelDetail={mockDetails[0]}
                 formikRef={undefined}

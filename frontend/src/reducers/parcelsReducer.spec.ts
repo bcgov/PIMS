@@ -4,12 +4,14 @@ import {
   IStoreParcelDetail,
   IProperty,
   IParcelDetail,
+  IStoreDraftParcelsAction,
 } from 'actions/parcelsActions';
 import * as ActionTypes from 'constants/actionTypes';
 import { cloneDeep } from 'lodash';
 
 const baseExpectedValue: IParcelState = {
   parcels: [],
+  draftParcels: [],
   parcelDetail: null,
   pid: 0,
 };
@@ -96,6 +98,33 @@ describe('parcelReducer', () => {
     const action: IStoreParcelsAction = {
       type: ActionTypes.STORE_PARCEL_RESULTS,
       parcelList: [defaultParcel, defaultParcel],
+    };
+
+    const result = parcelsReducer(undefined, action);
+    expect(result).toEqual(expectedValue);
+  });
+
+  it('receives draft parcels', () => {
+    const expectedValue = getBaseExpectedValue();
+    expectedValue.draftParcels.push(defaultParcel);
+
+    const action: IStoreDraftParcelsAction = {
+      type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
+      draftParcelList: [defaultParcel],
+    };
+
+    const result = parcelsReducer(undefined, action);
+    expect(result).toEqual(expectedValue);
+  });
+
+  it('receives multiple draft parcels', () => {
+    const expectedValue = getBaseExpectedValue();
+    expectedValue.draftParcels.push(defaultParcel);
+    expectedValue.draftParcels.push(defaultParcel);
+
+    const action: IStoreDraftParcelsAction = {
+      type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
+      draftParcelList: [defaultParcel, defaultParcel],
     };
 
     const result = parcelsReducer(undefined, action);

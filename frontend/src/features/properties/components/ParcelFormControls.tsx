@@ -11,9 +11,11 @@ import Claims from 'constants/claims';
 import { FaTrash } from 'react-icons/fa';
 import { IKeycloak } from 'hooks/useKeycloakWrapper';
 import { useFormikContext } from 'formik';
-import { IParcel } from 'actions/parcelsActions';
+import { IParcel, IProperty } from 'actions/parcelsActions';
 import GenericModal from 'components/common/GenericModal';
 import { valuesToApiFormat, IFormParcel } from '../containers/ParcelDetailFormContainer';
+import useDraftMarkerSynchronizer from '../hooks/useDraftMarkerSynchronizer';
+import { ParcelDetailTabs } from '../containers/ParcelDetailContainer';
 
 interface IParcelFormControlsProps {
   showDeleteDialog: boolean;
@@ -21,6 +23,8 @@ interface IParcelFormControlsProps {
   keycloak: IKeycloak;
   onDelete: (parcel: IParcel) => void;
   persistCallback: (data: IParcel) => void;
+  properties: IProperty[];
+  currentTab: ParcelDetailTabs;
   disabled?: boolean;
   loadDraft?: boolean;
 }
@@ -82,8 +86,11 @@ const ParcelFormControls: React.FunctionComponent<IParcelFormControlsProps> = ({
   keycloak,
   onDelete,
   persistCallback,
+  properties,
+  currentTab,
 }) => {
   const formikProps = useFormikContext<IFormParcel>();
+  useDraftMarkerSynchronizer({ properties });
   return (
     <>
       <FormControls className="form-controls">
@@ -115,7 +122,7 @@ const ParcelFormControls: React.FunctionComponent<IParcelFormControlsProps> = ({
         )}
       </FormControls>
 
-      {!disabled && (
+      {!disabled && currentTab === ParcelDetailTabs.parcel && keycloak.isAdmin && (
         <DeleteButton
           cachedParcelDetail={formikProps.values}
           keycloak={keycloak}

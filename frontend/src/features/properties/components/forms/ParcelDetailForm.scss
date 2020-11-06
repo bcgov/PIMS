@@ -115,13 +115,16 @@
         width: 120px;
       }
       .input-medium {
-        min-width: 150px;
-        width: 150px;
+        min-width: 220px;
+        width: 220px;
       }
     }
   }
   .table {
     margin: 0;
+    .tr {
+      height: 55px;
+    }
     .th,
     .td {
       padding: 5px;

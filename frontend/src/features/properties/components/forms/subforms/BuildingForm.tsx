@@ -18,7 +18,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import { IGeocoderResponse } from 'hooks/useApi';
 import InformationForm from './InformationForm';
-import styled from 'styled-components';
 import LatLongForm from './LatLongForm';
 
 export interface IFormBuilding extends IBuilding {
@@ -26,7 +25,7 @@ export interface IFormBuilding extends IBuilding {
 }
 
 export const defaultBuildingValues: any = {
-  id: 0,
+  id: undefined,
   name: '',
   projectNumber: '',
   description: '',
@@ -54,16 +53,12 @@ export const defaultBuildingValues: any = {
   financials: defaultFinancials,
 };
 interface BuildingProps {
+  setMovingPinNameSpace: (nameSpace: string) => void;
   nameSpace?: string;
   index?: number;
   disabled?: boolean;
   allowEdit?: boolean;
 }
-
-const ScrollBox = styled.div`
-  height: 440px;
-  overflow-y: auto;
-`;
 
 const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   const keycloak = useKeycloakWrapper();
@@ -172,11 +167,11 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             {...props}
             nameSpace={withNameSpace()}
             disabled={props.disabled || readonly}
-            onGeocoderChange={handleGeocoderChanges}
+            setMovingPinNameSpace={props.setMovingPinNameSpace}
           />
         </Col>
       </Row>
-      <ScrollBox>
+      <div className="scroll">
         <h4>Information</h4>
         <Row noGutters>
           <Col md={6}>
@@ -288,7 +283,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             />
           </Col>
         </Row>
-      </ScrollBox>
+      </div>
     </>
   );
 };
