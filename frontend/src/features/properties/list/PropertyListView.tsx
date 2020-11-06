@@ -207,10 +207,7 @@ const PropertyListView: React.FC = () => {
   };
 
   const checkExpanded = (row: IProperty, property: IProperty) => {
-    const latLongcheck = row.latitude === property.latitude && row.longitude === property.longitude;
-    const propertyTypeCheck = row.propertyTypeId === property.propertyTypeId;
-    const pidOrPinCheck = row.pid === property.pid || row.pin === property.pin;
-    return latLongcheck && propertyTypeCheck && pidOrPinCheck;
+    return row.id === property.id;
   };
 
   const loadBuildings = async (expandedRows: IProperty[]) => {

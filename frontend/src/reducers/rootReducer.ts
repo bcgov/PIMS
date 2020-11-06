@@ -20,6 +20,8 @@ import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
 import splTabSlice from 'features/projects/spl/slices/splTabSlice';
 import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 import filterSlice from './filterSlice';
+import agencyReducer from './agencyReducer';
+import agencyDetailReducer from './agencyDetailReducer';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -27,7 +29,9 @@ export const reducerObject = {
   [reducerTypes.ACCESS_REQUEST]: accessRequestReducer,
   [reducerTypes.USERS]: usersReducer,
   [reducerTypes.GET_USER_DETAIL]: userDetailReducer,
+  [reducerTypes.GET_AGENCY_DETAIL]: agencyDetailReducer,
   [reducerTypes.LOOKUP_CODE]: lookupCodeReducer,
+  [reducerTypes.AGENCIES]: agencyReducer,
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,

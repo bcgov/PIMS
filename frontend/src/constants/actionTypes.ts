@@ -21,6 +21,21 @@ export const DELETE_PARCEL = 'DELETE_PARCEL';
 export const STORE_LOOKUP_CODE_RESULTS = 'STORE_LOOKUP_CODE_RESULTS';
 export const GET_LOOKUP_CODES = 'lookupCodes';
 
+// Agencies
+export const STORE_AGENCY_RESULTS = 'STORE_AGENCY_RESULTS';
+export const STORE_AGENCY_DETAILS = 'STORE_AGENCY_DETAILS';
+export const GET_AGENCIES = 'agencies';
+export const GET_AGENCY = 'GET_AGENCY';
+export const UPDATE_AGENCY = 'UPDATE_USER';
+export const SORT_AGENCIES = 'SORT_AGENCIES';
+export const FILTER_AGENCIES = 'FILTER_AGENCIES';
+export const SET_AGENCIES_PAGE_SIZE = 'SET_AGENCIES_PAGE_SIZE';
+export const SET_AGENCIES_PAGE_INDEX = 'SET_AGENCIES_PAGE_INDEX';
+export const GET_AGENCY_DETAILS = 'GET_AGENCY_DETAILS';
+export const PUT_AGENCY_DETAILS = 'PUT_AGENCY_DETAILS';
+export const ADD_AGENCY = 'ADD_AGENCY';
+export const DELETE_AGENCY = 'DELETE_AGENCY';
+
 // access requests
 export const STORE_ACCESS_REQUESTS = 'STORE_ACCESS_REQUESTS';
 export const ADD_REQUEST_ACCESS = 'addRequestAccess';

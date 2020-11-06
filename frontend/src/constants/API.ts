@@ -20,6 +20,12 @@ export interface IGetUsersParams extends IPaginateParams {
   position?: string;
 }
 
+export interface IGetAgenciesParams extends IPaginateParams {
+  name?: string;
+  description?: string;
+  isDisabled?: boolean;
+}
+
 export interface IPaginateAccessRequests extends IPaginateParams {
   status?: AccessRequestStatus | null;
 }
@@ -55,6 +61,13 @@ export const PARCEL_ROOT = `/properties/parcels`;
 export interface IUserDetailParams {
   id: string;
 }
+
+export interface IAgencyDetailParams {
+  id: string;
+}
+
+export const AGENCY_ROOT = () => `/admin/agencies/`;
+export const AGENCY_DETAIL = (params: IAgencyDetailParams) => `/admin/agencies/${params.id}`;
 export const USER_DETAIL = (params: IUserDetailParams) => `/admin/users/${params.id}`;
 export const KEYCLOAK_USER_UPDATE = (params: IUserDetailParams) => `/keycloak/users/${params.id}`;
 
@@ -75,6 +88,9 @@ export const PROPERTY_CLASSIFICATION_CODE_SET_NAME = 'PropertyClassification';
 export const CONSTRUCTION_CODE_SET_NAME = 'BuildingConstructionType';
 export const PREDOMINATE_USE_CODE_SET_NAME = 'BuildingPredominateUse';
 export const OCCUPANT_TYPE_CODE_SET_NAME = 'BuildingOccupantType';
+
+// Agencies
+export const POST_AGENCIES = () => `/admin/agencies/filter`; // get paged list of agencies
 
 // Auth Service
 export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties or all if not specified.

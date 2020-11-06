@@ -15,6 +15,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
       <div
         className="search-bar form-row"
       >
+        <h3
+          className="filterBarHeading"
+        />
         <div
           className="bar-item col-2"
         >
@@ -46,15 +49,19 @@ exports[`Project list view tests Matches snapshot 1`] = `
             <div
               className="form-group"
             >
-              <input
-                autoComplete="off"
-                className="form-control"
-                id="input-agencies"
-                name="agencies"
-                onChange={[Function]}
-                placeholder="Enter an agency"
-                value=""
-              />
+              <div
+                className="input-area"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control"
+                  id="input-agencies"
+                  name="agencies"
+                  onChange={[Function]}
+                  placeholder="Enter an agency"
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -79,7 +86,7 @@ exports[`Project list view tests Matches snapshot 1`] = `
           className="bar-item flex-grow-0 col"
         >
           <button
-            className="Button Button--icon-only btn btn-warning"
+            className="Button Button--icon-only bg-warning btn btn-primary"
             disabled={false}
             onBlur={[Function]}
             onFocus={[Function]}
