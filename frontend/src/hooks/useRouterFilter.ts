@@ -5,6 +5,7 @@ import { saveFilter } from 'reducers/filterSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 import { BasePropertyFilter } from 'components/common/interfaces';
+import queryString from 'query-string';
 
 const defaultFilter: BasePropertyFilter = {
   searchBy: 'address',
@@ -18,24 +19,15 @@ const defaultFilter: BasePropertyFilter = {
   maxLotSize: '',
 };
 
-export const paramsToObject = (searchString: string) => {
-  const params = new URLSearchParams(searchString);
-  const obj: any = {};
-  for (const key of params.keys()) {
-    if (params.getAll(key).length > 1) {
-      obj[key] = params.getAll(key);
-    } else {
-      obj[key] = params.get(key);
-    }
-  }
-  return obj;
-};
-
 /**
  * Control the state of the passed filter using url search params.
  * NOTE: URLSearchParams not supported by IE.
  */
-export const useRouterFilter = (filter: any, setFilter: (val: any) => void, key: string) => {
+export const useRouterFilter = <T extends BasePropertyFilter>(
+  filter: T,
+  setFilter: (val: T) => void,
+  key: string,
+) => {
   const history = useHistory();
   const [originalSearch] = useState(history.location.search);
   const reduxSearch = useSelector<RootState, any>(state => state.filter);
@@ -44,12 +36,12 @@ export const useRouterFilter = (filter: any, setFilter: (val: any) => void, key:
 
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
   React.useEffect(() => {
-    const filterFromParams = paramsToObject(originalSearch);
+    const filterFromParams = queryString.parse(originalSearch);
     if (
       Object.keys(defaultFilter).length ===
       _.intersection(Object.keys(filterFromParams), Object.keys(defaultFilter)).length
     ) {
-      setFilter(filterFromParams);
+      setFilter(filterFromParams as any);
     } else if (originalSearchRedux?.hasOwnProperty(key) && !!originalSearchRedux[key]?.searchBy) {
       setFilter(originalSearchRedux[key]);
     }
@@ -57,8 +49,12 @@ export const useRouterFilter = (filter: any, setFilter: (val: any) => void, key:
 
   //If the filter ever changes, push those changes to the search params
   React.useEffect(() => {
-    const params = new URLSearchParams(filter);
-    history.push({ search: params.toString() });
+    const filterParams = new URLSearchParams(filter as any);
+    const allParams = {
+      ...queryString.parse(filterParams.toString()),
+      ...queryString.parse(history.location.search),
+    };
+    history.push({ pathname: history.location.pathname, search: queryString.stringify(allParams) });
     const keyedFilter = { [key]: filter };
     dispatch(saveFilter({ ...originalSearchRedux, ...keyedFilter }));
   }, [history, filter, dispatch, key, originalSearchRedux]);

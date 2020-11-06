@@ -7,6 +7,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
 import { FaHome } from 'react-icons/fa';
+import queryString from 'query-string';
 
 /**
  * Nav bar with with role-based functionality.
@@ -64,7 +65,20 @@ function SubmitPropertyNav() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
-    <NavDropdown.Item onClick={() => history.push('/submitProperty')}>
+    <NavDropdown.Item
+      onClick={() =>
+        history.push({
+          pathname: '/mapview',
+          search: queryString.stringify({
+            ...queryString.parse(history.location.search),
+            sidebar: true,
+            disabled: false,
+            loadDraft: false,
+            new: true,
+          }),
+        })
+      }
+    >
       Submit Property
     </NavDropdown.Item>
   ) : null;

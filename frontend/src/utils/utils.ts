@@ -16,7 +16,7 @@ export const truncate = (input: string, maxLength: number): string => {
   return input;
 };
 
-export const decimalOrUndefined = (input: string): number | undefined => {
+export const decimalOrUndefined = (input: string | ''): number | undefined => {
   return input !== '' ? parseInt(input, 10) : undefined;
 };
 

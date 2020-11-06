@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import { sumFinancials } from './SumFinancialsForm';
 import { IFinancialYear } from './EvaluationForm';
-import { formatMoney } from 'utils';
+import { formatMoney, formatFiscalYear } from 'utils';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
@@ -20,7 +20,6 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
         key={`${namespace}.${cellInfo.row.index}.${type}.value`}
         formikProps={context}
         field={`${namespace}.${cellInfo.row.index}.${type}.value`}
-        tooltip="If value not available enter $1 and add notes"
         disabled={disabled}
       />
     );
@@ -42,6 +41,12 @@ const getImprovements = () => {
     const total = getSummedAssessed(year, context, allFinancials);
     const improvement = total - cellInfo.row.values['assessed.value'];
     return improvement > 0 ? formatMoney(improvement) : null;
+  };
+};
+
+const getFiscalYear = (field: string) => {
+  return (cellInfo: any) => {
+    return formatFiscalYear(cellInfo.row.values[field]);
   };
 };
 
@@ -67,13 +72,13 @@ export const getEvaluationCols = (
     {
       Header: 'Year',
       accessor: 'assessed.year', // accessor is the "key" in the data
-      maxWidth: 30,
+      maxWidth: 50,
       align: 'left',
     },
     {
       Header: 'Land',
       accessor: 'assessed.value',
-      maxWidth: 60,
+      maxWidth: 140,
       align: 'left',
       Cell: getEditableMoneyCell(disabled, namespace, 'assessed'),
     },
@@ -82,14 +87,14 @@ export const getEvaluationCols = (
     {
       Header: 'Improvements',
       accessor: 'assessed.improvements',
-      maxWidth: 60,
+      maxWidth: 140,
       align: 'left',
       Cell: getImprovements(),
     },
     {
       Header: 'Total',
       accessor: 'assessed.total',
-      maxWidth: 60,
+      maxWidth: 140,
       align: 'left',
       Cell: getTotal(),
     },
@@ -101,13 +106,14 @@ export const getEvaluationCols = (
         {
           Header: 'Fiscal Year',
           accessor: 'netbook.fiscalYear',
-          maxWidth: 60,
+          maxWidth: 50,
           align: 'left',
+          Cell: getFiscalYear('netbook.fiscalYear'),
         },
         {
           Header: 'Value',
           accessor: 'netbook.value',
-          maxWidth: 60,
+          maxWidth: 140,
           align: 'left',
           Cell: getEditableMoneyCell(disabled, namespace, 'netbook'),
         },
@@ -119,13 +125,14 @@ export const getEvaluationCols = (
         {
           Header: 'Fiscal Year',
           accessor: 'estimated.fiscalYear',
-          maxWidth: 60,
+          maxWidth: 50,
           align: 'left',
+          Cell: getFiscalYear('estimated.fiscalYear'),
         },
         {
           Header: 'Value',
           accessor: 'estimated.value',
-          maxWidth: 60,
+          maxWidth: 140,
           align: 'left',
           Cell: getEditableMoneyCell(disabled, namespace, 'estimated'),
         },

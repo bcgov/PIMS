@@ -14,12 +14,12 @@ const OnLoadActions: React.FC = () => {
       cancelButtonText="Discard"
       okButtonText="Resume Editing"
       display={
-        !history.location.pathname.includes('/submitProperty') &&
+        !history.location.pathname.includes('/mapview') &&
         isStorageInUse(PARCEL_STORAGE_NAME) &&
         keycloak?.obj?.authenticated
       }
       handleOk={() => {
-        history.push('/submitProperty?loadDraft=true');
+        history.push('/mapview?sidebar=true&loadDraft=true');
       }}
       handleCancel={() => {
         clearStorage(PARCEL_STORAGE_NAME);

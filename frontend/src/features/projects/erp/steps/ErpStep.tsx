@@ -17,7 +17,6 @@ import {
   IStepProps,
   useProject,
   handleValidate,
-  ValidationGroup,
   DisposeWorkflowStatus,
   useAgencyResponseTable,
 } from '../../common';
@@ -30,6 +29,7 @@ import {
 import * as Yup from 'yup';
 import _ from 'lodash';
 import './ErpStep.scss';
+import { ValidationGroup } from 'components/common/tabValidation';
 
 const CenterBoldText = styled.div`
   text-align: center;

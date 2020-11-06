@@ -9,7 +9,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react';
 import { mockDetails } from 'mocks/filterDataMock';
 import { Formik } from 'formik';
 import PagedBuildingForms from './PagedBuildingForms';
-import { IFormParcel, getInitialValues } from '../ParcelDetailForm';
+import { IFormParcel, getInitialValues } from '../../../containers/ParcelDetailFormContainer';
 import { IFormBuilding } from './BuildingForm';
 import { ILookupCode } from 'actions/lookupActions';
 import _ from 'lodash';
@@ -145,7 +145,7 @@ describe('PagedBuildingForms functionality', () => {
       fireEvent.click(getByTitle('Add Building'));
     });
     expect(getByText('Type of Construction')).toBeVisible(); //validate that at least one of the building forms fields is displaying.
-    expect(getByText('Building Information')).toBeVisible(); //the building header is hidden until one building is present.
+    expect(getByText('Information')).toBeVisible(); //the building header is hidden until one building is present.
   });
 
   it('removes a pre-existing building after user confirms modal', () => {
@@ -169,7 +169,7 @@ describe('PagedBuildingForms functionality', () => {
 
   it('displays the building at a given page on click', () => {
     const mockBuildingTwo = _.clone(mockBuilding);
-    mockBuildingTwo.projectNumber = 'building 2';
+    mockBuildingTwo.name = 'building 2';
     const initialValues: IFormParcel = {
       ...mockDetails[0],
       financials: [],
@@ -177,11 +177,11 @@ describe('PagedBuildingForms functionality', () => {
     };
 
     const pagedBuildingForms = getPagedBuildingForms(initialValues, () => {});
-    const { getByDisplayValue, getAllByLabelText } = render(pagedBuildingForms);
+    const { getByText, getAllByLabelText } = render(pagedBuildingForms);
 
     act(() => {
       fireEvent.click(getAllByLabelText('Page 2')[0]);
     });
-    expect(getByDisplayValue(mockBuildingTwo.projectNumber)).toBeVisible();
+    expect(getByText(mockBuildingTwo.name)).toBeVisible();
   });
 });

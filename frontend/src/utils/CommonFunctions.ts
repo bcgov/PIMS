@@ -33,6 +33,7 @@ export const toReactPaginateProps = (props: IPaginate): ReactPaginateProps => {
     disableInitialCallback: true,
     nextLabel: '>',
     previousLabel: '<',
+    forcePage: props.page,
   };
   return reactPaginateProps;
 };

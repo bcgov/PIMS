@@ -4,10 +4,11 @@ import { IParcel } from 'actions/parcelsActions';
 import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 import './ParcelPopupView.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import queryString from 'query-string';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -17,6 +18,7 @@ export interface IParcelDetailProps {
 export const ParcelPopupView = (props: IParcelDetailProps | null) => {
   const parcelDetail: IParcel | null | undefined = props?.parcel;
   const keycloak = useKeycloakWrapper();
+  const location = useLocation();
 
   return (
     <Container className="parcelPopup" fluid={true}>
@@ -80,10 +82,33 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
           {parcelDetail?.id && !props?.disabled && (
             <Row className="menu">
               <Col>
-                <Link to={`/submitProperty/${parcelDetail?.id}?disabled=true`}>View</Link>
+                <Link
+                  to={{
+                    pathname: `/mapview/${parcelDetail?.id}`,
+                    search: queryString.stringify({
+                      ...queryString.parse(location.search),
+                      sidebar: true,
+                      disabled: false,
+                      loadDraft: false,
+                    }),
+                  }}
+                >
+                  View
+                </Link>
                 {(keycloak.hasAgency(parcelDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
-                  <Link style={{ paddingLeft: '5px' }} to={`/submitProperty/${parcelDetail?.id}`}>
+                  <Link
+                    style={{ paddingLeft: '5px' }}
+                    to={{
+                      pathname: `/mapview/${parcelDetail?.id}`,
+                      search: queryString.stringify({
+                        ...queryString.parse(location.search),
+                        sidebar: true,
+                        disabled: false,
+                        loadDraft: false,
+                      }),
+                    }}
+                  >
                     Update
                   </Link>
                 )}

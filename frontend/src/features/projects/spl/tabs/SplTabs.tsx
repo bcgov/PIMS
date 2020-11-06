@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Tab } from 'react-bootstrap';
-import { SPPApprovalTabs, ReviewWorkflowStatus, isTabInError, IProject } from '../../common';
+import { SPPApprovalTabs, ReviewWorkflowStatus, IProject } from '../../common';
 import { DocumentationTab } from '../../common';
 import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
 import { useFormikContext } from 'formik';
-import ErrorTabs from 'features/projects/common/tabs/ErrorTabs';
+import ErrorTabs from 'components/common/ErrorTabs';
 import { EnhancedReferralTab } from 'features/projects/erp';
 import { noop } from 'lodash';
+import { isTabInError } from 'components/common/tabValidation';
 
 interface ISplTabsProps {
   /** The currently displayed tab */

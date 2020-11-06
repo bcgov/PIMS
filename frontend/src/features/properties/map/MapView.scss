@@ -1,0 +1,36 @@
+@import '../../../variables';
+@import '../../../colors.scss';
+
+.map-side-drawer {
+  transition: 1s;
+  height: calc(100vh - #{$footer-height} - #{$header-height} - #{$navbar-height});
+  overflow: auto;
+  z-index: 999;
+  min-width: 930px;
+  margin-left: -930px;
+  background-color: $form-background-color;
+  padding: 10px;
+  position: absolute;
+}
+.map-filter-container {
+  transition: margin 1s;
+}
+.map {
+  transition: margin 1s, width 1s;
+  margin-left: 0px;
+}
+.side-bar .map {
+  margin-left: 930px;
+  width: calc(100vw - 930px);
+}
+.side-bar {
+  .map-side-drawer {
+    margin-left: 0px;
+  }
+  .map .leaflet-container {
+    height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
+  }
+  .map-filter-container {
+    margin-bottom: -#{$mapfilter-height};
+  }
+}

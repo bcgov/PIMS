@@ -80,11 +80,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
     map.on('click', spiderfier.unspiderfy, spiderfier);
     map.on('zoomstart', spiderfier.unspiderfy, spiderfier);
+    map.on('clear', spiderfier.unspiderfy, spiderfier);
 
     // cleanup function
     return function componentWillUnmount() {
       map.off('click', spiderfier.unspiderfy, spiderfier);
       map.off('zoomstart', spiderfier.unspiderfy, spiderfier);
+      map.off('clear', spiderfier.unspiderfy, spiderfier);
       spiderfierRef.current = undefined;
     };
   };

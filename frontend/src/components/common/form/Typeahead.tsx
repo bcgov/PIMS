@@ -12,7 +12,6 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
 
 const Group = styled(Form.Group)`
   div {
-    margin-left: 2px;
     width: 100%;
   }
 `;
@@ -45,6 +44,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
 
       <Typeahead<T>
         {...rest}
+        inputProps={{ name: name }}
         isInvalid={hasError as any}
         isValid={isValid}
         selected={!!getIn(values, name) ? [getIn(values, name)] : []}

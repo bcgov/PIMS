@@ -10,6 +10,7 @@ export interface PersistProps {
   name: string;
   secret: string;
   initialValues: any;
+  persistCallback: (values: any) => void;
   debounce?: number;
   isSessionStorage?: boolean;
   loadDraft?: boolean;
@@ -54,7 +55,7 @@ class PersistImpl extends React.Component<
     }
   }, this.props.debounce);
 
-  loadForm = () => {
+  loadForm = (): any => {
     const maybeState = this.props.isSessionStorage
       ? window.sessionStorage.getItem(this.props.name)
       : window.localStorage.getItem(this.props.name);
@@ -66,6 +67,7 @@ class PersistImpl extends React.Component<
           this.discardForm();
         } else {
           this.props.formik.setFormikState(decryptedData.data);
+          return decryptedData.data.values;
         }
       } catch (e) {
         console.debug(e);
@@ -85,7 +87,10 @@ class PersistImpl extends React.Component<
       this.props.isSessionStorage
         ? window.sessionStorage.removeItem(this.props.name)
         : window.localStorage.removeItem(this.props.name);
-    } else if (!isEqual(prevProps.formik.values, this.props.formik.values)) {
+    } else if (
+      this.props.formik.dirty &&
+      !isEqual(prevProps.formik.values, this.props.formik.values)
+    ) {
       this.saveForm(this.props.formik);
     }
   }
@@ -116,7 +121,7 @@ class PersistImpl extends React.Component<
             display={this.state.showLoadDraftDialog}
             handleOk={() => {
               this.setState({ showLoadDraftDialog: false });
-              this.loadForm();
+              this.props.persistCallback(this.loadForm());
             }}
             handleCancel={() => {
               this.setState({ showLoadDraftDialog: false });

@@ -171,12 +171,12 @@ exports[`Review Summary View renders approved correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -185,7 +185,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -257,7 +257,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   name="netBook"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -287,7 +287,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   name="estimated"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -321,7 +321,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   name="assessed"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -346,7 +346,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   name="appraised"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -687,12 +687,12 @@ exports[`Review Summary View renders approved correctly 1`] = `
       <svg
         className="tooltip-icon"
         fill="currentColor"
-        height={14}
+        height={20}
         onBlur={[Function]}
         onFocus={[Function]}
         onMouseOut={[Function]}
         onMouseOver={[Function]}
-        size={14}
+        size={20}
         stroke="currentColor"
         strokeWidth="0"
         style={
@@ -701,7 +701,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
           }
         }
         viewBox="0 0 512 512"
-        width={14}
+        width={20}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -733,7 +733,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             />
           </div>
           <label
-            className="form-label"
+            className="text-wrap form-label"
             htmlFor="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
@@ -778,12 +778,12 @@ exports[`Review Summary View renders approved correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -792,7 +792,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -1018,12 +1018,12 @@ exports[`Review Summary View renders denied correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -1032,7 +1032,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -1104,7 +1104,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   name="netBook"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1134,7 +1134,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   name="estimated"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1168,7 +1168,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   name="assessed"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1193,7 +1193,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   name="appraised"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1534,12 +1534,12 @@ exports[`Review Summary View renders denied correctly 1`] = `
       <svg
         className="tooltip-icon"
         fill="currentColor"
-        height={14}
+        height={20}
         onBlur={[Function]}
         onFocus={[Function]}
         onMouseOut={[Function]}
         onMouseOver={[Function]}
-        size={14}
+        size={20}
         stroke="currentColor"
         strokeWidth="0"
         style={
@@ -1548,7 +1548,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
           }
         }
         viewBox="0 0 512 512"
-        width={14}
+        width={20}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -1580,7 +1580,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             />
           </div>
           <label
-            className="form-label"
+            className="text-wrap form-label"
             htmlFor="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
@@ -1625,12 +1625,12 @@ exports[`Review Summary View renders denied correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -1639,7 +1639,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -1865,12 +1865,12 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -1879,7 +1879,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -1951,7 +1951,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   name="netBook"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -1981,7 +1981,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   name="estimated"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -2015,7 +2015,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   name="assessed"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -2040,7 +2040,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   name="appraised"
                   onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="$0"
+                  placeholder=""
                   value=""
                 />
               </div>
@@ -2381,12 +2381,12 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       <svg
         className="tooltip-icon"
         fill="currentColor"
-        height={14}
+        height={20}
         onBlur={[Function]}
         onFocus={[Function]}
         onMouseOut={[Function]}
         onMouseOver={[Function]}
-        size={14}
+        size={20}
         stroke="currentColor"
         strokeWidth="0"
         style={
@@ -2395,7 +2395,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           }
         }
         viewBox="0 0 512 512"
-        width={14}
+        width={20}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -2427,7 +2427,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             />
           </div>
           <label
-            className="form-label"
+            className="text-wrap form-label"
             htmlFor="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
@@ -2472,12 +2472,12 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           <svg
             className="tooltip-icon"
             fill="currentColor"
-            height={14}
+            height={20}
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            size={14}
+            size={20}
             stroke="currentColor"
             strokeWidth="0"
             style={
@@ -2486,7 +2486,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
               }
             }
             viewBox="0 0 512 512"
-            width={14}
+            width={20}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path

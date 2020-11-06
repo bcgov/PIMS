@@ -119,7 +119,7 @@ export const Check: React.FC<CheckProps> = ({
             <Form.Label>{postLabel}</Form.Label>
           </>
         )}
-        {!!postLabel && !required && <Form.Label>{postLabel}</Form.Label>}
+        {!!postLabel && !required && <Form.Label className="text-wrap">{postLabel}</Form.Label>}
       </div>
       <DisplayError field={field} />
     </Form.Group>
