@@ -1,6 +1,16 @@
 import * as Yup from 'yup';
 import moment from 'moment';
 
+Yup.addMethod(Yup.string, 'optional', function optional() {
+  return this.transform(value => {
+    return (typeof value == 'string' && !value) ||
+      (value instanceof Array && !value.length) ||
+      value === null // allow to skip "nullable"
+      ? undefined
+      : value;
+  });
+});
+
 function emptyStringToNull(value: any, originalValue: any) {
   if (typeof originalValue === 'string' && originalValue === '') {
     return undefined;
@@ -60,10 +70,9 @@ export const Address = Yup.object().shape({
     .required('Required')
     .nullable(),
   provinceId: Yup.string().required('Required'),
-  postal: Yup.string().matches(
-    /^[a-zA-z][0-9][a-zA-z][\s-]?[0-9][a-zA-z][0-9]$/,
-    'Invalid Postal Code',
-  ),
+  postal: (Yup.string() as any)
+    .optional()
+    .matches(/^[a-zA-z][0-9][a-zA-z][\s-]?[0-9][a-zA-z][0-9]$/, 'Invalid Postal Code'),
 });
 
 const currentYear = moment().year();
@@ -117,12 +126,11 @@ export const Building = Yup.object().shape({
     .required('Required')
     .nullable(),
   buildingFloorCount: Yup.number()
-    .min(1, 'Floor Count must be a positive number')
-    .transform(emptyStringToNull)
-    .required('Required'),
+    .min(0, 'Floor Count must be a valid number')
+    .transform(emptyStringToNull),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   rentableArea: Yup.number()
-    .min(0, 'Rentable Area must be a positive number')
+    .min(0, 'Rentable Area must be a valid number')
     .transform(emptyStringToNull)
     .required('Required'),
   agencyId: Yup.number()

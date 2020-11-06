@@ -1,9 +1,16 @@
 import './Map.scss';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng } from 'leaflet';
-import { Map as LeafletMap, TileLayer, Popup, LayersControl, WMSTileLayer } from 'react-leaflet';
+import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng, Map as LeafletMap } from 'leaflet';
+import {
+  MapProps as LeafletMapProps,
+  TileLayer,
+  Popup,
+  LayersControl,
+  WMSTileLayer,
+  Map as ReactLeafletMap,
+} from 'react-leaflet';
 import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
@@ -21,6 +28,7 @@ import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
 import { useRouterFilter } from 'hooks/useRouterFilter';
+import ReactResizeDetector from 'react-resize-detector';
 import {
   municipalityLayerPopupConfig,
   MUNICIPALITY_LAYER_URL,
@@ -60,6 +68,7 @@ export type MapProps = {
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
+  mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -90,10 +99,10 @@ const Map: React.FC<MapProps> = ({
   onMapClick,
   disableMapFilterBar,
   interactive = true,
+  mapRef,
 }) => {
   // state and refs
   const dispatch = useDispatch();
-  const mapRef = useRef<LeafletMap>(null);
   const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
     pid: '',
     searchBy: 'address',
@@ -109,21 +118,25 @@ const Map: React.FC<MapProps> = ({
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const { getAdministrativeAreaLatLng } = useApi();
+  const [mapWidth, setMapWidth] = useState(0);
   useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
-
-  //do not jump to map coordinates if we have an existing map but no parcel details.
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
+
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
     dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
   }, [dispatch, smallScreen]);
+
+  useEffect(() => {
+    mapRef.current?.leafletElement.invalidateSize();
+  }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
   const [bounds, setBounds] = useState<BBox>();
@@ -231,7 +244,7 @@ const Map: React.FC<MapProps> = ({
   const points = createPoints(properties);
 
   // get map bounds
-  const updateMap = () => {
+  const updateMap = useCallback(() => {
     if (!mapRef?.current) {
       return;
     }
@@ -243,11 +256,7 @@ const Map: React.FC<MapProps> = ({
       b.getNorthEast().lat,
     ]);
     setZoom(mapRef.current.leafletElement.getZoom());
-  };
-
-  useEffect(() => {
-    updateMap();
-  }, []);
+  }, [mapRef]);
 
   const renderPopup = (item: IPropertyDetail) => {
     const { propertyTypeId, parcelDetail, position } = item;
@@ -314,101 +323,108 @@ const Map: React.FC<MapProps> = ({
 
   // return map
   return (
-    <Container fluid className="px-0">
-      {!disableMapFilterBar ? (
-        <Container fluid className="px-0 map-filter-container">
-          <Container className="px-0">
-            <MapFilterBar
-              agencyLookupCodes={agencies}
-              propertyClassifications={propertyClassifications}
-              lotSizes={lotSizes}
-              mapFilter={mapFilter}
-              onFilterChange={handleMapFilterChange}
-              onFilterReset={fitMapBounds}
-            />
-          </Container>
-        </Container>
-      ) : null}
-      <Row noGutters>
-        <Col>
-          {baseLayers?.length > 0 && (
-            <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
-          )}
-          <LeafletMap
-            ref={mapRef}
-            center={[lat, lng]}
-            zoom={lastZoom}
-            whenReady={() => {
-              fitMapBounds();
-              handleViewportChange(mapFilter);
-            }}
-            onViewportChanged={() => {
-              handleViewportChange(mapFilter);
-            }}
-            onclick={showLocationDetails}
-            closePopupOnClick={interactive}
-            onzoomend={onZoomEnd}
-            onzoomstart={closeMarkerPopup}
-            onmoveend={updateMap}
-          >
-            {activeBasemap && (
-              <TileLayer
-                attribution={activeBasemap.attribution}
-                url={activeBasemap.url}
-                zIndex={0}
-              />
-            )}
-            <PointClusterer
-              points={points}
-              zoom={zoom}
-              bounds={bounds}
-              onMarkerClick={onSingleMarkerClick}
-            />
-            {selectedProperty && renderPopup(selectedProperty)}
-            {!!layerPopup && (
-              <Popup
-                position={layerPopup.latlng}
-                offset={[0, -25]}
-                onClose={() => setLayerPopup(undefined)}
-                closeButton={interactive}
-                autoPan={false}
-              >
+    <ReactResizeDetector handleWidth>
+      {({ width }: any) => {
+        setMapWidth(width);
+        return (
+          <Container fluid className="px-0 map">
+            {!disableMapFilterBar ? (
+              <Container fluid className="px-0 map-filter-container">
+                <Container className="px-0">
+                  <MapFilterBar
+                    agencyLookupCodes={agencies}
+                    propertyClassifications={propertyClassifications}
+                    lotSizes={lotSizes}
+                    mapFilter={mapFilter}
+                    onFilterChange={handleMapFilterChange}
+                    onFilterReset={fitMapBounds}
+                  />
+                </Container>
+              </Container>
+            ) : null}
+            <Row noGutters>
+              <Col>
+                {baseLayers?.length > 0 && (
+                  <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
+                )}
+                <ReactLeafletMap
+                  ref={mapRef}
+                  center={[lat, lng]}
+                  zoom={lastZoom}
+                  whenReady={() => {
+                    fitMapBounds();
+                    handleViewportChange(mapFilter);
+                  }}
+                  onViewportChanged={() => {
+                    handleViewportChange(mapFilter);
+                  }}
+                  onclick={showLocationDetails}
+                  closePopupOnClick={interactive}
+                  onzoomend={onZoomEnd}
+                  onzoomstart={closeMarkerPopup}
+                  onmoveend={updateMap}
+                >
+                  {activeBasemap && (
+                    <TileLayer
+                      attribution={activeBasemap.attribution}
+                      url={activeBasemap.url}
+                      zIndex={0}
+                    />
+                  )}
+                  <PointClusterer
+                    points={points}
+                    zoom={zoom}
+                    bounds={bounds}
+                    onMarkerClick={onSingleMarkerClick}
+                  />
+                  {selectedProperty && renderPopup(selectedProperty)}
+                  {!!layerPopup && (
+                    <Popup
+                      position={layerPopup.latlng}
+                      offset={[0, -25]}
+                      onClose={() => setLayerPopup(undefined)}
+                      closeButton={interactive}
+                      autoPan={false}
+                    >
                 <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
-                <LayerPopupContent
-                  data={layerPopup.data as any}
-                  config={layerPopup.config as any}
-                />
-              </Popup>
-            )}
-            <LegendControl />
+                      <LayerPopupContent
+                        data={layerPopup.data as any}
+                        config={layerPopup.config as any}
+                      />
+                    </Popup>
+                  )}
+                  <LegendControl />
 
-            <LayersControl position="topright">
-              <LayersControl.Overlay checked={true} name="Parcel Boundaries">
-                <WMSTileLayer
-                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
-                  layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-                  transparent={true}
-                  format="image/png"
-                  zIndex={10}
-                  id="parcelLayer"
-                />
-              </LayersControl.Overlay>
-              <LayersControl.Overlay checked name="Municipalities">
-                <WMSTileLayer
-                  url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?"
-                  layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP"
-                  transparent={true}
-                  format="image/png"
-                  opacity={0.5}
-                  zIndex={8}
-                  id="municipalityLayer"
-                />
-              </LayersControl.Overlay>
-            </LayersControl>
-          </LeafletMap>
-        </Col>
-      </Row>
-    </Container>
+                  <LayersControl position="topright">
+                    <LayersControl.Overlay checked={true} name="Parcel Boundaries">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
+                        layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+                        transparent={true}
+                        format="image/png"
+                        zIndex={10}
+                        id="parcelLayer"
+                      />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay checked name="Municipalities">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?"
+                        layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP"
+                        transparent={true}
+                        format="image/png"
+                        opacity={0.5}
+                        zIndex={8}
+                        id="municipalityLayer"
+                      />
+                    </LayersControl.Overlay>
+                  </LayersControl>
+                </ReactLeafletMap>
+              </Col>
+            </Row>
+          </Container>
+        );
+      }}
+    </ReactResizeDetector>
   );
 };
 

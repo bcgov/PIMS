@@ -51,7 +51,7 @@ export interface IBuilding {
   address: IAddress;
   latitude: number | '';
   longitude: number | '';
-  buildingFloorCount: number | '';
+  buildingFloorCount?: number | '';
   buildingConstructionType?: string;
   buildingConstructionTypeId: number | '';
   buildingPredominateUse?: string;

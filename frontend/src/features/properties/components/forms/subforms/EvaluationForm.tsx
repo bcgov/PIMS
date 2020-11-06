@@ -1,7 +1,6 @@
 import { Fragment, useMemo, useRef } from 'react';
 import React from 'react';
 import { FormikProps, getIn } from 'formik';
-import { Form } from 'components/common/form';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
@@ -10,7 +9,7 @@ import _ from 'lodash';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import { Table } from 'components/Table';
-import { getEvaluationCols } from './EvaluationCols';
+import { getEvaluationCols } from './columns';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -154,17 +153,15 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
         pagingRef={pagingRef}
       />
       <div ref={pagingRef}>
-        <Form.Row className="evaluationForm">
-          <Table
-            lockPageSize
-            pageSize={NUMBER_OF_EVALUATIONS_PER_PAGE}
-            pageCount={financials.length / NUMBER_OF_EVALUATIONS_PER_PAGE}
-            name="evaluations"
-            columns={cols}
-            data={defaultFinancials}
-            manualPagination={false}
-          />
-        </Form.Row>
+        <Table
+          lockPageSize
+          pageSize={NUMBER_OF_EVALUATIONS_PER_PAGE}
+          pageCount={financials?.length ?? 0 / NUMBER_OF_EVALUATIONS_PER_PAGE}
+          name="evaluations"
+          columns={cols}
+          data={defaultFinancials}
+          manualPagination={false}
+        />
       </div>
     </Fragment>
   );

@@ -117,13 +117,13 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
       className="col"
     >
       <a
-        href="/submitProperty/1?disabled=true"
+        href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         View
       </a>
       <a
-        href="/submitProperty/1"
+        href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
         onClick={[Function]}
         style={
           Object {

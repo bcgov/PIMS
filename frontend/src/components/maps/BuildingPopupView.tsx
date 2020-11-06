@@ -7,8 +7,9 @@ import { Alert, Row, Col } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 import { EvaluationKeys } from '../../constants/evaluationKeys';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Claims from 'constants/claims';
+import queryString from 'query-string';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
@@ -18,6 +19,7 @@ export interface IBuildingDetailProps {
 export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildingDetailProps) => {
   const keycloak = useKeycloakWrapper();
   const buildingDetail: IBuilding | null | undefined = props?.building;
+  const location = useLocation();
 
   return (
     <Container className="buildingPopup" fluid={true}>
@@ -76,12 +78,33 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
           {buildingDetail?.parcelId && !props?.disabled && (
             <Row className="menu">
               <Col>
-                <Link to={`/submitProperty/${buildingDetail?.parcelId}?disabled=true`}>View</Link>
+                <Link
+                  to={{
+                    pathname: `/mapview/${buildingDetail?.parcelId}`,
+                    search: queryString.stringify({
+                      ...queryString.parse(location.search),
+                      sidebar: true,
+                      disabled: true,
+                      loadDraft: false,
+                    }),
+                  }}
+                >
+                  View
+                </Link>
+
                 {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
                     style={{ paddingLeft: '5px' }}
-                    to={`/submitProperty/${buildingDetail?.parcelId}`}
+                    to={{
+                      pathname: `/mapview/${buildingDetail?.parcelId}`,
+                      search: queryString.stringify({
+                        ...queryString.parse(location.search),
+                        disabled: false,
+                        sidebar: true,
+                        loadDraft: false,
+                      }),
+                    }}
                   >
                     Update
                   </Link>

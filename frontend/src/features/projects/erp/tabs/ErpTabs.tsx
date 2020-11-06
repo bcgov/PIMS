@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { Tab, Spinner } from 'react-bootstrap';
-import {
-  SPPApprovalTabs,
-  initialValues,
-  ReviewWorkflowStatus,
-  IProject,
-  ErrorTabs,
-  isTabInError,
-} from '../../common';
+import { SPPApprovalTabs, initialValues, ReviewWorkflowStatus, IProject } from '../../common';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
 import { ProjectInformationTab, DocumentationTab } from '../../common';
 import { CloseOutFormTab } from 'features/projects/spl';
+import { isTabInError } from 'components/common/tabValidation';
+import ErrorTabs from 'components/common/ErrorTabs';
 
 interface IErpTabsProps {
   /** The currently displayed tab */

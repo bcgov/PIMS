@@ -5,6 +5,7 @@ import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import TooltipIcon from '../TooltipIcon';
+import TooltipWrapper from '../TooltipWrapper';
 
 type RequiredAttributes = {
   /** The field name */
@@ -34,6 +35,8 @@ type OptionalAttributes = {
   onBlurFormatter?: Function;
   /** tooltip to display after label */
   tooltip?: string;
+  /** Display errors in a tooltip instead of in a div */
+  displayErrorTooltips?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -57,6 +60,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     type,
     onBlurFormatter,
     tooltip,
+    displayErrorTooltips,
     formikProps: {
       values,
       errors,
@@ -72,6 +76,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     const error = getIn(errors, field);
     const touch = getIn(touched, field);
     const value = getIn(values, field);
+    const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
     const asElement: any = is || 'input';
     useEffect(() => {
       registerField(field, { validate: undefined });
@@ -79,6 +84,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
         unregisterField(field);
       };
     }, [field, registerField, unregisterField]);
+
     return (
       <Form.Group
         controlId={`input-${field}`}
@@ -90,30 +96,32 @@ export const FastInput: React.FC<FastInputProps> = memo(
             {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           </Form.Label>
         )}
+        {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
 
         {!!required && <span className="required">*</span>}
-
-        <Form.Control
-          as={asElement}
-          name={field}
-          className={className}
-          required={required}
-          disabled={disabled}
-          custom={custom}
-          isInvalid={!!touch && !!error}
-          isValid={!!touch && !error && value && !disabled}
-          value={value}
-          placeholder={placeholder}
-          onBlur={(e: any) => {
-            if (onBlurFormatter) {
-              setFieldValue(field, onBlurFormatter(value));
-            }
-            handleBlur(e);
-          }}
-          onChange={handleChange}
-          type={type}
-          {...rest}
-        />
+        <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
+          <Form.Control
+            as={asElement}
+            name={field}
+            className={className}
+            required={required}
+            disabled={disabled}
+            custom={custom}
+            isInvalid={!!touch && !!error}
+            isValid={!!touch && !error && value && !disabled}
+            value={value}
+            placeholder={placeholder}
+            onBlur={(e: any) => {
+              if (onBlurFormatter) {
+                setFieldValue(field, onBlurFormatter(value));
+              }
+              handleBlur(e);
+            }}
+            onChange={handleChange}
+            type={type}
+            {...rest}
+          />
+        </TooltipWrapper>
         <DisplayError field={field} />
       </Form.Group>
     );

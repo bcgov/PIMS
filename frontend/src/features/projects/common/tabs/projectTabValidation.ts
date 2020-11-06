@@ -1,16 +1,20 @@
 import { IProject, IProjectTask } from '..';
 import { setIn, validateYupSchema, yupToFormErrors } from 'formik';
+import { ValidationGroup } from 'components/common/tabValidation';
 import _ from 'lodash';
 
-export interface ValidationGroup {
-  schema: any;
-  tab: string;
-  statusCode: string;
-}
-
-/** return tab error classname if tab is in error */
-export const isTabInError = (errors: any, tabName: string) => {
-  return (errors.tabs as string[])?.includes(tabName) ? 'tabError' : '';
+/**
+ * Validate tasks for this project and status code
+ * @param project the project to validate
+ * @param statusCode any return invalid tasks that match this statusCode
+ */
+export const validateTasks = (project: IProject, statusCode: string) => {
+  return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
+    if (!task.isCompleted && !task.isOptional && task.statusCode === statusCode) {
+      errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
+    }
+    return errors;
+  }, {});
 };
 
 /**
@@ -56,18 +60,4 @@ export const validateTab = async (
       return _.merge(yupToFormErrors(err), errors);
     },
   );
-};
-
-/**
- * Validate tasks for this project and status code
- * @param project the project to validate
- * @param statusCode any return invalid tasks that match this statusCode
- */
-export const validateTasks = (project: IProject, statusCode: string) => {
-  return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
-    if (!task.isCompleted && !task.isOptional && task.statusCode === statusCode) {
-      errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
-    }
-    return errors;
-  }, {});
 };

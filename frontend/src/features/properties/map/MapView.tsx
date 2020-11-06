@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
-import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
+import { Map as LeafletMap } from 'react-leaflet';
 import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
 import { IPropertySearchParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,12 +10,12 @@ import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsAc
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
-import {
-  saveClickLatLng as saveLeafletMouseEvent,
-  clearClickLatLng,
-} from 'reducers/LeafletMouseSlice';
+import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
+import { saveClickLatLng as saveLeafletMouseEvent } from 'reducers/LeafletMouseSlice';
 import * as API from 'constants/API';
 import _ from 'lodash';
+import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
+import classNames from 'classnames';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -51,13 +51,12 @@ interface MapViewProps {
   showParcelBoundaries?: boolean;
   onMarkerClick?: (obj: IProperty) => void;
   onMarkerPopupClosed?: (obj: IPropertyDetail) => void;
-  /** to avoid the marker disappearing while zooming in the process of submitting a property */
-  submittingProperty?: boolean;
 }
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
   const [loadedProperties, setLoadedProperties] = useState(false);
+  const mapRef = useRef<LeafletMap>(null);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
     state => state.parcel.parcelDetail,
   );
@@ -127,47 +126,47 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
 
   useEffect(() => {
     throttledFetch(parcelBounds);
-    dispatch(getFetchLookupCodeAction());
   }, [dispatch, throttledFetch]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(clearClickLatLng());
-    };
-  }, [dispatch]);
+  const { showSideBar } = useParamSideBar();
 
   return (
-    <Map
-      lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
-      lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
-      properties={properties}
-      selectedProperty={propertyDetail}
-      agencies={agencies}
-      propertyClassifications={propertyClassifications}
-      lotSizes={lotSizes}
-      onMarkerClick={
-        props.onMarkerClick ??
-        ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
-      }
-      onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
-      onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-        if (!props.submittingProperty) {
-          const apiParams = getApiParams(mapFilterModel);
-          throttledFetch(apiParams);
-        } else {
+    <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
+      <MapSideBarContainer
+        refreshParcels={() => {
+          throttledFetch(parcelBounds);
+          mapRef.current?.leafletElement.fireEvent('clear');
+        }}
+        properties={properties}
+      ></MapSideBarContainer>
+      <Map
+        lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
+        lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
+        properties={properties}
+        selectedProperty={propertyDetail}
+        agencies={agencies}
+        propertyClassifications={propertyClassifications}
+        lotSizes={lotSizes}
+        onMarkerClick={
+          props.onMarkerClick ??
+          ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
+        }
+        onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
+        onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
           if (!loadedProperties) {
-            const apiParams = getApiParams(mapFilterModel);
-            throttledFetch(apiParams);
             setLoadedProperties(true);
           }
-        }
-      }}
-      onMapClick={saveLatLng}
-      disableMapFilterBar={props.disableMapFilterBar}
-      interactive={!props.disabled}
-      showParcelBoundaries={props.showParcelBoundaries ?? true}
-      zoom={6}
-    />
+          const apiParams = getApiParams(mapFilterModel);
+          throttledFetch(apiParams);
+        }}
+        onMapClick={saveLatLng}
+        disableMapFilterBar={props.disableMapFilterBar}
+        interactive={!props.disabled}
+        showParcelBoundaries={props.showParcelBoundaries ?? true}
+        zoom={6}
+        mapRef={mapRef}
+      />
+    </div>
   );
 };
 

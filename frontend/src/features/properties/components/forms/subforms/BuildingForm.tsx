@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { FormikProps, getIn } from 'formik';
 import React from 'react';
@@ -9,17 +9,7 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import {
-  Form,
-  FastDatePicker,
-  FastSelect,
-  InputGroup,
-  FastInput,
-  Input,
-  AutoCompleteText,
-  SelectOption,
-  TextArea,
-} from 'components/common/form';
+import { Form, FastDatePicker, FastSelect, InputGroup, FastInput } from 'components/common/form';
 import { Check } from 'components/common/form/Check';
 import { mapLookupCode, formikFieldMemo } from 'utils';
 import * as API from 'constants/API';
@@ -27,6 +17,9 @@ import { IBuilding } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import { IGeocoderResponse } from 'hooks/useApi';
+import InformationForm from './InformationForm';
+import styled from 'styled-components';
+import LatLongForm from './LatLongForm';
 
 export interface IFormBuilding extends IBuilding {
   financials: any;
@@ -66,6 +59,12 @@ interface BuildingProps {
   disabled?: boolean;
   allowEdit?: boolean;
 }
+
+const ScrollBox = styled.div`
+  height: 440px;
+  overflow-y: auto;
+`;
+
 const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   const keycloak = useKeycloakWrapper();
 
@@ -112,8 +111,6 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
     props.setFieldValue(withNameSpace('longitude'), props.values.longitude);
   }
 
-  const projectNumberDisabled = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
-
   const handleGeocoderChanges = (data: IGeocoderResponse) => {
     if (data) {
       const newValues = {
@@ -153,257 +150,146 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   };
 
   return (
-    <Fragment>
-      <Form.Row key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
+    <>
+      <Row noGutters key={withNameSpace()} className="buildingForm" style={{ marginBottom: 0 }}>
         <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Name
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              field={withNameSpace('name')}
-            />
-          </Form.Row>
+          <InformationForm
+            nameSpace={withNameSpace('')}
+            classifications={classifications}
+            agencies={agencies}
+            isAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            disabled={props.disabled || readonly}
+          />
+        </Col>
+        <Col md={6}>
           <AddressForm
             {...props}
             nameSpace={withNameSpace('address')}
             disabled={props.disabled || readonly}
             onGeocoderChange={handleGeocoderChanges}
           />
-        </Col>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Description
-            </Form.Label>
-            <TextArea
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              field={withNameSpace('description')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Type of Construction
-            </Form.Label>
-            <FastSelect
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              placeholder="Must Select One"
-              outerClassName="col-md-10"
-              field={withNameSpace('buildingConstructionTypeId')}
-              type="number"
-              options={constructionType}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Rentable Area
-            </Form.Label>
-            <InputGroup
-              fast={true}
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              type="number"
-              outerClassName="col-md-7"
-              field={withNameSpace('rentableArea')}
-              postText="Sq. Ft"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Number of Floors
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              type="number"
-              outerClassName="col-md-10"
-              field={withNameSpace('buildingFloorCount')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Predominate Use
-            </Form.Label>
-            <FastSelect
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              placeholder="Must Select One"
-              outerClassName="col-md-10"
-              field={withNameSpace('buildingPredominateUseId')}
-              type="number"
-              options={predominateUses}
-            />
-          </Form.Row>
-        </Col>
-      </Form.Row>
-      <Form.Row>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Latitude
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              type="number"
-              outerClassName="col-md-10"
-              field={withNameSpace('latitude')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Longitude
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              type="number"
-              outerClassName="col-md-10"
-              field={withNameSpace('longitude')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Classification
-            </Form.Label>
-            <FastSelect
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              placeholder="Must Select One"
-              field={withNameSpace('classificationId')}
-              type="number"
-              options={classifications}
-            />
-          </Form.Row>
-        </Col>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Agency
-            </Form.Label>
-            <AutoCompleteText
-              field={withNameSpace('agencyId')}
-              options={agencies}
-              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-              getValueDisplay={(val: SelectOption) => val.code!}
-              agencyType="parent"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Sub-Agency
-            </Form.Label>
-            <AutoCompleteText
-              field={withNameSpace('agencyId')}
-              options={agencies}
-              disabled={!keycloak.hasClaim(Claims.ADMIN_PROPERTIES) || props.disabled}
-              getValueDisplay={(val: SelectOption) => val.code!}
-              agencyType="child"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              RAEG or SPP
-            </Form.Label>
-            <Input
-              disabled={projectNumberDisabled || props.disabled}
-              outerClassName="col-md-10"
-              field={withNameSpace('projectNumber')}
-            />
-          </Form.Row>
-        </Col>
-      </Form.Row>
-      <h4>Tenancy</h4>
-      <Form.Row className="buildingTenancy">
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Type of Current Occupant
-            </Form.Label>
-            <FastSelect
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              placeholder="Must Select One"
-              outerClassName="col-md-10"
-              field={withNameSpace('buildingOccupantTypeId')}
-              type="number"
-              options={occupantTypes}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Lease to be transferred with land
-            </Form.Label>
-            <Check
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              field={withNameSpace('transferLeaseOnSale')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Date Lease Expires
-            </Form.Label>
-            <FastDatePicker
-              outerClassName="col-md-10"
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              field={withNameSpace('leaseExpiry')}
-            />
-          </Form.Row>
-        </Col>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Tenancy %
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              field={withNameSpace('buildingTenancy')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Occupant Name
-            </Form.Label>
-            <FastInput
-              formikProps={props}
-              disabled={props.disabled || readonly}
-              outerClassName="col-md-10"
-              field={withNameSpace('occupantName')}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Sensitive Building
-            </Form.Label>
-            <Check
-              disabled={props.disabled || readonly}
-              className="col-md-10"
-              field={withNameSpace('sensitiveBuilding')}
-            />
-          </Form.Row>
-        </Col>
-      </Form.Row>
-      <Row noGutters>
-        <Col>
-          <h4>Building Valuation Information</h4>
-          <EvaluationForm
+          <LatLongForm
             {...props}
-            nameSpace={withNameSpace('financials')}
+            nameSpace={withNameSpace()}
             disabled={props.disabled || readonly}
+            onGeocoderChange={handleGeocoderChanges}
           />
         </Col>
       </Row>
-    </Fragment>
+      <ScrollBox>
+        <h4>Information</h4>
+        <Row noGutters>
+          <Col md={6}>
+            <Form.Row>
+              <Form.Label className="required">Predominate Use</Form.Label>
+              <FastSelect
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingPredominateUseId')}
+                type="number"
+                options={predominateUses}
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label className="required">Type of Construction</Form.Label>
+              <FastSelect
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingConstructionTypeId')}
+                type="number"
+                options={constructionType}
+              />
+            </Form.Row>
+          </Col>
+          <Col md={6}>
+            <Form.Row>
+              <Form.Label className="required">Rentable Area</Form.Label>
+              <InputGroup
+                displayErrorTooltips
+                fast={true}
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                type="number"
+                field={withNameSpace('rentableArea')}
+                postText="Sq. Ft"
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label>Number of Floors</Form.Label>
+              <FastInput
+                displayErrorTooltips
+                className="input-small"
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                field={withNameSpace('buildingFloorCount')}
+                type="number"
+              />
+            </Form.Row>
+          </Col>
+        </Row>
+        <h4>Tenancy</h4>
+        <Row className="buildingTenancy" noGutters>
+          <Col md={6}>
+            <Form.Row>
+              <Form.Label className="required">Type of Current Occupant</Form.Label>
+              <FastSelect
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingOccupantTypeId')}
+                type="number"
+                options={occupantTypes}
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label>Occupant Name</Form.Label>
+              <FastInput
+                displayErrorTooltips
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                field={withNameSpace('occupantName')}
+              />
+            </Form.Row>
+          </Col>
+          <Col md={6}>
+            <Form.Row>
+              <Form.Label>Tenancy %</Form.Label>
+              <FastInput
+                displayErrorTooltips
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                field={withNameSpace('buildingTenancy')}
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label>Date Lease Expires</Form.Label>
+              <FastDatePicker
+                formikProps={props}
+                disabled={props.disabled || readonly}
+                field={withNameSpace('leaseExpiry')}
+              />
+              <Check
+                postLabel="Lease to be transferred with land"
+                disabled={props.disabled || readonly}
+                field={withNameSpace('transferLeaseOnSale')}
+              />
+            </Form.Row>
+          </Col>
+        </Row>
+        <Row noGutters>
+          <Col>
+            <h4>Building Valuation Information</h4>
+            <EvaluationForm
+              {...props}
+              nameSpace={withNameSpace('financials')}
+              disabled={props.disabled || readonly}
+            />
+          </Col>
+        </Row>
+      </ScrollBox>
+    </>
   );
 };
 
