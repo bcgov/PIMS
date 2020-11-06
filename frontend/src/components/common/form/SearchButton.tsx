@@ -10,7 +10,7 @@ import { Button, ButtonProps } from '.';
 const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return (
     <TooltipWrapper toolTipId="map-filter-search-tooltip" toolTip="Search">
-      <Button type="submit" className="bg-warning" {...props} icon={<FaSearch size={20} />} />
+      <Button type="submit" variant="warning" {...props} icon={<FaSearch size={20} />} />
     </TooltipWrapper>
   );
 };

@@ -87,7 +87,7 @@ const HelpModal: FunctionComponent<ModalProps> = ({ handleCancel, handleSubmit, 
               Submit
             </Button>
           )}
-          <Button variant="light" onClick={handleCancel}>
+          <Button variant="secondary" onClick={handleCancel}>
             Cancel
           </Button>
         </Modal.Footer>

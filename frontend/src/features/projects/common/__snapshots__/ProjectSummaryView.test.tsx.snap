@@ -822,7 +822,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       className="c2"
     >
       <button
-        className="btn btn-warning"
+        className="btn btn-primary"
         disabled={true}
         onClick={[Function]}
         style={
@@ -1669,7 +1669,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       className="c2"
     >
       <button
-        className="btn btn-warning"
+        className="btn btn-primary"
         disabled={true}
         onClick={[Function]}
         style={
@@ -2516,7 +2516,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       className="c2"
     >
       <button
-        className="btn btn-warning"
+        className="btn btn-primary"
         disabled={true}
         onClick={[Function]}
         style={
