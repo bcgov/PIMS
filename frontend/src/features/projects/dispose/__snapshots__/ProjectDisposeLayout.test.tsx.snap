@@ -63,7 +63,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
     className="bs-stepper"
   >
     <h6>
-      Complete this form to apply to Enhanced Referral Process or Request Exemption
+      Complete this form to apply to the Enhanced Referral Process or Request Exemption
     </h6>
     <div
       className="bs-stepper-header"
