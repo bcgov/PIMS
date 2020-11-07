@@ -24,6 +24,10 @@ interface IProps<T extends object = {}> {
   /** the two probs below are for controlling the tool tip for the plust button */
   toolTipAddId?: string;
   toolTipAddText?: string;
+  /** override formiks handleReset default for customized components */
+  customReset?: () => void;
+  /** custom component field name to clear/reset */
+  customResetField?: string;
 }
 
 const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) => {
@@ -41,7 +45,7 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, handleReset }) => (
+      {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
           <Form.Row className="search-bar">
             <h3 className="filterBarHeading">{props.filterBarHeading}</h3>
@@ -54,7 +58,17 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
             </Col>
             {!props.hideReset && (
               <Col className="bar-item flex-grow-0">
-                <ResetButton disabled={isSubmitting} onClick={handleReset} />
+                <ResetButton
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    if (props.customReset && props.customResetField) {
+                      props.customReset();
+                      setFieldValue(props.customResetField, '');
+                    } else {
+                      handleReset();
+                    }
+                  }}
+                />
               </Col>
             )}
             {props.plusButton && (

@@ -2,6 +2,9 @@
 .navBar {
   font-weight: 700;
   text-align: left;
+  .navbar-brand {
+    cursor: pointer;
+  }
 }
 
 .required {

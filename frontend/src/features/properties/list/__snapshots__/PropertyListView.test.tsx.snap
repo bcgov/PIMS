@@ -2,7 +2,11 @@
 
 exports[`Property list view Matches snapshot 1`] = `
 Array [
-  .c0 {
+  .c0 div {
+  width: 100%;
+}
+
+.c1 {
   background-color: #fff !important;
   color: #003366 !important;
   padding: 6px 5px;
@@ -95,28 +99,67 @@ Array [
               className="bar-item col"
             >
               <div
-                className="form-group"
+                className="c0 form-group"
               >
-                <select
-                  className="form-select form-control"
-                  id="input-agencies"
-                  name="agencies"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value=""
+                <div
+                  className="rbt"
+                  style={
+                    Object {
+                      "outline": "none",
+                      "position": "relative",
+                    }
+                  }
+                  tabIndex={-1}
                 >
-                  <option
-                    value=""
+                  <div
+                    style={
+                      Object {
+                        "display": "flex",
+                        "flex": 1,
+                        "height": "100%",
+                        "position": "relative",
+                      }
+                    }
                   >
-                    Enter an Agency
-                  </option>
-                  <option
-                    className="option"
-                    value="1"
-                  >
-                    agencyVal
-                  </option>
-                </select>
+                    <input
+                      aria-autocomplete="both"
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      autoComplete="off"
+                      className="rbt-input-main form-control rbt-input map-filter-typeahead"
+                      name="agencies"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      placeholder="Enter an Agency"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                    <input
+                      aria-hidden={true}
+                      className="rbt-input-hint"
+                      readOnly={true}
+                      style={
+                        Object {
+                          "backgroundColor": "transparent",
+                          "borderColor": "transparent",
+                          "boxShadow": "none",
+                          "color": "rgba(0, 0, 0, 0.35)",
+                          "left": 0,
+                          "pointerEvents": "none",
+                          "position": "absolute",
+                          "top": 0,
+                          "width": "100%",
+                        }
+                      }
+                      tabIndex={-1}
+                      value=""
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div
@@ -303,7 +346,7 @@ Array [
           </div>
         </div>
         <button
-          className="c0 btn btn-primary"
+          className="c1 btn btn-primary"
           disabled={false}
           onBlur={[Function]}
           onFocus={[Function]}
@@ -333,7 +376,7 @@ Array [
           </svg>
         </button>
         <button
-          className="c0 btn btn-primary"
+          className="c1 btn btn-primary"
           disabled={false}
           onBlur={[Function]}
           onFocus={[Function]}

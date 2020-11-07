@@ -55,6 +55,19 @@ export const mapLookupCode = (
   parentId: code.parentId,
 });
 
+/** used for filters that need to display the string value of a parent agency agency */
+export const mapLookupCodeWithParentString = (
+  code: ILookupCode,
+  /** the list of lookup codes to look for parent */
+  options: ILookupCode[],
+): SelectOption => ({
+  label: code.name,
+  value: code.id.toString(),
+  code: code.code,
+  parentId: code.parentId,
+  parent: options.find((a: ILookupCode) => a.id.toString() === code.parentId?.toString())?.name,
+});
+
 export const mapStatuses = (status: IStatus): SelectOption => ({
   label: status.name,
   value: status.id.toString(),

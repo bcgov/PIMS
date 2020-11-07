@@ -1,10 +1,10 @@
 import './MapFilterBar.scss';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import { Form, Select, InputGroup, Input, SelectOption, AutoCompleteText } from '../common/form';
+import { Form, Select, InputGroup, Input, SelectOption } from '../common/form';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from 'constants/claims';
 import SppButton from 'components/common/form/SppButton';
@@ -12,6 +12,8 @@ import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import { BasePropertyFilter } from 'components/common/interfaces';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import { mapLookupCodeWithParentString } from 'utils';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
@@ -104,11 +106,26 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
+    code: code.code,
+    parentId: code.parentId,
   });
-  const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
+  const agencies = (agencyLookupCodes ?? []).map(c =>
+    mapLookupCodeWithParentString(c, agencyLookupCodes),
+  );
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const keycloak = useKeycloakWrapper();
   let formikRef = React.useRef<any>() as any;
+
+  const initialValues = useMemo(() => {
+    const values = { ...defaultFilterValues, ...mapFilter };
+    if (typeof values.agencies === 'string') {
+      const agency = agencies.find(x => x.value.toString() === values.agencies.toString()) as any;
+      if (agency) {
+        values.agencies = agency;
+      }
+    }
+    return values;
+  }, [agencies, mapFilter]);
 
   const applyEnhancedReferralFilter = () => {
     const values: MapFilterChangeEvent = { ...formikRef!.values };
@@ -126,7 +143,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
 
   return (
     <Formik<MapFilterChangeEvent>
-      initialValues={{ ...defaultFilterValues, ...mapFilter }}
+      initialValues={{ ...initialValues }}
       enableReinitialize
       validationSchema={FilterBarSchema}
       onSubmit={(values, { setSubmitting }) => {
@@ -134,7 +151,7 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
         setSubmitting(true);
         delete values.inEnhancedReferralProcess;
         delete values.inSurplusPropertyProgram;
-        onFilterChange?.({ ...values });
+        onFilterChange?.({ ...values, agencies: (values.agencies as any)?.value });
         setSubmitting(false);
       }}
       innerRef={ref => (formikRef = ref)}
@@ -146,11 +163,13 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
               <SearchBar />
             </Col>
             <Col className="bar-item">
-              <AutoCompleteText
-                autoSetting="off"
-                field="agencies"
+              <ParentGroupedFilter
+                name="agencies"
                 options={agencies}
-                placeholder="Enter an agency"
+                className="map-filter-typeahead"
+                filterBy={['code', 'label', 'parent']}
+                placeholder="Enter an Agency"
+                inputSize="large"
               />
             </Col>
             <Col className="bar-item">
