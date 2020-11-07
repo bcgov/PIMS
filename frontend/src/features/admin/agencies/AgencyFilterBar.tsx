@@ -1,9 +1,10 @@
 import * as React from 'react';
 import FilterBar from 'components/SearchBar/FilterBar';
-import { Col } from 'react-bootstrap';
-import { AutoCompleteText } from 'components/common/form';
 import { IAgencyFilter } from 'interfaces';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import { Label } from 'components/common/Label';
+import { mapLookupCodeWithParentString } from 'utils';
 
 interface IProps {
   value: IAgencyFilter;
@@ -13,8 +14,10 @@ interface IProps {
 
 export const AgencyFilterBar: React.FC<IProps> = ({ value, onChange, handleAdd }) => {
   const lookupCodes = useCodeLookups();
-  const agencyOptions = lookupCodes.getOptionsByType('Agency');
-
+  const agencyOptions = lookupCodes.getByType('Agency');
+  const agencyWithParent = (agencyOptions ?? []).map(c =>
+    mapLookupCodeWithParentString(c, agencyOptions),
+  );
   return (
     <FilterBar<IAgencyFilter>
       initialValues={value}
@@ -25,17 +28,20 @@ export const AgencyFilterBar: React.FC<IProps> = ({ value, onChange, handleAdd }
       handleAdd={handleAdd}
       toolTipAddId="agency-filter-add"
       toolTipAddText="Add a new Agency"
+      customReset={() => {
+        onChange?.({ id: '' });
+      }}
+      customResetField="id"
     >
-      <Col className="d-item">
-        {/* TODO: Swap out with new auto complete after grouping complete*/}
-        <AutoCompleteText
-          autoSetting="off"
-          field="id"
-          options={agencyOptions!}
-          placeholder="Enter an agency"
-          label="Search by Name: "
-        />
-      </Col>
+      <Label>Search agency by name: </Label>
+      <ParentGroupedFilter
+        name="id"
+        options={agencyWithParent}
+        className="agency-search"
+        placeholder="Enter an Agency"
+        filterBy={['parent', 'code', 'name']}
+        inputSize="large"
+      />
     </FilterBar>
   );
 };

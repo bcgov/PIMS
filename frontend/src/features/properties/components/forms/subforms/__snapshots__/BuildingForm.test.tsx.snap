@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
+.c0 div {
+  width: 100%;
+}
+
 .c1 {
   position: absolute;
   top: 20px;
@@ -15,10 +19,6 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
 .c1 p {
   width: 35px;
   margin: 0;
-}
-
-.c0 div {
-  width: 100%;
 }
 
 <form

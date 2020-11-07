@@ -40,7 +40,7 @@ describe('FilterBar', () => {
     );
     const { container } = render(uiElement);
     const address = container.querySelector('input[name="address"]');
-    const agencies = container.querySelector('select[name="agencies"]');
+    // const agencies = container.querySelector('input[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
     const minLotSize = container.querySelector('input[name="minLotSize"]');
     const maxLotSize = container.querySelector('input[name="maxLotSize"]');
@@ -56,13 +56,13 @@ describe('FilterBar', () => {
       });
     });
 
-    await wait(() => {
-      fireEvent.change(agencies!, {
-        target: {
-          value: '1',
-        },
-      });
-    });
+    // await wait(() => {
+    //   fireEvent.change(agencies!, {
+    //     target: {
+    //       value: '1',
+    //     },
+    //   });
+    // });
 
     await wait(() => {
       fireEvent.change(classificationId!, {
@@ -93,13 +93,14 @@ describe('FilterBar', () => {
     });
 
     // Assert
-    expect(onFilterChange).toBeCalledWith<[IFilterBarState]>({
+    // TODO: New test for more complex typeahead autocomplete
+    expect(onFilterChange).toBeCalledWith({
       searchBy: 'address',
       pid: '',
       address: 'mockaddress',
       administrativeArea: '',
       projectNumber: '',
-      agencies: '1',
+      agencies: undefined,
       classificationId: '0',
       minLotSize: '1',
       maxLotSize: '3',

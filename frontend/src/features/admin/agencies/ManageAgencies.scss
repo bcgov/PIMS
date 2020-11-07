@@ -1,33 +1,32 @@
-$header-height: 72px;
-$footer-height: 46px;
-$navbar-height: 45px;
-$filter-height: 76px;
-$contentheading-height: 60px;
+@import '../../../variables';
 .ManageAgencies {
-  background-color: white;
   display: flex;
   flex-direction: column;
   padding: 0;
   .agency-toolbar {
-    padding: 0;
-    background-color: var(--light);
+    justify-content: center;
+    padding: 0px;
     .search-bar {
-      .filterBarHeading {
-        margin-left: 500px;
-        margin-right: 100px;
+      justify-content: center;
+      .label {
+        margin-top: 10px;
+        margin-right: 10px;
       }
-      .plus-button {
-        margin-right: 600px;
-      }
+    }
+    .agency-search {
+      min-width: 250px;
+      margin-right: 50px;
+    }
+    .filterBarHeading {
+      margin-right: 50px;
     }
   }
   .table-section {
     margin-left: 15%;
     margin-right: 15%;
     padding: 1rem 2rem;
-    // display: flex;
     max-height: calc(
-      100vh - #{$header-height} - #{$navbar-height} - #{$filter-height} - #{$footer-height}
+      100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height}
     );
     table {
       background-color: white;

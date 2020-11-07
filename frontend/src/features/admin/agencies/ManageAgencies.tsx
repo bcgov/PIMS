@@ -1,5 +1,5 @@
 import './ManageAgencies.scss';
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Table } from 'components/Table';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,8 +16,9 @@ import { generateSortCriteria } from 'utils';
 import { AgencyFilterBar } from './AgencyFilterBar';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useHistory } from 'react-router-dom';
+import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
 
-const ManageAgencies: React.FC<any> = ({ filterable, title, mode }) => {
+const ManageAgencies: React.FC = () => {
   const columns = useMemo(() => columnDefinitions, []);
   const dispatch = useDispatch();
   const [filter, setFilter] = useState<IAgencyFilter>({});
@@ -60,12 +61,25 @@ const ManageAgencies: React.FC<any> = ({ filterable, title, mode }) => {
     }),
   );
 
+  const defaultValue: IAgencyFilter = {
+    id: undefined,
+  };
+  const initialValues = useMemo(() => {
+    const values = { ...defaultValue, ...filter };
+    if (typeof values.id === 'number') {
+      const agency = agencyLookupCodes.find(x => Number(x.id) === values?.id) as any;
+      if (agency) {
+        values.id = agency;
+      }
+    }
+    return values;
+  }, [agencyLookupCodes, filter, defaultValue]);
   const onRequestData = useCallback(
     ({ pageIndex }) => {
       dispatch(
         getAgenciesAction(
           toFilteredApiPaginateParams<IAgencyFilter>(
-            pageIndex,
+            filter?.id ? 0 : pageIndex,
             pageSize,
             sort && sort.column && sort.direction
               ? [generateSortCriteria(sort.column, sort.direction)]
@@ -78,13 +92,21 @@ const ManageAgencies: React.FC<any> = ({ filterable, title, mode }) => {
     [dispatch, filter, pageSize, sort],
   );
 
+  useEffect(() => {
+    dispatch(getFetchLookupCodeAction());
+  }, [history, dispatch]);
+
   return (
     <Container fluid className="ManageAgencies">
       <Container fluid className="agency-toolbar">
         <AgencyFilterBar
-          value={filter}
+          value={{ ...initialValues }}
           onChange={value => {
-            setFilter({ ...value });
+            if ((value as any).id?.value) {
+              setFilter({ ...filter, id: Number((value as any).id.value) });
+            } else {
+              setFilter({ ...initialValues, id: undefined });
+            }
           }}
           handleAdd={() => {
             history.push('/admin/agency/new');

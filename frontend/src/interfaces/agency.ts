@@ -26,7 +26,7 @@ export interface IAgencyDetail {
 export interface IAgencyFilter {
   name?: string;
   description?: string;
-  id?: number;
+  id?: number | '';
 }
 
 /** for use in creating an agency */

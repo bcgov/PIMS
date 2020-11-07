@@ -40,6 +40,16 @@ export const UserUpdateSchema = Yup.object().shape({
   lastName: Yup.string().max(100, 'Last Name must be less than 100 characters'),
 });
 
+export const AgencyEditSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Please enter a valid email.')
+    .max(100, 'Email must be less than 100 characters'),
+  name: Yup.string()
+    .max(100, 'Agency name must be less than 100 characters')
+    .required('An agency name is required.'),
+  code: Yup.string().required('An agnecy code is required.'),
+});
+
 export const UserSchema = Yup.object().shape({
   email: Yup.string()
     .email()

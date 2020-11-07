@@ -1,6 +1,6 @@
 import './FilterBar.scss';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
@@ -8,6 +8,7 @@ import { Form, Select, SelectOption, InputGroup, Input } from 'components/common
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import { BasePropertyFilter } from 'components/common/interfaces';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
@@ -101,19 +102,34 @@ const FilterBar: React.FC<FilterBarProps> = ({
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
+    code: code.code,
+    parentId: code.parentId,
+    parent: agencyLookupCodes.find(x => x.id.toString() === code.parentId?.toString())?.name,
   });
+
   const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
+  const initialValues = useMemo(() => {
+    const values = { ...defaultFilterValues, ...filter };
+    if (typeof values.agencies === 'string') {
+      const agency = agencies.find(x => x.value.toString() === values.agencies.toString()) as any;
+      if (agency) {
+        values.agencies = agency;
+      }
+    }
+    return values;
+  }, [agencies, filter]);
+
   const classifications = (propertyClassifications ?? [])
     .filter(i => !!i.isVisible)
     .map(c => mapLookupCode(c));
 
   return (
     <Formik<IFilterBarState>
-      initialValues={{ ...defaultFilterValues, ...filter }}
+      initialValues={{ ...initialValues }}
       enableReinitialize
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        onChange?.({ ...values });
+        onChange?.({ ...values, agencies: (values.agencies as any)?.value });
         setSubmitting(false);
       }}
     >
@@ -124,7 +140,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
               <SearchBar />
             </Col>
             <Col className="bar-item">
-              <Select field="agencies" placeholder="Enter an Agency" options={agencies} />
+              <ParentGroupedFilter
+                name="agencies"
+                options={agencies}
+                className="map-filter-typeahead"
+                filterBy={['code', 'label', 'parent']}
+                placeholder="Enter an Agency"
+                inputSize="large"
+              />
             </Col>
             <Col className="bar-item">
               <Select
