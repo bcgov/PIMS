@@ -2,19 +2,34 @@ import { useCallback } from 'react';
 import React from 'react';
 import { FormikProps } from 'formik';
 import { Form, FastInput } from 'components/common/form';
-import { IGeocoderResponse } from 'hooks/useApi';
 import { latitudeTooltip } from '../strings';
+import { ReactComponent as BuildingDraftIcon } from 'assets/images/draft-building-icon.svg';
+import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import styled from 'styled-components';
 
 interface LatLongFormProps {
+  setMovingPinNameSpace: (nameSpace: string) => void;
   nameSpace?: string;
   disabled?: boolean;
-  onGeocoderChange?: (data: IGeocoderResponse) => void;
 }
 
 export const defaultLatLongValues: any = {
   latitude: '',
   longitude: '',
 };
+
+const DraftMarkerButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  display: flex;
+  p {
+    width: 35px;
+    margin: 0;
+  }
+`;
+
 const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) => {
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
@@ -24,10 +39,11 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
   );
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       <Form.Row>
         <Form.Label className="required">Latitude</Form.Label>
         <FastInput
+          className="input-medium"
           displayErrorTooltips
           tooltip={latitudeTooltip}
           formikProps={props}
@@ -39,6 +55,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
       <Form.Row>
         <Form.Label className="required">Longitude</Form.Label>
         <FastInput
+          className="input-medium"
           displayErrorTooltips
           formikProps={props}
           disabled={props.disabled}
@@ -46,7 +63,20 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           field={withNameSpace('longitude')}
         />
       </Form.Row>
-    </>
+      <DraftMarkerButton
+        onClick={(e: any) => {
+          props.setMovingPinNameSpace(props.nameSpace ?? '');
+          e.preventDefault();
+        }}
+      >
+        <p>Place Pin</p>
+        {props?.nameSpace?.includes('building') === true ? (
+          <BuildingDraftIcon />
+        ) : (
+          <ParcelDraftIcon />
+        )}
+      </DraftMarkerButton>
+    </div>
   );
 };
 

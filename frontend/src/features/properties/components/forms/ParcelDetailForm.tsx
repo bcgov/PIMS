@@ -31,6 +31,7 @@ interface IParcelDetailFormProps {
   pidSelection: IPidSelection;
   currentTab: ParcelDetailTabs;
   setCurrentTab: (tab: ParcelDetailTabs) => void;
+  setMovingPinNameSpace: (nameSpace: string) => void;
   isAdmin?: boolean;
 }
 
@@ -42,6 +43,7 @@ const ParcelDetailForm: React.FunctionComponent<IParcelDetailFormProps> = ({
   pidSelection,
   currentTab,
   setCurrentTab,
+  setMovingPinNameSpace,
   isAdmin,
 }) => {
   const formikProps = useFormikContext<IParcel>();
@@ -163,29 +165,35 @@ const ParcelDetailForm: React.FunctionComponent<IParcelDetailFormProps> = ({
               disabled={disabled || !allowEdit}
               nameSpace="address"
             />
-            <LatLongForm {...formikProps} disabled={disabled || !allowEdit} />
+            <LatLongForm
+              {...formikProps}
+              disabled={disabled || !allowEdit}
+              setMovingPinNameSpace={setMovingPinNameSpace}
+            />
             <LandForm {...formikProps} disabled={disabled || !allowEdit} />
           </Col>
         </Row>
-        <Row noGutters>
-          <Col>
-            <h4>Valuation Information</h4>
-            <p>
-              Total values for parcel inclusive of existing building(s) for the most recent year
-              with data
-            </p>
-            <SumFinancialsForm formikProps={formikProps} showAppraisal={false} />
-            <div key={disabled?.toString()}>
-              <EvaluationForm
-                {...(formikProps as any)}
-                isParcel={true}
-                showAppraisal={false}
-                disabled={disabled || !allowEdit}
-                nameSpace="financials"
-              />
-            </div>
-          </Col>
-        </Row>
+        <div className="scroll">
+          <Row noGutters>
+            <Col>
+              <h4>Valuation Information</h4>
+              <p>
+                Total values for parcel inclusive of existing building(s) for the most recent year
+                with data
+              </p>
+              <SumFinancialsForm formikProps={formikProps} showAppraisal={false} />
+              <div key={disabled?.toString()}>
+                <EvaluationForm
+                  {...(formikProps as any)}
+                  isParcel={true}
+                  showAppraisal={false}
+                  disabled={disabled || !allowEdit}
+                  nameSpace="financials"
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
       </Tab>
       {(formikProps.values?.buildings?.length && formikProps.values?.buildings?.length > 0) ||
       !disabled ? (
@@ -198,7 +206,12 @@ const ParcelDetailForm: React.FunctionComponent<IParcelDetailFormProps> = ({
               : ''
           }
         >
-          <PagedBuildingForms disabled={disabled} allowEdit={allowEdit} />
+          <PagedBuildingForms
+            disabled={disabled}
+            allowEdit={allowEdit}
+            isAdmin={isAdmin}
+            setMovingPinNameSpace={setMovingPinNameSpace}
+          />
         </Tab>
       ) : null}
     </ErrorTabs>

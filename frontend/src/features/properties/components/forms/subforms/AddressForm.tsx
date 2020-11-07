@@ -105,6 +105,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
       <Form.Row>
         <Form.Label>Postal</Form.Label>
         <FastInput
+          className="input-small"
           formikProps={props}
           disabled={props.disabled}
           onBlurFormatter={(postal: string) => postal.replace(postal, postalCodeFormatter(postal))}

@@ -22,7 +22,6 @@ const LinkButton = styled.span`
   padding: 0;
   color: #069;
   text-decoration: underline;
-  cursor: pointer;
 `;
 
 /**

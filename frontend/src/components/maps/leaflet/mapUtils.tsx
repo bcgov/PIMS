@@ -1,6 +1,6 @@
 import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
 import { ICluster } from '../types';
-import { IProperty } from 'actions/parcelsActions';
+import { IProperty, PropertyTypes } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
 import { ReviewWorkflowStatus } from 'features/projects/common';
 
@@ -22,6 +22,28 @@ export const buildingIcon = new Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
+});
+
+// draft parcel icon (green)
+export const draftParcelIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-green.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+  className: 'draft',
+});
+
+// draft building icon (blue)
+export const draftBuildingIcon = new Icon({
+  iconUrl: require('assets/images/marker-icon-2x-blue.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+  className: 'draft',
 });
 
 // spp icon (purple)
@@ -46,7 +68,8 @@ export const erpIcon = new Icon({
 
 export type PointFeature = Supercluster.PointFeature<{
   propertyId: number;
-  propertyTypeId: 0 | 1;
+  propertyTypeId: PropertyTypes;
+  name?: string;
 }>;
 
 /**
@@ -63,6 +86,7 @@ export const createPoints = (properties: IProperty[]) =>
         propertyTypeId: x.propertyTypeId,
         projectNumber: x.projectNumber,
         projectStatus: x.projectStatus,
+        name: x.name,
       },
       geometry: {
         type: 'Point',
@@ -104,8 +128,12 @@ export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression):
       return erpIcon;
     } else if (projectNumber !== undefined) {
       return sppIcon;
-    } else if (propertyTypeId === 0) {
+    } else if (propertyTypeId === PropertyTypes.PARCEL) {
       return parcelIcon;
+    } else if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
+      return draftParcelIcon;
+    } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
+      return draftBuildingIcon;
     } else {
       return buildingIcon;
     }
@@ -161,12 +189,13 @@ export const generateKey = (p: IProperty) =>
 
 /** Creates a IProperty object from a GeoJSON point */
 export const asProperty = (point: PointFeature): IProperty => {
-  const { propertyId: id, propertyTypeId } = point?.properties;
+  const { propertyId: id, propertyTypeId, name } = point?.properties;
   const latlng = GeoJSON.coordsToLatLng(point?.geometry?.coordinates as [number, number]);
   return {
     id,
     propertyTypeId,
     latitude: latlng.lat,
     longitude: latlng.lng,
+    name,
   } as IProperty;
 };

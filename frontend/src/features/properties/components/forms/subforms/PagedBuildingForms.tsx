@@ -14,9 +14,11 @@ import { SelectOption } from 'components/common/form';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface PagedBuildingFormsProps {
+  setMovingPinNameSpace: (nameSpace: string) => void;
   /** controls whether this form can be interacted with */
   disabled?: boolean;
   allowEdit?: boolean;
+  isAdmin?: boolean;
 }
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 1;
 
@@ -166,7 +168,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
                 ))}
               </Form.Control>
             </Form.Group>
-            {!props.disabled && !!props.allowEdit && (
+            {!props.disabled && (props.isAdmin || !buildings[currentPage]?.id) && (
               <TooltipWrapper toolTipId="building-delete-button" toolTip="Delete Building">
                 <Button
                   className="delete-button page-link mr-4"
@@ -197,6 +199,7 @@ const PagedBuildingForms: React.FC<PagedBuildingFormsProps> = (props: PagedBuild
           allowEdit={props.allowEdit}
           nameSpace="buildings"
           index={currentPage}
+          setMovingPinNameSpace={props.setMovingPinNameSpace}
         />
       ) : (
         <p>

@@ -6,7 +6,12 @@ import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionC
 import { IPropertySearchParams } from 'constants/API';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
+import {
+  IProperty,
+  storeParcelDetail,
+  IPropertyDetail,
+  PropertyTypes,
+} from 'actions/parcelsActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
@@ -54,7 +59,10 @@ interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
-  const properties = useSelector<RootState, IProperty[]>(state => state.parcel.parcels);
+  const properties = useSelector<RootState, IProperty[]>(state => [
+    ...state.parcel.parcels,
+    ...state.parcel.draftParcels,
+  ]);
   const [loadedProperties, setLoadedProperties] = useState(false);
   const mapRef = useRef<LeafletMap>(null);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
@@ -69,6 +77,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
   });
+  const [selectedDraftProperty, setSelectedDraftProperty] = useState<IPropertyDetail | null>(null);
 
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
@@ -129,7 +138,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   }, [dispatch, throttledFetch]);
 
   const { showSideBar } = useParamSideBar();
-
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
@@ -140,18 +148,40 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
         properties={properties}
       ></MapSideBarContainer>
       <Map
-        lat={(propertyDetail?.parcelDetail?.latitude as number) ?? defaultLatLng.lat}
-        lng={(propertyDetail?.parcelDetail?.longitude as number) ?? defaultLatLng.lng}
+        lat={
+          (propertyDetail?.parcelDetail?.latitude as number) ??
+          selectedDraftProperty?.parcelDetail?.latitude ??
+          defaultLatLng.lat
+        }
+        lng={
+          (propertyDetail?.parcelDetail?.longitude as number) ??
+          selectedDraftProperty?.parcelDetail?.longitude ??
+          defaultLatLng.lng
+        }
         properties={properties}
-        selectedProperty={propertyDetail}
+        selectedProperty={
+          !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
+        }
         agencies={agencies}
         propertyClassifications={propertyClassifications}
         lotSizes={lotSizes}
         onMarkerClick={
           props.onMarkerClick ??
-          ((p, position) => p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId, position)))
+          ((p, position) => {
+            if (p.propertyTypeId <= PropertyTypes.BUILDING) {
+              p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
+            } else {
+              setSelectedDraftProperty({
+                propertyTypeId: p.propertyTypeId,
+                parcelDetail: { ...p },
+              } as any);
+            }
+          })
         }
-        onMarkerPopupClose={props.onMarkerPopupClosed ?? (() => dispatch(storeParcelDetail(null)))}
+        onMarkerPopupClose={() => {
+          setSelectedDraftProperty(null);
+          dispatch(storeParcelDetail(null));
+        }}
         onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
           if (!loadedProperties) {
             setLoadedProperties(true);

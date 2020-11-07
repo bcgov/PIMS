@@ -1,12 +1,12 @@
 import * as React from 'react';
-import ParcelDetailForm from 'features/properties/containers/ParcelDetailFormContainer';
+import ParcelDetailFormContainer from 'features/properties/containers/ParcelDetailFormContainer';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { LeafletMouseEvent } from 'leaflet';
 import { FormikValues } from 'formik';
-import { IParcel, storeParcelAction, IProperty } from 'actions/parcelsActions';
+import { IParcel, IProperty } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import ParcelDetailFormLayout from 'features/properties/components/forms/ParcelDetailForm';
+import ParcelDetailForm from 'features/properties/components/forms/ParcelDetailForm';
 import { Claims } from 'constants/claims';
 import ParcelFormControls from 'features/properties/components/ParcelFormControls';
 import { deleteParcel } from 'actionCreators/parcelsActionCreator';
@@ -21,6 +21,7 @@ interface IParcelDetailContainerProps {
   loadDraft?: boolean;
   mapClickMouseEvent?: LeafletMouseEvent | null;
   defaultTab?: ParcelDetailTabs;
+  movingPinNameSpace?: string;
 }
 export enum ParcelDetailTabs {
   parcel = 'parcel',
@@ -39,44 +40,48 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
   const [currentTab, setCurrentTab] = useState(props.defaultTab ?? ParcelDetailTabs.parcel);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [pin, setPin] = useState<IProperty | undefined>(undefined);
+  const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
+    props.movingPinNameSpace,
+  );
 
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const formikRef = React.useRef<FormikValues>();
 
+  React.useEffect(() => {
+    if (movingPinNameSpace !== undefined) {
+      document.body.className =
+        currentTab === ParcelDetailTabs.parcel ? 'parcel-cursor' : 'building-cursor';
+    }
+    return () => {
+      //make sure to reset the cursor when this component is disposed.
+      document.body.className = '';
+    };
+  }, [currentTab, movingPinNameSpace]);
+
   //Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
     //If we click on the map, create a new pin at the click location.
     if (
+      movingPinNameSpace !== undefined &&
       !!formikRef?.current &&
       !!props.mapClickMouseEvent &&
       ((props.mapClickMouseEvent.originalEvent.timeStamp >=
         (document?.timeline?.currentTime ?? 0) - 500) as boolean)
     ) {
-      setPin({
-        id: Number(props.parcelDetail?.id || 0),
-        latitude: props.mapClickMouseEvent.latlng.lat,
-        longitude: props.mapClickMouseEvent.latlng.lng,
-        propertyTypeId: 0,
-      });
-      formikRef.current.setFieldValue('latitude', props.mapClickMouseEvent.latlng.lat);
-      formikRef.current.setFieldValue('longitude', props.mapClickMouseEvent.latlng.lng);
+      const nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
+      formikRef.current.setFieldValue(`${nameSpace}latitude`, props.mapClickMouseEvent.latlng.lat);
+      formikRef.current.setFieldValue(`${nameSpace}longitude`, props.mapClickMouseEvent.latlng.lng);
+      setMovingPinNameSpace(undefined);
     }
-    if (pin) {
-      dispatch(storeParcelAction(pin));
-    }
-    if (props.parcelDetail?.id && pin?.id !== undefined && pin?.id !== props.parcelDetail?.id) {
-      setPin(undefined);
-    }
-  }, [dispatch, props.mapClickMouseEvent, pin, props.parcelDetail, props.properties]);
+  }, [dispatch, props.mapClickMouseEvent, props.parcelDetail]);
 
   const isAdmin = keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
   let allowEdit =
     isAdmin || !props.parcelDetail || keycloak.hasAgency(props.parcelDetail?.agencyId as number);
 
   return (
-    <ParcelDetailForm
+    <ParcelDetailFormContainer
       formikRef={formikRef}
       parcelDetail={props.parcelDetail}
       agencyId={keycloak.agencyId}
@@ -94,8 +99,11 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
         showDeleteDialog={showDeleteDialog}
         disabled={props.disabled}
         loadDraft={props.loadDraft}
+        properties={props.properties}
+        currentTab={currentTab}
       />
-      <ParcelDetailFormLayout
+      <ParcelDetailForm
+        setMovingPinNameSpace={setMovingPinNameSpace}
         formikRef={formikRef}
         disabled={props.disabled ?? false}
         setPidSelection={setPidSelection}
@@ -105,7 +113,7 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
         allowEdit={allowEdit}
         isAdmin={isAdmin}
       />
-    </ParcelDetailForm>
+    </ParcelDetailFormContainer>
   );
 };
 

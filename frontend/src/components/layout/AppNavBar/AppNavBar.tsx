@@ -93,7 +93,7 @@ function PropertyDropdown() {
   return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
     <NavDropdown
       className={
-        history.location.pathname.includes('submitProperty') ||
+        history.location.pathname.includes('mapview') ||
         (history.location.pathname.includes('properties') &&
           !history.location.pathname.includes('projects'))
           ? 'active'

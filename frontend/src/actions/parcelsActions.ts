@@ -2,11 +2,19 @@ import * as ActionTypes from 'constants/actionTypes';
 
 //Parcel List API action
 
+export enum PropertyTypes {
+  PARCEL = 0,
+  BUILDING = 1,
+  DRAFT_PARCEL = 2,
+  DRAFT_BUILDING = 3,
+}
+
 export interface IProperty {
   id: number;
-  propertyTypeId: 0 | 1; // 0 = Parcel, 1 = Building
+  propertyTypeId: PropertyTypes;
   latitude: number;
   longitude: number;
+  name?: string;
   projectNumber?: string;
   projectStatus?: string;
 }
@@ -16,10 +24,20 @@ export interface IStoreParcelsAction {
   parcelList: IProperty[];
 }
 
+export interface IStoreDraftParcelsAction {
+  type: typeof ActionTypes.STORE_DRAFT_PARCEL_RESULTS;
+  draftParcelList: IProperty[];
+}
+
 export interface IStoreParcelAction {
   type: typeof ActionTypes.STORE_PARCEL_FROM_MAP_EVENT;
   parcel: IProperty;
 }
+
+export const storeDraftParcelsAction = (parcelList: IProperty[]): IStoreDraftParcelsAction => ({
+  type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
+  draftParcelList: parcelList,
+});
 
 export const storeParcelsAction = (parcelList: IProperty[]): IStoreParcelsAction => ({
   type: ActionTypes.STORE_PARCEL_RESULTS,
