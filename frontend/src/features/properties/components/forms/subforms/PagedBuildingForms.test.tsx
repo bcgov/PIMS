@@ -12,7 +12,7 @@ import PagedBuildingForms from './PagedBuildingForms';
 import { IFormParcel, getInitialValues } from '../../../containers/ParcelDetailFormContainer';
 import { IFormBuilding } from './BuildingForm';
 import { ILookupCode } from 'actions/lookupActions';
-import _ from 'lodash';
+import _, { noop } from 'lodash';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { createMemoryHistory } from 'history';
@@ -107,7 +107,11 @@ describe('PagedBuildingForms functionality', () => {
       <Provider store={store}>
         <Router history={history}>
           <Formik initialValues={initialValues} onSubmit={onSubmit}>
-            <PagedBuildingForms allowEdit={true}></PagedBuildingForms>
+            <PagedBuildingForms
+              allowEdit={true}
+              isAdmin={true}
+              setMovingPinNameSpace={noop}
+            ></PagedBuildingForms>
           </Formik>
         </Router>
       </Provider>
