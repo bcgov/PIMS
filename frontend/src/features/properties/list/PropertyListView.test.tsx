@@ -116,7 +116,7 @@ describe('Property list view', () => {
           subAgencyCode: 'NVIOT',
           addressId: 1,
           address: '4155 Belshaw St',
-          city: 'Merritt',
+          administrativeArea: 'Merritt',
           province: 'British Columbia',
           postal: 'V1K1R1',
           estimated: 0.0,
@@ -134,7 +134,6 @@ describe('Property list view', () => {
           transferLeaseOnSale: false,
           rentableArea: 0,
           propertyType: 'property',
-          cityId: 0,
         },
         {
           id: 5,
@@ -153,7 +152,7 @@ describe('Property list view', () => {
           subAgencyCode: 'NVIOT',
           addressId: 6,
           address: '4155 Belshaw St',
-          city: 'Merritt',
+          administrativeArea: 'Merritt',
           province: 'British Columbia',
           postal: 'V1K1R1',
           estimated: 0.0,
@@ -176,7 +175,6 @@ describe('Property list view', () => {
           transferLeaseOnSale: false,
           rentableArea: 0,
           propertyType: 'property',
-          cityId: 0,
         },
       ],
     });

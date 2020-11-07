@@ -6,12 +6,10 @@ using Microsoft.Extensions.Options;
 using Pims.Api.Areas.Project.Models.Dispose;
 using Pims.Api.Models;
 using Pims.Api.Policies;
-using Pims.Core.Exceptions;
 using Pims.Core.Extensions;
 using Pims.Dal;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
-using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Notifications;
 using Swashbuckle.AspNetCore.Annotations;
@@ -108,7 +106,7 @@ namespace Pims.Api.Areas.Project.Controllers
         public async Task<IActionResult> AddProjectAsync(ProjectModel model)
         {
             var project = await _pimsService.Project.AddAsync(_mapper.Map<Entity.Project>(model));
-            return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
+            return CreatedAtAction(nameof(GetProject), new { projectNumber = project.ProjectNumber }, _mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures a different response should be returned.
         }
 
         /// <summary>
@@ -127,7 +125,7 @@ namespace Pims.Api.Areas.Project.Controllers
         public async Task<IActionResult> UpdateProjectAsync(string projectNumber, ProjectModel model)
         {
             var project = await _pimsService.Project.UpdateAsync(_mapper.Map<Entity.Project>(model));
-            return new JsonResult(_mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures an different response should be returned.
+            return new JsonResult(_mapper.Map<ProjectModel>(project)); // TODO: If notifications have failures a different response should be returned.
         }
 
         /// <summary>
