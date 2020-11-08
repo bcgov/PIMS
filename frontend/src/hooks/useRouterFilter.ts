@@ -51,8 +51,8 @@ export const useRouterFilter = <T extends BasePropertyFilter>(
   React.useEffect(() => {
     const filterParams = new URLSearchParams(filter as any);
     const allParams = {
-      ...queryString.parse(filterParams.toString()),
       ...queryString.parse(history.location.search),
+      ...queryString.parse(filterParams.toString()),
     };
     history.push({ pathname: history.location.pathname, search: queryString.stringify(allParams) });
     const keyedFilter = { [key]: filter };

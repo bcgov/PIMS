@@ -103,7 +103,11 @@ Array [
       </svg>
     </button>
   </div>,
-  .c1 {
+  .c0 div {
+  width: 100%;
+}
+
+.c1 {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -117,10 +121,6 @@ Array [
 .c1 p {
   width: 35px;
   margin: 0;
-}
-
-.c0 div {
-  width: 100%;
 }
 
 <div

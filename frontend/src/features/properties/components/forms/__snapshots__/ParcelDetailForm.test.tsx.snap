@@ -69,7 +69,7 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
                 </div>
               </div>
               <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
-                <div class=\\"sc-AxhCb gFkCzc form-group\\">
+                <div class=\\"sc-AxjAm gLmrxD form-group\\">
                   <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
                     <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"Victoria\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
                   </div>
