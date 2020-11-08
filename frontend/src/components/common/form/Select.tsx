@@ -45,6 +45,7 @@ export type SelectOption = {
   selected?: boolean;
   code?: string;
   parentId?: string | number;
+  parent?: string;
 };
 
 export type SelectOptions = SelectOption[];

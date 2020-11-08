@@ -18,6 +18,8 @@ import {
 } from 'actionCreators/agencyActionCreator';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import GenericModal from 'components/common/GenericModal';
+import { AgencyEditSchema } from 'utils/YupSchema';
+import service from 'features/properties/service';
 
 interface IEditAgencyPageProps {
   /** id prop to identify which agency to edit */
@@ -32,6 +34,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   const dispatch = useDispatch();
   const newAgency = history.location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
+  const [showFailed, setShowFailed] = useState(false);
   useEffect(() => {
     if (!newAgency) {
       dispatch(fetchAgencyDetail({ id: agencyId }));
@@ -39,7 +42,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   }, [dispatch, agencyId, newAgency]);
 
   const { getByType } = useCodeLookups();
-  const agencies = getByType(API.AGENCY_CODE_SET_NAME);
+  const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter(x => !x.parentId);
 
   const agency = useSelector<RootState, IAgencyDetail>(
     state => state.GET_AGENCY_DETAIL as IAgencyDetail,
@@ -51,14 +54,13 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   });
   //
   const selectAgencies = agencies.map(c => mapLookupCode(c));
-
   const checkAgencies = (
     <Select
       label="Parent Agency - If applicable"
       field="parentId"
-      data-testid="agency"
       options={selectAgencies}
-      placeholder={newAgency ? 'Please select if applicable' : undefined}
+      disabled={!agency.parentId && !newAgency}
+      placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
     />
   );
 
@@ -83,17 +85,20 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   return (
     <div>
       {showDelete && <DeleteModal {...{ showDelete, setShowDelete, history, dispatch, agency }} />}
+      {showFailed && <FailedDeleteModal {...{ showFailed, setShowFailed }} />}
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
-        <Navbar.Brand href="#">
+        <Navbar.Brand>
           {' '}
-          <FaArrowAltCircleLeft onClick={goBack} size={20} /> Agency Information
+          <FaArrowAltCircleLeft onClick={goBack} size={20} />
         </Navbar.Brand>
+        <h4>Agency Information</h4>
       </Navbar>
       <Container fluid={true}>
         <Row className="agency-edit-form-container">
           <Formik
             enableReinitialize
             initialValues={newAgency ? newValues : initialValues}
+            validationSchema={AgencyEditSchema}
             onSubmit={async (values, { setSubmitting, setStatus }) => {
               try {
                 if (!newAgency) {
@@ -142,6 +147,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                   field="code"
                   value={props.values.code}
                   type="text"
+                  required
                 />
                 {checkAgencies}
                 <Input label="Description" field="description" type="text" />
@@ -169,7 +175,18 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                       <Button
                         className="bg-danger mr-5"
                         type="button"
-                        onClick={() => setShowDelete(true)}
+                        onClick={async () => {
+                          const data = await service.getPropertyList({
+                            page: 1,
+                            quantity: 10,
+                            agencies: agencyId,
+                          });
+                          if (data.total === 0) {
+                            setShowDelete(true);
+                          } else {
+                            setShowFailed(true);
+                          }
+                        }}
                       >
                         Delete Agency
                       </Button>
@@ -180,7 +197,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     )}
 
                     <Button className="mr-5" type="submit">
-                      {newAgency ? 'Save' : 'Save Changes'}
+                      {newAgency ? 'Submit Agency' : 'Save Changes'}
                     </Button>
                   </ButtonToolbar>
                 </Row>
@@ -208,6 +225,17 @@ const DeleteModal = ({ showDelete, setShowDelete, history, dispatch, agency }: a
     }}
     handleCancel={() => {
       setShowDelete(false);
+    }}
+  />
+);
+
+const FailedDeleteModal = ({ showFailed, setShowFailed }: any) => (
+  <GenericModal
+    message="You are not able to delete this agency as there are properties currently associated with it."
+    okButtonText="Ok"
+    display={showFailed}
+    handleOk={() => {
+      setShowFailed(false);
     }}
   />
 );
