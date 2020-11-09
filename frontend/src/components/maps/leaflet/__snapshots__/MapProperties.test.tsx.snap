@@ -27,9 +27,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           data-rb-event-key={null}
           disabled={false}
           onClick={[Function]}
-        >
-          test name
-        </div>
+        />
         <div
           className="description list-group-item"
           data-rb-event-key={null}
@@ -119,7 +117,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
       className="col"
     >
       <a
-        href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
+        href="/mapview/1?disabled=true&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         View
