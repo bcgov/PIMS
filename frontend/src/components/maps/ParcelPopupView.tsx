@@ -88,7 +88,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                     search: queryString.stringify({
                       ...queryString.parse(location.search),
                       sidebar: true,
-                      disabled: false,
+                      disabled: true,
                       loadDraft: false,
                     }),
                   }}
