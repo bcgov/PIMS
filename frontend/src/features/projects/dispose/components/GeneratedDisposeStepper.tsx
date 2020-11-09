@@ -29,7 +29,7 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
     <Stepper
       activeStep={activeStep}
       steps={steps}
-      activeStepMessage="Complete this form to apply to Enhanced Referral Process or Request Exemption"
+      activeStepMessage="Complete this form to apply to the Enhanced Referral Process or Request Exemption"
     ></Stepper>
   );
 };
