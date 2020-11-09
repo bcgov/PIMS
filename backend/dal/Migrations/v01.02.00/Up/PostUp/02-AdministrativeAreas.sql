@@ -1,7 +1,7 @@
 PRINT 'Adding municipalities'
 
-MERGE INTO dbo.[AdministrativeAreas] Target 
-USING ( VALUES 
+MERGE INTO dbo.[AdministrativeAreas] Target
+USING ( VALUES
 (
  'Village of Anmore',
  'Anmore',
@@ -642,7 +642,18 @@ USING ( VALUES
  'Village of Tahsis',
  'Tahsis',
  'Strathcona Regional District'
-), (
+),
+(
+ 'Lower Nicola',
+ 'Nicola',
+ 'Lower County'
+),
+(
+ 'Tsawwassen',
+ 'Tsawwassen',
+ 'City of Delta'
+),
+(
  'The Corporation of the Village of Zeballos',
  'Zeballos',
  'Strathcona Regional District'

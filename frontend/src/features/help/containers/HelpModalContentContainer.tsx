@@ -12,7 +12,7 @@ interface IHelpModalContentContainerProps {
 }
 
 /**
- * Find the first help page to match the start of the help page path. For example both /submitProperty and /submitProperty/56 will be matched to the /submitProperty Parcel Detail Help Page.
+ * Find the first help page to match the start of the help page path. For example both /mapview and /mapview/56 will be matched to the /mapview Parcel Detail Help Page.
  * @param location The current react router location within the application.
  */
 const getHelpPageByLocation = (location: any): IHelpPage | undefined => {

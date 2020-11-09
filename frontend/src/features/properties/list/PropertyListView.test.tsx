@@ -190,6 +190,9 @@ describe('Property list view', () => {
     // assert we got a table with two rows and links to the details page
     const links = await findAllByRole('link');
     expect(links).toHaveLength(2);
-    expect(links[0]).toHaveAttribute('href', `/submitProperty/${fakeId}?disabled=true`);
+    expect(links[0]).toHaveAttribute(
+      'href',
+      `/mapview/${fakeId}?disabled=true&sidebar=true&loadDraft=false`,
+    );
   });
 });
