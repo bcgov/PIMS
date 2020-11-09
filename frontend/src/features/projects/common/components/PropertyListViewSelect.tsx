@@ -147,7 +147,9 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             clickableTooltip={clickableTooltip}
             onRowClick={(row: IProperty) => {
               history.push(
-                `/submitProperty/${row.propertyTypeId === 0 ? row.id : row.parcelId}?disabled=true`,
+                `/mapview/${
+                  row.propertyTypeId === 0 ? row.id : row.parcelId
+                }?disabled=true&sidebar=true&loadDraft=false`,
               );
             }}
           />

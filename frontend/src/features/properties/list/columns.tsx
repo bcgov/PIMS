@@ -138,7 +138,9 @@ export const columns: ColumnWithProps<IProperty>[] = [
     },
     Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
       if (value > 0) {
-        return <Link to={`/submitProperty/${value}?disabled=true`}>View</Link>;
+        return (
+          <Link to={`/mapview/${value}?disabled=true&sidebar=true&loadDraft=false`}>View</Link>
+        );
       }
       return null;
     },
