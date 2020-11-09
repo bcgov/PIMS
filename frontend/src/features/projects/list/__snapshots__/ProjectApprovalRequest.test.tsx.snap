@@ -1228,7 +1228,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       width="3.5%"
                     >
                       <a
-                        href="/submitProperty/undefined?disabled=true"
+                        href="/mapview/undefined?disabled=true&sidebar=true&loadDraft=false"
                         onClick={[Function]}
                       >
                         View

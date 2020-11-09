@@ -130,7 +130,13 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.small,
     minWidth: 65,
     Cell: (props: CellProps<IProperty, number>) => {
-      return <Link to={`/submitProperty/${props.row.original.parcelId}?disabled=true`}>View</Link>;
+      return (
+        <Link
+          to={`/mapview/${props.row.original.parcelId}?disabled=true&sidebar=true&loadDraft=false`}
+        >
+          View
+        </Link>
+      );
     },
   },
 ];

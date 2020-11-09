@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 export enum HelpPageKeys {
   LANDING_PAGE = '/mapview',
   INVENTORY_PAGE = '/properties/list',
-  PROPERTY_DETAIL_PAGE = '/submitProperty',
+  PROPERTY_DETAIL_PAGE = '/mapview',
 }
 
 export interface IHelpPage {

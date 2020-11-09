@@ -41,7 +41,7 @@ export const propertyDetailPageTopics = new Map<Topics, ReactNode>([
 
 /**
  * A map of help pages. The key is the base route path of the component. The value is the help page name, and help topics to display at the corresponding path.
- * Note that currently the base path provided in the key will match all child pages. so for example, /submitProperty and /submitProperty/56 will both match the Property Detail page.
+ * Note that currently the base path provided in the key will match all child pages. so for example, /mapview and /mapview/56 will both match the Property Detail page.
  */
 export const helpPages = new Map<HelpPageKeys, IHelpPage>([
   [HelpPageKeys.LANDING_PAGE, { name: 'Landing Page', topics: landingPageTopics }],
