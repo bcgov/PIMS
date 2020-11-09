@@ -94,7 +94,7 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
 
   useDeepCompareEffect(() => synchronize(values, nonDraftProperties), [
     values,
-    nonDraftProperties,
+    properties,
     synchronize,
   ]);
 
