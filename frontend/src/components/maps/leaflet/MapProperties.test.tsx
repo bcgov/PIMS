@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { createMemoryHistory } from 'history';
 import { Router, BrowserRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IProperty, IParcelDetail } from 'actions/parcelsActions';
 import Map from './Map';
-import { Marker } from 'react-leaflet';
+import { Marker, Map as LeafletMap } from 'react-leaflet';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
@@ -23,12 +23,14 @@ jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
 const mockedAxios = Axios as jest.Mocked<typeof Axios>;
+mockedAxios.create = jest.fn(() => mockedAxios);
 
 // This will spoof the active parcel (the one that will populate the popup details)
 const mockDetails: IParcelDetail = {
   propertyTypeId: 0,
   parcelDetail: {
     id: 1,
+    name: 'test name',
     pid: '000-000-000',
     pin: '',
     projectNumber: '',
@@ -109,6 +111,7 @@ describe('MapProperties View', () => {
   xit('Renders the marker in correct position', async () => {
     const promise = Promise.resolve(mockParcels);
     mockedAxios.get.mockImplementationOnce(() => promise);
+    const mapRef = createRef<LeafletMap>();
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -122,6 +125,7 @@ describe('MapProperties View', () => {
             propertyClassifications={[]}
             lotSizes={[]}
             onMarkerClick={jest.fn()}
+            mapRef={mapRef}
           />
         </Router>
       </Provider>,
@@ -135,6 +139,7 @@ describe('MapProperties View', () => {
   xit('Should render 0 markers when there are no parcels', async () => {
     const promise = Promise.resolve(mockParcels);
     mockedAxios.get.mockImplementationOnce(() => promise);
+    const mapRef = createRef<LeafletMap>();
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -148,6 +153,7 @@ describe('MapProperties View', () => {
             propertyClassifications={[]}
             lotSizes={[]}
             onMarkerClick={jest.fn()}
+            mapRef={mapRef}
           />
         </Router>
       </Provider>,
@@ -161,6 +167,7 @@ describe('MapProperties View', () => {
   xit('Marker for each parcel is created', async () => {
     const promise = Promise.resolve(mockParcels);
     mockedAxios.get.mockImplementationOnce(() => promise);
+    const mapRef = createRef<LeafletMap>();
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -174,6 +181,7 @@ describe('MapProperties View', () => {
             propertyClassifications={[]}
             lotSizes={[]}
             onMarkerClick={jest.fn()}
+            mapRef={mapRef}
           />
         </Router>
       </Provider>,
@@ -187,6 +195,7 @@ describe('MapProperties View', () => {
   xit('Loads parcel details on click', async () => {
     const promise = Promise.resolve(mockParcels);
     mockedAxios.get.mockImplementationOnce(() => promise);
+    const mapRef = createRef<LeafletMap>();
     const onParcelClick = jest.fn();
     const component = mount(
       <Provider store={store}>
@@ -201,6 +210,7 @@ describe('MapProperties View', () => {
             propertyClassifications={[]}
             lotSizes={[]}
             onMarkerClick={onParcelClick}
+            mapRef={mapRef}
           />
         </BrowserRouter>
       </Provider>,
