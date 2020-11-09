@@ -396,7 +396,7 @@ const Map: React.FC<MapProps> = ({
                   <LegendControl />
 
                   <LayersControl position="topright">
-                    <LayersControl.Overlay checked={true} name="Parcel Boundaries">
+                    <LayersControl.Overlay checked name="Parcel Boundaries">
                       <WMSTileLayer
                         url="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?"
                         layers="pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
@@ -415,6 +415,50 @@ const Map: React.FC<MapProps> = ({
                         opacity={0.5}
                         zIndex={8}
                         id="municipalityLayer"
+                      />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Crown Leases">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_TANTALIS.TA_CROWN_LEASES_SVW/ows?"
+                        layers="pub:WHSE_TANTALIS.TA_CROWN_LEASES_SVW"
+                        transparent={true}
+                        format="image/png"
+                        opacity={0.5}
+                        zIndex={7}
+                        id="crownLeases"
+                      />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Crown Inventory">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_TANTALIS.TA_CROWN_INVENTORY_SVW/ows?"
+                        layers="pub:WHSE_TANTALIS.TA_CROWN_INVENTORY_SVW"
+                        transparent={true}
+                        format="image/png"
+                        opacity={0.5}
+                        zIndex={6}
+                        id="crownInventory"
+                      />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Crown Inclusions">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_TANTALIS.TA_CROWN_INCLUSIONS_SVW/ows?"
+                        layers="pub:WHSE_TANTALIS.TA_CROWN_INCLUSIONS_SVW"
+                        transparent={true}
+                        format="image/png"
+                        opacity={0.5}
+                        zIndex={5}
+                        id="crownInclusions"
+                      />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Agricultural Land Reserve Lines">
+                      <WMSTileLayer
+                        url="https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.OATS_ALR_BOUNDARY_LINES_SVW/ows?"
+                        layers="pub:WHSE_LEGAL_ADMIN_BOUNDARIES.OATS_ALR_BOUNDARY_LINES_SVW"
+                        transparent={true}
+                        format="image/png"
+                        opacity={0.5}
+                        zIndex={4}
+                        id="agriculturalLandReserveLines"
                       />
                     </LayersControl.Overlay>
                   </LayersControl>
