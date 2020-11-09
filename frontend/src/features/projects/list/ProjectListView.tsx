@@ -16,7 +16,7 @@ import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col } from 'react-bootstrap';
-import { Input, Button, AutoCompleteText, Select } from 'components/common/form';
+import { Input, Button, Select } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
@@ -27,12 +27,14 @@ import queryString from 'query-string';
 import download from 'utils/download';
 import { mapLookupCode, mapStatuses } from 'utils';
 import styled from 'styled-components';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 
 interface IProjectFilterState {
   name?: string;
   statusId?: string;
   agencyId?: string;
   assessWorkflow?: boolean;
+  agencies?: number;
 }
 
 const initialValues = {
@@ -133,7 +135,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
     (value: IProjectFilterState) => {
-      setFilter({ ...value });
+      (value as any).agencies?.value
+        ? setFilter({ ...value, agencies: (value as any)?.agencies.value })
+        : setFilter({ ...value });
       setPageIndex(0); // Go to first page of results when filter changes
     },
     [setFilter, setPageIndex],
@@ -272,11 +276,13 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               <Select field="statusId" options={statuses} placeholder="Select a project status" />
             </Col>
             <Col xs={2} className="bar-item">
-              <AutoCompleteText
-                autoSetting="off"
-                field="agencies"
+              <ParentGroupedFilter
+                name="agencies"
                 options={agencyOptions}
-                placeholder="Enter an agency"
+                className="map-filter-typeahead"
+                filterBy={['code', 'label', 'parent']}
+                placeholder="Enter an Agency"
+                inputSize="large"
               />
             </Col>
             <Col xs={2} className="bar-item">

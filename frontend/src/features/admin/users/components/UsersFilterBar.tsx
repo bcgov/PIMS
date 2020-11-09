@@ -4,6 +4,8 @@ import { Col } from 'react-bootstrap';
 import { Input, SelectOption, Select } from 'components/common/form';
 import { ILookupCode } from 'actions/lookupActions';
 import { IUsersFilter } from 'interfaces';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import { mapLookupCode } from 'utils';
 
 interface IProps {
   value: IUsersFilter;
@@ -18,13 +20,18 @@ export const UsersFilterBar: React.FC<IProps> = ({
   rolesLookups,
   onChange,
 }) => {
-  const agencyOptions = agencyLookups.map(
-    al => ({ label: al.name, value: al.name } as SelectOption),
-  );
+  const agencyOptions = (agencyLookups ?? []).map(c => mapLookupCode(c, null));
   const roleOptions = rolesLookups.map(rl => ({ label: rl.name, value: rl.name } as SelectOption));
 
   return (
-    <FilterBar<IUsersFilter> initialValues={value} onChange={onChange}>
+    <FilterBar<IUsersFilter>
+      initialValues={value}
+      onChange={onChange}
+      customReset={() => {
+        onChange?.({ agency: '' });
+      }}
+      customResetField="agency"
+    >
       <Col className="bar-item">
         <Input field="username" placeholder="IDIR/BCeID" />
       </Col>
@@ -41,7 +48,14 @@ export const UsersFilterBar: React.FC<IProps> = ({
         <Input field="position" placeholder="Position" />
       </Col>
       <Col className="bar-item">
-        <Select field="agency" placeholder="Agency" options={agencyOptions} />
+        <ParentGroupedFilter
+          name="agency"
+          options={agencyOptions}
+          className="map-filter-typeahead"
+          filterBy={['code', 'label', 'parent']}
+          placeholder="Enter an Agency"
+          inputSize="large"
+        />
       </Col>
       <Col className="bar-item">
         <Select field="role" placeholder="Role" options={roleOptions} />

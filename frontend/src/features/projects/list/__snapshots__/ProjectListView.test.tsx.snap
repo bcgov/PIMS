@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Project list view tests Matches snapshot 1`] = `
+.c0 div {
+  width: 100%;
+}
+
 <div
   className="ProjectListView container-fluid"
 >
@@ -44,21 +48,63 @@ exports[`Project list view tests Matches snapshot 1`] = `
           className="bar-item col-2"
         >
           <div
-            className="AutoCompleteText"
+            className="c0 form-group"
           >
             <div
-              className="form-group"
+              className="rbt"
+              style={
+                Object {
+                  "outline": "none",
+                  "position": "relative",
+                }
+              }
+              tabIndex={-1}
             >
               <div
-                className="input-area"
+                style={
+                  Object {
+                    "display": "flex",
+                    "flex": 1,
+                    "height": "100%",
+                    "position": "relative",
+                  }
+                }
               >
                 <input
+                  aria-autocomplete="both"
+                  aria-expanded={false}
+                  aria-haspopup="listbox"
                   autoComplete="off"
-                  className="form-control"
-                  id="input-agencies"
+                  className="rbt-input-main form-control rbt-input map-filter-typeahead"
                   name="agencies"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                  placeholder="Enter an agency"
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Enter an Agency"
+                  role="combobox"
+                  type="text"
+                  value=""
+                />
+                <input
+                  aria-hidden={true}
+                  className="rbt-input-hint"
+                  readOnly={true}
+                  style={
+                    Object {
+                      "backgroundColor": "transparent",
+                      "borderColor": "transparent",
+                      "boxShadow": "none",
+                      "color": "rgba(0, 0, 0, 0.35)",
+                      "left": 0,
+                      "pointerEvents": "none",
+                      "position": "absolute",
+                      "top": 0,
+                      "width": "100%",
+                    }
+                  }
+                  tabIndex={-1}
                   value=""
                 />
               </div>
