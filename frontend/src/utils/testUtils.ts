@@ -11,8 +11,13 @@ export const fillInput = async (
   if (type === 'radio') {
     input = container.querySelector(`#input-${name}`);
   } else {
-    input = container.querySelector(`${type}[name="${name}"]`);
+    if (type === 'typeahead') {
+      input = container.querySelector(`input[name="${name}"]`);
+    } else {
+      input = container.querySelector(`${type}[name="${name}"]`);
+    }
   }
+
   await wait(() => {
     act(() => {
       if (type === 'input') {
@@ -21,6 +26,14 @@ export const fillInput = async (
             value: value,
           },
         });
+      } else if (type === 'typeahead') {
+        fireEvent.change(input!, {
+          target: {
+            value: value,
+          },
+        });
+        const select = container.querySelector(`[aria-label="${value}"]`);
+        fireEvent.click(select!);
       } else if (type === 'radio') {
         fireEvent.click(input);
       } else {

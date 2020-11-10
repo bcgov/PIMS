@@ -38,11 +38,11 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     state => (state.network as any)[actionTypes.GET_PARCEL_DETAIL] as IGenericNetworkAction,
   );
   let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
-    state => state.parcel.parcelDetail as IPropertyDetail,
+    state => state.parcel?.parcelDetail as IPropertyDetail,
   );
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
-    state => state.leafletClickEvent.mapClickEvent,
+    state => state.leafletClickEvent?.mapClickEvent,
   );
 
   useDeepCompareEffect(() => {

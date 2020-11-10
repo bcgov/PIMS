@@ -22,6 +22,8 @@ interface IParcelFormControlsProps {
   setShowDeleteDialog: (show: boolean) => void;
   keycloak: IKeycloak;
   onDelete: (parcel: IParcel) => void;
+  setEditing: (editing: boolean) => void;
+  editing: boolean;
   persistCallback: (data: IParcel) => void;
   properties: IProperty[];
   currentTab: ParcelDetailTabs;
@@ -33,28 +35,98 @@ const FormControls = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
+  button {
+    margin-left: 10px;
+  }
 `;
 
 /**
  * Parcel Delete Button.
  */
-const DeleteButton = ({ cachedParcelDetail, keycloak, setShowDeleteDialog, disabled }: any) => {
+const DeleteButton = ({
+  cachedParcelDetail,
+  keycloak,
+  setShowDeleteDialog,
+  disabled,
+  editing,
+}: any) => {
   return (keycloak.hasAgency(cachedParcelDetail?.agencyId) ||
-    keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) &&
-    keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
-    cachedParcelDetail?.id ? (
+    keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+    keycloak.hasClaim(Claims.PROPERTY_DELETE)) &&
+    !!cachedParcelDetail?.id ? (
     <Button
+      data-testid="delete"
       className="delete-btn"
       onClick={(e: any) => {
         e.preventDefault();
         setShowDeleteDialog(true);
       }}
-      disabled={disabled}
+      disabled={disabled && !editing}
     >
       <TooltipWrapper toolTipId="delete-button-tooltip" toolTip="Delete Parcel">
         <FaTrash size={20} />
       </TooltipWrapper>
     </Button>
+  ) : null;
+};
+
+const SubmitButton = ({ disabled, formikProps, setEditing, editing }: any) => {
+  return !disabled || editing ? (
+    <TooltipWrapper toolTipId="submit-button-tooltip" toolTip="Add Property to Inventory">
+      <Button
+        disabled={disabled && !editing}
+        type="submit"
+        onClick={async (e: any) => {
+          e.preventDefault();
+          formikProps.setSubmitting(true);
+          await formikProps.submitForm();
+          setEditing(false);
+        }}
+      >
+        {editing ? 'Save' : 'Submit'}
+        {formikProps.isSubmitting && (
+          <Spinner
+            animation="border"
+            size="sm"
+            role="status"
+            as="span"
+            style={{ marginLeft: '.5rem' }}
+          />
+        )}
+      </Button>
+    </TooltipWrapper>
+  ) : null;
+};
+
+const EditButton = ({ disabled, setEditing, editing }: any) => {
+  return disabled && !editing ? (
+    <TooltipWrapper toolTipId="edit-button-tooltip" toolTip="Edit this property">
+      <Button
+        variant="secondary"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setEditing(true);
+        }}
+      >
+        Edit
+      </Button>
+    </TooltipWrapper>
+  ) : null;
+};
+
+const CancelButton = ({ disabled, setEditing, editing }: any) => {
+  return disabled && editing ? (
+    <TooltipWrapper toolTipId="cancel-button-tooltip" toolTip="Cancel eediting this property">
+      <Button
+        variant="secondary"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setEditing(false);
+        }}
+      >
+        Cancel
+      </Button>
+    </TooltipWrapper>
   ) : null;
 };
 
@@ -85,6 +157,8 @@ const ParcelFormControls: React.FunctionComponent<IParcelFormControlsProps> = ({
   showDeleteDialog,
   keycloak,
   onDelete,
+  setEditing,
+  editing,
   persistCallback,
   properties,
   currentTab,
@@ -95,38 +169,18 @@ const ParcelFormControls: React.FunctionComponent<IParcelFormControlsProps> = ({
     <>
       <FormControls className="form-controls">
         {formikProps.values.id && <LastUpdatedBy {...(formikProps.values as any)} />}
-
-        {!disabled && (
-          <TooltipWrapper toolTipId="submit-button-tooltip" toolTip="Add Property to Inventory">
-            <Button
-              disabled={disabled}
-              type="submit"
-              onClick={(e: any) => {
-                e.preventDefault();
-                formikProps.setSubmitting(true);
-                formikProps.submitForm();
-              }}
-            >
-              Submit&nbsp;
-              {formikProps.isSubmitting && (
-                <Spinner
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  as="span"
-                  style={{ marginLeft: '.5rem' }}
-                />
-              )}
-            </Button>
-          </TooltipWrapper>
-        )}
+        <EditButton {...{ formikProps, disabled, setEditing, editing }} />
+        <CancelButton {...{ formikProps, disabled, setEditing, editing }} />
+        <SubmitButton {...{ formikProps, disabled, setEditing, editing }} />
       </FormControls>
 
-      {!disabled && currentTab === ParcelDetailTabs.parcel && keycloak.isAdmin && (
+      {currentTab === ParcelDetailTabs.parcel && (
         <DeleteButton
           cachedParcelDetail={formikProps.values}
           keycloak={keycloak}
           setShowDeleteDialog={setShowDeleteDialog}
+          disabled={disabled}
+          editing={editing}
         />
       )}
       <DeleteModal

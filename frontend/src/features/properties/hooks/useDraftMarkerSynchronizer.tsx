@@ -7,10 +7,11 @@ import {
   storeDraftParcelsAction,
 } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
 import { useFormikContext } from 'formik';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import _ from 'lodash';
 
 interface IDraftMarker {
   latitude: number | '';
@@ -29,7 +30,7 @@ const getDraftMarkers = (values: IParcel) => {
     {
       latitude: values.latitude,
       longitude: values.longitude,
-      name: values.name.length ? values.name : 'New Parcel',
+      name: values.name?.length ? values.name : 'New Parcel',
       propertyTypeId: PropertyTypes.DRAFT_PARCEL,
     },
   ];
@@ -86,17 +87,15 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
   };
 
   const synchronize = useCallback(
-    _.debounce((values: IParcel, properties: IProperty[]) => {
+    debounce((values: IParcel, properties: IProperty[]) => {
       synchronizeMarkers(values, properties);
     }, 400),
     [],
   );
 
-  useDeepCompareEffect(() => synchronize(values, nonDraftProperties), [
-    values,
-    properties,
-    synchronize,
-  ]);
+  useDeepCompareEffect(() => {
+    synchronize(values, nonDraftProperties);
+  }, [values, properties, synchronize]);
 
   return;
 };

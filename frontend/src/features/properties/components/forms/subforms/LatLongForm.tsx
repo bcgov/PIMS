@@ -64,6 +64,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         />
       </Form.Row>
       <DraftMarkerButton
+        disabled={props.disabled}
         onClick={(e: any) => {
           props.setMovingPinNameSpace(props.nameSpace ?? '');
           e.preventDefault();
