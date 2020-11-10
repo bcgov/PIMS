@@ -1,0 +1,499 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty parcel sidebar matches snapshot 1`] = `
+"<div class=\\"Toastify\\"></div>
+<div class=\\"map-side-drawer\\">
+  <div>
+    <div class=\\"sc-fznWOq gwxPgm\\">
+      <h2 class=\\"mr-auto\\">Property Details</h2>
+      <div class=\\"SresManual\\">
+        <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+            <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
+            <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
+          </svg></div>
+      </div><small class=\\"p-1 mr-2\\">Inventory Policy</small><svg title=\\"close\\">close-square.svg</svg>
+    </div>
+    <div class=\\"parcelDetailForm row no-gutters\\">
+      <div class=\\"col\\">
+        <form novalidate=\\"\\" class=\\"\\">
+          <div class=\\"sc-fzoxKX iMqfUC form-controls\\"><button type=\\"submit\\" class=\\"btn btn-primary\\">Submit</button></div>
+          <div class=\\"container\\"></div>
+          <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"parcel\\" id=\\"approvalTabs-tab-parcel\\" aria-controls=\\"approvalTabs-tabpane-parcel\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Parcel</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"buildings\\" id=\\"approvalTabs-tab-buildings\\" aria-controls=\\"approvalTabs-tabpane-buildings\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Buildings</a></nav>
+          <div class=\\"tab-content\\">
+            <div id=\\"approvalTabs-tabpane-parcel\\" aria-labelledby=\\"approvalTabs-tab-parcel\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
+              <div class=\\"row no-gutters\\">
+                <div class=\\"col-md-6\\">
+                  <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"required form-label\\">PID</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"pid\\" id=\\"input-pid\\" class=\\"input-small form-control\\" value=\\"\\"></div><label class=\\"form-label\\" style=\\"width: 35px; min-width: 35px; padding-left: 5px;\\">or<br>PIN&nbsp;</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"pin\\" type=\\"number\\" id=\\"input-pin\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
+                    <div class=\\"form-group\\"><input name=\\"name\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
+                    <div class=\\"form-group\\"><textarea name=\\"description\\" id=\\"input-description\\" class=\\"form-control\\"></textarea></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Classification</label>
+                    <div class=\\"form-group\\"><select name=\\"classificationId\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
+                        <option value=\\"\\">Must Select One</option>
+                      </select></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
+                    <div class=\\"AutoCompleteText\\">
+                      <div class=\\"form-group\\">
+                        <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
+                    <div class=\\"AutoCompleteText\\">
+                      <div class=\\"form-group\\">
+                        <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
+                    <div class=\\"input-medium\\">
+                      <p>Harmful if Released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
+                      <div class=\\"form-group\\">
+                        <div class=\\"check-field\\">
+                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
+                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class=\\"col-md-6\\">
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Street Address</label>
+                    <div class=\\"GeocoderAutoComplete\\">
+                      <div>
+                        <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                          </svg><input name=\\"address.line1\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
+                    <div class=\\"sc-AxjAm gLmrxD form-group\\">
+                      <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
+                        <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Province</label>
+                    <div class=\\"form-group\\"><select name=\\"address.provinceId\\" disabled=\\"\\" id=\\"input-address.provinceId\\" class=\\"form-select form-control\\">
+                        <option value=\\"\\">Must Select One</option>
+                      </select></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Postal</label>
+                    <div class=\\"form-group\\"><input name=\\"address.postal\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div style=\\"position: relative;\\">
+                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Latitude</label>
+                      <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                        </svg><input name=\\"latitude\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+                    </div>
+                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Longitude</label>
+                      <div class=\\"form-group\\"><input name=\\"longitude\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+                    </div><button class=\\"sc-fzolEj irzBXr\\">
+                      <p>Place Pin</p><svg>draft-parcel-icon.svg</svg>
+                    </button>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Lot Size</label>
+                    <div class=\\"input-group\\">
+                      <div class=\\"input-group-content\\">
+                        <div class=\\"form-group\\"><input name=\\"landArea\\" type=\\"number\\" id=\\"input-landArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                      <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Hectares</span></div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Current Zoning</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"zoning\\" id=\\"input-zoning\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Potential Zoning</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"zoningPotential\\" id=\\"input-zoningPotential\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"scroll\\">
+                <div class=\\"row no-gutters\\">
+                  <div class=\\"col\\">
+                    <h4>Valuation Information</h4>
+                    <p>Total values for parcel inclusive of existing building(s) for the most recent year with data</p>
+                    <div class=\\"row no-gutters\\">
+                      <div class=\\"col-md-6\\">
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Assessed Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Assessed\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class=\\"col-md-6\\">
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Net Book Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"NetBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                          </div>
+                        </div>
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Estimated Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <div role=\\"table\\" class=\\"table\\">
+                          <div class=\\"thead thead-light\\">
+                            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                              <div colspan=\\"4\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 350 0 auto; min-width: 120px; width: 350px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed</div>
+                              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
+                              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Market Value</div>
+                            </div>
+                            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Land</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Improvements</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Total</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
+                            </div>
+                          </div>
+                          <div role=\\"rowgroup\\" class=\\"tbody\\">
+                            <div class=\\"tr-wrapper\\">
+                              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2021</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">N/A</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class=\\"tr-wrapper\\">
+                              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2020</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class=\\"table-toolbar\\">
+                          <ul class=\\"pagination\\">
+                            <li class=\\"page-item disabled\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"true\\">&lt;</a></li>
+                            <li class=\\"page-item active\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 1 is your current page\\" aria-current=\\"page\\">1</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 2\\">2</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 3\\">3</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 4\\">4</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 5\\">5</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 6\\">6</a></li>
+                            <li class=\\"page-item\\"><a class=\\"page-link\\" role=\\"button\\" tabindex=\\"0\\">...</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 9\\">9</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 10\\">10</a></li>
+                            <li class=\\"page-item\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"false\\">&gt;</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel sidebar snapshot loads by id 1`] = `
+"<div class=\\"Toastify\\"></div>
+<div class=\\"map-side-drawer show\\">
+  <div>
+    <div class=\\"sc-fznWOq gwxPgm\\">
+      <h2 class=\\"mr-auto\\">Property Details</h2>
+      <div class=\\"SresManual\\">
+        <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+            <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
+            <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
+          </svg></div>
+      </div><small class=\\"p-1 mr-2\\">Inventory Policy</small><svg title=\\"close\\">close-square.svg</svg>
+    </div>
+    <div class=\\"parcelDetailForm row no-gutters\\">
+      <div class=\\"col\\">
+        <form novalidate=\\"\\" class=\\"\\">
+          <div class=\\"sc-fzoxKX iMqfUC form-controls\\"><button type=\\"submit\\" class=\\"btn btn-primary\\">Submit</button></div><button data-testid=\\"delete\\" type=\\"button\\" class=\\"delete-btn btn btn-primary\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+              <path d=\\"M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z\\"></path>
+            </svg></button>
+          <div class=\\"container\\"></div>
+          <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"parcel\\" id=\\"approvalTabs-tab-parcel\\" aria-controls=\\"approvalTabs-tabpane-parcel\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Parcel</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"buildings\\" id=\\"approvalTabs-tab-buildings\\" aria-controls=\\"approvalTabs-tabpane-buildings\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Buildings</a></nav>
+          <div class=\\"tab-content\\">
+            <div id=\\"approvalTabs-tabpane-parcel\\" aria-labelledby=\\"approvalTabs-tab-parcel\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
+              <div class=\\"row no-gutters\\">
+                <div class=\\"col-md-6\\">
+                  <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"required form-label\\">PID</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"pid\\" id=\\"input-pid\\" class=\\"input-small form-control\\" value=\\"000-000-000\\"></div><label class=\\"form-label\\" style=\\"width: 35px; min-width: 35px; padding-left: 5px;\\">or<br>PIN&nbsp;</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"pin\\" type=\\"number\\" id=\\"input-pin\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
+                    <div class=\\"form-group\\"><input name=\\"name\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"test name\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
+                    <div class=\\"form-group\\"><textarea name=\\"description\\" id=\\"input-description\\" class=\\"form-control\\">test</textarea></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Classification</label>
+                    <div class=\\"form-group\\"><select name=\\"classificationId\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
+                        <option value=\\"\\">Must Select One</option>
+                      </select></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
+                    <div class=\\"AutoCompleteText\\">
+                      <div class=\\"form-group\\">
+                        <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
+                    <div class=\\"AutoCompleteText\\">
+                      <div class=\\"form-group\\">
+                        <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
+                    <div class=\\"input-medium\\">
+                      <p>Harmful if Released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
+                      <div class=\\"form-group\\">
+                        <div class=\\"check-field\\">
+                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
+                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class=\\"col-md-6\\">
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Street Address</label>
+                    <div class=\\"GeocoderAutoComplete\\">
+                      <div>
+                        <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                          </svg><input name=\\"address.line1\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"1234 mock Street\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
+                    <div class=\\"sc-AxjAm gLmrxD form-group\\">
+                      <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
+                        <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"Victoria\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Province</label>
+                    <div class=\\"form-group\\"><select name=\\"address.provinceId\\" disabled=\\"\\" id=\\"input-address.provinceId\\" class=\\"form-select form-control\\">
+                        <option value=\\"\\">Must Select One</option>
+                      </select></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Postal</label>
+                    <div class=\\"form-group\\"><input name=\\"address.postal\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"V1V1V1\\"></div>
+                  </div>
+                  <div style=\\"position: relative;\\">
+                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Latitude</label>
+                      <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                        </svg><input name=\\"latitude\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"48\\"></div>
+                    </div>
+                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Longitude</label>
+                      <div class=\\"form-group\\"><input name=\\"longitude\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"123\\"></div>
+                    </div><button class=\\"sc-fzolEj irzBXr\\">
+                      <p>Place Pin</p><svg>draft-parcel-icon.svg</svg>
+                    </button>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Lot Size</label>
+                    <div class=\\"input-group\\">
+                      <div class=\\"input-group-content\\">
+                        <div class=\\"form-group\\"><input name=\\"landArea\\" type=\\"number\\" id=\\"input-landArea\\" class=\\"form-control\\" value=\\"123\\"></div>
+                      </div>
+                      <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Hectares</span></div>
+                    </div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Current Zoning</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"zoning\\" id=\\"input-zoning\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Potential Zoning</label>
+                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" class=\\"tooltip-icon\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z\\"></path>
+                      </svg><input name=\\"zoningPotential\\" id=\\"input-zoningPotential\\" class=\\"form-control\\" value=\\"\\"></div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"scroll\\">
+                <div class=\\"row no-gutters\\">
+                  <div class=\\"col\\">
+                    <h4>Valuation Information</h4>
+                    <p>Total values for parcel inclusive of existing building(s) for the most recent year with data</p>
+                    <div class=\\"row no-gutters\\">
+                      <div class=\\"col-md-6\\">
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Assessed Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Assessed\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"10000\\"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class=\\"col-md-6\\">
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Net Book Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"NetBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"10000\\"></div>
+                          </div>
+                        </div>
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Estimated Sum</label>
+                          <div class=\\"fast-currency-input form-group\\">
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <div role=\\"table\\" class=\\"table\\">
+                          <div class=\\"thead thead-light\\">
+                            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                              <div colspan=\\"4\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 350 0 auto; min-width: 120px; width: 350px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed</div>
+                              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
+                              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Market Value</div>
+                            </div>
+                            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Land</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Improvements</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Total</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
+                              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
+                            </div>
+                          </div>
+                          <div role=\\"rowgroup\\" class=\\"tbody\\">
+                            <div class=\\"tr-wrapper\\">
+                              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2021</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">N/A</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class=\\"tr-wrapper\\">
+                              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 240px;\\" class=\\"tr\\">
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2020</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"10000\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">$10,000</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"10000\\"></div>
+                                  </div>
+                                </div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
+                                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                                  <div class=\\"fast-currency-input form-group\\">
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class=\\"table-toolbar\\">
+                          <ul class=\\"pagination\\">
+                            <li class=\\"page-item disabled\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"true\\">&lt;</a></li>
+                            <li class=\\"page-item active\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 1 is your current page\\" aria-current=\\"page\\">1</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 2\\">2</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 3\\">3</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 4\\">4</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 5\\">5</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 6\\">6</a></li>
+                            <li class=\\"page-item\\"><a class=\\"page-link\\" role=\\"button\\" tabindex=\\"0\\">...</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 9\\">9</a></li>
+                            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 10\\">10</a></li>
+                            <li class=\\"page-item\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"false\\">&gt;</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Parcel Detail MapSideBarContainer basic data loading and display sidebar is hidden 1`] = `"<div class=\\"Toastify\\"></div>"`;

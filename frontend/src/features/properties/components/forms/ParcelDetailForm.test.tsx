@@ -1,5 +1,4 @@
 import React from 'react';
-import { act } from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { mount } from 'enzyme';
@@ -15,9 +14,8 @@ import * as API from 'constants/API';
 import { useKeycloak } from '@react-keycloak/web';
 import * as reducerTypes from 'constants/reducerTypes';
 import AddressForm from './subforms/AddressForm';
-import BuildingForm from './subforms/BuildingForm';
 import PidPinForm from './subforms/PidPinForm';
-import { render, fireEvent, wait, cleanup } from '@testing-library/react';
+import { render, fireEvent, wait, cleanup, act } from '@testing-library/react';
 import { screen } from '@testing-library/dom';
 import { act as domAct } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
@@ -28,18 +26,19 @@ import { fillInput, getInput } from 'utils/testUtils';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { LatLng } from 'leaflet';
 import { useApi, PimsAPI } from 'hooks/useApi';
-import { IParcel } from 'actions/parcelsActions';
-import { updateParcel } from 'actionCreators/parcelsActionCreator';
+import { storeDraftParcelsAction, IProperty } from 'actions/parcelsActions';
+import { updateParcel, deleteParcel } from 'actionCreators/parcelsActionCreator';
 import ParcelDetailContainer, {
   ParcelDetailTabs,
 } from 'features/properties/containers/ParcelDetailContainer';
 import { noop } from 'lodash';
 import { ToastContainer } from 'react-toastify';
 import pretty from 'pretty';
+import { Roles } from 'constants/roles';
 
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock('lodash/debounce', () => jest.fn(fn => fn));
-
+jest.mock('actions/parcelsActions');
 jest.mock('actionCreators/parcelsActionCreator');
 
 const mockStore = configureMockStore([thunk]);
@@ -92,8 +91,14 @@ const lCodes = {
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME, code: 'TEST' },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
     {
-      name: 'test administrative area',
+      name: 'administrativeArea',
       id: '1',
+      isDisabled: false,
+      type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
+    },
+    {
+      name: 'Victoria',
+      id: '2',
       isDisabled: false,
       type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
     },
@@ -142,12 +147,16 @@ const parcelDetailForm = ({
   data,
   tab,
   disabled,
+  properties,
+  onDelete,
 }: {
   clickLatLng?: LatLng;
   loadDraft?: boolean;
   data?: any;
   tab?: ParcelDetailTabs;
   disabled?: boolean;
+  properties?: IProperty[];
+  onDelete?: () => void;
 }) => (
   <Provider store={store}>
     <Router history={history}>
@@ -163,9 +172,9 @@ const parcelDetailForm = ({
         parcelDetail={data ?? null}
         disabled={disabled}
         loadDraft={loadDraft ?? true}
-        onDelete={noop}
+        onDelete={onDelete ?? noop}
         persistCallback={noop}
-        properties={[]}
+        properties={properties ?? []}
         defaultTab={tab}
         movingPinNameSpace={''}
         mapClickMouseEvent={
@@ -182,8 +191,53 @@ const parcelDetailForm = ({
 );
 
 describe('ParcelDetail Functionality', () => {
+  beforeEach(() => {
+    (storeDraftParcelsAction as jest.Mock).mockReturnValue({ type: 'test' });
+  });
   afterEach(() => {
     cleanup();
+  });
+  describe('parcel detail form actions', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      cleanup();
+      (deleteParcel as jest.Mock).mockResolvedValue({ type: 'test' });
+      (storeDraftParcelsAction as jest.Mock).mockReturnValue({ type: 'test' });
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          userInfo: {
+            agencies: ['1'],
+            groups: [Roles.SYSTEM_ADMINISTRATOR],
+            roles: ['admin-properties'],
+          },
+          subject: 'test',
+        },
+      });
+    });
+    it('Displays modal when delete button is clicked', async () => {
+      const onDelete = jest.fn();
+      const { findByTestId } = render(
+        parcelDetailForm({ data: mockDetails[0], onDelete: onDelete }),
+      );
+      const deleteButton = await findByTestId('delete');
+
+      await act(async () => {
+        fireEvent.click(deleteButton);
+        const modalDeleteButton = await screen.findByText('Delete');
+        expect(modalDeleteButton).toBeVisible();
+      });
+    });
+    it('Displays the cancel and save buttons when the edit button is clicked', async () => {
+      const onDelete = jest.fn();
+      const { getByText, getAllByText } = render(
+        parcelDetailForm({ data: mockDetails[0], onDelete: onDelete, disabled: true }),
+      );
+      const editButton = getByText('Edit');
+
+      fireEvent.click(editButton);
+      expect(getAllByText('Cancel')[0]).toBeVisible();
+      expect(getByText('Save')).toBeVisible();
+    });
   });
   describe('field validation', () => {
     const exampleData = {
@@ -297,6 +351,7 @@ describe('ParcelDetail Functionality', () => {
         container,
         'address.administrativeArea',
         exampleData.address.administrativeArea,
+        'typeahead',
       );
       await fillInput(container, 'address.provinceId', exampleData.address.provinceId, 'select');
       await fillInput(container, 'address.postal', exampleData.address.postal);
@@ -312,22 +367,35 @@ describe('ParcelDetail Functionality', () => {
       await fillInput(container, 'longitude', exampleData.longitude);
       await fillInput(container, 'landArea', exampleData.landArea);
       await fillInput(container, 'isSensitive', true, 'radio');
-      // await fillInput(container, 'financials.1.date', exampleData.evaluations[1].date);
-      // TODO: add a function capable of filling this type of field
-      (updateParcel as any).mockImplementation((parcel: IParcel) => {
-        expect(parcel.isSensitive).toBeTruthy();
-        expect(parcel.pin).toEqual(exampleData.pin);
-        expect(parcel.latitude).toEqual(exampleData.latitude);
-        expect(parcel.longitude).toEqual(exampleData.longitude);
-        expect(parcel.landArea).toEqual(exampleData.landArea);
-        expect(parcel.address).toEqual(exampleData.address);
-        expect(parcel.name).toEqual(exampleData.name);
-        expect(parcel.zoning).toEqual(exampleData.zoning);
-        expect(parcel.zoningPotential).toEqual(exampleData.zoningPotential);
-      });
+
       const submit = form.getByText('Submit');
       await wait(() => {
         fireEvent.click(submit!);
+      });
+      expect(updateParcel).toHaveBeenCalledWith({
+        id: 1,
+        address: {
+          administrativeArea: 'administrativeArea',
+          cityId: 1,
+          line1: 'addressval',
+          postal: 'V8X 3L5',
+          provinceId: '2222',
+        },
+        buildings: [],
+        evaluations: [],
+        fiscals: [],
+        pid: undefined,
+        pin: 5,
+        projectNumber: '',
+        financials: [],
+        name: 'name',
+        zoning: 'zoningVal',
+        zoningPotential: 'zoningPotentialVal',
+        classificationId: 1,
+        latitude: 0,
+        longitude: 0,
+        landArea: 1234,
+        isSensitive: true,
       });
     });
 
@@ -344,19 +412,6 @@ describe('ParcelDetail Functionality', () => {
       await wait(() => {
         fireEvent.click(submit!);
       });
-      done();
-    });
-
-    xit('displays a top level error message if submit fails', async done => {
-      const { getByText } = render(parcelDetailForm({ data: exampleData }));
-      const mockAxios = new MockAdapter(axios);
-      const submit = getByText('Submit');
-      mockAxios.onPost().reply(() => {
-        throw Error('test message');
-      });
-
-      fireEvent.click(submit!);
-      await screen.findByText('Error saving property data, please try again.');
       done();
     });
   });
@@ -381,20 +436,16 @@ describe('ParcelDetail Functionality', () => {
   });
 
   // Currently leaves an ugly warning but passes test
-  it('provides appropriate specifications to add a new building', () => {
-    const component = mount(parcelDetailForm({ tab: ParcelDetailTabs.buildings }));
-    const addBuilding = component
-      .find('[className="pagedBuildingButton page-link btn btn-link"]')
-      .first();
+  it('provides appropriate specifications to add a new building', async () => {
+    const { getByTitle, findByText } = render(
+      parcelDetailForm({ tab: ParcelDetailTabs.buildings }),
+    );
+    const addBuilding = getByTitle('Add Building');
     act(() => {
-      addBuilding.simulate('click');
+      fireEvent.click(addBuilding);
     });
-
-    const buildingForm = component.find(BuildingForm);
-    expect(buildingForm).toHaveLength(1);
-    expect(buildingForm.text()).toContain('construction test type');
-    expect(buildingForm.text()).toContain('predominate use test type');
-    expect(buildingForm.text()).toContain('occupent type test');
+    const buildingComponent = await findByText('Name');
+    expect(buildingComponent).toBeVisible();
   });
 
   it('pidpin form renders', () => {
@@ -412,6 +463,35 @@ describe('ParcelDetail Functionality', () => {
     await wait(() => {
       // assert --> PID value was set
       expect(getInput(container, 'pid')).toHaveValue('123-456-789');
+    });
+  });
+  describe('useDraftMarkerSynchronizer hook tests', () => {
+    beforeEach(() => {
+      (storeDraftParcelsAction as jest.Mock).mockReset();
+      (storeDraftParcelsAction as jest.Mock).mockReturnValue({ type: 'test' });
+    });
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+    it('will create draft markers based on the current form state', async () => {
+      render(parcelDetailForm({ data: mockDetails[0] }));
+      expect(storeDraftParcelsAction).toHaveBeenCalledWith([
+        { latitude: 48, longitude: 123, name: 'test name', propertyTypeId: 2 },
+      ]);
+    });
+
+    it('will not create draft markers if the current lat/lngs match what is displayed on the map', async () => {
+      const { container } = render(
+        parcelDetailForm({
+          data: mockDetails[0],
+          properties: [{ id: 0, latitude: 123, longitude: 456, propertyTypeId: 0 }],
+        }),
+      );
+      await fillInput(container, 'latitude', '123');
+      await fillInput(container, 'longitude', '456');
+      expect(storeDraftParcelsAction).not.toHaveBeenCalledWith([
+        { latitude: 123, longitude: 456, name: 'test name', propertyTypeId: 2 },
+      ]);
     });
   });
 });
