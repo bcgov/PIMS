@@ -7,6 +7,20 @@ metadata:
     description: Deployment template for Elastic search
     tags: pims-logging
 objects:
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: pims-elasticsearch-password-secret
+      namespace: ${PROJECT_NAME}
+      annotations:
+        description: "Elastic search bootstrap password"
+      labels:
+        name: pims-elasticsearch-password-secret
+        app: ${APP_NAME}
+        component: tools
+    type: Opaque
+    stringData:
+      ELASTIC_PASSWORD: ${ELASTIC_BOOTSTRAP_PASSWORD}
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -87,7 +101,7 @@ objects:
         spec:
           containers:
             - name: ${APP_NAME}
-              image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+              image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
               env:
                 - name: discovery.type
                   value: single-node
@@ -95,6 +109,11 @@ objects:
                   value: "0.0.0.0"
                 - name: "ES_JAVA_OPTS"
                   value: "-Xms256m -Xmx256m"
+                - name: ELASTIC_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: pims-elasticsearch-password-secret
+                      key: ELASTIC_PASSWORD
               resources:
                 limits:
                   memory: "1000Mi"
@@ -109,7 +128,7 @@ objects:
                   readOnly: true
                   subPath: elasticsearch.yml
                 - name: ${APP_NAME}-data-persistent-storage-volume
-                  mountPath: /data
+                  mountPath: /usr/share/elasticsearch/data
           volumes:
             - name: config-volume
               configMap:
@@ -138,3 +157,7 @@ parameters:
     description: Elastic search domain
     required: true
     value: pims-elastic.pathfinder.gov.bc.ca
+  - name: ELASTIC_BOOTSTRAP_PASSWORD
+    displayName: Elastic search bootstrap password
+    description: Elastic search bootstrap password
+    required: true
