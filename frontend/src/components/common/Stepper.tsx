@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 import './Stepper.scss';
 
-interface Step {
+export interface IStep {
   title: string;
   route: string;
   completed: boolean;
@@ -12,21 +11,21 @@ interface Step {
 }
 
 interface StepperProps {
-  steps: Step[];
+  steps: IStep[];
   activeStep: number;
   activeStepMessage?: string;
+  onChange: (step: IStep, index?: number) => void;
 }
 
 /**
  * A simple stepper component that displays all based stepper components in order.
  * the active step is controlled externally via activeStep param.
- * @param param0 StepperProps
+ * @param StepperProps
  */
-const Stepper = ({ steps, activeStep, activeStepMessage }: StepperProps) => {
-  const history = useHistory();
+const Stepper = ({ steps, activeStep, activeStepMessage, onChange }: StepperProps) => {
   return (
     <div className="bs-stepper">
-      <h6>{activeStepMessage}</h6>
+      {!!activeStepMessage && <h6>{activeStepMessage}</h6>}
       <div className="bs-stepper-header">
         {steps.map((step, index) => (
           <Fragment key={`stepper-${index}`}>
@@ -35,9 +34,10 @@ const Stepper = ({ steps, activeStep, activeStepMessage }: StepperProps) => {
               data-target={`stepper-${index}`}
             >
               <button
+                type="button"
                 className="step-trigger"
                 disabled={!step.canGoToStep}
-                onClick={() => history.push(step.route)}
+                onClick={() => onChange(step, index)}
               >
                 <span
                   className={classNames(step.completed ? 'completed' : null, 'bs-stepper-circle')}
