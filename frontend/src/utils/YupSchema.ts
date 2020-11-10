@@ -47,7 +47,7 @@ export const AgencyEditSchema = Yup.object().shape({
   name: Yup.string()
     .max(100, 'Agency name must be less than 100 characters')
     .required('An agency name is required.'),
-  code: Yup.string().required('An agnecy code is required.'),
+  code: Yup.string().required('An agency code is required.'),
 });
 
 export const UserSchema = Yup.object().shape({

@@ -106,7 +106,9 @@ export const ManageUsersPage = () => {
         agencyLookups={agencies}
         rolesLookups={roles}
         onChange={value => {
-          dispatch(getUsersFilterAction(value));
+          (value as any)?.agency?.label
+            ? dispatch(getUsersFilterAction({ ...value, agency: (value as any).agency.label }))
+            : dispatch(getUsersFilterAction({ ...value, agency: '' }));
           dispatch(getUsersPageIndexAction(0));
         }}
       />

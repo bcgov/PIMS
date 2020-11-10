@@ -77,8 +77,8 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
                 <Col className="bar-item flex-grow-0 plus-button">
                   <PlusButton
                     onClick={props.handleAdd}
-                    toolTipId={props.toolTipAddId!}
-                    toolTipText={props.toolTipAddText!}
+                    toolId={props.toolTipAddId!}
+                    toolText={props.toolTipAddText!}
                   />
                 </Col>
               </>
