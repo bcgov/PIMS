@@ -5,9 +5,9 @@ import { Button, ButtonProps } from '.';
 
 interface IPlusButtonProps extends ButtonProps {
   /** set the text of the tooltip that appears on hover of the plus button */
-  toolTipText: string;
+  toolText: string;
   /** set the id of the tool tip use for on hover of the plus buttons */
-  toolTipId: string;
+  toolId: string;
 }
 
 /**
@@ -16,7 +16,7 @@ interface IPlusButtonProps extends ButtonProps {
  */
 const PlusButton: React.FC<IPlusButtonProps> = ({ ...props }) => {
   return (
-    <TooltipWrapper toolTipId={props.toolTipId} toolTip={props.toolTipText}>
+    <TooltipWrapper toolTipId={props.toolId} toolTip={props.toolText}>
       <Button className="bg-success" {...props} icon={<FaPlus size={20} />} />
     </TooltipWrapper>
   );
