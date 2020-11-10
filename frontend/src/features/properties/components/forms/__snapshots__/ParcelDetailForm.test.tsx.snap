@@ -5,7 +5,9 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
 <div class=\\"parcelDetailForm row no-gutters\\">
   <div class=\\"col\\">
     <form novalidate=\\"\\" class=\\"\\">
-      <div class=\\"sc-fzozJi efsfmS form-controls\\"><button type=\\"submit\\" class=\\"btn btn-primary\\">Submit&nbsp;</button></div>
+      <div class=\\"sc-fzozJi jkqcCg form-controls\\"><button type=\\"submit\\" class=\\"btn btn-primary\\">Submit</button></div><button data-testid=\\"delete\\" type=\\"button\\" class=\\"delete-btn btn btn-primary\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+          <path d=\\"M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z\\"></path>
+        </svg></button>
       <div class=\\"container\\"></div>
       <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"parcel\\" id=\\"approvalTabs-tab-parcel\\" aria-controls=\\"approvalTabs-tabpane-parcel\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Parcel</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"buildings\\" id=\\"approvalTabs-tab-buildings\\" aria-controls=\\"approvalTabs-tabpane-buildings\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Buildings</a></nav>
       <div class=\\"tab-content\\">

@@ -154,6 +154,7 @@ export const mockDetails = [
     landLegalDescription: 'test',
     buildings: [],
     agency: 'MOTI',
+    propertyTypeId: 0,
   },
   {
     id: 2,

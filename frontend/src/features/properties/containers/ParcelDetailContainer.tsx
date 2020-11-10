@@ -43,6 +43,7 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     props.movingPinNameSpace,
   );
+  const [editing, setEditing] = useState(false);
 
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
@@ -101,11 +102,13 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
         loadDraft={props.loadDraft}
         properties={props.properties}
         currentTab={currentTab}
+        setEditing={setEditing}
+        editing={editing}
       />
       <ParcelDetailForm
         setMovingPinNameSpace={setMovingPinNameSpace}
         formikRef={formikRef}
-        disabled={props.disabled ?? false}
+        disabled={(props.disabled && !editing) ?? false}
         setPidSelection={setPidSelection}
         pidSelection={pidSelection}
         currentTab={currentTab}
