@@ -1,8 +1,6 @@
 import EditUserPage from './EditUserPage';
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -16,8 +14,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment-timezone';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

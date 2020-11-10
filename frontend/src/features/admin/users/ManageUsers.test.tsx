@@ -1,8 +1,6 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -12,10 +10,8 @@ import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { create, ReactTestInstance } from 'react-test-renderer';
-import { render } from '@testing-library/react';
+import { fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -107,9 +103,18 @@ describe('Manage Users Component', () => {
     expect(table.props.data.length).toBe(2);
   });
 
-  xit('displays enabled agencies', () => {
-    const { queryByText } = testRender(getStore());
-    expect(queryByText('agencyVal')).toBeVisible();
+  it('displays enabled agencies via autocomplete', async () => {
+    const { getAllByRole, container } = testRender(getStore());
+    const agency = container.querySelector('input[name="agency"]');
+
+    await wait(() => {
+      fireEvent.change(agency!, {
+        target: {
+          value: 'age',
+        },
+      });
+    });
+    expect(getAllByRole('option')[0]).toHaveTextContent('agencyVal');
   });
 
   it('Does not display disabled agencies', () => {

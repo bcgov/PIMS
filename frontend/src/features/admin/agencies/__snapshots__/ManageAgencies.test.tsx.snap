@@ -1,0 +1,566 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Manage Agencies Component Snapshot matches 1`] = `
+.c0 div {
+  width: 100%;
+}
+
+<div
+  className="ManageAgencies container-fluid"
+>
+  <div
+    className="agency-toolbar container-fluid"
+  >
+    <form
+      className=""
+      noValidate={true}
+      onSubmit={[Function]}
+    >
+      <div
+        className="search-bar form-row"
+      >
+        <h3
+          className="filterBarHeading"
+        >
+          Agencies
+        </h3>
+        <p
+          className="label"
+        >
+          Search agency by name: 
+        </p>
+        <div
+          className="c0 form-group"
+        >
+          <div
+            className="rbt"
+            style={
+              Object {
+                "outline": "none",
+                "position": "relative",
+              }
+            }
+            tabIndex={-1}
+          >
+            <div
+              style={
+                Object {
+                  "display": "flex",
+                  "flex": 1,
+                  "height": "100%",
+                  "position": "relative",
+                }
+              }
+            >
+              <input
+                aria-autocomplete="both"
+                aria-expanded={false}
+                aria-haspopup="listbox"
+                autoComplete="off"
+                className="rbt-input-main form-control rbt-input agency-search"
+                name="id"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Enter an Agency"
+                role="combobox"
+                type="text"
+                value=""
+              />
+              <input
+                aria-hidden={true}
+                className="rbt-input-hint"
+                readOnly={true}
+                style={
+                  Object {
+                    "backgroundColor": "transparent",
+                    "borderColor": "transparent",
+                    "boxShadow": "none",
+                    "color": "rgba(0, 0, 0, 0.35)",
+                    "left": 0,
+                    "pointerEvents": "none",
+                    "position": "absolute",
+                    "top": 0,
+                    "width": "100%",
+                  }
+                }
+                tabIndex={-1}
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="bar-item flex-grow-0 col"
+        >
+          <button
+            className="Button Button--icon-only bg-primary btn btn-primary"
+            disabled={false}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="submit"
+          >
+            <div
+              className="Button__icon"
+            >
+              <svg
+                fill="currentColor"
+                height={20}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 512 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+        <div
+          className="bar-item flex-grow-0 col"
+        >
+          <button
+            className="Button Button--icon-only btn btn-secondary"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="reset"
+          >
+            <div
+              className="Button__icon"
+            >
+              <svg
+                fill="currentColor"
+                height={20}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 512 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+        <div
+          className="vl"
+        />
+        <div
+          className="bar-item flex-grow-0 plus-button col"
+        >
+          <button
+            className="Button Button--icon-only bg-success btn btn-primary"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            toolId="agency-filter-add"
+            toolText="Add a new Agency"
+            type="button"
+          >
+            <div
+              className="Button__icon"
+            >
+              <svg
+                fill="currentColor"
+                height={20}
+                size={20}
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 448 512"
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="table-section"
+  >
+    <div
+      className="table"
+      role="table"
+      style={
+        Object {
+          "minWidth": undefined,
+        }
+      }
+    >
+      <div
+        className="thead thead-light"
+      >
+        <div
+          className="tr"
+          role="row"
+          style={
+            Object {
+              "display": "flex",
+              "flex": "1 0 auto",
+              "minWidth": "120px",
+            }
+          }
+        >
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Agency name
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Short name
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Description
+          </div>
+          <div
+            className="th"
+            colSpan={1}
+            onClick={[Function]}
+            role="columnheader"
+            style={
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "flex": "100 0 auto",
+                "justifyContent": "flex-start",
+                "minWidth": "30px",
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Parent Agency
+          </div>
+        </div>
+      </div>
+      <div
+        className="tbody"
+        role="rowgroup"
+      >
+        <div
+          className="tr-wrapper"
+        >
+          <div
+            className="tr"
+            role="row"
+            style={
+              Object {
+                "display": "flex",
+                "flex": "1 0 auto",
+                "minWidth": "120px",
+              }
+            }
+          >
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              BC Assessment
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              BCA
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              <a
+                href="/admin/agency/undefined"
+                onClick={[Function]}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="tr-wrapper"
+        >
+          <div
+            className="tr"
+            role="row"
+            style={
+              Object {
+                "display": "flex",
+                "flex": "1 0 auto",
+                "minWidth": "120px",
+              }
+            }
+          >
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              BC Test
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              TEST
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              
+            </div>
+            <div
+              className="td clickable"
+              onClick={[Function]}
+              role="cell"
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "boxSizing": "border-box",
+                  "display": "flex",
+                  "flex": "100 0 auto",
+                  "justifyContent": "flex-start",
+                  "minWidth": "30px",
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+              title=""
+            >
+              <a
+                href="/admin/agency/12"
+                onClick={[Function]}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="table-toolbar"
+    >
+      <ul
+        className="pagination"
+      >
+        <li
+          className="page-item disabled"
+        >
+          <a
+            aria-disabled="true"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            &lt;
+          </a>
+        </li>
+        <li
+          className="page-item"
+        >
+          <a
+            aria-disabled="false"
+            className="page-link"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            role="button"
+            tabIndex="0"
+          >
+            &gt;
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
