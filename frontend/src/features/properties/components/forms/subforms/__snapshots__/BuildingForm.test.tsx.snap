@@ -510,6 +510,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         </div>
         <button
           className="c1"
+          disabled={false}
           onClick={[Function]}
         >
           <p>
