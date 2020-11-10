@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage Users Component Snapshot matches 1`] = `
-.c0 {
+.c0 div {
+  width: 100%;
+}
+
+.c1 {
   margin-top: 10px;
   margin-bottom: 40px;
 }
@@ -104,27 +108,67 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         className="bar-item col"
       >
         <div
-          className="form-group"
+          className="c0 form-group"
         >
-          <select
-            className="form-select form-control"
-            id="input-agency"
-            name="agency"
-            onBlur={[Function]}
-            onChange={[Function]}
+          <div
+            className="rbt"
+            style={
+              Object {
+                "outline": "none",
+                "position": "relative",
+              }
+            }
+            tabIndex={-1}
           >
-            <option
-              value=""
+            <div
+              style={
+                Object {
+                  "display": "flex",
+                  "flex": 1,
+                  "height": "100%",
+                  "position": "relative",
+                }
+              }
             >
-              Agency
-            </option>
-            <option
-              className="option"
-              value="agencyVal"
-            >
-              agencyVal
-            </option>
-          </select>
+              <input
+                aria-autocomplete="both"
+                aria-expanded={false}
+                aria-haspopup="listbox"
+                autoComplete="off"
+                className="rbt-input-main form-control rbt-input map-filter-typeahead"
+                name="agency"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Enter an Agency"
+                role="combobox"
+                type="text"
+                value=""
+              />
+              <input
+                aria-hidden={true}
+                className="rbt-input-hint"
+                readOnly={true}
+                style={
+                  Object {
+                    "backgroundColor": "transparent",
+                    "borderColor": "transparent",
+                    "boxShadow": "none",
+                    "color": "rgba(0, 0, 0, 0.35)",
+                    "left": 0,
+                    "pointerEvents": "none",
+                    "position": "absolute",
+                    "top": 0,
+                    "width": "100%",
+                  }
+                }
+                tabIndex={-1}
+                value=""
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -232,7 +276,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
     </div>
   </form>
   <div
-    className="c0 container-fluid"
+    className="c1 container-fluid"
   >
     <div
       className="table"

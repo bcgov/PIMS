@@ -1,0 +1,305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Edit agency page EditAgencyPage renders 1`] = `
+Array [
+  <div>
+    <nav
+      className="navBar navbar navbar-expand-sm navbar-light bg-light"
+    >
+      <span
+        className="navbar-brand"
+      >
+         
+        <svg
+          fill="currentColor"
+          height={20}
+          onClick={[Function]}
+          size={20}
+          stroke="currentColor"
+          strokeWidth="0"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 512 512"
+          width={20}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z"
+          />
+        </svg>
+      </span>
+      <h4>
+        Agency Information
+      </h4>
+    </nav>
+    <div
+      className="container-fluid"
+    >
+      <div
+        className="agency-edit-form-container row"
+      >
+        <form
+          className="agencyInfo"
+          noValidate={true}
+          onSubmit={[Function]}
+        >
+          <div
+            className="required form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-name"
+            >
+              Agency
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <input
+              className="form-control"
+              id="input-name"
+              name="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              required={true}
+              type="text"
+              value="Test Agency"
+            />
+          </div>
+          <div
+            className="required form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-code"
+            >
+              Short Name (Code)
+              <span
+                className="required"
+              >
+                *
+              </span>
+            </label>
+            <input
+              className="form-control"
+              id="input-code"
+              name="code"
+              onBlur={[Function]}
+              onChange={[Function]}
+              required={true}
+              type="text"
+              value="TEST"
+            />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-parentId"
+            >
+              Parent Agency - If applicable
+            </label>
+            <select
+              className="form-select form-control"
+              disabled={true}
+              id="input-parentId"
+              name="parentId"
+              onBlur={[Function]}
+              onChange={[Function]}
+            >
+              <option
+                value=""
+              >
+                No parent
+              </option>
+              <option
+                className="option"
+                value="111"
+              >
+                Test Agency
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-description"
+            >
+              Description
+            </label>
+            <input
+              className="form-control"
+              id="input-description"
+              name="description"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="text"
+            />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-email"
+            >
+              Agency e-mail address
+            </label>
+            <input
+              className="form-control"
+              id="input-email"
+              name="email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="text"
+              value="test@email.com"
+            />
+          </div>
+          <div
+            className="checkboxes form-group"
+          >
+            <div
+              className="form-group"
+            >
+              <div
+                className="check-field"
+              >
+                <label
+                  className="form-label"
+                  htmlFor="input-isDisabled"
+                >
+                  Is Disabled?
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={20}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={20}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={20}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
+                </label>
+                <div
+                  className="form-check"
+                >
+                  <input
+                    checked={false}
+                    className="form-check-input position-static"
+                    disabled={false}
+                    id="input-isDisabled"
+                    name="isDisabled"
+                    onChange={[Function]}
+                    type="checkbox"
+                    value={false}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="form-group"
+            >
+              <div
+                className="check-field"
+              >
+                <label
+                  className="form-label"
+                  htmlFor="input-sendEmail"
+                >
+                  Send email?
+                  <svg
+                    className="tooltip-icon"
+                    fill="currentColor"
+                    height={20}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
+                    size={20}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={20}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm107.244-255.2c0 67.052-72.421 68.084-72.421 92.863V300c0 6.627-5.373 12-12 12h-45.647c-6.627 0-12-5.373-12-12v-8.659c0-35.745 27.1-50.034 47.579-61.516 17.561-9.845 28.324-16.541 28.324-29.579 0-17.246-21.999-28.693-39.784-28.693-23.189 0-33.894 10.977-48.942 29.969-4.057 5.12-11.46 6.071-16.666 2.124l-27.824-21.098c-5.107-3.872-6.251-11.066-2.644-16.363C184.846 131.491 214.94 112 261.794 112c49.071 0 101.45 38.304 101.45 88.8zM298 368c0 23.159-18.841 42-42 42s-42-18.841-42-42 18.841-42 42-42 42 18.841 42 42z"
+                    />
+                  </svg>
+                </label>
+                <div
+                  className="form-check"
+                >
+                  <input
+                    checked={true}
+                    className="form-check-input position-static"
+                    disabled={false}
+                    id="input-sendEmail"
+                    name="sendEmail"
+                    onChange={[Function]}
+                    type="checkbox"
+                    value={true}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div
+            className="buttons row"
+          >
+            <div
+              className="cancelSave btn-toolbar"
+              role="toolbar"
+            >
+              <button
+                className="bg-danger mr-5 btn btn-primary"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                Delete Agency
+              </button>
+              <button
+                className="mr-5 btn btn-primary"
+                disabled={false}
+                type="submit"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>,
+  ",",
+]
+`;
