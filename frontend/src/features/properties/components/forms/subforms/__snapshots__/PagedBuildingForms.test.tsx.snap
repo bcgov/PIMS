@@ -607,6 +607,7 @@ Array [
         </div>
         <button
           className="c1"
+          disabled={true}
           onClick={[Function]}
         >
           <p>
