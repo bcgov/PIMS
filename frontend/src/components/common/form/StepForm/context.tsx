@@ -44,7 +44,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({ child
 
   const goBack = () => {
     const index = getIn(values, 'activeStep') - 1;
-    if (index > 0 && index < steps.length) {
+    if (index > -1 && index < steps.length) {
       const nextStep = steps[index];
       if (nextStep.canGoToStep) {
         setFieldValue('activeStep', index);
