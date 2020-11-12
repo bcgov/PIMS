@@ -4,6 +4,7 @@ import { RootState } from 'reducers/rootReducer';
 import Stepper from 'components/common/Stepper';
 import { useStepper } from '..';
 import { IStatus } from '../../common';
+import { useHistory } from 'react-router-dom';
 
 interface GeneratedDisposeStepperProps {
   activeStep: number;
@@ -17,6 +18,7 @@ interface GeneratedDisposeStepperProps {
 const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepperProps) => {
   const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
   const { projectStatusCompleted, canGoToStatus, project } = useStepper();
+  const history = useHistory();
   const steps = workflowStatuses
     .filter(i => !i.isOptional)
     .map(wfs => ({
@@ -27,6 +29,7 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
     }));
   return (
     <Stepper
+      onChange={step => history.push(step.route)}
       activeStep={activeStep}
       steps={steps}
       activeStepMessage="Complete this form to apply to the Enhanced Referral Process or Request Exemption"
