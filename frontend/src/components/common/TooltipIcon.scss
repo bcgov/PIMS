@@ -1,6 +1,10 @@
 @import '../../colors.scss';
+
 .tooltip-icon {
-  color: $icon-light-color;
+  min-width: 14px;
+  min-height: 14px;
+  margin-left: -14px;
+  color: $secondary-variant-color;
 }
 
 .tooltip {
@@ -8,5 +12,14 @@
   .tooltip-inner {
     text-align: left;
     max-width: 25rem;
+    background-color: $secondary-variant-color;
+    color: #ffffff;
   }
+  .arrow:before {
+    border-top-color: $secondary-variant-color;
+  }
+}
+
+.tooltip.show {
+  opacity: 1;
 }
