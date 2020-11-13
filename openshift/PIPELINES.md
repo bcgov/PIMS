@@ -27,4 +27,16 @@ This project makes use of several pipelines. For each one, use the generic pipel
 
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/jenkins/generic-pipeline.yaml | oc create -f -`
 
-## 3 dev-to-test-pipeline
+## 2 dev-alpha-pipeline
+
+The dev alpha pipeline is used to test unreleased features that may not have a complete implementation or includes a design that is not ready to be included in the regular PIMS release lifecycle. The alpha pipeline allows developers to share these kinds of changes with other developers and non-technical users in a similar manner to the core PIMS git flow, but using the dev-alpha branch instead of the regular dev branch. Note that the dev-alpha-pipeline uses the original Jenkinsfile.cicd configuration.
+
+1. View the parameters `oc process --parameters -f openshift/templates/jenkins/generic-pipeline.yaml`
+
+2. Create a **`.env`** file that contains the values for the parameters within the template
+
+   ```
+   APP_NAME=pims-alpha
+   ```
+
+3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/jenkins/generic-pipeline.yaml | oc create -f -`
