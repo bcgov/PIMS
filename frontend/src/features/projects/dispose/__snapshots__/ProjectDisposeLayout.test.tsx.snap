@@ -76,6 +76,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
@@ -100,6 +101,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
@@ -124,6 +126,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
@@ -148,6 +151,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
@@ -172,6 +176,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
@@ -196,6 +201,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
           className="step-trigger"
           disabled={true}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="bs-stepper-circle"
