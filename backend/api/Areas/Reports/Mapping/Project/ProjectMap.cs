@@ -1,5 +1,8 @@
 using Mapster;
+using Microsoft.Extensions.Options;
 using Pims.Api.Mapping.Converters;
+using Pims.Dal.Helpers.Extensions;
+using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.Project;
 
@@ -7,6 +10,22 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
 {
     public class ProjectMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ProjectMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public ProjectMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
+
+        #region Methods
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Project, Model.ProjectModel>()
@@ -29,54 +48,55 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     src => src.CreatedById != null ? src.CreatedBy.DisplayName : null)
 
             #region Notes
-                .Map(dest => dest.Note, src => src.Note)
-                .Map(dest => dest.PublicNote, src => src.PublicNote)
-                .Map(dest => dest.PrivateNote, src => src.PrivateNote)
-                .Map(dest => dest.AppraisedNote, src => src.AppraisedNote)
-            #endregion
-
-            #region Exemption
-                .Map(dest => dest.ExemptionRequested, src => src.ExemptionRequested)
-                .Map(dest => dest.ExemptionRationale, src => src.ExemptionRationale)
+                .Map(dest => dest.Note, src => src.GetNoteText(Entity.NoteTypes.General))
+                .Map(dest => dest.PublicNote, src => src.GetNoteText(Entity.NoteTypes.Public))
+                .Map(dest => dest.PrivateNote, src => src.GetNoteText(Entity.NoteTypes.Private))
+                .Map(dest => dest.AppraisedNote, src => src.GetNoteText(Entity.NoteTypes.Appraisal))
+                .Map(dest => dest.ExemptionRationale, src => src.GetNoteText(Entity.NoteTypes.Exemption))
+                .Map(dest => dest.OffersNote, src => src.GetNoteText(Entity.NoteTypes.Offer))
             #endregion
 
             #region Financial
                 .Map(dest => dest.NetBook, src => src.NetBook)
-                .Map(dest => dest.Estimated, src => src.Estimated)
+                .Map(dest => dest.Market, src => src.Market)
                 .Map(dest => dest.Assessed, src => src.Assessed)
                 .Map(dest => dest.Appraised, src => src.Appraised)
-                .Map(dest => dest.SalesCost, src => src.SalesCost)
-                .Map(dest => dest.NetProceeds, src => src.NetProceeds)
-                .Map(dest => dest.ProgramCost, src => src.ProgramCost)
-                .Map(dest => dest.GainLoss, src => src.GainLoss)
-                .Map(dest => dest.OcgFinancialStatement, src => src.OcgFinancialStatement)
-                .Map(dest => dest.InterestComponent, src => src.InterestComponent)
-                .Map(dest => dest.OfferAmount, src => src.OfferAmount)
-                .Map(dest => dest.SaleWithLeaseInPlace, src => src.SaleWithLeaseInPlace)
             #endregion
 
             #region Dates
                 .Map(dest => dest.SubmittedOn, src => src.SubmittedOn)
                 .Map(dest => dest.ApprovedOn, src => src.ApprovedOn)
-                .Map(dest => dest.InitialNotificationSentOn, src => src.InitialNotificationSentOn)
-                .Map(dest => dest.ThirtyDayNotificationSentOn, src => src.ThirtyDayNotificationSentOn)
-                .Map(dest => dest.SixtyDayNotificationSentOn, src => src.SixtyDayNotificationSentOn)
-                .Map(dest => dest.NinetyDayNotificationSentOn, src => src.NinetyDayNotificationSentOn)
-                .Map(dest => dest.OnHoldNotificationSentOn, src => src.OnHoldNotificationSentOn)
-                .Map(dest => dest.TransferredWithinGreOn, src => src.TransferredWithinGreOn)
-                .Map(dest => dest.ClearanceNotificationSentOn, src => src.ClearanceNotificationSentOn)
                 .Map(dest => dest.DeniedOn, src => src.DeniedOn)
                 .Map(dest => dest.CancelledOn, src => src.CancelledOn)
-                .Map(dest => dest.DisposedOn, src => src.DisposedOn)
                 .Map(dest => dest.CompletedOn, src => src.CompletedOn)
             #endregion
 
-            #region SPL
-                .Map(dest => dest.MarketedOn, src => src.MarketedOn)
-                .Map(dest => dest.OffersNote, src => src.OffersNote)
-                .Map(dest => dest.Purchaser, src => src.Purchaser)
-                .Map(dest => dest.IsContractConditional, src => src.IsContractConditional);
-            #endregion
+                .AfterMapping((src, dest) =>
+                {
+                    var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(src.Metadata, _serializerOptions);
+
+                    dest.ExemptionRequested = metadata.ExemptionRequested;
+                    dest.SalesCost = metadata.SalesCost;
+                    dest.NetProceeds = metadata.NetProceeds;
+                    dest.ProgramCost = metadata.ProgramCost;
+                    dest.GainLoss = metadata.GainLoss;
+                    dest.OcgFinancialStatement = metadata.OcgFinancialStatement;
+                    dest.InterestComponent = metadata.InterestComponent;
+                    dest.OfferAmount = metadata.OfferAmount;
+                    dest.SaleWithLeaseInPlace = metadata.SaleWithLeaseInPlace;
+                    dest.InitialNotificationSentOn = metadata.InitialNotificationSentOn;
+                    dest.ThirtyDayNotificationSentOn = metadata.ThirtyDayNotificationSentOn;
+                    dest.SixtyDayNotificationSentOn = metadata.SixtyDayNotificationSentOn;
+                    dest.NinetyDayNotificationSentOn = metadata.NinetyDayNotificationSentOn;
+                    dest.OnHoldNotificationSentOn = metadata.OnHoldNotificationSentOn;
+                    dest.TransferredWithinGreOn = metadata.TransferredWithinGreOn;
+                    dest.ClearanceNotificationSentOn = metadata.ClearanceNotificationSentOn;
+                    dest.DisposedOn = metadata.DisposedOn;
+                    dest.MarketedOn = metadata.MarketedOn;
+                    dest.Purchaser = metadata.Purchaser;
+                    dest.IsContractConditional = metadata.IsContractConditional;
+                });
         }
+        #endregion
     }
 }

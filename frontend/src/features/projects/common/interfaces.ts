@@ -13,6 +13,7 @@ export interface IProperty {
   pin?: number;
   classificationId: number;
   classification: string;
+  name: string;
   description: string;
   projectNumber?: string;
   latitude: number;
@@ -31,9 +32,9 @@ export interface IProperty {
   postal: string;
 
   // Financial Values
-  estimated: number;
-  estimatedFiscalYear?: number;
-  estimatedRowVersion?: string;
+  market: number;
+  marketFiscalYear?: number;
+  marketRowVersion?: string;
   netBook: number;
   netBookFiscalYear?: number;
   netBookRowVersion?: string;
@@ -156,10 +157,9 @@ export interface IProject {
   preliminaryFormSignedOn?: Date | string;
   finalFormSignedOn?: Date | string;
   netBook?: number | '';
-  closeOutNetbook?: number | '';
   assessed?: number | '';
   appraised?: number | '';
-  estimated?: number | '';
+  market?: number | '';
   workflowCode?: string;
   isContractConditional?: boolean;
   purchaser?: string;
@@ -173,7 +173,6 @@ export interface IProject {
   interestComponent?: number | '';
   ocgFinancialStatement?: number | '';
   salesCost?: number | '';
-  salesProceeds?: number | '';
   gainBeforeSpp?: number | '';
   gainAfterSpp?: number | '';
   programCost?: number | '';
@@ -313,7 +312,7 @@ export const initialValues: IProject = {
   netBook: '',
   assessed: '',
   appraised: '',
-  estimated: '',
+  market: '',
   workflowCode: '',
   offerAmount: '',
   isContractConditional: false,
@@ -327,7 +326,6 @@ export const initialValues: IProject = {
   interestComponent: '',
   ocgFinancialStatement: '',
   salesCost: '',
-  salesProceeds: '',
   gainBeforeSpp: '',
   gainAfterSpp: '',
   programCost: '',
@@ -344,7 +342,7 @@ export interface IApiProject {
   projectAgencyResponses: IProjectAgencyResponse[];
   note: string;
   netBook: number | '';
-  estimated: number | '';
+  market: number | '';
   assessed: number | '';
   appraised?: number | '';
   publicNote: string;
@@ -392,6 +390,7 @@ export interface IApiProperty {
   longitude: number;
   classification?: string;
   classificationId: number;
+  name: string;
   description: string;
   address?: IAddress;
   landArea: number;

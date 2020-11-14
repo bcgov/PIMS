@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Tool-Converter",
+      "type": "coreclr",
+      "request": "launch",
+      "console": "internalConsole",
+      "preLaunchTask": "build",
+      "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/netcoreapp3.1/Pims.Tools.Converters.ExcelConverter.dll",
+      "cwd": "${workspaceRoot}/tools/converters/excel",
+      "stopAtEntry": false
+    },
+    {
       "name": ".NET Core Launch (api)",
       "type": "coreclr",
       "request": "launch",

@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 
@@ -311,10 +312,18 @@ namespace Pims.Dal.Test.Services
             var fromSnapshot = init.CreateProjectSnapshot(2, agency: project.Agency, snapshotOn: projectReport.From);
             toSnapshot.Project = project;
             toSnapshot.ProjectId = project.Id;
-            toSnapshot.NetProceeds = 100;
+            var toMetadata = new Entity.Models.DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 100
+            };
+            toSnapshot.Metadata = JsonSerializer.Serialize(toMetadata);
             fromSnapshot.Project = project;
             fromSnapshot.ProjectId = project.Id;
-            fromSnapshot.NetProceeds = 10;
+            var fromMetadata = new Entity.Models.DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 10
+            };
+            fromSnapshot.Metadata = JsonSerializer.Serialize(fromMetadata);
             init.SaveChanges();
 
             var service = helper.CreateService<ProjectReportService>(user);
@@ -324,7 +333,7 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(90, result.First().BaselineIntegrity);
+            JsonSerializer.Deserialize<DisposalProjectSnapshotMetadata>(result.First().Metadata).BaselineIntegrity.Should().Be(90);
         }
 
         /// <summary>
@@ -350,7 +359,11 @@ namespace Pims.Dal.Test.Services
             toSnapshot.Project = project;
             toSnapshot.ProjectId = project.Id;
             fromSnapshot.Project = project2;
-            toSnapshot.NetProceeds = 100;
+            var toMetadata = new Entity.Models.DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 100
+            };
+            toSnapshot.Metadata = JsonSerializer.Serialize(toMetadata);
             init.SaveChanges();
 
             var service = helper.CreateService<ProjectReportService>(user);
@@ -360,7 +373,7 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(100, result.First().BaselineIntegrity);
+            JsonSerializer.Deserialize<DisposalProjectSnapshotMetadata>(result.First().Metadata).BaselineIntegrity.Should().Be(100);
         }
         #endregion
 
@@ -517,7 +530,11 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "AP-SPL");
             snapshot.SnapshotOn = fromDate;
             snapshot.Project = project;
-            snapshot.NetProceeds = 100;
+            var metadata = new DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 100
+            };
+            snapshot.Metadata = JsonSerializer.Serialize(metadata);
             
             init.SaveChanges();
             var projectReport = EntityHelper.CreateProjectReport(1, fromDate: fromDate, agency: project.Agency);
@@ -533,7 +550,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.Equal(fromDate, result.From);
             Assert.True(result.Id > 0);
-            Assert.Equal(snapshots.First().BaselineIntegrity, -100);
+            JsonSerializer.Deserialize<DisposalProjectSnapshotMetadata>(snapshots.First().Metadata).BaselineIntegrity.Should().Be(-100);
         }
 
         /// <summary>
@@ -545,7 +562,6 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ReportsSpl);
-            DateTime fromDate = DateTime.UtcNow;
 
             var init = helper.InitializeDatabase(user);
             init.CreateDefaultWorkflowsWithStatus();
@@ -559,7 +575,11 @@ namespace Pims.Dal.Test.Services
             report.IsFinal = true;
             report.To = DateTime.UtcNow;
             snapshot.SnapshotOn = report.To.Value;
-            snapshot.NetProceeds = 100;
+            var metadata = new DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 100
+            };
+            snapshot.Metadata = JsonSerializer.Serialize(metadata);
             snapshot.Project = project;
 
             init.SaveChanges();
@@ -575,7 +595,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.True(result.Id > 0);
-            Assert.Equal(snapshots.First().BaselineIntegrity, -100);
+            JsonSerializer.Deserialize<DisposalProjectSnapshotMetadata>(snapshots.First().Metadata).BaselineIntegrity.Should().Be(-100);
         }
 
         [Fact]
@@ -692,7 +712,11 @@ namespace Pims.Dal.Test.Services
             oldReport.IsFinal = true;
             oldReport.To = DateTime.UtcNow;
             snapshot.SnapshotOn = oldReport.To.Value;
-            snapshot.NetProceeds = 100;
+            var metadata = new DisposalProjectSnapshotMetadata()
+            {
+                NetProceeds = 100
+            };
+            snapshot.Metadata = JsonSerializer.Serialize(metadata);
             snapshot.Project = project;
             projectReport.To = DateTime.UtcNow.AddDays(1);
 
@@ -711,7 +735,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.True(result.Id > 0);
             Assert.NotEmpty(snapshots);
-            Assert.Equal(snapshots.First().BaselineIntegrity, -100);
+            JsonSerializer.Deserialize<DisposalProjectSnapshotMetadata>(snapshots.First().Metadata).BaselineIntegrity.Should().Be(-100);
         }
 
         [Fact]

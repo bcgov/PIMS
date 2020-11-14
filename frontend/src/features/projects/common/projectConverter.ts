@@ -77,12 +77,13 @@ export const toFlatProject = (project?: IApiProject) => {
     const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
     const appraised = getMostRecentAppraisal(apiProperty.evaluations, project.disposedOn);
     const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
-    const estimated = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Estimated);
+    const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
     const property: IProperty = {
       id: apiProperty.id,
       projectPropertyId: pp.id,
       parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
+      name: apiProperty.name,
       description: apiProperty.description,
       landLegalDescription: apiProperty.landLegalDescription,
       zoning: apiProperty.zoning,
@@ -113,9 +114,9 @@ export const toFlatProject = (project?: IApiProject) => {
       netBook: (netBook?.value as number) ?? 0,
       netBookFiscalYear: netBook?.fiscalYear as number,
       netBookRowVersion: netBook?.rowVersion,
-      estimated: (estimated?.value as number) ?? 0,
-      estimatedFiscalYear: estimated?.fiscalYear as number,
-      estimatedRowVersion: estimated?.rowVersion,
+      market: (market?.value as number) ?? 0,
+      marketFiscalYear: market?.fiscalYear as number,
+      marketRowVersion: market?.rowVersion,
       propertyTypeId: pp.parcel ? 0 : 1,
       propertyType: pp.propertyType,
       landArea: apiProperty.landArea,
@@ -168,6 +169,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
     latitude: property.latitude,
     longitude: property.longitude,
     classificationId: property.classificationId,
+    name: property.name,
     description: property.description,
     address: {
       id: property.addressId,
@@ -198,10 +200,10 @@ const toApiProperty = (property: IProperty): IApiProperty => {
       {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
         buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-        value: property.estimated,
-        fiscalYear: property.estimatedFiscalYear ?? getCurrentFiscalYear(),
-        rowVersion: property.estimatedRowVersion,
-        key: FiscalKeys.Estimated,
+        value: property.market,
+        fiscalYear: property.marketFiscalYear ?? getCurrentFiscalYear(),
+        rowVersion: property.marketRowVersion,
+        key: FiscalKeys.Market,
       },
     ],
     rowVersion: property.rowVersion,
@@ -240,7 +242,7 @@ export const toApiProject = (project: IProject) => {
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
     netBook: Number(project.netBook),
-    estimated: Number(project.estimated),
+    market: Number(project.market),
     assessed: Number(project.assessed),
     appraised: project.appraised,
     notes: project.notes.filter(note => note.id || note.note),

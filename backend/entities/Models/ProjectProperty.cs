@@ -32,8 +32,8 @@ namespace Pims.Dal.Entities.Models
             Location = property.Location;
             IsSensitive = property.IsSensitive;
             IsVisibleToOtherAgencies = property.IsVisibleToOtherAgencies;
-            Estimated = property.Estimated;
-            EstimatedFiscalYear = property.EstimatedFiscalYear;
+            Market = property.Market;
+            MarketFiscalYear = property.MarketFiscalYear;
             NetBook = property.NetBook;
             NetBookFiscalYear = property.NetBookFiscalYear;
             Assessed = property.Assessed;

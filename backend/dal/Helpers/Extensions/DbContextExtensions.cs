@@ -44,6 +44,11 @@ namespace Pims.Dal.Helpers.Extensions
 
             project.Properties.ForEach(p =>
             {
+                if (p.PropertyType == PropertyTypes.Land && p.Parcel == null)
+                    p.Parcel = context.Parcels.Find(p.ParcelId);
+                else if (p.PropertyType == PropertyTypes.Building && p.Building == null)
+                    p.Building = context.Buildings.Find(p.BuildingId);
+
                 context.Update(p.UpdateProjectNumber(projectNumber));
             });
         }

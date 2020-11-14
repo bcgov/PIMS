@@ -1,5 +1,6 @@
 using Pims.Core.Extensions;
 using Pims.Dal;
+using Pims.Dal.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace Pims.Core.Test
             var workflow = workflowStatus?.Workflow ?? EntityHelper.CreateWorkflow(id, "Submit", "SUBMIT-DISPOSAL", new[] { status });
 
             var user = CreateUser(Guid.NewGuid(), "project tester", "asasa", "asasa", null, agency);
-            return new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
+            var project = new Entity.Project($"SPP-{id:00000}", $"test-{id}", tierLevel)
             {
                 ReportedFiscalYear = DateTime.UtcNow.GetFiscalYear(),
                 ActualFiscalYear = DateTime.UtcNow.GetFiscalYear(),
@@ -59,13 +60,14 @@ namespace Pims.Core.Test
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = user.Id,
                 UpdatedBy = user,
-                PublicNote = $"publicNote-{id}",
-                PrivateNote = $"privateNote-{id}",
-                AppraisedNote = $"appraisedNote-{id}",
                 UpdatedOn = DateTime.UtcNow,
                 Metadata = "{offerAmount: 123}",
                 RowVersion = new byte[] { 12, 13, 14 }
             };
+            project.AddOrUpdateNote(Entity.NoteTypes.Public, $"publicNote-{id}");
+            project.AddOrUpdateNote(Entity.NoteTypes.Private, $"privateNote-{id}");
+            project.AddOrUpdateNote(Entity.NoteTypes.Appraisal, $"appraisedNote-{id}");
+            return project;
         }
 
         /// <summary>

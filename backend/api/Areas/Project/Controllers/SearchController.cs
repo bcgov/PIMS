@@ -67,7 +67,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost("page/filter")]
+        [HttpPost("page")]
         [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]

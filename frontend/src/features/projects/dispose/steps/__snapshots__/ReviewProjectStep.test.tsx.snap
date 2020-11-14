@@ -220,7 +220,7 @@ exports[`renders correctly 1`] = `
                 <input
                   className="form-control"
                   disabled={true}
-                  name="estimated"
+                  name="market"
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
@@ -336,7 +336,7 @@ exports[`renders correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "675px",
+                    "minWidth": "645px",
                   }
                 }
               >
@@ -378,27 +378,7 @@ exports[`renders correctly 1`] = `
                     }
                   }
                 >
-                  Sub Agency
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  onClick={[Function]}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
-                  Property Name
+                  Name
                 </div>
                 <div
                   className="th"
@@ -498,7 +478,7 @@ exports[`renders correctly 1`] = `
                     }
                   }
                 >
-                  Netbook Value
+                  Net Book Value
                 </div>
                 <div
                   className="th"
@@ -518,7 +498,7 @@ exports[`renders correctly 1`] = `
                     }
                   }
                 >
-                  Estimated Value
+                  Market Value
                 </div>
                 <div
                   className="th"

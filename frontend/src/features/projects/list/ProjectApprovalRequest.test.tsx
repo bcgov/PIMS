@@ -40,7 +40,7 @@ const testData = {
           city: 'Merritt',
           netBook: 0,
           assessed: 0,
-          estimated: 0,
+          market: 0,
           landArea: 26.9,
           createdOn: '2020-05-28T18:48:03.181977',
           rowVersion: 'AAAAAAAAfRA=',

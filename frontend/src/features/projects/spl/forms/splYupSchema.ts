@@ -24,18 +24,18 @@ export const SurplusPropertyInformationYupSchema = Yup.object().shape({
   submittedOn: Yup.date().required('Required'),
   tierLevelId: Yup.number().required('Required'),
   netBook: Yup.number().required('Required'),
-  estimated: Yup.number().required('Required'),
+  market: Yup.number().required('Required'),
   assessed: Yup.number().required('Required'),
   properties: Yup.array().of(
     Yup.object().shape({
       netBook: Yup.number()
         .required()
-        .min(1, 'Minimum value is $1')
+        .min(0, 'Minimum value is $0')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
-      estimated: Yup.number()
+      market: Yup.number()
         .required()
-        .min(1, 'Minimum value is $1')
+        .min(0, 'Minimum value is $0')
         .max(1000000000, 'Maximum value is $1,000,000,000')
         .required('Required'),
     }),
@@ -60,7 +60,7 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
   salesCost: Yup.number()
     .min(0, 'Sales Cost amount must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
-  salesProceeds: Yup.number()
+  market: Yup.number()
     .min(0, 'Sales Proceeds must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
 

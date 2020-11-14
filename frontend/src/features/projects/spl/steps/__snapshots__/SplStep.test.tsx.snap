@@ -108,7 +108,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
             <div class=\\"col-md-6\\">
               <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Proceeds</label>
                 <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"salesProceeds\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                 </div>
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Cost of Sales</label>
@@ -118,7 +118,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
                 <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"closeOutNetbook\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                 </div>
               </div>
               <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain Before SPP Cost</label>

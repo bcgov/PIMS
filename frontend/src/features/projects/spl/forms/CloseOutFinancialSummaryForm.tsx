@@ -28,7 +28,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               formikProps={formikProps}
               disabled={props.isReadOnly}
               outerClassName="col-md-8"
-              field="salesProceeds"
+              field="market"
             />
           </Form.Row>
           <Form.Row>
@@ -50,7 +50,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               formikProps={formikProps}
               disabled={props.isReadOnly}
               outerClassName="col-md-8"
-              field="closeOutNetbook"
+              field="netBook"
             />
           </Form.Row>
           <Form.Row>

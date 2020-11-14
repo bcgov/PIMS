@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Tools.Models.Import;
@@ -154,7 +155,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -163,14 +164,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -214,9 +212,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -225,12 +222,15 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
-            project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
+
+            var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectSnapshotMetadata>(project.Snapshots.First().Metadata);
+            metadata.NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
             project.Tasks.Should().BeEmpty();
         }
 
@@ -261,7 +261,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -270,14 +270,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -312,9 +309,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -323,7 +319,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
@@ -361,7 +358,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -370,14 +367,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -412,9 +406,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -423,7 +416,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
@@ -460,7 +454,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -468,14 +462,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -510,9 +501,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -521,7 +511,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -557,7 +548,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -565,14 +556,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -607,9 +595,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -618,7 +605,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -653,7 +641,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -661,13 +649,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -702,9 +688,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -712,6 +697,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.GainLoss.Should().Be(expectedResult.GainLoss);
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().BeEmpty();
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -746,18 +733,15 @@ namespace Pims.Api.Test.Controllers.Tools
                 new Model.ImportProjectModel()
                 {
                     ProjectNumber = "TEST-00001",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
                     ProgramCost = 3,
                     SalesCost = 4,
@@ -772,7 +756,7 @@ namespace Pims.Api.Test.Controllers.Tools
             };
 
             // Act
-            var result = controller.ImportProjects(projects, false, "Risk=Risk;Status=Status;Workflow=Workflow;Agency=Agency;Estimated=100000");
+            var result = controller.ImportProjects(projects, false, "Risk=Risk;Status=Status;Workflow=Workflow;Agency=Agency;Market=100000");
 
             // Assert
             Assert.NotNull(result);
@@ -794,9 +778,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
             first.MarketedOn.Should().Be(expectedResult.MarketedOn);
-            first.PrivateNote.Should().Be(expectedResult.PrivateNote);
             first.NetBook.Should().Be(expectedResult.NetBook);
-            first.Estimated.Should().Be(expectedResult.Estimated);
+            first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
             first.SalesCost.Should().Be(expectedResult.SalesCost);
             first.InterestComponent.Should().Be(expectedResult.InterestComponent);
@@ -805,12 +788,15 @@ namespace Pims.Api.Test.Controllers.Tools
             first.OcgFinancialStatement.Should().Be(expectedResult.OcgFinancialStatement);
             first.Notes.Should().HaveCount(1);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
-            first.Notes.First().Note.Should().Be(expectedResult.FinancialNote);
+            first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
+            first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
             first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
             project.Snapshots.Should().HaveCount(1);
-            project.Snapshots.First().NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
+
+            var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectSnapshotMetadata>(project.Snapshots.First().Metadata);
+            metadata.NetProceeds.Should().Be(expectedResult.PriorNetProceeds);
             project.Tasks.Should().HaveCount(1);
         }
         #endregion
@@ -840,7 +826,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -849,14 +835,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -898,7 +881,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -907,14 +890,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -956,7 +936,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -965,14 +945,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1014,7 +991,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1023,14 +1000,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Manager = "Manager",
                     Description = "Description",
                     AgencyResponseDate = DateTime.UtcNow.AddDays(1),
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
-                    FinancialNote = "Note",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1076,7 +1050,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1084,13 +1058,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1138,7 +1110,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1146,13 +1118,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1200,7 +1170,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1208,13 +1178,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1262,7 +1230,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1270,13 +1238,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1329,7 +1295,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1337,13 +1303,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 2,
+                    Market = 2,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1395,7 +1359,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1403,13 +1367,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 1000000,
+                    Market = 1000000,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1461,7 +1423,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1469,13 +1431,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 10000000,
+                    Market = 10000000,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,
@@ -1529,7 +1489,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 {
                     ProjectNumber = "TEST-00001",
                     Workflow = "Workflow",
-                    MajorActivity = "MajorActivity",
+                    Activity = "Activity",
                     Status = "Status",
                     ActualFiscalYear = 2020,
                     ReportedFiscalYear = 2021,
@@ -1537,13 +1497,11 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    Path = "Path",
-                    ItemType = "ItemType",
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
-                    PrivateNote = "PrivateNote",
+                    Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
                     NetBook = 1,
-                    Estimated = 10000000,
+                    Market = 10000000,
                     ProgramCost = 3,
                     SalesCost = 4,
                     InterestComponent = 5,

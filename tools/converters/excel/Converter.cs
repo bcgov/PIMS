@@ -70,6 +70,7 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
+        [Obsolete("This method is obsolete.  Call ConvertWithDataReaderAsync isntead.")]
         public async Task ConvertWithOleDbConnectionAsync(SourceOptions options)
         {
             var file = new FileInfo(options.File);
@@ -90,7 +91,7 @@ namespace Pims.Tools.Converters.ExcelConverter
             using var rdr = cmd.ExecuteReader();
             var query = (
                 from DbDataRecord row in rdr
-                select row).Select(async r => 
+                select row).Select(async r =>
                 {
                     var columns = new Dictionary<string, object>();
 
@@ -143,6 +144,8 @@ namespace Pims.Tools.Converters.ExcelConverter
                 foreach (var wrow in worksheet.Rows)
                 {
                     var drow = wrow as DataRow;
+                    _logger.LogDebug($"Parsing row '{drow.ItemArray[0]}'");
+
                     if (firstRowIsHeader)
                     {
                         columns = drow.ItemArray.Select(i => $"{i}").NotNullOrWhiteSpace().ToArray();
@@ -154,23 +157,40 @@ namespace Pims.Tools.Converters.ExcelConverter
                     }
                     else
                     {
-                        var row = new Dictionary<string, object>();
+                        // Create a source dictionary containing converted values.
+                        var sourceRow = new Dictionary<string, object>();
                         for (var i = 0; i < columns.Length; i++)
                         {
-                            var item = drow.ItemArray[i];
-                            var type = item.GetType();
+                            var sourceValue = drow.ItemArray[i];
 
                             var colOptions = options.Columns.ContainsKey(columns[i]) ? options.Columns[columns[i]] : null;
                             var name = GetName(colOptions, columns[i]);
-                            var value = await GetValueAsync(colOptions, item, row);
+                            var value = await GetValueAsync(colOptions, sourceValue, sourceRow);
+
+                            _logger.LogDebug($"Parsing source column '{name}'='{value}'");
+
+                            sourceRow.Add(columns[i], value);
+
+                            _logger.LogDebug($"Parsed source column '{name}'='{value}'");
+                        }
+
+                        // Generate output dictionary.
+                        var row = new Dictionary<string, object>();
+                        for (var i = 0; i < columns.Length; i++)
+                        {
+                            var colOptions = options.Columns.ContainsKey(columns[i]) ? options.Columns[columns[i]] : null;
+                            var name = GetName(colOptions, columns[i]);
+                            var value = sourceRow[columns[i]];
+
+                            _logger.LogDebug($"Reviewing column '{name}'='{value}'");
 
                             if (colOptions?.Skip != SkipOption.Never)
                             {
                                 if (colOptions?.Skip == SkipOption.Always) continue;
                                 if (colOptions?.Skip == SkipOption.AlreadySet && row.ContainsKey(name)) continue;
-                                if (colOptions?.Skip == SkipOption.Null && (item.GetType().IsDbNull() || item == null)) continue;
-                                if (colOptions?.Skip == SkipOption.NullOrEmpty && String.IsNullOrEmpty($"{item}")) continue;
-                                if (colOptions?.Skip == SkipOption.NullOrWhitespace && String.IsNullOrWhiteSpace($"{item}")) continue;
+                                if (colOptions?.Skip == SkipOption.Null && (value.GetType().IsDbNull() || value == null)) continue;
+                                if (colOptions?.Skip == SkipOption.NullOrEmpty && String.IsNullOrEmpty($"{value}")) continue;
+                                if (colOptions?.Skip == SkipOption.NullOrWhitespace && String.IsNullOrWhiteSpace($"{value}")) continue;
                             }
 
                             if (colOptions?.OutputTo?.Any() ?? false)
@@ -178,16 +198,37 @@ namespace Pims.Tools.Converters.ExcelConverter
                                 for (var oi = 0; oi < colOptions.OutputTo.Length; oi++)
                                 {
                                     var outputCol = colOptions.OutputTo[oi];
-                                    if (row.ContainsKey(outputCol))
-                                        row[outputCol] = SetValue(value, oi);
+                                    var colExists = row.ContainsKey(outputCol);
+
+                                    if (colOptions.OutputToArray)
+                                    {
+                                        var newArray = AddToArray(ExtractValue(value, oi), colExists ? row[outputCol] : null);
+
+                                        // Update the output dictionary.
+                                        if (colExists)
+                                            row[outputCol] = newArray;
+                                        else
+                                            row.Add(outputCol, newArray);
+                                    }
+                                    else if (colExists)
+                                        row[outputCol] = ExtractValue(value, oi);
                                     else
-                                        row.Add(outputCol, SetValue(value, oi));
+                                        row.Add(outputCol, ExtractValue(value, oi));
                                 }
+                            }
+                            else if (colOptions?.OutputToArray == true)
+                            {
+                                if (row.ContainsKey(name))
+                                    row[name] = AddToArray(value, row[name]);
+                                else
+                                    row.Add(name, AddToArray(value));
                             }
                             else
                             {
                                 row.Add(name, value);
                             }
+
+                            _logger.LogDebug($"Adding column '{name}'='{value}'");
                         }
 
                         // Post actions can further transform data after a row has been created.
@@ -209,6 +250,8 @@ namespace Pims.Tools.Converters.ExcelConverter
                             }
                         }
                         rows.Add(row);
+
+                        _logger.LogInformation($"Parsed row '{drow.ItemArray[0]}'");
                     }
                 }
             }
@@ -219,6 +262,31 @@ namespace Pims.Tools.Converters.ExcelConverter
 
             var json = JsonSerializer.Serialize(rows, _serialzerOptions);
             ExportJsonFile(json, options.Output);
+        }
+
+        /// <summary>
+        /// Adds the specified value to the 'sourceArray' or creates a new array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="sourceArray"></param>
+        /// <returns></returns>
+        private Array AddToArray(object value, object sourceArray = null)
+        {
+            // Use the source array or create a new array.
+            var type = value.GetType();
+            var array = (Array)sourceArray ?? Array.CreateInstance(type, 0);
+
+            // Copy the existing array into a larger array.
+            var length = array.Length;
+            var newArray = Array.CreateInstance(type, length + 1);
+            for (var ai = 0; ai < length; ai++)
+            {
+                newArray.SetValue(array.GetValue(ai), ai);
+            }
+
+            // Add the new value to the array.
+            newArray.SetValue(value, length);
+            return newArray;
         }
 
         /// <summary>
@@ -235,6 +303,7 @@ namespace Pims.Tools.Converters.ExcelConverter
             {
                 if (!String.IsNullOrWhiteSpace(a.Column))
                 {
+                    if (a.Column == "*") return sourceColumn;
                     if (!row.ContainsKey(a.Column)) throw new ConfigurationException($"Column '{a.Column}' does not exist.");
                     return row[a.Column];
                 }
@@ -248,7 +317,9 @@ namespace Pims.Tools.Converters.ExcelConverter
             {
                 "ConvertToTenancy" => $"{sourceColumn}".ConvertToTenancy(),
                 "GeoLocationConverter" => await _geoConverter.GetLocationAsync($"{argValues[0]}", $"{argValues[1]}"),
-                "ReplaceValues" => $"{sourceColumn}".ReplaceValues(argValues.Select(a => $"{a}").ToArray()),
+                "ReplaceWith" => $"{sourceColumn}".ReplaceWith(argValues.Select(a => $"{a}").ToArray()),
+                "ConvertToKeyValuePair" => $"{argValues[0]}".ConvertToKeyValuePair(argValues[1]),
+                "ChooseNotNull" => sourceColumn.ChooseNotNull(argValues),
                 _ => throw new NotImplementedException($"Converter '{converter}' does not exist.")
             };
         }
@@ -259,7 +330,7 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// <param name="value"></param>
         /// <param name="tupleIndex"></param>
         /// <returns></returns>
-        private object SetValue(object value, int tupleIndex = 0)
+        private object ExtractValue(object value, int tupleIndex = 0)
         {
             if (value != null && value.GetType().IsTuple()) return ((ITuple)value)[tupleIndex]; // Double boxing, but for our purposes, okay.
             return value;
@@ -285,28 +356,46 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// <returns></returns>
         private async Task<object> GetValueAsync(ColumnOptions options, object item, Dictionary<string, object> row = null)
         {
+            if (item == null) return item;
+
             var sourceType = item.GetType();
             var nullable = options?.Type?.Contains("?") ?? false;
             var baseType = options?.Type?.Replace("?", "") ?? "NA";
             var optionType = Type.GetType(baseType) ?? Type.GetType($"System.{baseType}") ?? sourceType;
             var destType = nullable ? typeof(Nullable<>).MakeGenericType(optionType) : optionType ?? sourceType;
 
+            _logger.LogDebug($"Parsing value from '{options?.Name}'='{item}'.");
+
             // Apply the switch.
             if (options?.ValueSwitch?.Any() ?? false)
             {
+                _logger.LogDebug($"Switch value check '{item}'.");
+
                 var key = $"{item}";
                 var found = options.ValueSwitch.FirstOrDefault(s => Regex.Match(key, s.Search, RegexOptions.Singleline).Success);
-                item = found != null ? found.Value : item;
+
+                if (found != null)
+                {
+                    item = found.Value;
+                    _logger.LogDebug($"Switch value to '{item}'.");
+                }
             }
 
             try
             {
+                if (options?.DefaultValue != null && sourceType.IsDbNull())
+                {
+                    return ConvertTo(options.DefaultValue, optionType);
+                }
+
                 if (!String.IsNullOrWhiteSpace(options?.Converter))
                 {
+                    _logger.LogDebug($"Applying converter to '{item}'.");
+
                     var providedValue = await GetValueAsync(null, item);
 
-                    if (
-                        (options.ConvertWhen == ConvertWhenOption.Always)
+                    if ((options.ConvertWhen == ConvertWhenOption.NotNull && !sourceType.IsDbNull())
+                        || (options.ConvertWhen == ConvertWhenOption.Always)
                         || (options.ConvertWhen == ConvertWhenOption.Null && providedValue != null)
                         || (options.ConvertWhen == ConvertWhenOption.NullOrEmpty && !String.IsNullOrEmpty($"{providedValue}"))
                         || (options.ConvertWhen == ConvertWhenOption.NullOrWhitespace && !String.IsNullOrWhiteSpace($"{providedValue}"))
@@ -318,13 +407,13 @@ namespace Pims.Tools.Converters.ExcelConverter
                         {
                             "ConvertToFiscalYear" => $"{item}".ConvertToFiscalYear(nullable && (sourceType.IsDbNull() || item == null)),
                             "ConvertToDate" => $"{item}".ConvertToDate(nullable && (sourceType.IsDbNull() || item == null)),
-                            _ => await ConvertAsync(item, row, options.Converter, options.ConverterArgs?.Select(a => new ActionArgumentOptions() { Column = a }).ToArray())
+                            _ => await ConvertAsync(sourceType.IsDbNull() ? null : item, row, options.Converter, options.ConverterArgs)
                         };
                     }
                 }
 
                 if (destType == typeof(string))
-                    return $"{item}";
+                    return String.IsNullOrWhiteSpace($"{item}") && sourceType.IsDbNull() ? null : $"{item}";
                 else if (optionType == destType && sourceType == destType)
                     return item;
                 else if (nullable && sourceType.IsDbNull())

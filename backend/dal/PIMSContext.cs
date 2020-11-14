@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Configuration;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Migrations;
 using System;
 using System.Linq;
+using System.Text.Json;
 
 namespace Pims.Dal
 {
@@ -14,6 +16,11 @@ namespace Pims.Dal
     /// </summary>
     public class PimsContext : DbContext
     {
+        #region Variables
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
         #region Properties
         #region Tables
         public DbSet<AccessRequest> AccessRequests { get; set; }
@@ -65,8 +72,6 @@ namespace Pims.Dal
         #region Views
         public DbSet<Entities.Views.Property> Properties { get; set; }
         #endregion
-
-        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Constructors
@@ -83,10 +88,13 @@ namespace Pims.Dal
         /// Creates a new instance of a PimsContext class.
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="serializerOptions"></param>
         /// <returns></returns>
-        public PimsContext(DbContextOptions<PimsContext> options, IHttpContextAccessor httpContextAccessor = null) : base(options)
+        public PimsContext(DbContextOptions<PimsContext> options, IHttpContextAccessor httpContextAccessor = null, IOptions<JsonSerializerOptions> serializerOptions = null) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
+            _serializerOptions = serializerOptions.Value;
         }
         #endregion
 
@@ -194,6 +202,28 @@ namespace Pims.Dal
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Deserialize the specified 'json' to the specified type of 'T'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public T Deserialize<T>(string json)
+        {
+            return JsonSerializer.Deserialize<T>(json, _serializerOptions);
+        }
+
+        /// <summary>
+        /// Serialize the specified 'item'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public string Serialize<T>(T item)
+        {
+            return JsonSerializer.Serialize(item, _serializerOptions);
         }
         #endregion
     }

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -19,7 +19,6 @@ namespace Pims.Dal.Services
     public class ProjectReportService : BaseService<ProjectReport>, IProjectReportService
     {
         #region Variables
-        private readonly PimsOptions _options;
         #endregion
 
         #region Constructors
@@ -29,12 +28,9 @@ namespace Pims.Dal.Services
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="service"></param>
-        /// <param name="notifyService"></param>
-        /// <param name="options"></param>
         /// <param name="logger"></param>
-        public ProjectReportService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, INotificationService notifyService, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
+        public ProjectReportService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
         {
-            _options = options.Value;
         }
         #endregion
 
@@ -104,8 +100,11 @@ namespace Pims.Dal.Services
 
             foreach (ProjectSnapshot snapshot in toSnapshots)
             {
-                var previousSnapshot = fromSnapshots.FirstOrDefault(s => s.Key == snapshot.ProjectId);
-                snapshot.BaselineIntegrity = (snapshot?.NetProceeds ?? 0) - (previousSnapshot.Value?.NetProceeds ?? 0);
+                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevSnapshot = fromSnapshots.GetValueOrDefault(snapshot.ProjectId);
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata) : null;
+                metadata.BaselineIntegrity = metadata.NetProceeds - (prevMetadata?.NetProceeds ?? 0);
+                snapshot.Metadata = this.Context.Serialize(metadata);
             }
 
             return toSnapshots;
@@ -267,10 +266,16 @@ namespace Pims.Dal.Services
             
             foreach (Project project in splProjects)
             {
-                JsonConvert.PopulateObject(project.Metadata ?? "{}", project);
-                ProjectSnapshot snapshot = new ProjectSnapshot(project);
-                snapshot.SnapshotOn = to;
-                snapshot.BaselineIntegrity = project.NetProceeds ?? 0 - (fromSnapshots.GetValueOrDefault(project.Id)?.NetProceeds ?? 0);
+                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevSnapshot = fromSnapshots.GetValueOrDefault(project.Id);
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata) : null;
+                metadata.BaselineIntegrity = metadata.NetProceeds - (prevMetadata?.NetProceeds ?? 0);
+
+                var snapshot = new ProjectSnapshot(project)
+                {
+                    SnapshotOn = to,
+                    Metadata = this.Context.Serialize(metadata)
+                };
 
                 projectSnapshots = projectSnapshots.Append(snapshot);
             }

@@ -1,6 +1,7 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Policies;
 using Pims.Dal;
@@ -9,6 +10,7 @@ using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 
 namespace Pims.Api.Areas.Tools.Controllers
@@ -29,6 +31,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         private readonly IPimsService _pimsService;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
+        private readonly IOptions<JsonSerializerOptions> _serializerOptions;
         #endregion
 
         #region Constructors
@@ -39,12 +42,14 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="pimsService"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public ImportController(ILogger<ImportController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper)
+        /// <param name="serializerOptions"></param>
+        public ImportController(ILogger<ImportController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper, IOptions<JsonSerializerOptions> serializerOptions)
         {
             _logger = logger;
             _pimsService = pimsService;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
+            _serializerOptions = serializerOptions;
         }
         #endregion
 
@@ -116,7 +121,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 projects in a single request.");
 
-            var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _logger);
+            var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _serializerOptions, _logger);
             var entities = helper.AddUpdateProjects(models, stopOnError, defaults?.Split(";"));
             var parcels = _mapper.Map<Model.ProjectModel[]>(entities);
 
