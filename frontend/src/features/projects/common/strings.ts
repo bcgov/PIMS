@@ -1,8 +1,13 @@
 export const clickableTooltip = 'Click to view property details';
 export const updateInfoMessage =
   'Please make any necessary updates to the valuation information and the classification';
-export const tierTooltip =
-  'Tier 1: properties with a estimated market value of less than $1M.\nTier 2: properties with a estimated market value of $1M or more and less than $10M.\nTier 3: properties are single parcels with an estimated market value of $10M or more.\nTier 4: properties are multiple parcels with a cumulative estimated market value of $10M or more.';
+export const tier1Tooltip = 'Tier 1: Properties with a net value of less than $1M.';
+export const tier2Tooltip =
+  'Tier 2: Properties with a net value of $1M or more and less than $10M.';
+export const tier3Tooltip =
+  'Tier 3: Properties are single parcels with a net value of $10M or more.';
+export const tier4Tooltip =
+  'Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.';
 export const projectNoDescription =
   'This is a temporary number during draft state. A project number will be assigned when you submit this application.';
 export const reviewAppraisalTooltip =

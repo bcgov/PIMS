@@ -11,10 +11,12 @@ import {
   DisposeWorkflowStatus,
   useProject,
   updateInfoMessage,
-  tierTooltip,
+  tier1Tooltip,
+  tier2Tooltip,
+  tier3Tooltip,
+  tier4Tooltip,
 } from '../../common';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
-import TooltipIcon from 'components/common/TooltipIcon';
 import { Container } from 'react-bootstrap';
 import ProjectFinancialTable from '../components/ProjectFinancialTable';
 
@@ -49,7 +51,11 @@ const UpdateInfoForm = ({
         <Form.Label column md={2}>
           Assign Tier&nbsp;
           <span className="required">*</span>
-          <TooltipIcon toolTipId="tier-info" toolTip={tierTooltip} placement="right" />
+          <p></p>
+          <p>{tier1Tooltip}</p>
+          <p>{tier2Tooltip}</p>
+          <p>{tier3Tooltip}</p>
+          <p>{tier4Tooltip}</p>
         </Form.Label>
 
         <Select
